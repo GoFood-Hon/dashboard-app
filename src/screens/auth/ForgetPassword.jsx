@@ -1,7 +1,21 @@
 import React from "react"
+import { useForm } from "react-hook-form"
 import { Link } from "react-router-dom"
+import { emailRules } from "../../utils/inputRules"
+import { ErrorMessage } from "../../components/Form/ErrorMessage"
+import InputField from "../../components/Form/InputField"
 
 export default function ForgetPassword() {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors }
+  } = useForm()
+
+  const onSubmit = (data) => {
+    console.log("Submit information", data)
+  }
+
   return (
     <>
       <div>
@@ -12,17 +26,23 @@ export default function ForgetPassword() {
           </p>
         </div>
         <div className="flex flex-col">
-          <span className="text-slate-400">Email</span>
-          <input
-            className="mb-4 mt-2 p-2 appearance-none block w-full border placeholder-gray-300 rounded focus:outline-none dark:bg-slate-900 dark:border-gray-600 dark:placeholder-gray-500"
-            type="email"
-            placeholder="Enter your email"
-          />
-          <button
-            className="ml-auto my-2 text-sm h-10 w-full bg-gray-800 text-white p-2 rounded hover:bg-gray-900 dark:bg-gray-900 dark:hover:bg-gray-700"
-            type="submit">
-            Envíame el correo
-          </button>
+          <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col">
+            <InputField
+              label="Correo electrónico"
+              name="email"
+              register={register}
+              rules={emailRules}
+              errors={errors}
+              placeholder="Ingrese su correo"
+            />
+            <input
+              value={"Envíame el correo"}
+              type="submit"
+              className={
+                "bg-slate-900 text-white flex h-10 w-full items-center justify-center space-x-3 rounded-md text-sm shadow-sm transition-all duration-700 focus:outline-none my-3"
+              }
+            />
+          </form>
           <Link
             to={"/login"}
             className=" text-center items-center justify-center w-full text-orange-500 hover:underline font-bold">
