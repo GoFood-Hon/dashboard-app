@@ -1,3 +1,5 @@
+import * as Yup from "yup"
+
 export const emailRules = {
   required: "Correo es requerido.",
   pattern: {
@@ -17,3 +19,12 @@ export const passwordRules = {
     message: "Contraseña tiene que tener por lo menos 8 caracteres."
   }
 }
+
+export const registrationValidationSchema = Yup.object().shape({
+  username: Yup.string().required("Nombre de usuario es requerido."),
+  email: Yup.string().required("Correo es requerido.").email("Correo incorrecto."),
+  password: Yup.string().required("Contraseña es requerida.").min(8, "Contraseña tiene que tener al menos 8 caracteres."),
+  confirmPassword: Yup.string()
+    .oneOf([Yup.ref("password"), null], "Las contraseñas no coinciden.")
+    .required("Confirme su contraseña.")
+})

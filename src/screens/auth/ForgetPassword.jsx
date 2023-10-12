@@ -2,7 +2,6 @@ import React from "react"
 import { useForm } from "react-hook-form"
 import { Link } from "react-router-dom"
 import { emailRules } from "../../utils/inputRules"
-import { ErrorMessage } from "../../components/Form/ErrorMessage"
 import InputField from "../../components/Form/InputField"
 
 export default function ForgetPassword() {
