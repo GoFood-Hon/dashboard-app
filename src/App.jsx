@@ -1,17 +1,12 @@
-import React from "react"
-import ToggleTheme from "./components/ToggleTheme"
+import React, { Suspense } from "react"
 import Login from "./screens/auth/Login"
+import { RouterProvider } from "react-router-dom"
+import Register from "./screens/auth/Register"
+import Home from "./screens/Home"
+import ForgetPassword from "./screens/auth/ForgetPassword"
 
 function App() {
-  return (
-    <>
-      {/*  <div className="flex flex-col justify-center items-center h-screen dark:bg-black dark:text-white bg-white text-black">
-        <span>Hello 🖐️</span>
-        <ToggleTheme />
-      </div> */}
-      <Login />
-    </>
-  )
+  return <Login />
 }
 
 export default App
