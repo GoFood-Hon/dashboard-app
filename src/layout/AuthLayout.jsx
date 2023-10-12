@@ -1,4 +1,4 @@
-import React, { Children } from "react"
+import React from "react"
 import ToggleTheme from "../components/ToggleTheme"
 
 export default function AuthLayout({ children }) {

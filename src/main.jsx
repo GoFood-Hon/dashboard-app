@@ -7,6 +7,7 @@ import Login from "./screens/auth/Login.jsx"
 import Register from "./screens/auth/Register.jsx"
 import ForgetPassword from "./screens/auth/ForgetPassword"
 import { ThemeProvider } from "./context/ThemeProvider"
+import LoadingCircle from "./components/LoadingCircle"
 
 const router = createBrowserRouter([
   {
@@ -29,8 +30,10 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <ThemeProvider>
-      <RouterProvider router={router} />
-    </ThemeProvider>
+    <React.Suspense fallback={LoadingCircle}>
+      <ThemeProvider>
+        <RouterProvider router={router} />
+      </ThemeProvider>
+    </React.Suspense>
   </React.StrictMode>
 )
