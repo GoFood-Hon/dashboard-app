@@ -1,12 +1,11 @@
 import React, { useContext, useEffect, useState } from "react"
 import LoadingCircle from "../../components/LoadingCircle"
-import Google from "../../components/GoogleIcon"
 import { Link, useLocation, useNavigate } from "react-router-dom"
 
 import { AuthContext } from "../../context/AuthProvider"
+import Button from "../../components/Button"
 
 export default function Login() {
-  const [signInClicked, setSignInClicked] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const { user, setUser } = useContext(AuthContext)
 
@@ -37,7 +36,7 @@ export default function Login() {
   return (
     <>
       {isLoading ? (
-        <div>
+        <div className="flex flex-col items-center">
           <div className=" flex flex-col items-center">
             <h1 className="text-3xl font-bold text-zinc-800 dark:text-white file">Iniciando sesión</h1>
             <p className="text-sm text-gray-500 pb-5">Conectando con el servidor... 📡</p>
@@ -65,31 +64,10 @@ export default function Login() {
           <Link to={"/forgetPassword"} className="mb-5 hover:underline hover:cursor-pointer text-sm text-orange-500">
             Olvidaste tu contraseña?
           </Link>
-          <button
-            className="ml-auto mt-6 mb-3 text-sm h-10 w-full bg-gray-800 text-white p-2 rounded hover:bg-gray-900 dark:bg-gray-900 dark:hover:bg-gray-700"
-            type="submit"
-            onClick={handleSubmit}>
-            Iniciar sesión
-          </button>
-          <button
-            disabled={signInClicked}
-            className={`${
-              signInClicked
-                ? "cursor-not-allowed border-gray-200 bg-gray-100"
-                : "border border-gray-200 bg-white text-black hover:bg-gray-50"
-            } flex h-10 w-full items-center justify-center space-x-3 rounded-md border text-sm shadow-sm transition-all duration-75 focus:outline-none mb-3`}
-            onClick={() => {
-              setSignInClicked(true)
-            }}>
-            {signInClicked ? (
-              <LoadingCircle />
-            ) : (
-              <>
-                <Google className="h-5 w-5" />
-                <p>Iniciar sesión con Google</p>
-              </>
-            )}
-          </button>
+          <Button text={"Iniciar sesión"} className={"bg-gray-900 text-white mt-3"} onClick={handleSubmit} />
+          <Button text={"Iniciar sesión con Google"} icon={"google"} className={"bg-white text-black border border-gray-200"} />
+          <Button text={"Iniciar sesión con Facebook"} className={"bg-blue-700 text-white"} />
+          <Button text={"Iniciar sesión con Apple"} icon={"apple"} className={"bg-black text-white"} />
           <div className="w-full flex flex-col items-center justify-center text-sm text-gray-500">
             <div className="flex flex-row justify-center w-full mb-3">
               <p>No tienes una cuenta?</p>
