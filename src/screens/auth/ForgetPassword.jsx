@@ -6,8 +6,12 @@ export default function ForgetPassword() {
   return (
     <AuthLayout>
       <div>
-        <h1 className="text-3xl font-bold text-zinc-800 dark:text-white file">Recuperar contrasena!</h1>
-        <p className="text-sm text-gray-500 pb-5 mt-3">Ingrese su correo y siga las instrucciones que se enviaran a su correo.</p>
+        <div className=" flex flex-col items-center">
+          <h1 className="text-3xl font-bold text-zinc-800 dark:text-white file">Recuperar contrasena!</h1>
+          <p className="text-sm text-gray-500 pb-5 mt-2 text-center">
+            Ingrese su correo y siga las instrucciones que se enviaran a su correo.
+          </p>
+        </div>
         <div className="flex flex-col">
           <span className="text-slate-400">Email</span>
           <input
