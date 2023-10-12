@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import AuthLayout from "../../layout/AuthLayout"
+
 import LoadingCircle from "../../components/LoadingCircle"
 import Google from "../../components/GoogleIcon"
 import { Link } from "react-router-dom"
@@ -8,7 +8,7 @@ export default function Register() {
   const [signInClicked, setSignInClicked] = useState(false)
 
   return (
-    <AuthLayout>
+    <>
       <div className="w-full">
         <div className=" flex flex-col items-center">
           <h1 className="text-3xl font-bold text-zinc-800 dark:text-white file">Bienvenido a GoFood</h1>
@@ -69,6 +69,6 @@ export default function Register() {
           </Link>
         </div>
       </div>
-    </AuthLayout>
+    </>
   )
 }

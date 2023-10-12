@@ -2,18 +2,17 @@ import React, { useContext } from "react"
 import { Link } from "react-router-dom"
 import { AuthContext } from "../context/AuthProvider"
 
-function Home() {
+function Admin() {
   const { user, setUser } = useContext(AuthContext)
 
   return (
     <div>
-      <h1>Homepage</h1>
-      <Link to="/admin" replace>
-        <button>Admin Page</button>
+      <h1>Admin</h1>
+      <Link to="/" replace>
+        <button>Back to Home</button>
       </Link>
       <button onClick={() => setUser(false)}>Logout</button>
     </div>
   )
 }
-
-export default Home
+export default Admin

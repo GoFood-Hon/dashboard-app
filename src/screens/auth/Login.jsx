@@ -1,15 +1,30 @@
-import React, { useState } from "react"
-import ToggleTheme from "../../components/ToggleTheme"
+import React, { useContext, useEffect, useState } from "react"
 import LoadingCircle from "../../components/LoadingCircle"
 import Google from "../../components/GoogleIcon"
-import { Link } from "react-router-dom"
-import AuthLayout from "../../layout/AuthLayout"
+import { Link, useLocation, useNavigate } from "react-router-dom"
+
+import { AuthContext } from "../../context/AuthProvider"
 
 export default function Login() {
   const [signInClicked, setSignInClicked] = useState(false)
+  const { user, setUser } = useContext(AuthContext)
+
+  const navigate = useNavigate()
+  const location = useLocation()
+
+  useEffect(() => {
+    if (user && location.state?.from) {
+      navigate(location.state.from.pathname)
+    }
+  }, [user, location.state])
+
+  const handleSubmit = () => {
+    console.log("Submit information")
+    setUser(true)
+  }
 
   return (
-    <AuthLayout>
+    <>
       <div>
         <div className=" flex flex-col items-center">
           <h1 className="text-3xl font-bold text-zinc-800 dark:text-white file">Iniciar sesion en GoFood</h1>
@@ -33,7 +48,8 @@ export default function Login() {
         </Link>
         <button
           className="ml-auto mt-6 mb-3 text-sm h-10 w-full bg-gray-800 text-white p-2 rounded hover:bg-gray-900 dark:bg-gray-900 dark:hover:bg-gray-700"
-          type="submit">
+          type="submit"
+          onClick={handleSubmit}>
           Iniciar sesion
         </button>
         <button
@@ -64,6 +80,6 @@ export default function Login() {
           </div>
         </div>
       </div>
-    </AuthLayout>
+    </>
   )
 }

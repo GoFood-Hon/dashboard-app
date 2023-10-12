@@ -1,10 +1,9 @@
 import React from "react"
-import AuthLayout from "../../layout/AuthLayout"
 import { Link } from "react-router-dom"
 
 export default function ForgetPassword() {
   return (
-    <AuthLayout>
+    <>
       <div>
         <div className=" flex flex-col items-center">
           <h1 className="text-3xl font-bold text-zinc-800 dark:text-white file">Recuperar contrasena!</h1>
@@ -31,6 +30,6 @@ export default function ForgetPassword() {
           </Link>
         </div>
       </div>
-    </AuthLayout>
+    </>
   )
 }
