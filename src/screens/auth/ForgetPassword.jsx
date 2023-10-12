@@ -6,7 +6,7 @@ export default function ForgetPassword() {
     <>
       <div>
         <div className=" flex flex-col items-center">
-          <h1 className="text-3xl font-bold text-zinc-800 dark:text-white file">Recuperar contrasena!</h1>
+          <h1 className="text-3xl font-bold text-zinc-800 dark:text-white file">Recuperar contraseña!</h1>
           <p className="text-sm text-gray-500 pb-5 mt-2 text-center">
             Ingrese su correo y siga las instrucciones que se enviaran a su correo.
           </p>
@@ -21,12 +21,12 @@ export default function ForgetPassword() {
           <button
             className="ml-auto my-2 text-sm h-10 w-full bg-gray-800 text-white p-2 rounded hover:bg-gray-900 dark:bg-gray-900 dark:hover:bg-gray-700"
             type="submit">
-            Enviame el correo
+            Envíame el correo
           </button>
           <Link
             to={"/login"}
             className=" text-center items-center justify-center w-full text-orange-500 hover:underline font-bold">
-            Iniciar sesion
+            Iniciar sesión
           </Link>
         </div>
       </div>
