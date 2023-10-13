@@ -1,6 +1,4 @@
-import React, { useState } from "react"
-import LoadingCircle from "../../components/LoadingCircle"
-import Google from "../../components/GoogleIcon"
+import React from "react"
 import { Link } from "react-router-dom"
 import { useForm } from "react-hook-form"
 import InputField from "../../components/Form/InputField"

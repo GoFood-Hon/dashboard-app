@@ -45,7 +45,7 @@ export default function Login() {
       {isLoading ? (
         <div className="flex flex-col items-center">
           <div className=" flex flex-col items-center">
-            <h1 className="text-3xl font-bold text-zinc-800 dark:text-white file">Iniciando sesión</h1>
+            <h1 className="text-3xl font-bold text-zinc-800 dark:text-white">Iniciando sesión</h1>
             <p className="text-sm text-gray-500 pb-5">Conectando con el servidor... 📡</p>
           </div>
           <LoadingCircle />
@@ -53,7 +53,7 @@ export default function Login() {
       ) : (
         <div>
           <div className=" flex flex-col items-center">
-            <h1 className="text-3xl font-bold text-zinc-800 dark:text-white file">Iniciar sesión en GoFood</h1>
+            <h1 className="text-3xl font-bold text-zinc-800 dark:text-white">Iniciar sesión en GoFood</h1>
             <p className="text-sm text-gray-500 pb-5">Inicia sesión con tu cuenta o con alguna red social.</p>
           </div>
           <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col">

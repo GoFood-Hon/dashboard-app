@@ -4,7 +4,8 @@ import { ReactSVG } from "react-svg"
 export const iconComponents = {
   google: <ReactSVG src={"src/assets/icons/google.svg"} />,
   facebook: <ReactSVG src={"src/assets/icons/facebook.svg"} />,
-  apple: <ReactSVG src={"src/assets/icons/apple.svg"} />
+  apple: <ReactSVG src={"src/assets/icons/apple.svg"} />,
+  close: <ReactSVG src={"src/assets/icons/close.svg"} />
 }
 
 export const Icon = (props) => {
