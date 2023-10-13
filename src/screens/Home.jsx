@@ -1,11 +1,10 @@
 import React, { useContext } from "react"
 import { Link } from "react-router-dom"
 import { AuthContext } from "../context/AuthProvider"
-import ToggleTheme from "../components/ToggleTheme"
 import Header from "../components/Header"
 
 function Home() {
-  const { user, setUser } = useContext(AuthContext)
+  const { setUser } = useContext(AuthContext)
 
   return (
     <div className="w-full h-screen dark:bg-slate-900 bg-slate-100 text-black dark:text-white">

@@ -1,6 +1,5 @@
 import React from "react"
 import * as Popover from "@radix-ui/react-popover"
-import { Icon } from "./Icon"
 import Button from "./Button"
 import ToggleTheme from "./ToggleTheme"
 
