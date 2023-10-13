@@ -45,7 +45,7 @@ export default function Header() {
               <Button text={"Manejar cuenta"} className={"mt-5 border border-slate-400 rounded text-sm"} />
               <Button
                 text={"Cerrar sesión"}
-                className={"mt-3 dark:border-slate-100 border-slate-400 rounded text-sm bg-slate-600 text-white"}
+                className={"mt-3 dark:border-slate-100 border-slate-400 rounded text-sm bg-slate-700 text-white"}
               />
               <div className="flex justify-center">
                 <ToggleTheme className={"text-sm font-semibold"} />
