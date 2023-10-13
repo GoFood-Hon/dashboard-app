@@ -3,12 +3,18 @@ import { Route, RouterProvider, createBrowserRouter, createRoutesFromElements } 
 
 import AuthLayout from "./layout/AuthLayout"
 import { AuthContext } from "./context/AuthProvider"
-import Admin from "./screens/Admin"
+
 import Home from "./screens/Home"
 import Login from "./screens/auth/Login"
 import UnauthenticatedLayout from "./layout/UnauthenticatedLayout"
 import Register from "./screens/auth/Register"
 import ForgetPassword from "./screens/auth/ForgetPassword"
+import Orders from "./screens/Orders"
+import Transactions from "./screens/Transactions"
+import Menu from "./screens/Menu"
+import Complements from "./screens/Complements"
+import Branches from "./screens/Branches"
+import Users from "./screens/Users"
 
 function App() {
   const { user } = useContext(AuthContext)
@@ -18,7 +24,12 @@ function App() {
       <>
         <Route element={<AuthLayout authenticated={user} />}>
           <Route path="/" element={<Home />} />
-          <Route path="/admin" element={<Admin />} />
+          <Route path="/orders" element={<Orders />} />
+          <Route path="/transactions" element={<Transactions />} />
+          <Route path="/menu" element={<Menu />} />
+          <Route path="/complements" element={<Complements />} />
+          <Route path="/branches" element={<Branches />} />
+          <Route path="/users" element={<Users />} />
         </Route>
         <Route element={<UnauthenticatedLayout />}>
           <Route path="login" element={<Login />} />

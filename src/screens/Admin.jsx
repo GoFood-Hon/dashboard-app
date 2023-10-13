@@ -1,18 +1,11 @@
-import React, { useContext } from "react"
-import { Link } from "react-router-dom"
-import { AuthContext } from "../context/AuthProvider"
+import React from "react"
+import BaseLayout from "../components/BaseLayout"
 
 function Admin() {
-  const { setUser } = useContext(AuthContext)
-
   return (
-    <div>
+    <BaseLayout>
       <h1>Admin</h1>
-      <Link to="/" replace>
-        <button>Back to Home</button>
-      </Link>
-      <button onClick={() => setUser(false)}>Logout</button>
-    </div>
+    </BaseLayout>
   )
 }
 export default Admin

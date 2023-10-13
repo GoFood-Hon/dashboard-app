@@ -1,12 +1,10 @@
 import React from "react"
 import BaseLayout from "../components/BaseLayout"
 
-function Home() {
+export default function Menu() {
   return (
     <BaseLayout>
-      <h1>Dashboard 👋</h1>
+      <h1>Menu 👋</h1>
     </BaseLayout>
   )
 }
-
-export default Home
