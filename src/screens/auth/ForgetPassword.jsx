@@ -1,8 +1,9 @@
-import React from "react"
+import React, { useRef, useState } from "react"
 import { useForm } from "react-hook-form"
 import { Link } from "react-router-dom"
 import { emailRules } from "../../utils/inputRules"
 import InputField from "../../components/Form/InputField"
+import toast from "react-hot-toast"
 
 export default function ForgetPassword() {
   const {
@@ -13,6 +14,7 @@ export default function ForgetPassword() {
 
   const onSubmit = (data) => {
     console.log("Submit information", data)
+    toast.success("Correo enviado exitosamente!")
   }
 
   return (

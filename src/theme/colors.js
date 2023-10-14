@@ -42,4 +42,8 @@ export const colors = {
   red: palette.wewak,
   element_tag_bg: palette.corn_silk,
   element_tag_text: palette.cream_can
+
+  /**
+   * Toast Notifications
+   */
 }

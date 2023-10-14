@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react"
+import React, { useContext, useEffect, useState, useRef } from "react"
 import LoadingCircle from "../../components/LoadingCircle"
 import { Link, useLocation, useNavigate } from "react-router-dom"
 import { AuthContext } from "../../context/AuthProvider"
@@ -6,10 +6,16 @@ import Button from "../../components/Button"
 import { useForm } from "react-hook-form"
 import { emailRules, passwordRules } from "../../utils/inputRules"
 import InputField from "../../components/Form/InputField"
+import toast from "react-hot-toast"
+import { useTheme } from "../../context/ThemeProvider"
 
 export default function Login() {
-  const [isLoading, setIsLoading] = useState(false)
+  const { theme } = useTheme()
   const { user, setUser } = useContext(AuthContext)
+
+  const [isLoading, setIsLoading] = useState(false)
+  const [open, setOpen] = useState(false)
+  const timerRef = useRef(0)
 
   const navigate = useNavigate()
   const location = useLocation()
@@ -35,9 +41,23 @@ export default function Login() {
     }
   }, [user, location.state])
 
+  useEffect(() => {
+    return () => clearTimeout(timerRef.current)
+  }, [])
+
+  const notify = () =>
+    toast("Correo enviado!", {
+      icon: "👏",
+      style: {
+        background: "#333",
+        color: "#fff"
+      }
+    })
+
   const onSubmit = (data) => {
     console.log("Submit information", data)
-    setUser(true)
+    notify()
+    // setUser(true)
   }
 
   return (
@@ -69,8 +89,8 @@ export default function Login() {
               label="Contraseña"
               name="password"
               type="password"
-              register={register}
               rules={passwordRules}
+              register={register}
               errors={errors}
               placeholder="Ingrese su contraseña"
             />
