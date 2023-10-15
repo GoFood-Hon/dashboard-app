@@ -1,5 +1,5 @@
 const { blackA, mauve, violet, sky, green, slate } = require("@radix-ui/colors")
-
+const { colors, palette } = require("./src/theme/colors")
 /** @type {import('tailwindcss').Config} */
 
 const defaultTheme = require("tailwindcss/defaultTheme")
@@ -19,7 +19,8 @@ export default {
         ...mauve,
         ...slate,
         ...violet,
-        ...sky
+        ...sky,
+        ...colors
       }
     },
     keyframes: {

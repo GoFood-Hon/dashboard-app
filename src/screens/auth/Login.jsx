@@ -7,7 +7,6 @@ import { useForm } from "react-hook-form"
 import { emailRules, passwordRules } from "../../utils/inputRules"
 import InputField from "../../components/Form/InputField"
 import toast from "react-hot-toast"
-import { useTheme } from "../../context/ThemeProvider"
 
 export default function Login() {
   const { user, setUser } = useContext(AuthContext)
@@ -58,7 +57,7 @@ export default function Login() {
         </div>
       ) : (
         <div>
-          <div className=" flex flex-col items-center">
+          <div className="flex flex-col items-center">
             <h1 className="text-3xl font-bold text-zinc-800 dark:text-white">Iniciar sesión en GoFood</h1>
             <p className="text-sm text-gray-500 pb-5">Inicia sesión con tu cuenta o con alguna red social.</p>
           </div>
@@ -96,9 +95,6 @@ export default function Login() {
            * SOCIAL MEDIA LOGINS
            */}
 
-          <Button text={"Iniciar sesión con Google"} icon={"google"} className={"bg-white text-black border border-gray-200"} />
-          <Button text={"Iniciar sesión con Facebook"} className={"bg-blue-700 text-white"} />
-          <Button text={"Iniciar sesión con Apple"} icon={"apple"} className={"bg-black text-white"} />
           <div className="w-full flex flex-col items-center justify-center text-sm text-gray-500">
             <div className="flex flex-row justify-center w-full mb-3">
               <p>No tienes una cuenta?</p>

@@ -13,7 +13,8 @@ export const iconComponents = {
   layout: <ReactSVG src={"src/assets/icons/layout.svg"} />,
   branch: <ReactSVG src={"src/assets/icons/branch.svg"} />,
   users: <ReactSVG src={"src/assets/icons/users.svg"} />,
-  exit: <ReactSVG src={"src/assets/icons/exit.svg"} />
+  exit: <ReactSVG src={"src/assets/icons/exit.svg"} />,
+  oneTouch: <ReactSVG src={"src/assets/logoOT.svg"} />
 }
 
 export const Icon = (props) => {

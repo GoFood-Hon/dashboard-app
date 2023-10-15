@@ -1,16 +1,20 @@
 export const palette = {
   amaranth: "#E53A54",
   supernova: "#FEBD3E",
+
   white: "#FFFFFF",
-  pattens_blue: "#CBE3FE",
+  alice_blue: "#FAFCFF",
+  pattens_blue: "#CDE3FE",
+  raven: "#6D7177",
+  tangaroa: "#0F2846",
+  dodger_blue: "#0474FB",
+
   charcoal: "#4A4A4A",
-  alice_blue: "#F5F8FE",
   black_russian: "#0E172A",
   midnight: "#1E293B",
   waikawa_grey: "##5D7693",
   ebony: "#2B2E36",
   lavender: "#E9EAFE",
-  tangaroa: "#011E40",
   shady_lady: "#A6A4A5",
   wewak: "#F49697",
   jordy_blue: "#8AB5E7",
@@ -24,10 +28,20 @@ export const colors = {
    */
   red_logo: palette.amaranth,
   yellow_logo: palette.supernova,
-  light_background_primary: palette.alice_blue,
-  dark_background_primary: palette.black_russian,
-  light_background_child_flow: palette.white,
-  dark_background_child_flow: palette.midnight,
+
+  light_bg_primary: palette.alice_blue,
+  dark_bg_primary: palette.black_russian,
+
+  light_bg_child_flow: palette.white,
+  dark_bg_child_flow: palette.midnight,
+
+  light_primary_text: palette.tangaroa,
+
+  light_border_card: palette.pattens_blue,
+
+  light_secondary_text: palette.raven,
+
+  light_link_text: palette.dodger_blue,
 
   /**
    * Dashboard colors
@@ -39,7 +53,6 @@ export const colors = {
   link_text: palette.jordy_blue,
   borders: palette.lavender,
   primary_button: palette.tangaroa,
-  red: palette.wewak,
   element_tag_bg: palette.corn_silk,
   element_tag_text: palette.cream_can
 
