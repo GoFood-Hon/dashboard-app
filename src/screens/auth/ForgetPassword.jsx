@@ -49,7 +49,7 @@ export default function ForgetPassword() {
             </form>
             <Link
               to={"/login"}
-              className="text-center items-center justify-center w-full text-orange-500 hover:underline font-bold ">
+              className="text-center items-center justify-center w-full text-primary_text hover:underline font-bold ">
               Iniciar sesión
             </Link>
           </div>
