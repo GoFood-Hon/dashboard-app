@@ -7,6 +7,7 @@ import { useForm } from "react-hook-form"
 import { emailRules, passwordRules } from "../../utils/inputRules"
 import InputField from "../../components/Form/InputField"
 import toast from "react-hot-toast"
+import ToggleTheme from "../../components/ToggleTheme"
 
 export default function Login() {
   const { user, setUser } = useContext(AuthContext)
@@ -56,14 +57,14 @@ export default function Login() {
           <LoadingCircle />
         </div>
       ) : (
-        <div>
-          <div className="flex flex-col items-center">
-            <h1 className="text-3xl font-bold text-zinc-800 dark:text-white">Iniciar sesión en GoFood</h1>
-            <p className="text-sm text-gray-500 pb-5">Inicia sesión con tu cuenta o con alguna red social.</p>
+        <div className="w-full">
+          <div className="mb-5">
+            <p className="text-sm text-gray-500 pb-2">Panel GoFood</p>
+            <h1 className="text-3xl font-bold text-zinc-800 dark:text-white">Inicia sesión</h1>
           </div>
           <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col">
             <InputField
-              label="Correo electrónico"
+              label="Correo"
               name="email"
               register={register}
               rules={emailRules}
@@ -90,11 +91,6 @@ export default function Login() {
               }
             />
           </form>
-
-          {/*
-           * SOCIAL MEDIA LOGINS
-           */}
-
           <div className="w-full flex flex-col items-center justify-center text-sm text-gray-500">
             <div className="flex flex-row justify-center w-full mb-3">
               <p>No tienes una cuenta?</p>

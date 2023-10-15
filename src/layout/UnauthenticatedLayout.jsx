@@ -5,14 +5,30 @@ import Footer from "../components/Footer"
 
 export default function UnauthenticatedLayout() {
   return (
-    <div className="w-screen h-screen flex flex-col items-center justify-between dark:bg-slate-900 bg-light_bg_primary text-black dark:text-white">
+    <div className="w-screen h-screen flex flex-col items-center justify-between dark:bg-slate-900 bg-slate-100 text-black dark:text-white">
       <div className="w-full p-3 bg-white flex justify-center mb-5 border-slate-200 border  dark:bg-slate-800 dark:border-slate-700 ">
         <img className="w-44 h-[54px]" src="src/assets/gooFood.png" />
       </div>
-      <div className="w-full justify-center p-3 xl:w-3/6 2xl:w-2/6 lg:w-3/6 md:w-3/6 sm:w-5/6 py-10 xs:w-full xs:rounded-none bg-white dark:bg-slate-800 dark:border-slate-700 drop-shadow-xl shadow-slate-100 overflow-x-hidden shadow-xl md:rounded-2xl border border-gray-200 dark:shadow-slate-800">
-        <div className="md:p-12 xs:p-5 items-center justify-center flex dark:text-white">{<Outlet />}</div>
-        <div className="w-full flex items-center justify-center">
-          <ToggleTheme className="font-bold" />
+      <div className="w-full xs:h-fit xs:rounded-2xl xs:drop-shadow-none xs:shadow-none sm:w-5/6 md:w-3/6 lg:w-5/6 lg:max-w-[1100px] xl:w-5/6 2xl:w-5/6 lg:justify-between bg-light_bg_child rounded-2xl dark:bg-slate-800 dark:border-slate-700 md:drop-shadow-xl md:shadow-slate-100 overflow-hidden md:shadow-xl md:border dark:shadow-slate-800 flex flex-row">
+        <div className="lg:w-full lg:min-w-[500px] lg:max-w-[620px] lg:h-[660px] relative -left-2 hidden md:hidden lg:flex">
+          <img
+            src="src/assets/images/layout1.png"
+            className="lg:w-full h-[690px] left-0 -top-2 absolute bg-opacity-20 rounded-2xl"
+            style={{ clipPath: "inset(8px)" }}
+            alt="hamburger"
+          />
+          <img
+            className="w-[394px] h-[394px] left-[394px] top-[394px] absolute origin-top-left rotate-180 object-cover filter grayscale opacity-60"
+            src="src/assets/images/fork.png"
+            alt="fork"
+          />
+          <div className="w-[477px] pl-10 top-[500px] absolute text-white text-[32px] font-bold  leading-10">
+            Gestión y entrega de tus platillos: Tu socio de negocios es GoFood
+          </div>
+        </div>
+        <div className="xs:w-full md:w-full md:h-full lg:w-full h-fit lg:border-none flex flex-col items-center justify-start px-10 py-12 rounded-2xl border border-slate-200 dark:border-slate-700">
+          {<Outlet />}
+          <ToggleTheme className="font-bold text-sm" />
         </div>
       </div>
       <Footer />

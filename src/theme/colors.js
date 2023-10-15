@@ -32,8 +32,8 @@ export const colors = {
   light_bg_primary: palette.alice_blue,
   dark_bg_primary: palette.black_russian,
 
-  light_bg_child_flow: palette.white,
-  dark_bg_child_flow: palette.midnight,
+  light_bg_child: palette.white,
+  dark_bg_child: palette.midnight,
 
   light_primary_text: palette.tangaroa,
 
