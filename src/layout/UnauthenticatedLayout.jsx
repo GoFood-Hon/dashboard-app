@@ -13,7 +13,7 @@ export default function UnauthenticatedLayout() {
         <div className="lg:w-full lg:min-w-[500px] lg:max-w-[620px] lg:h-[660px] relative -left-2 hidden md:hidden lg:flex">
           <img
             src="src/assets/images/layout1.png"
-            className="lg:w-full h-[690px] left-0 -top-2 absolute bg-opacity-20 rounded-2xl"
+            className="lg:w-full h-[700px] left-0 -top-2 absolute bg-opacity-20 rounded-2xl"
             style={{ clipPath: "inset(8px)" }}
             alt="hamburger"
           />
@@ -26,9 +26,12 @@ export default function UnauthenticatedLayout() {
             Gestión y entrega de tus platillos: Tu socio de negocios es GoFood
           </div>
         </div>
-        <div className="xs:w-full md:w-full md:h-full lg:w-full h-fit lg:border-none flex flex-col items-center justify-start px-10 py-12 rounded-2xl border border-slate-200 dark:border-slate-700">
+        <div className="xs:w-full md:w-full md:h-full lg:w-full h-fit lg:border-none flex flex-col items-center justify-between px-10 py-12 rounded-2xl border border-slate-200 dark:border-slate-700">
+          <div />
           {<Outlet />}
-          <ToggleTheme className="font-bold text-sm" />
+          <div className="flex items-end">
+            <ToggleTheme className="font-bold text-sm" />
+          </div>
         </div>
       </div>
       <Footer />
