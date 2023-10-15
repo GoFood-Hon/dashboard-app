@@ -10,12 +10,9 @@ import toast from "react-hot-toast"
 import { useTheme } from "../../context/ThemeProvider"
 
 export default function Login() {
-  const { theme } = useTheme()
   const { user, setUser } = useContext(AuthContext)
 
   const [isLoading, setIsLoading] = useState(false)
-  const [open, setOpen] = useState(false)
-  const timerRef = useRef(0)
 
   const navigate = useNavigate()
   const location = useLocation()
@@ -41,23 +38,12 @@ export default function Login() {
     }
   }, [user, location.state])
 
-  useEffect(() => {
-    return () => clearTimeout(timerRef.current)
-  }, [])
-
-  const notify = () =>
-    toast("Correo enviado!", {
-      icon: "👏",
-      style: {
-        background: "#333",
-        color: "#fff"
-      }
-    })
+  const notify = () => toast.success("Acceso garantizado!")
 
   const onSubmit = (data) => {
     console.log("Submit information", data)
     notify()
-    // setUser(true)
+    setUser(true)
   }
 
   return (

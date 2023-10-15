@@ -2,6 +2,7 @@ import React, { useContext } from "react"
 import { Link } from "react-router-dom"
 import { Icon } from "./Icon"
 import { AuthContext } from "../context/AuthProvider"
+import toast from "react-hot-toast"
 
 export default function SideBar() {
   const sideBarElements = [
@@ -63,7 +64,12 @@ export default function SideBar() {
           </ul>
           <div className="pb-10">
             <div className="pb-5">
-              <button className="flex flex-row items-center" onClick={() => setUser(false)}>
+              <button
+                className="flex flex-row items-center"
+                onClick={() => {
+                  toast.error("Cerrando sesión")
+                  setUser(false)
+                }}>
                 <Icon icon="exit" />
                 <span className="text-sm ml-3">Cerrar session</span>
               </button>
