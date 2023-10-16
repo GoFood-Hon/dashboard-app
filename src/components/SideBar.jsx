@@ -48,9 +48,6 @@ export default function SideBar() {
   return (
     <div className="w-[200px] h-full flex flex-col start-0 fixed overflow-y-hidden top-0 bg-white border-slate-200 border z-10 font-bold dark:text-white dark:bg-slate-800 dark:border-slate-700">
       <div className="p-5 h-full">
-        <div className="p-4">
-          <div className="flex items-center font-bold">🍔 GoFood</div>
-        </div>
         <div className="flex flex-col justify-between h-full">
           <ul className="py-4 text-sm">
             {sideBarElements.map((item, index) => (

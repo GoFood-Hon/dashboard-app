@@ -3,19 +3,34 @@ import * as Popover from "@radix-ui/react-popover"
 import Button from "./Button"
 import ToggleTheme from "./ToggleTheme"
 import { AuthContext } from "../context/AuthProvider"
+import { restaurantList } from "../utils/restaurants"
+import { Icon } from "./Icon"
 
 export default function Header() {
-  const { setUser } = useContext(AuthContext)
+  const { setUser, restaurant } = useContext(AuthContext)
 
   return (
-    <div className="w-full p-4 flex flex-row justify-between text-black  bg-white dark:text-white dark:bg-slate-800 dark:border-slate-700 border border-slate-200 z-50">
-      <div />
+    <div className=" w-full p-4 flex flex-row justify-between text-black  bg-white dark:text-white dark:bg-slate-800 dark:border-slate-700 border border-slate-200 z-20 relative">
+      <div className="flex flex-row">
+        <div className="border-r-2 border-r-gray-300 pr-4">
+          <img className="w-[123px] h-[42px]" src="src/assets/images/goFood.png" />
+        </div>
+        <div className="pl-4">
+          <img className="w-[123px] h-[42px]" src={restaurantList[restaurant]?.image} alt={restaurantList[restaurant]?.name} />
+        </div>
+      </div>
       <div className="flex flex-row text-sm items-center">
+        <span className="mx-1 hover:bg-light_selected_element p-2 rounded-full cursor-pointer dark:hover:bg-dark_selected_element">
+          <Icon icon="alarm" />
+        </span>
+        <span className="hover:bg-light_selected_element p-2 rounded-full cursor-pointer dark:hover:bg-dark_selected_element">
+          <Icon icon="settings" />
+        </span>
         <div className="flex flex-col items-end px-3">
           <div className="font-semibold">M Geovany</div>
           <div className="text-gray-400">Software Engineer</div>
         </div>
-        <Popover.Root>
+        <Popover.Root className="z-50">
           <Popover.Trigger asChild>
             <button aria-label="Update dimensions">
               <img
@@ -29,8 +44,10 @@ export default function Header() {
           </Popover.Trigger>
           <Popover.Portal>
             <Popover.Content
-              className="rounded-lg p-5 w-[260px] text-black dark:text-white bg-white dark:bg-slate-800 dark:border dark:border-slate-700 shadow-[0_10px_38px_-10px_hsla(206,22%,7%,.35),0_10px_20px_-15px_hsla(206,22%,7%,.2)] focus:shadow-[0_10px_38px_-10px_hsla(206,22%,7%,.35),0_10px_20px_-15px_hsla(206,22%,7%,.2),0_0_0_2px_theme(colors.sky12)] will-change-[transform,opacity] data-[state=open]:data-[side=top]:animate-slideDownAndFade data-[state=open]:data-[side=right]:animate-slideLeftAndFade data-[state=open]:data-[side=bottom]:animate-slideUpAndFade data-[state=open]:data-[side=left]:animate-slideRightAndFade"
-              sideOffset={5}>
+              className="rounded-lg border-none p-5 w-[260px] text-black dark:text-white bg-white dark:bg-slate-800 dark:border dark:border-slate-700 shadow-[0_10px_38px_-10px_hsla(206,22%,7%,.35),0_10px_20px_-15px_hsla(206,22%,7%,.2)] will-change-[transform,opacity] data-[state=open]:data-[side=top]:animate-slideDownAndFade data-[state=open]:data-[side=right]:animate-slideLeftAndFade data-[state=open]:data-[side=bottom]:animate-slideUpAndFade data-[state=open]:data-[side=left]:animate-slideRightAndFade"
+              sideOffset={30}
+              align="end">
+              <Popover.Arrow className="fill-white dark:fill-slate-800" width={15} height={10} />
               <div className="flex flex-col gap-2.5 justify-center items-center">
                 <img
                   className="rounded-full hover:outline hover:outline-cyan-500 hover:duration-75 hover:ease-in-out hover:outline-offset-2"

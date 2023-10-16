@@ -10,7 +10,7 @@ export const palette = {
   dodger_blue: "#0474FB",
 
   charcoal: "#4A4A4A",
-  black_russian: "#0E172A",
+  black_russian: "#10172a",
   midnight: "#1E293B",
   waikawa_grey: "##5D7693",
   ebony: "#2B2E36",
@@ -19,7 +19,8 @@ export const palette = {
   wewak: "#F49697",
   jordy_blue: "#8AB5E7",
   corn_silk: "#FEF6DC",
-  cream_can: "#F1C652"
+  cream_can: "#F1C652",
+  biscay: "#334154"
 }
 
 export const colors = {
@@ -37,7 +38,8 @@ export const colors = {
 
   light_primary_text: palette.tangaroa,
 
-  light_border_card: palette.pattens_blue,
+  light_selected_element: palette.pattens_blue,
+  dark_selected_element: palette.biscay,
 
   light_secondary_text: palette.raven,
 
