@@ -16,7 +16,8 @@ export const iconComponents = {
   exit: <ReactSVG src={"src/assets/icons/exit.svg"} />,
   oneTouch: <ReactSVG src={"src/assets/logoOT.svg"} />,
   settings: <ReactSVG src={"src/assets/icons/config.svg"} />,
-  alarm: <ReactSVG src={"src/assets/icons/alarm.svg"} />
+  alarm: <ReactSVG src={"src/assets/icons/alarm.svg"} />,
+  mail: <ReactSVG src={"src/assets/icons/mail.svg"} />
 }
 
 export const Icon = (props) => {

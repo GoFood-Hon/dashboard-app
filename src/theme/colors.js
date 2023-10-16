@@ -20,7 +20,8 @@ export const palette = {
   jordy_blue: "#8AB5E7",
   corn_silk: "#FEF6DC",
   cream_can: "#F1C652",
-  biscay: "#334154"
+  biscay: "#334154",
+  light_slate_gray: "#94a3b8"
 }
 
 export const colors = {
@@ -42,6 +43,7 @@ export const colors = {
   dark_selected_element: palette.biscay,
 
   light_secondary_text: palette.raven,
+  dark_secondary_text: palette.light_slate_gray,
 
   light_link_text: palette.dodger_blue,
 
