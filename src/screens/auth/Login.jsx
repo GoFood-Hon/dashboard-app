@@ -94,7 +94,9 @@ export default function Login() {
           <div className="w-full flex flex-col items-center justify-center text-sm text-secondary_text">
             <div className="flex flex-row justify-center w-full mb-3">
               <p>No tienes una cuenta?</p>
-              <Link to={"/register"} className="hover:underline text-primary_text cursor-pointer pl-1">
+              <Link
+                to={"/register"}
+                className="hover:underline text-primary_text cursor-pointer pl-1 dark:text-dark_secondary_text">
                 Crear cuenta
               </Link>
             </div>

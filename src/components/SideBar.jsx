@@ -44,7 +44,7 @@ export default function SideBar() {
               })}
             </ul>
           </div>
-          <div className="pb-5">
+          <div>
             <button
               className="flex flex-row items-center duration-300 hover:bg-red-400 hover:rounded-lg pb-3 hover:p-3"
               onClick={() => {

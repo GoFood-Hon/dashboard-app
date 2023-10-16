@@ -20,10 +20,10 @@ export default function Header() {
         </div>
       </div>
       <div className="flex flex-row text-sm items-center">
-        <span className="mx-1 hover:bg-light_selected_element p-2 rounded-full cursor-pointer dark:hover:bg-dark_selected_element">
+        <span className="mx-1 hover:bg-light_selected_element p-2 rounded-full cursor-pointer duration-500 dark:hover:bg-dark_selected_element">
           <Icon icon="alarm" />
         </span>
-        <span className="hover:bg-light_selected_element p-2 rounded-full cursor-pointer dark:hover:bg-dark_selected_element">
+        <span className="hover:bg-light_selected_element p-2 rounded-full cursor-pointer duration-500 dark:hover:bg-dark_selected_element">
           <Icon icon="settings" />
         </span>
         <div className="flex flex-col items-end px-3">
