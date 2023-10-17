@@ -1,4 +1,4 @@
-import React, { useContext } from "react"
+import React from "react"
 import { AUTH_NAVIGATION_ROUTES, NAVIGATION_ROUTES } from "./routes"
 import { Route, RouterProvider, createBrowserRouter, createRoutesFromElements } from "react-router-dom"
 import AuthLayout from "./layout/AuthLayout"
@@ -14,15 +14,12 @@ import Menu from "./screens/Menu"
 import Complements from "./screens/Complements"
 import Branches from "./screens/Branches"
 import Users from "./screens/Users"
-import { AuthContext } from "./context/AuthProvider"
 
 function App() {
-  const { user } = useContext(AuthContext)
-
   const router = createBrowserRouter(
     createRoutesFromElements(
       <>
-        <Route element={<AuthLayout authenticated={user} />}>
+        <Route element={<AuthLayout />}>
           <Route path={NAVIGATION_ROUTES.Dashboard.path} element={<Home />} />
           <Route path={NAVIGATION_ROUTES.Orders.path} element={<Orders />} />
           <Route path={NAVIGATION_ROUTES.Transactions.path} element={<Transactions />} />

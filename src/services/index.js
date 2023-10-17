@@ -23,7 +23,8 @@ class Api {
 
   static getApiErrorMessage(error) {
     if (!error?.response) return ApiResponseMessage.NetworkError
-    return error?.response?.data?.message || Api.getDefaultErrorMessage(error?.response?.status)
+
+    return error?.message || Api.getDefaultErrorMessage(error?.statusCode)
   }
 
   static getDefaultErrorMessage(status) {

@@ -1,13 +1,10 @@
-import React, { useContext } from "react"
+import React from "react"
 import { Link } from "react-router-dom"
 import { Icon } from "./Icon"
-import { AuthContext } from "../context/AuthProvider"
 import toast from "react-hot-toast"
 import { NAVIGATION_ROUTES } from "../routes"
 
 export default function SideBar() {
-  const { setUser } = useContext(AuthContext)
-
   return (
     <div className="w-[200px] pt-[76px] h-full flex flex-col start-0 fixed overflow-y-hidden top-0 bg-white border-slate-200 border z-10 font-semibold dark:text-white dark:bg-slate-800 dark:border-slate-700">
       <div className="p-5 h-full">
@@ -49,7 +46,6 @@ export default function SideBar() {
               className="flex flex-row items-center duration-300 hover:bg-red-400 hover:rounded-lg pb-3 hover:p-3"
               onClick={() => {
                 toast.error("Cerrando sesión")
-                setUser(false)
               }}>
               <Icon icon="exit" />
               <span className="text-sm ml-3">Cerrar session</span>

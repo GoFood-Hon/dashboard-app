@@ -1,13 +1,17 @@
-import React, { useContext } from "react"
 import * as Popover from "@radix-ui/react-popover"
+import React, { useContext } from "react"
 import Button from "./Button"
 import ToggleTheme from "./ToggleTheme"
-import { AuthContext } from "../context/AuthProvider"
 import { restaurantList } from "../utils/restaurants"
 import { Icon } from "./Icon"
+import { useSelector } from "react-redux"
+import { AuthContext } from "../context/AuthProvider"
 
 export default function Header() {
-  const { setUser, restaurant } = useContext(AuthContext)
+  const user = useSelector((state) => state.user.value)
+  const { restaurant } = useContext(AuthContext)
+
+  const handleLogout = () => {}
 
   return (
     <div className="w-full p-4 flex flex-row justify-between text-black  bg-white dark:text-white dark:bg-slate-800 dark:border-slate-700 border border-slate-200 z-20 fixed">
@@ -27,8 +31,8 @@ export default function Header() {
           <Icon icon="settings" />
         </span>
         <div className="flex flex-col items-end px-3">
-          <div className="font-semibold">M Geovany</div>
-          <div className="text-gray-400">Software Engineer</div>
+          <div className="font-semibold">{user.name}</div>
+          <div className="text-gray-400">{user.email}</div>
         </div>
         <Popover.Root className="z-50">
           <Popover.Trigger asChild>
@@ -65,7 +69,7 @@ export default function Header() {
               <Button
                 text={"Cerrar sesión"}
                 className={"mt-3 dark:border-slate-100 border-slate-400 rounded text-sm bg-slate-700 text-white"}
-                onClick={() => setUser(false)}
+                onClick={handleLogout}
               />
               <div className="flex justify-center">
                 <ToggleTheme className={"text-sm font-semibold"} />

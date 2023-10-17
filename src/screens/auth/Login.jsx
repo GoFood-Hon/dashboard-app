@@ -1,21 +1,23 @@
-import React, { useContext, useEffect, useState, useRef } from "react"
+import React, { useEffect, useState } from "react"
 import LoadingCircle from "../../components/LoadingCircle"
 import { Link, useLocation, useNavigate } from "react-router-dom"
-import { AuthContext } from "../../context/AuthProvider"
-import Button from "../../components/Button"
 import { useForm } from "react-hook-form"
 import { emailRules, passwordRules } from "../../utils/inputRules"
 import InputField from "../../components/Form/InputField"
 import toast from "react-hot-toast"
-import ToggleTheme from "../../components/ToggleTheme"
+import authApi from "../../api/authApi"
+import { useDispatch, useSelector } from "react-redux"
+import { setUser } from "../../store/features/userSlice"
 
 export default function Login() {
-  const { user, setUser } = useContext(AuthContext)
-
-  const [isLoading, setIsLoading] = useState(false)
+  const user = useSelector((state) => state.user.value)
+  const dispatch = useDispatch()
 
   const navigate = useNavigate()
   const location = useLocation()
+
+  const [isLoading, setIsLoading] = useState(false)
+
   const {
     register,
     handleSubmit,
@@ -23,13 +25,13 @@ export default function Login() {
   } = useForm()
 
   useEffect(() => {
-    if (user && location.state?.from) {
+    if (user?.active && location.state?.from) {
       setIsLoading(true)
       setTimeout(() => {
         setIsLoading(false)
         navigate(location.state.from.pathname)
       }, 7000)
-    } else if (user) {
+    } else if (user?.active) {
       setIsLoading(true)
       setTimeout(() => {
         setIsLoading(false)
@@ -40,10 +42,17 @@ export default function Login() {
 
   const notify = () => toast.success("Acceso garantizado!")
 
-  const onSubmit = (data) => {
-    console.log("Submit information", data)
-    notify()
-    setUser(true)
+  const onSubmit = async ({ email, password }) => {
+    try {
+      const res = await authApi.login({ email, password })
+      setIsLoading(false)
+      localStorage.setItem("token", res.token)
+      dispatch(setUser(res.data.user))
+      notify()
+      navigate("/")
+    } catch (err) {
+      setIsLoading(false)
+    }
   }
 
   return (
