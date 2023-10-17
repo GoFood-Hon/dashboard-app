@@ -12,7 +12,6 @@ import { setUser } from "../../store/features/userSlice"
 export default function Login() {
   const user = useSelector((state) => state.user.value)
   const dispatch = useDispatch()
-
   const navigate = useNavigate()
   const location = useLocation()
 
@@ -27,29 +26,32 @@ export default function Login() {
   useEffect(() => {
     if (user?.active && location.state?.from) {
       setIsLoading(true)
-      setTimeout(() => {
-        setIsLoading(false)
-        navigate(location.state.from.pathname)
-      }, 7000)
+      navigate(location.state.from.pathname)
     } else if (user?.active) {
       setIsLoading(true)
-      setTimeout(() => {
-        setIsLoading(false)
-        navigate("/")
-      }, 7000)
+      setIsLoading(false)
+      navigate("/")
     }
   }, [user, location.state])
-
-  const notify = () => toast.success("Acceso garantizado!")
 
   const onSubmit = async ({ email, password }) => {
     try {
       const res = await authApi.login({ email, password })
-      setIsLoading(false)
-      localStorage.setItem("token", res.token)
-      dispatch(setUser(res.data.user))
-      notify()
-      navigate("/")
+
+      if (res.status === "fail") {
+        toast.error(res.message)
+        return
+      }
+      const userData = res?.data?.user
+
+      if (userData) {
+        toast.success("Inicio de session exitoso, bienvenido de vuelta!")
+        setIsLoading(false)
+        localStorage.setItem("token", res.token)
+        dispatch(setUser(res.data.user))
+
+        navigate("/")
+      }
     } catch (err) {
       setIsLoading(false)
     }

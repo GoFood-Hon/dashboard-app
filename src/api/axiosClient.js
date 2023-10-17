@@ -29,7 +29,7 @@ axiosClient.interceptors.response.use(
   },
   (err) => {
     if (!err?.response) return ApiResponseMessage.NetworkError
-    return err?.message || Api.getDefaultErrorMessage(err?.statusCode)
+    return err?.response?.data || Api.getDefaultErrorMessage(err?.statusCode)
   }
 )
 
