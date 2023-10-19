@@ -6,7 +6,7 @@ import { restaurantList } from "../utils/restaurants"
 import { Icon } from "./Icon"
 import { useSelector } from "react-redux"
 import { AuthContext } from "../context/AuthProvider"
-import { Link, useLocation, useNavigate } from "react-router-dom"
+import { NavLink, useLocation, useNavigate } from "react-router-dom"
 
 export default function Header() {
   const user = useSelector((state) => state.user.value)
@@ -14,10 +14,9 @@ export default function Header() {
   const location = useLocation()
   const navigate = useNavigate()
 
-  const handleLogout = () => {}
-
   useEffect(() => {
     if (location.pathname === "/logout") {
+      localStorage.removeItem("token")
       navigate("/login")
     }
   }, [location.pathname])
@@ -75,13 +74,13 @@ export default function Header() {
                 </div>
               </div>
               <Button text={"Manejar cuenta"} className={"mt-5 border border-slate-400 rounded text-sm"} />
-              <Link
+              <NavLink
                 className={
                   "mt-3 dark:border-slate-100 border-slate-400 rounded text-sm bg-slate-700 text-white flex h-10 w-full items-center justify-center space-x-3 shadow-sm transition-all duration-700 focus:outline-none mb-3"
                 }
                 to="/logout">
                 <span>Cerrar sesión</span>
-              </Link>
+              </NavLink>
               <div className="flex justify-center">
                 <ToggleTheme className={"text-sm font-semibold"} />
               </div>

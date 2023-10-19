@@ -23,7 +23,7 @@ export default function Login() {
     formState: { errors }
   } = useForm()
 
-  useEffect(() => {
+  /*  useEffect(() => {
     if (user?.active && location.state?.from) {
       setIsLoading(true)
       navigate(location.state.from.pathname)
@@ -32,7 +32,7 @@ export default function Login() {
       setIsLoading(false)
       navigate("/")
     }
-  }, [user, location.state])
+  }, [user, location.state]) */
 
   const onSubmit = async ({ email, password }) => {
     try {
