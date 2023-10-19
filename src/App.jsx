@@ -6,7 +6,7 @@ import AuthLayout from "./layout/AuthLayout"
 import Login from "./screens/auth/Login"
 import UnauthenticatedLayout from "./layout/UnauthenticatedLayout"
 import Register from "./screens/auth/Register"
-import ForgetPassword from "./screens/auth/ForgetPassword"
+import ForgetPassword from "./screens/auth/PasswordRecovery/ForgetPassword"
 import Home from "./screens/Home"
 import Orders from "./screens/Orders"
 import Transactions from "./screens/Transactions"
@@ -14,6 +14,7 @@ import Menu from "./screens/Menu"
 import Complements from "./screens/Complements"
 import Branches from "./screens/Branches"
 import Users from "./screens/Users"
+import Logout from "./screens/Logout"
 
 function App() {
   const router = createBrowserRouter(
@@ -27,6 +28,7 @@ function App() {
           <Route path={NAVIGATION_ROUTES.Complements.path} element={<Complements />} />
           <Route path={NAVIGATION_ROUTES.Branches.path} element={<Branches />} />
           <Route path={NAVIGATION_ROUTES.Users.path} element={<Users />} />
+          <Route path={"logout"} element={<Logout />} />
         </Route>
         <Route element={<UnauthenticatedLayout />}>
           <Route path={AUTH_NAVIGATION_ROUTES.Loin.path} element={<Login />} />

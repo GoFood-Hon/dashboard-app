@@ -1,17 +1,26 @@
 import * as Popover from "@radix-ui/react-popover"
-import React, { useContext } from "react"
+import React, { useContext, useEffect } from "react"
 import Button from "./Button"
 import ToggleTheme from "./ToggleTheme"
 import { restaurantList } from "../utils/restaurants"
 import { Icon } from "./Icon"
 import { useSelector } from "react-redux"
 import { AuthContext } from "../context/AuthProvider"
+import { Link, useLocation, useNavigate } from "react-router-dom"
 
 export default function Header() {
   const user = useSelector((state) => state.user.value)
   const { restaurant } = useContext(AuthContext)
+  const location = useLocation()
+  const navigate = useNavigate()
 
   const handleLogout = () => {}
+
+  useEffect(() => {
+    if (location.pathname === "/logout") {
+      navigate("/login")
+    }
+  }, [location.pathname])
 
   return (
     <div className="w-full p-4 flex flex-row justify-between text-black  bg-white dark:text-white dark:bg-slate-800 dark:border-slate-700 border border-slate-200 z-20 fixed">
@@ -66,11 +75,13 @@ export default function Header() {
                 </div>
               </div>
               <Button text={"Manejar cuenta"} className={"mt-5 border border-slate-400 rounded text-sm"} />
-              <Button
-                text={"Cerrar sesión"}
-                className={"mt-3 dark:border-slate-100 border-slate-400 rounded text-sm bg-slate-700 text-white"}
-                onClick={handleLogout}
-              />
+              <Link
+                className={
+                  "mt-3 dark:border-slate-100 border-slate-400 rounded text-sm bg-slate-700 text-white flex h-10 w-full items-center justify-center space-x-3 shadow-sm transition-all duration-700 focus:outline-none mb-3"
+                }
+                to="/logout">
+                <span>Cerrar sesión</span>
+              </Link>
               <div className="flex justify-center">
                 <ToggleTheme className={"text-sm font-semibold"} />
               </div>
