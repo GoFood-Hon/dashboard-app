@@ -77,6 +77,7 @@ export default function Login() {
             <InputField
               label="Correo"
               name="email"
+              type="email"
               register={register}
               rules={emailRules}
               errors={errors}
