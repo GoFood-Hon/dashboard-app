@@ -1,19 +1,17 @@
-import React, { useEffect, useState } from "react"
+import React, { useState } from "react"
 import LoadingCircle from "../../components/LoadingCircle"
-import { Link, useLocation, useNavigate } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { useForm } from "react-hook-form"
 import { emailRules, passwordRules } from "../../utils/inputRules"
 import InputField from "../../components/Form/InputField"
 import toast from "react-hot-toast"
 import authApi from "../../api/authApi"
-import { useDispatch, useSelector } from "react-redux"
+import { useDispatch } from "react-redux"
 import { setUser } from "../../store/features/userSlice"
 
 export default function Login() {
-  const user = useSelector((state) => state.user.value)
   const dispatch = useDispatch()
   const navigate = useNavigate()
-  const location = useLocation()
 
   const [isLoading, setIsLoading] = useState(false)
 
@@ -22,17 +20,6 @@ export default function Login() {
     handleSubmit,
     formState: { errors }
   } = useForm()
-
-  /*  useEffect(() => {
-    if (user?.active && location.state?.from) {
-      setIsLoading(true)
-      navigate(location.state.from.pathname)
-    } else if (user?.active) {
-      setIsLoading(true)
-      setIsLoading(false)
-      navigate("/")
-    }
-  }, [user, location.state]) */
 
   const onSubmit = async ({ email, password }) => {
     try {
@@ -53,6 +40,7 @@ export default function Login() {
         navigate("/")
       }
     } catch (err) {
+      toast.error("Hubo un error!")
       setIsLoading(false)
     }
   }
