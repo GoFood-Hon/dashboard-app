@@ -1,15 +1,13 @@
 import React, { useEffect } from "react"
 import Button from "./Button"
-import ToggleTheme from "./ToggleTheme"
 import { restaurantList } from "../utils/restaurants"
 import { Icon } from "./Icon"
 import { useSelector } from "react-redux"
 import { NavLink, useLocation, useNavigate } from "react-router-dom"
-import { Popover, Text } from "@mantine/core"
+import { Popover, useMantineColorScheme, Button as MantineButton } from "@mantine/core"
 
 export default function Header() {
   const user = useSelector((state) => state.user.value)
-
   const location = useLocation()
   const navigate = useNavigate()
 
@@ -76,10 +74,6 @@ export default function Header() {
                 to="/logout">
                 <span>Cerrar sesión</span>
               </NavLink>
-
-              <div className="flex justify-center">
-                <ToggleTheme className={"text-sm font-semibold"} />
-              </div>
             </div>
           </Popover.Dropdown>
         </Popover>

@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react"
-import ToggleTheme from "../components/ToggleTheme"
 import { Outlet, useLocation, useNavigate } from "react-router-dom"
 import Footer from "../components/Footer"
 import livingImage from "../assets/images/living.png"
@@ -63,9 +62,7 @@ export default function UnauthenticatedLayout() {
           <div className="xs:w-full md:w-full md:h-full lg:w-full h-fit lg:border-none flex flex-col items-center justify-between px-10 py-12 rounded-2xl border border-slate-200 dark:border-slate-700">
             <div />
             {<Outlet />}
-            <div className="flex items-end">
-              <ToggleTheme className="font-bold text-sm" />
-            </div>
+            <div className="flex items-end" />
           </div>
         </div>
         <Footer />
