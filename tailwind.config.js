@@ -1,4 +1,3 @@
-const { blackA, mauve, violet, sky, green, slate } = require("@radix-ui/colors")
 const { colors, palette } = require("./src/theme/colors")
 /** @type {import('tailwindcss').Config} */
 
@@ -14,12 +13,6 @@ export default {
     },
     extend: {
       colors: {
-        ...blackA,
-        ...green,
-        ...mauve,
-        ...slate,
-        ...violet,
-        ...sky,
         ...colors
       }
     },
@@ -51,10 +44,6 @@ export default {
       slideIn: {
         from: { transform: "translateX(calc(100% + var(--viewport-padding)))" },
         to: { transform: "translateX(0)" }
-      },
-      swipeOut: {
-        from: { transform: "translateX(var(--radix-toast-swipe-end-x))" },
-        to: { transform: "translateX(calc(100% + var(--viewport-padding)))" }
       }
     },
 
