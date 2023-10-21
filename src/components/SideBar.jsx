@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import React, { useEffect, useState } from "react"
 import { Link, useLocation, useNavigate } from "react-router-dom"
 import { Icon } from "./Icon"
@@ -9,11 +10,24 @@ export default function SideBar() {
   const location = useLocation()
 
   const [selectedRoute, setSelectedRoute] = useState(null)
+  const [showMenuElements, setShowMenuElements] = useState(false)
+  const [selectedSubmenuRoute, setSelectedSubmenuRoute] = useState(null)
+
   useEffect(() => {
     const routeArray = Object.values(NAVIGATION_ROUTES)
     const currentRoute = routeArray.find((item) => location.pathname === item.path)
 
-    setSelectedRoute(currentRoute)
+    if (currentRoute !== undefined) {
+      setSelectedRoute(currentRoute)
+      setSelectedSubmenuRoute(null)
+    } else {
+      const submenuItems = routeArray.filter((item) => item.submenu).flatMap((item) => Object.values(item.submenu))
+
+      const currentSubmenuRoute = submenuItems.find((item) => location.pathname === item.path)
+
+      setSelectedRoute(null)
+      setSelectedSubmenuRoute(currentSubmenuRoute)
+    }
   }, [location.pathname])
 
   const logout = () => {
@@ -21,6 +35,56 @@ export default function SideBar() {
     localStorage.removeItem("token")
     navigate("/login")
   }
+
+  const renderNavigationItem = (item, isSelected) => (
+    <li key={item.label} className="flex flex-col w-full items-center">
+      {item.submenu ? (
+        <>
+          <Link
+            to={item.path}
+            className={`flex w-full items-center justify-between duration-300 hover:bg-light_selected_element rounded-lg py-3 pl-2 pr-3 hover:pl-4 dark:hover:bg-dark_selected_element ${
+              isSelected && "bg-light_selected_element"
+            }`}>
+            <div className="flex flex-row items-center">
+              <Icon icon={item.icon} />
+              <span className="font-sans ml-3">{item.label}</span>
+            </div>
+            <button onClick={() => setShowMenuElements(!showMenuElements)}>
+              <Icon icon={"chevronDown"} />
+            </button>
+          </Link>
+          <ul className={`w-full bg-white ${showMenuElements ? "block" : "hidden"}`}>
+            {Object.values(item.submenu).map((subItem) => (
+              <li key={subItem.label} className="h-12 w-full items-center">
+                <Link
+                  to={subItem.path}
+                  className={`flex w-full items-center duration-300 hover:bg-light_selected_element rounded-lg py-3 pl-2 pr-3 hover:pl-4 dark:hover:bg-dark_selected_element ${
+                    subItem === selectedSubmenuRoute && "bg-light_selected_element"
+                  }`}>
+                  <span className="font-sans ml-3">{subItem.label}</span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </>
+      ) : (
+        <Link
+          to={item.path}
+          className={`flex w-full items-center duration-300 hover:bg-light_selected_element rounded-lg py-3 pl-2 pr-3 hover:pl-4 dark:hover:bg-dark_selected_element ${
+            isSelected && "bg-light_selected_element"
+          }`}>
+          <Icon icon={item.icon} />
+          <span className="font-sans ml-3">{item.label}</span>
+        </Link>
+      )}
+    </li>
+  )
+
+  const renderedItems = Object.values(NAVIGATION_ROUTES).map((item) => {
+    const isSelected = item === selectedRoute
+    return renderNavigationItem(item, isSelected)
+  })
+
   return (
     <div className="w-[200px] pt-[76px] h-full flex flex-col start-0 fixed overflow-y-hidden top-0 bg-white border-slate-200 border z-10 font-semibold dark:text-white dark:bg-slate-800 dark:border-slate-700">
       <div className="p-5 h-full">
@@ -41,24 +105,7 @@ export default function SideBar() {
               </li>
             </ul>
             <h1 className="text-light_secondary_text uppercase pt-5 text-sm dark:text-dark_secondary_text">General</h1>
-            <ul className="py-4 text-sm">
-              {Object.keys(NAVIGATION_ROUTES).map((key) => {
-                const item = NAVIGATION_ROUTES[key]
-                const isSelected = item === selectedRoute
-                return (
-                  <li key={key} className="flex h-12 w-full items-center">
-                    <Link
-                      to={item.path}
-                      className={`flex w-full items-center duration-300 hover:bg-light_selected_element rounded-lg py-3 pl-2 pr-3  hover:pl-4 dark:hover:bg-dark_selected_element ${
-                        isSelected && "bg-light_selected_element"
-                      }`}>
-                      <Icon icon={item.icon} />
-                      <span className="font-sans ml-3">{item.label}</span>
-                    </Link>
-                  </li>
-                )
-              })}
-            </ul>
+            <ul className="py-4 text-sm">{renderedItems}</ul>
           </div>
           <div>
             <button
