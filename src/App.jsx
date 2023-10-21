@@ -15,6 +15,8 @@ import Complements from "./screens/Complements"
 import Branches from "./screens/Branches"
 import Users from "./screens/Users"
 import Logout from "./screens/Logout"
+import Dishes from "./screens/Dishes"
+import Combos from "./screens/Combos"
 
 function App() {
   const router = createBrowserRouter(
@@ -24,7 +26,12 @@ function App() {
           <Route path={NAVIGATION_ROUTES.Dashboard.path} element={<Home />} />
           <Route path={NAVIGATION_ROUTES.Orders.path} element={<Orders />} />
           <Route path={NAVIGATION_ROUTES.Transactions.path} element={<Transactions />} />
+
           <Route path={NAVIGATION_ROUTES.Menu.path} element={<Menu />} />
+          <Route path={NAVIGATION_ROUTES.Menu.submenu.Platillos.path} element={<Dishes />} />
+          <Route path={NAVIGATION_ROUTES.Menu.submenu.Complements.path} element={<Complements />} />
+          <Route path={NAVIGATION_ROUTES.Menu.submenu.Combos.path} element={<Combos />} />
+
           <Route path={NAVIGATION_ROUTES.Branches.path} element={<Branches />} />
           <Route path={NAVIGATION_ROUTES.Users.path} element={<Users />} />
           <Route path={"logout"} element={<Logout />} />

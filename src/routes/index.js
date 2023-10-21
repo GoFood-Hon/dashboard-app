@@ -10,9 +10,26 @@ export const NAVIGATION_ROUTES = {
     icon: "shoppingCart"
   },
   Menu: {
-    label: "Menus",
+    label: "Menú",
+    icon: "menu",
     path: "/menu",
-    icon: "menu"
+    submenu: {
+      Platillos: {
+        label: "Platillos",
+        icon: "menu",
+        path: "/menu/dishes"
+      },
+      Complements: {
+        label: "Complementos",
+        icon: "menu",
+        path: "/menu/complements"
+      },
+      Combos: {
+        label: "Combos",
+        icon: "menu",
+        path: "/menu/combos"
+      }
+    }
   },
   Transactions: {
     label: "Transacciones",
