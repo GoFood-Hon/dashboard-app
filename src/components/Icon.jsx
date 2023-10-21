@@ -21,7 +21,11 @@ export const iconComponents = {
   money: <ReactSVG src={"src/assets/icons/money.svg"} />,
   down: <ReactSVG src={"src/assets/icons/down.svg"} />,
   up: <ReactSVG src={"src/assets/icons/up.svg"} />,
-  bag: <ReactSVG src={"src/assets/icons/bag.svg"} />
+  bag: <ReactSVG src={"src/assets/icons/bag.svg"} />,
+  warehouse: <ReactSVG src={"src/assets/icons/warehouse.svg"} />,
+  timer: <ReactSVG src={"src/assets/icons/timer.svg"} />,
+  calendar: <ReactSVG src={"src/assets/icons/calender.svg"} />,
+  more: <ReactSVG src={"src/assets/icons/more.svg"} />
 }
 
 export const Icon = (props) => {
