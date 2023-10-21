@@ -34,6 +34,7 @@ function App() {
 
           <Route path={NAVIGATION_ROUTES.Branches.path} element={<Branches />} />
           <Route path={NAVIGATION_ROUTES.Users.path} element={<Users />} />
+          <Route path={NAVIGATION_ROUTES.Users.submenu.Admins.path} element={<Users />} />
           <Route path={"logout"} element={<Logout />} />
         </Route>
         <Route element={<UnauthenticatedLayout />}>

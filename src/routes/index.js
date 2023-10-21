@@ -49,7 +49,14 @@ export const NAVIGATION_ROUTES = {
   Users: {
     label: "Usuarios",
     path: "/users",
-    icon: "users"
+    icon: "users",
+    submenu: {
+      Admins: {
+        label: "Admins",
+        icon: "users",
+        path: "/users/admins"
+      }
+    }
   }
 }
 

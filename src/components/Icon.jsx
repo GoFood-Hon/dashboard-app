@@ -26,7 +26,8 @@ export const iconComponents = {
   timer: <ReactSVG src={"src/assets/icons/timer.svg"} />,
   calendar: <ReactSVG src={"src/assets/icons/calender.svg"} />,
   more: <ReactSVG src={"src/assets/icons/more.svg"} />,
-  chevronDown: <ReactSVG src={"src/assets/icons/chevron-down.svg"} />
+  chevronDown: <ReactSVG src={"src/assets/icons/chevron-down.svg"} />,
+  chevronUp: <ReactSVG src={"src/assets/icons/chevron-up.svg"} />
 }
 
 export const Icon = (props) => {
