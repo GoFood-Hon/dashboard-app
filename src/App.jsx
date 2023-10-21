@@ -25,7 +25,6 @@ function App() {
           <Route path={NAVIGATION_ROUTES.Orders.path} element={<Orders />} />
           <Route path={NAVIGATION_ROUTES.Transactions.path} element={<Transactions />} />
           <Route path={NAVIGATION_ROUTES.Menu.path} element={<Menu />} />
-          <Route path={NAVIGATION_ROUTES.Complements.path} element={<Complements />} />
           <Route path={NAVIGATION_ROUTES.Branches.path} element={<Branches />} />
           <Route path={NAVIGATION_ROUTES.Users.path} element={<Users />} />
           <Route path={"logout"} element={<Logout />} />

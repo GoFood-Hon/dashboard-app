@@ -1,8 +1,6 @@
-import { lazy } from "react"
-
 export const NAVIGATION_ROUTES = {
   Dashboard: {
-    label: "Dashboard",
+    label: "Inicio",
     path: "/",
     icon: "dashboard"
   },
@@ -11,21 +9,21 @@ export const NAVIGATION_ROUTES = {
     path: "/orders",
     icon: "shoppingCart"
   },
-  Transactions: {
-    label: "Transacciones",
-    path: "/transactions",
-    icon: "invoice"
-  },
   Menu: {
     label: "Menus",
     path: "/menu",
     icon: "menu"
   },
-  Complements: {
+  Transactions: {
+    label: "Transacciones",
+    path: "/transactions",
+    icon: "invoice"
+  },
+  /*  Complements: {
     label: "Complementos",
     path: "/complements",
     icon: "layout"
-  },
+  }, */
   Branches: {
     label: "Sucursales",
     path: "/branches",

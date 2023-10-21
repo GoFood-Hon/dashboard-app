@@ -1,4 +1,4 @@
-import React, { useEffect } from "react"
+import React, { useEffect, useState } from "react"
 import { Link, useLocation, useNavigate } from "react-router-dom"
 import { Icon } from "./Icon"
 import toast from "react-hot-toast"
@@ -6,6 +6,15 @@ import { NAVIGATION_ROUTES } from "../routes"
 
 export default function SideBar() {
   const navigate = useNavigate()
+  const location = useLocation()
+
+  const [selectedRoute, setSelectedRoute] = useState(null)
+  useEffect(() => {
+    const routeArray = Object.values(NAVIGATION_ROUTES)
+    const currentRoute = routeArray.find((item) => location.pathname === item.path)
+
+    setSelectedRoute(currentRoute)
+  }, [location.pathname])
 
   const logout = () => {
     toast.error("Cerrando sesión")
@@ -35,11 +44,14 @@ export default function SideBar() {
             <ul className="py-4 text-sm">
               {Object.keys(NAVIGATION_ROUTES).map((key) => {
                 const item = NAVIGATION_ROUTES[key]
+                const isSelected = item === selectedRoute
                 return (
                   <li key={key} className="flex h-12 w-full items-center">
                     <Link
                       to={item.path}
-                      className="flex w-full items-center duration-300 hover:bg-light_selected_element hover:rounded-lg hover:p-3 dark:hover:bg-dark_selected_element">
+                      className={`flex w-full items-center duration-300 hover:bg-light_selected_element rounded-lg py-3 pl-2 pr-3  hover:pl-4 dark:hover:bg-dark_selected_element ${
+                        isSelected && "bg-light_selected_element"
+                      }`}>
                       <Icon icon={item.icon} />
                       <span className="font-sans ml-3">{item.label}</span>
                     </Link>
