@@ -67,7 +67,7 @@ function Home() {
         ))}
       </div>
       <div className="flex flex-row mt-6 w-full items-center">
-        <div className="bg-white rounded-2xl shadow border border-blue-100 flex flex-col md:w-1/2 p-2 mr-3">
+        <div className="bg-white rounded-2xl shadow border border-blue-100 flex flex-col md:w-1/2 p-2 mr-6">
           <div className="flex flex-row justify-between items-center p-6 flex-wrap">
             <h2 className="text-white-200 text-xl font-semibold">Nuevos Pedidos</h2>
             <Icon icon="more" />
@@ -79,9 +79,43 @@ function Home() {
             ))}
           </div>
         </div>
-        <div className="bg-white rounded-2xl shadow border border-blue-100 flex flex-col w-1/2 p-2 ml-3">
-          <h2 className="text-white-200 text-xl font-semibold p-6">Platillos más comprados</h2>
+        <div className="bg-white rounded-2xl shadow border border-blue-100 flex flex-col md:w-1/2 p-2">
+          <div className="flex flex-row justify-between items-center p-6 flex-wrap">
+            <h2 className="text-white-200 text-xl font-semibold">Platillos mas comprados</h2>
+            <Icon icon="more" />
+          </div>
           <span className="border border-blue-100" />
+          <div className="pb-6">
+            {newOrders.map((item, key) => (
+              <NewOrders data={item} key={key} />
+            ))}
+          </div>
+        </div>
+      </div>
+      <div className="flex flex-row mt-6 w-full items-center">
+        <div className="bg-white rounded-2xl shadow border border-blue-100 flex flex-col md:w-1/2 p-2 mr-6">
+          <div className="flex flex-row justify-between items-center p-6 flex-wrap">
+            <h2 className="text-white-200 text-xl font-semibold">Total ingresos</h2>
+            <Icon icon="more" />
+          </div>
+          <span className="border border-blue-100" />
+          <div className="pb-6">
+            {newOrders.map((item, key) => (
+              <NewOrders data={item} key={key} />
+            ))}
+          </div>
+        </div>
+        <div className="bg-white rounded-2xl shadow border border-blue-100 flex flex-col md:w-1/2 p-2">
+          <div className="flex flex-row justify-between items-center p-6 flex-wrap">
+            <h2 className="text-white-200 text-xl font-semibold">Usuarios</h2>
+            <Icon icon="more" />
+          </div>
+          <span className="border border-blue-100" />
+          <div className="pb-6">
+            {newOrders.map((item, key) => (
+              <NewOrders data={item} key={key} />
+            ))}
+          </div>
         </div>
       </div>
     </BaseLayout>

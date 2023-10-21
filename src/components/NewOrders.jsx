@@ -12,24 +12,26 @@ export default function NewOrders({ data }) {
 
   return (
     <div className="pt-6 px-6">
-      <div className="flex flex-row justify-between items-center flex-wra ">
-        <img className="w-12 h-12 p-2 rounded-full bg-light_selected_element" src="src/assets/images/restaurants/kfc.png" />
-        <div className="flex flex-col ml-4 justify-between flex-wrap">
-          <span>
-            Pedido: #<span className="font-semibold">{data.orderNumber}</span>
-          </span>
-          <div className="flex flex-row text-xs items-center text-secondary_text pt-1">
-            <div className="flex flex-row items-center">
-              <Icon icon="warehouse" />
-              <span className="ml-2">{data?.address}</span>
-            </div>
-            <div className="flex flex-row ml-4 items-center">
-              <Icon icon="timer" />
-              <span className="ml-2">{data?.time}</span>
-            </div>
-            <div className="flex flex-row ml-4 items-center">
-              <Icon icon="calendar" />
-              <span className="ml-2">{data?.date}</span>
+      <div className="flex flex-row justify-between items-center">
+        <div className="flex">
+          <img className="w-12 h-12 p-2 rounded-full bg-light_selected_element" src="src/assets/images/restaurants/kfc.png" />
+          <div className="flex flex-col ml-4 justify-between flex-wrap">
+            <span>
+              Pedido: #<span className="font-semibold">{data.orderNumber}</span>
+            </span>
+            <div className="flex flex-row text-xs items-center text-secondary_text pt-1">
+              <div className="flex flex-row items-center">
+                <Icon icon="warehouse" />
+                <span className="ml-2">{data?.address}</span>
+              </div>
+              <div className="flex flex-row ml-4 items-center">
+                <Icon icon="timer" />
+                <span className="ml-2">{data?.time}</span>
+              </div>
+              <div className="flex flex-row ml-4 items-center">
+                <Icon icon="calendar" />
+                <span className="ml-2">{data?.date}</span>
+              </div>
             </div>
           </div>
         </div>
