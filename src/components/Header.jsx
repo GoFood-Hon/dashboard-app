@@ -5,6 +5,7 @@ import { Icon } from "./Icon"
 import { useSelector } from "react-redux"
 import { NavLink, useLocation, useNavigate } from "react-router-dom"
 import { Popover, Transition } from "@mantine/core"
+import GoFoodLogo from "../assets/images/goFood.png"
 
 export default function Header() {
   const user = useSelector((state) => state.user.value)
@@ -24,7 +25,7 @@ export default function Header() {
     <div className="w-full p-4 flex flex-row justify-between text-black  bg-white dark:text-white dark:bg-slate-800 dark:border-slate-700 border border-slate-200 z-20 fixed">
       <div className="flex flex-row">
         <div className="border-r-2 border-r-gray-300 pr-4">
-          <img className="w-[123px] h-[42px]" src="src/assets/images/goFood.png" />
+          <img className="w-[123px] h-[42px]" src={GoFoodLogo} />
         </div>
         <div className="pl-4">
           <img className="w-[123px] h-[42px]" src={restaurantList.Campero.image} alt={restaurantList.Campero.name} />

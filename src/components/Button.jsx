@@ -9,7 +9,7 @@ export default function Button({ icon, text, className, onClick }) {
       disabled={btnClicked}
       className={`${
         btnClicked && "cursor-not-allowed"
-      } flex h-10 w-full items-center justify-center space-x-3 rounded-md text-sm shadow-sm transition-all duration-700 focus:outline-none mb-3 ${className}`}
+      } flex h-10 w-full items-center justify-center space-x-3 rounded-md text-sm shadow-sm transition-all duration-700 focus:outline-none ${className}`}
       onClick={() => {
         setBtnClicked(true)
         onClick()
