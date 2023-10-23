@@ -1,8 +1,9 @@
 import React from "react"
 import BaseLayout from "../components/BaseLayout"
-import Cards from "../components/Cards"
+import DashboardCard from "../components/DashboardCard"
 import { Icon } from "../components/Icon"
 import NewOrders from "../components/NewOrders"
+import { Grid } from "@mantine/core"
 
 function Home() {
   const dashboardCards = [
@@ -44,7 +45,7 @@ function Home() {
     {
       restaurant: "kfc",
       orderNumber: "180A9DA3384B39CE",
-      address: "14 calle, bo. san jorge",
+      address: "15 calle, bo. san jorge",
       time: "10:20",
       date: "13 Julio 2024",
       status: "En camino"
@@ -61,63 +62,71 @@ function Home() {
   return (
     <BaseLayout>
       <h1 className="text-white-200 text-2xl font-semibold pb-6">Dashboard</h1>
-      <div className="flex flex-row flex-wrap gap-3 justify-between">
+      <Grid grow>
         {dashboardCards.map((item, key) => (
-          <Cards data={item} key={key} />
+          <Grid.Col span={{ base: 12, md: 6, lg: 3 }} key={key}>
+            <DashboardCard gutter={{ base: 5, xs: "md", md: "xl", xl: 50 }} data={item} />
+          </Grid.Col>
         ))}
-      </div>
-      <div className="flex flex-row mt-6 w-full items-center">
-        <div className="bg-white rounded-2xl shadow border border-blue-100 flex flex-col md:w-1/2 p-2 mr-6">
-          <div className="flex flex-row justify-between items-center p-6 flex-wrap">
-            <h2 className="text-white-200 text-xl font-semibold">Nuevos Pedidos</h2>
-            <Icon icon="more" />
+      </Grid>
+      <Grid grow className="mt-6">
+        <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
+          <div className="bg-white rounded-2xl shadow border border-blue-100 flex flex-col w-full p-2 mr-6">
+            <div className="flex flex-row justify-between items-center p-6 flex-wrap">
+              <h2 className="text-white-200 text-xl font-semibold">Nuevos Pedidos</h2>
+              <Icon icon="more" />
+            </div>
+            <span className="border border-blue-100" />
+            <div className="pb-6">
+              {newOrders.map((item, key) => (
+                <NewOrders data={item} key={key} />
+              ))}
+            </div>
           </div>
-          <span className="border border-blue-100" />
-          <div className="pb-6">
-            {newOrders.map((item, key) => (
-              <NewOrders data={item} key={key} />
-            ))}
+        </Grid.Col>
+        <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
+          <div className="bg-white rounded-2xl shadow border border-blue-100 flex flex-col w-full p-2">
+            <div className="flex flex-row justify-between items-center p-6 flex-wrap">
+              <h2 className="text-white-200 text-xl font-semibold">Platillos mas comprados</h2>
+              <Icon icon="more" />
+            </div>
+            <span className="border border-blue-100" />
+            <div className="pb-6">
+              {newOrders.map((item, key) => (
+                <NewOrders data={item} key={key} />
+              ))}
+            </div>
           </div>
-        </div>
-        <div className="bg-white rounded-2xl shadow border border-blue-100 flex flex-col md:w-1/2 p-2">
-          <div className="flex flex-row justify-between items-center p-6 flex-wrap">
-            <h2 className="text-white-200 text-xl font-semibold">Platillos mas comprados</h2>
-            <Icon icon="more" />
+        </Grid.Col>
+        <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
+          <div className="bg-white rounded-2xl shadow border border-blue-100 flex flex-col w-full p-2 mr-6">
+            <div className="flex flex-row justify-between items-center p-6 flex-wrap">
+              <h2 className="text-white-200 text-xl font-semibold">Total ingresos</h2>
+              <Icon icon="more" />
+            </div>
+            <span className="border border-blue-100" />
+            <div className="pb-6">
+              {newOrders.map((item, key) => (
+                <NewOrders data={item} key={key} />
+              ))}
+            </div>
           </div>
-          <span className="border border-blue-100" />
-          <div className="pb-6">
-            {newOrders.map((item, key) => (
-              <NewOrders data={item} key={key} />
-            ))}
+        </Grid.Col>
+        <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
+          <div className="bg-white rounded-2xl shadow border border-blue-100 flex flex-col w-full p-2">
+            <div className="flex flex-row justify-between items-center p-6 flex-wrap">
+              <h2 className="text-white-200 text-xl font-semibold">Usuarios</h2>
+              <Icon icon="more" />
+            </div>
+            <span className="border border-blue-100" />
+            <div className="pb-6">
+              {newOrders.map((item, key) => (
+                <NewOrders data={item} key={key} />
+              ))}
+            </div>
           </div>
-        </div>
-      </div>
-      <div className="flex flex-row mt-6 w-full items-center">
-        <div className="bg-white rounded-2xl shadow border border-blue-100 flex flex-col md:w-1/2 p-2 mr-6">
-          <div className="flex flex-row justify-between items-center p-6 flex-wrap">
-            <h2 className="text-white-200 text-xl font-semibold">Total ingresos</h2>
-            <Icon icon="more" />
-          </div>
-          <span className="border border-blue-100" />
-          <div className="pb-6">
-            {newOrders.map((item, key) => (
-              <NewOrders data={item} key={key} />
-            ))}
-          </div>
-        </div>
-        <div className="bg-white rounded-2xl shadow border border-blue-100 flex flex-col md:w-1/2 p-2">
-          <div className="flex flex-row justify-between items-center p-6 flex-wrap">
-            <h2 className="text-white-200 text-xl font-semibold">Usuarios</h2>
-            <Icon icon="more" />
-          </div>
-          <span className="border border-blue-100" />
-          <div className="pb-6">
-            {newOrders.map((item, key) => (
-              <NewOrders data={item} key={key} />
-            ))}
-          </div>
-        </div>
-      </div>
+        </Grid.Col>
+      </Grid>
     </BaseLayout>
   )
 }

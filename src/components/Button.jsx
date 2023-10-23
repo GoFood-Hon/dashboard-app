@@ -19,7 +19,7 @@ export default function Button({ icon, text, className, onClick }) {
       ) : (
         <>
           {icon && <Icon icon={icon} className="h-5 w-5" />}
-          <p>{text}</p>
+          <p className="w-full whitespace-nowrap">{text}</p>
         </>
       )}
     </button>

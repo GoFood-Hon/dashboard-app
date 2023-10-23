@@ -2,11 +2,12 @@ import React, { useState } from "react"
 import BaseLayout from "../components/BaseLayout"
 import { Breadcrumbs, CloseButton, Grid, Input, Pagination } from "@mantine/core"
 import Button from "../components/Button"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import DishesCard from "../components/DishesCard"
 import { colors } from "../theme/colors"
 
 export default function Dishes() {
+  const navigate = useNavigate()
   const [searchDish, setSearchDish] = useState("")
 
   const dishes = [
@@ -76,13 +77,21 @@ export default function Dishes() {
     </Link>
   ))
 
+  const handleNewDish = () => {
+    navigate("/menu/dishes/newDish")
+  }
+
   return (
     <BaseLayout>
       <section>
         <div className="flex flex-row justify-between items-center pb-6">
           <div className="flex flex-row gap-x-3 items-center">
             <h1 className="text-white-200 text-2xl font-semibold">Platillos</h1>
-            <Button text={"Nuevo Platillo"} className={"text-white text-md px-3 py-2 bg-primary_button mb-0"} />
+            <Button
+              text={"Nuevo Platillo"}
+              className={"text-white text-md px-3 py-2 bg-primary_button mb-0"}
+              onClick={handleNewDish}
+            />
           </div>
           <div>
             <Breadcrumbs>{breadcrumbItems}</Breadcrumbs>
