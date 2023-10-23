@@ -12,6 +12,7 @@
   "dependencies": {
     "@hookform/resolvers": "^3.3.2",
     "@mantine/core": "^7.1.5",
+    "@mantine/dropzone": "^7.1.5",
     "@mantine/hooks": "^7.1.5",
     "@reduxjs/toolkit": "^1.9.7",
     "@tabler/icons-react": "^2.39.0",
