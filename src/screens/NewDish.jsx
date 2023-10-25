@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import BaseLayout from "../components/BaseLayout"
 import { Link } from "react-router-dom"
 import { Breadcrumbs, Accordion, Grid, Group, Text, rem, Input, CloseButton, Affix, Transition } from "@mantine/core"
@@ -11,6 +11,9 @@ import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone"
 import Button from "../components/Button"
 
 export default function NewDish() {
+  const [isAffixMounted, setAffixMounted] = useState(true)
+  const containerRef = useRef(null)
+
   const breadcrumbItems = [
     { title: "Inicio", href: "/" },
     { title: "Menu", href: "/menu" },
@@ -283,8 +286,8 @@ export default function NewDish() {
 
   const PaymentForm = () => {
     return (
-      <Grid className="w-full h-full items-center justify-center flex bg-white rounded-2xl border border-blue-100 p-4">
-        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-row item-center w-full h-full">
+      <Grid className="bg-white rounded-2xl border border-blue-100 p-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-row item-center w-full h-full flex-wrap">
           <Grid.Col span={{ base: 12, md: 6 }}>
             <InputField
               label="Precio inicial"
@@ -362,6 +365,26 @@ export default function NewDish() {
     </Accordion.Item>
   ))
 
+  useEffect(() => {
+    const container = containerRef.current
+
+    if (container) {
+      const observer = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting) {
+          setAffixMounted(false)
+        } else {
+          setAffixMounted(true)
+        }
+      })
+
+      observer.observe(container)
+
+      return () => {
+        observer.disconnect()
+      }
+    }
+  }, [])
+
   return (
     <BaseLayout>
       <section>
@@ -385,11 +408,13 @@ export default function NewDish() {
           {items}
         </Accordion>
       </section>
-      <section>
+      <section ref={containerRef}>
         <Affix position={{ bottom: 20, left: "calc(50% - 200px)" }}>
-          <Transition transition="slide-up" mounted={true}>
+          <Transition transition="slide-down" mounted={isAffixMounted} duration={400} timingFunction="ease">
             {(transitionStyles) => (
-              <div className="w-full flex flex-row justify-end mt-6 gap-3 rounded-lg bg-white px-8 py-5 border border-gray-100 shadow">
+              <div
+                className="w-full flex flex-row justify-end mt-6 gap-3 rounded-lg bg-white px-8 py-5 border border-gray-100 shadow"
+                style={transitionStyles}>
                 <Button text={"Descartar"} className={"text-xs border border-red-400 text-red-400 bg-white"} />
                 <Button text={"Guardar como borrador"} className={"text-xs border bg-white border-sky-950 text-sky-950"} />
                 <Button text={"Guardar platillo"} className={"text-xs bg-sky-950 text-slate-50 "} />
@@ -397,6 +422,15 @@ export default function NewDish() {
             )}
           </Transition>
         </Affix>
+        {!isAffixMounted && (
+          <div className="w-full flex justify-end mt-6 gap-3 rounded-md bg-white px-8 py-5 border border-gray-200">
+            <div className="w-1/3 flex flex-row justify-end gap-3">
+              <Button text={"Descartar"} className={"text-xs border border-red-400 text-red-400 bg-white"} />
+              <Button text={"Guardar como borrador"} className={"text-xs border bg-white border-sky-950 text-sky-950"} />
+              <Button text={"Guardar platillo"} className={"text-xs bg-sky-950 text-slate-50 "} />
+            </div>
+          </div>
+        )}
       </section>
     </BaseLayout>
   )
