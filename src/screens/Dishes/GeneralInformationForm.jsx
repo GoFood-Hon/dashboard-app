@@ -1,16 +1,17 @@
-import { Grid, Group, Text } from "@mantine/core"
-import { Dropzone } from "@mantine/dropzone"
+import { Grid, Group, Text, rem } from "@mantine/core"
+import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone"
 import { IconPhoto, IconUpload, IconX } from "@tabler/icons-react"
 import React from "react"
-import InputTextAreaField from "./Form/InputTextAreaField"
-import InputField from "./Form/InputField"
+import InputTextAreaField from "../../components/Form/InputTextAreaField"
+import InputField from "../../components/Form/InputField"
+import { inputRequired } from "../../utils/inputRules"
 
-export default function GeneralInformation() {
+export default function GeneralInformationForm({ register, errors }) {
   return (
     <Grid>
-      <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
+      <Grid.Col span={{ base: 12, md: 8, lg: 8 }}>
         <div className="w-full h-full items-center justify-center flex bg-white rounded-2xl border border-blue-100 p-4">
-          <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col w-full">
+          <div className="flex flex-col w-full">
             <InputField
               label="Nombre (Obligatorio)"
               name="dishName"
@@ -28,10 +29,10 @@ export default function GeneralInformation() {
               errors={errors}
               placeholder="Ej. Rico pollo con papas, salsas..."
             />
-          </form>
+          </div>
         </div>
       </Grid.Col>
-      <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
+      <Grid.Col span={{ base: 12, md: 4, lg: 4 }}>
         <div className="w-full h-full bg-white rounded-2xl border border-blue-100 p-4">
           <Dropzone
             onDrop={(files) => console.log("accepted files", files)}
@@ -49,7 +50,7 @@ export default function GeneralInformation() {
               </Dropzone.Idle>
 
               <div className="flex items-center flex-col">
-                <Text size="xl" inline>
+                <Text size="xl" inline className="text-center">
                   Seleccione una imagen destacada
                 </Text>
                 <Text size="sm" c="dimmed" inline mt={7} className="text-center">

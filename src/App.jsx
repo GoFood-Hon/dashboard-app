@@ -15,9 +15,9 @@ import Complements from "./screens/Complements"
 import Branches from "./screens/Branches"
 import Users from "./screens/Users"
 import Logout from "./screens/Logout"
-import Dishes from "./screens/Dishes"
+import Dishes from "./screens/Dishes/DishesScreen"
 import Combos from "./screens/Combos"
-import NewDish from "./screens/NewDish"
+import NewDish from "./screens/Dishes/NewDishScreen"
 
 function App() {
   const router = createBrowserRouter(

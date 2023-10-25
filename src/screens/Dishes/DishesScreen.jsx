@@ -1,10 +1,10 @@
 import React, { useState } from "react"
-import BaseLayout from "../components/BaseLayout"
+import BaseLayout from "../../components/BaseLayout"
 import { Breadcrumbs, CloseButton, Grid, Input, Pagination } from "@mantine/core"
-import Button from "../components/Button"
+import Button from "../../components/Button"
 import { Link, useNavigate } from "react-router-dom"
-import DishesCard from "../components/DishesCard"
-import { colors } from "../theme/colors"
+import DishesCard from "../../components/DishesCard"
+import { colors } from "../../theme/colors"
 
 export default function Dishes() {
   const navigate = useNavigate()
