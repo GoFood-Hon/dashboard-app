@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 import BaseLayout from "../components/BaseLayout"
 import { Link } from "react-router-dom"
-import { Breadcrumbs, Accordion, Grid, Group, Text, rem, Input, CloseButton } from "@mantine/core"
+import { Breadcrumbs, Accordion, Grid, Group, Text, rem, Input, CloseButton, Affix, Transition } from "@mantine/core"
 import InputField from "../components/Form/InputField"
 import { useForm } from "react-hook-form"
 import { inputRequired } from "../utils/inputRules"
@@ -18,7 +18,7 @@ export default function NewDish() {
     { title: "Nuevo platillo", href: "/menu/dishes/newDish" }
   ].map((item, index) => (
     <Link to={item.href} key={index}>
-      {item.title}
+      <span className="md:text-sm xs:text-xs">{item.title}</span>
     </Link>
   ))
 
@@ -311,7 +311,7 @@ export default function NewDish() {
       </Grid>
     )
   }
-  const groceries = [
+  const dishForms = [
     {
       title: "Información general",
       requirement: "Obligatorio",
@@ -347,10 +347,10 @@ export default function NewDish() {
 
   const onSubmit = async () => {}
 
-  const items = groceries.map((item, key) => (
+  const items = dishForms.map((item, key) => (
     <Accordion.Item key={key} value={item.title}>
       <Accordion.Control>
-        <div className="w-full rounded-lg  flex-row flex items-center bg-white">
+        <div className="w-full rounded-lg flex-row flex items-center bg-white">
           <div className="text-slate-50 text-base font-bold bg-sky-950 rounded-full p-2 w-8 h-8 flex items-center justify-center">
             {key + 1}
           </div>
@@ -365,9 +365,9 @@ export default function NewDish() {
   return (
     <BaseLayout>
       <section>
-        <div className="flex flex-row justify-between items-center pb-6">
+        <div className="flex flex-row justify-between items-center pb-6 flex-wrap xs:gap-3">
           <div className="flex flex-row gap-x-3 items-center">
-            <h1 className="text-white-200 text-2xl font-semibold">Nuevo Platillo</h1>
+            <h1 className="text-white-200 md:text-2xl font-semibold">Nuevo Platillo</h1>
           </div>
           <div>
             <Breadcrumbs>{breadcrumbItems}</Breadcrumbs>
@@ -385,12 +385,18 @@ export default function NewDish() {
           {items}
         </Accordion>
       </section>
-      <section className="w-full flex flex-row justify-end mt-6 gap-3 rounded-lg bg-white px-4 py-8 border border-gray-100 shadow">
-        <div className="w-2/3 flex flex-row gap-2">
-          <Button text={"Descartar"} className={"text-xs border border-red-400 text-red-400 bg-white"} />
-          <Button text={"Guardar como borrador"} className={"text-xs border bg-white border-sky-950 text-sky-950"} />
-          <Button text={"Guardar platillo"} className={"text-xs bg-sky-950 text-slate-50 "} />
-        </div>
+      <section>
+        <Affix position={{ bottom: 20, left: "calc(50% - 200px)" }}>
+          <Transition transition="slide-up" mounted={true}>
+            {(transitionStyles) => (
+              <div className="w-full flex flex-row justify-end mt-6 gap-3 rounded-lg bg-white px-8 py-5 border border-gray-100 shadow">
+                <Button text={"Descartar"} className={"text-xs border border-red-400 text-red-400 bg-white"} />
+                <Button text={"Guardar como borrador"} className={"text-xs border bg-white border-sky-950 text-sky-950"} />
+                <Button text={"Guardar platillo"} className={"text-xs bg-sky-950 text-slate-50 "} />
+              </div>
+            )}
+          </Transition>
+        </Affix>
       </section>
     </BaseLayout>
   )
