@@ -1,74 +1,32 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import BaseLayout from "../../components/BaseLayout"
 import { Breadcrumbs, CloseButton, Grid, Input, Pagination } from "@mantine/core"
 import Button from "../../components/Button"
-import { Link, useNavigate, useLocation } from "react-router-dom"
+import { useNavigate, useLocation } from "react-router-dom"
 import DishesCard from "../../components/DishesCard"
 import { colors } from "../../theme/colors"
 import { NAVIGATION_ROUTES } from "../../routes"
 import BreadCrumbNavigation from "../../components/BreadCrumbNavigation"
+import { useDispatch, useSelector } from "react-redux"
+import { fetchDishes, selectAllDishes, selectDishesError, selectDishesStatus } from "../../store/features/DishesSlice"
+import LoadingCircle from "../../components/LoadingCircle"
 
 export default function Dishes() {
   const navigate = useNavigate()
   const location = useLocation()
+
+  const dispatch = useDispatch()
+  const dishes = useSelector(selectAllDishes)
+  const status = useSelector(selectDishesStatus)
+  const error = useSelector(selectDishesError)
+
   const [searchDish, setSearchDish] = useState("")
 
-  const dishes = [
-    {
-      src: "src/assets/dishes/whopper.png",
-      status: "Habilitado",
-      dishName: "Whopper",
-      price: 120.0,
-      isUserSearch: true,
-      isUserLove: true,
-      isPromotion: true
-    },
-    {
-      src: "src/assets/dishes/whopper.png",
-      status: "Deshabilitado",
-      dishName: "Whopper",
-      price: 120.0,
-      isUserSearch: false,
-      isUserLove: false,
-      isPromotion: true
-    },
-    {
-      src: "src/assets/dishes/whopper.png",
-      status: "Habilitado",
-      dishName: "CangreBurguer",
-      price: 130.0,
-      isUserSearch: true,
-      isUserLove: true,
-      isPromotion: false
-    },
-    {
-      src: "src/assets/dishes/whopper.png",
-      status: "Habilitado",
-      dishName: "Whopper",
-      price: 220.0,
-      isUserSearch: false,
-      isUserLove: false,
-      isPromotion: false
-    },
-    {
-      src: "src/assets/dishes/whopper.png",
-      status: "Habilitado",
-      dishName: "Whopper",
-      price: 144.0,
-      isUserSearch: true,
-      isUserLove: false,
-      isPromotion: true
-    },
-    {
-      src: "src/assets/dishes/whopper.png",
-      status: "Deshabilitado",
-      dishName: "Whopper",
-      price: 313.0,
-      isUserSearch: false,
-      isUserLove: true,
-      isPromotion: false
+  useEffect(() => {
+    if (status === "idle") {
+      dispatch(fetchDishes())
     }
-  ]
+  }, [status, dispatch])
 
   const handleNewDish = () => {
     navigate(NAVIGATION_ROUTES.Menu.submenu.Dishes.submenu.NewDish.path)
@@ -112,6 +70,14 @@ export default function Dishes() {
         </div>
       </section>
       <section className="my-6 w-full">
+        {status === "loading" && (
+          <div className="h-[calc(100vh-350px)] w-full flex justify-center items-center">
+            <LoadingCircle />
+          </div>
+        )}
+
+        {status === "error" && <div>Error: {error}</div>}
+
         <Grid grow>
           {dishes.map((item, key) => (
             <Grid.Col span={{ base: 12, md: 6, lg: 3 }} key={key}>
