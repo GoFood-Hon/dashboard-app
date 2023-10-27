@@ -14,15 +14,20 @@ export const NAVIGATION_ROUTES = {
     icon: "menu",
     path: "/menu",
     submenu: {
-      Platillos: {
+      Dishes: {
         label: "Platillos",
         icon: "menu",
-        path: "/menu/dishes"
+        path: "/menu/platillos",
+        submenu: {
+          NewDish: {
+            path: "/menu/platillos/nuevoPlatillo"
+          }
+        }
       },
       Complements: {
         label: "Complementos",
         icon: "menu",
-        path: "/menu/complements"
+        path: "/menu/complementos"
       },
       Combos: {
         label: "Combos",
@@ -33,7 +38,7 @@ export const NAVIGATION_ROUTES = {
   },
   Transactions: {
     label: "Transacciones",
-    path: "/transactions",
+    path: "/transacciones",
     icon: "invoice"
   },
   /*  Complements: {
@@ -43,34 +48,38 @@ export const NAVIGATION_ROUTES = {
   }, */
   Branches: {
     label: "Sucursales",
-    path: "/branches",
+    path: "/sucursales",
     icon: "branch"
   },
   Users: {
     label: "Usuarios",
-    path: "/users",
+    path: "/usuarios",
     icon: "users",
     submenu: {
       Admins: {
         label: "Admins",
         icon: "users",
-        path: "/users/admins"
+        path: "/usuarios/administradores"
       }
     }
   }
 }
 
 export const AUTH_NAVIGATION_ROUTES = {
-  Loin: {
+  Login: {
     label: "Login",
-    path: "/login"
+    path: "/iniciarSesión"
   },
   Register: {
     label: "Register",
-    path: "/register"
+    path: "/Registrarse"
   },
   ForgetPassword: {
     label: "Forget Password",
-    path: "/forgetPassword"
+    path: "/olvideMiContraseña"
+  },
+  Logout: {
+    label: "Logout",
+    path: "/CerrarSesión"
   }
 }

@@ -1,18 +1,11 @@
 import React from "react"
 import BaseLayout from "../components/BaseLayout"
 import { Breadcrumbs } from "@mantine/core"
-import { Link } from "react-router-dom"
+import { Link, useLocation } from "react-router-dom"
+import BreadCrumbNavigation from "../components/BreadCrumbNavigation"
 
 export default function Complements() {
-  const breadcrumbItems = [
-    { title: "Inicio", href: "/" },
-    { title: "Menu", href: "/menu" },
-    { title: "Complementos", href: "/menu/complements" }
-  ].map((item, index) => (
-    <Link to={item.href} key={index}>
-      {item.title}
-    </Link>
-  ))
+  const location = useLocation()
   return (
     <BaseLayout>
       <section>
@@ -21,7 +14,9 @@ export default function Complements() {
             <h1 className="text-white-200 text-2xl font-semibold">Complementos</h1>
           </div>
           <div>
-            <Breadcrumbs>{breadcrumbItems}</Breadcrumbs>
+            <Breadcrumbs>
+              <BreadCrumbNavigation location={location} />
+            </Breadcrumbs>
           </div>
         </div>
       </section>

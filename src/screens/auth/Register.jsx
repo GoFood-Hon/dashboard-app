@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form"
 import InputField from "../../components/Form/InputField"
 import { yupResolver } from "@hookform/resolvers/yup"
 import { registrationValidationSchema } from "../../utils/inputRules"
+import { AUTH_NAVIGATION_ROUTES } from "../../routes"
 
 export default function Register() {
   const {
@@ -70,7 +71,9 @@ export default function Register() {
           */}
           <div className="flex flex-row justify-center w-full mb-3">
             <p>Ya tienes una cuenta?</p>
-            <Link to={"/login"} className="hover:underline pl-1 text-primary_text cursor-pointer dark:text-dark_secondary_text">
+            <Link
+              to={AUTH_NAVIGATION_ROUTES.Login.path}
+              className="hover:underline pl-1 text-primary_text cursor-pointer dark:text-dark_secondary_text">
               Iniciar sesión
             </Link>
           </div>

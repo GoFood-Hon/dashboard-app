@@ -6,6 +6,7 @@ import EnterEmail from "./EnterEmail"
 import SuccessScreen from "./SuccessScreen"
 import EnterNewPassword from "./EnterNewPassword"
 import EnterSecretCode from "./EnterSecretCode"
+import { AUTH_NAVIGATION_ROUTES } from "../../../routes"
 
 export default function ForgetPassword() {
   const [token, setToken] = useState(null)
@@ -73,7 +74,7 @@ export default function ForgetPassword() {
           {step === "enterNewPassword" && <EnterNewPassword onSubmit={handlePasswordSubmit} />}
           {step === "success" && <SuccessScreen />}
           <Link
-            to={"/login"}
+            to={AUTH_NAVIGATION_ROUTES.Login.path}
             className="text-center items-center justify-center w-full text-primary_text cursor-pointer dark:text-dark_secondary_text hover:underline font-bold ">
             Iniciar sesión
           </Link>

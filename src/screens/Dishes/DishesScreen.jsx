@@ -2,12 +2,15 @@ import React, { useState } from "react"
 import BaseLayout from "../../components/BaseLayout"
 import { Breadcrumbs, CloseButton, Grid, Input, Pagination } from "@mantine/core"
 import Button from "../../components/Button"
-import { Link, useNavigate } from "react-router-dom"
+import { Link, useNavigate, useLocation } from "react-router-dom"
 import DishesCard from "../../components/DishesCard"
 import { colors } from "../../theme/colors"
+import { NAVIGATION_ROUTES } from "../../routes"
+import BreadCrumbNavigation from "../../components/BreadCrumbNavigation"
 
 export default function Dishes() {
   const navigate = useNavigate()
+  const location = useLocation()
   const [searchDish, setSearchDish] = useState("")
 
   const dishes = [
@@ -67,18 +70,8 @@ export default function Dishes() {
     }
   ]
 
-  const breadcrumbItems = [
-    { title: "Inicio", href: "/" },
-    { title: "Menu", href: "/menu" },
-    { title: "Platillos", href: "/menu/dishes" }
-  ].map((item, index) => (
-    <Link to={item.href} key={index}>
-      {item.title}
-    </Link>
-  ))
-
   const handleNewDish = () => {
-    navigate("/menu/dishes/newDish")
+    navigate(NAVIGATION_ROUTES.Menu.submenu.Dishes.submenu.NewDish.path)
   }
 
   return (
@@ -94,7 +87,9 @@ export default function Dishes() {
             />
           </div>
           <div>
-            <Breadcrumbs>{breadcrumbItems}</Breadcrumbs>
+            <Breadcrumbs>
+              <BreadCrumbNavigation location={location} />
+            </Breadcrumbs>
           </div>
         </div>
       </section>

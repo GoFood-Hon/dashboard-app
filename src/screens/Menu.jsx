@@ -2,24 +2,19 @@ import React from "react"
 import BaseLayout from "../components/BaseLayout"
 import Button from "../components/Button"
 import { Breadcrumbs } from "@mantine/core"
-import { Link, useNavigate } from "react-router-dom"
+import { useLocation, useNavigate } from "react-router-dom"
+import { NAVIGATION_ROUTES } from "../routes"
+import BreadCrumbNavigation from "../components/BreadCrumbNavigation"
 
 export default function Menu() {
   const navigate = useNavigate()
-  const breadcrumbItems = [
-    { title: "Inicio", href: "/" },
-    { title: "Menu", href: "/menu" }
-  ].map((item, index) => (
-    <Link to={item.href} key={index}>
-      {item.title}
-    </Link>
-  ))
+  const location = useLocation()
 
   const handleDishes = () => {
-    navigate("/menu/dishes")
+    navigate(NAVIGATION_ROUTES.Menu.submenu.Dishes.path)
   }
   const handleComplements = () => {
-    navigate("/menu/complements")
+    navigate(NAVIGATION_ROUTES.Menu.submenu.Complements.path)
   }
 
   return (
@@ -40,7 +35,9 @@ export default function Menu() {
             />
           </div>
           <div>
-            <Breadcrumbs>{breadcrumbItems}</Breadcrumbs>
+            <Breadcrumbs>
+              <BreadCrumbNavigation location={location} />
+            </Breadcrumbs>
           </div>
         </div>
       </section>

@@ -6,6 +6,7 @@ import authUtils from "../utils/authUtils"
 import LoadingCircle from "../components/LoadingCircle"
 import { useDispatch } from "react-redux"
 import { setUser } from "../store/features/userSlice"
+import { AUTH_NAVIGATION_ROUTES } from "../routes"
 
 function AuthLayout() {
   const navigate = useNavigate()
@@ -16,7 +17,7 @@ function AuthLayout() {
     const checkAuth = async () => {
       const user = await authUtils.isAuthenticated()
       if (!user) {
-        navigate("/login")
+        navigate(AUTH_NAVIGATION_ROUTES.Login.path)
       } else {
         dispatch(setUser(user))
         setLoading(false)

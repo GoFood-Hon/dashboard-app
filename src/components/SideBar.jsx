@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react"
 import { Link, useLocation, useNavigate } from "react-router-dom"
 import { Icon } from "./Icon"
 import toast from "react-hot-toast"
-import { NAVIGATION_ROUTES } from "../routes"
+import { AUTH_NAVIGATION_ROUTES, NAVIGATION_ROUTES } from "../routes"
 import NavigationItem from "./NavigationItem"
 
 export default function SideBar() {
@@ -33,7 +33,7 @@ export default function SideBar() {
   const logout = () => {
     toast.error("Cerrando sesión")
     localStorage.removeItem("token")
-    navigate("/login")
+    navigate(AUTH_NAVIGATION_ROUTES.Login.path)
   }
 
   const toggleSubMenu = (submenuLabel) => {

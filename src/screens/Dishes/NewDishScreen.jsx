@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react"
-import { Link } from "react-router-dom"
+import { Link, useLocation } from "react-router-dom"
 import { Breadcrumbs, Accordion, Affix, Transition } from "@mantine/core"
 import { useForm } from "react-hook-form"
 import BaseLayout from "../../components/BaseLayout"
@@ -9,7 +9,10 @@ import DrinksForms from "./DrinksForms"
 import ExtrasForm from "./ExtrasForm"
 import GeneralInformationForm from "./GeneralInformationForm"
 import PaymentForm from "./PaymentForm"
+import BreadCrumbNavigation from "../../components/BreadCrumbNavigation"
+
 export default function NewDish() {
+  const location = useLocation()
   const [isAffixMounted, setAffixMounted] = useState(true)
 
   const containerRef = useRef(null)
@@ -19,17 +22,6 @@ export default function NewDish() {
     handleSubmit,
     formState: { errors }
   } = useForm()
-
-  const breadcrumbItems = [
-    { title: "Inicio", href: "/" },
-    { title: "Menu", href: "/menu" },
-    { title: "Platillos", href: "/menu/dishes" },
-    { title: "Nuevo platillo", href: "/menu/dishes/newDish" }
-  ].map((item, index) => (
-    <Link to={item.href} key={index}>
-      <span className="md:text-sm xs:text-xs">{item.title}</span>
-    </Link>
-  ))
 
   const dishFormConfiguration = [
     {
@@ -101,7 +93,9 @@ export default function NewDish() {
             <h1 className="text-white-200 md:text-2xl font-semibold">Nuevo Platillo</h1>
           </div>
           <div>
-            <Breadcrumbs>{breadcrumbItems}</Breadcrumbs>
+            <Breadcrumbs>
+              <BreadCrumbNavigation location={location} />
+            </Breadcrumbs>
           </div>
         </div>
       </section>
@@ -131,8 +125,8 @@ export default function NewDish() {
           </Transition>
         </Affix>
         {!isAffixMounted && (
-          <div className="w-full flex justify-end mt-6 gap-3 rounded-md bg-white px-8 py-5 border border-gray-200">
-            <div className="w-1/3 flex flex-row justify-end gap-3">
+          <div className="w-full flex md:justify-end mt-6 md:gap-3 rounded-md bg-white px-8 py-5 border border-gray-200">
+            <div className="md:w-2/3 lg:1/3 sm:w-full flex flex-row justify-end gap-3 sm:flex-wrap md:flex-nowrap">
               <Button text={"Descartar"} className={"text-xs border border-red-400 text-red-400 bg-white"} />
               <Button text={"Guardar como borrador"} className={"text-xs border bg-white border-sky-950 text-sky-950"} />
               <Button text={"Guardar platillo"} className={"text-xs bg-sky-950 text-slate-50 "} />

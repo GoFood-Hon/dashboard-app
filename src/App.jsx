@@ -29,8 +29,8 @@ function App() {
           <Route path={NAVIGATION_ROUTES.Transactions.path} element={<Transactions />} />
 
           <Route path={NAVIGATION_ROUTES.Menu.path} element={<Menu />} />
-          <Route path={NAVIGATION_ROUTES.Menu.submenu.Platillos.path} element={<Dishes />} />
-          <Route path={`${NAVIGATION_ROUTES.Menu.submenu.Platillos.path}/newDish`} element={<NewDish />} />
+          <Route path={NAVIGATION_ROUTES.Menu.submenu.Dishes.path} element={<Dishes />} />
+          <Route path={NAVIGATION_ROUTES.Menu.submenu.Dishes.submenu.NewDish.path} element={<NewDish />} />
           <Route path={NAVIGATION_ROUTES.Menu.submenu.Complements.path} element={<Complements />} />
           <Route path={NAVIGATION_ROUTES.Menu.submenu.Combos.path} element={<Combos />} />
 
@@ -40,7 +40,7 @@ function App() {
           <Route path={"logout"} element={<Logout />} />
         </Route>
         <Route element={<UnauthenticatedLayout />}>
-          <Route path={AUTH_NAVIGATION_ROUTES.Loin.path} element={<Login />} />
+          <Route path={AUTH_NAVIGATION_ROUTES.Login.path} element={<Login />} />
           <Route path={AUTH_NAVIGATION_ROUTES.Register.path} element={<Register />} />
           <Route path={AUTH_NAVIGATION_ROUTES.ForgetPassword.path} element={<ForgetPassword />} />
         </Route>

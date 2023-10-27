@@ -6,6 +6,7 @@ import { useSelector } from "react-redux"
 import { NavLink, useLocation, useNavigate } from "react-router-dom"
 import { Popover, Transition } from "@mantine/core"
 import GoFoodLogo from "../assets/images/goFood.png"
+import { AUTH_NAVIGATION_ROUTES } from "../routes"
 
 export default function Header() {
   const user = useSelector((state) => state.user.value)
@@ -15,9 +16,9 @@ export default function Header() {
   const [opened, setOpened] = useState(false)
 
   useEffect(() => {
-    if (location.pathname === "/logout") {
+    if (location.pathname === AUTH_NAVIGATION_ROUTES.Logout.path) {
       localStorage.removeItem("token")
-      navigate("/login")
+      navigate(AUTH_NAVIGATION_ROUTES.Login.path)
     }
   }, [location.pathname])
 
