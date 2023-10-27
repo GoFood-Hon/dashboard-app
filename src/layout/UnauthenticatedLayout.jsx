@@ -5,6 +5,7 @@ import livingImage from "../assets/images/living.png"
 import layout1Image from "../assets/images/layout1.png"
 import authUtils from "../utils/authUtils"
 import LoadingCircle from "../components/LoadingCircle"
+import { AUTH_NAVIGATION_ROUTES } from "../routes"
 
 export default function UnauthenticatedLayout() {
   const location = useLocation()
@@ -25,7 +26,7 @@ export default function UnauthenticatedLayout() {
   }, [navigate])
 
   useEffect(() => {
-    if (location.pathname === "/forgetPassword") {
+    if (location.pathname === AUTH_NAVIGATION_ROUTES.ForgetPassword.path) {
       setBgImage(livingImage)
     } else {
       setBgImage(layout1Image)

@@ -1,12 +1,19 @@
-import React from "react"
+import React, { useState } from "react"
 import { Link } from "react-router-dom"
 import { useForm } from "react-hook-form"
 import InputField from "../../components/Form/InputField"
 import { yupResolver } from "@hookform/resolvers/yup"
 import { registrationValidationSchema } from "../../utils/inputRules"
 import { AUTH_NAVIGATION_ROUTES } from "../../routes"
+import authApi from "../../api/authApi"
+import toast from "react-hot-toast"
+import { useDispatch } from "react-redux"
+import { setUser } from "../../store/features/userSlice"
 
 export default function Register() {
+  const [isLoading, setIsLoading] = useState(false)
+  const dispatch = useDispatch()
+
   const {
     register,
     handleSubmit,
@@ -15,7 +22,28 @@ export default function Register() {
     resolver: yupResolver(registrationValidationSchema)
   })
 
-  const onSubmit = (data) => {}
+  const onSubmit = async ({ name, email, password, phoneNumber }) => {
+    try {
+      const res = await authApi.signup({ name, email, password, phoneNumber: "+50412345678" })
+      if (res.status === "fail") {
+        toast.error(res.message)
+        return
+      }
+      const userData = res?.data?.user
+
+      if (userData) {
+        toast.success("Usuario registrado, bienvenido a GoFood!")
+        setIsLoading(false)
+        localStorage.setItem("token", res.token)
+        dispatch(setUser(res.data.user))
+
+        navigate("/")
+      }
+    } catch (err) {
+      toast.error("Hubo un error!")
+      setIsLoading(false)
+    }
+  }
 
   return (
     <>
@@ -28,7 +56,7 @@ export default function Register() {
           <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col">
             <InputField
               label="Nombre de usuario"
-              name="username"
+              name="name"
               register={register}
               errors={errors}
               placeholder="Ingrese nombre de usuario"

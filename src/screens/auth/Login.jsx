@@ -8,6 +8,7 @@ import toast from "react-hot-toast"
 import authApi from "../../api/authApi"
 import { useDispatch } from "react-redux"
 import { setUser } from "../../store/features/userSlice"
+import { AUTH_NAVIGATION_ROUTES } from "../../routes"
 
 export default function Login() {
   const dispatch = useDispatch()
@@ -80,7 +81,9 @@ export default function Login() {
               errors={errors}
               placeholder="Ingrese su contraseña"
             />
-            <Link to={"/forgetPassword"} className="mb-3 mt-3 hover:underline hover:cursor-pointer text-sm text-secondary_text">
+            <Link
+              to={AUTH_NAVIGATION_ROUTES.ForgetPassword.path}
+              className="mb-3 mt-3 hover:underline hover:cursor-pointer text-sm text-secondary_text">
               Olvidaste tu contraseña?
             </Link>
             <input
@@ -95,7 +98,7 @@ export default function Login() {
             <div className="flex flex-row justify-center w-full mb-3">
               <p>No tienes una cuenta?</p>
               <Link
-                to={"/register"}
+                to={AUTH_NAVIGATION_ROUTES.Register.path}
                 className="hover:underline text-primary_text cursor-pointer pl-1 dark:text-dark_secondary_text">
                 Crear cuenta
               </Link>
