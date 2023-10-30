@@ -1,13 +1,34 @@
 import React, { useState } from "react"
 import { CloseButton, Grid, Input } from "@mantine/core"
+import { SortableList } from "./components"
+
+function getMockItems() {
+  return createRange(50, (index) => ({ id: index + 1 }))
+}
+
+function createRange(length, initializer) {
+  return [...new Array(length)].map((_, index) => initializer(index))
+}
 
 export default function ComplementsForm() {
   const [searchComplement, setSearchComplement] = useState("")
+  const [items, setItems] = useState(getMockItems)
 
   return (
     <Grid>
       <Grid.Col span={{ base: 12, md: 7 }}>
-        <div className="w-full h-full p-6 bg-white rounded-lg border border-blue-100">Draggable List</div>
+        <div className="w-full h-full p-6 bg-white rounded-lg border border-blue-100">
+          <SortableList
+            items={items}
+            onChange={setItems}
+            renderItem={(item) => (
+              <SortableList.Item id={item.id}>
+                <SortableList.DragHandle />
+                {item.id}
+              </SortableList.Item>
+            )}
+          />
+        </div>
       </Grid.Col>
       <Grid.Col span={{ base: 12, md: 5 }}>
         <div className="w-full h-full p-6 bg-white rounded-lg border border-blue-100">
