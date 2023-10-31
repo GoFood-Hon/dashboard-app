@@ -3,13 +3,13 @@ import BaseLayout from "../../components/BaseLayout"
 import { Breadcrumbs, CloseButton, Grid, Input, Pagination } from "@mantine/core"
 import Button from "../../components/Button"
 import { useNavigate, useLocation } from "react-router-dom"
-import DishesCard from "../../components/DishesCard"
 import { colors } from "../../theme/colors"
 import { NAVIGATION_ROUTES } from "../../routes"
 import BreadCrumbNavigation from "../../components/BreadCrumbNavigation"
 import { useDispatch, useSelector } from "react-redux"
 import { fetchDishes, selectAllDishes, selectDishesError, selectDishesStatus } from "../../store/features/DishesSlice"
 import LoadingCircle from "../../components/LoadingCircle"
+import ItemCard from "../../components/ItemCard"
 
 export default function Dishes() {
   const navigate = useNavigate()
@@ -81,7 +81,7 @@ export default function Dishes() {
         <Grid grow>
           {dishes.map((item, key) => (
             <Grid.Col span={{ base: 12, md: 6, lg: 3 }} key={key}>
-              <DishesCard dish={item} />
+              <ItemCard item={item} />
             </Grid.Col>
           ))}
         </Grid>

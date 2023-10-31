@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react"
-import { Link, useLocation } from "react-router-dom"
+import { useLocation } from "react-router-dom"
 import { Breadcrumbs, Accordion, Affix, Transition } from "@mantine/core"
 import { useForm } from "react-hook-form"
 import BaseLayout from "../../components/BaseLayout"
@@ -10,9 +10,16 @@ import ExtrasForm from "./ExtrasForm"
 import GeneralInformationForm from "./GeneralInformationForm"
 import PaymentForm from "./PaymentForm"
 import BreadCrumbNavigation from "../../components/BreadCrumbNavigation"
+import { useDispatch, useSelector } from "react-redux"
+import { createDish, selectAllDishes } from "../../store/features/DishesSlice"
+import { newDishValidationSchema } from "../../utils/inputRules"
+import { yupResolver } from "@hookform/resolvers/yup"
 
 export default function NewDish() {
   const location = useLocation()
+  const dispatch = useDispatch()
+  const dishes = useSelector(selectAllDishes)
+
   const [isAffixMounted, setAffixMounted] = useState(true)
 
   const containerRef = useRef(null)
@@ -20,14 +27,28 @@ export default function NewDish() {
   const {
     register,
     handleSubmit,
+    setValue,
+    control,
     formState: { errors }
-  } = useForm()
+  } = useForm({
+    resolver: yupResolver(newDishValidationSchema)
+  })
+
+  const onSubmit = (data) => {
+    const formData = new FormData()
+    formData.append("name", data.name)
+    formData.append("price", data.price)
+    formData.append("description", data.description)
+    formData.append("files", data.files[0])
+
+    dispatch(createDish(formData))
+  }
 
   const dishFormConfiguration = [
     {
       title: "Información general",
       requirement: "Obligatorio",
-      form: <GeneralInformationForm register={register} errors={errors} />
+      form: <GeneralInformationForm register={register} errors={errors} setValue={setValue} control={control} />
     },
     {
       title: "Complementos",
@@ -87,53 +108,67 @@ export default function NewDish() {
 
   return (
     <BaseLayout>
-      <section>
-        <div className="flex flex-row justify-between items-center pb-6 flex-wrap xs:gap-3">
-          <div className="flex flex-row gap-x-3 items-center">
-            <h1 className="text-white-200 md:text-2xl font-semibold">Nuevo Platillo</h1>
-          </div>
-          <div>
-            <Breadcrumbs>
-              <BreadCrumbNavigation location={location} />
-            </Breadcrumbs>
-          </div>
-        </div>
-      </section>
-      <section>
-        <Accordion
-          variant="separated"
-          multiple
-          defaultValue={["Información general", "Pagos"]}
-          classNames={{
-            label: "bg-white fill-white"
-          }}>
-          {items}
-        </Accordion>
-      </section>
-      <section ref={containerRef}>
-        <Affix position={{ bottom: 20, left: "calc(50% - 200px)" }}>
-          <Transition transition="slide-down" mounted={isAffixMounted} duration={400} timingFunction="ease">
-            {(transitionStyles) => (
-              <div
-                className="w-full flex flex-row justify-end mt-6 gap-3 rounded-lg bg-white px-8 py-5 border border-gray-100 shadow"
-                style={transitionStyles}>
-                <Button text={"Descartar"} className={"text-xs border border-red-400 text-red-400 bg-white"} />
-                <Button text={"Guardar como borrador"} className={"text-xs border bg-white border-sky-950 text-sky-950"} />
-                <Button text={"Guardar platillo"} className={"text-xs bg-sky-950 text-slate-50 "} />
-              </div>
-            )}
-          </Transition>
-        </Affix>
-        {!isAffixMounted && (
-          <div className="w-full flex md:justify-end mt-6 md:gap-3 rounded-md bg-white px-8 py-5 border border-gray-200">
-            <div className="md:w-2/3 lg:1/3 sm:w-full flex flex-row justify-end gap-3 sm:flex-wrap md:flex-nowrap">
-              <Button text={"Descartar"} className={"text-xs border border-red-400 text-red-400 bg-white"} />
-              <Button text={"Guardar como borrador"} className={"text-xs border bg-white border-sky-950 text-sky-950"} />
-              <Button text={"Guardar platillo"} className={"text-xs bg-sky-950 text-slate-50 "} />
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <section>
+          <div className="flex flex-row justify-between items-center pb-6 flex-wrap xs:gap-3">
+            <div className="flex flex-row gap-x-3 items-center">
+              <h1 className="text-white-200 md:text-2xl font-semibold">Nuevo Platillo</h1>
+            </div>
+            <div>
+              <Breadcrumbs>
+                <BreadCrumbNavigation location={location} />
+              </Breadcrumbs>
             </div>
           </div>
-        )}
-      </section>
+        </section>
+        <section>
+          <Accordion
+            variant="separated"
+            multiple
+            defaultValue={["Información general", "Pagos"]}
+            classNames={{
+              label: "bg-white fill-white"
+            }}>
+            {items}
+          </Accordion>
+        </section>
+        <section ref={containerRef}>
+          <Affix position={{ bottom: 20, left: "calc(50% - 200px)" }}>
+            <Transition transition="slide-down" mounted={isAffixMounted} duration={400} timingFunction="ease">
+              {(transitionStyles) => (
+                <div
+                  className="w-full flex flex-row justify-end mt-6 gap-3 rounded-lg bg-white px-8 py-5 border border-gray-100 shadow"
+                  style={transitionStyles}>
+                  <Button text={"Descartar"} className={"text-xs border border-red-400 text-red-400 bg-white"} />
+                  <Button text={"Guardar como borrador"} className={"text-xs border bg-white border-sky-950 text-sky-950"} />
+                  <input
+                    value={"Guardar platillo"}
+                    type="submit"
+                    className={
+                      "flex h-10 w-full items-center justify-center px-4 rounded-md shadow-sm transition-all duration-700 focus:outline-none text-xs bg-sky-950 text-slate-50"
+                    }
+                  />
+                </div>
+              )}
+            </Transition>
+          </Affix>
+          {!isAffixMounted && (
+            <div className="w-full flex md:justify-end mt-6 md:gap-3 rounded-md bg-white px-8 py-5 border border-gray-200">
+              <div className="md:w-2/3 lg:1/3 sm:w-full flex flex-row justify-end gap-3 sm:flex-wrap md:flex-nowrap">
+                <Button text={"Descartar"} className={"text-xs border border-red-400 text-red-400 bg-white"} />
+                <Button text={"Guardar como borrador"} className={"text-xs border bg-white border-sky-950 text-sky-950"} />
+                <input
+                  value={"Guardar platillo"}
+                  type="submit"
+                  className={
+                    "bg-primary_button flex h-10 w-full items-center justify-center space-x-3 rounded-md shadow-sm transition-all duration-700 focus:outline-none text-xs text-slate-50"
+                  }
+                />
+              </div>
+            </div>
+          )}
+        </section>
+      </form>
     </BaseLayout>
   )
 }

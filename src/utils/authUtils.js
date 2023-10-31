@@ -6,6 +6,8 @@ const authUtils = {
     if (!token) return false
     try {
       const res = await authApi.verifyToken()
+      console.log(res, "token")
+
       if (res?.status === "success") {
         const user = await authApi.getUser()
         return user?.data?.data

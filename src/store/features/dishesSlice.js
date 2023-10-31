@@ -11,9 +11,18 @@ export const fetchDishes = createAsyncThunk("dishes/fetchDishes", async (_, { di
   }
 })
 
+export const createDish = createAsyncThunk("dishes/createDish", async (formData, { dispatch }) => {
+  const response = await dishesApi.createDish(formData)
+
+  dispatch(fetchDishes())
+
+  return response.data
+})
+
 const initialState = {
   dishes: [],
   status: "idle",
+  loading: false,
   error: null
 }
 
@@ -28,6 +37,9 @@ export const dishesSlice = createSlice({
     setError: (state, action) => {
       state.status = "failed"
       state.error = action.payload
+    },
+    setLoading: (state, action) => {
+      state.loading = action.payload
     }
   },
   extraReducers: (builder) => {
@@ -47,6 +59,8 @@ export const dishesSlice = createSlice({
 })
 
 export const { setDishes, setError } = dishesSlice.actions
+
+export const setLoading = (state) => state.dishes.loading
 
 export const selectAllDishes = (state) => state.dishes.dishes
 
