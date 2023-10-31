@@ -13,12 +13,16 @@ const axiosClient = axios.create({
 })
 
 axiosClient.interceptors.request.use(async (config) => {
+  const token = getToken()
+
+  const headers = {
+    "Content-Type": `${config.contentType ?? "application/json"}`,
+    authorization: `Bearer ${config.refreshToken ?? token}`
+  }
+
   return {
     ...config,
-    headers: {
-      "Content-Type": "application/json",
-      authorization: `Bearer ${getToken()}`
-    }
+    headers
   }
 })
 

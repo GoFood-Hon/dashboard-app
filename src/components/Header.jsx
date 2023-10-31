@@ -86,7 +86,7 @@ export default function Header() {
                     className={
                       "mt-3 dark:border-slate-100 border-slate-400 rounded text-sm bg-slate-700 text-white flex h-10 w-full items-center justify-center space-x-3 shadow-sm transition-all duration-700 focus:outline-none mb-3"
                     }
-                    to="/logout">
+                    to={AUTH_NAVIGATION_ROUTES.Logout.path}>
                     <span>Cerrar sesión</span>
                   </NavLink>
                 </div>

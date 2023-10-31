@@ -25,7 +25,7 @@ export default function UnauthenticatedLayout() {
   }, [navigate])
 
   useEffect(() => {
-    if (location.pathname === "/forgetPassword") {
+    if (location.pathname === "/olvideMiContrase%C3%B1a") {
       setBgImage(livingImage)
     } else {
       setBgImage(layout1Image)

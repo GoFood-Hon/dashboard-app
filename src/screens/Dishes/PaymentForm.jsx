@@ -10,9 +10,8 @@ export default function PaymentForm({ register, errors }) {
         <Grid.Col span={{ base: 12, md: 6 }}>
           <InputField
             label="Precio inicial"
-            name="initialPrice"
+            name="price"
             register={register}
-            rules={inputRequired}
             errors={errors}
             placeholder="Ej. HND 200.00"
             className="text-black"
@@ -23,7 +22,6 @@ export default function PaymentForm({ register, errors }) {
             label="Precio final"
             name="finalPrice"
             register={register}
-            rules={inputRequired}
             errors={errors}
             placeholder="Ej. HND 150.00"
             className="text-black"

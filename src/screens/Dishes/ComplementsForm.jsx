@@ -1,33 +1,104 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { CloseButton, Grid, Input } from "@mantine/core"
 import { SortableList } from "./components"
+import { getFormattedHNL } from "../../utils"
+import LoadingCircle from "../../components/LoadingCircle"
+import {
+  fetchComplements,
+  selectAllComplements,
+  selectComplementsError,
+  selectComplementsStatus
+} from "../../store/features/complementsSlice"
+import { useDispatch, useSelector } from "react-redux"
+import EyeIcon from "../../assets/icons/EyeIcon"
+import { TrashIcon } from "../../assets/icons/TrashIcon"
 
-function getMockItems() {
-  return createRange(50, (index) => ({ id: index + 1 }))
+const AvailableComplementsCard = ({ item, onItemClick }) => {
+  const { active, images, name, price } = item
+  const handleItemClick = () => {
+    onItemClick(item)
+  }
+
+  return (
+    <div onClick={handleItemClick} className="cursor-pointer">
+      <div className="w-full p-5 my-3 bg-white rounded-lg border border-blue-100 flex-row justify-between items-center flex text-sm">
+        <div className="flex flex-row items-center w-1/2">
+          <img className="w-10 h-10" src={images?.[0]?.location} alt={images?.[0]?.key} />
+          <span className="text-sky-950 pl-3">{name}</span>
+        </div>
+        <div className="flex flex-row w-1/2 justify-end">
+          <span className="text-sky-950 pl-3">{getFormattedHNL(price)}</span>
+        </div>
+      </div>
+    </div>
+  )
 }
 
-function createRange(length, initializer) {
-  return [...new Array(length)].map((_, index) => initializer(index))
+const ComplementCard = ({ item }) => {
+  const { active, images, name, price } = item
+
+  return (
+    <div className="w-full h-full">
+      <div className="w-full h-full flex-row justify-between items-center flex text-sm">
+        <div className="flex flex-row items-center w-1/2">
+          <img className="w-10 h-10" src={images?.[0]?.location} alt={images?.[0]?.key} />
+          <span className="text-sky-950 pl-3">{name}</span>
+        </div>
+        <div className="flex flex-row w-1/2 justify-end">
+          <span className="text-sky-950 pl-3">{getFormattedHNL(price)}</span>
+          <div className="h-full flex justify-center items-center">
+            <span className="mx-1 cursor-pointer">
+              <EyeIcon width={20} height={20} />
+            </span>
+            <span className="mx-1 cursor-pointer">
+              <TrashIcon width={20} height={20} fill={"#F87171"} />
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
 }
 
 export default function ComplementsForm() {
+  const dispatch = useDispatch()
+  const complements = useSelector(selectAllComplements)
+  const status = useSelector(selectComplementsStatus)
+  const error = useSelector(selectComplementsError)
+
   const [searchComplement, setSearchComplement] = useState("")
-  const [items, setItems] = useState(getMockItems)
+  const [addedComplements, setAddedComplements] = useState([])
+
+  useEffect(() => {
+    if (status === "idle") {
+      dispatch(fetchComplements())
+    }
+  }, [status, dispatch])
+
+  const handleComplementClick = (complement) => {
+    setAddedComplements([...addedComplements, complement])
+  }
 
   return (
     <Grid>
       <Grid.Col span={{ base: 12, md: 7 }}>
         <div className="w-full h-full p-6 bg-white rounded-lg border border-blue-100">
-          <SortableList
-            items={items}
-            onChange={setItems}
-            renderItem={(item) => (
-              <SortableList.Item id={item.id}>
-                <SortableList.DragHandle />
-                {item.id}
-              </SortableList.Item>
-            )}
-          />
+          {addedComplements.length > 0 ? (
+            <SortableList
+              items={addedComplements}
+              onChange={setAddedComplements}
+              renderItem={(item) => (
+                <SortableList.Item id={item.id}>
+                  <SortableList.DragHandle />
+                  <ComplementCard item={item} />
+                </SortableList.Item>
+              )}
+            />
+          ) : (
+            <div className="flex flex-col w-full h-full text-xl justify-center item-center text-center">
+              Por favor seleccione complementos para este platillo
+            </div>
+          )}
         </div>
       </Grid.Col>
       <Grid.Col span={{ base: 12, md: 5 }}>
@@ -50,38 +121,16 @@ export default function ComplementsForm() {
               }
             />
           </div>
-          <div>
-            <div className="w-full p-5 my-3 bg-white rounded-lg border border-blue-100 flex-row justify-between items-center flex text-sm">
-              <div className="flex flex-row items-center w-1/2">
-                <img className="w-10 h-10" src="https://via.placeholder.com/40x40" />
-                <span className="text-sky-950 pl-3">Papas</span>
+          <div className="w-full">
+            {status === "loading" && (
+              <div className="h-[calc(100vh-350px)] w-full flex justify-center items-center">
+                <LoadingCircle />
               </div>
-              <div className="flex flex-row w-1/2 justify-end">
-                <span className="text-sky-950 pl-3">+ HND 120.00</span>
-              </div>
-            </div>
-          </div>
-          <div>
-            <div className="w-full p-5 my-3 bg-white rounded-lg border border-blue-100 flex-row justify-between items-center flex text-sm">
-              <div className="flex flex-row items-center w-1/2">
-                <img className="w-10 h-10" src="https://via.placeholder.com/40x40" />
-                <span className="text-sky-950 pl-3">Papas Supreme</span>
-              </div>
-              <div className="flex flex-row w-1/2 justify-end">
-                <span className="text-sky-950 pl-3">+ HND 10.03</span>
-              </div>
-            </div>
-          </div>
-          <div>
-            <div className="w-full p-5 my-3 bg-white rounded-lg border border-blue-100 flex-row justify-between items-center flex text-sm">
-              <div className="flex flex-row items-center w-1/2">
-                <img className="w-10 h-10" src="https://via.placeholder.com/40x40" />
-                <span className="text-sky-950 pl-3">Chilli Cheese</span>
-              </div>
-              <div className="flex flex-row w-1/2 justify-end">
-                <span className="text-sky-950 pl-3">+ HND 103.23</span>
-              </div>
-            </div>
+            )}
+            {status === "error" && <div>Error: {error}</div>}
+            {complements?.map((item, key) => (
+              <AvailableComplementsCard item={item} key={key} onItemClick={handleComplementClick} />
+            ))}
           </div>
         </div>
       </Grid.Col>
