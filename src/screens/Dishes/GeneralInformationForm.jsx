@@ -5,15 +5,11 @@ import React, { useState } from "react"
 import InputTextAreaField from "../../components/Form/InputTextAreaField"
 import InputField from "../../components/Form/InputField"
 import toast from "react-hot-toast"
+import { bytesToMB } from "../../utils"
 
 export default function GeneralInformationForm({ register, errors, setValue, control }) {
   const [uploadedImage, setUploadedImage] = useState(null)
   const [fileInformation, setFileInformation] = useState(null)
-
-  function bytesToMB(bytes) {
-    const megabytes = bytes / (1024 * 1024)
-    return megabytes.toFixed(2)
-  }
 
   const handleDrop = (acceptedFiles) => {
     if (acceptedFiles.length > 0) {
@@ -52,6 +48,10 @@ export default function GeneralInformationForm({ register, errors, setValue, con
               errors={errors}
               placeholder="Ej. Rico pollo con papas, salsas..."
             />
+            <div className="flex flex-row justify-start">
+              <label className="text-slate-400 mr-3">Incluye bebida?</label>
+              <input type="checkbox" {...register("includeDrink")} />
+            </div>
           </div>
         </div>
       </Grid.Col>

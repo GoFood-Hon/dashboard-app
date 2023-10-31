@@ -10,14 +10,8 @@ import {
   selectComplementsStatus
 } from "../../store/features/complementsSlice"
 import { useDispatch, useSelector } from "react-redux"
-
-function getMockItems() {
-  return createRange(5, (index) => ({ id: index + 1 }))
-}
-
-function createRange(length, initializer) {
-  return [...new Array(length)].map((_, index) => initializer(index))
-}
+import EyeIcon from "../../assets/icons/EyeIcon"
+import { TrashIcon } from "../../assets/icons/TrashIcon"
 
 const AvailableComplementsCard = ({ item, onItemClick }) => {
   const { active, images, name, price } = item
@@ -44,14 +38,22 @@ const ComplementCard = ({ item }) => {
   const { active, images, name, price } = item
 
   return (
-    <div className="cursor-pointer">
-      <div className="w-full  flex-row justify-between items-center flex text-sm">
+    <div className="w-full h-full">
+      <div className="w-full h-full flex-row justify-between items-center flex text-sm">
         <div className="flex flex-row items-center w-1/2">
           <img className="w-10 h-10" src={images?.[0]?.location} alt={images?.[0]?.key} />
           <span className="text-sky-950 pl-3">{name}</span>
         </div>
         <div className="flex flex-row w-1/2 justify-end">
           <span className="text-sky-950 pl-3">{getFormattedHNL(price)}</span>
+          <div className="h-full flex justify-center items-center">
+            <span className="mx-1 cursor-pointer">
+              <EyeIcon width={20} height={20} />
+            </span>
+            <span className="mx-1 cursor-pointer">
+              <TrashIcon width={20} height={20} fill={"#F87171"} />
+            </span>
+          </div>
         </div>
       </div>
     </div>

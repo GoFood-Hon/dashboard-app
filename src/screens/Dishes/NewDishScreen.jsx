@@ -50,11 +50,11 @@ export default function NewDish() {
       requirement: "Obligatorio",
       form: <GeneralInformationForm register={register} errors={errors} setValue={setValue} control={control} />
     },
-    {
+    /* {
       title: "Complementos",
       requirement: "Opcional",
       form: <ComplementsForm />
-    },
+    }, */
     {
       title: "Bebidas",
       requirement: "Opcional",
