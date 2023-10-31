@@ -18,6 +18,10 @@ export const NAVIGATION_ROUTES = {
         label: "Platillos",
         icon: "menu",
         path: "/menu/platillos",
+        DishDetails: {
+          label: "Detalles del Platillo",
+          path: "/menu/platillos/:dishId"
+        },
         submenu: {
           NewDish: {
             path: "/menu/platillos/nuevoPlatillo"

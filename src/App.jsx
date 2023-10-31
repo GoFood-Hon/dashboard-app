@@ -18,6 +18,7 @@ import Logout from "./screens/Logout"
 import Dishes from "./screens/Dishes/DishesScreen"
 import Combos from "./screens/Combos"
 import NewDish from "./screens/Dishes/NewDishScreen"
+import DishDetails from "./screens/DishDetails"
 
 function App() {
   const router = createBrowserRouter(
@@ -30,6 +31,7 @@ function App() {
 
           <Route path={NAVIGATION_ROUTES.Menu.path} element={<Menu />} />
           <Route path={NAVIGATION_ROUTES.Menu.submenu.Dishes.path} element={<Dishes />} />
+          <Route path={NAVIGATION_ROUTES.Menu.submenu.Dishes.DishDetails.path} element={<DishDetails />} />
           <Route path={NAVIGATION_ROUTES.Menu.submenu.Dishes.submenu.NewDish.path} element={<NewDish />} />
           <Route path={NAVIGATION_ROUTES.Menu.submenu.Complements.path} element={<Complements />} />
           <Route path={NAVIGATION_ROUTES.Menu.submenu.Combos.path} element={<Combos />} />

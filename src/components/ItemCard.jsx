@@ -4,12 +4,21 @@ import { UserLoveIcon } from "../assets/icons/UserLoveIcon"
 import { UserSearchIcon } from "../assets/icons/UserSearchIcon"
 import { UserPromotionIcon } from "../assets/icons/PromotionUserIcon"
 import { getFormattedHNL } from "../utils"
+import { useNavigate } from "react-router-dom"
+import { NAVIGATION_ROUTES } from "../routes"
 
 export default function ItemCard({ item }) {
-  const { active = true, name, images, price, isUserSearch, isUserLove, isPromotion } = item
+  const { id, active = true, name, images, price, isUserSearch, isUserLove, isPromotion } = item
+  const navigate = useNavigate()
+
+  const handleClick = () => {
+    navigate(`${NAVIGATION_ROUTES.Menu.submenu.Dishes.path}/${id}`)
+  }
 
   return (
-    <div className="w-full h-full px-6 py-3 bg-white rounded-2xl border border-blue-100 flex-col justify-between items-center inline-flex">
+    <div
+      className="w-full h-full px-6 py-3 bg-white rounded-2xl border border-blue-100 flex-col justify-between items-center inline-flex cursor-pointer"
+      onClick={handleClick}>
       <div className="flex flex-col justify-between items-center">
         {active ? (
           <div className="text-emerald-400 px-4 py-1 rounded-2xl justify-center items-center bg-green-100 my-3">Habilitado</div>
