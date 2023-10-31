@@ -12,19 +12,40 @@ import {
 import { useDispatch, useSelector } from "react-redux"
 
 function getMockItems() {
-  return createRange(50, (index) => ({ id: index + 1 }))
+  return createRange(5, (index) => ({ id: index + 1 }))
 }
 
 function createRange(length, initializer) {
   return [...new Array(length)].map((_, index) => initializer(index))
 }
 
+const AvailableComplementsCard = ({ item, onItemClick }) => {
+  const { active, images, name, price } = item
+  const handleItemClick = () => {
+    onItemClick(item)
+  }
+
+  return (
+    <div onClick={handleItemClick} className="cursor-pointer">
+      <div className="w-full p-5 my-3 bg-white rounded-lg border border-blue-100 flex-row justify-between items-center flex text-sm">
+        <div className="flex flex-row items-center w-1/2">
+          <img className="w-10 h-10" src={images?.[0]?.location} alt={images?.[0]?.key} />
+          <span className="text-sky-950 pl-3">{name}</span>
+        </div>
+        <div className="flex flex-row w-1/2 justify-end">
+          <span className="text-sky-950 pl-3">{getFormattedHNL(price)}</span>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 const ComplementCard = ({ item }) => {
   const { active, images, name, price } = item
 
   return (
-    <div>
-      <div className="w-full p-5 my-3 bg-white rounded-lg border border-blue-100 flex-row justify-between items-center flex text-sm">
+    <div className="cursor-pointer">
+      <div className="w-full  flex-row justify-between items-center flex text-sm">
         <div className="flex flex-row items-center w-1/2">
           <img className="w-10 h-10" src={images?.[0]?.location} alt={images?.[0]?.key} />
           <span className="text-sky-950 pl-3">{name}</span>
@@ -44,7 +65,7 @@ export default function ComplementsForm() {
   const error = useSelector(selectComplementsError)
 
   const [searchComplement, setSearchComplement] = useState("")
-  const [items, setItems] = useState(getMockItems)
+  const [addedComplements, setAddedComplements] = useState([])
 
   useEffect(() => {
     if (status === "idle") {
@@ -52,20 +73,30 @@ export default function ComplementsForm() {
     }
   }, [status, dispatch])
 
+  const handleComplementClick = (complement) => {
+    setAddedComplements([...addedComplements, complement])
+  }
+
   return (
     <Grid>
       <Grid.Col span={{ base: 12, md: 7 }}>
         <div className="w-full h-full p-6 bg-white rounded-lg border border-blue-100">
-          <SortableList
-            items={items}
-            onChange={setItems}
-            renderItem={(item) => (
-              <SortableList.Item id={item.id}>
-                <SortableList.DragHandle />
-                {item.id}
-              </SortableList.Item>
-            )}
-          />
+          {addedComplements.length > 0 ? (
+            <SortableList
+              items={addedComplements}
+              onChange={setAddedComplements}
+              renderItem={(item) => (
+                <SortableList.Item id={item.id}>
+                  <SortableList.DragHandle />
+                  <ComplementCard item={item} />
+                </SortableList.Item>
+              )}
+            />
+          ) : (
+            <div className="flex flex-col w-full h-full text-xl justify-center item-center text-center">
+              Por favor seleccione complementos para este platillo
+            </div>
+          )}
         </div>
       </Grid.Col>
       <Grid.Col span={{ base: 12, md: 5 }}>
@@ -96,7 +127,7 @@ export default function ComplementsForm() {
             )}
             {status === "error" && <div>Error: {error}</div>}
             {complements?.map((item, key) => (
-              <ComplementCard item={item} key={key} />
+              <AvailableComplementsCard item={item} key={key} onItemClick={handleComplementClick} />
             ))}
           </div>
         </div>

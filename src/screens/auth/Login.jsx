@@ -36,6 +36,7 @@ export default function Login() {
         toast.success("Inicio de session exitoso, bienvenido de vuelta!")
         setIsLoading(false)
         localStorage.setItem("token", res.token)
+        localStorage.setItem("refreshToken", res.refreshToken)
         dispatch(setUser(res.data.user))
 
         navigate("/")

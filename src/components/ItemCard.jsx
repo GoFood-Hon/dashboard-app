@@ -6,7 +6,7 @@ import { UserPromotionIcon } from "../assets/icons/PromotionUserIcon"
 import { getFormattedHNL } from "../utils"
 
 export default function ItemCard({ item }) {
-  const { active, name, images, price, isUserSearch, isUserLove, isPromotion } = item
+  const { active = true, name, images, price, isUserSearch, isUserLove, isPromotion } = item
 
   return (
     <div className="w-full h-full px-6 py-3 bg-white rounded-2xl border border-blue-100 flex-col justify-between items-center inline-flex">
