@@ -10,6 +10,10 @@ import { useDispatch, useSelector } from "react-redux"
 import { fetchDishes, selectAllDishes, selectDishesError, selectDishesStatus } from "../../store/features/DishesSlice"
 import LoadingCircle from "../../components/LoadingCircle"
 import ItemCard from "../../components/ItemCard"
+import { ReloadIcon } from "../../assets/icons/ReloadIcon"
+import { SettingIcon } from "../../assets/icons/SettingIcon"
+import { TrashIcon } from "../../assets/icons/TrashIcon"
+import { DotsIcon } from "../../assets/icons/DotsIcon"
 
 export default function Dishes() {
   const navigate = useNavigate()
@@ -52,7 +56,7 @@ export default function Dishes() {
         </div>
       </section>
       <section>
-        <div>
+        <div className="flex flex-row justify-between">
           <Input
             className="w-80"
             placeholder="Buscar platillo"
@@ -67,6 +71,29 @@ export default function Dishes() {
               />
             }
           />
+          <div className="flex flex-row w-full justify-end items-center">
+            <div className="flex flex-row mr-4">
+              <span className="text-sky-950 text-base font-bold leading-normal">1 </span>
+              <span className="text-zinc-500 text-base font-bold leading-normal">-</span>
+              <span className="text-sky-950 text-base font-bold leading-normal"> 15</span>
+              <span className="text-zinc-500 text-base font-medium leading-normal px-1"> de </span>
+              <span className="text-sky-950 text-base font-bold leading-normal">{dishes.length} platillos</span>
+            </div>
+            <div className="flex flex-row h-full items-center gap-3">
+              <span className="cursor-pointer">
+                <ReloadIcon height={20} />
+              </span>
+              <span className="cursor-pointer">
+                <SettingIcon height={20} />
+              </span>
+              <span className="cursor-pointer">
+                <TrashIcon height={20} />
+              </span>
+              <span className="cursor-pointer">
+                <DotsIcon height={20} width={20} />
+              </span>
+            </div>
+          </div>
         </div>
       </section>
       <section className="my-6 w-full">
@@ -81,14 +108,14 @@ export default function Dishes() {
         <Grid grow>
           {dishes.map((item, key) => (
             <Grid.Col span={{ base: 12, md: 6, lg: 3 }} key={key}>
-              <ItemCard item={item} />
+              <ItemCard item={item} navigation={true} />
             </Grid.Col>
           ))}
         </Grid>
       </section>
       <section className="flex flex-row justify-between">
         <div />
-        <Pagination total={10} color={colors.primary_button} />
+        <Pagination total={dishes.length} color={colors.primary_button} />
       </section>
     </BaseLayout>
   )

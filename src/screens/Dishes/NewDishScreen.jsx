@@ -11,16 +11,17 @@ import GeneralInformationForm from "./GeneralInformationForm"
 import PaymentForm from "./PaymentForm"
 import BreadCrumbNavigation from "../../components/BreadCrumbNavigation"
 import { useDispatch, useSelector } from "react-redux"
-import { createDish, selectAllDishes } from "../../store/features/DishesSlice"
+import { createDish, selectAllDishes, selectDishesError, selectDishesStatus } from "../../store/features/DishesSlice"
 import { newDishValidationSchema } from "../../utils/inputRules"
 import { yupResolver } from "@hookform/resolvers/yup"
+import toast from "react-hot-toast"
 
 export default function NewDish() {
   const location = useLocation()
   const dispatch = useDispatch()
-  const dishes = useSelector(selectAllDishes)
 
   const [isAffixMounted, setAffixMounted] = useState(true)
+  const [isDataCleared, setIsDataCleared] = useState(false)
 
   const containerRef = useRef(null)
 
@@ -29,6 +30,7 @@ export default function NewDish() {
     handleSubmit,
     setValue,
     control,
+    reset,
     formState: { errors }
   } = useForm({
     resolver: yupResolver(newDishValidationSchema)
@@ -41,14 +43,27 @@ export default function NewDish() {
     formData.append("description", data.description)
     formData.append("files", data.files[0])
 
-    dispatch(createDish(formData))
+    dispatch(createDish(formData)).then((response) => {
+      if (response.payload) {
+        reset()
+        setIsDataCleared(true)
+      }
+    })
   }
 
   const dishFormConfiguration = [
     {
       title: "Información general",
       requirement: "Obligatorio",
-      form: <GeneralInformationForm register={register} errors={errors} setValue={setValue} control={control} />
+      form: (
+        <GeneralInformationForm
+          register={register}
+          errors={errors}
+          setValue={setValue}
+          control={control}
+          isDataCleared={isDataCleared}
+        />
+      )
     },
     /* {
       title: "Complementos",

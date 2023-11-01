@@ -12,6 +12,7 @@ import {
 } from "../store/features/complementsSlice"
 import LoadingCircle from "../components/LoadingCircle"
 import ItemCard from "../components/ItemCard"
+import { NAVIGATION_ROUTES } from "../routes"
 
 export default function Complements() {
   const navigate = useNavigate()
@@ -73,7 +74,7 @@ export default function Complements() {
         <Grid grow>
           {complements?.map((item, key) => (
             <Grid.Col span={{ base: 12, md: 6, lg: 3 }} key={key}>
-              <ItemCard item={item} />
+              <ItemCard item={item} navigation={false} />
             </Grid.Col>
           ))}
         </Grid>
