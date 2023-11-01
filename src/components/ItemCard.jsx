@@ -7,12 +7,14 @@ import { getFormattedHNL } from "../utils"
 import { useNavigate } from "react-router-dom"
 import { NAVIGATION_ROUTES } from "../routes"
 
-export default function ItemCard({ item }) {
+export default function ItemCard({ item, navigation }) {
   const { id, active = true, name, images, price, isUserSearch, isUserLove, isPromotion } = item
   const navigate = useNavigate()
 
   const handleClick = () => {
-    navigate(`${NAVIGATION_ROUTES.Menu.submenu.Dishes.path}/${id}`)
+    if (navigation) {
+      navigate(`${NAVIGATION_ROUTES.Menu.submenu.Dishes.path}/${id}`)
+    }
   }
 
   return (

@@ -81,7 +81,7 @@ export default function Dishes() {
         <Grid grow>
           {dishes.map((item, key) => (
             <Grid.Col span={{ base: 12, md: 6, lg: 3 }} key={key}>
-              <ItemCard item={item} />
+              <ItemCard item={item} navigation={true} />
             </Grid.Col>
           ))}
         </Grid>
