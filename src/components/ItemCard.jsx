@@ -28,7 +28,7 @@ export default function ItemCard({ item, navigation }) {
           <div className="bg-rose-100 text-red-400 px-4 py-1 rounded-2xl justify-center items-center my-3">Deshabilitado</div>
         )}
       </div>
-      {images && <Image h={140} w="auto" fit="contain" src={images[0]?.location} alt={name} />}
+      {images && <Image h={"auto"} w="full" fit="contain" src={images[0]?.location} alt={name} radius={"xl"} />}
       <div className="flex flex-row justify-between w-full">
         <div className="flex-col items-start gap-2 flex w-full">
           <div className="text-sky-950 text-base font-bold">{name}</div>
