@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 import dishesApi from "../../api/dishesApi"
+import toast from "react-hot-toast"
 
 export const fetchDishes = createAsyncThunk("dishes/fetchDishes", async (_, { dispatch }) => {
   try {
@@ -12,11 +13,28 @@ export const fetchDishes = createAsyncThunk("dishes/fetchDishes", async (_, { di
 })
 
 export const createDish = createAsyncThunk("dishes/createDish", async (formData, { dispatch }) => {
-  const response = await dishesApi.createDish(formData)
+  try {
+    const response = await dishesApi.createDish(formData)
+    dispatch(fetchDishes())
 
-  dispatch(fetchDishes())
+    if (response.error) {
+      toast.error(`Fallo al crear el platillo. Por favor intente de nuevo. ${response.message}`, {
+        duration: 7000
+      })
+    } else {
+      toast.success("Platillo creado exitosamente", {
+        duration: 7000
+      })
+    }
+    return response.data
+  } catch (error) {
+    dispatch(setError("Error creating dish"))
+    toast.error("Fallo al crear el platillo. Por favor intente de nuevo.", {
+      duration: 7000
+    })
 
-  return response.data
+    throw error
+  }
 })
 
 const initialState = {
@@ -53,7 +71,7 @@ export const dishesSlice = createSlice({
       })
       .addCase(fetchDishes.rejected, (state, action) => {
         state.status = "failed"
-        state.error = action.error.message
+        state.error = action.error
       })
   }
 })
