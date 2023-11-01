@@ -7,6 +7,7 @@ import { NavLink, useLocation, useNavigate } from "react-router-dom"
 import { Popover, Transition } from "@mantine/core"
 import GoFoodLogo from "../assets/images/goFood.png"
 import { AUTH_NAVIGATION_ROUTES } from "../routes"
+import toast from "react-hot-toast"
 
 export default function Header() {
   const user = useSelector((state) => state.user.value)
@@ -21,6 +22,12 @@ export default function Header() {
       navigate(AUTH_NAVIGATION_ROUTES.Login.path)
     }
   }, [location.pathname])
+
+  const logout = () => {
+    toast.error("Cerrando sesión")
+    localStorage.removeItem("token")
+    navigate(AUTH_NAVIGATION_ROUTES.Login.path)
+  }
 
   return (
     <div className="w-full p-4 flex flex-row justify-between text-black  bg-white dark:text-white dark:bg-slate-800 dark:border-slate-700 border border-slate-200 z-20 fixed">
@@ -82,13 +89,9 @@ export default function Header() {
                     <div className="text-gray-400 text-sm">marlongeo1999@gmail.com</div>
                   </div>
                   <Button text={"Manejar cuenta"} className={"mt-5 border border-slate-400 rounded text-sm"} />
-                  <NavLink
-                    className={
-                      "mt-3 dark:border-slate-100 border-slate-400 rounded text-sm bg-slate-700 text-white flex h-10 w-full items-center justify-center space-x-3 shadow-sm transition-all duration-700 focus:outline-none mb-3"
-                    }
-                    to={AUTH_NAVIGATION_ROUTES.Logout.path}>
-                    <span>Cerrar sesión</span>
-                  </NavLink>
+                  <div className="mt-3 dark:border-slate-100 border-slate-400 rounded text-sm bg-slate-700 text-white flex h-10 w-full items-center justify-center space-x-3 shadow-sm transition-all duration-700 focus:outline-none mb-3">
+                    <span onClick={logout}>Cerrar sesión</span>
+                  </div>
                 </div>
               )}
             </Transition>
