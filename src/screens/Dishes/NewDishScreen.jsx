@@ -37,11 +37,16 @@ export default function NewDish() {
   })
 
   const onSubmit = (data) => {
+    console.log("leData", data)
     const formData = new FormData()
     formData.append("name", data.name)
+    formData.append("files", data.files[0])
     formData.append("price", data.price)
     formData.append("description", data.description)
-    formData.append("files", data.files[0])
+    formData.append("includesDrink", data.includesDrink)
+    formData.append("endPrice", data.includesDrink)
+    formData.append("categoryId", "00e1871d-478c-48d9-9095-a01d34d43196")
+    formData.append("restaurantId", "ba121c4f-764f-4d71-a489-6bb5204e6e8b")
 
     dispatch(createDish(formData)).then((response) => {
       if (response.payload) {

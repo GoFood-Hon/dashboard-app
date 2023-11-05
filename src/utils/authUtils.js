@@ -10,7 +10,6 @@ const authUtils = {
 
       if (user.status === "error" || !user) {
         const res = await authApi.verifyToken(refreshToken)
-        console.log(res)
         localStorage.setItem("token", res.token)
       }
 

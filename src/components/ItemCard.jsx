@@ -30,7 +30,7 @@ export default function ItemCard({ item, navigation }) {
       </div>
       {images && <Image h={"auto"} w="full" fit="contain" src={images[0]?.location} alt={name} radius={"xl"} />}
       <div className="flex flex-row justify-between w-full">
-        <div className="flex-col items-start gap-2 flex w-full">
+        <div className="flex-col items-start gap-2 flex w-full pt-3">
           <div className="text-sky-950 text-base font-bold">{name}</div>
           <div className="text-right text-sky-950 text-base font-medium">{getFormattedHNL(price)}</div>
         </div>

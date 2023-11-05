@@ -1,4 +1,4 @@
-import { CloseIcon, Grid, Group, Image, SimpleGrid, Text, rem } from "@mantine/core"
+import { CloseIcon, Grid, Group, Image, SimpleGrid, Text, rem, InputBase, Combobox, useCombobox } from "@mantine/core"
 import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone"
 import { IconPhoto } from "@tabler/icons-react"
 import React, { useEffect, useState } from "react"
@@ -6,8 +6,12 @@ import InputTextAreaField from "../../components/Form/InputTextAreaField"
 import InputField from "../../components/Form/InputField"
 import toast from "react-hot-toast"
 import { bytesToMB } from "../../utils"
+import InputCombobox from "../../components/Form/InputCombobox"
+import InputCheckbox from "../../components/Form/InputCheckbox"
 
 export default function GeneralInformationForm({ register, errors, setValue, isDataCleared }) {
+  const groceries = ["🍎 Apples", "🍌 Bananas", "🥦 Broccoli", "🥕 Carrots", "🍫 Chocolate"]
+
   const [images, setImages] = useState([])
   const [fileInformation, setFileInformation] = useState(null)
 
@@ -43,6 +47,7 @@ export default function GeneralInformationForm({ register, errors, setValue, isD
       />
     )
   })
+
   return (
     <Grid>
       <Grid.Col span={{ base: 12, md: 8, lg: 8 }}>
@@ -64,22 +69,31 @@ export default function GeneralInformationForm({ register, errors, setValue, isD
               errors={errors}
               placeholder="Ej. Rico pollo con papas, salsas..."
             />
-            <div className="flex flex-row justify-start">
-              <label className="text-slate-400 mr-3">Incluye bebida?</label>
-              <input type="checkbox" {...register("includeDrink")} />
+            <div className="mt-1  ">
+              <InputCombobox
+                label="Categoría del platillo"
+                name={"categoryId"}
+                placeholder="Buscar categoría"
+                items={groceries}
+                register={register}
+                errors={errors}
+              />
+            </div>
+            <div className="mt-4">
+              <InputCheckbox label="Incluye bebida?" name="includeDrink" register={register} />
             </div>
           </div>
         </div>
       </Grid.Col>
       <Grid.Col span={{ base: 12, md: 4, lg: 4 }}>
-        <div className="flex flex-row justify-center items-center w-full h-full bg-white rounded-2xl border border-blue-100 p-4">
+        <div className="flex flex-col justify-center items-center w-full h-full bg-white rounded-2xl border border-blue-100 p-4">
           {previews.length > 0 ? (
             <div className="w-full">
               <Text size="lg" inline className="text-left mb-5">
                 Imagen seleccionada:
               </Text>
-              <div className="flex flex-row justify-center items-center rounded-2xl w-full border border-slate-200 my-6">
-                <div className="flex flex-row w-full items-center gap-2 flex-wrap">
+              <div className="flex flex-row justify-center items-center rounded-2xl w-full border border-slate-200 my-3">
+                <div className="flex flex-row w-full items-center gap-2 flex-wrap p-2">
                   {previews}
                   <div className="flex flex-col">
                     <Text className="font-semibold italic">{fileInformation?.name}</Text>
