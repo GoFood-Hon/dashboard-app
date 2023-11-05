@@ -8,9 +8,17 @@ import toast from "react-hot-toast"
 import { bytesToMB } from "../../utils"
 import InputCombobox from "../../components/Form/InputCombobox"
 import InputCheckbox from "../../components/Form/InputCheckbox"
+import { useDispatch, useSelector } from "react-redux"
+import {
+  fetchDishesCategories,
+  selectAllDishesCategories,
+  selectAllDishesCategoriesStatus
+} from "../../store/features/categorySlice"
 
 export default function GeneralInformationForm({ register, errors, setValue, isDataCleared }) {
-  const groceries = ["🍎 Apples", "🍌 Bananas", "🥦 Broccoli", "🥕 Carrots", "🍫 Chocolate"]
+  const dispatch = useDispatch()
+  const categories = useSelector(selectAllDishesCategories)
+  const status = useSelector(selectAllDishesCategoriesStatus)
 
   const [images, setImages] = useState([])
   const [fileInformation, setFileInformation] = useState(null)
@@ -35,6 +43,12 @@ export default function GeneralInformationForm({ register, errors, setValue, isD
       deleteImage()
     }
   }, [isDataCleared])
+
+  useEffect(() => {
+    if (status === "idle") {
+      dispatch(fetchDishesCategories("pizza-hut"))
+    }
+  }, [status, dispatch])
 
   const previews = images.map((file, index) => {
     const imageUrl = URL.createObjectURL(file)
@@ -69,14 +83,16 @@ export default function GeneralInformationForm({ register, errors, setValue, isD
               errors={errors}
               placeholder="Ej. Rico pollo con papas, salsas..."
             />
-            <div className="mt-1  ">
+            <div className="mt-1">
               <InputCombobox
                 label="Categoría del platillo"
                 name={"categoryId"}
                 placeholder="Buscar categoría"
-                items={groceries}
+                emptyMessage="Sin categorías  "
+                items={categories}
                 register={register}
                 errors={errors}
+                setValue={setValue}
               />
             </div>
             <div className="mt-4">

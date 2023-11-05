@@ -74,7 +74,7 @@ export default function DishDetails() {
                   <div className="text-sky-950 text-sm font-medium py-5 leading-snug">Precio inicial</div>
                   <div className="text-sky-950 text-sm font-bold leading-snug">{getFormattedHNL(dishDetails?.price)}</div>
                   <div className="text-sky-950 text-sm font-medium py-5 leading-snug">Precio final</div>
-                  <div className="text-sky-950 text-sm font-bold leading-snug">{getFormattedHNL(dishDetails?.price)}</div>
+                  <div className="text-sky-950 text-sm font-bold leading-snug">{getFormattedHNL(dishDetails?.endPrice)}</div>
                 </div>
               </Grid.Col>
               <Grid.Col span={{ base: 12, md: 10, lg: 10 }}>

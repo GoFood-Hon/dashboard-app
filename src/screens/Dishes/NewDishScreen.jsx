@@ -10,11 +10,10 @@ import ExtrasForm from "./ExtrasForm"
 import GeneralInformationForm from "./GeneralInformationForm"
 import PaymentForm from "./PaymentForm"
 import BreadCrumbNavigation from "../../components/BreadCrumbNavigation"
-import { useDispatch, useSelector } from "react-redux"
-import { createDish, selectAllDishes, selectDishesError, selectDishesStatus } from "../../store/features/DishesSlice"
+import { useDispatch } from "react-redux"
+import { createDish } from "../../store/features/DishesSlice"
 import { newDishValidationSchema } from "../../utils/inputRules"
 import { yupResolver } from "@hookform/resolvers/yup"
-import toast from "react-hot-toast"
 
 export default function NewDish() {
   const location = useLocation()
@@ -37,16 +36,15 @@ export default function NewDish() {
   })
 
   const onSubmit = (data) => {
-    console.log("leData", data)
     const formData = new FormData()
     formData.append("name", data.name)
     formData.append("files", data.files[0])
     formData.append("price", data.price)
     formData.append("description", data.description)
-    formData.append("includesDrink", data.includesDrink)
-    formData.append("endPrice", data.includesDrink)
-    formData.append("categoryId", "00e1871d-478c-48d9-9095-a01d34d43196")
-    formData.append("restaurantId", "ba121c4f-764f-4d71-a489-6bb5204e6e8b")
+    formData.append("includesDrink", data.includeDrink)
+    formData.append("endPrice", data.endPrice)
+    formData.append("categoryId", data.categoryId)
+    formData.append("restaurantId", "eee4a05a-1186-43a7-a865-cdaedc903e74")
 
     dispatch(createDish(formData)).then((response) => {
       if (response.payload) {
