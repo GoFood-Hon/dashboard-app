@@ -8,6 +8,8 @@ import { Popover, Transition } from "@mantine/core"
 import GoFoodLogo from "../assets/images/goFood.png"
 import { AUTH_NAVIGATION_ROUTES } from "../routes"
 import toast from "react-hot-toast"
+import { AlarmIcon } from "../assets/icons/AlarmIcon"
+import { ConfigIcon } from "../assets/icons/ConfigIcon"
 
 export default function Header() {
   const user = useSelector((state) => state.user.value)
@@ -41,10 +43,10 @@ export default function Header() {
       </div>
       <div className="flex flex-row text-sm items-center">
         <span className="mx-1 hover:bg-light_selected_element p-2 rounded-full cursor-pointer duration-500 dark:hover:bg-dark_selected_element">
-          <Icon icon="alarm" />
+          <AlarmIcon />
         </span>
         <span className="hover:bg-light_selected_element p-2 rounded-full cursor-pointer duration-500 dark:hover:bg-dark_selected_element">
-          <Icon icon="settings" />
+          <ConfigIcon />
         </span>
         <div className="flex flex-col items-end px-3">
           <div className="font-semibold">{user.name}</div>
@@ -85,8 +87,8 @@ export default function Header() {
                     />
                   </div>
                   <div className="flex flex-col items-center">
-                    <div className="font-semibold">M Geovany</div>
-                    <div className="text-gray-400 text-sm">marlongeo1999@gmail.com</div>
+                    <div className="font-semibold">{user.name}</div>
+                    <div className="text-gray-400 text-sm">{user.email}</div>
                   </div>
                   <Button text={"Manejar cuenta"} className={"mt-5 border border-slate-400 rounded text-sm"} />
                   <div className="mt-3 dark:border-slate-100 border-slate-400 rounded text-sm bg-slate-700 text-white flex h-10 w-full items-center justify-center space-x-3 shadow-sm transition-all duration-700 focus:outline-none mb-3">

@@ -4,6 +4,8 @@ import { Icon } from "./Icon"
 import toast from "react-hot-toast"
 import { AUTH_NAVIGATION_ROUTES, NAVIGATION_ROUTES } from "../routes"
 import NavigationItem from "./NavigationItem"
+import { AlarmIcon } from "../assets/icons/AlarmIcon"
+import { MailIcon } from "../assets/icons/MailIcon"
 
 export default function SideBar() {
   const navigate = useNavigate()
@@ -67,13 +69,13 @@ export default function SideBar() {
             <ul className="text-sm text-light_secondary_text border-b border-b-light_selected_element pb-2 dark:border-b-dark_selected_element dark:text-dark_secondary_text">
               <li className="flex h-12 w-full items-center">
                 <Link to="/" className="flex w-full items-center duration-300">
-                  <Icon icon="alarm" />
+                  <AlarmIcon />
                   <span className="ml-3">Notificaciones</span>
                 </Link>
               </li>
               <li className="flex h-12 w-full items-center">
                 <Link to="/" className="flex w-full items-center duration-300">
-                  <Icon icon="mail" />
+                  <MailIcon />
                   <span className="ml-3">Mensajes</span>
                 </Link>
               </li>
