@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from "react"
 import Button from "./Button"
-import { restaurantList } from "../utils/restaurants"
-import { Icon } from "./Icon"
 import { useSelector } from "react-redux"
-import { NavLink, useLocation, useNavigate } from "react-router-dom"
+import { useLocation, useNavigate } from "react-router-dom"
 import { Popover, Transition } from "@mantine/core"
 import GoFoodLogo from "../assets/images/goFood.png"
 import { AUTH_NAVIGATION_ROUTES } from "../routes"
 import toast from "react-hot-toast"
 import { AlarmIcon } from "../assets/icons/AlarmIcon"
 import { ConfigIcon } from "../assets/icons/ConfigIcon"
+import restaurantsApi from "../api/restaurantApi"
+import RestaurantPicker from "./RestaurantPicker"
 
 export default function Header() {
   const user = useSelector((state) => state.user.value)
@@ -17,6 +17,7 @@ export default function Header() {
   const navigate = useNavigate()
 
   const [opened, setOpened] = useState(false)
+  const [restaurants, setRestaurants] = useState([])
 
   useEffect(() => {
     if (location.pathname === AUTH_NAVIGATION_ROUTES.Logout.path) {
@@ -31,6 +32,26 @@ export default function Header() {
     navigate(AUTH_NAVIGATION_ROUTES.Login.path)
   }
 
+  useEffect(() => {
+    const fetchAllRestaurants = async () => {
+      try {
+        const response = await restaurantsApi.getAllRestaurants()
+
+        if (response.error) {
+          toast.error(`Fallo al obtener todos los platillos. Por favor intente de nuevo. ${response.message}`, {
+            duration: 7000
+          })
+        } else {
+          setRestaurants(response.data)
+        }
+      } catch (error) {
+        dispatch(setError("Error fetching dishesCategories"))
+        throw error
+      }
+    }
+    fetchAllRestaurants()
+  }, [])
+
   return (
     <div className="w-full p-4 flex flex-row justify-between text-black  bg-white dark:text-white dark:bg-slate-800 dark:border-slate-700 border border-slate-200 z-20 fixed">
       <div className="flex flex-row">
@@ -38,7 +59,7 @@ export default function Header() {
           <img className="w-[123px] h-[42px]" src={GoFoodLogo} />
         </div>
         <div className="pl-4">
-          <img className="w-[123px] h-[42px]" src={restaurantList.Campero.image} alt={restaurantList.Campero.name} />
+          <RestaurantPicker items={restaurants} />
         </div>
       </div>
       <div className="flex flex-row text-sm items-center">

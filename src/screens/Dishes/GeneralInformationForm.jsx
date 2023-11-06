@@ -17,6 +17,8 @@ import {
 
 export default function GeneralInformationForm({ register, errors, setValue, isDataCleared }) {
   const dispatch = useDispatch()
+  const restaurant = useSelector((state) => state.restaurant.value)
+
   const categories = useSelector(selectAllDishesCategories)
   const status = useSelector(selectAllDishesCategoriesStatus)
 
@@ -45,10 +47,10 @@ export default function GeneralInformationForm({ register, errors, setValue, isD
   }, [isDataCleared])
 
   useEffect(() => {
-    if (status === "idle") {
-      dispatch(fetchDishesCategories("pizza-hut"))
+    if (status === "succeeded" || status === "idle") {
+      dispatch(fetchDishesCategories(restaurant.id))
     }
-  }, [status, dispatch])
+  }, [restaurant])
 
   const previews = images.map((file, index) => {
     const imageUrl = URL.createObjectURL(file)
@@ -93,6 +95,7 @@ export default function GeneralInformationForm({ register, errors, setValue, isD
                 register={register}
                 errors={errors}
                 setValue={setValue}
+                status={status}
               />
             </div>
             <div className="mt-4">

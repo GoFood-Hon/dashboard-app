@@ -10,7 +10,7 @@ import ExtrasForm from "./ExtrasForm"
 import GeneralInformationForm from "./GeneralInformationForm"
 import PaymentForm from "./PaymentForm"
 import BreadCrumbNavigation from "../../components/BreadCrumbNavigation"
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { createDish } from "../../store/features/DishesSlice"
 import { newDishValidationSchema } from "../../utils/inputRules"
 import { yupResolver } from "@hookform/resolvers/yup"
@@ -18,6 +18,7 @@ import { yupResolver } from "@hookform/resolvers/yup"
 export default function NewDish() {
   const location = useLocation()
   const dispatch = useDispatch()
+  const restaurant = useSelector((state) => state.restaurant.value)
 
   const [isDataCleared, setIsDataCleared] = useState(false)
 
@@ -43,7 +44,7 @@ export default function NewDish() {
     formData.append("includesDrink", data.includeDrink)
     formData.append("endPrice", data.endPrice)
     formData.append("categoryId", data.categoryId)
-    formData.append("restaurantId", "eee4a05a-1186-43a7-a865-cdaedc903e74")
+    formData.append("restaurantId", restaurant.id)
 
     dispatch(createDish(formData)).then((response) => {
       if (response.payload) {

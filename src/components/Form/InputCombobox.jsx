@@ -1,8 +1,9 @@
-import React, { useRef, useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import { InputBase, Combobox, useCombobox } from "@mantine/core"
 import { ErrorMessage } from "./ErrorMessage"
+import LoadingCircle from "../LoadingCircle"
 
-export default function InputCombobox({ items, label, errors, register, name, placeholder, emptyMessage, setValue }) {
+export default function InputCombobox({ items, label, errors, name, placeholder, emptyMessage, setValue, status }) {
   const combobox = useCombobox({
     onDropdownClose: () => combobox.resetSelectedOption()
   })
@@ -37,6 +38,10 @@ export default function InputCombobox({ items, label, errors, register, name, pl
     combobox.closeDropdown()
   }
 
+  useEffect(() => {
+    setSearch("")
+  }, [items])
+
   return (
     <React.Fragment>
       <div className="flex flex-col">
@@ -48,10 +53,11 @@ export default function InputCombobox({ items, label, errors, register, name, pl
               rightSection={<Combobox.Chevron />}
               onClick={() => combobox.openDropdown()}
               onFocus={() => combobox.openDropdown()}
-              onBlur={() => {
+              /* onBlur={() => {
                 combobox.closeDropdown()
+                console.log(value)
                 setSearch(value || "")
-              }}
+              }} */
               placeholder={placeholder}
               value={search}
               onChange={(event) => {
@@ -61,7 +67,22 @@ export default function InputCombobox({ items, label, errors, register, name, pl
             />
           </Combobox.Target>
           <Combobox.Dropdown>
-            <Combobox.Options>{options.length > 0 ? options : <Combobox.Empty>{emptyMessage}</Combobox.Empty>}</Combobox.Options>
+            <Combobox.Options>
+              {options.length > 0 ? (
+                options
+              ) : (
+                <Combobox.Empty>
+                  {status === "loading" ? (
+                    <div className="flex flex-col items-center justify-center">
+                      <LoadingCircle />
+                      <span>Cargando categorías...</span>
+                    </div>
+                  ) : (
+                    emptyMessage
+                  )}
+                </Combobox.Empty>
+              )}
+            </Combobox.Options>
           </Combobox.Dropdown>
         </Combobox>
         <ErrorMessage message={errors?.[name]?.message} />
