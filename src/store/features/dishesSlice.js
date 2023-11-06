@@ -2,10 +2,18 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 import dishesApi from "../../api/dishesApi"
 import toast from "react-hot-toast"
 
-export const fetchDishes = createAsyncThunk("dishes/fetchDishes", async (_, { dispatch }) => {
+const initialState = {
+  dishes: [],
+  currentPage: 1,
+  itemsPerPage: 2,
+  totalItems: 0
+}
+
+export const fetchDishes = createAsyncThunk("dishes/fetchDishes", async ({ limit, page, order }, { dispatch }) => {
   try {
-    const response = await dishesApi.getAllDishes()
+    const response = await dishesApi.getAllDishes({ limit, page, order })
     dispatch(setDishes(response.data))
+    return response.data
   } catch (error) {
     dispatch(setError("Error fetching dishes"))
     throw error
@@ -37,17 +45,13 @@ export const createDish = createAsyncThunk("dishes/createDish", async (formData,
   }
 })
 
-const initialState = {
-  dishes: [],
-  status: "idle",
-  loading: false,
-  error: null
-}
-
 export const dishesSlice = createSlice({
   name: "dishes",
   initialState,
   reducers: {
+    setPage: (state, action) => {
+      state.currentPage = action.payload
+    },
     setDishes: (state, action) => {
       state.dishes = action.payload
       state.status = "succeeded"
@@ -67,6 +71,7 @@ export const dishesSlice = createSlice({
       })
       .addCase(fetchDishes.fulfilled, (state, action) => {
         state.status = "succeeded"
+        state.totalItems = 6
         state.value = action.payload
       })
       .addCase(fetchDishes.rejected, (state, action) => {
@@ -76,7 +81,7 @@ export const dishesSlice = createSlice({
   }
 })
 
-export const { setDishes, setError } = dishesSlice.actions
+export const { setDishes, setError, setPage } = dishesSlice.actions
 
 export const setLoading = (state) => state.dishes.loading
 

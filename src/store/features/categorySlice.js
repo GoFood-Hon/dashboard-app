@@ -18,8 +18,6 @@ export const fetchDishesCategories = createAsyncThunk(
 export const createDishCategory = createAsyncThunk("dishesCategories/createDishCategory", async (formData, { dispatch }) => {
   try {
     const response = await dishesCategoriesApi.createCategory(formData)
-    dispatch(fetchDishesCategories())
-
     if (response.error) {
       toast.error(`Fallo al crear nueva categoría de platillo. Por favor intente de nuevo. ${response.message}`, {
         duration: 7000

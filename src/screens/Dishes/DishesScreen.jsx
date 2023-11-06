@@ -7,33 +7,41 @@ import { colors } from "../../theme/colors"
 import { NAVIGATION_ROUTES } from "../../routes"
 import BreadCrumbNavigation from "../../components/BreadCrumbNavigation"
 import { useDispatch, useSelector } from "react-redux"
-import { fetchDishes, selectAllDishes, selectDishesError, selectDishesStatus } from "../../store/features/DishesSlice"
+import { fetchDishes, selectAllDishes, selectDishesError, selectDishesStatus, setPage } from "../../store/features/DishesSlice"
 import LoadingCircle from "../../components/LoadingCircle"
 import ItemCard from "../../components/ItemCard"
 import { ReloadIcon } from "../../assets/icons/ReloadIcon"
 import { SettingIcon } from "../../assets/icons/SettingIcon"
 import { TrashIcon } from "../../assets/icons/TrashIcon"
 import { DotsIcon } from "../../assets/icons/DotsIcon"
+import { usePagination } from "@mantine/hooks"
 
 export default function Dishes() {
   const navigate = useNavigate()
   const location = useLocation()
+  const pagination = usePagination({ total: 2, initialPage: 1 })
 
   const dispatch = useDispatch()
   const dishes = useSelector(selectAllDishes)
   const status = useSelector(selectDishesStatus)
   const error = useSelector(selectDishesError)
+  const limit = useSelector((state) => state.dishes.itemsPerPage)
+  const totalItems = useSelector((state) => state.dishes.totalItems)
+  const page = useSelector((state) => state.dishes.currentPage)
+
+  const totalControlBtn = Math.ceil(totalItems / limit)
 
   const [searchDish, setSearchDish] = useState("")
-
   useEffect(() => {
-    if (status === "idle") {
-      dispatch(fetchDishes())
-    }
-  }, [status, dispatch])
+    dispatch(fetchDishes({ limit, page, order: "DESC" }))
+  }, [page, dispatch])
 
   const handleNewDish = () => {
     navigate(NAVIGATION_ROUTES.Menu.submenu.Dishes.submenu.NewDish.path)
+  }
+
+  const refreshDishes = () => {
+    dispatch(fetchDishes({ limit, page, order: "DESC" }))
   }
 
   return (
@@ -73,14 +81,16 @@ export default function Dishes() {
           />
           <div className="flex flex-row w-full justify-end items-center">
             <div className="flex flex-row mr-4">
-              <span className="text-sky-950 text-base font-bold leading-normal">1 </span>
+              <span className="text-sky-950 text-base font-bold leading-normal">{page === 1 ? 1 : (page - 1) * limit + 1}</span>
               <span className="text-zinc-500 text-base font-bold leading-normal">-</span>
-              <span className="text-sky-950 text-base font-bold leading-normal"> 15</span>
+              <span className="text-sky-950 text-base font-bold leading-normal">
+                {page === 1 ? limit : Math.min(page * limit, totalItems)}
+              </span>
               <span className="text-zinc-500 text-base font-medium leading-normal px-1"> de </span>
-              <span className="text-sky-950 text-base font-bold leading-normal">{dishes.length} platillos</span>
+              <span className="text-sky-950 text-base font-bold leading-normal">{totalItems} platillos</span>
             </div>
             <div className="flex flex-row h-full items-center gap-3">
-              <span className="cursor-pointer">
+              <span className="cursor-pointer" onClick={refreshDishes}>
                 <ReloadIcon height={20} />
               </span>
               <span className="cursor-pointer">
@@ -97,25 +107,30 @@ export default function Dishes() {
         </div>
       </section>
       <section className="my-6 w-full">
-        {status === "loading" && (
+        {status === "loading" ? (
           <div className="h-[calc(100vh-350px)] w-full flex justify-center items-center">
             <LoadingCircle />
           </div>
+        ) : (
+          <Grid grow>
+            {dishes?.map((item, key) => (
+              <Grid.Col span={{ base: 12, md: 6, lg: 3 }} key={key}>
+                <ItemCard item={item} navigation={true} />
+              </Grid.Col>
+            ))}
+          </Grid>
         )}
-
         {status === "error" && <div>Error: {error}</div>}
-
-        <Grid grow>
-          {dishes.map((item, key) => (
-            <Grid.Col span={{ base: 12, md: 6, lg: 3 }} key={key}>
-              <ItemCard item={item} navigation={true} />
-            </Grid.Col>
-          ))}
-        </Grid>
       </section>
       <section className="flex flex-row justify-between">
         <div />
-        <Pagination total={dishes.length} color={colors.primary_button} />
+        <Pagination
+          total={totalControlBtn}
+          page={page}
+          limit={limit}
+          onChange={(newPage) => dispatch(setPage(newPage))}
+          color={colors.primary_button}
+        />
       </section>
     </BaseLayout>
   )

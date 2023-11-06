@@ -18,13 +18,7 @@ export default function RestaurantPicker({ items }) {
   })
 
   const options = items.map((item) => (
-    <Combobox.Option
-      value={item}
-      key={item.id}
-      selected={restaurantIdRef.current === item}
-      ref={() => {
-        restaurantIdRef.current = item
-      }}>
+    <Combobox.Option value={item} key={item.id}>
       {item.name}
     </Combobox.Option>
   ))

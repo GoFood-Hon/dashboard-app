@@ -1,7 +1,7 @@
 import axiosClient from "./axiosClient"
 
 const dishesApi = {
-  getAllDishes: () => axiosClient.get("api/v1/dish/"),
+  getAllDishes: ({ limit, page, order }) => axiosClient.get(`api/v1/dish?limit=${limit}&page=${page}&order=${order}`),
   getDish: (dishId) => axiosClient.get(`api/v1/dish/${dishId}`),
   createDish: (params) =>
     axiosClient.post("api/v1/dish/", params, { contentType: `multipart/form-data; boundary=${params._boundary}` }),
