@@ -74,7 +74,7 @@ function Home() {
           <div className="bg-white rounded-2xl shadow border border-blue-100 flex flex-col w-full p-2 mr-6">
             <div className="flex flex-row justify-between items-center p-6 flex-wrap">
               <h2 className="text-white-200 text-xl font-semibold">Nuevos Pedidos</h2>
-              <Icon icon="more" />
+              <Icon icon="more" size={20} />
             </div>
             <span className="border border-blue-100" />
             <div className="pb-6">
@@ -88,7 +88,7 @@ function Home() {
           <div className="bg-white rounded-2xl shadow border border-blue-100 flex flex-col w-full p-2">
             <div className="flex flex-row justify-between items-center p-6 flex-wrap">
               <h2 className="text-white-200 text-xl font-semibold">Platillos mas comprados</h2>
-              <Icon icon="more" />
+              <Icon icon="more" size={20} />
             </div>
             <span className="border border-blue-100" />
             <div className="pb-6">
@@ -102,7 +102,7 @@ function Home() {
           <div className="bg-white rounded-2xl shadow border border-blue-100 flex flex-col w-full p-2 mr-6">
             <div className="flex flex-row justify-between items-center p-6 flex-wrap">
               <h2 className="text-white-200 text-xl font-semibold">Total ingresos</h2>
-              <Icon icon="more" />
+              <Icon icon="more" size={20} />
             </div>
             <span className="border border-blue-100" />
             <div className="pb-6">
@@ -116,7 +116,7 @@ function Home() {
           <div className="bg-white rounded-2xl shadow border border-blue-100 flex flex-col w-full p-2">
             <div className="flex flex-row justify-between items-center p-6 flex-wrap">
               <h2 className="text-white-200 text-xl font-semibold">Usuarios</h2>
-              <Icon icon="more" />
+              <Icon icon="more" size={20} />
             </div>
             <span className="border border-blue-100" />
             <div className="pb-6">

@@ -87,7 +87,7 @@ export default function SideBar() {
             <button
               className="flex flex-row items-center duration-300 hover:bg-red-400 hover:rounded-lg pb-3 hover:p-3"
               onClick={logout}>
-              <Icon icon="exit" />
+              <Icon icon="exit" size={17} />
               <span className="text-sm ml-3">Cerrar session</span>
             </button>
           </div>

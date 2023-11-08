@@ -9,15 +9,15 @@ export default function NavigationItem({ item, isSelected, isOpen, toggleSubMenu
         <>
           <Link
             to={item.path}
-            className={`flex w-full items-center justify-between duration-300 hover:bg-light_selected_element rounded-lg py-3 my-2 pl-2 pr-3 hover:pl-4 dark:hover:bg-dark_selected_element ${
+            className={`flex w-full items-center justify-between duration-300 hover:bg-light_selected_element rounded-lg py-3 my-2 pl-2 pr-3 hover:pl-4 ${
               isSelected && "bg-light_selected_element"
             }`}>
             <div className="flex flex-row items-center">
-              <Icon icon={item.icon} />
+              <Icon icon={item.icon} size={17} />
               <span className="font-sans ml-3">{item.label}</span>
             </div>
             <button onClick={() => toggleSubMenu(item.label)}>
-              <Icon icon={isOpen ? "chevronUp" : "chevronDown"} />
+              <Icon icon={isOpen ? "chevronUp" : "chevronDown"} size={17} />
             </button>
           </Link>
           {isOpen && (
@@ -26,7 +26,7 @@ export default function NavigationItem({ item, isSelected, isOpen, toggleSubMenu
                 <li key={subItem.label} className="h-12 w-full items-center">
                   <Link
                     to={subItem.path}
-                    className={`flex w-full items-center duration-300 hover:bg-light_selected_element rounded-lg py-3 pl-2 pr-3 hover:pl-4 dark:hover:bg-dark_selected_element ${
+                    className={`flex w-full items-center duration-300 hover:bg-light_selected_element rounded-lg py-3 pl-2 pr-3 hover:pl-4 ${
                       subItem === selectedSubmenuRoute && "bg-light_selected_element"
                     }`}>
                     <span className="font-sans ml-3">{subItem.label}</span>
@@ -39,10 +39,10 @@ export default function NavigationItem({ item, isSelected, isOpen, toggleSubMenu
       ) : (
         <Link
           to={item.path}
-          className={`flex w-full items-center duration-300 hover:bg-light_selected_element rounded-lg py-3 pl-2 pr-3 my-1 hover:pl-4 dark:hover:bg-dark_selected_element ${
+          className={`flex w-full items-center duration-300 hover:bg-light_selected_element rounded-lg py-3 pl-2 pr-3 my-1 hover:pl-4 ${
             isSelected && "bg-light_selected_element"
           }`}>
-          <Icon icon={item.icon} />
+          <Icon icon={item.icon} size={17} className="" />
           <span className="font-sans ml-3">{item.label}</span>
         </Link>
       )}

@@ -21,15 +21,15 @@ export default function NewOrders({ data }) {
             </span>
             <div className="flex flex-row text-xs items-center text-secondary_text pt-1">
               <div className="flex flex-row items-center">
-                <Icon icon="warehouse" />
+                <Icon icon="warehouse" size={17} />
                 <span className="ml-2">{data?.address}</span>
               </div>
               <div className="flex flex-row ml-4 items-center">
-                <Icon icon="timer" />
+                <Icon icon="timer" size={17} />
                 <span className="ml-2">{data?.time}</span>
               </div>
               <div className="flex flex-row ml-4 items-center">
-                <Icon icon="calendar" />
+                <Icon icon="calendar" size={17} />
                 <span className="ml-2">{data?.date}</span>
               </div>
             </div>

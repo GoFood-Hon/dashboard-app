@@ -137,7 +137,7 @@ export default function OrdersTable() {
   modifiedNodes = modifiedNodes.filter((node) => node.user.toLowerCase().includes(search.toLowerCase()))
 
   // filter
-  // modifiedNodes = isHide ? modifiedNodes.filter((node) => !node.isComplete) : modifiedNodes
+  modifiedNodes = isHide ? modifiedNodes.filter((node) => !node.isComplete) : modifiedNodes
 
   //* Columns *//
 

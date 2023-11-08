@@ -18,7 +18,7 @@ export default function Button({ icon, text, className, onClick }) {
         <LoadingCircle />
       ) : (
         <>
-          {icon && <Icon icon={icon} className="h-5 w-5" />}
+          {icon && <Icon icon={icon} size={20} className="h-5 w-5" />}
           <p className="w-full whitespace-nowrap px-4">{text}</p>
         </>
       )}
