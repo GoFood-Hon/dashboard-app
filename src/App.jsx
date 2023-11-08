@@ -8,7 +8,7 @@ import UnauthenticatedLayout from "./layout/UnauthenticatedLayout"
 import Register from "./screens/auth/Register"
 import ForgetPassword from "./screens/auth/PasswordRecovery/ForgetPassword"
 import Home from "./screens/Home"
-import Orders from "./screens/Orders"
+import Orders from "./screens/Orders/OrdersScreen"
 import Transactions from "./screens/Transactions"
 import Menu from "./screens/Menu"
 import Complements from "./screens/Complements"
@@ -26,7 +26,7 @@ function App() {
       <>
         <Route element={<AuthLayout />}>
           <Route path={NAVIGATION_ROUTES.Dashboard.path} element={<Home />} />
-          <Route path={NAVIGATION_ROUTES.Orders.path} element={<Orders />} />
+          <Route path={NAVIGATION_ROUTES.Pedidos.path} element={<Orders />} />
           <Route path={NAVIGATION_ROUTES.Transactions.path} element={<Transactions />} />
 
           <Route path={NAVIGATION_ROUTES.Menu.path} element={<Menu />} />

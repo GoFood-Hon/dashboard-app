@@ -4,9 +4,9 @@ export const NAVIGATION_ROUTES = {
     path: "/",
     icon: "dashboard"
   },
-  Orders: {
+  Pedidos: {
     label: "Pedidos",
-    path: "/orders",
+    path: "/pedidos",
     icon: "shoppingCart"
   },
   Menu: {

@@ -19,8 +19,6 @@ import { usePagination } from "@mantine/hooks"
 export default function Dishes() {
   const navigate = useNavigate()
   const location = useLocation()
-  const pagination = usePagination({ total: 2, initialPage: 1 })
-
   const dispatch = useDispatch()
   const dishes = useSelector(selectAllDishes)
   const status = useSelector(selectDishesStatus)
