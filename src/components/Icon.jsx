@@ -14,16 +14,20 @@ import {
   InvoiceIcon,
   LayoutIcon,
   MenuIcon,
+  ReloadIcon,
   MoneyIcon,
   MoreIcon,
+  TrashIcon,
+  DotsIcon,
+  SettingIcon,
   OneTouchIcon,
   ShoppingIcon,
   TimerIcon,
   UpIcon,
   UserIcon,
-  WarehouseIcon
+  WarehouseIcon,
+  EyeIcon
 } from "../assets/icons"
-import EyeIcon from "../assets/icons/EyeIcon"
 
 export const iconComponents = {
   close: <CloseIcon />,
@@ -48,7 +52,11 @@ export const iconComponents = {
   chevronDown: <ChevronDown />,
   chevronUp: <ChevronUp />,
   eye: <EyeIcon />,
-  filter: <FilterIcon />
+  filter: <FilterIcon />,
+  reload: <ReloadIcon />,
+  setting: <SettingIcon />,
+  trash: <TrashIcon />,
+  dots: <DotsIcon />
 }
 
 export const Icon = (props) => {

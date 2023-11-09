@@ -1,5 +1,13 @@
 export * from "./AlarmIcon"
 
+export * from "./SettingIcon"
+
+export * from "./TrashIcon"
+
+export * from "./DotsIcon"
+
+export * from "./EyeIcon"
+
 export * from "./DashboardIcon"
 
 export * from "./ChevronUp"
@@ -34,12 +42,12 @@ export * from "./TimerIcon"
 
 export * from "./CalendarIcon"
 
+export * from "./ReloadIcon"
+
 export * from "./MoreIcon"
 
 export * from "./ChevronDown"
 
 export * from "./CloseIcon"
-
-export * from "./EyeIcon"
 
 export * from "./FilterIcon"

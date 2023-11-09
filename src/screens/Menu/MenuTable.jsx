@@ -14,25 +14,25 @@ import { Icon } from "../../components/Icon"
 const nodes = [
   {
     id: 1,
-    user: "tarea",
-    phoneNumber: "+2323232",
-    status: "Entregado",
+    menu: "tarea",
+    coupons: "XSDA",
+    type: "Normal",
     date: new Date(2020, 1, 15),
-    type: "Domicilio",
-    total: "233.31"
+    dishes: 12,
+    status: "Habilitado"
   },
   {
     id: 2,
-    user: "marea",
-    phoneNumber: "+2323232",
-    status: "Entregado",
+    menu: "marea",
+    coupons: "XSDA",
+    type: "Normal",
     date: new Date(2020, 1, 15),
-    type: "Domicilio",
-    total: "233.31"
+    dishes: 12,
+    status: "Habilitado"
   }
 ]
 
-export default function OrdersTable() {
+export default function MenuTable() {
   const [data, setData] = React.useState({ nodes })
 
   //* Pagination *//
@@ -117,11 +117,11 @@ export default function OrdersTable() {
         iconDown: <IconChevronDown />
       },
       sortFns: {
-        TASK: (array) => array.sort((a, b) => a.name.localeCompare(b.name)),
-        DEADLINE: (array) => array.sort((a, b) => a.deadline - b.deadline),
+        MENU: (array) => array.sort((a, b) => a.menu.localeCompare(b.menu)),
+        COUPONS: (array) => array.sort((a, b) => a.coupons.localeCompare(b.coupons)),
         TYPE: (array) => array.sort((a, b) => a.type.localeCompare(b.type)),
-        COMPLETE: (array) => array.sort((a, b) => a.isComplete - b.isComplete),
-        TASKS: (array) => array.sort((a, b) => (a.nodes || []).length - (b.nodes || []).length)
+        DATE: (array) => array.sort((a, b) => a.date - b.date),
+        STATE: (array) => array.sort((a, b) => a.state.localeCompare(b.state))
       }
     }
   )
@@ -135,10 +135,10 @@ export default function OrdersTable() {
   let modifiedNodes = data.nodes
 
   // search
-  modifiedNodes = modifiedNodes.filter((node) => node.user.toLowerCase().includes(search.toLowerCase()))
+  modifiedNodes = modifiedNodes.filter((node) => node.menu.toLowerCase().includes(search.toLowerCase()))
 
   // filter
-  modifiedNodes = isHide ? modifiedNodes.filter((node) => !node.isComplete) : modifiedNodes
+  // modifiedNodes = isHide ? modifiedNodes.filter((node) => !node.isComplete) : modifiedNodes
 
   //* Columns *//
 
@@ -163,22 +163,22 @@ export default function OrdersTable() {
     },
 
     {
-      label: "Usuario",
-      renderCell: (item) => item.user,
-      sort: { sortKey: "USER" }
+      label: "MENU",
+      renderCell: (item) => item.menu,
+      sort: { sortKey: "MENU" }
     },
     {
-      label: "Teléfono",
-      renderCell: (item) => item.phoneNumber,
-      sort: { sortKey: "MOBILE" }
+      label: "CUPONES",
+      renderCell: (item) => item.coupons,
+      sort: { sortKey: "COUPONS" }
     },
     {
-      label: "Estado",
-      renderCell: (item) => item.status,
-      sort: { sortKey: "STATUS" }
+      label: "TIPO",
+      renderCell: (item) => item.type,
+      sort: { sortKey: "TYPE" }
     },
     {
-      label: "Fecha",
+      label: "FECHA",
       renderCell: (item) =>
         item.date.toLocaleDateString("en-US", {
           year: "numeric",
@@ -189,14 +189,14 @@ export default function OrdersTable() {
       sort: { sortKey: "DATE" }
     },
     {
-      label: "Tipo",
-      renderCell: (item) => item.type,
-      sort: { sortKey: "TYPE" }
+      label: "PLATILLOS",
+      renderCell: (item) => item.dishes,
+      sort: { sortKey: "DISHES" }
     },
     {
-      label: "Total",
-      renderCell: (item) => item.total,
-      sort: { sortKey: "TOTAL" }
+      label: "STATUS",
+      renderCell: (item) => item.status,
+      sort: { sortKey: "STATUS" }
     },
     {
       label: "Acciones",
@@ -206,15 +206,31 @@ export default function OrdersTable() {
   return (
     <>
       {/* Form */}
+      <div className="flex flex-row w-full justify-between items-center">
+        <Group mx={10}>
+          <TextInput
+            placeholder="Buscar aquí"
+            value={search}
+            icon={<IconSearch />}
+            onChange={(event) => setSearch(event.target.value)}
+          />
+        </Group>
 
-      <Group mx={10}>
-        <TextInput
-          placeholder="Buscar pedido"
-          value={search}
-          icon={<IconSearch />}
-          onChange={(event) => setSearch(event.target.value)}
-        />
-      </Group>
+        <div className="flex flex-row h-full items-center gap-3">
+          <span className="cursor-pointer">
+            <Icon icon="reload" size={20} />
+          </span>
+          <span className="cursor-pointer">
+            <Icon icon="setting" size={20} />
+          </span>
+          <span className="cursor-pointer">
+            <Icon icon="trash" size={20} />
+          </span>
+          <span className="cursor-pointer">
+            <Icon icon="dots" size={20} width={20} />
+          </span>
+        </div>
+      </div>
 
       {/* Table */}
 
