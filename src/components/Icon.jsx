@@ -10,6 +10,7 @@ import {
   DashboardIcon,
   DownIcon,
   ExitIcon,
+  FilterIcon,
   InvoiceIcon,
   LayoutIcon,
   MenuIcon,
@@ -22,6 +23,7 @@ import {
   UserIcon,
   WarehouseIcon
 } from "../assets/icons"
+import EyeIcon from "../assets/icons/EyeIcon"
 
 export const iconComponents = {
   close: <CloseIcon />,
@@ -44,7 +46,9 @@ export const iconComponents = {
   calendar: <CalendarIcon />,
   more: <MoreIcon />,
   chevronDown: <ChevronDown />,
-  chevronUp: <ChevronUp />
+  chevronUp: <ChevronUp />,
+  eye: <EyeIcon />,
+  filter: <FilterIcon />
 }
 
 export const Icon = (props) => {

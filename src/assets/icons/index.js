@@ -39,3 +39,7 @@ export * from "./MoreIcon"
 export * from "./ChevronDown"
 
 export * from "./CloseIcon"
+
+export * from "./EyeIcon"
+
+export * from "./FilterIcon"

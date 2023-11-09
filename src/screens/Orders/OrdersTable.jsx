@@ -9,6 +9,7 @@ import { usePagination } from "@table-library/react-table-library/pagination"
 import { Icon360, IconChevronDown, IconChevronUp, IconEdit, IconEye, IconSearch } from "@tabler/icons-react"
 import { useTheme } from "@table-library/react-table-library/theme"
 import { DEFAULT_OPTIONS, getTheme } from "@table-library/react-table-library/mantine"
+import { Icon } from "../../components/Icon"
 
 const nodes = [
   {
@@ -111,7 +112,7 @@ export default function OrdersTable() {
     },
     {
       sortIcon: {
-        iconDefault: <Icon360 />,
+        iconDefault: null,
         iconUp: <IconChevronUp />,
         iconDown: <IconChevronDown />
       },
@@ -163,16 +164,18 @@ export default function OrdersTable() {
 
     {
       label: "Usuario",
-      renderCell: (item) => item.user
+      renderCell: (item) => item.user,
+      sort: { sortKey: "USER" }
     },
     {
       label: "Teléfono",
-      renderCell: (item) => item.phoneNumber
-      /*   sort: { sortKey: "DEADLINE" } */
+      renderCell: (item) => item.phoneNumber,
+      sort: { sortKey: "MOBILE" }
     },
     {
       label: "Estado",
-      renderCell: (item) => item.status
+      renderCell: (item) => item.status,
+      sort: { sortKey: "STATUS" }
     },
     {
       label: "Fecha",
@@ -181,21 +184,23 @@ export default function OrdersTable() {
           year: "numeric",
           month: "2-digit",
           day: "2-digit"
-        })
+        }),
 
-      /*  sort: { sortKey: "COMPLETE" } */
+      sort: { sortKey: "DATE" }
     },
     {
       label: "Tipo",
-      renderCell: (item) => item.type
+      renderCell: (item) => item.type,
+      sort: { sortKey: "TYPE" }
     },
     {
       label: "Total",
-      renderCell: (item) => item.total
+      renderCell: (item) => item.total,
+      sort: { sortKey: "TOTAL" }
     },
     {
       label: "Acciones",
-      renderCell: () => <IconEye />
+      renderCell: () => <Icon icon="eye" size={19} />
     }
   ]
   return (
