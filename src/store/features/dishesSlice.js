@@ -5,7 +5,7 @@ import toast from "react-hot-toast"
 const initialState = {
   dishes: [],
   currentPage: 1,
-  itemsPerPage: 2,
+  itemsPerPage: 4,
   totalItems: 0
 }
 

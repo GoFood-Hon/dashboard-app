@@ -26,7 +26,9 @@ import {
   UpIcon,
   UserIcon,
   WarehouseIcon,
-  EyeIcon
+  EyeIcon,
+  SearchIcon,
+  CustomCheckedIcon
 } from "../assets/icons"
 
 export const iconComponents = {
@@ -56,7 +58,9 @@ export const iconComponents = {
   reload: <ReloadIcon />,
   setting: <SettingIcon />,
   trash: <TrashIcon />,
-  dots: <DotsIcon />
+  dots: <DotsIcon />,
+  search: <SearchIcon />,
+  customChecked: <CustomCheckedIcon />
 }
 
 export const Icon = (props) => {

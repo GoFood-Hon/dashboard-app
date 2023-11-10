@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react"
 import BaseLayout from "../../components/BaseLayout"
-import { Breadcrumbs, CloseButton, Grid, Input, Pagination } from "@mantine/core"
+import { Affix, Breadcrumbs, CloseButton, Grid, Input, Pagination } from "@mantine/core"
 import Button from "../../components/Button"
 import { useNavigate, useLocation } from "react-router-dom"
 import { colors } from "../../theme/colors"
@@ -27,17 +27,43 @@ export default function Dishes() {
 
   const totalControlBtn = Math.ceil(totalItems / limit)
   const [searchDish, setSearchDish] = useState("")
+  const [cardsSelected, setCardsSelected] = useState(0)
+  const [selectAll, setSelectAll] = useState(false)
 
   useEffect(() => {
     dispatch(fetchDishes({ limit, page, order: "DESC" }))
+    setSelectAll(false)
+    setCardsSelected(0)
   }, [page, dispatch])
 
+  useEffect(() => {
+    if (cardsSelected < limit) {
+      setSelectAll(false)
+    }
+  }, [cardsSelected])
   const handleNewDish = () => {
     navigate(NAVIGATION_ROUTES.Menu.submenu.Dishes.submenu.NewDish.path)
   }
 
+  console.log(cardsSelected)
   const refreshDishes = () => {
     dispatch(fetchDishes({ limit, page, order: "DESC" }))
+    setSelectAll(false)
+    setCardsSelected(0)
+  }
+
+  const onChangePagination = (newPage) => {
+    dispatch(setPage(newPage))
+    setCardsSelected(0)
+    setSelectAll(false)
+  }
+
+  const handleSelectAll = () => {
+    setSelectAll(true)
+    setCardsSelected(limit)
+    console.log(selectAll)
+
+    setSelectAll(true)
   }
 
   return (
@@ -67,6 +93,7 @@ export default function Dishes() {
             value={searchDish}
             onChange={(event) => setSearchDish(event.currentTarget.value)}
             rightSectionPointerEvents="all"
+            leftSection={<Icon icon="search" size={16} color="#6d7177" />}
             rightSection={
               <CloseButton
                 aria-label="Clear input"
@@ -90,9 +117,6 @@ export default function Dishes() {
                 <Icon icon="reload" size={20} />
               </span>
               <FilterDishesPopover />
-              <span className="cursor-pointer">
-                <Icon icon="trash" size={20} />
-              </span>
               <SortDishesPopover />
             </div>
           </div>
@@ -107,22 +131,51 @@ export default function Dishes() {
           <Grid grow>
             {dishes?.map((item, key) => (
               <Grid.Col span={{ base: 12, md: 6, lg: 3 }} key={key}>
-                <ItemCard item={item} navigation={true} />
+                <ItemCard
+                  item={item}
+                  navigation={true}
+                  setCardsSelected={setCardsSelected}
+                  cardsSelected={cardsSelected}
+                  selectAll={selectAll}
+                />
               </Grid.Col>
             ))}
           </Grid>
         )}
         {status === "error" && <div>Error: {error}</div>}
       </section>
-      <section className="flex flex-row justify-between">
+      <section className="flex flex-row justify-between pb-32">
         <div />
         <Pagination
           total={totalControlBtn}
           page={page}
           limit={limit}
-          onChange={(newPage) => dispatch(setPage(newPage))}
+          onChange={onChangePagination}
           color={colors.primary_button}
         />
+      </section>
+      <section>
+        {cardsSelected >= 1 && (
+          <Affix position={{ bottom: 20, left: "calc(50% - 270px)" }}>
+            <div className="w-full flex flex-row justify-end mt-6 gap-3 rounded-lg bg-white px-8 py-5 border border-gray-100 shadow">
+              <Button text={"Deshabilitar seleccionados"} className={"text-xs border border-red-400 text-red-400 bg-white"} />
+              <Button
+                text={"Habilitar seleccionados"}
+                className={"text-xs border border-emerald-400 text-emerald-400 bg-white"}
+              />
+              <Button
+                text={"Deseleccionar todos"}
+                className={"text-xs border border-sky-950 text-sky-950 bg-white"}
+                onClick={handleSelectAll}
+              />
+              <Button
+                text={"Seleccionar todos"}
+                className={"text-xs border border-sky-950 text-white bg-sky-950"}
+                onClick={handleSelectAll}
+              />
+            </div>
+          </Affix>
+        )}
       </section>
     </BaseLayout>
   )

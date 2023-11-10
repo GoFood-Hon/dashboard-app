@@ -21,7 +21,8 @@ export const palette = {
   corn_silk: "#FEF6DC",
   cream_can: "#F1C652",
   biscay: "#334154",
-  light_slate_gray: "#94a3b8"
+  light_slate_gray: "#94a3b8",
+  alice_bluer: "#EFF4FB"
 }
 
 export const colors = {
@@ -58,7 +59,8 @@ export const colors = {
   borders: palette.lavender,
   primary_button: palette.tangaroa,
   element_tag_bg: palette.corn_silk,
-  element_tag_text: palette.cream_can
+  element_tag_text: palette.cream_can,
+  selected_card: palette.alice_bluer
 
   /**
    * Toast Notifications

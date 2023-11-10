@@ -14,6 +14,10 @@ export * from "./ChevronUp"
 
 export * from "./ShoppingIcon"
 
+export * from "./CustomCheckedIcon"
+
+export * from "./SearchIcon"
+
 export * from "./InvoiceIcon"
 
 export * from "./MenuIcon"
