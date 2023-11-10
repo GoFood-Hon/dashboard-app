@@ -2,7 +2,7 @@ import React, { useState } from "react"
 import LoadingCircle from "./LoadingCircle"
 import { Icon } from "./Icon"
 
-export default function Button({ icon, text, className, onClick }) {
+export default function Button({ icon, text, className, onClick, textClassName }) {
   const [btnClicked, setBtnClicked] = useState(false)
   return (
     <button
@@ -19,7 +19,7 @@ export default function Button({ icon, text, className, onClick }) {
       ) : (
         <>
           {icon && <Icon icon={icon} size={20} className="h-5 w-5" />}
-          <p className="w-full whitespace-nowrap px-4">{text}</p>
+          <p className={`w-full whitespace-nowrap px-4 ${textClassName}`}>{text}</p>
         </>
       )}
     </button>

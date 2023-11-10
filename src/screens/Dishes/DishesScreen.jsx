@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react"
 import BaseLayout from "../../components/BaseLayout"
-import { Breadcrumbs, CloseButton, Grid, Input, Pagination } from "@mantine/core"
+import { Breadcrumbs, CloseButton, Grid, Input, NumberInput, Pagination, Popover, RangeSlider, Select } from "@mantine/core"
 import Button from "../../components/Button"
 import { useNavigate, useLocation } from "react-router-dom"
 import { colors } from "../../theme/colors"
@@ -11,10 +11,8 @@ import { fetchDishes, selectAllDishes, selectDishesError, selectDishesStatus, se
 import LoadingCircle from "../../components/LoadingCircle"
 import ItemCard from "../../components/ItemCard"
 import { ReloadIcon } from "../../assets/icons/ReloadIcon"
-import { SettingIcon } from "../../assets/icons/SettingIcon"
-import { TrashIcon } from "../../assets/icons/TrashIcon"
-import { DotsIcon } from "../../assets/icons/DotsIcon"
-import { usePagination } from "@mantine/hooks"
+import FilterDishesPopover from "./FilterDishesPopover"
+import { Icon } from "../../components/Icon"
 
 export default function Dishes() {
   const navigate = useNavigate()
@@ -28,8 +26,8 @@ export default function Dishes() {
   const page = useSelector((state) => state.dishes.currentPage)
 
   const totalControlBtn = Math.ceil(totalItems / limit)
-
   const [searchDish, setSearchDish] = useState("")
+
   useEffect(() => {
     dispatch(fetchDishes({ limit, page, order: "DESC" }))
   }, [page, dispatch])
@@ -89,16 +87,14 @@ export default function Dishes() {
             </div>
             <div className="flex flex-row h-full items-center gap-3">
               <span className="cursor-pointer" onClick={refreshDishes}>
-                <ReloadIcon height={20} />
+                <Icon icon="reload" size={20} />
+              </span>
+              <FilterDishesPopover />
+              <span className="cursor-pointer">
+                <Icon icon="trash" size={20} />
               </span>
               <span className="cursor-pointer">
-                <SettingIcon height={20} />
-              </span>
-              <span className="cursor-pointer">
-                <TrashIcon height={20} />
-              </span>
-              <span className="cursor-pointer">
-                <DotsIcon height={20} width={20} />
+                <Icon icon="dots" size={20} />
               </span>
             </div>
           </div>

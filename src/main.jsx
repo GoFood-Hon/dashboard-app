@@ -1,6 +1,7 @@
 import * as React from "react"
 import * as ReactDOM from "react-dom/client"
 import "./index.css"
+import "@mantine/dates/styles.css"
 import App from "./App"
 import LoadingCircle from "./components/LoadingCircle"
 import { Toaster } from "react-hot-toast"
