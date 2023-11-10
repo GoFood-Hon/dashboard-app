@@ -7,7 +7,14 @@ import { colors } from "../../theme/colors"
 import { NAVIGATION_ROUTES } from "../../routes"
 import BreadCrumbNavigation from "../../components/BreadCrumbNavigation"
 import { useDispatch, useSelector } from "react-redux"
-import { fetchDishes, selectAllDishes, selectDishesError, selectDishesStatus, setPage } from "../../store/features/DishesSlice"
+import {
+  fetchDishes,
+  selectAllDishes,
+  selectDishesError,
+  selectDishesStatus,
+  setPage,
+  updateDish
+} from "../../store/features/DishesSlice"
 import LoadingCircle from "../../components/LoadingCircle"
 import ItemCard from "../../components/ItemCard"
 import { Icon } from "../../components/Icon"
@@ -41,7 +48,6 @@ export default function Dishes() {
 
   const refreshDishes = () => {
     dispatch(fetchDishes({ limit, page, order: "DESC" }))
-    setSelectAll(false)
     setCardsSelected([])
   }
 
@@ -51,7 +57,7 @@ export default function Dishes() {
   }
 
   const handleSelectAll = () => {
-    const allSelected = dishes.map((_, index) => index)
+    const allSelected = dishes.map((dish) => dish.id)
     setCardsSelected(allSelected)
   }
 
@@ -67,6 +73,31 @@ export default function Dishes() {
     }
   }
 
+  const handleEnableSelected = async () => {
+    const formData = new FormData()
+    formData.append("isActive", true)
+
+    await Promise.all(
+      cardsSelected.map(async (dishId) => {
+        await dispatch(updateDish({ formData, dishId }))
+      })
+    )
+
+    refreshDishes()
+  }
+
+  const handleDisableSelected = async () => {
+    const formData = new FormData()
+    formData.append("isActive", false)
+
+    await Promise.all(
+      cardsSelected.map(async (dishId) => {
+        await dispatch(updateDish({ formData, dishId }))
+      })
+    )
+
+    refreshDishes()
+  }
   return (
     <BaseLayout>
       <section>
@@ -159,10 +190,15 @@ export default function Dishes() {
         {cardsSelected.length >= 1 && (
           <Affix position={{ bottom: 20, left: "calc(50% - 270px)" }}>
             <div className="w-full flex flex-row justify-end mt-6 gap-3 rounded-lg bg-white px-8 py-5 border border-gray-100 shadow">
-              <Button text={"Deshabilitar seleccionados"} className={"text-xs border border-red-400 text-red-400 bg-white"} />
+              <Button
+                text={"Deshabilitar seleccionados"}
+                className={"text-xs border border-red-400 text-red-400 bg-white"}
+                onClick={handleDisableSelected}
+              />
               <Button
                 text={"Habilitar seleccionados"}
                 className={"text-xs border border-emerald-400 text-emerald-400 bg-white"}
+                onClick={handleEnableSelected}
               />
               <Button
                 text={"Deseleccionar todos"}

@@ -9,16 +9,15 @@ import { NAVIGATION_ROUTES } from "../routes"
 import { colors } from "../theme/colors"
 
 export default function ItemCard({ item, index, navigation, cardsSelected, setCardsSelected, handleChangeSelected }) {
-  const { id, active = true, name, images, price, isUserSearch, isUserLove, isPromotion } = item
+  const { id, isActive, name, images, price, isUserSearch, isUserLove, isPromotion } = item
 
   const navigate = useNavigate()
-  const checked = cardsSelected.includes(index)
+  const checked = cardsSelected.includes(id)
 
   const handleClick = () => {
     if (navigation) {
       navigate(`${NAVIGATION_ROUTES.Menu.submenu.Dishes.path}/${id}`)
     }
-    setCardsSelected([])
   }
 
   return (
@@ -26,11 +25,11 @@ export default function ItemCard({ item, index, navigation, cardsSelected, setCa
       className={`w-full h-full px-6 py-3  rounded-2xl border border-blue-100 flex-col justify-between items-center inline-flex `}
       style={{ backgroundColor: `${checked ? colors.selected_card : colors.light_bg_child}` }}>
       <div className="flex flex-row justify-end w-full">
-        <Checkbox color={colors.primary_button} checked={checked} size="sm" onChange={() => handleChangeSelected(index)} />
+        <Checkbox color={colors.primary_button} checked={checked} size="sm" onChange={() => handleChangeSelected(id)} />
       </div>
       <div onClick={handleClick} className="cursor-pointer">
         <div className="flex flex-col justify-between items-center">
-          {active ? (
+          {isActive ? (
             <div className="text-emerald-400 px-4 py-1 rounded-2xl justify-center items-center bg-green-100 my-3">Habilitado</div>
           ) : (
             <div className="bg-rose-100 text-red-400 px-4 py-1 rounded-2xl justify-center items-center my-3">Deshabilitado</div>

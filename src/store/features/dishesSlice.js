@@ -45,6 +45,30 @@ export const createDish = createAsyncThunk("dishes/createDish", async (formData,
   }
 })
 
+export const updateDish = createAsyncThunk("dishes/updateDish", async ({ formData, dishId }, { dispatch }) => {
+  try {
+    const response = await dishesApi.updateDish(formData, dishId)
+
+    if (response.error) {
+      toast.error(`Fallo al actualizar el platillo. Por favor intente de nuevo. ${response.message}`, {
+        duration: 7000
+      })
+    } else {
+      toast.success("Platillo actualizado exitosamente", {
+        duration: 7000
+      })
+    }
+    return response.data
+  } catch (error) {
+    dispatch(setError("Error updating dish"))
+    toast.error("Fallo al actualizar el platillo. Por favor intente de nuevo.", {
+      duration: 7000
+    })
+
+    throw error
+  }
+})
+
 export const dishesSlice = createSlice({
   name: "dishes",
   initialState,
