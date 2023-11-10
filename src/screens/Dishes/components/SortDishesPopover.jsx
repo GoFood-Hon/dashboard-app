@@ -2,6 +2,7 @@ import { Group, Popover, Radio } from "@mantine/core"
 import React, { useState } from "react"
 import { Icon } from "../../../components/Icon"
 import { colors } from "../../../theme/colors"
+import Button from "../../../components/Button"
 
 export default function SortDishesPopover() {
   const [checked, setChecked] = useState(false)
@@ -78,6 +79,19 @@ export default function SortDishesPopover() {
               color={colors.primary_text}
               checked={!checked}
               onChange={(event) => setChecked(!event.currentTarget.checked)}
+            />
+          </div>
+        </section>
+        <section>
+          <div className="flex flex-row gap-2 p-4">
+            <Button
+              text="Borrar Filtros"
+              className="rounded border border-sky-950 justify-center items-center gap-2.5 inline-flex"
+            />
+            <Button
+              text="Aplicar Filtros"
+              className="bg-sky-950 rounded justify-center items-center gap-2.5 inline-flex"
+              textClassName="text-white"
             />
           </div>
         </section>
