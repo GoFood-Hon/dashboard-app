@@ -1,10 +1,9 @@
 import { Input, NumberInput, Popover, RangeSlider, Select } from "@mantine/core"
 import React from "react"
-import { DotsIcon, ReloadIcon, SettingIcon, TrashIcon } from "../../assets/icons"
 import { DatePickerInput } from "@mantine/dates"
-import { Icon } from "../../components/Icon"
-import { colors } from "../../theme/colors"
-import Button from "../../components/Button"
+import { Icon } from "../../../components/Icon"
+import { colors } from "../../../theme/colors"
+import Button from "../../../components/Button"
 
 export default function FilterDishesPopover() {
   const marks = [
@@ -17,7 +16,7 @@ export default function FilterDishesPopover() {
     <Popover width={300} position="bottom" withArrow shadow="md" radius={20} offset={{ mainAxis: 2, crossAxis: -100 }}>
       <Popover.Target>
         <span className="cursor-pointer">
-          <SettingIcon height={20} />
+          <Icon icon="setting" size={20} />
         </span>
       </Popover.Target>
       <Popover.Dropdown className="p-0" p={0}>

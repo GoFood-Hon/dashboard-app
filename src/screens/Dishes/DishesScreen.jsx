@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react"
 import BaseLayout from "../../components/BaseLayout"
-import { Breadcrumbs, CloseButton, Grid, Input, NumberInput, Pagination, Popover, RangeSlider, Select } from "@mantine/core"
+import { Breadcrumbs, CloseButton, Grid, Input, Pagination } from "@mantine/core"
 import Button from "../../components/Button"
 import { useNavigate, useLocation } from "react-router-dom"
 import { colors } from "../../theme/colors"
@@ -10,9 +10,9 @@ import { useDispatch, useSelector } from "react-redux"
 import { fetchDishes, selectAllDishes, selectDishesError, selectDishesStatus, setPage } from "../../store/features/DishesSlice"
 import LoadingCircle from "../../components/LoadingCircle"
 import ItemCard from "../../components/ItemCard"
-import { ReloadIcon } from "../../assets/icons/ReloadIcon"
-import FilterDishesPopover from "./FilterDishesPopover"
 import { Icon } from "../../components/Icon"
+import FilterDishesPopover from "./components/FilterDishesPopover"
+import SortDishesPopover from "./components/SortDishesPopover"
 
 export default function Dishes() {
   const navigate = useNavigate()
@@ -93,9 +93,7 @@ export default function Dishes() {
               <span className="cursor-pointer">
                 <Icon icon="trash" size={20} />
               </span>
-              <span className="cursor-pointer">
-                <Icon icon="dots" size={20} />
-              </span>
+              <SortDishesPopover />
             </div>
           </div>
         </div>
