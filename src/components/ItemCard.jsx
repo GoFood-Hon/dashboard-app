@@ -1,5 +1,5 @@
 import { Checkbox, Image } from "@mantine/core"
-import React, { useEffect, useState } from "react"
+import React from "react"
 import { UserLoveIcon } from "../assets/icons/UserLoveIcon"
 import { UserSearchIcon } from "../assets/icons/UserSearchIcon"
 import { UserPromotionIcon } from "../assets/icons/PromotionUserIcon"
@@ -8,30 +8,17 @@ import { useNavigate } from "react-router-dom"
 import { NAVIGATION_ROUTES } from "../routes"
 import { colors } from "../theme/colors"
 
-export default function ItemCard({ item, navigation, setCardsSelected, cardsSelected, selectAll }) {
+export default function ItemCard({ item, index, navigation, cardsSelected, setCardsSelected, handleChangeSelected }) {
   const { id, active = true, name, images, price, isUserSearch, isUserLove, isPromotion } = item
-  const navigate = useNavigate()
 
-  const [checked, setChecked] = useState(selectAll)
+  const navigate = useNavigate()
+  const checked = cardsSelected.includes(index)
+
   const handleClick = () => {
     if (navigation) {
       navigate(`${NAVIGATION_ROUTES.Menu.submenu.Dishes.path}/${id}`)
     }
-  }
-
-  useEffect(() => {
-    if (selectAll) {
-      setChecked(true)
-    }
-  }, [selectAll])
-
-  const handleChangeSelected = (event) => {
-    if (event.currentTarget.checked) {
-      setCardsSelected(cardsSelected + 1)
-    } else {
-      setCardsSelected(cardsSelected - 1)
-    }
-    setChecked(!checked)
+    setCardsSelected([])
   }
 
   return (
@@ -39,7 +26,7 @@ export default function ItemCard({ item, navigation, setCardsSelected, cardsSele
       className={`w-full h-full px-6 py-3  rounded-2xl border border-blue-100 flex-col justify-between items-center inline-flex `}
       style={{ backgroundColor: `${checked ? colors.selected_card : colors.light_bg_child}` }}>
       <div className="flex flex-row justify-end w-full">
-        <Checkbox color={colors.primary_button} checked={checked} size="sm" onChange={handleChangeSelected} />
+        <Checkbox color={colors.primary_button} checked={checked} size="sm" onChange={() => handleChangeSelected(index)} />
       </div>
       <div onClick={handleClick} className="cursor-pointer">
         <div className="flex flex-col justify-between items-center">

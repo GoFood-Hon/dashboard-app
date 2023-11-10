@@ -27,43 +27,44 @@ export default function Dishes() {
 
   const totalControlBtn = Math.ceil(totalItems / limit)
   const [searchDish, setSearchDish] = useState("")
-  const [cardsSelected, setCardsSelected] = useState(0)
-  const [selectAll, setSelectAll] = useState(false)
+  const [cardsSelected, setCardsSelected] = useState([])
 
   useEffect(() => {
     dispatch(fetchDishes({ limit, page, order: "DESC" }))
-    setSelectAll(false)
-    setCardsSelected(0)
+    setCardsSelected([])
   }, [page, dispatch])
 
-  useEffect(() => {
-    if (cardsSelected < limit) {
-      setSelectAll(false)
-    }
-  }, [cardsSelected])
   const handleNewDish = () => {
     navigate(NAVIGATION_ROUTES.Menu.submenu.Dishes.submenu.NewDish.path)
+    setCardsSelected([])
   }
 
-  console.log(cardsSelected)
   const refreshDishes = () => {
     dispatch(fetchDishes({ limit, page, order: "DESC" }))
     setSelectAll(false)
-    setCardsSelected(0)
+    setCardsSelected([])
   }
 
   const onChangePagination = (newPage) => {
     dispatch(setPage(newPage))
-    setCardsSelected(0)
-    setSelectAll(false)
+    setCardsSelected([])
   }
 
   const handleSelectAll = () => {
-    setSelectAll(true)
-    setCardsSelected(limit)
-    console.log(selectAll)
+    const allSelected = dishes.map((_, index) => index)
+    setCardsSelected(allSelected)
+  }
 
-    setSelectAll(true)
+  const handleDeselectAll = () => {
+    setCardsSelected([])
+  }
+
+  const handleChangeSelected = (index) => {
+    if (cardsSelected.includes(index)) {
+      setCardsSelected(cardsSelected.filter((i) => i !== index))
+    } else {
+      setCardsSelected([...cardsSelected, index])
+    }
   }
 
   return (
@@ -133,10 +134,10 @@ export default function Dishes() {
               <Grid.Col span={{ base: 12, md: 6, lg: 3 }} key={key}>
                 <ItemCard
                   item={item}
+                  index={key}
                   navigation={true}
-                  setCardsSelected={setCardsSelected}
                   cardsSelected={cardsSelected}
-                  selectAll={selectAll}
+                  handleChangeSelected={handleChangeSelected}
                 />
               </Grid.Col>
             ))}
@@ -155,7 +156,7 @@ export default function Dishes() {
         />
       </section>
       <section>
-        {cardsSelected >= 1 && (
+        {cardsSelected.length >= 1 && (
           <Affix position={{ bottom: 20, left: "calc(50% - 270px)" }}>
             <div className="w-full flex flex-row justify-end mt-6 gap-3 rounded-lg bg-white px-8 py-5 border border-gray-100 shadow">
               <Button text={"Deshabilitar seleccionados"} className={"text-xs border border-red-400 text-red-400 bg-white"} />
@@ -166,7 +167,7 @@ export default function Dishes() {
               <Button
                 text={"Deseleccionar todos"}
                 className={"text-xs border border-sky-950 text-sky-950 bg-white"}
-                onClick={handleSelectAll}
+                onClick={handleDeselectAll}
               />
               <Button
                 text={"Seleccionar todos"}
