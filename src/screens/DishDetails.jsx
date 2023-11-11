@@ -58,6 +58,8 @@ export default function DishDetails() {
     fetchDishes()
   }, [])
 
+  console.log(dishDetails.images)
+
   return (
     <BaseLayout>
       <section>
@@ -161,11 +163,17 @@ export default function DishDetails() {
         opened={opened}
         onClose={close}
         centered
+        radius={"lg"}
         overlayProps={{
           backgroundOpacity: 0.55,
           blur: 3
         }}>
-        <img src={dishDetails.images?.[0]?.location} />
+        <div className="flex flex-row w-full gap-2">
+          <section className="w-full border border-blue-100 rounded-lg">
+            <img src={dishDetails.images?.[0]?.location} />
+          </section>
+          <section className="w-full border border-blue-100 rounded-lg"></section>
+        </div>
       </Modal>
     </BaseLayout>
   )
