@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react"
 import BaseLayout from "../components/BaseLayout"
-import { Affix, Breadcrumbs, CloseButton, Grid, Input, Pagination } from "@mantine/core"
+import { Affix, Breadcrumbs, CloseButton, Grid, Input, Pagination, Tabs } from "@mantine/core"
 import { useLocation, useNavigate } from "react-router-dom"
 import BreadCrumbNavigation from "../components/BreadCrumbNavigation"
 import { useDispatch, useSelector } from "react-redux"
@@ -122,22 +122,36 @@ export default function Complements() {
         </div>
       </section>
       <section>
-        <div className="flex flex-row justify-between">
-          <Input
-            className="w-80"
-            placeholder="Buscar platillo"
-            value={searchDish}
-            onChange={(event) => setSearchDish(event.currentTarget.value)}
-            rightSectionPointerEvents="all"
-            leftSection={<Icon icon="search" size={16} color="#6d7177" />}
-            rightSection={
-              <CloseButton
-                aria-label="Clear input"
-                onClick={() => setSearchDish("")}
-                style={{ display: searchDish ? undefined : "none" }}
-              />
-            }
-          />
+        <div className="flex flex-row justify-between w-full">
+          <div className="w-full">
+            <Input
+              className="w-80"
+              placeholder="Buscar platillo"
+              value={searchDish}
+              onChange={(event) => setSearchDish(event.currentTarget.value)}
+              rightSectionPointerEvents="all"
+              leftSection={<Icon icon="search" size={16} color="#6d7177" />}
+              rightSection={
+                <CloseButton
+                  aria-label="Clear input"
+                  onClick={() => setSearchDish("")}
+                  style={{ display: searchDish ? undefined : "none" }}
+                />
+              }
+            />
+          </div>
+          <div className="w-full bg-white rounded p-2">
+            <Tabs color={colors.primary_button} variant="pills" defaultValue="first">
+              <Tabs.List justify="center">
+                <Tabs.Tab value="first">Todos</Tabs.Tab>
+                <Tabs.Tab value="second">Complementos</Tabs.Tab>
+                <Tabs.Tab value="third">Bebidas</Tabs.Tab>
+                <Tabs.Tab value="fourth">Postres</Tabs.Tab>
+                <Tabs.Tab value="fifth">Extras</Tabs.Tab>
+              </Tabs.List>
+            </Tabs>
+          </div>
+
           <div className="flex flex-row w-full justify-end items-center">
             <div className="flex flex-row mr-4">
               <span className="text-sky-950 text-base font-bold leading-normal">{page === 1 ? 1 : (page - 1) * limit + 1}</span>
