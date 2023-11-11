@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react"
-import BaseLayout from "../components/BaseLayout"
+import BaseLayout from "../../components/BaseLayout"
 import { Affix, Breadcrumbs, CloseButton, Grid, Input, Pagination, Tabs } from "@mantine/core"
 import { useLocation, useNavigate } from "react-router-dom"
-import BreadCrumbNavigation from "../components/BreadCrumbNavigation"
+import BreadCrumbNavigation from "../../components/BreadCrumbNavigation"
 import { useDispatch, useSelector } from "react-redux"
 import {
   fetchComplements,
@@ -10,15 +10,15 @@ import {
   selectComplementsError,
   selectComplementsStatus,
   updateComplement
-} from "../store/features/complementsSlice"
-import LoadingCircle from "../components/LoadingCircle"
-import ItemCard from "../components/ItemCard"
-import { Icon } from "../components/Icon"
-import FilterDishesPopover from "./Dishes/components/FilterDishesPopover"
-import SortDishesPopover from "./Dishes/components/SortDishesPopover"
-import { NAVIGATION_ROUTES } from "../routes"
-import Button from "../components/Button"
-import { colors } from "../theme/colors"
+} from "../../store/features/complementsSlice"
+import LoadingCircle from "../../components/LoadingCircle"
+import ItemCard from "../../components/ItemCard"
+import { Icon } from "../../components/Icon"
+import FilterDishesPopover from "../Dishes/components/FilterDishesPopover"
+import SortDishesPopover from "../Dishes/components/SortDishesPopover"
+import { NAVIGATION_ROUTES } from "../../routes"
+import Button from "../../components/Button"
+import { colors } from "../../theme/colors"
 
 export default function Complements() {
   const location = useLocation()

@@ -1,5 +1,5 @@
 import React from "react"
-import BaseLayout from "../components/BaseLayout"
+import BaseLayout from "../../components/BaseLayout"
 
 export default function ComplementsDetails() {
   return (

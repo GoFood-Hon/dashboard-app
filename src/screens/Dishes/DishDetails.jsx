@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react"
-import BaseLayout from "../components/BaseLayout"
+import BaseLayout from "../../components/BaseLayout"
 import { useLocation, useParams } from "react-router-dom"
-import BreadCrumbNavigation from "../components/BreadCrumbNavigation"
+import BreadCrumbNavigation from "../../components/BreadCrumbNavigation"
 import { Breadcrumbs, Card, Grid, Modal } from "@mantine/core"
-import dishesApi from "../api/dishesApi"
-import { getFormattedHNL } from "../utils"
+import dishesApi from "../../api/dishesApi"
+import { getFormattedHNL } from "../../utils"
 import { IconCamera } from "@tabler/icons-react"
 import { useDisclosure } from "@mantine/hooks"
-import DashboardCard from "../components/DashboardCard"
+import DashboardCard from "../../components/DashboardCard"
 
 export default function DishDetails() {
   const { dishId } = useParams()

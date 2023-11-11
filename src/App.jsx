@@ -11,16 +11,17 @@ import Home from "./screens/Home"
 import Orders from "./screens/Orders/OrdersScreen"
 import Transactions from "./screens/Transactions"
 import Menu from "./screens/Menu/Menu"
-import Complements from "./screens/Complements"
+
 import Branches from "./screens/Branches"
 import Users from "./screens/Users"
 import Logout from "./screens/Logout"
 import Dishes from "./screens/Dishes/DishesScreen"
 import Combos from "./screens/Combos"
 import NewDish from "./screens/Dishes/NewDishScreen"
-import DishDetails from "./screens/DishDetails"
-import ComplementsDetails from "./screens/ComplementsDetails"
-import NewComplement from "./screens/NewComplement"
+import DishDetails from "./screens/Dishes/DishDetails"
+import ComplementsDetails from "./screens/Complements/ComplementsDetails"
+import NewComplement from "./screens/Complements/NewComplement"
+import Complements from "./screens/Complements/Complements"
 
 function App() {
   const router = createBrowserRouter(
