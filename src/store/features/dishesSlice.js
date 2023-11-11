@@ -1,11 +1,12 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 import dishesApi from "../../api/dishesApi"
 import toast from "react-hot-toast"
+import { ITEMS_PER_PAGE } from "../../utils/paginationConfig"
 
 const initialState = {
   dishes: [],
   currentPage: 1,
-  itemsPerPage: 4,
+  itemsPerPage: ITEMS_PER_PAGE,
   totalItems: 0
 }
 

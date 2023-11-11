@@ -58,8 +58,6 @@ export default function DishDetails() {
     fetchDishes()
   }, [])
 
-  console.log(dishDetails.images)
-
   return (
     <BaseLayout>
       <section>

@@ -41,12 +41,12 @@ export default function Dishes() {
     setCardsSelected([])
   }, [page, dispatch])
 
-  const handleNewDish = () => {
+  const handleNewItem = () => {
     navigate(NAVIGATION_ROUTES.Menu.submenu.Dishes.submenu.NewDish.path)
     setCardsSelected([])
   }
 
-  const refreshDishes = () => {
+  const refreshPage = () => {
     dispatch(fetchDishes({ limit, page, order: "DESC" }))
     setCardsSelected([])
   }
@@ -83,7 +83,7 @@ export default function Dishes() {
       })
     )
 
-    refreshDishes()
+    refreshPage()
   }
 
   const handleDisableSelected = async () => {
@@ -96,8 +96,9 @@ export default function Dishes() {
       })
     )
 
-    refreshDishes()
+    refreshPage()
   }
+
   return (
     <BaseLayout>
       <section>
@@ -107,7 +108,7 @@ export default function Dishes() {
             <Button
               text={"Nuevo Platillo"}
               className={"text-white text-md px-3 py-2 bg-primary_button mb-0"}
-              onClick={handleNewDish}
+              onClick={handleNewItem}
             />
           </div>
           <div>
@@ -145,7 +146,7 @@ export default function Dishes() {
               <span className="text-sky-950 text-base font-bold leading-normal">{totalItems} platillos</span>
             </div>
             <div className="flex flex-row h-full items-center gap-3">
-              <span className="cursor-pointer" onClick={refreshDishes}>
+              <span className="cursor-pointer" onClick={refreshPage}>
                 <Icon icon="reload" size={20} />
               </span>
               <FilterDishesPopover />
@@ -159,7 +160,7 @@ export default function Dishes() {
           <div className="h-[calc(100vh-350px)] w-full flex justify-center items-center">
             <LoadingCircle />
           </div>
-        ) : (
+        ) : dishes && dishes.length > 0 ? (
           <Grid grow>
             {dishes?.map((item, key) => (
               <Grid.Col span={{ base: 12, md: 6, lg: 3 }} key={key}>
@@ -173,6 +174,8 @@ export default function Dishes() {
               </Grid.Col>
             ))}
           </Grid>
+        ) : (
+          <div className="text-center mt-4 text-gray-500">Sin platillos disponibles</div>
         )}
         {status === "error" && <div>Error: {error}</div>}
       </section>

@@ -1,10 +1,34 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 import complementsApi from "../../api/complementsApi"
+import { ITEMS_PER_PAGE } from "../../utils/paginationConfig"
 
-export const fetchComplements = createAsyncThunk("complements/fetchComplements", async (_, { dispatch }) => {
+const initialState = {
+  complements: [],
+  currentPage: 1,
+  itemsPerPage: ITEMS_PER_PAGE,
+  totalItems: 0,
+  status: "idle",
+  loading: false,
+  error: null
+}
+
+export const fetchComplements = createAsyncThunk("complements/fetchComplements", async ({ restaurantId }, { dispatch }) => {
   try {
-    const response = await complementsApi.getAddOnByRestaurant("9917ad53-e999-4207-b2bd-207f5ffc3b40")
+    const response = await complementsApi.getAddOnByRestaurant(restaurantId)
     dispatch(setComplements(response.data))
+    console.log(response)
+
+    if (response.error) {
+      toast.error(`Fallo al actualizar el platillo. Por favor intente de nuevo. ${response.message}`, {
+        duration: 7000
+      })
+    } else {
+      toast.success("Platillo actualizado exitosamente", {
+        duration: 7000
+      })
+    }
+
+    return response.data
   } catch (error) {
     dispatch(setError("Error fetching complements"))
     throw error
@@ -19,17 +43,37 @@ export const createComplement = createAsyncThunk("complements/createComplement",
   return response.data
 })
 
-const initialState = {
-  complements: [],
-  status: "idle",
-  loading: false,
-  error: null
-}
+export const updateComplement = createAsyncThunk("dishes/updateComplement", async ({ formData, complementId }, { dispatch }) => {
+  try {
+    const response = await complementsApi.updateAddOn(formData, complementId)
+
+    if (response.error) {
+      toast.error(`Fallo al actualizar el complemento. Por favor intente de nuevo. ${response.message}`, {
+        duration: 7000
+      })
+    } else {
+      toast.success("Complemento actualizado exitosamente", {
+        duration: 7000
+      })
+    }
+    return response.data
+  } catch (error) {
+    dispatch(setError("Error updating add-on"))
+    toast.error("Fallo al actualizar el complemento. Por favor intente de nuevo.", {
+      duration: 7000
+    })
+
+    throw error
+  }
+})
 
 export const complementsSlice = createSlice({
   name: "complements",
   initialState,
   reducers: {
+    setPage: (state, action) => {
+      state.currentPage = action.payload
+    },
     setComplements: (state, action) => {
       state.complements = action.payload
       state.status = "succeeded"
@@ -49,6 +93,7 @@ export const complementsSlice = createSlice({
       })
       .addCase(fetchComplements.fulfilled, (state, action) => {
         state.status = "succeeded"
+        state.totalItems = 6
         state.value = action.payload
       })
       .addCase(fetchComplements.rejected, (state, action) => {
@@ -58,7 +103,7 @@ export const complementsSlice = createSlice({
   }
 })
 
-export const { setComplements, setError } = complementsSlice.actions
+export const { setComplements, setError, setPage } = complementsSlice.actions
 
 export const setLoading = (state) => state.complements.loading
 

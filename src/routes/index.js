@@ -19,7 +19,7 @@ export const NAVIGATION_ROUTES = {
         icon: "menu",
         path: "/menu/platillos",
         DishDetails: {
-          label: "Detalles del Platillo",
+          label: "Detalles del platillo",
           path: "/menu/platillos/:dishId"
         },
         submenu: {
@@ -31,7 +31,16 @@ export const NAVIGATION_ROUTES = {
       Complements: {
         label: "Complementos",
         icon: "menu",
-        path: "/menu/complementos"
+        path: "/menu/complementos",
+        ComplementDetails: {
+          label: "Detalles del complemento",
+          path: "/menu/complementos/:complementId"
+        },
+        submenu: {
+          NewComplement: {
+            path: "/menu/complementos/nuevoComplemento"
+          }
+        }
       },
       Combos: {
         label: "Combos",
