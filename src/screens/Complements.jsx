@@ -105,7 +105,7 @@ export default function Complements() {
   return (
     <BaseLayout>
       <section>
-        <div className="flex flex-row justify-between items-center pb-6">
+        <div className="flex flex-row justify-between items-center pb-6 flex-wrap">
           <div className="flex flex-row gap-x-3 items-center">
             <h1 className="text-white-200 text-2xl font-semibold">Complementos</h1>
             <Button
@@ -122,55 +122,62 @@ export default function Complements() {
         </div>
       </section>
       <section>
-        <div className="flex flex-row justify-between w-full">
-          <div className="w-full">
-            <Input
-              className="w-80"
-              placeholder="Buscar platillo"
-              value={searchDish}
-              onChange={(event) => setSearchDish(event.currentTarget.value)}
-              rightSectionPointerEvents="all"
-              leftSection={<Icon icon="search" size={16} color="#6d7177" />}
-              rightSection={
-                <CloseButton
-                  aria-label="Clear input"
-                  onClick={() => setSearchDish("")}
-                  style={{ display: searchDish ? undefined : "none" }}
-                />
-              }
-            />
-          </div>
-          <div className="w-full bg-white rounded p-2">
-            <Tabs color={colors.primary_button} variant="pills" defaultValue="first">
-              <Tabs.List justify="center">
-                <Tabs.Tab value="first">Todos</Tabs.Tab>
-                <Tabs.Tab value="second">Complementos</Tabs.Tab>
-                <Tabs.Tab value="third">Bebidas</Tabs.Tab>
-                <Tabs.Tab value="fourth">Postres</Tabs.Tab>
-                <Tabs.Tab value="fifth">Extras</Tabs.Tab>
-              </Tabs.List>
-            </Tabs>
-          </div>
-
-          <div className="flex flex-row w-full justify-end items-center">
-            <div className="flex flex-row mr-4">
-              <span className="text-sky-950 text-base font-bold leading-normal">{page === 1 ? 1 : (page - 1) * limit + 1}</span>
-              <span className="text-zinc-500 text-base font-bold leading-normal">-</span>
-              <span className="text-sky-950 text-base font-bold leading-normal">
-                {page === 1 ? limit : Math.min(page * limit, totalItems)}
-              </span>
-              <span className="text-zinc-500 text-base font-medium leading-normal px-1"> de </span>
-              <span className="text-sky-950 text-base font-bold leading-normal">{totalItems} platillos</span>
+        <Grid grow>
+          <Grid.Col span={{ base: 12, md: 4, lg: 3, xl: 2 }}>
+            <div className="w-full h-full flex items-center">
+              <Input
+                className="w-full"
+                placeholder="Buscar platillo"
+                value={searchDish}
+                onChange={(event) => setSearchDish(event.currentTarget.value)}
+                rightSectionPointerEvents="all"
+                leftSection={<Icon icon="search" size={16} color="#6d7177" />}
+                rightSection={
+                  <CloseButton
+                    aria-label="Clear input"
+                    onClick={() => setSearchDish("")}
+                    style={{ display: searchDish ? undefined : "none" }}
+                  />
+                }
+              />
             </div>
-            <div className="flex flex-row h-full items-center gap-3">
-              <span className="cursor-pointer" onClick={refreshPage}>
-                <Icon icon="reload" size={20} />
-              </span>
-              <FilterDishesPopover />
-              <SortDishesPopover />
+          </Grid.Col>
+          <Grid.Col span={{ base: 12, md: 8, lg: 6, xl: 8 }}>
+            <div className="flex w-full flex-row lg:justify-end xl:justify-center justify-center">
+              <div className="w-fit bg-white rounded p-2">
+                <Tabs color={colors.primary_button} variant="pills" defaultValue="first">
+                  <Tabs.List justify="center">
+                    <Tabs.Tab value="first">Todos</Tabs.Tab>
+                    <Tabs.Tab value="second">Complementos</Tabs.Tab>
+                    <Tabs.Tab value="third">Bebidas</Tabs.Tab>
+                    <Tabs.Tab value="fourth">Postres</Tabs.Tab>
+                    <Tabs.Tab value="fifth">Extras</Tabs.Tab>
+                  </Tabs.List>
+                </Tabs>
+              </div>
             </div>
-          </div>
-        </div>
+          </Grid.Col>
+          <Grid.Col span={{ base: 12, lg: 3, xl: 2 }}>
+            <div className="flex flex-row justify-end items-center w-full h-full">
+              <div className="flex flex-row mr-4 text-sm flex-wrap">
+                <div>
+                  <span className="text-sky-950  font-bold leading-normal">
+                    {page === 1 ? 1 : (page - 1) * limit + 1} - {page === 1 ? limit : Math.min(page * limit, totalItems)}
+                  </span>
+                  <span className="text-zinc-500 font-medium leading-normal px-1"> de </span>
+                </div>
+                <span className="text-sky-950 font-bold leading-normal">{totalItems} platillos</span>
+              </div>
+              <div className="flex flex-row h-full items-center gap-2">
+                <span className="cursor-pointer" onClick={refreshPage}>
+                  <Icon icon="reload" size={20} />
+                </span>
+                <FilterDishesPopover />
+                <SortDishesPopover />
+              </div>
+            </div>
+          </Grid.Col>
+        </Grid>
       </section>
       <section className="my-6 w-full">
         {status === "loading" ? (
