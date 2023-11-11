@@ -35,10 +35,6 @@ export default function RestaurantPicker({ items }) {
     }
   }, [items])
 
-  useEffect(() => {
-    // console.log(restaurant, "Rest")
-  }, [restaurant])
-
   const handleComboboxSubmit = (val) => {
     setSelectedItem(val)
     dispatch(setRestaurant(val))

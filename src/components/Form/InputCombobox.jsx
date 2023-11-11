@@ -53,11 +53,6 @@ export default function InputCombobox({ items, label, errors, name, placeholder,
               rightSection={<Combobox.Chevron />}
               onClick={() => combobox.openDropdown()}
               onFocus={() => combobox.openDropdown()}
-              /* onBlur={() => {
-                combobox.closeDropdown()
-                console.log(value)
-                setSearch(value || "")
-              }} */
               placeholder={placeholder}
               value={search}
               onChange={(event) => {

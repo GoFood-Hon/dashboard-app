@@ -16,7 +16,6 @@ export const fetchComplements = createAsyncThunk("complements/fetchComplements",
   try {
     const response = await complementsApi.getAddOnByRestaurant(restaurantId)
     dispatch(setComplements(response.data))
-    console.log(response)
 
     if (response.error) {
       toast.error(`Fallo al actualizar el platillo. Por favor intente de nuevo. ${response.message}`, {
