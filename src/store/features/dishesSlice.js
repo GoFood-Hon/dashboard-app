@@ -10,11 +10,11 @@ const initialState = {
   totalItems: 0
 }
 
-export const fetchDishes = createAsyncThunk("dishes/fetchDishes", async ({ limit, page, order }, { dispatch }) => {
+export const fetchDishes = createAsyncThunk("dishes/fetchDishes", async ({ limit, page, order, restaurantId }, { dispatch }) => {
   try {
-    const response = await dishesApi.getAllDishes({ limit, page, order })
-    dispatch(setDishes(response.data))
-    return response.data
+    const response = await dishesApi.getAllDishesByRestaurant({ limit, page, order, restaurantId })
+    dispatch(setDishes(response.data.data))
+    return response
   } catch (error) {
     dispatch(setError("Error fetching dishes"))
     throw error
@@ -95,8 +95,9 @@ export const dishesSlice = createSlice({
         state.status = "loading"
       })
       .addCase(fetchDishes.fulfilled, (state, action) => {
+        console.log(action.payload.results)
         state.status = "succeeded"
-        state.totalItems = 6
+        state.totalItems = action.payload.results
         state.value = action.payload
       })
       .addCase(fetchDishes.rejected, (state, action) => {

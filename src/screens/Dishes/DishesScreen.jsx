@@ -35,11 +35,12 @@ export default function Dishes() {
   const totalControlBtn = Math.ceil(totalItems / limit)
   const [searchDish, setSearchDish] = useState("")
   const [cardsSelected, setCardsSelected] = useState([])
+  const restaurant = useSelector((state) => state.restaurant.value)
 
   useEffect(() => {
-    dispatch(fetchDishes({ limit, page, order: "DESC" }))
+    dispatch(fetchDishes({ limit, page, order: "DESC", restaurantId: restaurant.id }))
     setCardsSelected([])
-  }, [page, dispatch])
+  }, [page, dispatch, restaurant])
 
   const handleNewItem = () => {
     navigate(NAVIGATION_ROUTES.Menu.submenu.Dishes.submenu.NewDish.path)
@@ -47,7 +48,7 @@ export default function Dishes() {
   }
 
   const refreshPage = () => {
-    dispatch(fetchDishes({ limit, page, order: "DESC" }))
+    dispatch(fetchDishes({ limit, page, order: "DESC", restaurantId: restaurant.id }))
     setCardsSelected([])
   }
 
