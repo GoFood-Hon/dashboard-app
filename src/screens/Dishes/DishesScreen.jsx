@@ -18,8 +18,8 @@ import {
 import LoadingCircle from "../../components/LoadingCircle"
 import ItemCard from "../../components/ItemCard"
 import { Icon } from "../../components/Icon"
-import FilterDishesPopover from "./components/FilterDishesPopover"
-import SortDishesPopover from "./components/SortDishesPopover"
+import FilterPopover from "../../components/FilterPopover"
+import SortPopover from "../../components/SortPopover"
 
 export default function Dishes() {
   const navigate = useNavigate()
@@ -149,8 +149,8 @@ export default function Dishes() {
               <span className="cursor-pointer" onClick={refreshPage}>
                 <Icon icon="reload" size={20} />
               </span>
-              <FilterDishesPopover />
-              <SortDishesPopover />
+              <FilterPopover />
+              <SortPopover />
             </div>
           </div>
         </div>

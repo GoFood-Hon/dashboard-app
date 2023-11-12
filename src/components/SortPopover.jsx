@@ -1,10 +1,10 @@
 import { Group, Popover, Radio } from "@mantine/core"
 import React, { useState } from "react"
-import { Icon } from "../../../components/Icon"
-import { colors } from "../../../theme/colors"
-import Button from "../../../components/Button"
+import { Icon } from "./Icon"
+import { colors } from "../theme/colors"
+import Button from "./Button"
 
-export default function SortDishesPopover() {
+export default function SortPopover() {
   const [checked, setChecked] = useState(false)
 
   return (

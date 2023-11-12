@@ -40,7 +40,7 @@ export const registrationValidationSchema = Yup.object().shape({
     .required("Confirme su contraseña.")
 })
 
-export const newDishValidationSchema = Yup.object().shape({
+export const newItemValidationSchema = Yup.object().shape({
   name: Yup.string().required("Nombre del platillo es requerido."),
   description: Yup.string().required("Descripción del platillo es requerido."),
   price: Yup.string().required("Precio del platillo es requerido."),

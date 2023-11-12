@@ -4,7 +4,7 @@ import { ErrorMessage } from "./ErrorMessage"
 export default function InputTextAreaField({ label, name, register, rules, errors, placeholder }) {
   return (
     <React.Fragment>
-      <label className="text-slate-400">{label}</label>
+      <label className="text-sky-950 text-sm font-bold leading-snug">{label}</label>
       <textarea
         className={`${
           errors[name] ? "border border-red-500" : null

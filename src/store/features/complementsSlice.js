@@ -35,11 +35,28 @@ export const fetchComplements = createAsyncThunk("complements/fetchComplements",
 })
 
 export const createComplement = createAsyncThunk("complements/createComplement", async (formData, { dispatch }) => {
-  const response = await complementsApi.createAddOn(formData)
+  try {
+    const response = await complementsApi.createAddOn(formData)
+    dispatch(fetchDishes())
 
-  dispatch(fetchComplements())
+    if (response.error) {
+      toast.error(`Fallo al crear complemento. Por favor intente de nuevo. ${response.message}`, {
+        duration: 7000
+      })
+    } else {
+      toast.success("Complemento creado exitosamente", {
+        duration: 7000
+      })
+    }
+    return response.data
+  } catch (error) {
+    dispatch(setError("Error creating complement"))
+    toast.error("Fallo al crear el complemento. Por favor intente de nuevo.", {
+      duration: 7000
+    })
 
-  return response.data
+    throw error
+  }
 })
 
 export const updateComplement = createAsyncThunk("dishes/updateComplement", async ({ formData, complementId }, { dispatch }) => {

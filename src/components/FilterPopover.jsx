@@ -1,11 +1,11 @@
 import { Input, NumberInput, Popover, RangeSlider, Select } from "@mantine/core"
 import React from "react"
 import { DatePickerInput } from "@mantine/dates"
-import { Icon } from "../../../components/Icon"
-import { colors } from "../../../theme/colors"
-import Button from "../../../components/Button"
+import { Icon } from "./Icon"
+import { colors } from "../theme/colors"
+import Button from "./Button"
 
-export default function FilterDishesPopover() {
+export default function FilterPopover() {
   const marks = [
     { value: 20, label: "20%" },
     { value: 50, label: "50%" },

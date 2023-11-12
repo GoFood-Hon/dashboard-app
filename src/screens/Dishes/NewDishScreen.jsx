@@ -10,7 +10,7 @@ import PaymentForm from "./PaymentForm"
 import BreadCrumbNavigation from "../../components/BreadCrumbNavigation"
 import { useDispatch, useSelector } from "react-redux"
 import { createDish } from "../../store/features/DishesSlice"
-import { newDishValidationSchema } from "../../utils/inputRules"
+import { newItemValidationSchema } from "../../utils/inputRules"
 import { yupResolver } from "@hookform/resolvers/yup"
 import toast from "react-hot-toast"
 
@@ -31,10 +31,10 @@ export default function NewDish() {
     reset,
     formState: { errors }
   } = useForm({
-    resolver: yupResolver(newDishValidationSchema)
+    resolver: yupResolver(newItemValidationSchema)
   })
 
-  const dishFormConfiguration = [
+  const accordionStructure = [
     {
       title: "Información general",
       requirement: "Obligatorio",
@@ -69,7 +69,7 @@ export default function NewDish() {
       form: <PaymentForm register={register} errors={errors} />
     }
   ]
-  const items = dishFormConfiguration.map((item, key) => (
+  const items = accordionStructure.map((item, key) => (
     <Accordion.Item key={key} value={item.title}>
       <Accordion.Control>
         <div className="w-full rounded-lg flex-row flex items-center bg-white">

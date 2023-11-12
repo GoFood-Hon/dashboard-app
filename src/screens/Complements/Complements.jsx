@@ -14,11 +14,12 @@ import {
 import LoadingCircle from "../../components/LoadingCircle"
 import ItemCard from "../../components/ItemCard"
 import { Icon } from "../../components/Icon"
-import FilterDishesPopover from "../Dishes/components/FilterDishesPopover"
-import SortDishesPopover from "../Dishes/components/SortDishesPopover"
+
 import { NAVIGATION_ROUTES } from "../../routes"
 import Button from "../../components/Button"
 import { colors } from "../../theme/colors"
+import FilterPopover from "../../components/FilterPopover"
+import SortPopover from "../../components/SortPopover"
 
 export default function Complements() {
   const location = useLocation()
@@ -172,8 +173,8 @@ export default function Complements() {
                 <span className="cursor-pointer" onClick={refreshPage}>
                   <Icon icon="reload" size={20} />
                 </span>
-                <FilterDishesPopover />
-                <SortDishesPopover />
+                <FilterPopover />
+                <SortPopover />
               </div>
             </div>
           </Grid.Col>

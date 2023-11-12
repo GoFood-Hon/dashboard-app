@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react"
 import { InputBase, Combobox, useCombobox } from "@mantine/core"
 import { ErrorMessage } from "./ErrorMessage"
 import LoadingCircle from "../LoadingCircle"
+import { colors } from "../../theme/colors"
 
 export default function InputCombobox({ items, label, errors, name, placeholder, emptyMessage, setValue, status }) {
   const combobox = useCombobox({
@@ -21,6 +22,7 @@ export default function InputCombobox({ items, label, errors, name, placeholder,
     <Combobox.Option
       value={item.name}
       key={item.id}
+      color={colors.primary_button}
       selected={categoryIdRef.current === item}
       ref={() => {
         categoryIdRef.current = item
@@ -45,7 +47,7 @@ export default function InputCombobox({ items, label, errors, name, placeholder,
   return (
     <React.Fragment>
       <div className="flex flex-col">
-        <span className="text-slate-400 pb-1">{label}</span>
+        <span className="text-sky-950 text-sm font-bold leading-snug pb-1">{label}</span>
         <Combobox store={combobox} onOptionSubmit={handleComboboxSubmit}>
           <Combobox.Target>
             <InputBase
