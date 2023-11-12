@@ -95,7 +95,6 @@ export const dishesSlice = createSlice({
         state.status = "loading"
       })
       .addCase(fetchDishes.fulfilled, (state, action) => {
-        console.log(action.payload.results)
         state.status = "succeeded"
         state.totalItems = action.payload.results
         state.value = action.payload
