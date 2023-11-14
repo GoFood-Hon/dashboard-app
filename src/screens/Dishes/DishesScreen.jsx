@@ -42,8 +42,16 @@ export default function Dishes() {
   const restaurant = useSelector((state) => state.restaurant.value)
 
   useEffect(() => {
-    console.log(filters, "page change")
-    dispatch(fetchDishes({ limit, page, order: "DESC", restaurantId: restaurant.id, filters }))
+    dispatch(
+      fetchDishes({
+        limit,
+        page,
+        order: "DESC",
+        restaurantId: restaurant.id,
+        filters
+      })
+    )
+
     setCardsSelected([])
   }, [page, dispatch, restaurant])
 
@@ -53,7 +61,15 @@ export default function Dishes() {
   }
 
   const refreshPage = () => {
-    dispatch(fetchDishes({ limit, page, order: "DESC", restaurantId: restaurant.id, filters }))
+    dispatch(
+      fetchDishes({
+        limit,
+        page,
+        order: "DESC",
+        restaurantId: restaurant.id,
+        filters
+      })
+    )
     setCardsSelected([])
   }
 
@@ -108,21 +124,13 @@ export default function Dishes() {
   useEffect(() => {}, [])
 
   const onFiltersChange = (data) => {
-    const { startDate, endDate, status, startPrice, endPrice } = data
+    const serializableFilters = {
+      ...data,
+      startDate: data.startDate?.toISOString().split("T")[0],
+      endDate: data.endDate?.toISOString().split("T")[0]
+    }
 
-    const formattedStartDate = startDate?.toISOString().split("T")[0]
-    const formattedEndDate = endDate?.toISOString().split("T")[0]
-    const formattedStatus = status === "Todos" ? null : status === "Habilitado" ? "true" : "false"
-    const formattedPrice = `${startPrice}-${endPrice}`
-
-    dispatch(
-      setFilters({
-        startDate: formattedStartDate,
-        endDate: formattedEndDate,
-        status: formattedStatus,
-        price: formattedPrice
-      })
-    )
+    dispatch(setFilters(serializableFilters))
 
     dispatch(
       fetchDishes({
@@ -130,7 +138,7 @@ export default function Dishes() {
         page,
         order: "DESC",
         restaurantId: restaurant.id,
-        filters: { startDate: formattedStartDate, endDate: formattedEndDate, status: formattedStatus, price: formattedPrice }
+        filters: data
       })
     )
 
@@ -187,7 +195,7 @@ export default function Dishes() {
               <span className="cursor-pointer" onClick={refreshPage}>
                 <Icon icon="reload" size={20} />
               </span>
-              <FilterPopover onFiltersChange={onFiltersChange} />
+              <FilterPopover onFiltersChange={onFiltersChange} refreshPage={refreshPage} />
               <SortPopover />
             </div>
           </div>

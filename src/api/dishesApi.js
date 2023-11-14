@@ -3,7 +3,7 @@ import axiosClient from "./axiosClient"
 const dishesApi = {
   getAllDishes: ({ limit, page, order }) => axiosClient.get(`api/v1/dish?limit=${limit}&page=${page}&order=${order}`),
 
-  getAllDishesByRestaurant: ({ limit, page, order, restaurantId, status, price, startDate, endDate }) => {
+  getAllDishesByRestaurant: ({ limit, page, order, restaurantId, startDate, endDate, status, price }) => {
     const params = {
       limit,
       page,

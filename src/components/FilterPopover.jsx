@@ -9,8 +9,10 @@ import { yupResolver } from "@hookform/resolvers/yup"
 import { filtersValidationSchema } from "../utils/inputRules"
 import { ErrorMessage } from "./Form/ErrorMessage"
 import { useDispatch, useSelector } from "react-redux"
+import { setFilters } from "../store/features/DishesSlice"
+import toast from "react-hot-toast"
 
-export default function FilterPopover({ onFiltersChange }) {
+export default function FilterPopover({ onFiltersChange, refreshPage }) {
   const marks = [
     { value: 10, label: "100 HNL" },
     { value: 50, label: "500 HNL" },
@@ -28,11 +30,9 @@ export default function FilterPopover({ onFiltersChange }) {
 
     formState: { errors, isSubmitSuccessful }
   } = useForm({
-    resolver: yupResolver(filtersValidationSchema),
-    defaultValues: filters
+    resolver: yupResolver(filtersValidationSchema)
   })
 
-  console.log(filters, "pop")
   const [price, setPrice] = useState({ startPrice: 100, endPrice: 700 })
 
   const onSubmit = (data) => {
@@ -47,6 +47,11 @@ export default function FilterPopover({ onFiltersChange }) {
     setValue("endPrice", val[1] * 10)
   }
 
+  const handleResetFilters = () => {
+    dispatch(setFilters({}))
+    refreshPage()
+    toast.success("Filtros borrados!")
+  }
   return (
     <React.Fragment>
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -109,7 +114,7 @@ export default function FilterPopover({ onFiltersChange }) {
                   <Input.Wrapper label="Desde" size="12px">
                     <NumberInput
                       max={MAX_NUMBER_INPUT}
-                      min={0}
+                      min={1}
                       value={price.startPrice}
                       placeholder="120.00"
                       allowNegative={false}
@@ -126,7 +131,7 @@ export default function FilterPopover({ onFiltersChange }) {
                   <Input.Wrapper label="Hasta" size="12px">
                     <NumberInput
                       max={MAX_NUMBER_INPUT}
-                      min={0}
+                      min={10}
                       value={price.endPrice}
                       allowNegative={false}
                       prefix="L. "
@@ -158,7 +163,7 @@ export default function FilterPopover({ onFiltersChange }) {
                 <Button
                   text="Borrar Filtros"
                   className="rounded border border-sky-950 justify-center items-center gap-2.5 inline-flex"
-                  onClick={() => reset()}
+                  onClick={() => handleResetFilters()}
                 />
                 <Button
                   text="Aplicar Filtros"

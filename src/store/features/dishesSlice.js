@@ -8,24 +8,53 @@ const initialState = {
   currentPage: 1,
   itemsPerPage: ITEMS_PER_PAGE,
   totalItems: 0,
-  filters: { startDate: "", endDate: "", status: "", price: "" }
+  filters: {
+    startDate: null,
+    endDate: null,
+    status: null,
+    startPrice: null,
+    endPrice: null
+  }
 }
 
 export const fetchDishes = createAsyncThunk(
   "dishes/fetchDishes",
   async ({ limit, page, order, restaurantId, filters }, { dispatch }) => {
-    const { startDate, endDate, status, price } = filters
+    let formattedStartDate = null
+    let formattedEndDate = null
+    let formattedStatus = null
+    let formattedPrice = null
+
+    const { startDate, endDate, status, startPrice, endPrice } = filters
+
+    if (startDate) {
+      formattedStartDate = startDate.toISOString().split("T")[0]
+    }
+
+    if (endDate) {
+      formattedEndDate = endDate.toISOString().split("T")[0]
+    }
+
+    if (status) {
+      formattedStatus = status === "Todos" ? null : status === "Habilitado" ? "true" : "false"
+    }
+
+    if (startPrice || endPrice) {
+      formattedPrice = `${startPrice || ""}-${endPrice || ""}`
+    }
+
     try {
       const response = await dishesApi.getAllDishesByRestaurant({
         limit,
         page,
         order,
         restaurantId,
-        startDate,
-        endDate,
-        status,
-        price
+        startDate: formattedStartDate,
+        endDate: formattedEndDate,
+        status: formattedStatus,
+        price: formattedPrice
       })
+
       dispatch(setDishes(response.data.data))
       return response
     } catch (error) {
