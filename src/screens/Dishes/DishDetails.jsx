@@ -8,6 +8,8 @@ import { getFormattedHNL } from "../../utils"
 import { IconCamera } from "@tabler/icons-react"
 import { useDisclosure } from "@mantine/hooks"
 import DashboardCard from "../../components/DashboardCard"
+import NewDish from "./NewDishScreen"
+import EditDishScreen from "./EditDishScreen"
 
 export default function DishDetails() {
   const { dishId } = useParams()
@@ -115,13 +117,15 @@ export default function DishDetails() {
                 </Grid.Col>
                 <Grid.Col span={{ base: 12, md: 10, lg: 10 }}>
                   <div className="flex w-full flex-col">
-                    <p className="text-zinc-500 text-sm font-medium h-full w-full pt-20 p-8">{dishDetails?.description}</p>
+                    <div className="flex flex-row justify-between w-full">
+                      <p className="text-zinc-500 text-sm font-medium h-full w-full pt-20 p-8">{dishDetails?.description}</p>
+                      <p className="text-blue-600 text-base font-normal leading-normal cursor-pointer self-center">Editar</p>
+                    </div>
                     <div className="flex flex-row justify-between">
                       <div>
                         <span className="text-sky-950 text-base font-bold leading-normal">Complementos (12)</span>
                         <span className="text-sky-950 text-base font-normal leading-normal"> </span>
                       </div>
-                      <div className="text-blue-600 text-base font-normal leading-normal cursor-pointer">Editar</div>
                     </div>
                     <div className="w-full h-20 p-5 bg-white rounded-lg border border-blue-100 my-2">item</div>
                     <div className="w-full h-20 p-5 bg-white rounded-lg border border-blue-100 my-2">item</div>
@@ -133,7 +137,6 @@ export default function DishDetails() {
                         <span className="text-sky-950 text-base font-bold leading-normal">Extras (12)</span>
                         <span className="text-sky-950 text-base font-normal leading-normal"> </span>
                       </div>
-                      <div className="text-blue-600 text-base font-normal leading-normal cursor-pointer">Editar</div>
                     </div>
                     <div className="w-full h-20 p-5 bg-white rounded-lg border border-blue-100 my-2">item</div>
                     <div className="w-full h-20 p-5 bg-white rounded-lg border border-blue-100 my-2">item</div>
@@ -156,9 +159,21 @@ export default function DishDetails() {
           </Grid>
         </section>
       </div>
-
       <Modal
         opened={opened}
+        onClose={close}
+        centered
+        size={"xl"}
+        radius={"lg"}
+        overlayProps={{
+          backgroundOpacity: 0.55,
+          blur: 3
+        }}>
+        <EditDishScreen />
+      </Modal>
+
+      <Modal
+        opened={false}
         onClose={close}
         centered
         radius={"lg"}
