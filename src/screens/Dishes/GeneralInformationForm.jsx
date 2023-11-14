@@ -6,7 +6,7 @@ import InputTextAreaField from "../../components/Form/InputTextAreaField"
 import InputField from "../../components/Form/InputField"
 import toast from "react-hot-toast"
 import { bytesToMB } from "../../utils"
-import InputCombobox from "../../components/Form/InputCombobox"
+import InputSearchCombobox from "../../components/Form/InputSearchCombobox"
 import InputCheckbox from "../../components/Form/InputCheckbox"
 import { useDispatch, useSelector } from "react-redux"
 import {
@@ -86,7 +86,7 @@ export default function GeneralInformationForm({ register, errors, setValue, isD
               placeholder="Ej. Rico pollo con papas, salsas..."
             />
             <div className="mt-1">
-              <InputCombobox
+              <InputSearchCombobox
                 label="Categoría del platillo"
                 name={"categoryId"}
                 placeholder="Buscar categoría"

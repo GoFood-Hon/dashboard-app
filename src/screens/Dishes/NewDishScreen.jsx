@@ -13,6 +13,7 @@ import { createDish } from "../../store/features/DishesSlice"
 import { newItemValidationSchema } from "../../utils/inputRules"
 import { yupResolver } from "@hookform/resolvers/yup"
 import toast from "react-hot-toast"
+import PreparationForm from "./PreparationForm"
 
 export default function NewDish() {
   const location = useLocation()
@@ -67,6 +68,11 @@ export default function NewDish() {
       title: "Pagos",
       requirement: "Obligatorio",
       form: <PaymentForm register={register} errors={errors} />
+    },
+    {
+      title: "Preparación",
+      requirement: "Opcional",
+      form: <PreparationForm register={register} errors={errors} setValue={setValue} />
     }
   ]
   const items = accordionStructure.map((item, key) => (

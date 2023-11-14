@@ -4,7 +4,7 @@ import { ErrorMessage } from "./ErrorMessage"
 import LoadingCircle from "../LoadingCircle"
 import { colors } from "../../theme/colors"
 
-export default function InputCombobox({ items, label, errors, name, placeholder, emptyMessage, setValue, status }) {
+export default function InputSearchCombobox({ items, label, errors, name, placeholder, emptyMessage, setValue, status }) {
   const combobox = useCombobox({
     onDropdownClose: () => combobox.resetSelectedOption()
   })

@@ -37,7 +37,6 @@ export default function Dishes() {
   const totalControlBtn = Math.ceil(totalItems / limit)
   const [searchDish, setSearchDish] = useState("")
   const [cardsSelected, setCardsSelected] = useState([])
-  // const [filters, setFilters] = useState([])
 
   const restaurant = useSelector((state) => state.restaurant.value)
 

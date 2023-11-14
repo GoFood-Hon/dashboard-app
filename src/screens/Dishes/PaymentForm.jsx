@@ -1,7 +1,6 @@
 import React from "react"
 import { Grid } from "@mantine/core"
 import InputField from "../../components/Form/InputField"
-import { inputRequired } from "../../utils/inputRules"
 
 export default function PaymentForm({ register, errors }) {
   return (
