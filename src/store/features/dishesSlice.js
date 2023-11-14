@@ -7,19 +7,33 @@ const initialState = {
   dishes: [],
   currentPage: 1,
   itemsPerPage: ITEMS_PER_PAGE,
-  totalItems: 0
+  totalItems: 0,
+  filters: { startDate: "", endDate: "", status: "", price: "" }
 }
 
-export const fetchDishes = createAsyncThunk("dishes/fetchDishes", async ({ limit, page, order, restaurantId }, { dispatch }) => {
-  try {
-    const response = await dishesApi.getAllDishesByRestaurant({ limit, page, order, restaurantId })
-    dispatch(setDishes(response.data.data))
-    return response
-  } catch (error) {
-    dispatch(setError("Error fetching dishes"))
-    throw error
+export const fetchDishes = createAsyncThunk(
+  "dishes/fetchDishes",
+  async ({ limit, page, order, restaurantId, filters }, { dispatch }) => {
+    const { startDate, endDate, status, price } = filters
+    try {
+      const response = await dishesApi.getAllDishesByRestaurant({
+        limit,
+        page,
+        order,
+        restaurantId,
+        startDate,
+        endDate,
+        status,
+        price
+      })
+      dispatch(setDishes(response.data.data))
+      return response
+    } catch (error) {
+      dispatch(setError("Error fetching dishes"))
+      throw error
+    }
   }
-})
+)
 
 export const createDish = createAsyncThunk("dishes/createDish", async (formData, { dispatch }) => {
   try {
@@ -74,6 +88,9 @@ export const dishesSlice = createSlice({
   name: "dishes",
   initialState,
   reducers: {
+    setFilters: (state, action) => {
+      state.filters = action.payload
+    },
     setPage: (state, action) => {
       state.currentPage = action.payload
     },
@@ -106,7 +123,7 @@ export const dishesSlice = createSlice({
   }
 })
 
-export const { setDishes, setError, setPage } = dishesSlice.actions
+export const { setDishes, setError, setPage, setFilters } = dishesSlice.actions
 
 export const setLoading = (state) => state.dishes.loading
 

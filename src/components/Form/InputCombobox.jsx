@@ -9,7 +9,6 @@ export default function InputCombobox({ items, label, errors, name, placeholder,
     onDropdownClose: () => combobox.resetSelectedOption()
   })
 
-  const [value, setValueState] = useState("")
   const [search, setSearch] = useState("")
   const categoryIdRef = useRef(null)
 
@@ -32,7 +31,6 @@ export default function InputCombobox({ items, label, errors, name, placeholder,
   ))
 
   const handleComboboxSubmit = (val) => {
-    setValueState(val)
     setSearch(val)
     if (categoryIdRef.current) {
       setValue(name, categoryIdRef.current.id)

@@ -6,12 +6,12 @@ const dishesApi = {
   getAllDishesByRestaurant: ({ limit, page, order, restaurantId, status, price, startDate, endDate }) => {
     const params = {
       limit,
-      order,
-      status,
-      price,
-      startDate,
       page,
-      endDate
+      order,
+      startDate,
+      endDate,
+      status,
+      price
     }
 
     const validParams = Object.fromEntries(Object.entries(params).filter(([_, value]) => value !== undefined && value))

@@ -12,6 +12,7 @@ import {
   selectAllDishes,
   selectDishesError,
   selectDishesStatus,
+  setFilters,
   setPage,
   updateDish
 } from "../../store/features/DishesSlice"
@@ -30,15 +31,19 @@ export default function Dishes() {
   const error = useSelector(selectDishesError)
   const limit = useSelector((state) => state.dishes.itemsPerPage)
   const totalItems = useSelector((state) => state.dishes.totalItems)
+  const filters = useSelector((state) => state.dishes.filters)
   const page = useSelector((state) => state.dishes.currentPage)
 
   const totalControlBtn = Math.ceil(totalItems / limit)
   const [searchDish, setSearchDish] = useState("")
   const [cardsSelected, setCardsSelected] = useState([])
+  // const [filters, setFilters] = useState([])
+
   const restaurant = useSelector((state) => state.restaurant.value)
 
   useEffect(() => {
-    dispatch(fetchDishes({ limit, page, order: "DESC", restaurantId: restaurant.id }))
+    console.log(filters, "page change")
+    dispatch(fetchDishes({ limit, page, order: "DESC", restaurantId: restaurant.id, filters }))
     setCardsSelected([])
   }, [page, dispatch, restaurant])
 
@@ -48,7 +53,7 @@ export default function Dishes() {
   }
 
   const refreshPage = () => {
-    dispatch(fetchDishes({ limit, page, order: "DESC", restaurantId: restaurant.id }))
+    dispatch(fetchDishes({ limit, page, order: "DESC", restaurantId: restaurant.id, filters }))
     setCardsSelected([])
   }
 
@@ -98,6 +103,38 @@ export default function Dishes() {
     )
 
     refreshPage()
+  }
+
+  useEffect(() => {}, [])
+
+  const onFiltersChange = (data) => {
+    const { startDate, endDate, status, startPrice, endPrice } = data
+
+    const formattedStartDate = startDate?.toISOString().split("T")[0]
+    const formattedEndDate = endDate?.toISOString().split("T")[0]
+    const formattedStatus = status === "Todos" ? null : status === "Habilitado" ? "true" : "false"
+    const formattedPrice = `${startPrice}-${endPrice}`
+
+    dispatch(
+      setFilters({
+        startDate: formattedStartDate,
+        endDate: formattedEndDate,
+        status: formattedStatus,
+        price: formattedPrice
+      })
+    )
+
+    dispatch(
+      fetchDishes({
+        limit,
+        page,
+        order: "DESC",
+        restaurantId: restaurant.id,
+        filters: { startDate: formattedStartDate, endDate: formattedEndDate, status: formattedStatus, price: formattedPrice }
+      })
+    )
+
+    setCardsSelected([])
   }
 
   return (
@@ -150,7 +187,7 @@ export default function Dishes() {
               <span className="cursor-pointer" onClick={refreshPage}>
                 <Icon icon="reload" size={20} />
               </span>
-              <FilterPopover />
+              <FilterPopover onFiltersChange={onFiltersChange} />
               <SortPopover />
             </div>
           </div>
