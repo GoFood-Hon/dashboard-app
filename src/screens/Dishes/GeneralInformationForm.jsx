@@ -134,7 +134,7 @@ export default function GeneralInformationForm({ register, errors, setValue, isD
                   <Text size="xl" inline className="text-center">
                     Seleccione una imagen destacada
                   </Text>
-                  <Text size="sm" c="dimmed" inline mt={7} className="text-center">
+                  <Text size="sm" c="dimmed" inline mt={7} className="text-center leading-10">
                     Haga click o arrastre una imagen que sera usada junto con el platillo
                   </Text>
                 </div>
