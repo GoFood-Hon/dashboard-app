@@ -72,7 +72,7 @@ export default function NewDish() {
     {
       title: "Preparación",
       requirement: "Opcional",
-      form: <PreparationForm register={register} errors={errors} setValue={setValue} />
+      form: <PreparationForm setValue={setValue} errors={errors} />
     }
   ]
   const items = accordionStructure.map((item, key) => (
@@ -162,7 +162,6 @@ export default function NewDish() {
       Object.keys(parsedData).forEach((field) => {
         setValue(field, parsedData[field])
       })
-
       toast.success("Platillo cargado desde borrador")
     }
   }, [setValue])
@@ -194,7 +193,7 @@ export default function NewDish() {
           </Accordion>
         </section>
         <section ref={containerRef}>
-          <Affix position={{ bottom: 20, left: "calc(50% - 200px)" }}>
+          {/*  <Affix position={{ bottom: 20, left: "calc(50% - 200px)" }}>
             <Transition transition="slide-down" mounted={isAffixMounted} duration={400} timingFunction="ease">
               {(transitionStyles) => (
                 <div
@@ -216,13 +215,13 @@ export default function NewDish() {
                   />
                   <Button
                     text={"Guardar platillo"}
-                    onClick={handleSubmit(onSubmit)}
+                    onClick={() => handleSubmit(onSubmit)}
                     className="flex h-10 w-full items-center justify-center px-4 rounded-md shadow-sm transition-all duration-700 focus:outline-none text-xs bg-sky-950 text-slate-50"
                   />
                 </div>
               )}
             </Transition>
-          </Affix>
+          </Affix> */}
           {!isAffixMounted && (
             <div className="w-full flex md:justify-end mt-6 md:gap-3 rounded-md bg-white px-8 py-5 border border-gray-200">
               <div className="md:w-2/3 lg:1/3 sm:w-full flex flex-row justify-end gap-3 sm:flex-wrap md:flex-nowrap">
@@ -242,7 +241,6 @@ export default function NewDish() {
                 />
                 <Button
                   text={"Guardar platillo"}
-                  onClick={handleSubmit(onSubmit)}
                   className="flex h-10 w-full items-center justify-center px-4 rounded-md shadow-sm transition-all duration-700 focus:outline-none text-xs bg-sky-950 text-slate-50"
                 />
               </div>

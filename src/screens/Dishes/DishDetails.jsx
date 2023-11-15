@@ -9,7 +9,6 @@ import { IconCamera } from "@tabler/icons-react"
 import { useDisclosure } from "@mantine/hooks"
 import DashboardCard from "../../components/DashboardCard"
 import NewDish from "./NewDishScreen"
-import EditDishScreen from "./EditDishScreen"
 
 export default function DishDetails() {
   const { dishId } = useParams()
@@ -168,9 +167,7 @@ export default function DishDetails() {
         overlayProps={{
           backgroundOpacity: 0.55,
           blur: 3
-        }}>
-        <EditDishScreen />
-      </Modal>
+        }}></Modal>
 
       <Modal
         opened={false}

@@ -1,4 +1,4 @@
-import Button from "../../components/Button"
+/* import Button from "../../components/Button"
 import { Accordion } from "@mantine/core"
 import React, { useEffect, useRef, useState } from "react"
 import { useLocation } from "react-router-dom"
@@ -7,7 +7,6 @@ import ExtrasForm from "./ExtrasForm"
 import GeneralInformationForm from "./GeneralInformationForm"
 import PaymentForm from "./PaymentForm"
 import { useDispatch, useSelector } from "react-redux"
-import { createDish } from "../../store/features/DishesSlice"
 import { newItemValidationSchema } from "../../utils/inputRules"
 import { yupResolver } from "@hookform/resolvers/yup"
 import toast from "react-hot-toast"
@@ -50,12 +49,12 @@ export default function EditDishScreen() {
       title: "Complementos",
       requirement: "Opcional",
       form: <ComplementsForm />
-    }, */
+    },
     /*  {
       title: "Bebidas",
       requirement: "Opcional",
       form: <DrinksForms />
-    }, */
+    },
     {
       title: "Extras",
       requirement: "Opcional",
@@ -100,26 +99,6 @@ export default function EditDishScreen() {
       }
     }
   }, [])
-
-  const onSubmit = (data) => {
-    const formData = new FormData()
-    formData.append("name", data.name)
-    formData.append("files", data.files[0])
-    formData.append("price", data.price)
-    formData.append("description", data.description)
-    formData.append("includesDrink", data.includeDrink)
-    formData.append("endPrice", data.endPrice)
-    formData.append("categoryId", data.categoryId)
-    formData.append("restaurantId", restaurant.id)
-
-    dispatch(createDish(formData)).then((response) => {
-      if (response.payload) {
-        reset()
-        localStorage.removeItem("draft")
-        setIsDataCleared(true)
-      }
-    })
-  }
 
   useEffect(() => {
     const draftData = localStorage.getItem("draft")
@@ -178,3 +157,4 @@ export default function EditDishScreen() {
     </form>
   )
 }
+ */
