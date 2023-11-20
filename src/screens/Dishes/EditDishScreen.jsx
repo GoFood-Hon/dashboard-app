@@ -13,7 +13,7 @@ import toast from "react-hot-toast"
 import PreparationForm from "./PreparationForm"
 import { updateDish } from "../../store/features/DishesSlice"
 
-export default function EditDishScreen({ close, data }) {
+export default function EditDishScreen({ close, dishDetails }) {
   const dispatch = useDispatch()
   const restaurant = useSelector((state) => state.restaurant.value)
 
@@ -29,7 +29,7 @@ export default function EditDishScreen({ close, data }) {
     formState: { errors }
   } = useForm({
     resolver: yupResolver(newItemValidationSchema),
-    defaultValues: data
+    defaultValues: dishDetails
   })
 
   const accordionStructure = [
@@ -43,7 +43,7 @@ export default function EditDishScreen({ close, data }) {
           setValue={setValue}
           control={control}
           isDataCleared={isDataCleared}
-          preloadImage={data.images}
+          preloadImage={dishDetails.images}
         />
       )
     },
@@ -79,18 +79,7 @@ export default function EditDishScreen({ close, data }) {
   ))
 
   const onSubmit = (data) => {
-    const formData = new FormData()
-    formData.append("name", data.name)
-    formData.append("files", data.files[0])
-    formData.append("price", data.price)
-    formData.append("description", data.description)
-    formData.append("includesDrink", data.includeDrink)
-    formData.append("endPrice", data.endPrice)
-    formData.append("categoryId", data.categoryId)
-    formData.append("restaurantId", data.restaurantId)
-
-    const dishId = data.id
-    dispatch(updateDish({ formData, dishId })).then((response) => {
+    dispatch(updateDish({ data })).then((response) => {
       if (response.payload) {
         reset()
         close()

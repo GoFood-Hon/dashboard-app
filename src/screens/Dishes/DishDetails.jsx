@@ -112,7 +112,7 @@ export default function DishDetails() {
                     <div className="text-sky-950 text-sm font-medium leading-snug mb-2 mt-4">Preparación</div>
                     <div className="w-[125px] h-px bg-blue-100 sm:w-full" />
                     <div className="text-sky-950 text-sm font-medium leading-snug my-2">Tiempo estimado</div>
-                    <div className="text-sky-950 text-sm font-bold leading-snug mb-2">2-5 minutos</div>
+                    <div className="text-sky-950 text-sm font-bold leading-snug mb-2">{dishDetails.preparationTime} minutos</div>
                   </div>
                 </Grid.Col>
                 <Grid.Col span={{ base: 12, md: 10, lg: 10 }}>
@@ -171,7 +171,7 @@ export default function DishDetails() {
           backgroundOpacity: 0.55,
           blur: 3
         }}>
-        <EditDishScreen close={close} data={dishDetails} />
+        <EditDishScreen close={close} dishDetails={dishDetails} />
       </Modal>
 
       <Modal

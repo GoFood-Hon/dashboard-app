@@ -79,7 +79,9 @@ export const createDish = createAsyncThunk("dishes/createDish", async ({ data, r
     dispatch(fetchDishes())
 
     if (response.error) {
-      handleCreateDishError(response)
+      toast.error(`Fallo al crear el platillo. Por favor intente de nuevo. ${response.message}`, {
+        duration: 7000
+      })
     } else {
       const dishId = response.data.data.id
       const addImageResponse = await uploadDishImage(dishId, data.files[0])
@@ -111,11 +113,7 @@ const createDishFormData = (data, restaurant) => {
   return formData
 }
 
-const handleCreateDishError = (response) => {
-  toast.error(`Fallo al crear el platillo. Por favor intente de nuevo. ${response.message}`, {
-    duration: 7000
-  })
-}
+const handleCreateDishError = (response) => {}
 
 const uploadDishImage = async (dishId, file) => {
   const formDataImage = new FormData()
@@ -141,15 +139,36 @@ const handleErrorOnCreateDish = (error, dispatch) => {
  * UPDATE DISHES
  */
 
-export const updateDish = createAsyncThunk("dishes/updateDish", async ({ formData, dishId }, { dispatch }) => {
+const updateDishFormData = (data) => {
+  const formData = new FormData()
+  formData.append("name", data.name)
+  formData.append("price", data.price)
+  formData.append("description", data.description)
+  formData.append("includesDrink", data.includeDrink)
+  formData.append("endPrice", data.endPrice)
+  formData.append("categoryId", data.categoryId)
+  formData.append("restaurantId", data.restaurantId)
+  formData.append("preparationTime", data?.preparationTime)
+
+  return formData
+}
+
+export const updateDish = createAsyncThunk("dishes/updateDish", async ({ data }, { dispatch }) => {
   try {
-    const response = await dishesApi.updateDish(formData, dishId)
+    const formData = updateDishFormData(data)
+
+    const response = await dishesApi.updateDish(formData, data.id)
 
     if (response.error) {
       toast.error(`Fallo al actualizar el platillo. Por favor intente de nuevo. ${response.message}`, {
         duration: 7000
       })
     } else {
+      const addImageResponse = await uploadDishImage(data.id, data.files[0])
+      if (addImageResponse.error) {
+        handleImageUploadError(addImageResponse)
+      }
+
       toast.success("Platillo actualizado exitosamente", {
         duration: 7000
       })
