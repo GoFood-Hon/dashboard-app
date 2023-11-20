@@ -9,6 +9,8 @@ import {
   selectAllComplements,
   selectComplementsError,
   selectComplementsStatus,
+  setFilters,
+  setPage,
   updateComplement
 } from "../../store/features/complementsSlice"
 import LoadingCircle from "../../components/LoadingCircle"
@@ -22,27 +24,37 @@ import FilterPopover from "../../components/FilterPopover"
 import SortPopover from "../../components/SortPopover"
 
 export default function Complements() {
-  const location = useLocation()
   const navigate = useNavigate()
-
+  const location = useLocation()
   const dispatch = useDispatch()
+
   const complements = useSelector(selectAllComplements)
   const status = useSelector(selectComplementsStatus)
   const error = useSelector(selectComplementsError)
   const limit = useSelector((state) => state.complements.itemsPerPage)
   const totalItems = useSelector((state) => state.complements.totalItems)
+  const filters = useSelector((state) => state.complements.filters)
   const page = useSelector((state) => state.complements.currentPage)
   const restaurant = useSelector((state) => state.restaurant.value)
+
   const totalControlBtn = Math.ceil(totalItems / limit)
 
   const [searchDish, setSearchDish] = useState("")
   const [cardsSelected, setCardsSelected] = useState([])
 
   useEffect(() => {
-    dispatch(fetchComplements({ restaurantId: restaurant.id }))
+    dispatch(
+      fetchComplements({
+        limit,
+        page,
+        order: "DESC",
+        restaurantId: restaurant.id,
+        filters
+      })
+    )
 
     setCardsSelected([])
-  }, [page, dispatch])
+  }, [page, dispatch, restaurant])
 
   const handleNewItem = () => {
     navigate(NAVIGATION_ROUTES.Menu.submenu.Complements.submenu.NewComplement.path)
@@ -50,8 +62,15 @@ export default function Complements() {
   }
 
   const refreshPage = () => {
-    dispatch(fetchComplements({ restaurantId: restaurant.id }))
-
+    dispatch(
+      fetchComplements({
+        limit,
+        page,
+        order: "DESC",
+        restaurantId: restaurant.id,
+        filters
+      })
+    )
     setCardsSelected([])
   }
 
@@ -80,10 +99,9 @@ export default function Complements() {
   const handleEnableSelected = async () => {
     const formData = new FormData()
     formData.append("isActive", true)
-
     await Promise.all(
-      cardsSelected.map(async (dishId) => {
-        await dispatch(updateComplement({ formData, dishId }))
+      cardsSelected.map(async (complementId) => {
+        await dispatch(updateComplement({ formData, complementId }))
       })
     )
 
@@ -95,12 +113,34 @@ export default function Complements() {
     formData.append("isActive", false)
 
     await Promise.all(
-      cardsSelected.map(async (dishId) => {
-        await dispatch(updateDish({ formData, dishId }))
+      cardsSelected.map(async (complementId) => {
+        await dispatch(updateComplement({ formData, complementId }))
       })
     )
 
     refreshPage()
+  }
+
+  const onFiltersChange = (data) => {
+    const serializableFilters = {
+      ...data,
+      startDate: data.startDate?.toISOString().split("T")[0],
+      endDate: data.endDate?.toISOString().split("T")[0]
+    }
+
+    dispatch(setFilters(serializableFilters))
+
+    dispatch(
+      fetchDishes({
+        limit,
+        page,
+        order: "DESC",
+        restaurantId: restaurant.id,
+        filters: data
+      })
+    )
+
+    setCardsSelected([])
   }
 
   return (
@@ -128,7 +168,7 @@ export default function Complements() {
             <div className="w-full h-full flex items-center">
               <Input
                 className="w-full"
-                placeholder="Buscar platillo"
+                placeholder="Buscar complemento"
                 value={searchDish}
                 onChange={(event) => setSearchDish(event.currentTarget.value)}
                 rightSectionPointerEvents="all"
@@ -159,21 +199,21 @@ export default function Complements() {
             </div>
           </Grid.Col>
           <Grid.Col span={{ base: 12, lg: 3, xl: 2 }}>
-            <div className="flex flex-row justify-end items-center w-full h-full">
-              <div className="flex flex-row mr-4 text-sm flex-wrap">
-                <div>
-                  <span className="text-sky-950  font-bold leading-normal">
-                    {page === 1 ? 1 : (page - 1) * limit + 1} - {page === 1 ? limit : Math.min(page * limit, totalItems)}
-                  </span>
-                  <span className="text-zinc-500 font-medium leading-normal px-1"> de </span>
-                </div>
-                <span className="text-sky-950 font-bold leading-normal">{totalItems} platillos</span>
+            <div className="flex flex-row w-full justify-end items-center">
+              <div className="flex flex-row mr-4">
+                <span className="text-sky-950 text-base font-bold leading-normal">{page === 1 ? 1 : (page - 1) * limit + 1}</span>
+                <span className="text-zinc-500 text-base font-bold leading-normal">-</span>
+                <span className="text-sky-950 text-base font-bold leading-normal">
+                  {page === 1 ? limit : Math.min(page * limit, totalItems)}
+                </span>
+                <span className="text-zinc-500 text-base font-medium leading-normal px-1"> de </span>
+                <span className="text-sky-950 text-base font-bold leading-normal">{totalItems} platillos</span>
               </div>
-              <div className="flex flex-row h-full items-center gap-2">
+              <div className="flex flex-row h-full items-center gap-3">
                 <span className="cursor-pointer" onClick={refreshPage}>
                   <Icon icon="reload" size={20} />
                 </span>
-                <FilterPopover />
+                <FilterPopover onFiltersChange={onFiltersChange} refreshPage={refreshPage} />
                 <SortPopover />
               </div>
             </div>

@@ -1,7 +1,26 @@
 import axiosClient from "./axiosClient"
 
 const complementsApi = {
-  getAddOnByRestaurant: (restaurantId) => axiosClient.get(`api/v1/addon/${restaurantId}`),
+  getAddOnByRestaurant: ({ limit, page, order, restaurantId, startDate, endDate, status, price }) => {
+    const params = {
+      limit,
+      page,
+      order,
+      startDate,
+      endDate,
+      status,
+      price
+    }
+
+    const validParams = Object.fromEntries(Object.entries(params).filter(([_, value]) => value !== undefined && value))
+
+    const queryString = new URLSearchParams(validParams).toString()
+
+    const url = `api/v1/addon/${restaurantId}${queryString ? `?${queryString}` : ""}`
+
+    return axiosClient.get(url)
+  },
+
   createAddOn: (params) => axiosClient.post("api/v1/addon/", params),
   updateAddOn: (params, addonId) => axiosClient.patch(`api/v1/addon/${addonId}`, params),
   deleteAddOn: (addonId) => axiosClient.del(`api/v1/addon/${addonId}`)
