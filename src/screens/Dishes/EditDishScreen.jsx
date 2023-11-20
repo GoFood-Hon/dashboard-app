@@ -28,7 +28,6 @@ export default function EditDishScreen({ close, dishDetails }) {
     reset,
     formState: { errors }
   } = useForm({
-    resolver: yupResolver(newItemValidationSchema),
     defaultValues: dishDetails
   })
 

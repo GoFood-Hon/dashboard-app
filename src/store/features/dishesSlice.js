@@ -157,17 +157,14 @@ export const updateDish = createAsyncThunk("dishes/updateDish", async ({ data },
   try {
     const formData = updateDishFormData(data)
 
-    const response = await dishesApi.updateDish(formData, data.id)
+    const response = await dishesApi.updateDish(formData, data?.id)
 
     if (response.error) {
       toast.error(`Fallo al actualizar el platillo. Por favor intente de nuevo. ${response.message}`, {
         duration: 7000
       })
     } else {
-      const addImageResponse = await uploadDishImage(data.id, data.files[0])
-      if (addImageResponse.error) {
-        handleImageUploadError(addImageResponse)
-      }
+      await uploadDishImage(data?.id, data?.files?.[0])
 
       toast.success("Platillo actualizado exitosamente", {
         duration: 7000
@@ -175,6 +172,7 @@ export const updateDish = createAsyncThunk("dishes/updateDish", async ({ data },
     }
     return response.data
   } catch (error) {
+    console.log(error)
     dispatch(setError("Error updating dish"))
     toast.error("Fallo al actualizar el platillo. Por favor intente de nuevo.", {
       duration: 7000
