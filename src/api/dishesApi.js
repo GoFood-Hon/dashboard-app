@@ -24,8 +24,12 @@ const dishesApi = {
 
   getDish: (dishId) => axiosClient.get(`api/v1/dish/${dishId}`),
 
-  createDish: (params) =>
-    axiosClient.post("api/v1/dish/", params, { contentType: `multipart/form-data; boundary=${params._boundary}` }),
+  createDish: (formData) => axiosClient.post("api/v1/dish/", formData),
+
+  addImage: (dishId, params) =>
+    axiosClient.post(`api/v1/dish/${dishId}/images`, params, {
+      contentType: `multipart/form-data; boundary=${params._boundary}`
+    }),
 
   updateDish: (params, dishId) => axiosClient.patch(`api/v1/dish/${dishId}`, params),
   deleteDish: (dishId) => axiosClient.del(`api/v1/dish/${dishId}`)
