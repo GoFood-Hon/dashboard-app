@@ -9,7 +9,7 @@ import { NAVIGATION_ROUTES } from "../routes"
 import { colors } from "../theme/colors"
 
 export default function ItemCard({ item, index, navigation, cardsSelected, setCardsSelected, handleChangeSelected }) {
-  const { id, isActive, name, images, price, isUserSearch, isUserLove, isPromotion } = item
+  const { id, isActive, active, name, images, price, isUserSearch, isUserLove, isPromotion } = item
 
   const navigate = useNavigate()
   const checked = cardsSelected.includes(id)
@@ -29,7 +29,7 @@ export default function ItemCard({ item, index, navigation, cardsSelected, setCa
       </div>
       <div onClick={handleClick} className="cursor-pointer">
         <div className="flex flex-col justify-between items-center">
-          {isActive ? (
+          {isActive || active ? (
             <div className="text-emerald-400 px-4 py-1 rounded-2xl justify-center items-center bg-green-100 my-3">Habilitado</div>
           ) : (
             <div className="bg-rose-100 text-red-400 px-4 py-1 rounded-2xl justify-center items-center my-3">Deshabilitado</div>

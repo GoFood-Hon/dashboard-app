@@ -26,6 +26,7 @@ export default function Dishes() {
   const navigate = useNavigate()
   const location = useLocation()
   const dispatch = useDispatch()
+
   const dishes = useSelector(selectAllDishes)
   const status = useSelector(selectDishesStatus)
   const error = useSelector(selectDishesError)
@@ -33,12 +34,11 @@ export default function Dishes() {
   const totalItems = useSelector((state) => state.dishes.totalItems)
   const filters = useSelector((state) => state.dishes.filters)
   const page = useSelector((state) => state.dishes.currentPage)
+  const restaurant = useSelector((state) => state.restaurant.value)
 
   const totalControlBtn = Math.ceil(totalItems / limit)
   const [searchDish, setSearchDish] = useState("")
   const [cardsSelected, setCardsSelected] = useState([])
-
-  const restaurant = useSelector((state) => state.restaurant.value)
 
   useEffect(() => {
     dispatch(
@@ -119,8 +119,6 @@ export default function Dishes() {
 
     refreshPage()
   }
-
-  useEffect(() => {}, [])
 
   const onFiltersChange = (data) => {
     const serializableFilters = {
