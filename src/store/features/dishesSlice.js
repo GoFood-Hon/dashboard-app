@@ -13,7 +13,8 @@ const initialState = {
     endDate: null,
     status: null,
     startPrice: null,
-    endPrice: null
+    endPrice: null,
+    dateSort: null
   }
 }
 
@@ -25,7 +26,7 @@ export const fetchDishes = createAsyncThunk(
     let formattedStatus = null
     let formattedPrice = null
 
-    const { startDate, endDate, status, startPrice, endPrice } = filters
+    const { startDate, endDate, status, startPrice, endPrice, dateSort } = filters
 
     if (startDate) {
       formattedStartDate = startDate.toISOString().split("T")[0]
@@ -52,7 +53,8 @@ export const fetchDishes = createAsyncThunk(
         startDate: formattedStartDate,
         endDate: formattedEndDate,
         status: formattedStatus,
-        price: formattedPrice
+        price: formattedPrice,
+        dateSort
       })
 
       dispatch(setDishes(response.data.data))

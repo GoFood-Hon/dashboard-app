@@ -193,7 +193,7 @@ export default function Dishes() {
                 <Icon icon="reload" size={20} />
               </span>
               <FilterPopover onFiltersChange={onFiltersChange} refreshPage={refreshPage} />
-              <SortPopover />
+              {/*   <SortPopover onFiltersChange={onFiltersChange} refreshPage={refreshPage} /> */}
             </div>
           </div>
         </div>
