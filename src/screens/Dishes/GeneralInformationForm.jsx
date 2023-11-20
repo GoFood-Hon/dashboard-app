@@ -15,7 +15,7 @@ import {
   selectAllDishesCategoriesStatus
 } from "../../store/features/categorySlice"
 
-export default function GeneralInformationForm({ register, errors, setValue, isDataCleared }) {
+export default function GeneralInformationForm({ register, errors, setValue, isDataCleared, preloadImage }) {
   const dispatch = useDispatch()
   const restaurant = useSelector((state) => state.restaurant.value)
 

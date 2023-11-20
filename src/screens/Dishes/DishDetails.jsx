@@ -9,6 +9,7 @@ import { IconCamera } from "@tabler/icons-react"
 import { useDisclosure } from "@mantine/hooks"
 import DashboardCard from "../../components/DashboardCard"
 import NewDish from "./NewDishScreen"
+import EditDishScreen from "./EditDishScreen"
 
 export default function DishDetails() {
   const { dishId } = useParams()
@@ -57,7 +58,7 @@ export default function DishDetails() {
       }
     }
     fetchDishes()
-  }, [])
+  }, [close, opened])
 
   return (
     <BaseLayout>
@@ -118,7 +119,9 @@ export default function DishDetails() {
                   <div className="flex w-full flex-col">
                     <div className="flex flex-row justify-between w-full">
                       <p className="text-zinc-500 text-sm font-medium h-full w-full pt-20 p-8">{dishDetails?.description}</p>
-                      <p className="text-blue-600 text-base font-normal leading-normal cursor-pointer self-center">Editar</p>
+                      <a className="text-blue-600 text-base font-normal leading-normal cursor-pointer self-center" onClick={open}>
+                        Editar
+                      </a>
                     </div>
                     <div className="flex flex-row justify-between">
                       <div>
@@ -167,7 +170,9 @@ export default function DishDetails() {
         overlayProps={{
           backgroundOpacity: 0.55,
           blur: 3
-        }}></Modal>
+        }}>
+        <EditDishScreen close={close} data={dishDetails} />
+      </Modal>
 
       <Modal
         opened={false}

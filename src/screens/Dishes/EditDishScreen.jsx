@@ -1,4 +1,4 @@
-/* import Button from "../../components/Button"
+import Button from "../../components/Button"
 import { Accordion } from "@mantine/core"
 import React, { useEffect, useRef, useState } from "react"
 import { useLocation } from "react-router-dom"
@@ -10,14 +10,14 @@ import { useDispatch, useSelector } from "react-redux"
 import { newItemValidationSchema } from "../../utils/inputRules"
 import { yupResolver } from "@hookform/resolvers/yup"
 import toast from "react-hot-toast"
+import PreparationForm from "./PreparationForm"
+import { updateDish } from "../../store/features/DishesSlice"
 
-export default function EditDishScreen() {
-  const location = useLocation()
+export default function EditDishScreen({ close, data }) {
   const dispatch = useDispatch()
   const restaurant = useSelector((state) => state.restaurant.value)
 
   const [isDataCleared, setIsDataCleared] = useState(false)
-  const [isAffixMounted, setAffixMounted] = useState(true)
   const containerRef = useRef(null)
 
   const {
@@ -28,7 +28,8 @@ export default function EditDishScreen() {
     reset,
     formState: { errors }
   } = useForm({
-    resolver: yupResolver(newItemValidationSchema)
+    resolver: yupResolver(newItemValidationSchema),
+    defaultValues: data
   })
 
   const accordionStructure = [
@@ -42,18 +43,9 @@ export default function EditDishScreen() {
           setValue={setValue}
           control={control}
           isDataCleared={isDataCleared}
+          preloadImage={data.images}
         />
       )
-    },
-    /* {
-      title: "Complementos",
-      requirement: "Opcional",
-      form: <ComplementsForm />
-    },
-    /*  {
-      title: "Bebidas",
-      requirement: "Opcional",
-      form: <DrinksForms />
     },
     {
       title: "Extras",
@@ -64,6 +56,11 @@ export default function EditDishScreen() {
       title: "Pagos",
       requirement: "Obligatorio",
       form: <PaymentForm register={register} errors={errors} />
+    },
+    {
+      title: "Preparación",
+      requirement: "Opcional",
+      form: <PreparationForm setValue={setValue} errors={errors} />
     }
   ]
   const items = accordionStructure.map((item, key) => (
@@ -81,38 +78,25 @@ export default function EditDishScreen() {
     </Accordion.Item>
   ))
 
-  useEffect(() => {
-    const container = containerRef.current
+  const onSubmit = (data) => {
+    const formData = new FormData()
+    formData.append("name", data.name)
+    formData.append("files", data.files[0])
+    formData.append("price", data.price)
+    formData.append("description", data.description)
+    formData.append("includesDrink", data.includeDrink)
+    formData.append("endPrice", data.endPrice)
+    formData.append("categoryId", data.categoryId)
+    formData.append("restaurantId", data.restaurantId)
 
-    if (container) {
-      const observer = new IntersectionObserver((entries) => {
-        if (entries[0].isIntersecting) {
-          setAffixMounted(false)
-        } else {
-          setAffixMounted(true)
-        }
-      })
-
-      observer.observe(container)
-      return () => {
-        observer.disconnect()
+    const dishId = data.id
+    dispatch(updateDish({ formData, dishId })).then((response) => {
+      if (response.payload) {
+        reset()
+        close()
       }
-    }
-  }, [])
-
-  useEffect(() => {
-    const draftData = localStorage.getItem("draft")
-
-    if (draftData) {
-      const parsedData = JSON.parse(draftData)
-
-      Object.keys(parsedData).forEach((field) => {
-        setValue(field, parsedData[field])
-      })
-
-      toast.success("Platillo cargado desde borrador")
-    }
-  }, [setValue])
+    })
+  }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -142,8 +126,8 @@ export default function EditDishScreen() {
               className={"text-xs border border-red-400 text-red-400 bg-white"}
               onClick={() => {
                 reset()
-                localStorage.removeItem("draft")
-                toast.success("Información eliminada")
+                close()
+                toast.success("Cambios descartados")
               }}
             />
             <Button
@@ -157,4 +141,3 @@ export default function EditDishScreen() {
     </form>
   )
 }
- */
