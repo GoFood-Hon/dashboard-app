@@ -30,7 +30,7 @@ export default function FilterPopover({ onFiltersChange, refreshPage }) {
 
     formState: { errors, isSubmitSuccessful }
   } = useForm({
-    resolver: yupResolver(filtersValidationSchema)
+    defaultValues: filters
   })
 
   const [price, setPrice] = useState({ startPrice: 100, endPrice: 700 })
@@ -48,10 +48,12 @@ export default function FilterPopover({ onFiltersChange, refreshPage }) {
   }
 
   const handleResetFilters = () => {
-    dispatch(setFilters({}))
     refreshPage()
     toast.success("Filtros borrados!")
+    reset({ startDate: null, endDate: null, status: "Todos", startPrice: 0, endPrice: 100 })
+    dispatch(setFilters({}))
   }
+
   return (
     <React.Fragment>
       <form onSubmit={handleSubmit(onSubmit)}>
