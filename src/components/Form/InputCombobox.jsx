@@ -2,16 +2,16 @@ import React, { useState } from "react"
 import { Combobox, InputBase, Input, useCombobox } from "@mantine/core"
 import { ErrorMessage } from "./ErrorMessage"
 
-export default function InputCombobox({ items, label, name, placeholder, errors }) {
+export default function InputCombobox({ items, label, name, placeholder, errors, setValue }) {
   const combobox = useCombobox({
     onDropdownClose: () => combobox.resetSelectedOption()
   })
 
-  const [value, setValue] = useState(null)
+  const [inputValue, setInputValue] = useState(null)
 
   const options = items.map((item) => (
-    <Combobox.Option value={item} key={item}>
-      {item}
+    <Combobox.Option value={item.value} key={item.value}>
+      {item.label}
     </Combobox.Option>
   ))
 
@@ -22,7 +22,8 @@ export default function InputCombobox({ items, label, name, placeholder, errors 
         <Combobox
           store={combobox}
           onOptionSubmit={(val) => {
-            setValue(val)
+            setValue(name, val)
+            setInputValue(val)
             combobox.closeDropdown()
           }}>
           <Combobox.Target>
@@ -32,7 +33,7 @@ export default function InputCombobox({ items, label, name, placeholder, errors 
               pointer
               rightSection={<Combobox.Chevron />}
               onClick={() => combobox.toggleDropdown()}>
-              {value || <Input.Placeholder>{placeholder}</Input.Placeholder>}
+              {inputValue || <Input.Placeholder>{placeholder}</Input.Placeholder>}
             </InputBase>
           </Combobox.Target>
           <Combobox.Dropdown>
