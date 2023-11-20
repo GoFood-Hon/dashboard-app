@@ -21,7 +21,7 @@ export default function NewDish() {
   const restaurant = useSelector((state) => state.restaurant.value)
 
   const [isDataCleared, setIsDataCleared] = useState(false)
-  const [isAffixMounted, setAffixMounted] = useState(true)
+  const [isAffixMounted, setAffixMounted] = useState(false)
   const containerRef = useRef(null)
 
   const {
@@ -75,6 +75,7 @@ export default function NewDish() {
       form: <PreparationForm setValue={setValue} errors={errors} />
     }
   ]
+
   const items = accordionStructure.map((item, key) => (
     <Accordion.Item key={key} value={item.title}>
       <Accordion.Control>
@@ -90,7 +91,7 @@ export default function NewDish() {
     </Accordion.Item>
   ))
 
-  useEffect(() => {
+  /*   useEffect(() => {
     const container = containerRef.current
 
     if (container) {
@@ -107,20 +108,10 @@ export default function NewDish() {
         observer.disconnect()
       }
     }
-  }, [])
+  }, []) */
 
   const onSubmit = (data) => {
-    const formData = new FormData()
-    formData.append("name", data.name)
-    formData.append("files", data.files[0])
-    formData.append("price", data.price)
-    formData.append("description", data.description)
-    formData.append("includesDrink", data.includeDrink)
-    formData.append("endPrice", data.endPrice)
-    formData.append("categoryId", data.categoryId)
-    formData.append("restaurantId", restaurant.id)
-
-    dispatch(createDish(formData)).then((response) => {
+    dispatch(createDish({ data, restaurant })).then((response) => {
       if (response.payload) {
         reset()
         localStorage.removeItem("draft")
