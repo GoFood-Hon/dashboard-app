@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react"
-import { useLocation } from "react-router-dom"
+import { useLocation, useNavigate } from "react-router-dom"
 import { Breadcrumbs, Accordion } from "@mantine/core"
 import { useForm } from "react-hook-form"
 import BaseLayout from "../../components/BaseLayout"
@@ -14,10 +14,13 @@ import { yupResolver } from "@hookform/resolvers/yup"
 import toast from "react-hot-toast"
 import PreparationForm from "./PreparationForm"
 import ComplementsForm from "./ComplementsForm"
+import { NAVIGATION_ROUTES } from "../../routes"
 
 export default function NewDish() {
   const location = useLocation()
   const dispatch = useDispatch()
+  const navigate = useNavigate()
+
   const restaurant = useSelector((state) => state.restaurant.value)
 
   const [isDataCleared, setIsDataCleared] = useState(false)
@@ -223,6 +226,7 @@ export default function NewDish() {
                     reset()
                     localStorage.removeItem("draft")
                     toast.success("Información eliminada")
+                    navigate(NAVIGATION_ROUTES.Menu.submenu.Dishes.path)
                   }}
                 />
                 <Button
