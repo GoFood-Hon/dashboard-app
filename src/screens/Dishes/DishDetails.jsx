@@ -8,7 +8,6 @@ import { getFormattedHNL } from "../../utils"
 import { IconCamera } from "@tabler/icons-react"
 import { useDisclosure } from "@mantine/hooks"
 import DashboardCard from "../../components/DashboardCard"
-import NewDish from "./NewDishScreen"
 import EditDishScreen from "./EditDishScreen"
 
 export default function DishDetails() {
@@ -115,7 +114,7 @@ export default function DishDetails() {
                     <div className="text-sky-950 text-sm font-medium leading-snug mb-2 mt-4">Preparación</div>
                     <div className="w-[125px] h-px bg-blue-100 sm:w-full" />
                     <div className="text-sky-950 text-sm font-medium leading-snug my-2">Tiempo estimado</div>
-                    <div className="text-sky-950 text-sm font-bold leading-snug mb-2">{dishDetails.preparationTime} minutos</div>
+                    <div className="text-sky-950 text-sm font-bold leading-snug mb-2">{dishDetails?.preparationTime} minutos</div>
                   </div>
                 </Grid.Col>
                 <Grid.Col span={{ base: 12, md: 10, lg: 10 }}>

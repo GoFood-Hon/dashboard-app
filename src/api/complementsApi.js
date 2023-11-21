@@ -1,7 +1,7 @@
 import axiosClient from "./axiosClient"
 
 const complementsApi = {
-  getAddOnByRestaurant: ({ limit, page, order, restaurantId, startDate, endDate, status, price }) => {
+  getAddOnByRestaurant: ({ limit, page, order, restaurantId, startDate, endDate, status, price, category }) => {
     const params = {
       limit,
       page,
@@ -9,7 +9,8 @@ const complementsApi = {
       startDate,
       endDate,
       status,
-      price
+      price,
+      category
     }
 
     const validParams = Object.fromEntries(Object.entries(params).filter(([_, value]) => value !== undefined && value))

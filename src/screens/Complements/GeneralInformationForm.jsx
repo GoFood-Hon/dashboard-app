@@ -6,9 +6,9 @@ import InputTextAreaField from "../../components/Form/InputTextAreaField"
 import InputField from "../../components/Form/InputField"
 import toast from "react-hot-toast"
 import { bytesToMB } from "../../utils"
-import InputSearchCombobox from "../../components/Form/InputSearchCombobox"
 import { useDispatch, useSelector } from "react-redux"
 import { fetchDishesCategories, selectAllDishesCategoriesStatus } from "../../store/features/categorySlice"
+import InputCombobox from "../../components/Form/InputCombobox"
 
 export default function GeneralInformationForm({ register, errors, setValue, isDataCleared }) {
   const dispatch = useDispatch()
@@ -16,20 +16,20 @@ export default function GeneralInformationForm({ register, errors, setValue, isD
 
   const complementsType = [
     {
-      id: 1,
-      name: "Complemento"
+      value: "Complemento",
+      label: "Complemento"
     },
     {
-      id: 2,
-      name: "Bebidas"
+      value: "Bebidas",
+      label: "Bebidas"
     },
     {
-      id: 3,
-      name: "Postres"
+      value: "Postres",
+      label: "Postres"
     },
     {
-      id: 4,
-      name: "Extras"
+      value: "Extras",
+      label: "Extras"
     }
   ]
   const status = useSelector(selectAllDishesCategoriesStatus)
@@ -98,16 +98,13 @@ export default function GeneralInformationForm({ register, errors, setValue, isD
               placeholder="Ej. Salsa especial de la casa..."
             />
             <div className="mt-3">
-              <InputSearchCombobox
-                label="Tipo de complemento"
-                name={"categoryId"}
-                placeholder="Buscar categoría"
-                emptyMessage="Sin categorías  "
+              <InputCombobox
                 items={complementsType}
-                register={register}
-                errors={errors}
+                placeholder="Seleccione la categoría"
                 setValue={setValue}
-                status={status}
+                errors={errors}
+                label="Tipo de complemento"
+                name="category"
               />
             </div>
           </div>

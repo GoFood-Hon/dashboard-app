@@ -14,6 +14,7 @@ import { newItemValidationSchema } from "../../utils/inputRules"
 import { yupResolver } from "@hookform/resolvers/yup"
 import toast from "react-hot-toast"
 import PreparationForm from "./PreparationForm"
+import ComplementsForm from "./ComplementsForm"
 
 export default function NewDish() {
   const location = useLocation()
@@ -49,21 +50,21 @@ export default function NewDish() {
         />
       )
     },
-    /* {
-      title: "Complementos",
+    {
+      title: "Extras",
       requirement: "Opcional",
       form: <ComplementsForm />
-    }, */
+    },
     /*  {
       title: "Bebidas",
       requirement: "Opcional",
       form: <DrinksForms />
     }, */
-    {
+    /*  {
       title: "Extras",
       requirement: "Opcional",
       form: <ExtrasForm />
-    },
+    }, */
     {
       title: "Pagos",
       requirement: "Obligatorio",

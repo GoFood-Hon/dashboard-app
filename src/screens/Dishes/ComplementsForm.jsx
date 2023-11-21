@@ -10,8 +10,10 @@ import {
   selectComplementsStatus
 } from "../../store/features/complementsSlice"
 import { useDispatch, useSelector } from "react-redux"
-import EyeIcon from "../../assets/icons/EyeIcon"
+
 import { TrashIcon } from "../../assets/icons/TrashIcon"
+import complementsApi from "../../api/complementsApi"
+import toast from "react-hot-toast"
 
 const AvailableComplementsCard = ({ item, onItemClick }) => {
   const { active, images, name, price } = item
@@ -34,7 +36,7 @@ const AvailableComplementsCard = ({ item, onItemClick }) => {
   )
 }
 
-const ComplementCard = ({ item }) => {
+const ComplementCard = ({ item, handleRemoveComplement }) => {
   const { active, images, name, price } = item
 
   return (
@@ -47,10 +49,7 @@ const ComplementCard = ({ item }) => {
         <div className="flex flex-row w-1/2 justify-end">
           <span className="text-sky-950 pl-3">{getFormattedHNL(price)}</span>
           <div className="h-full flex justify-center items-center">
-            <span className="mx-1 cursor-pointer">
-              <EyeIcon width={20} height={20} />
-            </span>
-            <span className="mx-1 cursor-pointer">
+            <span className="mx-1 cursor-pointer" onClick={() => handleRemoveComplement(item)}>
               <TrashIcon width={20} height={20} fill={"#F87171"} />
             </span>
           </div>
@@ -62,22 +61,43 @@ const ComplementCard = ({ item }) => {
 
 export default function ComplementsForm() {
   const dispatch = useDispatch()
-  const complements = useSelector(selectAllComplements)
   const status = useSelector(selectComplementsStatus)
   const error = useSelector(selectComplementsError)
 
+  const restaurant = useSelector((state) => state.restaurant.value)
+
   const [searchComplement, setSearchComplement] = useState("")
   const [addedComplements, setAddedComplements] = useState([])
-
-  useEffect(() => {
-    if (status === "idle") {
-      dispatch(fetchComplements())
-    }
-  }, [status, dispatch])
+  const [extras, setExtras] = useState([])
 
   const handleComplementClick = (complement) => {
     setAddedComplements([...addedComplements, complement])
+    setExtras((prevExtras) => prevExtras.filter((extra) => extra !== complement))
   }
+
+  const handleRemoveComplement = (complement) => {
+    const updatedAddedComplements = addedComplements.filter((item) => item !== complement)
+    setAddedComplements(updatedAddedComplements)
+
+    setExtras((prevExtras) => [...prevExtras, complement])
+  }
+
+  useEffect(() => {
+    async function getExtras() {
+      try {
+        const response = await complementsApi.getAddOnByRestaurant({
+          restaurantId: restaurant.id,
+          category: "extra"
+        })
+        setExtras(response.data.data)
+        return response
+      } catch (error) {
+        toast.error(`Hubo error obteniendo los extras, ${error}`)
+        throw error
+      }
+    }
+    getExtras()
+  }, [restaurant])
 
   return (
     <Grid>
@@ -90,25 +110,25 @@ export default function ComplementsForm() {
               renderItem={(item) => (
                 <SortableList.Item id={item.id}>
                   <SortableList.DragHandle />
-                  <ComplementCard item={item} />
+                  <ComplementCard item={item} handleRemoveComplement={() => handleRemoveComplement(item)} />
                 </SortableList.Item>
               )}
             />
           ) : (
             <div className="flex flex-col w-full h-full text-xl justify-center item-center text-center">
-              Por favor seleccione complementos para este platillo
+              Por favor seleccione complementos extras para este platillo
             </div>
           )}
         </div>
       </Grid.Col>
       <Grid.Col span={{ base: 12, md: 5 }}>
         <div className="w-full h-full p-6 bg-white rounded-lg border border-blue-100">
-          <span className="text-sm font-semibold ">Complementos disponibles </span>
+          <span className="text-sm font-semibold ">Extras disponibles </span>
           <span className="text-sm">(opcional)</span>
           <div className="my-2">
             <Input
               className="w-full"
-              placeholder="Buscar complemento"
+              placeholder="Buscar Extra"
               value={searchComplement}
               onChange={(event) => setSearchComplement(event.currentTarget.value)}
               rightSectionPointerEvents="all"
@@ -128,8 +148,13 @@ export default function ComplementsForm() {
               </div>
             )}
             {status === "error" && <div>Error: {error}</div>}
-            {complements?.map((item, key) => (
-              <AvailableComplementsCard item={item} key={key} onItemClick={handleComplementClick} />
+            {extras?.map((item, key) => (
+              <AvailableComplementsCard
+                item={item}
+                key={key}
+                onItemClick={handleComplementClick}
+                handleRemoveComplement={handleRemoveComplement}
+              />
             ))}
           </div>
         </div>
