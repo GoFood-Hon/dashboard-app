@@ -84,13 +84,22 @@ export const createDish = createAsyncThunk("dishes/createDish", async ({ data, r
       })
     } else {
       const dishId = response.data.data.id
-      const addImageResponse = await uploadDishImage(dishId, data.files[0])
+      const addImageResponse = await uploadDishImage(dishId, data?.files?.[0])
 
       if (addImageResponse.error) {
-        handleImageUploadError(addImageResponse)
+        toast.error(`Fallo al subir la imagen. Por favor intente de nuevo. ${addImageResponse.message}`, {
+          duration: 7000
+        })
       }
-      toast.success("Platillo creado exitosamente", { duration: 7000 })
 
+      const addComplementsResponse = await addComplements(dishId, data?.extras)
+      if (addComplementsResponse.error) {
+        toast.error(`Fallo al cargar los extras. Por favor intente de nuevo. ${addImageResponse.message}`, {
+          duration: 7000
+        })
+      }
+
+      toast.success("Platillo creado exitosamente", { duration: 7000 })
       return response.data
     }
   } catch (error) {
@@ -113,19 +122,18 @@ const createDishFormData = (data, restaurant) => {
   return formData
 }
 
-const handleCreateDishError = (response) => {}
+const addComplements = async (dishId, extras) => {
+  const raw = JSON.stringify({
+    extras
+  })
 
+  return await dishesApi.addExtras(dishId, raw)
+}
 const uploadDishImage = async (dishId, file) => {
   const formDataImage = new FormData()
   formDataImage.append("files", file)
 
   return await dishesApi.addImage(dishId, formDataImage)
-}
-
-const handleImageUploadError = (response) => {
-  toast.error(`Fallo al subir la imagen. Por favor intente de nuevo. ${response.message}`, {
-    duration: 7000
-  })
 }
 
 const handleErrorOnCreateDish = (error, dispatch) => {

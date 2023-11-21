@@ -53,7 +53,7 @@ export default function NewDish() {
     {
       title: "Extras",
       requirement: "Opcional",
-      form: <ComplementsForm />
+      form: <ComplementsForm setValue={setValue} isDataCleared={isDataCleared} />
     },
     /*  {
       title: "Bebidas",

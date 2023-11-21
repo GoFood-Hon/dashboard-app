@@ -59,7 +59,7 @@ const ComplementCard = ({ item, handleRemoveComplement }) => {
   )
 }
 
-export default function ComplementsForm() {
+export default function ComplementsForm({ setValue, isDataCleared }) {
   const dispatch = useDispatch()
   const status = useSelector(selectComplementsStatus)
   const error = useSelector(selectComplementsError)
@@ -70,9 +70,15 @@ export default function ComplementsForm() {
   const [addedComplements, setAddedComplements] = useState([])
   const [extras, setExtras] = useState([])
 
+  const updateComplementsValue = (complements) => {
+    const complementIds = complements.map((complement) => complement.id)
+    setValue("extras", complementIds)
+  }
+
   const handleComplementClick = (complement) => {
     setAddedComplements([...addedComplements, complement])
     setExtras((prevExtras) => prevExtras.filter((extra) => extra !== complement))
+    updateComplementsValue([...addedComplements, complement])
   }
 
   const handleRemoveComplement = (complement) => {
@@ -80,6 +86,8 @@ export default function ComplementsForm() {
     setAddedComplements(updatedAddedComplements)
 
     setExtras((prevExtras) => [...prevExtras, complement])
+
+    updateComplementsValue(updatedAddedComplements)
   }
 
   useEffect(() => {
@@ -98,6 +106,10 @@ export default function ComplementsForm() {
     }
     getExtras()
   }, [restaurant])
+
+  useEffect(() => {
+    setAddedComplements([])
+  }, [isDataCleared])
 
   return (
     <Grid>
