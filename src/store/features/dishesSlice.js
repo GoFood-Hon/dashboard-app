@@ -173,6 +173,7 @@ export const updateDish = createAsyncThunk("dishes/updateDish", async ({ data },
       })
     } else {
       await uploadDishImage(data?.id, data?.files?.[0])
+      await addComplements(data?.id, data?.extras)
 
       toast.success("Platillo actualizado exitosamente", {
         duration: 7000

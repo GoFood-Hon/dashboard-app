@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from "react-redux"
 import toast from "react-hot-toast"
 import PreparationForm from "./PreparationForm"
 import { updateDish } from "../../store/features/DishesSlice"
+import ComplementsForm from "./ComplementsForm"
 
 export default function EditDishScreen({ close, dishDetails }) {
   const dispatch = useDispatch()
@@ -46,7 +47,7 @@ export default function EditDishScreen({ close, dishDetails }) {
     {
       title: "Extras",
       requirement: "Opcional",
-      form: <ExtrasForm />
+      form: <ComplementsForm setValue={setValue} />
     },
     {
       title: "Pagos",
@@ -56,7 +57,7 @@ export default function EditDishScreen({ close, dishDetails }) {
     {
       title: "Preparación",
       requirement: "Opcional",
-      form: <PreparationForm setValue={setValue} errors={errors} />
+      form: <PreparationForm setValue={setValue} errors={errors} isDataCleared={isDataCleared} />
     }
   ]
   const items = accordionStructure.map((item, key) => (
