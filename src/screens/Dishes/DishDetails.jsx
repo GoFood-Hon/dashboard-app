@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react"
 import BaseLayout from "../../components/BaseLayout"
 import { useLocation, useParams } from "react-router-dom"
 import BreadCrumbNavigation from "../../components/BreadCrumbNavigation"
-import { Breadcrumbs, Card, Grid, Modal } from "@mantine/core"
+import { Breadcrumbs, Card, Grid, Image, Modal } from "@mantine/core"
 import dishesApi from "../../api/dishesApi"
 import { getFormattedHNL } from "../../utils"
 import { IconCamera } from "@tabler/icons-react"
@@ -14,8 +14,9 @@ import EditDishScreen from "./EditDishScreen"
 export default function DishDetails() {
   const { dishId } = useParams()
   const location = useLocation()
-  const [opened, { open, close }] = useDisclosure(false)
 
+  const [imageModalOpened, { open: openImageModal, close: closeImageModal }] = useDisclosure(false)
+  const [formModalOpened, { open: openFormModal, close: closeFormModal }] = useDisclosure(false)
   const [dishDetails, setDishDetails] = useState({})
 
   const dashboardCards = [
@@ -58,7 +59,7 @@ export default function DishDetails() {
       }
     }
     fetchDishes()
-  }, [close, opened])
+  }, [closeFormModal, formModalOpened])
 
   return (
     <BaseLayout>
@@ -85,11 +86,13 @@ export default function DishDetails() {
                 />
                 <img
                   className="w-44 h-44 rounded-full object-contain absolute border top-[150px] left-[50px] bg-white"
-                  src={dishDetails.images?.[0]?.location}
+                  src={dishDetails?.images?.[0]?.location}
                 />
                 <div
                   className="w-[34px] h-[34px] bg-sky-950 rounded-full absolute top-[280px] left-[190px] flex items-center justify-center cursor-pointer"
-                  onClick={open}>
+                  onClick={() => {
+                    openImageModal()
+                  }}>
                   <IconCamera color="white" size={18} />
                 </div>
               </div>
@@ -119,7 +122,11 @@ export default function DishDetails() {
                   <div className="flex w-full flex-col">
                     <div className="flex flex-row justify-between w-full">
                       <p className="text-zinc-500 text-sm font-medium h-full w-full pt-20 p-8">{dishDetails?.description}</p>
-                      <a className="text-blue-600 text-base font-normal leading-normal cursor-pointer self-center" onClick={open}>
+                      <a
+                        className="text-blue-600 text-base font-normal leading-normal cursor-pointer self-center"
+                        onClick={() => {
+                          openFormModal()
+                        }}>
                         Editar
                       </a>
                     </div>
@@ -162,8 +169,8 @@ export default function DishDetails() {
         </section>
       </div>
       <Modal
-        opened={opened}
-        onClose={close}
+        opened={imageModalOpened}
+        onClose={closeImageModal}
         centered
         size={"xl"}
         radius={"lg"}
@@ -171,24 +178,27 @@ export default function DishDetails() {
           backgroundOpacity: 0.55,
           blur: 3
         }}>
-        <EditDishScreen close={close} dishDetails={dishDetails} />
+        <Image
+          h={"auto"}
+          w="full"
+          fit="contain"
+          src={dishDetails?.images?.[0]?.location}
+          radius={"xl"}
+          fallbackSrc="https://placehold.co/600x400?text=Imagen+no+disponible"
+        />
       </Modal>
 
       <Modal
-        opened={false}
-        onClose={close}
+        opened={formModalOpened}
+        onClose={closeFormModal}
         centered
+        size={"xl"}
         radius={"lg"}
         overlayProps={{
           backgroundOpacity: 0.55,
           blur: 3
         }}>
-        <div className="flex flex-row w-full gap-2">
-          <section className="w-full border border-blue-100 rounded-lg">
-            <img src={dishDetails.images?.[0]?.location} />
-          </section>
-          <section className="w-full border border-blue-100 rounded-lg"></section>
-        </div>
+        <EditDishScreen close={closeFormModal} dishDetails={dishDetails} />
       </Modal>
     </BaseLayout>
   )
