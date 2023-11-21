@@ -19,7 +19,6 @@ const initialState = {
 export const fetchComplements = createAsyncThunk(
   "complements/fetchComplements",
   async ({ limit, page, order, restaurantId, filters }, { dispatch }) => {
-    console.log("in")
     let formattedStartDate = null
     let formattedEndDate = null
     let formattedStatus = null
@@ -143,7 +142,6 @@ export const complementsSlice = createSlice({
         state.status = "loading"
       })
       .addCase(fetchComplements.fulfilled, (state, action) => {
-        console.log(action, "adct")
         state.status = "succeeded"
         state.totalItems = action.payload.results
         state.value = action.payload

@@ -180,7 +180,6 @@ export const updateDish = createAsyncThunk("dishes/updateDish", async ({ data },
     }
     return response.data
   } catch (error) {
-    console.log(error)
     dispatch(setError("Error updating dish"))
     toast.error("Fallo al actualizar el platillo. Por favor intente de nuevo.", {
       duration: 7000
