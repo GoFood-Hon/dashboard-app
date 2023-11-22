@@ -130,27 +130,23 @@ export default function DishDetails() {
                       </a>
                     </div>
                     <div className="flex flex-row justify-between">
-                      <div>
-                        <span className="text-sky-950 text-base font-bold leading-normal">Complementos (12)</span>
-                        <span className="text-sky-950 text-base font-normal leading-normal"> </span>
+                      <span className="text-sky-950 text-base font-bold leading-normal">
+                        Complementos ({dishDetails?.Addons?.length})
+                      </span>
+                    </div>
+                    {dishDetails?.Addons?.map((item) => (
+                      <div
+                        className="w-full p-5 my-3 bg-white rounded-lg border border-blue-100 flex-row justify-between items-center flex text-sm"
+                        key={item?.id}>
+                        <div className="flex flex-row items-center w-1/2">
+                          <img className="w-10 h-10" src={item?.images?.[0]?.location} />
+                          <span className="text-sky-950 pl-3">{item?.name}</span>
+                        </div>
+                        <div className="flex flex-row w-1/2 justify-end">
+                          <span className="text-sky-950 pl-3">{getFormattedHNL(item?.price)}</span>
+                        </div>
                       </div>
-                    </div>
-                    <div className="w-full h-20 p-5 bg-white rounded-lg border border-blue-100 my-2">item</div>
-                    <div className="w-full h-20 p-5 bg-white rounded-lg border border-blue-100 my-2">item</div>
-                    <div className="text-sky-950 text-xs font-bold leading-normal w-full text-center cursor-pointer">
-                      Ver todos
-                    </div>
-                    <div className="flex flex-row justify-between mt-6">
-                      <div className="">
-                        <span className="text-sky-950 text-base font-bold leading-normal">Extras (12)</span>
-                        <span className="text-sky-950 text-base font-normal leading-normal"> </span>
-                      </div>
-                    </div>
-                    <div className="w-full h-20 p-5 bg-white rounded-lg border border-blue-100 my-2">item</div>
-                    <div className="w-full h-20 p-5 bg-white rounded-lg border border-blue-100 my-2">item</div>
-                    <div className="text-sky-950 text-xs font-bold leading-normal w-full text-center cursor-pointer">
-                      Ver todos
-                    </div>
+                    ))}
                   </div>
                 </Grid.Col>
               </Grid>
