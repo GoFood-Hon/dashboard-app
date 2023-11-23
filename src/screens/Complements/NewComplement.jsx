@@ -3,16 +3,17 @@ import BaseLayout from "../../components/BaseLayout"
 import { useLocation } from "react-router-dom"
 import { useDispatch, useSelector } from "react-redux"
 import { useForm } from "react-hook-form"
-import { yupResolver } from "@hookform/resolvers/yup"
-import { newItemValidationSchema } from "../../utils/inputRules"
+import { newComplementValidation } from "../../utils/inputRules"
 
 import PaymentForm from "../Dishes/PaymentForm"
-import { Accordion, Affix, Breadcrumbs, Transition } from "@mantine/core"
-import { createComplement } from "../../store/features/complementsSlice"
+import { Accordion, Breadcrumbs } from "@mantine/core"
 import BreadCrumbNavigation from "../../components/BreadCrumbNavigation"
 import Button from "../../components/Button"
 import GeneralInformationForm from "./GeneralInformationForm"
 import ComplementSettings from "./ComplementSettings"
+import toast from "react-hot-toast"
+import { yupResolver } from "@hookform/resolvers/yup"
+import { createComplement } from "../../store/features/complementsSlice"
 
 export default function NewComplement() {
   const location = useLocation()
@@ -20,7 +21,7 @@ export default function NewComplement() {
   const restaurant = useSelector((state) => state.restaurant.value)
 
   const [isDataCleared, setIsDataCleared] = useState(false)
-  const [isAffixMounted, setAffixMounted] = useState(true)
+  const [isAffixMounted, setAffixMounted] = useState(false)
   const containerRef = useRef(null)
 
   const {
@@ -30,9 +31,7 @@ export default function NewComplement() {
     control,
     reset,
     formState: { errors }
-  } = useForm({
-    resolver: yupResolver(newItemValidationSchema)
-  })
+  } = useForm({ resolver: yupResolver(newComplementValidation) })
 
   const accordionStructure = [
     {
@@ -84,7 +83,7 @@ export default function NewComplement() {
     </Accordion.Item>
   ))
 
-  useEffect(() => {
+  /*   useEffect(() => {
     const container = containerRef.current
 
     if (container) {
@@ -101,21 +100,12 @@ export default function NewComplement() {
         observer.disconnect()
       }
     }
-  }, [])
+  }, []) */
 
   const onSubmit = (data) => {
-    const formData = new FormData()
-    formData.append("name", data.name)
-    formData.append("files", data.files[0])
-    formData.append("active", true)
-    // formData.append("description", data.description)
-    formData.append("category", data.category)
-    formData.append("price", data.price)
-    // formData.append("endPrice", data.endPrice)
-    formData.append("restaurantId", restaurant.id)
-    formData.append("dishId", data.dishId)
+    console.log(data)
 
-    dispatch(createComplement(formData)).then((response) => {
+    dispatch(createComplement({ data, restaurant })).then((response) => {
       if (response.payload) {
         reset()
         localStorage.removeItem("complement-draft")
@@ -189,7 +179,7 @@ export default function NewComplement() {
           </Accordion>
         </section>
         <section ref={containerRef}>
-          <Affix position={{ bottom: 20, left: "calc(50% - 200px)" }}>
+          {/* <Affix position={{ bottom: 20, left: "calc(50% - 200px)" }}>
             <Transition transition="slide-down" mounted={isAffixMounted} duration={400} timingFunction="ease">
               {(transitionStyles) => (
                 <div
@@ -211,13 +201,14 @@ export default function NewComplement() {
                   />
                   <Button
                     text={"Guardar complemento"}
-                    onClick={handleSubmit(onSubmit)}
                     className="flex h-10 w-full items-center justify-center px-4 rounded-md shadow-sm transition-all duration-700 focus:outline-none text-xs bg-sky-950 text-slate-50"
+                    onClick={() => handleSubmit(onSubmit)}
                   />
                 </div>
               )}
             </Transition>
           </Affix>
+          */}
           {!isAffixMounted && (
             <div className="w-full flex md:justify-end mt-6 md:gap-3 rounded-md bg-white px-8 py-5 border border-gray-200">
               <div className="md:w-2/3 lg:1/3 sm:w-full flex flex-row justify-end gap-3 sm:flex-wrap md:flex-nowrap">
@@ -237,7 +228,6 @@ export default function NewComplement() {
                 />
                 <Button
                   text={"Guardar complemento"}
-                  onClick={handleSubmit(onSubmit)}
                   className="flex h-10 w-full items-center justify-center px-4 rounded-md shadow-sm transition-all duration-700 focus:outline-none text-xs bg-sky-950 text-slate-50"
                 />
               </div>

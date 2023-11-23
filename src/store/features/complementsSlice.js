@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 import complementsApi from "../../api/complementsApi"
 import { ITEMS_PER_PAGE } from "../../utils/paginationConfig"
+import toast from "react-hot-toast"
 
 const initialState = {
   complements: [],
@@ -53,7 +54,7 @@ export const fetchComplements = createAsyncThunk(
         status: formattedStatus,
         price: formattedPrice
       })
-      dispatch(setComplements(response.data))
+      dispatch(setComplements(response.data.data))
       return response
     } catch (error) {
       dispatch(setError("Error fetching complements"))
@@ -62,16 +63,43 @@ export const fetchComplements = createAsyncThunk(
   }
 )
 
-export const createComplement = createAsyncThunk("complements/createComplement", async (formData, { dispatch }) => {
+const uploadComplementImage = async (dishId, file) => {
+  const formDataImage = new FormData()
+  formDataImage.append("files", file)
+
+  return await complementsApi.addImage(dishId, formDataImage)
+}
+
+export const createComplement = createAsyncThunk("complements/createComplement", async ({ data, restaurant }, { dispatch }) => {
   try {
+    const formData = new FormData()
+    formData.append("name", data.name)
+    formData.append("description", data.description)
+    formData.append("category", data.category)
+
+    formData.append("price", data.price)
+    formData.append("endPrice", data.endPrice)
+    formData.append("restaurantId", restaurant.id)
+
     const response = await complementsApi.createAddOn(formData)
+
     dispatch(fetchComplements())
 
     if (response.error) {
       toast.error(`Fallo al crear complemento. Por favor intente de nuevo. ${response.message}`, {
         duration: 7000
       })
+      console.log("error", response)
     } else {
+      const dishId = response.data.data.id
+      const addImageResponse = await uploadComplementImage(dishId, data?.files?.[0])
+
+      if (addImageResponse.error) {
+        toast.error(`Fallo al subir la imagen. Por favor intente de nuevo. ${addImageResponse.message}`, {
+          duration: 7000
+        })
+      }
+
       toast.success("Complemento creado exitosamente", {
         duration: 7000
       })

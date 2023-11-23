@@ -20,7 +20,6 @@ import LoadingCircle from "../../components/LoadingCircle"
 import ItemCard from "../../components/ItemCard"
 import { Icon } from "../../components/Icon"
 import FilterPopover from "../../components/FilterPopover"
-import SortPopover from "../../components/SortPopover"
 
 export default function Dishes() {
   const navigate = useNavigate()

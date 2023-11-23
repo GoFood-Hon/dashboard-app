@@ -22,7 +22,13 @@ const complementsApi = {
     return axiosClient.get(url)
   },
 
+  addImage: (dishId, params) =>
+    axiosClient.post(`api/v1/addon/${dishId}/images`, params, {
+      contentType: `multipart/form-data; boundary=${params._boundary}`
+    }),
+
   createAddOn: (params) => axiosClient.post("api/v1/addon/", params),
+
   updateAddOn: (params, addonId) => axiosClient.patch(`api/v1/addon/${addonId}`, params),
   deleteAddOn: (addonId) => axiosClient.del(`api/v1/addon/${addonId}`)
 }

@@ -16,19 +16,19 @@ export default function GeneralInformationForm({ register, errors, setValue, isD
 
   const complementsType = [
     {
-      value: "Complemento",
+      value: "complemento",
       label: "Complemento"
     },
     {
-      value: "Bebidas",
+      value: "bebida",
       label: "Bebidas"
     },
     {
-      value: "Postres",
+      value: "postre",
       label: "Postres"
     },
     {
-      value: "Extras",
+      value: "extra",
       label: "Extras"
     }
   ]

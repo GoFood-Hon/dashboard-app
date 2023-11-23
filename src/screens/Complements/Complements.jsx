@@ -131,7 +131,7 @@ export default function Complements() {
     dispatch(setFilters(serializableFilters))
 
     dispatch(
-      fetchDishes({
+      fetchComplements({
         limit,
         page,
         order: "DESC",

@@ -2,8 +2,13 @@ import { Radio } from "@mantine/core"
 import React, { useState } from "react"
 import { colors } from "../../theme/colors"
 
-export default function ComplementSettings() {
-  const [checked, setChecked] = useState(false)
+export default function ComplementSettings({ setValue }) {
+  const [selectedOption, setSelectedOption] = useState("none")
+
+  const handleRadioChange = (value) => {
+    setSelectedOption(value)
+    setValue("availability", value)
+  }
 
   return (
     <div className="w-full h-full flex flex-col bg-white rounded-2xl border border-blue-100 p-4">
@@ -15,22 +20,22 @@ export default function ComplementSettings() {
           value="none"
           label="Ninguna"
           color={colors.primary_text}
-          checked={checked}
-          onChange={(event) => setChecked(event.currentTarget.checked)}
+          checked={selectedOption === "none"}
+          onChange={() => handleRadioChange("none")}
         />
         <Radio
           value="choose"
           label="Elige los platillos"
           color={colors.primary_text}
-          checked={!checked}
-          onChange={(event) => setChecked(!event.currentTarget.checked)}
+          checked={selectedOption === "choose"}
+          onChange={() => handleRadioChange("choose")}
         />
         <Radio
           value="default"
           label="Por defecto en todos los platillos"
           color={colors.primary_text}
-          checked={checked}
-          onChange={(event) => setChecked(!event.currentTarget.checked)}
+          checked={selectedOption === "default"}
+          onChange={() => handleRadioChange("default")}
         />
       </div>
     </div>
