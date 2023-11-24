@@ -17,7 +17,7 @@ const complementsApi = {
 
     const queryString = new URLSearchParams(validParams).toString()
 
-    const url = `api/v1/addon/${restaurantId}${queryString ? `?${queryString}` : ""}`
+    const url = `api/v1/restaurant/${restaurantId}/addons${queryString ? `?${queryString}` : ""}`
 
     return axiosClient.get(url)
   },

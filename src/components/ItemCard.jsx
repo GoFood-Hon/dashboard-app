@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom"
 import { NAVIGATION_ROUTES } from "../routes"
 import { colors } from "../theme/colors"
 
-export default function ItemCard({ item, index, navigation, cardsSelected, setCardsSelected, handleChangeSelected }) {
+export default function ItemCard({ item, index, navigation, cardsSelected, setCardsSelected, handleChangeSelected, title }) {
   const { id, isActive, active, name, images, price, isUserSearch, isUserLove, isPromotion } = item
 
   const navigate = useNavigate()
@@ -16,7 +16,11 @@ export default function ItemCard({ item, index, navigation, cardsSelected, setCa
 
   const handleClick = () => {
     if (navigation) {
-      navigate(`${NAVIGATION_ROUTES.Menu.submenu.Dishes.path}/${id}`)
+      if (title === "dishes") {
+        navigate(`${NAVIGATION_ROUTES.Menu.submenu.Dishes.path}/${id}`)
+      } else if (title === "complements") {
+        navigate(`${NAVIGATION_ROUTES.Menu.submenu.Complements.path}/${id}`)
+      }
     }
   }
 

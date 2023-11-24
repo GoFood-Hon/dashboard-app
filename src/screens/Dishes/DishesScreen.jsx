@@ -212,6 +212,7 @@ export default function Dishes() {
                   navigation={true}
                   cardsSelected={cardsSelected}
                   handleChangeSelected={handleChangeSelected}
+                  title="dishes"
                 />
               </Grid.Col>
             ))}
