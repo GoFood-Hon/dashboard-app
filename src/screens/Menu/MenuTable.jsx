@@ -39,14 +39,6 @@ const nodes = [
 
 export default function MenuTable({ refreshPage, menus }) {
   const [data, setData] = useState({ nodes: menus })
-  const [menu, setDat] = useState({ menus })
-
-  useEffect(() => {
-    // setData(menus)
-    console.log(data, "nodes")
-    console.log(menu, "menus")
-    console.log(menus, "props")
-  }, [menus])
 
   //* Pagination *//
 
@@ -199,12 +191,12 @@ export default function MenuTable({ refreshPage, menus }) {
     },
     {
       label: "PLATILLOS",
-      renderCell: (item) => item.id,
+      renderCell: (item) => item.dishesCount,
       sort: { sortKey: "DISHES" }
     },
     {
       label: "ESTADO",
-      renderCell: (item) => item.typeMenu,
+      renderCell: (item) => (item.isActive ? "Habilitado" : "Deshabilitado"),
       sort: { sortKey: "STATUS" }
     },
     {
