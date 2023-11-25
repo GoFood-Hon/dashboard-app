@@ -8,7 +8,9 @@ const menuApi = {
   addImage: (dishId, params) =>
     axiosClient.post(`api/v1/restaurant/categories/${dishId}/images`, params, {
       contentType: `multipart/form-data; boundary=${params._boundary}`
-    })
+    }),
+
+  addDishesToMenu: (dishId, params) => axiosClient.post(`api/v1/dish/${dishId}/category`, params)
 }
 
 export default menuApi

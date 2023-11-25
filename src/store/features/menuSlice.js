@@ -73,6 +73,16 @@ export const createMenu = createAsyncThunk("dishes/createDish", async ({ data, r
         })
       }
 
+      const { dishes } = data
+      const raw = JSON.stringify({ dishes })
+      const addComplementsResponse = await menuApi.addDishesToMenu(dishId, raw)
+
+      if (addComplementsResponse.error) {
+        toast.error(`Fallo al cargar los platillos. Por favor intente de nuevo. ${addImageResponse.message}`, {
+          duration: 7000
+        })
+      }
+
       toast.success("Platillo creado exitosamente", { duration: 7000 })
       return response.data
     }
