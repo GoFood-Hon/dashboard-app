@@ -15,6 +15,7 @@ import toast from "react-hot-toast"
 import PreparationForm from "./PreparationForm"
 import ComplementsForm from "./ComplementsForm"
 import { NAVIGATION_ROUTES } from "../../routes"
+import complementsApi from "../../api/complementsApi"
 
 export default function NewDish() {
   const location = useLocation()
@@ -25,6 +26,8 @@ export default function NewDish() {
 
   const [isDataCleared, setIsDataCleared] = useState(false)
   const [isAffixMounted, setAffixMounted] = useState(false)
+  const [extras, setExtras] = useState([])
+
   const containerRef = useRef(null)
 
   const {
@@ -37,6 +40,24 @@ export default function NewDish() {
   } = useForm({
     resolver: yupResolver(newItemValidationSchema)
   })
+
+  useEffect(() => {
+    async function getExtras() {
+      try {
+        const response = await complementsApi.getAddOnByRestaurant({
+          restaurantId: restaurant.id,
+          category: "extra"
+        })
+        setExtras(response.data.data)
+
+        return response
+      } catch (error) {
+        toast.error(`Hubo error obteniendo los extras, ${error}`)
+        throw error
+      }
+    }
+    getExtras()
+  }, [restaurant])
 
   const accordionStructure = [
     {
@@ -55,7 +76,16 @@ export default function NewDish() {
     {
       title: "Extras",
       requirement: "Opcional",
-      form: <ComplementsForm setValue={setValue} isDataCleared={isDataCleared} />
+      form: (
+        <ComplementsForm
+          setValue={setValue}
+          isDataCleared={isDataCleared}
+          defaultMessage="Por favor seleccione complementos extras para este platillo"
+          itemsAvailableLabel="Extras disponibles"
+          data={extras}
+          name={"extras"}
+        />
+      )
     },
     /*  {
       title: "Bebidas",

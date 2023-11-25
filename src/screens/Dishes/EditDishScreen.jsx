@@ -10,13 +10,34 @@ import toast from "react-hot-toast"
 import PreparationForm from "./PreparationForm"
 import { updateDish } from "../../store/features/DishesSlice"
 import ComplementsForm from "./ComplementsForm"
+import complementsApi from "../../api/complementsApi"
 
 export default function EditDishScreen({ close, dishDetails }) {
   const dispatch = useDispatch()
   const restaurant = useSelector((state) => state.restaurant.value)
 
   const [isDataCleared, setIsDataCleared] = useState(false)
+  const [extras, setExtras] = useState([])
+
   const containerRef = useRef(null)
+
+  useEffect(() => {
+    async function getExtras() {
+      try {
+        const response = await complementsApi.getAddOnByRestaurant({
+          restaurantId: restaurant.id,
+          category: "extra"
+        })
+        setExtras(response.data.data)
+
+        return response
+      } catch (error) {
+        toast.error(`Hubo error obteniendo los extras, ${error}`)
+        throw error
+      }
+    }
+    getExtras()
+  }, [restaurant])
 
   const {
     register,
@@ -47,7 +68,16 @@ export default function EditDishScreen({ close, dishDetails }) {
     {
       title: "Extras",
       requirement: "Opcional",
-      form: <ComplementsForm setValue={setValue} />
+      form: (
+        <ComplementsForm
+          setValue={setValue}
+          isDataCleared={isDataCleared}
+          defaultMessage="Por favor seleccione complementos extras para este platillo"
+          itemsAvailableLabel="Extras disponibles"
+          data={extras}
+          name={"extras"}
+        />
+      )
     },
     {
       title: "Pagos",

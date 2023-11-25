@@ -1,22 +1,15 @@
 import React, { useEffect, useState } from "react"
-import { CloseButton, Grid, Input } from "@mantine/core"
+import { CloseButton, Grid, Image, Input, Text } from "@mantine/core"
 import { SortableList } from "./components"
 import { getFormattedHNL } from "../../utils"
 import LoadingCircle from "../../components/LoadingCircle"
-import {
-  fetchComplements,
-  selectAllComplements,
-  selectComplementsError,
-  selectComplementsStatus
-} from "../../store/features/complementsSlice"
-import { useDispatch, useSelector } from "react-redux"
+import { selectComplementsError, selectComplementsStatus } from "../../store/features/complementsSlice"
+import { useSelector } from "react-redux"
 
 import { TrashIcon } from "../../assets/icons/TrashIcon"
-import complementsApi from "../../api/complementsApi"
-import toast from "react-hot-toast"
 
 const AvailableComplementsCard = ({ item, onItemClick }) => {
-  const { active, images, name, price } = item
+  const { images, name, price } = item
   const handleItemClick = () => {
     onItemClick(item)
   }
@@ -25,7 +18,15 @@ const AvailableComplementsCard = ({ item, onItemClick }) => {
     <div onClick={handleItemClick} className="cursor-pointer">
       <div className="w-full p-5 my-3 bg-white rounded-lg border border-blue-100 flex-row justify-between items-center flex text-sm">
         <div className="flex flex-row items-center w-1/2">
-          <img className="w-10 h-10" src={images?.[0]?.location} alt={images?.[0]?.key} />
+          <Image
+            h={"40"}
+            w="auto"
+            fit="contain"
+            src={images?.[0]?.location}
+            alt={images?.[0]?.key}
+            radius={"sm"}
+            fallbackSrc="https://placehold.co/600x400?text=Imagen+no+disponible"
+          />
           <span className="text-sky-950 pl-3">{name}</span>
         </div>
         <div className="flex flex-row w-1/2 justify-end">
@@ -37,13 +38,22 @@ const AvailableComplementsCard = ({ item, onItemClick }) => {
 }
 
 const ComplementCard = ({ item, handleRemoveComplement }) => {
-  const { active, images, name, price } = item
+  const { images, name, price } = item
 
   return (
     <div className="w-full h-full">
       <div className="w-full h-full flex-row justify-between items-center flex text-sm">
         <div className="flex flex-row items-center w-1/2">
-          <img className="w-10 h-10" src={images?.[0]?.location} alt={images?.[0]?.key} />
+          <Image
+            h={"40"}
+            w="auto"
+            fit="contain"
+            src={images?.[0]?.location}
+            alt={images?.[0]?.key}
+            radius={"sm"}
+            fallbackSrc="https://placehold.co/60x40?text=Imagen+no+disponible"
+          />
+
           <span className="text-sky-950 pl-3">{name}</span>
         </div>
         <div className="flex flex-row w-1/2 justify-end">
@@ -59,20 +69,21 @@ const ComplementCard = ({ item, handleRemoveComplement }) => {
   )
 }
 
-export default function ComplementsForm({ setValue, isDataCleared }) {
-  const dispatch = useDispatch()
+export default function ComplementsForm({ setValue, isDataCleared, defaultMessage, itemsAvailableLabel, data, name }) {
   const status = useSelector(selectComplementsStatus)
   const error = useSelector(selectComplementsError)
-
-  const restaurant = useSelector((state) => state.restaurant.value)
 
   const [searchComplement, setSearchComplement] = useState("")
   const [addedComplements, setAddedComplements] = useState([])
   const [extras, setExtras] = useState([])
 
+  useEffect(() => {
+    setExtras(data)
+  }, [data])
+
   const updateComplementsValue = (complements) => {
     const complementIds = complements.map((complement) => complement.id)
-    setValue("extras", complementIds)
+    setValue(name, complementIds)
   }
 
   const handleComplementClick = (complement) => {
@@ -89,23 +100,6 @@ export default function ComplementsForm({ setValue, isDataCleared }) {
 
     updateComplementsValue(updatedAddedComplements)
   }
-
-  useEffect(() => {
-    async function getExtras() {
-      try {
-        const response = await complementsApi.getAddOnByRestaurant({
-          restaurantId: restaurant.id,
-          category: "extra"
-        })
-        setExtras(response.data.data)
-        return response
-      } catch (error) {
-        toast.error(`Hubo error obteniendo los extras, ${error}`)
-        throw error
-      }
-    }
-    getExtras()
-  }, [restaurant])
 
   useEffect(() => {
     setAddedComplements([])
@@ -127,20 +121,17 @@ export default function ComplementsForm({ setValue, isDataCleared }) {
               )}
             />
           ) : (
-            <div className="flex flex-col w-full h-full text-xl justify-center item-center text-center">
-              Por favor seleccione complementos extras para este platillo
-            </div>
+            <div className="flex flex-col w-full h-full text-xl justify-center item-center text-center">{defaultMessage}</div>
           )}
         </div>
       </Grid.Col>
       <Grid.Col span={{ base: 12, md: 5 }}>
         <div className="w-full h-full p-6 bg-white rounded-lg border border-blue-100">
-          <span className="text-sm font-semibold ">Extras disponibles </span>
-          <span className="text-sm">(opcional)</span>
+          <span className="text-sm font-semibold ">{itemsAvailableLabel}</span>
           <div className="my-2">
             <Input
               className="w-full"
-              placeholder="Buscar Extra"
+              placeholder="Buscar"
               value={searchComplement}
               onChange={(event) => setSearchComplement(event.currentTarget.value)}
               rightSectionPointerEvents="all"
@@ -160,14 +151,20 @@ export default function ComplementsForm({ setValue, isDataCleared }) {
               </div>
             )}
             {status === "error" && <div>Error: {error}</div>}
-            {extras?.map((item, key) => (
-              <AvailableComplementsCard
-                item={item}
-                key={key}
-                onItemClick={handleComplementClick}
-                handleRemoveComplement={handleRemoveComplement}
-              />
-            ))}
+            {extras.length > 0 ? (
+              extras?.map((item, key) => (
+                <AvailableComplementsCard
+                  item={item}
+                  key={key}
+                  onItemClick={handleComplementClick}
+                  handleRemoveComplement={handleRemoveComplement}
+                />
+              ))
+            ) : (
+              <Text size="sm" c="dimmed" inline mt={20} className="text-center leading-10">
+                Sin disponibilidad...
+              </Text>
+            )}
           </div>
         </div>
       </Grid.Col>
