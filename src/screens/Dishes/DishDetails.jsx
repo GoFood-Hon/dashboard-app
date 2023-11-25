@@ -46,7 +46,7 @@ export default function DishDetails() {
   ]
 
   useEffect(() => {
-    const fetchDishes = async () => {
+    const fetchDish = async () => {
       try {
         const response = await dishesApi.getDish(dishId)
 
@@ -57,7 +57,7 @@ export default function DishDetails() {
         throw error
       }
     }
-    fetchDishes()
+    fetchDish()
   }, [closeFormModal, formModalOpened])
 
   return (

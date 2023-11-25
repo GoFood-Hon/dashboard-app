@@ -103,8 +103,6 @@ export default function NewComplement() {
   }, []) */
 
   const onSubmit = (data) => {
-    console.log(data)
-
     dispatch(createComplement({ data, restaurant })).then((response) => {
       if (response.payload) {
         reset()

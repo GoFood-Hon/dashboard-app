@@ -207,7 +207,7 @@ export default function Complements() {
                   {page === 1 ? limit : Math.min(page * limit, totalItems)}
                 </span>
                 <span className="text-zinc-500 text-base font-medium leading-normal px-1"> de </span>
-                <span className="text-sky-950 text-base font-bold leading-normal">{totalItems} platillos</span>
+                <span className="text-sky-950 text-base font-bold leading-normal">{totalItems} complementos</span>
               </div>
               <div className="flex flex-row h-full items-center gap-3">
                 <span className="cursor-pointer" onClick={refreshPage}>

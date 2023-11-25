@@ -22,6 +22,8 @@ const complementsApi = {
     return axiosClient.get(url)
   },
 
+  getComplement: (dishId) => axiosClient.get(`api/v1/addon/${dishId}`),
+
   addImage: (dishId, params) =>
     axiosClient.post(`api/v1/addon/${dishId}/images`, params, {
       contentType: `multipart/form-data; boundary=${params._boundary}`
