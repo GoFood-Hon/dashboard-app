@@ -36,6 +36,56 @@ export const fetchMenus = createAsyncThunk("menu/fetchMenus", async ({ restauran
   }
 })
 
+/*
+ * CREATE MENUS
+ */
+
+const uploadMenuImage = async (dishId, file) => {
+  const formDataImage = new FormData()
+  formDataImage.append("files", file)
+
+  return await menuApi.addImage(dishId, formDataImage)
+}
+
+export const createMenu = createAsyncThunk("dishes/createDish", async ({ data, restaurant }, { dispatch }) => {
+  try {
+    const formData = new FormData()
+    formData.append("name", data.name)
+    formData.append("description", data.description)
+    formData.append("type", data.type)
+    formData.append("restaurantId", restaurant.id)
+
+    const response = await menuApi.createMenu(formData)
+    dispatch(fetchMenus())
+
+    if (response.error) {
+      toast.error(`Fallo al crear el platillo. Por favor intente de nuevo. ${response.message}`, {
+        duration: 7000
+      })
+    } else {
+      const dishId = response.data.data.id
+
+      const addImageResponse = await uploadMenuImage(dishId, data?.files?.[0])
+
+      if (addImageResponse.error) {
+        toast.error(`Fallo al subir la imagen. Por favor intente de nuevo. ${addImageResponse.message}`, {
+          duration: 7000
+        })
+      }
+
+      toast.success("Platillo creado exitosamente", { duration: 7000 })
+      return response.data
+    }
+  } catch (error) {
+    dispatch(setError("Error updating dish"))
+    toast.error("Fallo al actualizar el platillo. Por favor intente de nuevo.", {
+      duration: 7000
+    })
+
+    throw error
+  }
+})
+
 export const menusSlice = createSlice({
   name: "menus",
   initialState,
