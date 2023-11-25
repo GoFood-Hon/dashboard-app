@@ -56,6 +56,12 @@ export const newComplementValidation = Yup.object().shape({
   price: Yup.string().required("Precio es requerido."),
   endPrice: Yup.string().required("Precio final es requerido.")
 })
+export const newMenuValidation = Yup.object().shape({
+  name: Yup.string().required("Nombre del menu es requerido."),
+  description: Yup.string().required("Descripción del menu es requerido."),
+  type: Yup.string().required("Tipo de menu es requerido."),
+  files: Yup.array().required("Imagen es requerida").min(1, "Debe seleccionar al menos una imagen")
+})
 
 export const filtersValidationSchema = Yup.object().shape({
   startDate: Yup.date().required("*Fecha inicial es requerida"),
