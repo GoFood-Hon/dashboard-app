@@ -13,6 +13,9 @@ export const NAVIGATION_ROUTES = {
     label: "Menú",
     icon: "menu",
     path: "/menu",
+    NewMenu: {
+      path: "/menu/nuevoMenu"
+    },
     submenu: {
       Dishes: {
         label: "Platillos",

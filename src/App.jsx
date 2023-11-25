@@ -22,6 +22,7 @@ import DishDetails from "./screens/Dishes/DishDetails"
 import ComplementsDetails from "./screens/Complements/ComplementsDetails"
 import NewComplement from "./screens/Complements/NewComplement"
 import Complements from "./screens/Complements/Complements"
+import NewMenu from "./screens/Menu/NewMenu"
 
 function App() {
   const router = createBrowserRouter(
@@ -33,6 +34,8 @@ function App() {
           <Route path={NAVIGATION_ROUTES.Transactions.path} element={<Transactions />} />
 
           <Route path={NAVIGATION_ROUTES.Menu.path} element={<Menu />} />
+          <Route path={NAVIGATION_ROUTES.Menu.NewMenu.path} element={<NewMenu />} />
+
           <Route path={NAVIGATION_ROUTES.Menu.submenu.Dishes.path} element={<Dishes />} />
           <Route path={NAVIGATION_ROUTES.Menu.submenu.Dishes.DishDetails.path} element={<DishDetails />} />
           <Route path={NAVIGATION_ROUTES.Menu.submenu.Dishes.submenu.NewDish.path} element={<NewDish />} />
