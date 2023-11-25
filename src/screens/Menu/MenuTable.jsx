@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useEffect, useState } from "react"
 import { Checkbox, Group, Pagination, TextInput } from "@mantine/core"
 
 import { useCustom } from "@table-library/react-table-library/table"
@@ -10,37 +10,50 @@ import { IconChevronDown, IconChevronUp, IconSearch } from "@tabler/icons-react"
 import { useTheme } from "@table-library/react-table-library/theme"
 import { DEFAULT_OPTIONS, getTheme } from "@table-library/react-table-library/mantine"
 import { Icon } from "../../components/Icon"
+import { fetchMenus } from "../../store/features/menuSlice"
+import { useSelector } from "react-redux"
+import { ITEMS_PER_PAGE } from "../../utils/paginationConfig"
+import { formatDistanceToNow } from "date-fns"
+import { colors } from "../../theme/colors"
 
 const nodes = [
   {
-    id: 1,
-    menu: "tarea",
-    coupons: "XSDA",
-    type: "Normal",
-    date: new Date(2020, 1, 15),
-    dishes: 12,
-    status: "Habilitado"
+    id: "3f24d92a-23bc-49a7-8b94-f17f0f3e78a4",
+    name: "Hamburguesas",
+    restaurantId: "13dadca7-2d49-48c1-bac5-fd342999ba14",
+    createdAt: new Date("2023-11-15T19:28:41.812Z"),
+    typeMenu: "normal",
+    description: null,
+    images: null
   },
   {
-    id: 2,
-    menu: "marea",
-    coupons: "XSDA",
-    type: "Normal",
-    date: new Date(2020, 1, 15),
-    dishes: 12,
-    status: "Habilitado"
+    id: "3f24d92a-23bc-49a7-8b94-f17f0f3e78a2",
+    name: "Hamburguesas",
+    restaurantId: "13dadca7-2d49-48c1-bac5-fd342999ba14",
+    createdAt: new Date("2023-11-15T19:28:41.812Z"),
+    typeMenu: "normal",
+    description: null,
+    images: null
   }
 ]
 
-export default function MenuTable() {
-  const [data, setData] = React.useState({ nodes })
+export default function MenuTable({ refreshPage, menus }) {
+  const [data, setData] = useState({ nodes: menus })
+  const [menu, setDat] = useState({ menus })
+
+  useEffect(() => {
+    // setData(menus)
+    console.log(data, "nodes")
+    console.log(menu, "menus")
+    console.log(menus, "props")
+  }, [menus])
 
   //* Pagination *//
 
   const pagination = usePagination(data, {
     state: {
       page: 0,
-      size: 4
+      size: ITEMS_PER_PAGE
     },
     onChange: onPaginationChange
   })
@@ -67,7 +80,7 @@ export default function MenuTable() {
 
   //* Search *//
 
-  const [search, setSearch] = React.useState("")
+  const [search, setSearch] = useState("")
 
   useCustom("search", data, {
     state: { search },
@@ -81,7 +94,7 @@ export default function MenuTable() {
 
   //* Filter *//
 
-  const [isHide, setHide] = React.useState(false)
+  const [isHide, setHide] = useState(false)
 
   useCustom("filter", data, {
     state: { isHide },
@@ -117,11 +130,11 @@ export default function MenuTable() {
         iconDown: <IconChevronDown />
       },
       sortFns: {
-        MENU: (array) => array.sort((a, b) => a.menu.localeCompare(b.menu)),
-        COUPONS: (array) => array.sort((a, b) => a.coupons.localeCompare(b.coupons)),
-        TYPE: (array) => array.sort((a, b) => a.type.localeCompare(b.type)),
-        DATE: (array) => array.sort((a, b) => a.date - b.date),
-        STATE: (array) => array.sort((a, b) => a.state.localeCompare(b.state))
+        MENU: (array) => array.sort((a, b) => a.name.localeCompare(b.name)),
+
+        TYPE: (array) => array.sort((a, b) => a.typeMenu.localeCompare(b.typeMenu)),
+
+        DATE: (array) => array.sort((a, b) => a.createdAt - b.createdAt)
       }
     }
   )
@@ -135,12 +148,17 @@ export default function MenuTable() {
   let modifiedNodes = data.nodes
 
   // search
-  modifiedNodes = modifiedNodes.filter((node) => node.menu.toLowerCase().includes(search.toLowerCase()))
+  modifiedNodes = modifiedNodes.filter((node) => node.name.toLowerCase().includes(search.toLowerCase()))
 
   // filter
   // modifiedNodes = isHide ? modifiedNodes.filter((node) => !node.isComplete) : modifiedNodes
 
   //* Columns *//
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString)
+    return formatDistanceToNow(date, { addSuffix: true })
+  }
 
   const COLUMNS = [
     {
@@ -164,42 +182,33 @@ export default function MenuTable() {
 
     {
       label: "MENU",
-      renderCell: (item) => item.menu,
+      renderCell: (item) => item.name,
       sort: { sortKey: "MENU" }
     },
-    {
-      label: "CUPONES",
-      renderCell: (item) => item.coupons,
-      sort: { sortKey: "COUPONS" }
-    },
+
     {
       label: "TIPO",
-      renderCell: (item) => item.type,
+      renderCell: (item) => item.typeMenu,
       sort: { sortKey: "TYPE" }
     },
     {
       label: "FECHA",
-      renderCell: (item) =>
-        item.date.toLocaleDateString("en-US", {
-          year: "numeric",
-          month: "2-digit",
-          day: "2-digit"
-        }),
+      renderCell: (item) => formatDate(item.createdAt),
 
       sort: { sortKey: "DATE" }
     },
     {
       label: "PLATILLOS",
-      renderCell: (item) => item.dishes,
+      renderCell: (item) => item.id,
       sort: { sortKey: "DISHES" }
     },
     {
-      label: "STATUS",
-      renderCell: (item) => item.status,
+      label: "ESTADO",
+      renderCell: (item) => item.typeMenu,
       sort: { sortKey: "STATUS" }
     },
     {
-      label: "Acciones",
+      label: "ACCIONES",
       renderCell: () => <Icon icon="eye" size={19} />
     }
   ]
@@ -217,7 +226,7 @@ export default function MenuTable() {
         </Group>
 
         <div className="flex flex-row h-full items-center gap-3">
-          <span className="cursor-pointer">
+          <span className="cursor-pointer" onClick={refreshPage}>
             <Icon icon="reload" size={20} />
           </span>
           <span className="cursor-pointer">
@@ -225,9 +234,6 @@ export default function MenuTable() {
           </span>
           <span className="cursor-pointer">
             <Icon icon="trash" size={20} />
-          </span>
-          <span className="cursor-pointer">
-            <Icon icon="dots" size={20} width={20} />
           </span>
         </div>
       </div>
@@ -248,6 +254,7 @@ export default function MenuTable() {
           total={pagination.state.getTotalPages(modifiedNodes)}
           page={pagination.state.page + 1}
           onChange={(page) => pagination.fns.onSetPage(page - 1)}
+          color={colors.primary_button}
         />
       </Group>
     </>

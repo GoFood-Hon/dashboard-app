@@ -147,7 +147,6 @@ export const updateComplement = createAsyncThunk("complements/updateComplement",
     }
     return response.data
   } catch (error) {
-    console.log(error)
     dispatch(setError("Error updating add-on"))
     toast.error("Fallo al actualizar el complemento. Por favor intente de nuevo.", {
       duration: 7000

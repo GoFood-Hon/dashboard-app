@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useEffect, useState } from "react"
 import BaseLayout from "../../components/BaseLayout"
 import Button from "../../components/Button"
 import { Breadcrumbs } from "@mantine/core"
@@ -6,17 +6,55 @@ import { useLocation, useNavigate } from "react-router-dom"
 import { NAVIGATION_ROUTES } from "../../routes"
 import BreadCrumbNavigation from "../../components/BreadCrumbNavigation"
 import MenuTable from "./MenuTable"
-import { Icon } from "../../components/Icon"
+
+import { useDispatch, useSelector } from "react-redux"
+import { fetchMenus, selectAllMenus, selectMenusError, selectMenusStatus } from "../../store/features/menuSlice"
+import LoadingCircle from "../../components/LoadingCircle"
 
 export default function Menu() {
   const navigate = useNavigate()
   const location = useLocation()
+  const dispatch = useDispatch()
+
+  const menus = useSelector(selectAllMenus)
+  const status = useSelector(selectMenusStatus)
+  const error = useSelector(selectMenusError)
+  const limit = useSelector((state) => state.menus.itemsPerPage)
+  const totalItems = useSelector((state) => state.menus.totalItems)
+  const filters = useSelector((state) => state.menus.filters)
+  const page = useSelector((state) => state.menus.currentPage)
+
+  const restaurant = useSelector((state) => state.restaurant.value)
+
+  const totalControlBtn = Math.ceil(totalItems / limit)
+  const [cardsSelected, setCardsSelected] = useState([])
 
   const handleDishes = () => {
     navigate(NAVIGATION_ROUTES.Menu.submenu.Dishes.path)
   }
   const handleComplements = () => {
     navigate(NAVIGATION_ROUTES.Menu.submenu.Complements.path)
+  }
+
+  //* Fetch menu data *//
+
+  useEffect(() => {
+    dispatch(
+      fetchMenus({
+        restaurantId: restaurant.id
+      })
+    )
+
+    setCardsSelected([])
+  }, [page, dispatch, restaurant])
+
+  const refreshPage = () => {
+    dispatch(
+      fetchMenus({
+        restaurantId: restaurant.id
+      })
+    )
+    setCardsSelected([])
   }
 
   return (
@@ -45,7 +83,13 @@ export default function Menu() {
       </section>
       <section>
         <div className="w-full p-4 h-full bg-white rounded-2xl border border-blue-100">
-          <MenuTable />
+          {menus.length > 0 ? (
+            <MenuTable refreshPage={refreshPage} menus={menus} />
+          ) : (
+            <div className="w-full h-screen flex justify-center items-center">
+              <LoadingCircle />
+            </div>
+          )}
         </div>
       </section>
     </BaseLayout>
