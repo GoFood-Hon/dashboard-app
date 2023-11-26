@@ -22,7 +22,7 @@ const initialState = {
  * GET MENUS
  */
 
-export const fetchMenus = createAsyncThunk("menu/fetchMenus", async ({ restaurantId }, { dispatch }) => {
+export const fetchMenus = createAsyncThunk("menus/fetchMenus", async ({ restaurantId }, { dispatch }) => {
   try {
     const response = await menuApi.getMenuByRestaurant({
       restaurantId
@@ -40,14 +40,22 @@ export const fetchMenus = createAsyncThunk("menu/fetchMenus", async ({ restauran
  * CREATE MENUS
  */
 
-const uploadMenuImage = async (dishId, file) => {
+const uploadMenuImage = async (id, file) => {
   const formDataImage = new FormData()
   formDataImage.append("files", file)
 
-  return await menuApi.addImage(dishId, formDataImage)
+  return await menuApi.addImage(id, formDataImage)
 }
 
-export const createMenu = createAsyncThunk("dishes/createDish", async ({ data, restaurant }, { dispatch }) => {
+const addComplements = async (id, data) => {
+  const raw = JSON.stringify({
+    data
+  })
+
+  return await menuApi.addDishesToMenu(id, data)
+}
+
+export const createMenu = createAsyncThunk("menus/createMenu", async ({ data, restaurant }, { dispatch }) => {
   try {
     const formData = new FormData()
     formData.append("name", data.name)
@@ -95,6 +103,53 @@ export const createMenu = createAsyncThunk("dishes/createDish", async ({ data, r
     throw error
   }
 })
+
+/*
+ * UPDATE MENUS
+ */
+
+const updateMenuFormData = (data, propertyToUpdate) => {
+  if (propertyToUpdate === "isActive") {
+    formData.append("isActive", data.isActive)
+  } else {
+    const formData = new FormData()
+    formData.append("name", data?.name)
+    formData.append("description", data?.description)
+    formData.append("type", data?.type)
+  }
+  return formData
+}
+export const updateMenu = createAsyncThunk("menus/updateMenu", async ({ data, propertyToUpdate = "all" }, { dispatch }) => {
+  try {
+    const formData = updateMenuFormData(data, propertyToUpdate)
+
+    const response = await menuApi.updateMenu(formData, data?.id)
+
+    if (response.error) {
+      toast.error(`Fallo al actualizar el menu. Por favor intente de nuevo. ${response.message}`, {
+        duration: 7000
+      })
+    } else {
+      await uploadMenuImage(data?.id, data?.files?.[0])
+      await addComplements(data?.id, data?.dishes)
+
+      toast.success("Menu actualizado exitosamente", {
+        duration: 7000
+      })
+    }
+  } catch (error) {
+    dispatch(setError("Error updating menu"))
+    toast.error("Fallo al actualizar el menu. Por favor intente de nuevo.", {
+      duration: 7000
+    })
+
+    throw error
+  }
+})
+
+/*
+ * MENU SLICE
+ */
 
 export const menusSlice = createSlice({
   name: "menus",
