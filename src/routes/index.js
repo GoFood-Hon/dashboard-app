@@ -65,7 +65,10 @@ export const NAVIGATION_ROUTES = {
   Branches: {
     label: "Sucursales",
     path: "/sucursales",
-    icon: "branch"
+    icon: "branch",
+    NewBranch: {
+      path: "/sucursales/nuevaSucursal"
+    }
   },
   Users: {
     label: "Usuarios",

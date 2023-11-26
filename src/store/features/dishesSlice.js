@@ -18,6 +18,10 @@ const initialState = {
   }
 }
 
+/*
+ * GET DISHES
+ */
+
 export const fetchDishes = createAsyncThunk(
   "dishes/fetchDishes",
   async ({ limit, page, order, restaurantId, filters }, { dispatch }) => {
@@ -196,6 +200,10 @@ export const updateDish = createAsyncThunk("dishes/updateDish", async ({ data, p
     throw error
   }
 })
+
+/*
+ * DISHES SLICE
+ */
 
 export const dishesSlice = createSlice({
   name: "dishes",
