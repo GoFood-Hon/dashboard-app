@@ -37,9 +37,12 @@ const nodes = [
   }
 ]
 
-export default function MenuTable({ refreshPage, menus }) {
+export default function MenuTable({ refreshPage, menus, handleDisableSelected }) {
   const [data, setData] = useState({ nodes: menus })
 
+  useEffect(() => {
+    setData({ nodes: menus })
+  }, [menus])
   //* Pagination *//
 
   const pagination = usePagination(data, {
@@ -224,7 +227,7 @@ export default function MenuTable({ refreshPage, menus }) {
           <span className="cursor-pointer">
             <Icon icon="setting" size={20} />
           </span>
-          <span className="cursor-pointer">
+          <span className="cursor-pointer" onClick={handleDisableSelected}>
             <Icon icon="trash" size={20} />
           </span>
         </div>
@@ -239,6 +242,7 @@ export default function MenuTable({ refreshPage, menus }) {
         theme={theme}
         sort={sort}
         pagination={pagination}
+        color={colors.primary_button}
       />
 
       <Group position="right" mx={10}>

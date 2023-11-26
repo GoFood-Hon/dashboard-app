@@ -8,7 +8,7 @@ import BreadCrumbNavigation from "../../components/BreadCrumbNavigation"
 import MenuTable from "./MenuTable"
 
 import { useDispatch, useSelector } from "react-redux"
-import { fetchMenus, selectAllMenus, selectMenusError, selectMenusStatus } from "../../store/features/menuSlice"
+import { fetchMenus, selectAllMenus, selectMenusError, selectMenusStatus, updateMenu } from "../../store/features/menuSlice"
 import LoadingCircle from "../../components/LoadingCircle"
 
 export default function Menu() {
@@ -60,6 +60,30 @@ export default function Menu() {
     setCardsSelected([])
   }
 
+  //* disable menu data *//
+
+  const handleDisableSelected = async (cardsSelected) => {
+    await Promise.all(
+      cardsSelected.map(async (id) => {
+        await dispatch(updateMenu({ data: { id, isActive: false }, propertyToUpdate: "isActive" }))
+      })
+    )
+
+    refreshPage()
+  }
+
+  //* enable menu data *//
+
+  const handleEnableSelected = async (cardsSelected) => {
+    await Promise.all(
+      cardsSelected.map(async (id) => {
+        await dispatch(updateDish({ data: { id, isActive: true }, propertyToUpdate: "isActive" }))
+      })
+    )
+
+    refreshPage()
+  }
+
   return (
     <BaseLayout>
       <section>
@@ -89,7 +113,7 @@ export default function Menu() {
       <section>
         <div className="w-full p-4 h-full bg-white rounded-2xl border border-blue-100">
           {menus.length > 0 ? (
-            <MenuTable refreshPage={refreshPage} menus={menus} />
+            <MenuTable refreshPage={refreshPage} menus={menus} handleDisableSelected={handleDisableSelected} />
           ) : (
             <div className="w-full h-screen flex justify-center items-center">
               <LoadingCircle />
