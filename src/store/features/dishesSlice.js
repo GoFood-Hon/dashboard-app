@@ -147,23 +147,27 @@ const handleErrorOnCreateDish = (error, dispatch) => {
  * UPDATE DISHES
  */
 
-const updateDishFormData = (data) => {
+const updateDishFormData = (data, propertyToUpdate) => {
   const formData = new FormData()
-  formData.append("name", data.name)
-  formData.append("price", data.price)
-  formData.append("description", data.description)
-  formData.append("includesDrink", data.includeDrink)
-  formData.append("endPrice", data.endPrice)
-  formData.append("categoryId", data.categoryId)
-  formData.append("restaurantId", data.restaurantId)
-  formData.append("preparationTime", data?.preparationTime)
+
+  if (propertyToUpdate === "isActive") {
+    formData.append("isActive", data.isActive)
+  } else {
+    formData.append("name", data.name)
+    formData.append("price", data.price)
+    formData.append("description", data.description)
+    formData.append("includesDrink", data.includeDrink)
+    formData.append("endPrice", data.endPrice)
+    formData.append("categoryId", data.categoryId)
+    formData.append("restaurantId", data.restaurantId)
+    formData.append("preparationTime", data?.preparationTime)
+  }
 
   return formData
 }
-
-export const updateDish = createAsyncThunk("dishes/updateDish", async ({ data }, { dispatch }) => {
+export const updateDish = createAsyncThunk("dishes/updateDish", async ({ data, propertyToUpdate = "all" }, { dispatch }) => {
   try {
-    const formData = updateDishFormData(data)
+    const formData = updateDishFormData(data, propertyToUpdate)
 
     const response = await dishesApi.updateDish(formData, data?.id)
 
@@ -172,8 +176,10 @@ export const updateDish = createAsyncThunk("dishes/updateDish", async ({ data },
         duration: 7000
       })
     } else {
-      await uploadDishImage(data?.id, data?.files?.[0])
-      await addComplements(data?.id, data?.extras)
+      if (propertyToUpdate !== "isActive") {
+        await uploadDishImage(data?.id, data?.files?.[0])
+        await addComplements(data?.id, data?.extras)
+      }
 
       toast.success("Platillo actualizado exitosamente", {
         duration: 7000
@@ -185,6 +191,7 @@ export const updateDish = createAsyncThunk("dishes/updateDish", async ({ data },
     toast.error("Fallo al actualizar el platillo. Por favor intente de nuevo.", {
       duration: 7000
     })
+    console.log(error)
 
     throw error
   }

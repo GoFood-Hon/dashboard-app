@@ -94,12 +94,9 @@ export default function Dishes() {
   }
 
   const handleEnableSelected = async () => {
-    const formData = new FormData()
-    formData.append("isActive", true)
-
     await Promise.all(
-      cardsSelected.map(async (dishId) => {
-        await dispatch(updateDish({ formData, dishId }))
+      cardsSelected.map(async (id) => {
+        await dispatch(updateDish({ data: { id, isActive: true }, propertyToUpdate: "isActive" }))
       })
     )
 
@@ -107,12 +104,9 @@ export default function Dishes() {
   }
 
   const handleDisableSelected = async () => {
-    const formData = new FormData()
-    formData.append("isActive", false)
-
     await Promise.all(
-      cardsSelected.map(async (dishId) => {
-        await dispatch(updateDish({ formData, dishId }))
+      cardsSelected.map(async (id) => {
+        await dispatch(updateDish({ data: { id, isActive: false }, propertyToUpdate: "isActive" }))
       })
     )
 
