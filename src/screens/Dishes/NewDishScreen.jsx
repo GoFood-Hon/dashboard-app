@@ -172,11 +172,6 @@ export default function NewDish() {
     reset()
   }
 
-  const onDiscard = () => {
-    localStorage.removeItem("draft")
-    reset()
-  }
-
   useEffect(() => {
     const draftData = localStorage.getItem("draft")
 
