@@ -143,6 +143,10 @@ export default function Complements() {
     setCardsSelected([])
   }
 
+  const handleClick = (id) => {
+    navigate(`${NAVIGATION_ROUTES.Menu.submenu.Complements.path}/${id}`)
+  }
+
   return (
     <BaseLayout>
       <section>
@@ -236,6 +240,7 @@ export default function Complements() {
                   cardsSelected={cardsSelected}
                   handleChangeSelected={handleChangeSelected}
                   title="complements"
+                  handleClick={handleClick}
                 />
               </Grid.Col>
             ))}

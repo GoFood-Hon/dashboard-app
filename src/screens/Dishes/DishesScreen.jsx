@@ -135,6 +135,10 @@ export default function Dishes() {
     setCardsSelected([])
   }
 
+  const handleClick = (id) => {
+    navigate(`${NAVIGATION_ROUTES.Menu.submenu.Dishes.path}/${id}`)
+  }
+
   return (
     <BaseLayout>
       <section>
@@ -207,6 +211,7 @@ export default function Dishes() {
                   cardsSelected={cardsSelected}
                   handleChangeSelected={handleChangeSelected}
                   title="dishes"
+                  handleClick={handleClick}
                 />
               </Grid.Col>
             ))}

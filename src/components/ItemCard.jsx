@@ -4,25 +4,12 @@ import { UserLoveIcon } from "../assets/icons/UserLoveIcon"
 import { UserSearchIcon } from "../assets/icons/UserSearchIcon"
 import { UserPromotionIcon } from "../assets/icons/PromotionUserIcon"
 import { getFormattedHNL } from "../utils"
-import { useNavigate } from "react-router-dom"
-import { NAVIGATION_ROUTES } from "../routes"
 import { colors } from "../theme/colors"
 
-export default function ItemCard({ item, index, navigation, cardsSelected, setCardsSelected, handleChangeSelected, title }) {
+export default function ItemCard({ item, cardsSelected, handleChangeSelected, handleClick }) {
   const { id, isActive, active, name, images, price, isUserSearch, isUserLove, isPromotion } = item
 
-  const navigate = useNavigate()
   const checked = cardsSelected.includes(id)
-
-  const handleClick = () => {
-    if (navigation) {
-      if (title === "dishes") {
-        navigate(`${NAVIGATION_ROUTES.Menu.submenu.Dishes.path}/${id}`)
-      } else if (title === "complements") {
-        navigate(`${NAVIGATION_ROUTES.Menu.submenu.Complements.path}/${id}`)
-      }
-    }
-  }
 
   return (
     <div
@@ -31,7 +18,7 @@ export default function ItemCard({ item, index, navigation, cardsSelected, setCa
       <div className="flex flex-row justify-end w-full">
         <Checkbox color={colors.primary_button} checked={checked} size="sm" onChange={() => handleChangeSelected(id)} />
       </div>
-      <div onClick={handleClick} className="cursor-pointer">
+      <div onClick={() => handleClick(id)} className="cursor-pointer">
         <div className="flex flex-col justify-between items-center">
           {isActive || active ? (
             <div className="text-emerald-400 px-4 py-1 rounded-2xl justify-center items-center bg-green-100 my-3">Habilitado</div>

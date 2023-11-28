@@ -131,6 +131,9 @@ export default function Branches() {
     setCardsSelected(allSelected)
   }
 
+  const handleClick = (id) => {
+    navigate(`${NAVIGATION_ROUTES.Branches.path}/${id}`)
+  }
   return (
     <BaseLayout>
       <section>
@@ -202,6 +205,7 @@ export default function Branches() {
                   cardsSelected={cardsSelected}
                   handleChangeSelected={handleChangeSelected}
                   title="branches"
+                  handleClick={handleClick}
                 />
               </Grid.Col>
             ))}
