@@ -20,9 +20,7 @@ export default function TimeForm() {
     </ActionIcon>
   )
 
-  useEffect(() => {
-    console.log(switchStatus, "le st")
-  }, [switchStatus])
+  useEffect(() => {}, [switchStatus])
 
   return (
     <div className="w-full h-full bg-white rounded-2xl border border-blue-100 p-4">
