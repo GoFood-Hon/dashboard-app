@@ -68,6 +68,9 @@ export const NAVIGATION_ROUTES = {
     icon: "branch",
     NewBranch: {
       path: "/sucursales/nuevaSucursal"
+    },
+    BranchDetail: {
+      path: "/sucursales/:sucursalId"
     }
   },
   Users: {

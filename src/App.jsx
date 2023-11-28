@@ -24,6 +24,7 @@ import NewComplement from "./screens/Complements/NewComplement"
 import Complements from "./screens/Complements/Complements"
 import NewMenu from "./screens/Menu/NewMenu"
 import NewBranch from "./screens/Branches/NewBranch"
+import BranchesDetails from "./screens/Branches/BranchesDetails"
 
 function App() {
   const router = createBrowserRouter(
@@ -31,7 +32,9 @@ function App() {
       <>
         <Route element={<AuthLayout />}>
           <Route path={NAVIGATION_ROUTES.Dashboard.path} element={<Home />} />
+
           <Route path={NAVIGATION_ROUTES.Pedidos.path} element={<Orders />} />
+
           <Route path={NAVIGATION_ROUTES.Transactions.path} element={<Transactions />} />
 
           <Route path={NAVIGATION_ROUTES.Menu.path} element={<Menu />} />
@@ -40,15 +43,21 @@ function App() {
           <Route path={NAVIGATION_ROUTES.Menu.submenu.Dishes.path} element={<Dishes />} />
           <Route path={NAVIGATION_ROUTES.Menu.submenu.Dishes.DishDetails.path} element={<DishDetails />} />
           <Route path={NAVIGATION_ROUTES.Menu.submenu.Dishes.submenu.NewDish.path} element={<NewDish />} />
+
           <Route path={NAVIGATION_ROUTES.Menu.submenu.Complements.path} element={<Complements />} />
           <Route path={NAVIGATION_ROUTES.Menu.submenu.Complements.ComplementDetails.path} element={<ComplementsDetails />} />
           <Route path={NAVIGATION_ROUTES.Menu.submenu.Complements.submenu.NewComplement.path} element={<NewComplement />} />
+
           <Route path={NAVIGATION_ROUTES.Menu.submenu.Combos.path} element={<Combos />} />
 
           <Route path={NAVIGATION_ROUTES.Branches.path} element={<Branches />} />
           <Route path={NAVIGATION_ROUTES.Branches.NewBranch.path} element={<NewBranch />} />
+          <Route path={NAVIGATION_ROUTES.Branches.BranchDetail.path} element={<BranchesDetails />} />
+
           <Route path={NAVIGATION_ROUTES.Users.path} element={<Users />} />
+
           <Route path={NAVIGATION_ROUTES.Users.submenu.Admins.path} element={<Users />} />
+
           <Route path={AUTH_NAVIGATION_ROUTES.Logout.path} element={<Logout />} />
         </Route>
         <Route element={<UnauthenticatedLayout />}>
