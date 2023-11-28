@@ -28,7 +28,8 @@ import {
   WarehouseIcon,
   EyeIcon,
   SearchIcon,
-  CustomCheckedIcon
+  CustomCheckedIcon,
+  MoonIcon
 } from "../assets/icons"
 
 export const iconComponents = {
@@ -60,7 +61,8 @@ export const iconComponents = {
   trash: <TrashIcon />,
   dots: <DotsIcon />,
   search: <SearchIcon />,
-  customChecked: <CustomCheckedIcon />
+  customChecked: <CustomCheckedIcon />,
+  moon: <MoonIcon />
 }
 
 export const Icon = (props) => {

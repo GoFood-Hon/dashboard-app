@@ -28,6 +28,8 @@ export * from "./BranchIcon"
 
 export * from "./UserIcon"
 
+export * from "./MoonIcon"
+
 export * from "./ExitIcon"
 
 export * from "./OneTouchIcon"
