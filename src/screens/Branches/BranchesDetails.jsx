@@ -28,7 +28,6 @@ export default function BranchesDetails() {
 
         const details = response?.data
         setDetails(details)
-        console.log(details, "le detail")
       } catch (error) {
         dispatch(setError("Error fetching branches"))
         throw error
