@@ -204,7 +204,6 @@ export default function Branches() {
                   navigation={true}
                   cardsSelected={cardsSelected}
                   handleChangeSelected={handleChangeSelected}
-                  title="branches"
                   handleClick={handleClick}
                 />
               </Grid.Col>

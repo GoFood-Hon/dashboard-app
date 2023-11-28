@@ -239,7 +239,6 @@ export default function Complements() {
                   navigation={true}
                   cardsSelected={cardsSelected}
                   handleChangeSelected={handleChangeSelected}
-                  title="complements"
                   handleClick={handleClick}
                 />
               </Grid.Col>
