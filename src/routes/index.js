@@ -70,7 +70,7 @@ export const NAVIGATION_ROUTES = {
       path: "/sucursales/nuevaSucursal"
     },
     BranchDetail: {
-      path: "/sucursales/:sucursalId"
+      path: "/sucursales/:branchId"
     }
   },
   Users: {

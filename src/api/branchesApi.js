@@ -18,7 +18,9 @@ const branchesApi = {
     const url = `api/v1/sucursal/${queryString ? `?${queryString}` : ""}`
 
     return axiosClient.get(url)
-  }
+  },
+
+  getBranch: (id) => axiosClient.get(`api/v1/sucursal/${id}`)
 }
 
 export default branchesApi
