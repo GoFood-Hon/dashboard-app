@@ -60,12 +60,9 @@ export const fetchBranches = createAsyncThunk(
         price: formattedPrice,
         dateSort
       })
-
       dispatch(setBranches(response.data))
-      console.log(response)
       return response
     } catch (error) {
-      console.log(error)
       dispatch(setError("Error fetching branches"))
       throw error
     }
