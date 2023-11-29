@@ -1,12 +1,9 @@
-/* eslint-disable import/no-webpack-loader-syntax */
 import { CloseIcon, Grid, Group, Text, rem } from "@mantine/core"
 import InputField from "../../components/Form/InputField"
 import InputTextAreaField from "../../components/Form/InputTextAreaField"
-import { IconPhoto } from "@tabler/icons-react"
-import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone"
+
 import React, { useEffect, useState, useRef } from "react"
-import toast from "react-hot-toast"
-import { bytesToMB } from "../../utils"
+
 import InputSearchCombobox from "../../components/Form/InputSearchCombobox"
 import { departments } from "../../utils/hondurasDepartments"
 import mapboxgl from "mapbox-gl"
@@ -65,7 +62,7 @@ export default function LocationForm({ register, errors, setValue }) {
 
             <InputSearchCombobox
               label="Departamento (Obligatorio)"
-              name={"department"}
+              name={"state"}
               placeholder="Buscar departamento"
               items={departments}
               register={register}

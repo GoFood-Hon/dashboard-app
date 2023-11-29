@@ -3,9 +3,8 @@ import BaseLayout from "../../components/BaseLayout"
 import { Accordion, Breadcrumbs } from "@mantine/core"
 import BreadCrumbNavigation from "../../components/BreadCrumbNavigation"
 import { useLocation, useNavigate } from "react-router-dom"
-import { useDispatch, useSelector } from "react-redux"
 import { yupResolver } from "@hookform/resolvers/yup"
-import { newItemValidationSchema } from "../../utils/inputRules"
+import { newBranchValidation } from "../../utils/inputRules"
 import { useForm } from "react-hook-form"
 import Button from "../../components/Button"
 import GeneralInformationForm from "./GeneralInformationForm"
@@ -25,7 +24,7 @@ export default function NewBranch() {
     reset,
     formState: { errors }
   } = useForm({
-    resolver: yupResolver(newItemValidationSchema)
+    resolver: yupResolver(newBranchValidation)
   })
 
   const [isDataCleared, setIsDataCleared] = useState(false)
