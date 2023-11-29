@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import BaseLayout from "../../components/BaseLayout"
 import { useLocation, useParams } from "react-router-dom"
 import { Breadcrumbs, Card, Grid, Image, Modal } from "@mantine/core"
@@ -11,6 +11,9 @@ import BreadCrumbNavigation from "../../components/BreadCrumbNavigation"
 import branchesApi from "../../api/branchesApi"
 import { getFormattedHNL } from "../../utils"
 import DashboardCard from "../../components/DashboardCard"
+import mapboxgl from "mapbox-gl"
+
+mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_KEY
 
 export default function BranchesDetails() {
   const { branchId } = useParams()
@@ -20,6 +23,22 @@ export default function BranchesDetails() {
   const [imageModalOpened, { open: openImageModal, close: closeImageModal }] = useDisclosure(false)
   const [formModalOpened, { open: openFormModal, close: closeFormModal }] = useDisclosure(false)
   const [details, setDetails] = useState({})
+
+  const mapContainer = useRef(null)
+  const map = useRef(null)
+  const [lng, setLng] = useState(-88.025)
+  const [lat, setLat] = useState(15.50417)
+  const [zoom, setZoom] = useState(12)
+
+  useEffect(() => {
+    if (map.current) return
+    map.current = new mapboxgl.Map({
+      container: mapContainer.current,
+      style: "mapbox://styles/onetouchstudio/clopr8g1x00il01nz2nw7045t",
+      center: [lng, lat],
+      zoom
+    })
+  }, [lng, lat])
 
   useEffect(() => {
     const fetchData = async () => {
@@ -33,8 +52,15 @@ export default function BranchesDetails() {
         throw error
       }
     }
+
     fetchData()
   }, [closeFormModal, formModalOpened])
+
+  useEffect(() => {
+    if (map.current) {
+      map.current.setCenter([lng, lat])
+    }
+  }, [lng, lat])
 
   const dashboardCards = [
     {
@@ -156,8 +182,9 @@ export default function BranchesDetails() {
                         </div>
                       ))}
 
-                      <div className="flex flex-row justify-between">
-                        <span className="text-sky-950 text-base font-bold leading-normal">Ubicación</span>
+                      <div className="flex flex-col justify-between w-full h-96 py-4">
+                        <span className="text-sky-950 text-base font-bold leading-normal pb-4">Ubicación</span>
+                        <div ref={mapContainer} className="h-full w-full rounded-2xl" />
                       </div>
 
                       <div className="flex flex-row justify-between">
