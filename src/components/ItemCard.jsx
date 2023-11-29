@@ -25,17 +25,16 @@ export default function ItemCard({ item, cardsSelected, handleChangeSelected, ha
           <div className="bg-rose-100 text-red-400 px-4 py-1 rounded-2xl justify-center items-center my-3">Deshabilitado</div>
         )}
 
-        {images && (
-          <Image
-            h={"auto"}
-            w={"full"}
-            fit="contain"
-            src={images[0]?.location}
-            alt={name}
-            radius={"xl"}
-            fallbackSrc="https://placehold.co/600x400?text=Imagen+no+disponible"
-          />
-        )}
+        <Image
+          h={"auto"}
+          w={"full"}
+          fit="contain"
+          src={images?.[0]?.location}
+          alt={name}
+          radius={"xl"}
+          fallbackSrc="https://placehold.co/600x400?text=Imagen+no+disponible"
+        />
+
         <div className="flex flex-row justify-between w-full">
           <div className="flex-col items-start gap-2 flex w-full pt-3">
             <div className="text-sky-950 text-base font-bold">{name}</div>

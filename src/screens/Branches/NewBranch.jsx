@@ -15,10 +15,7 @@ import TimeForm from "./TimeForm"
 
 export default function NewBranch() {
   const location = useLocation()
-  const dispatch = useDispatch()
   const navigate = useNavigate()
-
-  const restaurant = useSelector((state) => state.restaurant.value)
 
   const {
     register,

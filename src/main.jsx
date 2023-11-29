@@ -8,6 +8,7 @@ import { Toaster } from "react-hot-toast"
 import { Provider } from "react-redux"
 import { store } from "./store/store"
 import "@mantine/core/styles.css"
+import "mapbox-gl/dist/mapbox-gl.css"
 
 import { MantineProvider } from "@mantine/core"
 ReactDOM.createRoot(document.getElementById("root")).render(
