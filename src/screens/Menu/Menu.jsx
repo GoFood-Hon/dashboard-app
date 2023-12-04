@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react"
 import BaseLayout from "../../components/BaseLayout"
 import Button from "../../components/Button"
-import { Breadcrumbs } from "@mantine/core"
+import { Breadcrumbs, Checkbox } from "@mantine/core"
 import { useLocation, useNavigate } from "react-router-dom"
 import { NAVIGATION_ROUTES } from "../../routes"
 import BreadCrumbNavigation from "../../components/BreadCrumbNavigation"
@@ -10,6 +10,7 @@ import MenuTable from "./MenuTable"
 import { useDispatch, useSelector } from "react-redux"
 import { fetchMenus, selectAllMenus, selectMenusError, selectMenusStatus, updateMenu } from "../../store/features/menuSlice"
 import LoadingCircle from "../../components/LoadingCircle"
+import { Icon } from "../../components/Icon"
 
 export default function Menu() {
   const navigate = useNavigate()
@@ -113,7 +114,12 @@ export default function Menu() {
       <section>
         <div className="w-full p-4 h-full bg-white rounded-2xl border border-blue-100">
           {menus.length > 0 ? (
-            <MenuTable refreshPage={refreshPage} menus={menus} handleDisableSelected={handleDisableSelected} />
+            <MenuTable
+              refreshPage={refreshPage}
+              items={menus}
+              handleDisableSelected={handleDisableSelected}
+              screenType="menuScreen"
+            />
           ) : (
             <div className="w-full h-screen flex justify-center items-center">
               <LoadingCircle />

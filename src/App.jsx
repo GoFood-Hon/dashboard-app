@@ -13,7 +13,7 @@ import Transactions from "./screens/Transactions"
 import Menu from "./screens/Menu/Menu"
 
 import Branches from "./screens/Branches/Branches"
-import Users from "./screens/Users"
+import Users from "./screens/Users/Users"
 import Logout from "./screens/Logout"
 import Dishes from "./screens/Dishes/DishesScreen"
 import Combos from "./screens/Combos"

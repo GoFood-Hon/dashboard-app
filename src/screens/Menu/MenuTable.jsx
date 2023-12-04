@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { Checkbox, Group, Pagination, TextInput } from "@mantine/core"
+import { Checkbox, Group, Pagination, TextInput, Avatar } from "@mantine/core"
 
 import { useCustom } from "@table-library/react-table-library/table"
 import { CompactTable } from "@table-library/react-table-library/compact"
@@ -10,8 +10,6 @@ import { IconChevronDown, IconChevronUp, IconSearch } from "@tabler/icons-react"
 import { useTheme } from "@table-library/react-table-library/theme"
 import { DEFAULT_OPTIONS, getTheme } from "@table-library/react-table-library/mantine"
 import { Icon } from "../../components/Icon"
-import { fetchMenus } from "../../store/features/menuSlice"
-import { useSelector } from "react-redux"
 import { ITEMS_PER_PAGE } from "../../utils/paginationConfig"
 import { formatDistanceToNow } from "date-fns"
 import { colors } from "../../theme/colors"
@@ -37,12 +35,134 @@ const nodes = [
   }
 ]
 
-export default function MenuTable({ refreshPage, menus, handleDisableSelected }) {
-  const [data, setData] = useState({ nodes: menus })
+export default function MenuTable({ refreshPage, items, handleDisableSelected, screenType }) {
+  const [data, setData] = useState({ nodes: items })
 
   useEffect(() => {
-    setData({ nodes: menus })
-  }, [menus])
+    setData({ nodes: items })
+  }, [items])
+
+  let columns = []
+  if (screenType === "menuScreen") {
+    columns = [
+      {
+        label: "ID",
+        renderCell: (item) => item.id,
+
+        select: {
+          renderHeaderCellSelect: () => (
+            <Checkbox
+              checked={select.state.all}
+              indeterminate={!select.state.all && !select.state.none}
+              onChange={select.fns.onToggleAll}
+            />
+          ),
+          renderCellSelect: (item) => (
+            <Checkbox checked={select.state.ids.includes(item.id)} onChange={() => select.fns.onToggleById(item.id)} />
+          )
+        },
+        tree: true
+      },
+
+      {
+        label: "MENU",
+        renderCell: (item) => item.name,
+        sort: { sortKey: "MENU" }
+      },
+
+      {
+        label: "TIPO",
+        renderCell: (item) => item.typeMenu,
+        sort: { sortKey: "TYPE" }
+      },
+      {
+        label: "FECHA",
+        renderCell: (item) => formatDate(item.createdAt),
+
+        sort: { sortKey: "DATE" }
+      },
+      {
+        label: "PLATILLOS",
+        renderCell: (item) => item.dishesCount,
+        sort: { sortKey: "DISHES" }
+      },
+      {
+        label: "ESTADO",
+        renderCell: (item) => (item.isActive ? "Habilitado" : "Deshabilitado"),
+        sort: { sortKey: "STATUS" }
+      },
+      {
+        label: "ACCIONES",
+        renderCell: () => <Icon icon="eye" size={19} />
+      }
+    ]
+  } else if (screenType === "usersScreen") {
+    columns = [
+      {
+        label: "ID",
+        renderCell: (item) => item.id,
+
+        select: {
+          renderHeaderCellSelect: () => (
+            <Checkbox
+              checked={select.state.all}
+              indeterminate={!select.state.all && !select.state.none}
+              onChange={select.fns.onToggleAll}
+            />
+          ),
+          renderCellSelect: (item) => (
+            <Checkbox checked={select.state.ids.includes(item.id)} onChange={() => select.fns.onToggleById(item.id)} />
+          )
+        }
+      },
+
+      {
+        label: "USUARIO",
+        renderCell: (item) => (
+          <div className="flex flex-row items-center gap-2">
+            <Avatar size="sm" src={item.image} />
+            {item.name}
+          </div>
+        ),
+        sort: { sortKey: "USER" }
+      },
+
+      {
+        label: "CORREO",
+        renderCell: (item) => item.email,
+        sort: { sortKey: "EMAIL" }
+      },
+      {
+        label: "TELÉFONO",
+        renderCell: (item) => item.phoneNumber,
+        sort: { sortKey: "PHONE_NUMBER" }
+      },
+      {
+        label: "FECHA",
+        renderCell: (item) => formatDate(item.createdAt),
+
+        sort: { sortKey: "DATE" }
+      },
+
+      {
+        label: "ESTADO",
+        renderCell: (item) => (item.isActive ? "Habilitado" : "Deshabilitado"),
+        sort: { sortKey: "STATUS" }
+      },
+      {
+        label: "COMPRAS",
+        renderCell: (item) => item.purchases,
+        sort: { sortKey: "PURCHASES" }
+      },
+      {
+        label: "ACCIONES",
+        renderCell: () => <Icon icon="eye" size={19} />
+      }
+    ]
+  } else {
+    columns = []
+  }
+
   //* Pagination *//
 
   const pagination = usePagination(data, {
@@ -155,58 +275,6 @@ export default function MenuTable({ refreshPage, menus, handleDisableSelected })
     return formatDistanceToNow(date, { addSuffix: true })
   }
 
-  const COLUMNS = [
-    {
-      label: "ID",
-      renderCell: (item) => item.id,
-
-      select: {
-        renderHeaderCellSelect: () => (
-          <Checkbox
-            checked={select.state.all}
-            indeterminate={!select.state.all && !select.state.none}
-            onChange={select.fns.onToggleAll}
-          />
-        ),
-        renderCellSelect: (item) => (
-          <Checkbox checked={select.state.ids.includes(item.id)} onChange={() => select.fns.onToggleById(item.id)} />
-        )
-      },
-      tree: true
-    },
-
-    {
-      label: "MENU",
-      renderCell: (item) => item.name,
-      sort: { sortKey: "MENU" }
-    },
-
-    {
-      label: "TIPO",
-      renderCell: (item) => item.typeMenu,
-      sort: { sortKey: "TYPE" }
-    },
-    {
-      label: "FECHA",
-      renderCell: (item) => formatDate(item.createdAt),
-
-      sort: { sortKey: "DATE" }
-    },
-    {
-      label: "PLATILLOS",
-      renderCell: (item) => item.dishesCount,
-      sort: { sortKey: "DISHES" }
-    },
-    {
-      label: "ESTADO",
-      renderCell: (item) => (item.isActive ? "Habilitado" : "Deshabilitado"),
-      sort: { sortKey: "STATUS" }
-    },
-    {
-      label: "ACCIONES",
-      renderCell: () => <Icon icon="eye" size={19} />
-    }
-  ]
   return (
     <>
       {/* Form */}
@@ -236,7 +304,7 @@ export default function MenuTable({ refreshPage, menus, handleDisableSelected })
       {/* Table */}
 
       <CompactTable
-        columns={COLUMNS}
+        columns={columns}
         data={{ ...data, nodes: modifiedNodes }}
         select={select}
         theme={theme}
