@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from "react-redux"
 
 import { fetchBranches, selectAllBranches } from "../../store/features/branchesSlice"
 import { useLocation, useNavigate } from "react-router-dom"
+import { NAVIGATION_ROUTES } from "../../routes"
 
 const userTypes = [
   {
@@ -40,6 +41,9 @@ export default function SucursalSettings({ setValue, errors, register }) {
     )
   }, [dispatch, restaurant])
 
+  const handleNewBranchNavigation = () => {
+    navigate(NAVIGATION_ROUTES.Branches.NewBranch.path)
+  }
   return (
     <div className="w-full h-full flex flex-col bg-white rounded-2xl border border-blue-100 p-4">
       <Grid>
@@ -69,6 +73,11 @@ export default function SucursalSettings({ setValue, errors, register }) {
               label="Encargado"
               name="type"
             />
+          </div>
+        </Grid.Col>
+        <Grid.Col span={{ sm: 12 }}>
+          <div className="text-blue-600 text-base font-normal leading-normal cursor-pointer" onClick={handleNewBranchNavigation}>
+            + Añadir sucursal
           </div>
         </Grid.Col>
       </Grid>
