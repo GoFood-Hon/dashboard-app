@@ -2,7 +2,7 @@ import React, { useState } from "react"
 import { Combobox, InputBase, Input, useCombobox } from "@mantine/core"
 import { ErrorMessage } from "./ErrorMessage"
 
-export default function InputCombobox({ items, label, name, placeholder, errors, setValue }) {
+export default function InputCombobox({ items, label, name, placeholder, errors, setValue, disabled = false }) {
   const combobox = useCombobox({
     onDropdownClose: () => combobox.resetSelectedOption()
   })
@@ -20,6 +20,7 @@ export default function InputCombobox({ items, label, name, placeholder, errors,
       <div className="flex flex-col">
         <span className="text-sky-950 text-sm font-bold leading-snug pb-1">{label}</span>
         <Combobox
+          disabled={disabled}
           store={combobox}
           onOptionSubmit={(val) => {
             setValue(name, val)
