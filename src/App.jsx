@@ -25,6 +25,7 @@ import Complements from "./screens/Complements/Complements"
 import NewMenu from "./screens/Menu/NewMenu"
 import NewBranch from "./screens/Branches/NewBranch"
 import BranchesDetails from "./screens/Branches/BranchesDetails"
+import NewUser from "./screens/Users/NewUser"
 
 function App() {
   const router = createBrowserRouter(
@@ -57,6 +58,7 @@ function App() {
           <Route path={NAVIGATION_ROUTES.Users.path} element={<Users />} />
 
           <Route path={NAVIGATION_ROUTES.Users.submenu.Admins.path} element={<Users />} />
+          <Route path={NAVIGATION_ROUTES.Users.NewUser.path} element={<NewUser />} />
 
           <Route path={AUTH_NAVIGATION_ROUTES.Logout.path} element={<Logout />} />
         </Route>

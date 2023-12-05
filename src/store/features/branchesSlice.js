@@ -25,30 +25,35 @@ const initialState = {
 export const fetchBranches = createAsyncThunk(
   "branches/fetchBranches",
   async ({ limit, page, order, restaurantId, filters }, { dispatch }) => {
-    let formattedStartDate = null
-    let formattedEndDate = null
-    let formattedStatus = null
-    let formattedPrice = null
-
-    const { startDate, endDate, status, startPrice, endPrice, dateSort } = filters
-
-    if (startDate) {
-      formattedStartDate = startDate.toISOString().split("T")[0]
-    }
-
-    if (endDate) {
-      formattedEndDate = endDate.toISOString().split("T")[0]
-    }
-
-    if (status) {
-      formattedStatus = status === "Todos" ? null : status === "Habilitado" ? "true" : "false"
-    }
-
-    if (startPrice || endPrice) {
-      formattedPrice = `${startPrice || ""}-${endPrice || ""}`
-    }
-
     try {
+      let formattedStartDate = null
+      let formattedEndDate = null
+      let formattedStatus = null
+      let formattedPrice = null
+      let dateSort = null
+
+      if (filters) {
+        const { startDate, endDate, status, startPrice, endPrice, dateSort: filterDateSort } = filters
+
+        if (startDate) {
+          formattedStartDate = startDate.toISOString().split("T")[0]
+        }
+
+        if (endDate) {
+          formattedEndDate = endDate.toISOString().split("T")[0]
+        }
+
+        if (status) {
+          formattedStatus = status === "Todos" ? null : status === "Habilitado" ? "true" : "false"
+        }
+
+        if (startPrice || endPrice) {
+          formattedPrice = `${startPrice || ""}-${endPrice || ""}`
+        }
+
+        dateSort = filterDateSort || null
+      }
+
       const response = await branchesApi.getAllBranches({
         limit,
         page,
@@ -60,6 +65,7 @@ export const fetchBranches = createAsyncThunk(
         price: formattedPrice,
         dateSort
       })
+
       dispatch(setBranches(response.data))
       return response
     } catch (error) {

@@ -77,6 +77,9 @@ export const NAVIGATION_ROUTES = {
     label: "Usuarios",
     path: "/usuarios",
     icon: "users",
+    NewUser: {
+      path: "/usuarios/nuevoUsuario"
+    },
     submenu: {
       Admins: {
         label: "Admins",

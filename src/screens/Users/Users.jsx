@@ -6,6 +6,7 @@ import BreadCrumbNavigation from "../../components/BreadCrumbNavigation"
 import MenuTable from "../Menu/MenuTable"
 import { useLocation, useNavigate } from "react-router-dom"
 import { useDispatch } from "react-redux"
+import { NAVIGATION_ROUTES } from "../../routes"
 
 export default function Users() {
   const navigate = useNavigate()
@@ -45,14 +46,12 @@ export default function Users() {
     }
   ]
 
-  const handleDishes = () => {}
   const refreshPage = () => {}
   const handleDisableSelected = () => {}
 
-  const tableConfig = {
-    headers: ["ID", "Usuario", "Correo", "Teléfono", "Fecha", "Estado", "Compras", "Acciones"]
+  const handleNavigateNewUser = () => {
+    navigate(NAVIGATION_ROUTES.Users.NewUser.path)
   }
-
   return (
     <BaseLayout>
       <section>
@@ -63,7 +62,7 @@ export default function Users() {
             <Button
               text={"Crear cajero"}
               className={"text-white text-md px-3 py-2 bg-primary_button mb-0"}
-              onClick={handleDishes}
+              onClick={handleNavigateNewUser}
             />
           </div>
           <div>
@@ -77,7 +76,6 @@ export default function Users() {
         <div className="w-full p-4 h-full bg-white rounded-2xl border border-blue-100">
           {users.length > 0 ? (
             <MenuTable
-              tableConfig={tableConfig}
               refreshPage={refreshPage}
               items={users}
               handleDisableSelected={handleDisableSelected}
