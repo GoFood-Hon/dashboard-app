@@ -83,10 +83,100 @@ export const NAVIGATION_ROUTES = {
     submenu: {
       Admins: {
         label: "Admins",
-        icon: "users",
         path: "/usuarios/administradores"
+      },
+      Settings: {
+        label: "Configuraciones",
+        path: "/usuarios/configuraciones"
       }
     }
+  }
+}
+
+export const SETTING_NAVIGATION_ROUTES = {
+  General: {
+    type: "button",
+    label: "General",
+    path: "/usuario/configuraciones/general",
+    icon: "configuration"
+  },
+  Profile: {
+    label: "Perfil"
+  },
+  Cuenta: {
+    type: "button",
+    label: "Cuenta",
+    path: "/usuario/configuraciones/cuenta",
+    icon: "user"
+  },
+  Password: {
+    type: "button",
+    label: "Contraseña",
+    path: "/usuario/configuraciones/contraseña",
+    icon: "password"
+  },
+  Business: {
+    label: "Negocio"
+  },
+  Business_btn: {
+    type: "button",
+    label: "Negocios",
+    path: "/usuario/configuraciones/negocios",
+    icon: "building"
+  },
+  Coupons: {
+    type: "button",
+    label: "Cupones",
+    path: "/usuario/configuraciones/cupones",
+    icon: "label"
+  },
+  Personal: {
+    type: "button",
+    label: "Personal",
+    path: "/usuario/configuraciones/personal",
+    icon: "users"
+  },
+  Branches: {
+    type: "button",
+    label: "Sucursales",
+    path: "/usuario/configuraciones/sucursales",
+    icon: "warehouse"
+  },
+  Kitchen: {
+    type: "button",
+    label: "Cocina",
+    path: "/usuario/configuraciones/cocina",
+    icon: "chefHat"
+  },
+  Billing: {
+    label: "Facturación"
+  },
+  Bank: {
+    type: "button",
+    label: "Bancos",
+    path: "/usuario/configuraciones/bancos",
+    icon: "bank"
+  },
+  Plan: {
+    type: "button",
+    label: "Plan",
+    path: "/usuario/configuraciones/plan",
+    icon: "creditCard"
+  },
+  More: {
+    label: "Mas"
+  },
+  Administrative: {
+    type: "button",
+    label: "Administrable",
+    path: "/usuario/configuraciones/administrable",
+    icon: "vrDesign"
+  },
+  Notification: {
+    type: "button",
+    label: "Notificaciones",
+    path: "/usuario/configuraciones/notificaciones",
+    icon: "bell"
   }
 }
 

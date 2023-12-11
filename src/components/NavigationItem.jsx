@@ -5,7 +5,7 @@ import { Link } from "react-router-dom"
 export default function NavigationItem({ item, isSelected, isOpen, toggleSubMenu, selectedSubmenuRoute }) {
   return (
     <li className="flex flex-col w-full items-center">
-      {item.submenu ? (
+      {item?.submenu ? (
         <>
           <Link
             to={item.path}

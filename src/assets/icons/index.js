@@ -18,15 +18,33 @@ export * from "./CustomCheckedIcon"
 
 export * from "./SearchIcon"
 
+export * from "./PasswordIcon"
+
 export * from "./InvoiceIcon"
 
 export * from "./MenuIcon"
 
 export * from "./LayoutIcon"
 
+export * from "./ConfigIcon"
+
 export * from "./BranchIcon"
 
-export * from "./UserIcon"
+export * from "./BankIcon"
+
+export * from "./CreditCardIcon"
+
+export * from "./VRDesignIcon"
+
+export * from "./BellIcon"
+
+export * from "./ChefHatIcon"
+
+export * from "./BuildingIcon"
+
+export * from "./UsersIcon"
+
+export * from "./LabelIcon"
 
 export * from "./MoonIcon"
 

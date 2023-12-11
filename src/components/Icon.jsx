@@ -24,13 +24,23 @@ import {
   ShoppingIcon,
   TimerIcon,
   UpIcon,
-  UserIcon,
+  UsersIcon,
   WarehouseIcon,
   EyeIcon,
   SearchIcon,
   CustomCheckedIcon,
-  MoonIcon
+  MoonIcon,
+  ConfigIcon,
+  PasswordIcon,
+  LabelIcon,
+  BuildingIcon,
+  ChefHatIcon,
+  BankIcon,
+  CreditCardIcon,
+  VRDesignIcon,
+  BellIcon
 } from "../assets/icons"
+import { UserIcon } from "../assets/icons/UserIcon"
 
 export const iconComponents = {
   close: <CloseIcon />,
@@ -40,7 +50,7 @@ export const iconComponents = {
   menu: <MenuIcon />,
   layout: <LayoutIcon />,
   branch: <BranchIcon />,
-  users: <UserIcon />,
+  users: <UsersIcon />,
   exit: <ExitIcon />,
   oneTouch: <OneTouchIcon />,
 
@@ -62,7 +72,17 @@ export const iconComponents = {
   dots: <DotsIcon />,
   search: <SearchIcon />,
   customChecked: <CustomCheckedIcon />,
-  moon: <MoonIcon />
+  moon: <MoonIcon />,
+  configuration: <ConfigIcon />,
+  password: <PasswordIcon />,
+  user: <UserIcon />,
+  label: <LabelIcon />,
+  building: <BuildingIcon />,
+  chefHat: <ChefHatIcon />,
+  bank: <BankIcon />,
+  creditCard: <CreditCardIcon />,
+  vrDesign: <VRDesignIcon />,
+  bell: <BellIcon />
 }
 
 export const Icon = (props) => {
