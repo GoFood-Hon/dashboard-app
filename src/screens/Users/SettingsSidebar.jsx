@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react"
+import React, { useState } from "react"
 import { Link } from "react-router-dom"
 import { Icon } from "../../components/Icon"
 import { SETTING_NAVIGATION_ROUTES } from "../../routes"

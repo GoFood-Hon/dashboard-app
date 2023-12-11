@@ -97,7 +97,7 @@ export const SETTING_NAVIGATION_ROUTES = {
   General: {
     type: "button",
     label: "General",
-    path: "/usuario/configuraciones/general",
+    path: "/usuarios/configuraciones/general",
     icon: "configuration"
   },
   Profile: {
@@ -106,13 +106,13 @@ export const SETTING_NAVIGATION_ROUTES = {
   Cuenta: {
     type: "button",
     label: "Cuenta",
-    path: "/usuario/configuraciones/cuenta",
+    path: "/usuarios/configuraciones/cuenta",
     icon: "user"
   },
   Password: {
     type: "button",
     label: "Contraseña",
-    path: "/usuario/configuraciones/contraseña",
+    path: "/usuarios/configuraciones/contraseña",
     icon: "password"
   },
   Business: {
@@ -121,31 +121,31 @@ export const SETTING_NAVIGATION_ROUTES = {
   Business_btn: {
     type: "button",
     label: "Negocios",
-    path: "/usuario/configuraciones/negocios",
+    path: "/usuarios/configuraciones/negocios",
     icon: "building"
   },
   Coupons: {
     type: "button",
     label: "Cupones",
-    path: "/usuario/configuraciones/cupones",
+    path: "/usuarios/configuraciones/cupones",
     icon: "label"
   },
   Personal: {
     type: "button",
     label: "Personal",
-    path: "/usuario/configuraciones/personal",
+    path: "/usuarios/configuraciones/personal",
     icon: "users"
   },
   Branches: {
     type: "button",
     label: "Sucursales",
-    path: "/usuario/configuraciones/sucursales",
+    path: "/usuarios/configuraciones/sucursales",
     icon: "warehouse"
   },
   Kitchen: {
     type: "button",
     label: "Cocina",
-    path: "/usuario/configuraciones/cocina",
+    path: "/usuarios/configuraciones/cocina",
     icon: "chefHat"
   },
   Billing: {
@@ -154,13 +154,13 @@ export const SETTING_NAVIGATION_ROUTES = {
   Bank: {
     type: "button",
     label: "Bancos",
-    path: "/usuario/configuraciones/bancos",
+    path: "/usuarios/configuraciones/bancos",
     icon: "bank"
   },
   Plan: {
     type: "button",
     label: "Plan",
-    path: "/usuario/configuraciones/plan",
+    path: "/usuarios/configuraciones/plan",
     icon: "creditCard"
   },
   More: {
@@ -169,13 +169,13 @@ export const SETTING_NAVIGATION_ROUTES = {
   Administrative: {
     type: "button",
     label: "Administrable",
-    path: "/usuario/configuraciones/administrable",
+    path: "/usuarios/configuraciones/administrable",
     icon: "vrDesign"
   },
   Notification: {
     type: "button",
     label: "Notificaciones",
-    path: "/usuario/configuraciones/notificaciones",
+    path: "/usuarios/configuraciones/notificaciones",
     icon: "bell"
   }
 }

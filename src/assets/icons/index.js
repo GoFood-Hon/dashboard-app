@@ -16,6 +16,8 @@ export * from "./ShoppingIcon"
 
 export * from "./CustomCheckedIcon"
 
+export * from "./ArrowRightIcon"
+
 export * from "./SearchIcon"
 
 export * from "./PasswordIcon"

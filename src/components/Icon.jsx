@@ -38,7 +38,8 @@ import {
   BankIcon,
   CreditCardIcon,
   VRDesignIcon,
-  BellIcon
+  BellIcon,
+  ArrowRightIcon
 } from "../assets/icons"
 import { UserIcon } from "../assets/icons/UserIcon"
 
@@ -82,7 +83,8 @@ export const iconComponents = {
   bank: <BankIcon />,
   creditCard: <CreditCardIcon />,
   vrDesign: <VRDesignIcon />,
-  bell: <BellIcon />
+  bell: <BellIcon />,
+  arrowRight: <ArrowRightIcon />
 }
 
 export const Icon = (props) => {

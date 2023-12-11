@@ -1,17 +1,22 @@
 import React, { useEffect, useState } from "react"
-import { Outlet, useNavigate } from "react-router-dom"
+import { Outlet, useLocation, useNavigate } from "react-router-dom"
 import SideBar from "../components/SideBar"
 import Header from "../components/Header"
 import authUtils from "../utils/authUtils"
 import LoadingCircle from "../components/LoadingCircle"
 import { useDispatch } from "react-redux"
 import { setUser } from "../store/features/userSlice"
-import { AUTH_NAVIGATION_ROUTES } from "../routes"
+import { AUTH_NAVIGATION_ROUTES, NAVIGATION_ROUTES } from "../routes"
+import SettingsSidebar from "../screens/Users/SettingsSidebar"
 
 function AuthLayout() {
   const navigate = useNavigate()
+  const location = useLocation()
+
   const dispatch = useDispatch()
   const [loading, setLoading] = useState(true)
+  const { pathname } = location
+  const shouldRenderSettings = pathname.includes(NAVIGATION_ROUTES.Users.submenu.Settings.path)
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -34,6 +39,7 @@ function AuthLayout() {
     <>
       <Header />
       <SideBar />
+      {shouldRenderSettings && <SettingsSidebar />}
       <Outlet />
     </>
   )

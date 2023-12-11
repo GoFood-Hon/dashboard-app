@@ -1,5 +1,5 @@
 import React from "react"
-import { AUTH_NAVIGATION_ROUTES, NAVIGATION_ROUTES } from "./routes"
+import { AUTH_NAVIGATION_ROUTES, NAVIGATION_ROUTES, SETTING_NAVIGATION_ROUTES } from "./routes"
 import { Route, RouterProvider, createBrowserRouter, createRoutesFromElements } from "react-router-dom"
 import AuthLayout from "./layout/AuthLayout"
 
@@ -27,6 +27,7 @@ import NewBranch from "./screens/Branches/NewBranch"
 import BranchesDetails from "./screens/Branches/BranchesDetails"
 import NewUser from "./screens/Users/NewUser"
 import UserSettings from "./screens/Users/UserSettings"
+import GeneralSettings from "./screens/Users/GeneralSettings"
 
 function App() {
   const router = createBrowserRouter(
@@ -61,6 +62,7 @@ function App() {
           <Route path={NAVIGATION_ROUTES.Users.submenu.Admins.path} element={<Users />} />
           <Route path={NAVIGATION_ROUTES.Users.NewUser.path} element={<NewUser />} />
           <Route path={NAVIGATION_ROUTES.Users.submenu.Settings.path} element={<UserSettings />} />
+          <Route path={SETTING_NAVIGATION_ROUTES.General.path} element={<GeneralSettings />} />
 
           <Route path={AUTH_NAVIGATION_ROUTES.Logout.path} element={<Logout />} />
         </Route>
