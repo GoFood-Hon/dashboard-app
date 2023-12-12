@@ -38,7 +38,7 @@ export default function SettingsSidebar() {
   }
 
   return (
-    <div className="w-[200px] pt-[76px] h-full flex left-[200px] flex-col start-0 fixed overflow-y-hidden top-0 bg-white border-slate-200 border z-10 font-semibold dark:text-white dark:bg-slate-800 dark:border-slate-700">
+    <div className="w-[200px] pt-[76px] h-full flex ml-[200px] flex-col start-0 fixed overflow-y-hidden top-0 bg-white border-slate-200 border z-10 font-semibold dark:text-white dark:bg-slate-800 dark:border-slate-700">
       <div className="p-5 h-full">
         <div className="flex flex-col justify-between h-full">
           <div>

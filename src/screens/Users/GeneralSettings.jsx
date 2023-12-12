@@ -1,19 +1,22 @@
 import React, { useEffect, useState } from "react"
 import BaseLayout from "../../components/BaseLayout"
-import { Breadcrumbs, Image } from "@mantine/core"
+import { Avatar, Breadcrumbs, Image } from "@mantine/core"
 import BreadCrumbNavigation from "../../components/BreadCrumbNavigation"
-import { Icon } from "../../components/Icon"
-import { Link } from "react-router-dom"
+
 import { SETTING_NAVIGATION_ROUTES } from "../../routes"
 import restaurantsApi from "../../api/restaurantApi"
 import { useSelector } from "react-redux"
 import { setRestaurant } from "../../store/features/restaurantSlice"
+import SettingsCard from "../../components/SettingsCard"
+import toast from "react-hot-toast"
+import authApi from "../../api/authApi"
 
 export default function GeneralSettings() {
   const [restaurants, setRestaurants] = useState([])
   const restaurant = useSelector((state) => state.restaurant.value)
   const [loading, setLoading] = useState(true)
   const [selectedItem, setSelectedItem] = useState({})
+  const [userData, setUserData] = useState({})
 
   useEffect(() => {
     const fetchAllRestaurants = async () => {
@@ -21,7 +24,7 @@ export default function GeneralSettings() {
         const response = await restaurantsApi.getAllRestaurants()
 
         if (response.error) {
-          toast.error(`Fallo al obtener todos los platillos. Por favor intente de nuevo. ${response.message}`, {
+          toast.error(`Fallo al obtener la información del restaurante. Por favor intente de nuevo. ${response.message}`, {
             duration: 7000
           })
         } else {
@@ -36,6 +39,24 @@ export default function GeneralSettings() {
   }, [])
 
   useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const response = await authApi.getUser()
+
+        if (response.error) {
+          toast.error("Error en la respuesta de la información del usuario")
+        } else {
+          setUserData(response.data.data)
+          console.log(response, "us")
+        }
+      } catch (error) {
+        toast.error("Error obteniendo información del usuario")
+      }
+    }
+    fetchUser()
+  }, [])
+
+  useEffect(() => {
     if (restaurants.length > 0) {
       setLoading(false)
       // si no hay store selecciona por defecto el primer restaurant
@@ -45,7 +66,6 @@ export default function GeneralSettings() {
       } else {
         setSelectedItem(restaurant)
       }
-      console.log(selectedItem)
     }
   }, [restaurants])
   return (
@@ -63,18 +83,10 @@ export default function GeneralSettings() {
             </div>
           </div>
         </section>
-        <section className="bg-white rounded-lg border border-blue-100 pb-5">
-          <div className="w-full p-3 bg-[#f5f9ff] rounded-lg border border-blue-100 items-center justify-between flex flex-row">
-            <div className="flex flex-row gap-2 items-center">
-              <Icon icon="building" size={17} />
-              <div className="text-sky-950 text-base font-bold leading-normal">Negocio</div>
-            </div>
-            <Link to={SETTING_NAVIGATION_ROUTES.Business_btn.path}>
-              <Icon icon="arrowRight" size={17} />
-            </Link>
-          </div>
-          <div className="flex flex-row items-center py-4 px-20 justify-between">
-            <div className="flex flex-row items-center">
+
+        <SettingsCard title="Negocio" iconName="building" linkPage={SETTING_NAVIGATION_ROUTES.Business_btn.path}>
+          <div className="flex flex-row items-center  justify-between">
+            <div className="flex flex-row items-center py-4">
               <Image src={selectedItem?.images?.[0]?.location} h={50} w={150} fit="contain" />
               <div className="flex flex-col pl-3">
                 <div className="text-sky-950 text-md font-bold leading-snug">{selectedItem.name}</div>
@@ -85,10 +97,68 @@ export default function GeneralSettings() {
               <div className="text-md">{selectedItem?.isActive ? "Habilitado" : "Deshabilitado"}</div>
             </div>
           </div>
-          <div className="flex flex-row px-20">
-            <div className="border-b border-b-light_selected_element flex flex-row items-center w-full" />
+
+          <div className="border-b border-b-light_selected_element" />
+
+          <div className="flex flex-row justify-between items-center py-4 flex-wrap">
+            <div className="flex flex-col">
+              <span className="text-sky-950 font-semibold">Correo</span>
+              <span>{selectedItem.email}</span>
+            </div>
+            <div className="flex flex-col">
+              <span className="text-sky-950 font-semibold">Teléfono</span>
+              <span>{selectedItem.phoneNumber}</span>
+            </div>
+            <div className="flex flex-col">
+              <span className="text-sky-950 font-semibold">Dirección principal</span>
+              <span>{selectedItem.billingAddress}</span>
+            </div>
           </div>
-        </section>
+
+          <div className="border-b border-b-light_selected_element flex flex-row items-center w-full" />
+
+          <div className="flex flex-row justify-between items-center py-4 flex-wrap">
+            <div className="flex flex-col">
+              <span className="text-sky-950 font-semibold">Razón social</span>
+              <span>{selectedItem.socialReason}</span>
+            </div>
+            <div className="flex flex-col">
+              <span className="text-sky-950 font-semibold">CAI</span>
+              <span>{selectedItem.cai}</span>
+            </div>
+            <div className="flex flex-col">
+              <span className="text-sky-950 font-semibold">RTN</span>
+              <span>{selectedItem.rtn}</span>
+            </div>
+          </div>
+        </SettingsCard>
+
+        <SettingsCard title="Cuenta" iconName="user" linkPage={SETTING_NAVIGATION_ROUTES.Cuenta.path}>
+          <div className="flex flex-row item-center justify-start py-4">
+            <div className="flex flex-row items-center">
+              <Avatar size="md" src={userData?.images?.[0]?.location} />
+            </div>
+            <div className="flex flex-col pl-2">
+              <span className="text-sky-950 font-semibold">{userData.name}</span>
+              <span>{userData.role}</span>
+            </div>
+          </div>
+
+          <div className="border-b border-b-light_selected_element" />
+
+          <div className="flex flex-row justify-between items-center py-4">
+            <div className="flex flex-col">
+              <span className="text-sky-950 font-semibold">Correo</span>
+              <span>{userData.email}</span>
+            </div>
+            <div className="flex flex-col">
+              <span className="text-sky-950 font-semibold">Teléfono</span>
+              <span>{userData.phoneNumber}</span>
+            </div>
+          </div>
+        </SettingsCard>
+
+        <SettingsCard title="Plan" iconName="creditCard" linkPage={SETTING_NAVIGATION_ROUTES.Plan.path}></SettingsCard>
       </div>
     </BaseLayout>
   )
