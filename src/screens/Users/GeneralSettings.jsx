@@ -47,7 +47,6 @@ export default function GeneralSettings() {
           toast.error("Error en la respuesta de la información del usuario")
         } else {
           setUserData(response.data.data)
-          console.log(response, "us")
         }
       } catch (error) {
         toast.error("Error obteniendo información del usuario")
