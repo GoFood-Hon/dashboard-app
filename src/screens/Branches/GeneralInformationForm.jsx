@@ -7,11 +7,7 @@ import InputField from "../../components/Form/InputField"
 import toast from "react-hot-toast"
 import { bytesToMB } from "../../utils"
 import { useDispatch, useSelector } from "react-redux"
-import {
-  fetchDishesCategories,
-  selectAllDishesCategories,
-  selectAllDishesCategoriesStatus
-} from "../../store/features/categorySlice"
+import { fetchDishesCategories, selectAllDishesCategoriesStatus } from "../../store/features/categorySlice"
 
 export default function GeneralInformationForm({ register, errors, setValue, isDataCleared }) {
   const dispatch = useDispatch()

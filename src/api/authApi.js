@@ -7,7 +7,8 @@ const authApi = {
   getUser: () => axiosClient.get("api/v1/users/me"),
   forgotPassword: (params) => axiosClient.post("api/v1/users/forgotPassword", params),
   resetPassword: (params) => axiosClient.patch("api/v1/users/resetPassword", params),
-  verifyOTP: (params) => axiosClient.post("api/v1/users/verifyToken", params)
+  verifyOTP: (params) => axiosClient.post("api/v1/users/verifyToken", params),
+  updateUser: (params) => axiosClient.post("api/v1/users/update-me", params)
 }
 
 export default authApi
