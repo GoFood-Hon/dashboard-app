@@ -29,6 +29,11 @@ import NewUser from "./screens/Users/NewUser"
 import UserSettings from "./screens/Users/UserSettings"
 import GeneralSettings from "./screens/Users/GeneralSettings"
 import AccountSettings from "./screens/Users/AccountSettings"
+import PasswordSettings from "./screens/Users/PasswordSettings"
+import BusinessSettings from "./screens/Users/BusinessSettings"
+import CouponsSettings from "./screens/Users/CouponsSettings"
+import PersonalSettings from "./screens/Users/PersonalSettings"
+import BankSettings from "./screens/Users/BankSettings"
 
 function App() {
   const router = createBrowserRouter(
@@ -65,6 +70,16 @@ function App() {
           <Route path={NAVIGATION_ROUTES.Users.submenu.Settings.path} element={<UserSettings />} />
           <Route path={SETTING_NAVIGATION_ROUTES.General.path} element={<GeneralSettings />} />
           <Route path={SETTING_NAVIGATION_ROUTES.Cuenta.path} element={<AccountSettings />} />
+          <Route path={SETTING_NAVIGATION_ROUTES.Password.path} element={<PasswordSettings />} />
+          <Route path={SETTING_NAVIGATION_ROUTES.Business_btn.path} element={<BusinessSettings />} />
+          <Route path={SETTING_NAVIGATION_ROUTES.Coupons.path} element={<CouponsSettings />} />
+          <Route path={SETTING_NAVIGATION_ROUTES.Personal.path} element={<PersonalSettings />} />
+          <Route path={SETTING_NAVIGATION_ROUTES.Branches.path} element={<CouponsSettings />} />
+          <Route path={SETTING_NAVIGATION_ROUTES.Kitchen.path} element={<CouponsSettings />} />
+          <Route path={SETTING_NAVIGATION_ROUTES.Bank.path} element={<BankSettings />} />
+          <Route path={SETTING_NAVIGATION_ROUTES.Plan.path} element={<CouponsSettings />} />
+          <Route path={SETTING_NAVIGATION_ROUTES.Administrative.path} element={<CouponsSettings />} />
+          <Route path={SETTING_NAVIGATION_ROUTES.Notification.path} element={<CouponsSettings />} />
 
           <Route path={AUTH_NAVIGATION_ROUTES.Logout.path} element={<Logout />} />
         </Route>

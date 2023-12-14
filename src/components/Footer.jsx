@@ -12,7 +12,6 @@ export default function Footer() {
       <div className="lg:w-[275px] w-full flex flex-col items-center h-[31px] relative">
         <div className="lg:right-0 top-0 absolute text-zinc-500 text-[10px]">powered by</div>
         <Icon
-          size={17}
           icon="oneTouch"
           className="w-[100px] h-3.5 lg:right-0 top-[17px] absolute flex-col justify-start items-start inline-flex"
         />

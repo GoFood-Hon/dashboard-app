@@ -12,7 +12,7 @@ export default function AccountSettings() {
     const fetchUser = async () => {
       try {
         const response = await authApi.getUser()
-        console.log(response.data.data)
+
         if (response.error) {
           toast.error("Error en la respuesta de la información del usuario")
         } else {
