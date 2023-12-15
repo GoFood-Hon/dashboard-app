@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useState } from "react"
 import BaseLayout from "../../components/BaseLayout"
 import { Breadcrumbs, CloseIcon, Grid, Group, Text, rem } from "@mantine/core"
 import BreadCrumbNavigation from "../../components/BreadCrumbNavigation"
@@ -98,7 +98,6 @@ export default function BusinessSettings() {
         })
       } else {
         await uploadRestaurantImage(restaurant.id, data?.files?.[0])
-        console.log(response.data.data, "dat")
 
         dispatch(setRestaurant(response.data.data))
         toast.success("Negocio actualizado exitosamente", {

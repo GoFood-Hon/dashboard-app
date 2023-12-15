@@ -4,7 +4,7 @@ import { useSelector } from "react-redux"
 import { useLocation, useNavigate } from "react-router-dom"
 import { Popover, Transition } from "@mantine/core"
 import GoFoodLogo from "../assets/images/goFood.png"
-import { AUTH_NAVIGATION_ROUTES } from "../routes"
+import { AUTH_NAVIGATION_ROUTES, SETTING_NAVIGATION_ROUTES } from "../routes"
 import toast from "react-hot-toast"
 import { AlarmIcon } from "../assets/icons/AlarmIcon"
 import { ConfigIcon } from "../assets/icons/ConfigIcon"
@@ -66,7 +66,9 @@ export default function Header() {
         <span className="mx-1 hover:bg-light_selected_element p-2 rounded-full cursor-pointer duration-500 dark:hover:bg-dark_selected_element">
           <AlarmIcon />
         </span>
-        <span className="hover:bg-light_selected_element p-2 rounded-full cursor-pointer duration-500 dark:hover:bg-dark_selected_element">
+        <span
+          className="hover:bg-light_selected_element p-2 rounded-full cursor-pointer duration-500 dark:hover:bg-dark_selected_element"
+          onClick={() => navigate(SETTING_NAVIGATION_ROUTES.General.path)}>
           <ConfigIcon />
         </span>
         <div className="flex flex-col items-end px-3">
