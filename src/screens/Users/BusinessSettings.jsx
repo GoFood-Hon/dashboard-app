@@ -97,9 +97,15 @@ export default function BusinessSettings() {
           duration: 7000
         })
       } else {
-        await uploadRestaurantImage(restaurant.id, data?.files?.[0])
+        const imageResponse = await uploadRestaurantImage(restaurant.id, data?.files?.[0])
+        const newImageData = imageResponse.data.data[0]
 
-        dispatch(setRestaurant(response.data.data))
+        const updatedRestaurant = {
+          ...response.data,
+          images: [{ location: newImageData.location, key: newImageData.key }]
+        }
+
+        dispatch(setRestaurant(updatedRestaurant))
         toast.success("Negocio actualizado exitosamente", {
           duration: 7000
         })
