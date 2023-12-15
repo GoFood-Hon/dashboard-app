@@ -1,10 +1,34 @@
 import React from "react"
 import BaseLayout from "../../components/BaseLayout"
-import { Breadcrumbs } from "@mantine/core"
+import { Breadcrumbs, Grid } from "@mantine/core"
 import BreadCrumbNavigation from "../../components/BreadCrumbNavigation"
 import SettingsCard from "../../components/SettingsCard"
+import InputField from "../../components/Form/InputField"
+import { useForm } from "react-hook-form"
+import InputCombobox from "../../components/Form/InputCombobox"
 
 export default function BankSettings() {
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    formState: { errors }
+  } = useForm({})
+
+  const businessType = [
+    {
+      value: "darkKitchen",
+      label: "Dark Kitchen"
+    },
+    {
+      value: "cocina",
+      label: "Cocina"
+    },
+    {
+      value: "Glorieta",
+      label: "glorieta"
+    }
+  ]
   return (
     <BaseLayout>
       <div className="pl-[200px]">
@@ -20,7 +44,24 @@ export default function BankSettings() {
             </div>
           </div>
         </section>
-        <SettingsCard title="Banco" iconName="bank"></SettingsCard>
+        <SettingsCard title="Banco" iconName="bank">
+          <Grid my={20}>
+            <Grid.Col span={{ sm: 12 }}>
+              <InputCombobox
+                items={businessType}
+                placeholder="Seleccione banco"
+                setValue={setValue}
+                errors={errors}
+                label="Banco"
+                name="type"
+              />
+            </Grid.Col>
+            <Grid.Col span={{ sm: 12 }}>
+              <InputField label="Titular de la cuenta" name="name" register={register} errors={errors} />
+            </Grid.Col>
+          </Grid>
+        </SettingsCard>
+        <SettingsCard title="Plan" iconName="creditCard"></SettingsCard>
       </div>
     </BaseLayout>
   )
