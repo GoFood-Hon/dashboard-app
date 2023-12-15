@@ -34,6 +34,8 @@ import BusinessSettings from "./screens/Users/BusinessSettings"
 import CouponsSettings from "./screens/Users/CouponsSettings"
 import PersonalSettings from "./screens/Users/PersonalSettings"
 import BankSettings from "./screens/Users/BankSettings"
+import BranchesSettings from "./screens/Users/BranchesSettings"
+import KitchenSettings from "./screens/Users/KitchenSettings"
 
 function App() {
   const router = createBrowserRouter(
@@ -74,8 +76,8 @@ function App() {
           <Route path={SETTING_NAVIGATION_ROUTES.Business_btn.path} element={<BusinessSettings />} />
           <Route path={SETTING_NAVIGATION_ROUTES.Coupons.path} element={<CouponsSettings />} />
           <Route path={SETTING_NAVIGATION_ROUTES.Personal.path} element={<PersonalSettings />} />
-          <Route path={SETTING_NAVIGATION_ROUTES.Branches.path} element={<CouponsSettings />} />
-          <Route path={SETTING_NAVIGATION_ROUTES.Kitchen.path} element={<CouponsSettings />} />
+          <Route path={SETTING_NAVIGATION_ROUTES.Branches.path} element={<BranchesSettings />} />
+          <Route path={SETTING_NAVIGATION_ROUTES.Kitchen.path} element={<KitchenSettings />} />
           <Route path={SETTING_NAVIGATION_ROUTES.Bank.path} element={<BankSettings />} />
           <Route path={SETTING_NAVIGATION_ROUTES.Plan.path} element={<CouponsSettings />} />
           <Route path={SETTING_NAVIGATION_ROUTES.Administrative.path} element={<CouponsSettings />} />
