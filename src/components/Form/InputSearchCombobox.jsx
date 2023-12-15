@@ -44,7 +44,7 @@ export default function InputSearchCombobox({ items, label, errors, name, placeh
 
   return (
     <React.Fragment>
-      <div className="flex flex-col mb-4">
+      <div className="flex flex-col my-2">
         <span className="text-sky-950 text-sm font-bold leading-snug pb-1">{label}</span>
         <Combobox store={combobox} onOptionSubmit={handleComboboxSubmit}>
           <Combobox.Target>

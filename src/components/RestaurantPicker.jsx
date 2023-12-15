@@ -48,7 +48,13 @@ export default function RestaurantPicker({ items }) {
         <LoadingCircle />
       ) : (
         <div className="flex flex-row items-center gap-2">
-          <Image src={selectedItem.images[0].location} h={50} w={150} fit="contain" />
+          <Image
+            src={selectedItem?.images?.[0]?.location}
+            h={50}
+            w={150}
+            fit="contain"
+            fallbackSrc="https://placehold.co/600x400?text=Imagen+no+disponible"
+          />
           <Combobox store={combobox} position="bottom-start" width={250} withArrow onOptionSubmit={handleComboboxSubmit}>
             <Combobox.Target>
               <button onClick={() => combobox.toggleDropdown()}>

@@ -10,6 +10,7 @@ import { IconChevronDown, IconChevronUp, IconSearch } from "@tabler/icons-react"
 import { useTheme } from "@table-library/react-table-library/theme"
 import { DEFAULT_OPTIONS, getTheme } from "@table-library/react-table-library/mantine"
 import { Icon } from "../../components/Icon"
+import { colors } from "../../theme/colors"
 
 const nodes = [
   {
@@ -232,6 +233,7 @@ export default function OrdersTable() {
           total={pagination.state.getTotalPages(modifiedNodes)}
           page={pagination.state.page + 1}
           onChange={(page) => pagination.fns.onSetPage(page - 1)}
+          color={colors.primary_button}
         />
       </Group>
     </>

@@ -87,7 +87,7 @@ export const NAVIGATION_ROUTES = {
       },
       Settings: {
         label: "Configuraciones",
-        path: "/usuarios/configuraciones"
+        path: "/usuarios/configuraciones/"
       }
     }
   }

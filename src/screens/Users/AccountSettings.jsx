@@ -88,7 +88,7 @@ export default function AccountSettings() {
     const formDataImage = new FormData()
     formDataImage.append("files", file)
 
-    // return await dishesApi.addImage(dishId, formDataImage)
+    return await dishesApi.addImage(dishId, formDataImage)
   }
 
   const onSubmit = async (data) => {
@@ -106,7 +106,7 @@ export default function AccountSettings() {
           duration: 7000
         })
       } else {
-        // await uploadDishImage(userData?.id, data?.files?.[0])
+        // await uploadProfileImage(userData?.id, data?.files?.[0])
         toast.success("Usuario actualizado exitosamente", {
           duration: 7000
         })

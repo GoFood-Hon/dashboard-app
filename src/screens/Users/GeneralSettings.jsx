@@ -55,18 +55,6 @@ export default function GeneralSettings() {
     fetchUser()
   }, [])
 
-  useEffect(() => {
-    if (restaurants.length > 0) {
-      setLoading(false)
-      // si no hay store selecciona por defecto el primer restaurant
-      if (Object.keys(restaurant).length === 0) {
-        dispatch(setRestaurant(restaurants?.[0]))
-        setSelectedItem(restaurants?.[0])
-      } else {
-        setSelectedItem(restaurant)
-      }
-    }
-  }, [restaurants])
   return (
     <BaseLayout>
       <div className="pl-[200px]">

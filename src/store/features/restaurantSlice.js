@@ -1,8 +1,27 @@
-import { createSlice } from "@reduxjs/toolkit"
+import restaurantsApi from "../../api/restaurantApi"
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 
 const initialState = {
   value: JSON.parse(localStorage.getItem("restaurant")) || {}
 }
+
+/*
+ * GET RESTAURANTS
+ */
+
+export const fetchRestaurants = createAsyncThunk("restaurants/fetchRestaurants", async ({ restaurantId }, { dispatch }) => {
+  try {
+    const response = await restaurantsApi.getAllRestaurants({
+      restaurantId
+    })
+
+    dispatch(setMenus(response.data))
+    return response
+  } catch (error) {
+    dispatch(setError("Error fetching menus"))
+    throw error
+  }
+})
 
 export const restaurantSlice = createSlice({
   name: "restaurant",

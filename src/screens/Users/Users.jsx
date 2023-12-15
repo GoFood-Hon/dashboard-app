@@ -60,7 +60,7 @@ export default function Users() {
             <h1 className="text-white-200 text-2xl font-semibold">Usuarios</h1>
 
             <Button
-              text={"Crear cajero"}
+              text={"Crear usuario"}
               className={"text-white text-md px-3 py-2 bg-primary_button mb-0"}
               onClick={handleNavigateNewUser}
             />

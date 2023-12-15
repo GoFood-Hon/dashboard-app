@@ -1,5 +1,4 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
-import toast from "react-hot-toast"
 import { ITEMS_PER_PAGE } from "../../utils/paginationConfig"
 import branchesApi from "../../api/branchesApi"
 
