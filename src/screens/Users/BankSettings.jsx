@@ -25,8 +25,8 @@ export default function BankSettings() {
       label: "FICOHSA"
     },
     {
-      value: "ATLANTIDA",
-      label: "ATLANTIDA"
+      value: "Atlántida",
+      label: "Atlántida"
     }
   ]
 
