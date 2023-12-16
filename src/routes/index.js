@@ -13,6 +13,10 @@ export const NAVIGATION_ROUTES = {
     label: "Menú",
     icon: "menu",
     path: "/menu",
+    MenuDetails: {
+      label: "Detalles del menu",
+      path: "/menu/:menuId"
+    },
     NewMenu: {
       path: "/menu/nuevoMenu"
     },

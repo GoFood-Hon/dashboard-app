@@ -13,6 +13,8 @@ import { Icon } from "../../components/Icon"
 import { ITEMS_PER_PAGE } from "../../utils/paginationConfig"
 import { formatDistanceToNow } from "date-fns"
 import { colors } from "../../theme/colors"
+import { useNavigate } from "react-router-dom"
+import { NAVIGATION_ROUTES } from "../../routes"
 
 const nodes = [
   {
@@ -36,6 +38,8 @@ const nodes = [
 ]
 
 export default function MenuTable({ refreshPage, items, handleDisableSelected, screenType }) {
+  const navigate = useNavigate()
+
   const [data, setData] = useState({ nodes: items })
 
   useEffect(() => {
@@ -43,6 +47,11 @@ export default function MenuTable({ refreshPage, items, handleDisableSelected, s
   }, [items])
 
   let columns = []
+
+  const handleClick = (id) => {
+    navigate(`${NAVIGATION_ROUTES.Menu.path}/${id}`)
+  }
+
   if (screenType === "menuScreen") {
     columns = [
       {
@@ -93,7 +102,13 @@ export default function MenuTable({ refreshPage, items, handleDisableSelected, s
       },
       {
         label: "ACCIONES",
-        renderCell: () => <Icon icon="eye" size={19} />
+        renderCell: (item) => {
+          return (
+            <span onClick={() => handleClick(item.id)}>
+              <Icon icon="eye" size={19} />
+            </span>
+          )
+        }
       }
     ]
   } else if (screenType === "usersScreen") {
@@ -156,7 +171,11 @@ export default function MenuTable({ refreshPage, items, handleDisableSelected, s
       },
       {
         label: "ACCIONES",
-        renderCell: () => <Icon icon="eye" size={19} />
+        renderCell: () => (
+          <span onClick={() => handleClick(item.id)}>
+            <Icon icon="eye" size={19} />
+          </span>
+        )
       }
     ]
   } else {
@@ -174,7 +193,7 @@ export default function MenuTable({ refreshPage, items, handleDisableSelected, s
   })
 
   function onPaginationChange(action, state) {
-    console.log(action, state)
+    // console.log(action, state)
   }
 
   //* Theme *//
@@ -203,7 +222,7 @@ export default function MenuTable({ refreshPage, items, handleDisableSelected, s
   })
 
   function onSearchChange(action, state) {
-    console.log(action, state)
+    // console.log(action, state)
     pagination.fns.onSetPage(0)
   }
 
@@ -217,7 +236,7 @@ export default function MenuTable({ refreshPage, items, handleDisableSelected, s
   })
 
   function onFilterChange(action, state) {
-    console.log(action, state)
+    // console.log(action, state)
     pagination.fns.onSetPage(0)
   }
 
@@ -228,7 +247,7 @@ export default function MenuTable({ refreshPage, items, handleDisableSelected, s
   })
 
   function onSelectChange(action, state) {
-    console.log(action, state)
+    // console.log(action, state, "selected")
   }
 
   //* Sort *//
@@ -255,7 +274,7 @@ export default function MenuTable({ refreshPage, items, handleDisableSelected, s
   )
 
   function onSortChange(action, state) {
-    console.log(action, state)
+    // console.log(action, state)
   }
 
   //* Custom Modifiers *//

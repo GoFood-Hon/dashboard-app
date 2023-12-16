@@ -38,6 +38,7 @@ import BranchesSettings from "./screens/Users/BranchesSettings"
 import KitchenSettings from "./screens/Users/KitchenSettings"
 import PlanSettings from "./screens/Users/PlanSettings"
 import AdministrativeSettings from "./screens/Users/AdministrativeSettings"
+import MenuDetalles from "./screens/Menu/MenuDetalles"
 
 function App() {
   const router = createBrowserRouter(
@@ -60,6 +61,7 @@ function App() {
           <Route path={NAVIGATION_ROUTES.Menu.submenu.Complements.path} element={<Complements />} />
           <Route path={NAVIGATION_ROUTES.Menu.submenu.Complements.ComplementDetails.path} element={<ComplementsDetails />} />
           <Route path={NAVIGATION_ROUTES.Menu.submenu.Complements.submenu.NewComplement.path} element={<NewComplement />} />
+          <Route path={NAVIGATION_ROUTES.Menu.MenuDetails.path} element={<MenuDetalles />} />
 
           <Route path={NAVIGATION_ROUTES.Menu.submenu.Combos.path} element={<Combos />} />
 
