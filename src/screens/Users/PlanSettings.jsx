@@ -1,6 +1,6 @@
 import React from "react"
 import BaseLayout from "../../components/BaseLayout"
-import { Breadcrumbs, Grid } from "@mantine/core"
+import { Breadcrumbs, Grid, Tabs } from "@mantine/core"
 import BreadCrumbNavigation from "../../components/BreadCrumbNavigation"
 import { useForm } from "react-hook-form"
 import SettingsCard from "../../components/SettingsCard"
@@ -22,7 +22,7 @@ export default function PlanSettings() {
           <section>
             <div className="flex flex-row justify-between items-center pb-6">
               <div className="flex flex-row gap-x-3 items-center">
-                <h1 className="text-white-200 text-2xl font-semibold">Cocina</h1>
+                <h1 className="text-white-200 text-2xl font-semibold">Plan</h1>
               </div>
               <div>
                 <Breadcrumbs>
@@ -31,8 +31,19 @@ export default function PlanSettings() {
               </div>
             </div>
           </section>
-          <SettingsCard title="Plan" iconName="creditCard"></SettingsCard>
-          <SettingsCard title="Pago" iconName="creditCard"></SettingsCard>
+          <Tabs defaultValue="payments" color="#0e2946">
+            <Tabs.List>
+              <Tabs.Tab value="payments">Pagos</Tabs.Tab>
+              <Tabs.Tab value="history">Historial de pagos</Tabs.Tab>
+            </Tabs.List>
+            <Tabs.Panel value="payments">
+              <SettingsCard title="Plan" iconName="creditCard"></SettingsCard>
+              <SettingsCard title="Pago" iconName="creditCard"></SettingsCard>
+            </Tabs.Panel>
+            <Tabs.Panel value="history">
+              <SettingsCard title="Historial de pagos" iconName="creditCard"></SettingsCard>
+            </Tabs.Panel>
+          </Tabs>
         </div>
       </form>
     </BaseLayout>
