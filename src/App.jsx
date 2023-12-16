@@ -82,7 +82,7 @@ function App() {
           <Route path={SETTING_NAVIGATION_ROUTES.Kitchen.path} element={<KitchenSettings />} />
           <Route path={SETTING_NAVIGATION_ROUTES.Bank.path} element={<BankSettings />} />
           <Route path={SETTING_NAVIGATION_ROUTES.Plan.path} element={<PlanSettings />} />
-          <Route path={SETTING_NAVIGATION_ROUTES.Administrative.path} element={<AdministrativeSettings />} />
+          {/*   <Route path={SETTING_NAVIGATION_ROUTES.Administrative.path} element={<AdministrativeSettings />} /> */}
           {/* <Route path={SETTING_NAVIGATION_ROUTES.Notification.path} element={<CouponsSettings />} /> */}
 
           <Route path={AUTH_NAVIGATION_ROUTES.Logout.path} element={<Logout />} />

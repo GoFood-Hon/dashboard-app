@@ -162,17 +162,18 @@ export const SETTING_NAVIGATION_ROUTES = {
     label: "Plan",
     path: "/usuarios/configuraciones/plan",
     icon: "creditCard"
-  },
+  }
+  /*
   More: {
     label: "Mas"
-  },
-  Administrative: {
+  }
+   Administrative: {
     type: "button",
     label: "Administrable",
     path: "/usuarios/configuraciones/administrable",
     icon: "vrDesign"
   }
-  /*  Notification: {
+   Notification: {
     type: "button",
     label: "Notificaciones",
     path: "/usuarios/configuraciones/notificaciones",

@@ -1,6 +1,6 @@
 import React from "react"
 import BaseLayout from "../../components/BaseLayout"
-import { Breadcrumbs, Grid } from "@mantine/core"
+import { Breadcrumbs, Grid, Tabs, rem } from "@mantine/core"
 import BreadCrumbNavigation from "../../components/BreadCrumbNavigation"
 import SettingsCard from "../../components/SettingsCard"
 import InputField from "../../components/Form/InputField"
@@ -15,20 +15,21 @@ export default function BankSettings() {
     formState: { errors }
   } = useForm({})
 
-  const businessType = [
+  const banks = [
     {
-      value: "darkKitchen",
-      label: "Dark Kitchen"
+      value: "BAC",
+      label: "BAC"
     },
     {
-      value: "cocina",
-      label: "Cocina"
+      value: "FICOHSA",
+      label: "FICOHSA"
     },
     {
-      value: "Glorieta",
-      label: "glorieta"
+      value: "ATLANTIDA",
+      label: "ATLANTIDA"
     }
   ]
+
   return (
     <BaseLayout>
       <div className="pl-[200px]">
@@ -44,24 +45,48 @@ export default function BankSettings() {
             </div>
           </div>
         </section>
-        <SettingsCard title="Banco" iconName="bank">
-          <Grid my={20}>
-            <Grid.Col span={{ sm: 12 }}>
-              <InputCombobox
-                items={businessType}
-                placeholder="Seleccione banco"
-                setValue={setValue}
-                errors={errors}
-                label="Banco"
-                name="type"
-              />
-            </Grid.Col>
-            <Grid.Col span={{ sm: 12 }}>
-              <InputField label="Titular de la cuenta" name="name" register={register} errors={errors} />
-            </Grid.Col>
-          </Grid>
-        </SettingsCard>
-        <SettingsCard title="Plan" iconName="creditCard"></SettingsCard>
+        <section>
+          <Tabs defaultValue="banks" color="#0e2946">
+            <Tabs.List>
+              <Tabs.Tab value="banks">Bancos</Tabs.Tab>
+              <Tabs.Tab value="api">API</Tabs.Tab>
+            </Tabs.List>
+
+            <Tabs.Panel value="banks">
+              <SettingsCard title="Banco" iconName="bank">
+                <Grid my={20}>
+                  <Grid.Col span={{ sm: 12 }}>
+                    <InputCombobox
+                      items={banks}
+                      placeholder="Seleccione banco"
+                      setValue={setValue}
+                      errors={errors}
+                      label="Banco"
+                      name="type"
+                    />
+                  </Grid.Col>
+                  <Grid.Col span={{ sm: 12 }}>
+                    <InputField label="Titular de la cuenta" name="name" register={register} errors={errors} />
+                  </Grid.Col>
+                </Grid>
+              </SettingsCard>
+              <SettingsCard title="Plan" iconName="creditCard"></SettingsCard>
+            </Tabs.Panel>
+
+            <Tabs.Panel value="api">
+              <SettingsCard title="Accesos de la API" iconName="creditCard">
+                <Grid my={20}>
+                  <Grid.Col span={{ sm: 12 }}>
+                    <InputField label="CLIENT ID" name="clientId" register={register} errors={errors} />
+                  </Grid.Col>
+                  <Grid.Col>
+                    <InputField label="TOKEN" name="token" register={register} errors={errors} />
+                  </Grid.Col>
+                </Grid>
+              </SettingsCard>
+            </Tabs.Panel>
+          </Tabs>
+        </section>
       </div>
     </BaseLayout>
   )
