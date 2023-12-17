@@ -12,7 +12,9 @@ const menuApi = {
 
   addDishesToMenu: (dishId, params) => axiosClient.post(`api/v1/dish/${dishId}/category`, params),
 
-  updateMenu: (params, menuId) => axiosClient.patch(`api/v1/restaurant/categories/${menuId}`, params)
+  updateMenu: (params, menuId) => axiosClient.patch(`api/v1/restaurant/categories/${menuId}`, params),
+
+  getMenuDetails: ({ menuId }) => axiosClient.get(`api/v1/restaurant/categories/${menuId}/dishes`)
 }
 
 export default menuApi

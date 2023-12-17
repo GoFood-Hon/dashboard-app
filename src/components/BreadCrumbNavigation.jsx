@@ -11,6 +11,7 @@ export default function BreadCrumbNavigation({ location, dynamicRoute }) {
   const filteredItems = breadcrumbItems.filter((item) => !isId.test(item))
 
   // If dynamicRoute exists and doesn't look like an ID, append it to the breadcrumb
+  console.log(dynamicRoute, "in")
   if (dynamicRoute && !isId.test(dynamicRoute)) {
     filteredItems.push(dynamicRoute)
   }
