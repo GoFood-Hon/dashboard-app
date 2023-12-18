@@ -17,7 +17,7 @@ const authApi = {
 
   updateUser: (params) => axiosClient.post("api/v1/users/update-me", params),
 
-  changePassword: (params) => axiosClient.patch("api/v1/change-password", params)
+  changePassword: (params) => axiosClient.patch("api/v1/users/change-password", params)
 }
 
 export default authApi

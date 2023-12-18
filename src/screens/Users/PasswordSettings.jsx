@@ -11,8 +11,10 @@ import { yupResolver } from "@hookform/resolvers/yup"
 import { resetPasswordValidation } from "../../utils/inputRules"
 import toast from "react-hot-toast"
 import authApi from "../../api/authApi"
+import { useNavigate } from "react-router-dom"
 
 export default function PasswordSettings() {
+  const navigate = useNavigate()
   const {
     register,
     handleSubmit,
@@ -39,6 +41,7 @@ export default function PasswordSettings() {
         toast.success("Contraseña actualizada exitosamente", {
           duration: 7000
         })
+        window.location.reload()
       }
     } catch (error) {
       toast.error("Error restableciendo su contraseña", error)
