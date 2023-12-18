@@ -14,6 +14,8 @@ const menuApi = {
 
   updateMenu: (params, menuId) => axiosClient.patch(`api/v1/restaurant/categories/${menuId}`, params),
 
+  updateDishesToMenu: (dishId, params) => axiosClient.patch(`api/v1/dish/${dishId}/category`, params),
+
   getMenuDetails: ({ menuId }) => axiosClient.get(`api/v1/restaurant/categories/${menuId}/dishes`)
 }
 

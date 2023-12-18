@@ -9,6 +9,7 @@ import toast from "react-hot-toast"
 import { useDisclosure } from "@mantine/hooks"
 import DashboardCard from "../../components/DashboardCard"
 import { getFormattedHNL } from "../../utils"
+import EditMenuScreen from "./EditMenuScreen"
 
 export default function MenuDetalles() {
   const { menuId } = useParams()
@@ -30,7 +31,7 @@ export default function MenuDetalles() {
       }
     }
     fetchMenu()
-  }, [])
+  }, [closeFormModal, formModalOpened])
 
   const dashboardCards = [
     {
@@ -157,7 +158,7 @@ export default function MenuDetalles() {
               backgroundOpacity: 0.55,
               blur: 3
             }}>
-            <span>editar</span>
+            <EditMenuScreen close={closeFormModal} itemDetails={menuDetails} />
           </Modal>
         </section>
       </div>

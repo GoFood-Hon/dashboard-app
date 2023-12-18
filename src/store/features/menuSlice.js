@@ -47,12 +47,9 @@ const uploadMenuImage = async (id, file) => {
   return await menuApi.addImage(id, formDataImage)
 }
 
-const addComplements = async (id, data) => {
-  const raw = JSON.stringify({
-    data
-  })
-
-  return await menuApi.addDishesToMenu(id, data)
+const addComplements = async (id, dishes) => {
+  const raw = JSON.stringify({ dishes })
+  return await menuApi.addDishesToMenu(id, raw)
 }
 
 export const createMenu = createAsyncThunk("menus/createMenu", async ({ data, restaurant }, { dispatch }) => {
@@ -80,10 +77,7 @@ export const createMenu = createAsyncThunk("menus/createMenu", async ({ data, re
           duration: 7000
         })
       }
-
-      const { dishes } = data
-      const raw = JSON.stringify({ dishes })
-      const addComplementsResponse = await menuApi.addDishesToMenu(dishId, raw)
+      const addComplementsResponse = await addComplements(data?.id, data?.dishes)
 
       if (addComplementsResponse.error) {
         toast.error(`Fallo al cargar los platillos. Por favor intente de nuevo. ${addImageResponse.message}`, {
@@ -108,17 +102,25 @@ export const createMenu = createAsyncThunk("menus/createMenu", async ({ data, re
  * UPDATE MENUS
  */
 
+const updateComplements = async (id, dishes) => {
+  const raw = JSON.stringify({ dishes })
+  return await menuApi.updateDishesToMenu(id, raw)
+}
+
 const updateMenuFormData = (data, propertyToUpdate) => {
+  const formData = new FormData()
+
   if (propertyToUpdate === "isActive") {
     formData.append("isActive", data.isActive)
   } else {
-    const formData = new FormData()
     formData.append("name", data?.name)
     formData.append("description", data?.description)
     formData.append("type", data?.type)
   }
+
   return formData
 }
+
 export const updateMenu = createAsyncThunk("menus/updateMenu", async ({ data, propertyToUpdate = "all" }, { dispatch }) => {
   try {
     const formData = updateMenuFormData(data, propertyToUpdate)
@@ -130,8 +132,24 @@ export const updateMenu = createAsyncThunk("menus/updateMenu", async ({ data, pr
         duration: 7000
       })
     } else {
-      await uploadMenuImage(data?.id, data?.files?.[0])
-      await addComplements(data?.id, data?.dishes)
+      if (data?.files) {
+        const imageResponse = await uploadMenuImage(data?.id, data?.files?.[0])
+
+        if (imageResponse.error) {
+          toast.error(`Fallo al subir la imagen. Por favor intente de nuevo. ${response.message}`, {
+            duration: 7000
+          })
+        }
+      }
+
+      if (data.dishes) {
+        const complementsResponse = await updateComplements(data.id, data.dishes)
+        if (complementsResponse.error) {
+          toast.error(`Fallo al actualizar los platillos. Por favor intente de nuevo. ${response.message}`, {
+            duration: 7000
+          })
+        }
+      }
 
       toast.success("Menu actualizado exitosamente", {
         duration: 7000
