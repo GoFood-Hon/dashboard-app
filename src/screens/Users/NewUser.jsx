@@ -7,6 +7,9 @@ import { useDispatch } from "react-redux"
 import { useForm } from "react-hook-form"
 import GeneralInformationForm from "./GeneralInformationForm"
 import SucursalSettings from "./SucursalSettings"
+import Button from "../../components/Button"
+import { NAVIGATION_ROUTES } from "../../routes"
+import toast from "react-hot-toast"
 
 export default function NewUser() {
   const location = useLocation()
@@ -23,7 +26,6 @@ export default function NewUser() {
   } = useForm()
 
   const [isDataCleared, setIsDataCleared] = useState(false)
-  const [dishes, setDishes] = useState([])
 
   const onSubmit = (data) => {}
 
@@ -96,6 +98,25 @@ export default function NewUser() {
             }}>
             {items}
           </Accordion>
+        </section>
+        <section>
+          <div className="w-full flex md:justify-end mt-6 md:gap-3 rounded-md bg-white px-8 py-5 border border-gray-200">
+            <div className="md:w-2/3 lg:1/3 sm:w-full flex flex-row justify-end gap-3 sm:flex-wrap md:flex-nowrap">
+              <Button
+                text={"Descartar"}
+                className={"text-xs border border-red-400 text-red-400 bg-white"}
+                onClick={() => {
+                  toast.success("Información eliminada")
+                  navigate(NAVIGATION_ROUTES.Users.path)
+                }}
+              />
+
+              <Button
+                text={"Guardar platillo"}
+                className="flex h-10 w-full items-center justify-center px-4 rounded-md shadow-sm transition-all duration-700 focus:outline-none text-xs bg-sky-950 text-slate-50"
+              />
+            </div>
+          </div>
         </section>
       </form>
     </BaseLayout>
