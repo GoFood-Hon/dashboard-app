@@ -3,6 +3,8 @@ import { Outlet, useLocation, useNavigate } from "react-router-dom"
 import Footer from "../components/Footer"
 import livingImage from "../assets/images/living.png"
 import layout1Image from "../assets/images/layout1.png"
+import logoImage from "../assets/images/goFood.png"
+import forkImage from "../assets/images/fork.png"
 import authUtils from "../utils/authUtils"
 import LoadingCircle from "../components/LoadingCircle"
 
@@ -40,7 +42,7 @@ export default function UnauthenticatedLayout() {
     <>
       <div className="w-screen h-screen flex flex-col items-center justify-between dark:bg-slate-900 bg-slate-100 text-black dark:text-white">
         <div className="w-full p-3 bg-white flex justify-center mb-5 border-slate-200 border  dark:bg-slate-800 dark:border-slate-700 ">
-          <img className="w-44 h-[54px]" src="src/assets/images/goFood.png" />
+          <img className="w-44 h-[54px]" src={logoImage} />
         </div>
         <div className="w-full xs:h-fit xs:rounded-2xl xs:drop-shadow-none xs:shadow-none sm:w-5/6 md:w-3/6 lg:w-5/6 lg:max-w-[1100px] xl:w-5/6 2xl:w-5/6 lg:justify-between bg-light_bg_child rounded-2xl dark:bg-slate-800 dark:border-slate-700 md:drop-shadow-xl md:shadow-slate-100 overflow-hidden md:shadow-xl md:border dark:shadow-slate-800 flex flex-row">
           <div className="lg:w-full lg:min-w-[500px] lg:max-w-[620px] lg:h-[660px] relative -left-2 hidden md:hidden lg:flex">
@@ -52,7 +54,7 @@ export default function UnauthenticatedLayout() {
             />
             <img
               className="w-[394px] h-[394px] left-[394px] top-[394px] absolute origin-top-left rotate-180 object-cover filter grayscale opacity-60"
-              src="src/assets/images/fork.png"
+              src={forkImage}
               alt="fork"
             />
             <div className="w-[477px] pl-10 top-[500px] absolute text-white text-[32px] font-bold  leading-10">

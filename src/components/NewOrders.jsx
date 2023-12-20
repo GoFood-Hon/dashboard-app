@@ -1,5 +1,6 @@
 import React from "react"
 import { Icon } from "./Icon"
+import defaultImageRestaurant from "../assets/images/restaurants/kfc.png"
 
 export default function NewOrders({ data }) {
   const statusColors = {
@@ -14,7 +15,7 @@ export default function NewOrders({ data }) {
     <div className="pt-6 px-6">
       <div className="flex flex-row justify-between items-center">
         <div className="flex">
-          <img className="w-12 h-12 p-2 rounded-full bg-light_selected_element" src="src/assets/images/restaurants/kfc.png" />
+          <img className="w-12 h-12 p-2 rounded-full bg-light_selected_element" src={defaultImageRestaurant} />
           <div className="flex flex-col ml-4 justify-between flex-wrap">
             <span>
               Pedido: #<span className="font-semibold">{data.orderNumber}</span>
