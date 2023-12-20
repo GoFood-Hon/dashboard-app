@@ -1,9 +1,16 @@
 name: Deploy
 
 on:
+  pull_request:
+    branches:
+      - main
   push:
     branches:
       - main
+
+env:
+  VITE_API_URL: ${{ secrets.VITE_API_URL }}
+  VITE_MAPBOX_KEY: ${{ secrets.VITE_MAPBOX_KEY }}
 
 jobs:
   build:
