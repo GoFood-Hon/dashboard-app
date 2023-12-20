@@ -8,7 +8,7 @@ import PaymentForm from "./PaymentForm"
 import { useDispatch, useSelector } from "react-redux"
 import toast from "react-hot-toast"
 import PreparationForm from "./PreparationForm"
-import { updateDish } from "../../store/features/DishesSlice"
+import { updateDish } from "../../store/features/dishesSlice"
 import ComplementsForm from "./ComplementsForm"
 import complementsApi from "../../api/complementsApi"
 

@@ -18,7 +18,7 @@ import LoadingCircle from "../../components/LoadingCircle"
 import ItemCard from "../../components/ItemCard"
 import { colors } from "../../theme/colors"
 import { NAVIGATION_ROUTES } from "../../routes"
-import { updateDish } from "../../store/features/DishesSlice"
+import { updateDish } from "../../store/features/dishesSlice"
 
 export default function Branches() {
   const navigate = useNavigate()

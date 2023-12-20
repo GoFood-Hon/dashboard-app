@@ -15,7 +15,7 @@ import {
   setFilters,
   setPage,
   updateDish
-} from "../../store/features/DishesSlice"
+} from "../../store/features/dishesSlice"
 import LoadingCircle from "../../components/LoadingCircle"
 import ItemCard from "../../components/ItemCard"
 import { Icon } from "../../components/Icon"
