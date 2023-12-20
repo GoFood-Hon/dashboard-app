@@ -10,7 +10,6 @@ import MenuTable from "./MenuTable"
 import { useDispatch, useSelector } from "react-redux"
 import { fetchMenus, selectAllMenus, selectMenusError, selectMenusStatus, updateMenu } from "../../store/features/menuSlice"
 import LoadingCircle from "../../components/LoadingCircle"
-import { Icon } from "../../components/Icon"
 
 export default function Menu() {
   const navigate = useNavigate()
@@ -113,7 +112,7 @@ export default function Menu() {
       </section>
       <section>
         <div className="w-full p-4 h-full bg-white rounded-2xl border border-blue-100">
-          {menus.length > 0 ? (
+          {menus?.length > 0 ? (
             <MenuTable
               refreshPage={refreshPage}
               items={menus}
