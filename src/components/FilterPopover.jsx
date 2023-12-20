@@ -7,7 +7,7 @@ import Button from "./Button"
 import { useForm } from "react-hook-form"
 import { ErrorMessage } from "./Form/ErrorMessage"
 import { useDispatch, useSelector } from "react-redux"
-import { setFilters } from "../store/features/DishesSlice"
+import { setFilters } from "../store/features/dishesSlice"
 import toast from "react-hot-toast"
 
 export default function FilterPopover({ onFiltersChange, refreshPage }) {
