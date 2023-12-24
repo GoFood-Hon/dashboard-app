@@ -29,7 +29,7 @@ export const restaurantSlice = createSlice({
   reducers: {
     setRestaurant: (state, action) => {
       state.value = action.payload
-      localStorage.setItem("restaurant", JSON.stringify(action.payload))
+      // localStorage.setItem("restaurant", JSON.stringify(action.payload))
     }
   }
 })
