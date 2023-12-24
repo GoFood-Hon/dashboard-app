@@ -311,9 +311,10 @@ export default function MenuTable({ refreshPage, items, handleDisableSelected, s
           <span className="cursor-pointer" onClick={refreshPage}>
             <Icon icon="reload" size={20} />
           </span>
-          <span className="cursor-pointer">
+          {/*  <span className="cursor-pointer">
             <Icon icon="setting" size={20} />
           </span>
+          */}
           <span className="cursor-pointer" onClick={handleDisableSelected}>
             <Icon icon="trash" size={20} />
           </span>
