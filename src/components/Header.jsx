@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react"
 import Button from "./Button"
 import { useSelector } from "react-redux"
 import { useLocation, useNavigate } from "react-router-dom"
-import { Popover, Transition } from "@mantine/core"
+import { Image, Popover, Transition } from "@mantine/core"
 import GoFoodLogo from "../assets/images/goFood.png"
 import { AUTH_NAVIGATION_ROUTES, SETTING_NAVIGATION_ROUTES } from "../routes"
 import toast from "react-hot-toast"
@@ -35,7 +35,8 @@ export default function Header() {
   useEffect(() => {
     const fetchAllRestaurants = async () => {
       try {
-        const response = await restaurantsApi.getAllRestaurants()
+        const response = await restaurantsApi.getRestaurant(user?.restaurantId)
+        console.log(response, "user")
 
         if (response.error) {
           toast.error(`Fallo al obtener todos los platillos. Por favor intente de nuevo. ${response.message}`, {
@@ -59,7 +60,13 @@ export default function Header() {
           <img className="w-[123px] h-[42px]" src={GoFoodLogo} />
         </div>
         <div className="pl-4">
-          <RestaurantPicker items={restaurants} />
+          <Image
+            src={restaurants?.images?.[0]?.location}
+            h={50}
+            w={150}
+            fit="contain"
+            fallbackSrc="https://placehold.co/600x400?text=Imagen+no+disponible"
+          />
         </div>
       </div>
       <div className="flex flex-row text-sm items-center">
