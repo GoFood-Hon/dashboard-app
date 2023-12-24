@@ -217,8 +217,8 @@ export default function Complements() {
                 <span className="cursor-pointer" onClick={refreshPage}>
                   <Icon icon="reload" size={20} />
                 </span>
-                <FilterPopover onFiltersChange={onFiltersChange} refreshPage={refreshPage} />
-                <SortPopover />
+                {/*      <FilterPopover onFiltersChange={onFiltersChange} refreshPage={refreshPage} />
+                <SortPopover /> */}
               </div>
             </div>
           </Grid.Col>

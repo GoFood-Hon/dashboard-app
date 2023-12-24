@@ -185,7 +185,7 @@ export default function Branches() {
               <span className="cursor-pointer" onClick={refreshPage}>
                 <Icon icon="reload" size={20} />
               </span>
-              <FilterPopover onFiltersChange={onFiltersChange} refreshPage={refreshPage} />
+              {/*      <FilterPopover onFiltersChange={onFiltersChange} refreshPage={refreshPage} /> */}
             </div>
           </div>
         </div>
