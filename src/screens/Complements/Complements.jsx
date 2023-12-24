@@ -170,7 +170,7 @@ export default function Complements() {
         <Grid grow>
           <Grid.Col span={{ base: 12, md: 4, lg: 3, xl: 2 }}>
             <div className="w-full h-full flex items-center">
-              <Input
+              {/*  <Input
                 className="w-full"
                 placeholder="Buscar complemento"
                 value={searchDish}
@@ -184,7 +184,7 @@ export default function Complements() {
                     style={{ display: searchDish ? undefined : "none" }}
                   />
                 }
-              />
+              /> */}
             </div>
           </Grid.Col>
           <Grid.Col span={{ base: 12, md: 8, lg: 6, xl: 8 }}>

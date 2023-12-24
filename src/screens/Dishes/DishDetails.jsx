@@ -139,7 +139,13 @@ export default function DishDetails() {
                         className="w-full p-5 my-3 bg-white rounded-lg border border-blue-100 flex-row justify-between items-center flex text-sm"
                         key={item?.id}>
                         <div className="flex flex-row items-center w-1/2">
-                          <img className="w-10 h-10" src={item?.images?.[0]?.location} />
+                          <Image
+                            src={item?.images?.[0]?.location}
+                            h={60}
+                            w={40}
+                            fit="contain"
+                            fallbackSrc="https://placehold.co/600x400?text=Imagen+no+disponible"
+                          />
                           <span className="text-sky-950 pl-3">{item?.name}</span>
                         </div>
                         <div className="flex flex-row w-1/2 justify-end">

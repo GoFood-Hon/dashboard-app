@@ -14,7 +14,7 @@ export default function ExtrasForm() {
           <span className="text-sm font-semibold ">Extras disponibles </span>
           <span className="text-sm">(opcional)</span>
           <div className="my-2">
-            <Input
+            {/*  <Input
               className="w-full"
               placeholder="Buscar bebidas"
               value={searchComplement}
@@ -27,7 +27,7 @@ export default function ExtrasForm() {
                   style={{ display: searchComplement ? undefined : "none" }}
                 />
               }
-            />
+            /> */}
           </div>
           <div>
             <div className="w-full p-5 my-3 bg-white rounded-lg border border-blue-100 flex-row justify-between items-center flex text-sm">

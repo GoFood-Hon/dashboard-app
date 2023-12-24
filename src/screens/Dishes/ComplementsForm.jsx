@@ -129,7 +129,7 @@ export default function ComplementsForm({ setValue, isDataCleared, defaultMessag
         <div className="w-full h-full p-6 bg-white rounded-lg border border-blue-100">
           <span className="text-sm font-semibold ">{itemsAvailableLabel}</span>
           <div className="my-2">
-            <Input
+            {/*  <Input
               className="w-full"
               placeholder="Buscar"
               value={searchComplement}
@@ -142,7 +142,7 @@ export default function ComplementsForm({ setValue, isDataCleared, defaultMessag
                   style={{ display: searchComplement ? undefined : "none" }}
                 />
               }
-            />
+            /> */}
           </div>
           <div className="w-full">
             {status === "loading" && (

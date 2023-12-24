@@ -160,7 +160,7 @@ export default function Dishes() {
       </section>
       <section>
         <div className="flex flex-row justify-between">
-          <Input
+          {/*  <Input
             className="w-80"
             placeholder="Buscar platillo"
             value={searchDish}
@@ -174,7 +174,7 @@ export default function Dishes() {
                 style={{ display: searchDish ? undefined : "none" }}
               />
             }
-          />
+          /> */}
           <div className="flex flex-row w-full justify-end items-center">
             <div className="flex flex-row mr-4">
               <span className="text-sky-950 text-base font-bold leading-normal">{page === 1 ? 1 : (page - 1) * limit + 1}</span>

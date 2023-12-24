@@ -108,7 +108,6 @@ export const createDish = createAsyncThunk("dishes/createDish", async ({ data, r
     }
   } catch (error) {
     handleErrorOnCreateDish(error, dispatch)
-    console.log(error)
     throw error
   }
 })
