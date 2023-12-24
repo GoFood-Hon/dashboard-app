@@ -219,11 +219,11 @@ export default function NewComplement() {
                     toast.success("Información eliminada")
                   }}
                 />
-                <Button
+                {/*  <Button
                   text={"Guardar como borrador"}
                   className={"text-xs border bg-white border-sky-950 text-sky-950"}
                   onClick={handleSubmit(onSaveDraft)}
-                />
+                /> */}
                 <Button
                   text={"Guardar complemento"}
                   className="flex h-10 w-full items-center justify-center px-4 rounded-md shadow-sm transition-all duration-700 focus:outline-none text-xs bg-sky-950 text-slate-50"
