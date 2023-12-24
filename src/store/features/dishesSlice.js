@@ -87,7 +87,7 @@ export const createDish = createAsyncThunk("dishes/createDish", async ({ data, r
         duration: 7000
       })
     } else {
-      const dishId = response.data.data.id
+      const dishId = response.data.id
       const addImageResponse = await uploadDishImage(dishId, data?.files?.[0])
 
       if (addImageResponse.error) {
@@ -108,6 +108,7 @@ export const createDish = createAsyncThunk("dishes/createDish", async ({ data, r
     }
   } catch (error) {
     handleErrorOnCreateDish(error, dispatch)
+    console.log(error)
     throw error
   }
 })
@@ -142,7 +143,7 @@ const uploadDishImage = async (dishId, file) => {
 
 const handleErrorOnCreateDish = (error, dispatch) => {
   dispatch(setError("Error creating dish"))
-  toast.error(`Fallo al crear el platillo. Por favor intente de nuevo. ${error}`, {
+  toast.error(`Fallo al crear el platillo. Por favor intente de nuevo!!. ${error}`, {
     duration: 7000
   })
 }

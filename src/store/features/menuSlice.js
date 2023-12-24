@@ -79,7 +79,7 @@ export const createMenu = createAsyncThunk("menus/createMenu", async ({ data, re
       const addComplementsResponse = await addComplements(dishId, data?.dishes)
 
       if (addComplementsResponse.error) {
-        toast.error(`Fallo al cargar los platillos. Por favor intente de nuevo!!!. ${addImageResponse.message}`, {
+        toast.error(`Fallo al cargar los platillos. Por favor intente de nuevo. ${addImageResponse.message}`, {
           duration: 7000
         })
       }
@@ -92,7 +92,7 @@ export const createMenu = createAsyncThunk("menus/createMenu", async ({ data, re
     toast.error("Fallo al actualizar el platillo. Por favor intente de nuevo.", {
       duration: 7000
     })
-    console.log(error)
+
     throw error
   }
 })

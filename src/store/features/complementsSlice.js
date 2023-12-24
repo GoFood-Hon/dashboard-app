@@ -94,7 +94,7 @@ export const createComplement = createAsyncThunk("complements/createComplement",
         duration: 7000
       })
     } else {
-      const complementId = response.data.data.id
+      const complementId = response.data.id
       const addImageResponse = await uploadComplementImage(complementId, data?.files?.[0])
 
       if (addImageResponse.error) {
