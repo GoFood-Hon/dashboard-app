@@ -129,20 +129,21 @@ export default function BusinessSettings() {
           duration: 7000
         })
       } else {
-        const imageResponse = await uploadRestaurantImage(restaurant.id, data?.files?.[0])
-        const newImageData = imageResponse.data.data[0]
+        let imageResponse
 
-        const updatedRestaurant = {
-          ...response.data,
-          images: [{ location: newImageData.location, key: newImageData.key }]
+        if (data && data.files) {
+          await uploadRestaurantImage(restaurant.id, data?.files?.[0])
         }
 
-        dispatch(setRestaurant(updatedRestaurant))
         toast.success("Negocio actualizado exitosamente", {
           duration: 7000
         })
       }
-    } catch (error) {}
+    } catch (error) {
+      toast.error(`Fallo al actualizar la información del negocio. Por favor intente de nuevo!!!. ${error}`, {
+        duration: 7000
+      })
+    }
   }
 
   const businessType = [
