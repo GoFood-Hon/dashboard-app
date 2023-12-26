@@ -33,12 +33,12 @@ export default function Header() {
   }
 
   useEffect(() => {
-    const fetchAllRestaurants = async () => {
+    const fetchRestaurantInformation = async () => {
       try {
         const response = await restaurantsApi.getRestaurant(user?.restaurantId)
 
         if (response.error) {
-          toast.error(`Fallo al obtener todos los platillos. Por favor intente de nuevo. ${response.message}`, {
+          toast.error(`Fallo al obtenerla información del restaurante. Por favor intente de nuevo. ${response.message}`, {
             duration: 7000
           })
         } else {
@@ -49,7 +49,7 @@ export default function Header() {
         throw error
       }
     }
-    fetchAllRestaurants()
+    fetchRestaurantInformation()
   }, [])
 
   return (
