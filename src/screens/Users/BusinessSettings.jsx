@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import BaseLayout from "../../components/BaseLayout"
 import { Breadcrumbs, CloseIcon, Grid, Group, Text, rem } from "@mantine/core"
 import BreadCrumbNavigation from "../../components/BreadCrumbNavigation"
@@ -20,10 +20,33 @@ import { setRestaurant } from "../../store/features/restaurantSlice"
 export default function BusinessSettings() {
   const navigate = useNavigate()
   const dispatch = useDispatch()
-  const restaurant = useSelector((state) => state.restaurant.value)
+  const user = useSelector((state) => state.user.value)
 
   const [images, setImages] = useState([])
+  const [restaurant, setRestaurant] = useState({})
   const [fileInformation, setFileInformation] = useState(null)
+
+  useEffect(() => {
+    const fetchRestaurantInformation = async () => {
+      try {
+        const response = await restaurantsApi.getRestaurant(user?.restaurantId)
+
+        if (response.error) {
+          toast.error(`Fallo al obtenerla información del restaurante. Por favor intente de nuevo. ${response.message}`, {
+            duration: 7000
+          })
+        } else {
+          setRestaurant(response.data)
+        }
+      } catch (error) {
+        toast.error(`Fallo al obtenerla información del restaurante. Por favor intente de nuevo.`, {
+          duration: 7000
+        })
+        throw error
+      }
+    }
+    fetchRestaurantInformation()
+  }, [])
 
   const {
     register,
@@ -31,15 +54,24 @@ export default function BusinessSettings() {
     setValue,
     formState: { errors }
   } = useForm({
-    defaultValues: {
-      images: restaurant?.images?.[0]?.location,
-      name: restaurant?.name || "",
-      email: restaurant?.email || "",
-      phoneNumber: restaurant?.phoneNumber || "",
-      socialReason: restaurant?.socialReason || "",
-      cai: restaurant?.cai || "",
-      rtn: restaurant?.rtn || "",
-      billingAddress: restaurant?.billingAddress || ""
+    defaultValues: async () => {
+      try {
+        const response = await restaurantsApi.getRestaurant(user?.restaurantId)
+
+        if (response.error) {
+          toast.error(`Failed to fetch restaurant information. Please try again. ${response.message}`, {
+            duration: 7000
+          })
+          return {}
+        } else {
+          return response.data
+        }
+      } catch (error) {
+        toast.error(`Failed to fetch restaurant information. Please try again.`, {
+          duration: 7000
+        })
+        throw error
+      }
     }
   })
 
