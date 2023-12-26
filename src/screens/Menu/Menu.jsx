@@ -111,20 +111,18 @@ export default function Menu() {
         </div>
       </section>
       <section>
-        <div className="w-full p-4 h-full bg-white rounded-2xl border border-blue-100">
-          {menus?.length > 0 ? (
+        {menus && menus.length > 0 ? (
+          <div className="w-full p-4 h-full bg-white rounded-2xl border border-blue-100">
             <MenuTable
               refreshPage={refreshPage}
               items={menus}
               handleDisableSelected={handleDisableSelected}
               screenType="menuScreen"
             />
-          ) : (
-            <div className="w-full h-screen flex justify-center items-center">
-              <LoadingCircle />
-            </div>
-          )}
-        </div>
+          </div>
+        ) : (
+          <div className="text-center mt-4 text-gray-500">Sin menu disponibles!</div>
+        )}
       </section>
     </BaseLayout>
   )

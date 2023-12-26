@@ -216,7 +216,7 @@ export default function Dishes() {
             ))}
           </Grid>
         ) : (
-          <div className="text-center mt-4 text-gray-500">Sin platillos disponibles</div>
+          <div className="text-center mt-4 text-gray-500">Sin platillos disponibles!</div>
         )}
         {status === "error" && <div>Error: {error}</div>}
       </section>

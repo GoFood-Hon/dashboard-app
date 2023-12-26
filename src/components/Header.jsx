@@ -36,7 +36,6 @@ export default function Header() {
     const fetchAllRestaurants = async () => {
       try {
         const response = await restaurantsApi.getRestaurant(user?.restaurantId)
-        console.log(response, "user")
 
         if (response.error) {
           toast.error(`Fallo al obtener todos los platillos. Por favor intente de nuevo. ${response.message}`, {
