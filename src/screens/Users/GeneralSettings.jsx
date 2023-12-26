@@ -6,36 +6,36 @@ import BreadCrumbNavigation from "../../components/BreadCrumbNavigation"
 import { SETTING_NAVIGATION_ROUTES } from "../../routes"
 import restaurantsApi from "../../api/restaurantApi"
 import { useSelector } from "react-redux"
-import { setRestaurant } from "../../store/features/restaurantSlice"
 import SettingsCard from "../../components/SettingsCard"
 import toast from "react-hot-toast"
 import authApi from "../../api/authApi"
 
 export default function GeneralSettings() {
-  const [restaurants, setRestaurants] = useState([])
-  const restaurant = useSelector((state) => state.restaurant.value)
-  const [loading, setLoading] = useState(true)
-  const [selectedItem, setSelectedItem] = useState({})
+  const user = useSelector((state) => state.user.value)
+
+  const [restaurants, setRestaurants] = useState({})
   const [userData, setUserData] = useState({})
 
   useEffect(() => {
-    const fetchAllRestaurants = async () => {
+    const fetchRestaurantInformation = async () => {
       try {
-        const response = await restaurantsApi.getAllRestaurants()
+        const response = await restaurantsApi.getRestaurant(user?.restaurantId)
 
         if (response.error) {
-          toast.error(`Fallo al obtener la información del restaurante. Por favor intente de nuevo. ${response.message}`, {
+          toast.error(`Fallo al obtenerla información del restaurante. Por favor intente de nuevo. ${response.message}`, {
             duration: 7000
           })
         } else {
           setRestaurants(response.data)
         }
       } catch (error) {
-        dispatch(setError("Error fetching dishesCategories"))
+        toast.error(`Fallo al obtenerla información del restaurante. Por favor intente de nuevo.`, {
+          duration: 7000
+        })
         throw error
       }
     }
-    fetchAllRestaurants()
+    fetchRestaurantInformation()
   }, [])
 
   useEffect(() => {
@@ -74,14 +74,14 @@ export default function GeneralSettings() {
         <SettingsCard title="Negocio" iconName="building" linkPage={SETTING_NAVIGATION_ROUTES.Business_btn.path}>
           <div className="flex flex-row items-center  justify-between">
             <div className="flex flex-row items-center py-4">
-              <Image src={selectedItem?.images?.[0]?.location} h={50} w={150} fit="contain" />
+              <Image src={restaurants?.images?.[0]?.location} h={50} w={150} fit="contain" />
               <div className="flex flex-col pl-3">
-                <div className="text-sky-950 text-md font-bold leading-snug">{selectedItem.name}</div>
-                <div className="text-sky-950 text-xs font-normal leading-tight">{selectedItem.socialReason}</div>
+                <div className="text-sky-950 text-md font-bold leading-snug">{restaurants.name}</div>
+                <div className="text-sky-950 text-xs font-normal leading-tight">{restaurants.socialReason}</div>
               </div>
             </div>
             <div className={"px-2 py-1 rounded-2xl justify-center items-center"} style={{ whiteSpace: "nowrap" }}>
-              <div className="text-md">{selectedItem?.isActive ? "Habilitado" : "Deshabilitado"}</div>
+              <div className="text-md">{restaurants?.isActive ? "Habilitado" : "Deshabilitado"}</div>
             </div>
           </div>
 
@@ -90,15 +90,15 @@ export default function GeneralSettings() {
           <div className="flex flex-row justify-between items-center py-4 flex-wrap">
             <div className="flex flex-col">
               <span className="text-sky-950 font-semibold">Correo</span>
-              <span>{selectedItem.email}</span>
+              <span>{restaurants.email}</span>
             </div>
             <div className="flex flex-col">
               <span className="text-sky-950 font-semibold">Teléfono</span>
-              <span>{selectedItem.phoneNumber}</span>
+              <span>{restaurants.phoneNumber}</span>
             </div>
             <div className="flex flex-col">
               <span className="text-sky-950 font-semibold">Dirección principal</span>
-              <span>{selectedItem.billingAddress}</span>
+              <span>{restaurants.billingAddress}</span>
             </div>
           </div>
 
@@ -107,15 +107,15 @@ export default function GeneralSettings() {
           <div className="flex flex-row justify-between items-center py-4 flex-wrap">
             <div className="flex flex-col">
               <span className="text-sky-950 font-semibold">Razón social</span>
-              <span>{selectedItem.socialReason}</span>
+              <span>{restaurants.socialReason}</span>
             </div>
             <div className="flex flex-col">
               <span className="text-sky-950 font-semibold">CAI</span>
-              <span>{selectedItem.cai}</span>
+              <span>{restaurants.cai}</span>
             </div>
             <div className="flex flex-col">
               <span className="text-sky-950 font-semibold">RTN</span>
-              <span>{selectedItem.rtn}</span>
+              <span>{restaurants.rtn}</span>
             </div>
           </div>
         </SettingsCard>
@@ -144,8 +144,6 @@ export default function GeneralSettings() {
             </div>
           </div>
         </SettingsCard>
-
-        <SettingsCard title="Plan" iconName="creditCard" linkPage={SETTING_NAVIGATION_ROUTES.Plan.path}></SettingsCard>
       </div>
     </BaseLayout>
   )
