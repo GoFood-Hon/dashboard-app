@@ -3,18 +3,20 @@ import BaseLayout from "../../components/BaseLayout"
 import { Accordion, Breadcrumbs } from "@mantine/core"
 import BreadCrumbNavigation from "../../components/BreadCrumbNavigation"
 import { useLocation, useNavigate } from "react-router-dom"
-import { useDispatch } from "react-redux"
+
 import { useForm } from "react-hook-form"
 import GeneralInformationForm from "./GeneralInformationForm"
 import SucursalSettings from "./SucursalSettings"
 import Button from "../../components/Button"
 import { NAVIGATION_ROUTES } from "../../routes"
 import toast from "react-hot-toast"
+import { yupResolver } from "@hookform/resolvers/yup"
+import { userValidation } from "../../utils/inputRules"
+import userApi from "../../api/userApi"
 
 export default function NewUser() {
   const location = useLocation()
   const navigate = useNavigate()
-  const dispatch = useDispatch()
 
   const {
     register,
@@ -23,11 +25,42 @@ export default function NewUser() {
     control,
     reset,
     formState: { errors }
-  } = useForm()
+  } = useForm({ resolver: yupResolver(userValidation) })
 
   const [isDataCleared, setIsDataCleared] = useState(false)
 
-  const onSubmit = (data) => {}
+  const onSubmit = async (data) => {
+    try {
+      const formData = new FormData()
+      formData.append("name", `${data.firstName} ${data.lastName}`)
+      formData.append("email", data.email)
+      // formData.append("phoneNumber", data.phoneNumber)
+      formData.append("role", data.role)
+      // formData.append("note", data.note)
+
+      formData.append("sucursalId", data.branchId)
+      formData.append("password", "Abc123def@")
+      formData.append("confirmPassword", "Abc123def@")
+      const response = await userApi.createUser(formData)
+
+      if (response?.error) {
+        toast.error(`Fallo al crear un nuevo usuario. Por favor intente de nuevo. ${response.message}`, {
+          duration: 7000
+        })
+      } else {
+        toast.success(`Usuario creado exitosamente`, {
+          duration: 7000
+        })
+        reset()
+        setIsDataCleared(true)
+      }
+    } catch (error) {
+      toast.error(`Fallo al crear un nuevo usuario. Por favor intente de nuevo.`, {
+        duration: 7000
+      })
+      throw error
+    }
+  }
 
   const accordionStructure = [
     {
@@ -112,7 +145,7 @@ export default function NewUser() {
               />
 
               <Button
-                text={"Guardar platillo"}
+                text={"Crear usuario"}
                 className="flex h-10 w-full items-center justify-center px-4 rounded-md shadow-sm transition-all duration-700 focus:outline-none text-xs bg-sky-950 text-slate-50"
               />
             </div>

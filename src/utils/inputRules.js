@@ -93,3 +93,11 @@ export const filtersValidationSchema = Yup.object().shape({
     .required("*Precio final es requerido")
     .min(Yup.ref("startPrice"), "*Precio final debe ser mayor al precio inicial")
 })
+
+export const userValidation = Yup.object().shape({
+  firstName: Yup.string().required("*Campo requerido"),
+  lastName: Yup.string().required("*Campo requerido"),
+  email: Yup.string().required("*Campo requerido"),
+  phoneNumber: Yup.string().required("*Campo requerido"),
+  role: Yup.string().required("*Campo requerido")
+})
