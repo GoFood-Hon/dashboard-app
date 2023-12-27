@@ -12,7 +12,9 @@ import {
   selectAllBranches,
   selectBranchesError,
   selectBranchesStatus,
-  setFilters
+  setFilters,
+  setPage,
+  updateBranches
 } from "../../store/features/branchesSlice"
 import LoadingCircle from "../../components/LoadingCircle"
 import ItemCard from "../../components/ItemCard"
@@ -106,7 +108,7 @@ export default function Branches() {
   const handleEnableSelected = async () => {
     await Promise.all(
       cardsSelected.map(async (id) => {
-        await dispatch(updateDish({ data: { id, isActive: true }, propertyToUpdate: "isActive" }))
+        await dispatch(updateBranches({ data: { id, isActive: true }, propertyToUpdate: "isActive" }))
       })
     )
 
@@ -116,7 +118,7 @@ export default function Branches() {
   const handleDisableSelected = async () => {
     await Promise.all(
       cardsSelected.map(async (id) => {
-        await dispatch(updateDish({ data: { id, isActive: false }, propertyToUpdate: "isActive" }))
+        await dispatch(updateBranches({ data: { id, isActive: false }, propertyToUpdate: "isActive" }))
       })
     )
 

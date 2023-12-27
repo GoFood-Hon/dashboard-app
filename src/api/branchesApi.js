@@ -20,7 +20,9 @@ const branchesApi = {
     return axiosClient.get(url)
   },
 
-  getBranch: (id) => axiosClient.get(`api/v1/sucursal/${id}`)
+  getBranch: (id) => axiosClient.get(`api/v1/sucursal/${id}`),
+
+  updateBranches: (params, id) => axiosClient.patch(`api/v1/sucursal/${id}`, params)
 }
 
 export default branchesApi
