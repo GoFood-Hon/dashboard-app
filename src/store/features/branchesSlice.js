@@ -54,7 +54,7 @@ export const fetchBranches = createAsyncThunk(
         dateSort = filterDateSort || null
       }
 
-      const response = await branchesApi.getAllBranches({
+      const response = await branchesApi.getBranchesByRestaurant({
         limit,
         page,
         order,

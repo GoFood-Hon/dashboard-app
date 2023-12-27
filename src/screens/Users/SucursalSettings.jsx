@@ -1,12 +1,12 @@
-import { Grid, Radio } from "@mantine/core"
-import React, { useEffect, useState } from "react"
+import { Grid } from "@mantine/core"
+import React, { useEffect } from "react"
 import { colors } from "../../theme/colors"
 import InputCombobox from "../../components/Form/InputCombobox"
 import InputSearchCombobox from "../../components/Form/InputSearchCombobox"
 import { useDispatch, useSelector } from "react-redux"
 
 import { fetchBranches, selectAllBranches } from "../../store/features/branchesSlice"
-import { useLocation, useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import { NAVIGATION_ROUTES } from "../../routes"
 
 const userTypes = [
@@ -26,11 +26,13 @@ const userTypes = [
 
 export default function SucursalSettings({ setValue, errors, register }) {
   const navigate = useNavigate()
-  const location = useLocation()
-  const dispatch = useDispatch()
 
-  const branches = useSelector(selectAllBranches)
+  const dispatch = useDispatch()
+  const limit = useSelector((state) => state.branches.itemsPerPage)
+  const page = useSelector((state) => state.branches.currentPage)
   const restaurant = useSelector((state) => state.restaurant.value)
+  const filters = useSelector((state) => state.branches.filters)
+  const branches = useSelector(selectAllBranches)
 
   useEffect(() => {
     dispatch(
@@ -40,6 +42,18 @@ export default function SucursalSettings({ setValue, errors, register }) {
       })
     )
   }, [dispatch, restaurant])
+
+  useEffect(() => {
+    dispatch(
+      fetchBranches({
+        limit,
+        page,
+        order: "DESC",
+        restaurantId: restaurant.id,
+        filters
+      })
+    )
+  }, [page, dispatch, restaurant])
 
   const handleNewBranchNavigation = () => {
     navigate(NAVIGATION_ROUTES.Branches.NewBranch.path)
