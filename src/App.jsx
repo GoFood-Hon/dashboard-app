@@ -38,7 +38,8 @@ import BranchesSettings from "./screens/Users/BranchesSettings"
 import KitchenSettings from "./screens/Users/KitchenSettings"
 import PlanSettings from "./screens/Users/PlanSettings"
 import AdministrativeSettings from "./screens/Users/AdministrativeSettings"
-import MenuDetalles from "./screens/Menu/MenuDetalles"
+import MenuDetails from "./screens/Menu/MenuDetails"
+import UserDetails from "./screens/Users/UserDetails"
 
 function App() {
   const router = createBrowserRouter(
@@ -61,7 +62,7 @@ function App() {
           <Route path={NAVIGATION_ROUTES.Menu.submenu.Complements.path} element={<Complements />} />
           <Route path={NAVIGATION_ROUTES.Menu.submenu.Complements.ComplementDetails.path} element={<ComplementsDetails />} />
           <Route path={NAVIGATION_ROUTES.Menu.submenu.Complements.submenu.NewComplement.path} element={<NewComplement />} />
-          <Route path={NAVIGATION_ROUTES.Menu.MenuDetails.path} element={<MenuDetalles />} />
+          <Route path={NAVIGATION_ROUTES.Menu.MenuDetails.path} element={<MenuDetails />} />
 
           <Route path={NAVIGATION_ROUTES.Menu.submenu.Combos.path} element={<Combos />} />
 
@@ -70,6 +71,7 @@ function App() {
           <Route path={NAVIGATION_ROUTES.Branches.BranchDetail.path} element={<BranchesDetails />} />
 
           <Route path={NAVIGATION_ROUTES.Users.path} element={<Users />} />
+          <Route path={NAVIGATION_ROUTES.Users.UserDetails.path} element={<UserDetails />} />
 
           <Route path={NAVIGATION_ROUTES.Users.submenu.Admins.path} element={<Users />} />
           <Route path={NAVIGATION_ROUTES.Users.NewUser.path} element={<NewUser />} />

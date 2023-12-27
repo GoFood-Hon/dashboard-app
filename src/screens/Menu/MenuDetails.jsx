@@ -11,7 +11,7 @@ import DashboardCard from "../../components/DashboardCard"
 import { getFormattedHNL } from "../../utils"
 import EditMenuScreen from "./EditMenuScreen"
 
-export default function MenuDetalles() {
+export default function MenuDetails() {
   const { menuId } = useParams()
   const location = useLocation()
   const [menuDetails, setMenuDetails] = useState({})

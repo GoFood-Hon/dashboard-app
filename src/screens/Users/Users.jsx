@@ -16,7 +16,6 @@ export default function Users() {
   const restaurant = useSelector((state) => state.restaurant.value)
 
   const [users, setUser] = useState([])
-
   useEffect(() => {
     const fetchUsers = async () => {
       try {

@@ -49,7 +49,11 @@ export default function MenuTable({ refreshPage, items, handleDisableSelected, s
   let columns = []
 
   const handleClick = (id) => {
-    navigate(`${NAVIGATION_ROUTES.Menu.path}/${id}`)
+    if (screenType === "menuScreen") {
+      navigate(`${NAVIGATION_ROUTES.Menu.path}/${id}`)
+    } else if (screenType === "usersScreen") {
+      navigate(`${NAVIGATION_ROUTES.Users.path}/${id}`)
+    }
   }
 
   if (screenType === "menuScreen") {
@@ -135,7 +139,7 @@ export default function MenuTable({ refreshPage, items, handleDisableSelected, s
         label: "USUARIO",
         renderCell: (item) => (
           <div className="flex flex-row items-center gap-2">
-            <Avatar size="sm" src={item.image} />
+            <Avatar size="sm" src={item?.images?.[0]?.location} />
             {item.name}
           </div>
         ),
@@ -161,17 +165,17 @@ export default function MenuTable({ refreshPage, items, handleDisableSelected, s
 
       {
         label: "ESTADO",
-        renderCell: (item) => (item.isActive ? "Habilitado" : "Deshabilitado"),
+        renderCell: (item) => (item.active ? "Habilitado" : "Deshabilitado"),
         sort: { sortKey: "STATUS" }
       },
-      {
+      /* {
         label: "COMPRAS",
         renderCell: (item) => item.purchases,
         sort: { sortKey: "PURCHASES" }
-      },
+      }, */
       {
         label: "ACCIONES",
-        renderCell: () => (
+        renderCell: (item) => (
           <span onClick={() => handleClick(item.id)}>
             <Icon icon="eye" size={19} />
           </span>
