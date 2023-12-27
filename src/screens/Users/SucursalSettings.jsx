@@ -11,12 +11,12 @@ import { NAVIGATION_ROUTES } from "../../routes"
 
 const userTypes = [
   {
-    value: "cajero",
+    value: "cashier",
     label: "Cajero"
   },
   {
-    value: "cocina",
-    label: "Cocina"
+    value: "kitchen",
+    label: "kitchen"
   },
   {
     value: "motorista",
@@ -51,7 +51,7 @@ export default function SucursalSettings({ setValue, errors, register }) {
           <div className="flex flex-col gap-2 pt-4">
             <InputSearchCombobox
               label="Sucursal"
-              name={"branch"}
+              name={"branchId"}
               placeholder="Buscar sucursales"
               emptyMessage="Sin sucursales"
               items={branches}
@@ -65,13 +65,13 @@ export default function SucursalSettings({ setValue, errors, register }) {
         <Grid.Col span={{ sm: 12, md: 6 }}>
           <div className="flex flex-col gap-2 pt-4">
             <InputCombobox
-              disabled={true}
+              label="Encargado"
+              name="manager"
               items={userTypes}
               placeholder="Encargado de la sucursal..."
               setValue={setValue}
               errors={errors}
-              label="Encargado"
-              name="type"
+              color={colors.primary_button}
             />
           </div>
         </Grid.Col>

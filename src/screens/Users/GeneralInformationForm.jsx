@@ -18,7 +18,7 @@ export default function GeneralInformationForm({ register, errors, setValue, isD
       label: "Cajero"
     },
     {
-      value: "cocina",
+      value: "kitchen",
       label: "Cocina"
     },
     {
@@ -64,7 +64,13 @@ export default function GeneralInformationForm({ register, errors, setValue, isD
         <div className="w-full h-full items-center justify-center flex bg-white rounded-2xl border border-blue-100 p-4">
           <Grid>
             <Grid.Col span={{ base: 12, md: 6 }}>
-              <InputField label="Nombre (Obligatorio)" name="name" register={register} errors={errors} className="text-black" />
+              <InputField
+                label="Nombre (Obligatorio)"
+                name="firstName"
+                register={register}
+                errors={errors}
+                className="text-black"
+              />
             </Grid.Col>
 
             <Grid.Col span={{ base: 12, md: 6 }}>
@@ -98,7 +104,7 @@ export default function GeneralInformationForm({ register, errors, setValue, isD
                 setValue={setValue}
                 errors={errors}
                 label="Tipo de usuario (Obligatorio)"
-                name="type"
+                name="role"
               />
             </Grid.Col>
 
