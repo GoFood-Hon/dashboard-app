@@ -122,39 +122,54 @@ export const createComplement = createAsyncThunk("complements/createComplement",
  * UPDATE COMPLEMENT
  */
 
-export const updateComplement = createAsyncThunk("complements/updateComplement", async ({ data }, { dispatch }) => {
-  try {
-    const formData = new FormData()
+const updateFormData = (data, propertyToUpdate) => {
+  const formData = new FormData()
+  if (propertyToUpdate === "isActive") {
+    formData.append("isActive", data.isActive)
+  } else {
     formData.append("name", data.name)
     formData.append("description", data.description)
     formData.append("category", data.category)
 
     formData.append("price", data.price)
     formData.append("endPrice", data.endPrice)
-
-    const response = await complementsApi.updateAddOn(formData, data?.id)
-
-    if (response.error) {
-      toast.error(`Fallo al actualizar el complemento. Por favor intente de nuevo. ${response.message}`, {
-        duration: 7000
-      })
-    } else {
-      await uploadComplementImage(data?.id, data?.files?.[0])
-
-      toast.success("Complemento actualizado exitosamente", {
-        duration: 7000
-      })
-    }
-    return response.data
-  } catch (error) {
-    dispatch(setError("Error updating add-on"))
-    toast.error("Fallo al actualizar el complemento. Por favor intente de nuevo.", {
-      duration: 7000
-    })
-
-    throw error
   }
-})
+
+  return formData
+}
+
+export const updateComplement = createAsyncThunk(
+  "complements/updateComplement",
+  async ({ data, propertyToUpdate = "all" }, { dispatch }) => {
+    try {
+      const formData = updateFormData(data, propertyToUpdate)
+
+      const response = await complementsApi.updateAddOn(formData, data?.id)
+
+      if (response.error) {
+        toast.error(`Fallo al actualizar el complemento!!!. Por favor intente de nuevo. ${response.message}`, {
+          duration: 7000
+        })
+      } else {
+        if (propertyToUpdate !== "isActive") {
+          await uploadComplementImage(data?.id, data?.files?.[0])
+        }
+
+        toast.success("Complemento actualizado exitosamente", {
+          duration: 7000
+        })
+      }
+      return response.data
+    } catch (error) {
+      dispatch(setError("Error updating add-on"))
+      toast.error("Fallo al actualizar el complemento. Por favor intente de nuevo.", {
+        duration: 7000
+      })
+
+      throw error
+    }
+  }
+)
 
 export const complementsSlice = createSlice({
   name: "complements",

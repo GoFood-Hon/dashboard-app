@@ -97,11 +97,9 @@ export default function Complements() {
   }
 
   const handleEnableSelected = async () => {
-    const formData = new FormData()
-    formData.append("isActive", true)
     await Promise.all(
-      cardsSelected.map(async (complementId) => {
-        await dispatch(updateComplement({ formData, complementId }))
+      cardsSelected.map(async (id) => {
+        await dispatch(updateComplement({ data: { id, isActive: true }, propertyToUpdate: "isActive" }))
       })
     )
 
@@ -109,12 +107,9 @@ export default function Complements() {
   }
 
   const handleDisableSelected = async () => {
-    const formData = new FormData()
-    formData.append("isActive", false)
-
     await Promise.all(
-      cardsSelected.map(async (complementId) => {
-        await dispatch(updateComplement({ formData, complementId }))
+      cardsSelected.map(async (id) => {
+        await dispatch(updateComplement({ data: { id, isActive: false }, propertyToUpdate: "isActive" }))
       })
     )
 
