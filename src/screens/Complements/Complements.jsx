@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react"
 import BaseLayout from "../../components/BaseLayout"
-import { Affix, Breadcrumbs, CloseButton, Grid, Input, Pagination, Tabs } from "@mantine/core"
+import { Affix, Breadcrumbs, Grid, Pagination, Tabs } from "@mantine/core"
 import { useLocation, useNavigate } from "react-router-dom"
 import BreadCrumbNavigation from "../../components/BreadCrumbNavigation"
 import { useDispatch, useSelector } from "react-redux"
@@ -20,8 +20,6 @@ import { Icon } from "../../components/Icon"
 import { NAVIGATION_ROUTES } from "../../routes"
 import Button from "../../components/Button"
 import { colors } from "../../theme/colors"
-import FilterPopover from "../../components/FilterPopover"
-import SortPopover from "../../components/SortPopover"
 
 export default function Complements() {
   const navigate = useNavigate()
@@ -39,7 +37,6 @@ export default function Complements() {
 
   const totalControlBtn = Math.ceil(totalItems / limit)
 
-  const [searchDish, setSearchDish] = useState("")
   const [cardsSelected, setCardsSelected] = useState([])
 
   useEffect(() => {

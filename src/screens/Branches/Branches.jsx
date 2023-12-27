@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from "react"
 import BaseLayout from "../../components/BaseLayout"
 import Button from "../../components/Button"
-import { Affix, Breadcrumbs, CloseButton, Grid, Input, Pagination } from "@mantine/core"
+import { Affix, Breadcrumbs, Grid, Pagination } from "@mantine/core"
 import BreadCrumbNavigation from "../../components/BreadCrumbNavigation"
 import { useLocation, useNavigate } from "react-router-dom"
 import { useDispatch, useSelector } from "react-redux"
 import { Icon } from "../../components/Icon"
-import FilterPopover from "../../components/FilterPopover"
 import {
   fetchBranches,
   selectAllBranches,
@@ -20,7 +19,6 @@ import LoadingCircle from "../../components/LoadingCircle"
 import ItemCard from "../../components/ItemCard"
 import { colors } from "../../theme/colors"
 import { NAVIGATION_ROUTES } from "../../routes"
-import { updateDish } from "../../store/features/dishesSlice"
 
 export default function Branches() {
   const navigate = useNavigate()
