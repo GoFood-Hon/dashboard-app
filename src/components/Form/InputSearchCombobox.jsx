@@ -34,6 +34,7 @@ export default function InputSearchCombobox({ items, label, errors, name, placeh
     setSearch(val)
     if (categoryIdRef.current) {
       setValue(name, categoryIdRef.current.id)
+      // setItemSelected(categoryIdRef.current)
     }
     combobox.closeDropdown()
   }
