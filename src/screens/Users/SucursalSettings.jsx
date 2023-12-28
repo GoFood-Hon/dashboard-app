@@ -1,7 +1,7 @@
-import { Grid } from "@mantine/core"
-import React, { useEffect } from "react"
+import { Grid, Input } from "@mantine/core"
+import React, { useEffect, useState } from "react"
 import { colors } from "../../theme/colors"
-import InputCombobox from "../../components/Form/InputCombobox"
+
 import InputSearchCombobox from "../../components/Form/InputSearchCombobox"
 import { useDispatch, useSelector } from "react-redux"
 
@@ -9,24 +9,8 @@ import { fetchBranches, selectAllBranches } from "../../store/features/branchesS
 import { useNavigate } from "react-router-dom"
 import { NAVIGATION_ROUTES } from "../../routes"
 
-const userTypes = [
-  {
-    value: "cashier",
-    label: "Cajero"
-  },
-  {
-    value: "kitchen",
-    label: "kitchen"
-  },
-  {
-    value: "motorista",
-    label: "Motorista"
-  }
-]
-
 export default function SucursalSettings({ setValue, errors, register }) {
   const navigate = useNavigate()
-
   const dispatch = useDispatch()
   const limit = useSelector((state) => state.branches.itemsPerPage)
   const page = useSelector((state) => state.branches.currentPage)
@@ -34,14 +18,7 @@ export default function SucursalSettings({ setValue, errors, register }) {
   const filters = useSelector((state) => state.branches.filters)
   const branches = useSelector(selectAllBranches)
 
-  useEffect(() => {
-    dispatch(
-      fetchBranches({
-        order: "DESC",
-        restaurantId: restaurant.id
-      })
-    )
-  }, [dispatch, restaurant])
+  const [itemSelected, setItemSelected] = useState({ name: "select..." })
 
   useEffect(() => {
     dispatch(
@@ -58,11 +35,12 @@ export default function SucursalSettings({ setValue, errors, register }) {
   const handleNewBranchNavigation = () => {
     navigate(NAVIGATION_ROUTES.Branches.NewBranch.path)
   }
+
   return (
     <div className="w-full h-full flex flex-col bg-white rounded-2xl border border-blue-100 p-4">
       <Grid>
         <Grid.Col span={{ sm: 12, md: 6 }}>
-          <div className="flex flex-col gap-2 pt-4">
+          <div className="flex flex-col gap-2 pt-4 h-full justify-center">
             <InputSearchCombobox
               label="Sucursal"
               name={"branchId"}
@@ -73,20 +51,21 @@ export default function SucursalSettings({ setValue, errors, register }) {
               errors={errors}
               setValue={setValue}
               color={colors.primary_button}
+              setItemSelected={setItemSelected}
             />
           </div>
         </Grid.Col>
         <Grid.Col span={{ sm: 12, md: 6 }}>
-          <div className="flex flex-col gap-2 pt-4">
-            <InputCombobox
-              label="Encargado"
-              name="manager"
-              items={userTypes}
-              placeholder="Encargado de la sucursal..."
-              setValue={setValue}
-              errors={errors}
-              color={colors.primary_button}
-            />
+          <div className="flex flex-col gap-2 pt-4 h-full justify-center">
+            <Input.Wrapper label="Encargado">
+              <Input
+                placeholder="Seleccione una sucursal"
+                color={colors.primary_button}
+                size={"md"}
+                disabled
+                value={itemSelected?.name}
+              />
+            </Input.Wrapper>
           </div>
         </Grid.Col>
         <Grid.Col span={{ sm: 12 }}>
