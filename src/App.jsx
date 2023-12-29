@@ -64,7 +64,7 @@ function App() {
           <Route path={NAVIGATION_ROUTES.Menu.submenu.Complements.submenu.NewComplement.path} element={<NewComplement />} />
           <Route path={NAVIGATION_ROUTES.Menu.MenuDetails.path} element={<MenuDetails />} />
 
-          <Route path={NAVIGATION_ROUTES.Menu.submenu.Combos.path} element={<Combos />} />
+          {/*    <Route path={NAVIGATION_ROUTES.Menu.submenu.Combos.path} element={<Combos />} /> */}
 
           <Route path={NAVIGATION_ROUTES.Branches.path} element={<Branches />} />
           <Route path={NAVIGATION_ROUTES.Branches.NewBranch.path} element={<NewBranch />} />
@@ -73,9 +73,9 @@ function App() {
           <Route path={NAVIGATION_ROUTES.Users.path} element={<Users />} />
           <Route path={NAVIGATION_ROUTES.Users.UserDetails.path} element={<UserDetails />} />
 
-          <Route path={NAVIGATION_ROUTES.Users.submenu.Admins.path} element={<Users />} />
+          {/*    <Route path={NAVIGATION_ROUTES.Users.submenu.Admins.path} element={<Users />} /> */}
           <Route path={NAVIGATION_ROUTES.Users.NewUser.path} element={<NewUser />} />
-          <Route path={NAVIGATION_ROUTES.Users.submenu.Settings.path} element={<UserSettings />} />
+          <Route path={NAVIGATION_ROUTES.Users.submenu.Settings.path} element={<GeneralSettings />} />
           <Route path={SETTING_NAVIGATION_ROUTES.General.path} element={<GeneralSettings />} />
           <Route path={SETTING_NAVIGATION_ROUTES.Cuenta.path} element={<AccountSettings />} />
           <Route path={SETTING_NAVIGATION_ROUTES.Password.path} element={<PasswordSettings />} />

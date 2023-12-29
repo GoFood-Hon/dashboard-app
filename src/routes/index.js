@@ -48,12 +48,12 @@ export const NAVIGATION_ROUTES = {
             path: "/menu/complementos/nuevoComplemento"
           }
         }
-      },
-      Combos: {
+      }
+      /*  Combos: {
         label: "Combos",
         icon: "menu",
         path: "/menu/combos"
-      }
+      } */
     }
   },
   Transactions: {
@@ -89,10 +89,10 @@ export const NAVIGATION_ROUTES = {
       path: "/usuarios/nuevoUsuario"
     },
     submenu: {
-      Admins: {
+      /*  Admins: {
         label: "Admins",
         path: "/usuarios/administradores"
-      },
+      }, */
       Settings: {
         label: "Configuraciones",
         path: "/usuarios/configuraciones/"
