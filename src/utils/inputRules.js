@@ -101,3 +101,10 @@ export const userValidation = Yup.object().shape({
   phoneNumber: Yup.string().required("*Campo requerido"),
   role: Yup.string().required("*Campo requerido")
 })
+
+export const couponValidation = Yup.object().shape({
+  title: Yup.string().required("*Campo requerido"),
+  code: Yup.string().required("*Campo requerido"),
+  category: Yup.string().required("*Campo requerido"),
+  couponType: Yup.string().required("*Campo requerido")
+})

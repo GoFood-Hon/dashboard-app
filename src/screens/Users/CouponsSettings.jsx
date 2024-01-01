@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useState } from "react"
 import BaseLayout from "../../components/BaseLayout"
 import { Breadcrumbs, Grid, Tabs } from "@mantine/core"
 import BreadCrumbNavigation from "../../components/BreadCrumbNavigation"
@@ -8,31 +8,48 @@ import { useForm } from "react-hook-form"
 import InputCombobox from "../../components/Form/InputCombobox"
 import { DatePickerInput } from "@mantine/dates"
 import Button from "../../components/Button"
+import { useNavigate } from "react-router-dom"
+import { SETTING_NAVIGATION_ROUTES } from "../../routes/index"
+import { couponValidation } from "../../utils/inputRules"
+import { yupResolver } from "@hookform/resolvers/yup"
 
 export default function CouponsSettings() {
+  const navigate = useNavigate()
+  const [discountType, setDiscountType] = useState({ value: "porcentual", label: "Fijo" })
   const {
     register,
     handleSubmit,
     setValue,
     formState: { errors }
-  } = useForm({})
+  } = useForm({
+    resolver: yupResolver(couponValidation)
+  })
 
   const businessType = [
     {
-      value: "darkKitchen",
-      label: "Dark Kitchen"
+      value: "1",
+      label: "Por fecha"
     },
+
     {
-      value: "cocina",
-      label: "Cocina"
-    },
-    {
-      value: "Glorieta",
-      label: "glorieta"
+      value: "3",
+      label: "Cantidad de usos"
     }
   ]
 
-  const onSubmit = async (data) => {}
+  const discountPercentage = []
+
+  for (let i = 5; i <= 100; i += 5) {
+    const option = {
+      value: i,
+      label: `${i} %`
+    }
+    discountPercentage.push(option)
+  }
+
+  const onSubmit = async (data) => {
+    console.log(data)
+  }
 
   return (
     <BaseLayout>
@@ -64,42 +81,60 @@ export default function CouponsSettings() {
                     <InputField label="Titulo" name="title" register={register} errors={errors} />
                   </Grid.Col>
                   <Grid.Col span={{ sm: 12 }}>
+                    <InputField label="Código de cupón" name="code" register={register} errors={errors} />
+                  </Grid.Col>
+                  <Grid.Col span={{ sm: 12, md: 6 }}>
+                    <InputCombobox
+                      items={[
+                        { value: "fijo", label: "Fijo" },
+                        { value: "porcentual", label: "Porcentual" }
+                      ]}
+                      placeholder="Seleccione descuento"
+                      setValue={setValue}
+                      errors={errors}
+                      label="Tipo de descuento"
+                      name="category"
+                    />
+                  </Grid.Col>
+
+                  <Grid.Col span={{ sm: 12, md: 6 }}>
+                    {discountType.value === "fijo" ? (
+                      <InputField label="Valor del descuento" name="amount" register={register} errors={errors} />
+                    ) : discountType.value === "porcentual" ? (
+                      <InputCombobox
+                        items={discountPercentage}
+                        placeholder="Seleccione descuento"
+                        setValue={setValue}
+                        errors={errors}
+                        label="Valor del descuento"
+                        name="value"
+                      />
+                    ) : (
+                      <span>AAAAA</span>
+                    )}
+                  </Grid.Col>
+                  <Grid.Col span={{ sm: 12 }}>
                     <InputCombobox
                       items={businessType}
                       placeholder="Seleccione el tipo de cupón"
                       setValue={setValue}
                       errors={errors}
                       label="Tipo de cupón"
-                      name="type"
+                      name="couponType"
                     />
                   </Grid.Col>
-                  <Grid.Col span={{ sm: 12, md: 6 }}>
-                    <InputCombobox
-                      items={businessType}
-                      placeholder="Seleccione descuento"
-                      setValue={setValue}
-                      errors={errors}
-                      label="Tipo de descuento"
-                      name="discountType"
-                    />
+
+                  <Grid.Col span={{ sm: 12 }}>
+                    <InputField label="Veces para utilizar" name="timesToUse" register={register} errors={errors} />
                   </Grid.Col>
-                  <Grid.Col span={{ sm: 12, md: 6 }}>
-                    <InputCombobox
-                      items={businessType}
-                      placeholder="Seleccione descuento"
-                      setValue={setValue}
-                      errors={errors}
-                      label="Valor del descuento"
-                      name="value"
-                    />
-                  </Grid.Col>
+
                   <Grid.Col span={{ sm: 12, md: 6 }}>
                     <DatePickerInput
                       size="md"
                       label="Fecha inicial"
                       placeholder="Seleccionar fecha"
                       popoverProps={{ withinPortal: false }}
-                      onChange={(val) => setValue("initialDate", val)}
+                      onChange={(val) => setValue("startDate", val)}
                     />
                   </Grid.Col>
                   <Grid.Col span={{ sm: 12, md: 6 }}>
@@ -110,9 +145,6 @@ export default function CouponsSettings() {
                       popoverProps={{ withinPortal: false }}
                       onChange={(val) => setValue("endDate", val)}
                     />
-                  </Grid.Col>
-                  <Grid.Col span={{ sm: 12 }}>
-                    <InputField label="Código de cupón" name="code" register={register} errors={errors} />
                   </Grid.Col>
                 </Grid>
                 <div className="w-full flex flex-row gap-2 pt-4">
