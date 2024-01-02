@@ -19,7 +19,10 @@ const restaurantsApi = {
   addImage: (restaurantId, params) =>
     axiosClient.post(`api/v1/restaurant/${restaurantId}/images`, params, {
       contentType: `multipart/form-data; boundary=${params._boundary}`
-    })
+    }),
+
+  // BANK INFORMATION
+  getBankList: () => axiosClient.get(`api/v1/restaurant/banks/get-all`)
 }
 
 export default restaurantsApi

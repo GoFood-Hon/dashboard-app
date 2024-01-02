@@ -1,34 +1,75 @@
-import React from "react"
+import React, { useEffect, useState } from "react"
 import BaseLayout from "../../components/BaseLayout"
-import { Breadcrumbs, Grid, Tabs, rem } from "@mantine/core"
+import { Breadcrumbs, Grid, Select, Tabs, rem } from "@mantine/core"
 import BreadCrumbNavigation from "../../components/BreadCrumbNavigation"
 import SettingsCard from "../../components/SettingsCard"
 import InputField from "../../components/Form/InputField"
-import { useForm } from "react-hook-form"
-import InputCombobox from "../../components/Form/InputCombobox"
+import { Controller, useForm } from "react-hook-form"
+import restaurantsApi from "../../api/restaurantApi"
+import toast from "react-hot-toast"
+import { useSelector } from "react-redux"
 
 export default function BankSettings() {
+  const restaurant = useSelector((state) => state.restaurant.value)
+  const user = useSelector((state) => state.user.value)
+
+  const [banks, setBanks] = useState([])
   const {
     register,
     handleSubmit,
     setValue,
+    control,
     formState: { errors }
-  } = useForm({})
+  } = useForm({
+    defaultValues: async () => {
+      try {
+        const response = await restaurantsApi.getRestaurant(user?.restaurantId)
 
-  const banks = [
-    {
-      value: "BAC",
-      label: "BAC"
-    },
-    {
-      value: "FICOHSA",
-      label: "FICOHSA"
-    },
-    {
-      value: "Atlántida",
-      label: "Atlántida"
+        if (response.error) {
+          toast.error(`Failed to fetch restaurant information. Please try again. ${response.message}`, {
+            duration: 7000
+          })
+          return {}
+        } else {
+          return response.data
+        }
+      } catch (error) {
+        toast.error(`Failed to fetch restaurant information. Please try again.`, {
+          duration: 7000
+        })
+        throw error
+      }
     }
-  ]
+  })
+
+  const transformApiData = (apiData) => {
+    return apiData.map((item) => ({
+      value: item.id,
+      label: item.name
+    }))
+  }
+
+  useEffect(() => {
+    const getBankList = async () => {
+      try {
+        const response = await restaurantsApi.getBankList()
+
+        if (response.error) {
+          toast.error(`Fallo al obtener la lista de bancos. Por favor intente de nuevo. ${response.message}`, {
+            duration: 7000
+          })
+        } else {
+          const transformedBanks = transformApiData(response.data)
+          setBanks(transformedBanks)
+        }
+      } catch (error) {
+        toast.error(`Error. Por favor intente de nuevo. ${error}`, {
+          duration: 7000
+        })
+      }
+    }
+    getBankList()
+  }, [])
 
   return (
     <BaseLayout>
@@ -56,17 +97,25 @@ export default function BankSettings() {
               <SettingsCard title="Banco" iconName="bank">
                 <Grid my={20}>
                   <Grid.Col span={{ sm: 12 }}>
-                    <InputCombobox
-                      items={banks}
-                      placeholder="Seleccione banco"
-                      setValue={setValue}
-                      errors={errors}
-                      label="Banco"
-                      name="type"
+                    <span className="text-sky-950 text-sm font-bold leading-snug">Banco</span>
+                    <Controller
+                      control={control}
+                      name="bank"
+                      render={({ field: { onChange, onBlur, value, ref } }) => (
+                        <Select
+                          placeholder="Seleccione banco"
+                          data={banks}
+                          allowDeselect={false}
+                          size="md"
+                          onChange={onChange}
+                          onBlur={onBlur}
+                          selected={value}
+                        />
+                      )}
                     />
                   </Grid.Col>
                   <Grid.Col span={{ sm: 12 }}>
-                    <InputField label="Titular de la cuenta" name="name" register={register} errors={errors} />
+                    <InputField label="Titular de la cuenta" name="bankAccountOwner" register={register} errors={errors} />
                   </Grid.Col>
                 </Grid>
               </SettingsCard>
@@ -77,10 +126,10 @@ export default function BankSettings() {
               <SettingsCard title="Accesos de la API" iconName="creditCard">
                 <Grid my={20}>
                   <Grid.Col span={{ sm: 12 }}>
-                    <InputField label="CLIENT ID" name="clientId" register={register} errors={errors} />
+                    <InputField label="CLIENT ID" name="bankClientId" register={register} errors={errors} />
                   </Grid.Col>
                   <Grid.Col>
-                    <InputField label="TOKEN" name="token" register={register} errors={errors} />
+                    <InputField label="TOKEN" name="bankToken" register={register} errors={errors} />
                   </Grid.Col>
                 </Grid>
               </SettingsCard>

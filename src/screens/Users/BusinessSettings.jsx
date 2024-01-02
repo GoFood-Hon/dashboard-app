@@ -19,7 +19,6 @@ import { setRestaurant } from "../../store/features/restaurantSlice"
 
 export default function BusinessSettings() {
   const navigate = useNavigate()
-  const dispatch = useDispatch()
   const user = useSelector((state) => state.user.value)
 
   const [images, setImages] = useState([])
