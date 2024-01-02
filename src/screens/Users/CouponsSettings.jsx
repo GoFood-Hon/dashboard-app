@@ -113,8 +113,6 @@ export default function CouponsSettings() {
             <Tabs.List>
               <Tabs.Tab value="newCoupon">Nuevo cupón</Tabs.Tab>
               <Tabs.Tab value="activeCoupons">Cupones activos</Tabs.Tab>
-              <Tabs.Tab value="draft">Borradores</Tabs.Tab>
-              <Tabs.Tab value="dueCoupons">Cupones vencidos</Tabs.Tab>
             </Tabs.List>
             <Tabs.Panel value="newCoupon">
               <SettingsCard title="Nuevo cupón" iconName="label">
