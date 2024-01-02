@@ -102,9 +102,17 @@ export const userValidation = Yup.object().shape({
   role: Yup.string().required("*Campo requerido")
 })
 
-export const couponValidation = Yup.object().shape({
-  title: Yup.string().required("*Campo requerido"),
-  code: Yup.string().required("*Campo requerido"),
-  category: Yup.string().required("*Campo requerido"),
-  couponType: Yup.string().required("*Campo requerido")
-})
+export const couponValidation = (componentMounted) => {
+  return Yup.object().shape({
+    title: Yup.string().required("*Campo requerido"),
+    code: Yup.string().required("*Campo requerido"),
+    amount: Yup.string().required("*Campo requerido"),
+    startDate: componentMounted ? Yup.date().required("*Fecha inicial es requerida") : Yup.date(),
+    endDate: componentMounted
+      ? Yup.date()
+          .required("*Fecha final es requerida")
+          .min(Yup.ref("startDate"), "*Fecha final no puede ser antes de la fecha inicial.")
+      : Yup.date(),
+    timesToUse: !componentMounted ? Yup.string().required("*Campo requerido") : Yup.string()
+  })
+}

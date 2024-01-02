@@ -1,6 +1,6 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import BaseLayout from "../../components/BaseLayout"
-import { Breadcrumbs, Grid, Tabs } from "@mantine/core"
+import { Breadcrumbs, Grid, Select, Tabs } from "@mantine/core"
 import BreadCrumbNavigation from "../../components/BreadCrumbNavigation"
 import SettingsCard from "../../components/SettingsCard"
 import InputField from "../../components/Form/InputField"
@@ -12,30 +12,30 @@ import { useNavigate } from "react-router-dom"
 import { SETTING_NAVIGATION_ROUTES } from "../../routes/index"
 import { couponValidation } from "../../utils/inputRules"
 import { yupResolver } from "@hookform/resolvers/yup"
+import { ErrorMessage } from "../../components/Form/ErrorMessage"
+import couponApi from "../../api/couponApi"
+import { useSelector } from "react-redux"
+import toast from "react-hot-toast"
 
 export default function CouponsSettings() {
   const navigate = useNavigate()
-  const [discountType, setDiscountType] = useState({ value: "porcentual", label: "Fijo" })
+  const restaurant = useSelector((state) => state.restaurant.value)
+
+  const [discountType, setDiscountType] = useState("Porcentual")
+  const [couponType, setCouponType] = useState("Por fecha")
+  const [dateComponentMounted, setDateComponentMounted] = useState(false)
+
+  useEffect(() => {
+    setDateComponentMounted(couponType === "Por fecha")
+  }, [couponType])
   const {
     register,
     handleSubmit,
     setValue,
     formState: { errors }
   } = useForm({
-    resolver: yupResolver(couponValidation)
+    resolver: yupResolver(couponValidation(dateComponentMounted))
   })
-
-  const businessType = [
-    {
-      value: "1",
-      label: "Por fecha"
-    },
-
-    {
-      value: "3",
-      label: "Cantidad de usos"
-    }
-  ]
 
   const discountPercentage = []
 
@@ -49,6 +49,48 @@ export default function CouponsSettings() {
 
   const onSubmit = async (data) => {
     console.log(data)
+    try {
+      const formData = new FormData()
+
+      formData.append("title", data.title)
+      formData.append("code", data.code)
+
+      if (discountType === "Porcentual") {
+        formData.append("category", "porcentual")
+        formData.append("percentage", data.percentage)
+      } else {
+        formData.append("category", "fijo")
+        formData.append("amount", data.amount)
+      }
+
+      if (couponType === "Por fecha") {
+        formData.append("couponType", "fecha")
+        formData.append("startDate", data.startDate)
+        formData.append("endDate", data.endDate)
+      } else {
+        formData.append("couponType", "cantidad")
+        formData.append("timesToUse", data.timesToUse)
+      }
+
+      formData.append("restaurantId", restaurant.id)
+
+      const response = await couponApi.createCoupon(formData)
+
+      if (response.error) {
+        toast.error(`Fallo al crear el cupón. Por favor intente de nuevo. ${response.message}`, {
+          duration: 7000
+        })
+      } else {
+        toast.success("Cupón creado exitosamente", {
+          duration: 7000
+        })
+      }
+      return response.data
+    } catch (error) {
+      toast.error(`Error. Por favor intente de nuevo. ${error}`, {
+        duration: 7000
+      })
+    }
   }
 
   return (
@@ -84,69 +126,79 @@ export default function CouponsSettings() {
                     <InputField label="Código de cupón" name="code" register={register} errors={errors} />
                   </Grid.Col>
                   <Grid.Col span={{ sm: 12, md: 6 }}>
-                    <InputCombobox
-                      items={[
-                        { value: "fijo", label: "Fijo" },
-                        { value: "porcentual", label: "Porcentual" }
-                      ]}
-                      placeholder="Seleccione descuento"
-                      setValue={setValue}
-                      errors={errors}
-                      label="Tipo de descuento"
-                      name="category"
-                    />
+                    <span className="text-sky-950 text-sm font-bold leading-snug">Tipo de descuento</span>
+                    <div className="mt-1">
+                      <Select
+                        data={["Fijo", "Porcentual"]}
+                        allowDeselect={false}
+                        size="md"
+                        value={discountType}
+                        onChange={setDiscountType}
+                      />
+                    </div>
                   </Grid.Col>
 
                   <Grid.Col span={{ sm: 12, md: 6 }}>
-                    {discountType.value === "fijo" ? (
-                      <InputField label="Valor del descuento" name="amount" register={register} errors={errors} />
-                    ) : discountType.value === "porcentual" ? (
+                    {discountType === "Fijo" ? (
+                      <div className="">
+                        <InputField label="Valor del descuento" name="amount" register={register} errors={errors} />
+                      </div>
+                    ) : discountType === "Porcentual" ? (
                       <InputCombobox
                         items={discountPercentage}
                         placeholder="Seleccione descuento"
                         setValue={setValue}
                         errors={errors}
                         label="Valor del descuento"
-                        name="value"
+                        name="amount"
                       />
-                    ) : (
-                      <span>AAAAA</span>
-                    )}
+                    ) : null}
                   </Grid.Col>
                   <Grid.Col span={{ sm: 12 }}>
-                    <InputCombobox
-                      items={businessType}
-                      placeholder="Seleccione el tipo de cupón"
-                      setValue={setValue}
-                      errors={errors}
-                      label="Tipo de cupón"
-                      name="couponType"
-                    />
+                    <span className="text-sky-950 text-sm font-bold leading-snug">Tipo de cupón</span>
+                    <div className="mt-1">
+                      <Select
+                        data={["Por fecha", "Por cantidad de usos"]}
+                        allowDeselect={false}
+                        size="md"
+                        value={couponType}
+                        onChange={setCouponType}
+                      />
+                    </div>
                   </Grid.Col>
 
-                  <Grid.Col span={{ sm: 12 }}>
-                    <InputField label="Veces para utilizar" name="timesToUse" register={register} errors={errors} />
-                  </Grid.Col>
+                  {couponType === "Por cantidad de usos" ? (
+                    <Grid.Col span={{ sm: 12 }}>
+                      <InputField label="Veces para utilizar" name="timesToUse" register={register} errors={errors} />
+                    </Grid.Col>
+                  ) : null}
 
-                  <Grid.Col span={{ sm: 12, md: 6 }}>
-                    <DatePickerInput
-                      size="md"
-                      label="Fecha inicial"
-                      placeholder="Seleccionar fecha"
-                      popoverProps={{ withinPortal: false }}
-                      onChange={(val) => setValue("startDate", val)}
-                    />
-                  </Grid.Col>
-                  <Grid.Col span={{ sm: 12, md: 6 }}>
-                    <DatePickerInput
-                      size="md"
-                      label="Fecha final"
-                      placeholder="Seleccionar fecha"
-                      popoverProps={{ withinPortal: false }}
-                      onChange={(val) => setValue("endDate", val)}
-                    />
-                  </Grid.Col>
+                  {couponType === "Por fecha" ? (
+                    <>
+                      <Grid.Col span={{ sm: 12, md: 6 }}>
+                        <DatePickerInput
+                          size="md"
+                          label="Fecha inicial"
+                          placeholder="Seleccionar fecha"
+                          popoverProps={{ withinPortal: false }}
+                          onChange={(val) => setValue("startDate", val)}
+                        />
+                        <ErrorMessage message={errors?.startDate?.message} />
+                      </Grid.Col>
+                      <Grid.Col span={{ sm: 12, md: 6 }}>
+                        <DatePickerInput
+                          size="md"
+                          label="Fecha final"
+                          placeholder="Seleccionar fecha"
+                          popoverProps={{ withinPortal: false }}
+                          onChange={(val) => setValue("endDate", val)}
+                        />
+                        <ErrorMessage message={errors?.startDate?.message} />
+                      </Grid.Col>
+                    </>
+                  ) : null}
                 </Grid>
+
                 <div className="w-full flex flex-row gap-2 pt-4">
                   <Button
                     text={"Descartar"}
