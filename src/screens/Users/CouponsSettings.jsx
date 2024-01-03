@@ -48,7 +48,6 @@ export default function CouponsSettings() {
   }
 
   const onSubmit = async (data) => {
-    console.log(data)
     try {
       const formData = new FormData()
 
@@ -57,7 +56,7 @@ export default function CouponsSettings() {
 
       if (discountType === "Porcentual") {
         formData.append("category", "porcentual")
-        formData.append("percentage", data.percentage)
+        formData.append("percentage", data.amount)
       } else {
         formData.append("category", "fijo")
         formData.append("amount", data.amount)
