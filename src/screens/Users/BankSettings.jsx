@@ -121,7 +121,6 @@ export default function BankSettings() {
               </SettingsCard>
               <SettingsCard title="Plan" iconName="creditCard"></SettingsCard>
             </Tabs.Panel>
-
             <Tabs.Panel value="api">
               <SettingsCard title="Accesos de la API" iconName="creditCard">
                 <Grid my={20}>

@@ -193,7 +193,7 @@ export default function DishDetails() {
         opened={formModalOpened}
         onClose={closeFormModal}
         centered
-        size={"xl"}
+        size={"2xl"}
         radius={"lg"}
         overlayProps={{
           backgroundOpacity: 0.55,

@@ -2,7 +2,7 @@ import Button from "../../components/Button"
 import { Accordion } from "@mantine/core"
 import React, { useEffect, useRef, useState } from "react"
 import { useForm } from "react-hook-form"
-import ExtrasForm from "./ExtrasForm"
+
 import GeneralInformationForm from "./GeneralInformationForm"
 import PaymentForm from "./PaymentForm"
 import { useDispatch, useSelector } from "react-redux"
@@ -61,7 +61,7 @@ export default function EditDishScreen({ close, dishDetails }) {
           setValue={setValue}
           control={control}
           isDataCleared={isDataCleared}
-          preloadImage={dishDetails.images}
+          preloadImage={dishDetails?.images}
         />
       )
     },
@@ -115,7 +115,7 @@ export default function EditDishScreen({ close, dishDetails }) {
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form onSubmit={handleSubmit(onSubmit)} className="w-full h-full ">
       <section>
         <div className="flex flex-row justify-between items-center pb-6 flex-wrap xs:gap-3">
           <div className="flex flex-row gap-x-3 items-center">
