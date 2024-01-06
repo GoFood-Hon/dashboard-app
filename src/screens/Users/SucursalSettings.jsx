@@ -17,6 +17,7 @@ export default function SucursalSettings({ setValue, errors, register }) {
   const restaurant = useSelector((state) => state.restaurant.value)
   const filters = useSelector((state) => state.branches.filters)
   const branches = useSelector(selectAllBranches)
+  const user = useSelector((state) => state.user.value)
 
   const [itemSelected, setItemSelected] = useState({ name: "select..." })
 
@@ -26,7 +27,7 @@ export default function SucursalSettings({ setValue, errors, register }) {
         limit,
         page,
         order: "DESC",
-        restaurantId: restaurant.id,
+        restaurantId: user.restaurantId,
         filters
       })
     )

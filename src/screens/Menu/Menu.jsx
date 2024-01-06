@@ -23,6 +23,7 @@ export default function Menu() {
   const totalItems = useSelector((state) => state.menus.totalItems)
   const filters = useSelector((state) => state.menus.filters)
   const page = useSelector((state) => state.menus.currentPage)
+  const user = useSelector((state) => state.user.value)
 
   const restaurant = useSelector((state) => state.restaurant.value)
 
@@ -44,7 +45,7 @@ export default function Menu() {
   useEffect(() => {
     dispatch(
       fetchMenus({
-        restaurantId: restaurant.id
+        restaurantId: user.restaurantId
       })
     )
 
@@ -54,7 +55,7 @@ export default function Menu() {
   const refreshPage = () => {
     dispatch(
       fetchMenus({
-        restaurantId: restaurant.id
+        restaurantId: user.restaurantId
       })
     )
     setCardsSelected([])

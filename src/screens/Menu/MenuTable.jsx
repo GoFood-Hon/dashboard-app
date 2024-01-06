@@ -16,7 +16,7 @@ import { colors } from "../../theme/colors"
 import { useNavigate } from "react-router-dom"
 import { NAVIGATION_ROUTES } from "../../routes"
 
-const nodes = [
+/* const nodes = [
   {
     id: "3f24d92a-23bc-49a7-8b94-f17f0f3e78a4",
     name: "Hamburguesas",
@@ -36,10 +36,10 @@ const nodes = [
     images: null
   }
 ]
+ */
 
 export default function MenuTable({ refreshPage, items, handleDisableSelected, screenType }) {
   const navigate = useNavigate()
-
   const [data, setData] = useState({ nodes: items })
 
   useEffect(() => {

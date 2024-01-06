@@ -25,6 +25,7 @@ export default function Dishes() {
   const navigate = useNavigate()
   const location = useLocation()
   const dispatch = useDispatch()
+  const user = useSelector((state) => state.user.value)
 
   const dishes = useSelector(selectAllDishes)
   const status = useSelector(selectDishesStatus)
@@ -45,7 +46,7 @@ export default function Dishes() {
         limit,
         page,
         order: "DESC",
-        restaurantId: restaurant.id,
+        restaurantId: user.restaurantId,
         filters
       })
     )
@@ -64,10 +65,11 @@ export default function Dishes() {
         limit,
         page,
         order: "DESC",
-        restaurantId: restaurant.id,
+        restaurantId: user.restaurantId,
         filters
       })
     )
+    console.log(restaurant)
     setCardsSelected([])
   }
 
@@ -127,7 +129,7 @@ export default function Dishes() {
         limit,
         page,
         order: "DESC",
-        restaurantId: restaurant.id,
+        restaurantId: user.restaurantId,
         filters: data
       })
     )
@@ -189,7 +191,7 @@ export default function Dishes() {
               <span className="cursor-pointer" onClick={refreshPage}>
                 <Icon icon="reload" size={20} />
               </span>
-              <FilterPopover onFiltersChange={onFiltersChange} refreshPage={refreshPage} />
+              {/*  <FilterPopover onFiltersChange={onFiltersChange} refreshPage={refreshPage} /> */}
               {/*   <SortPopover onFiltersChange={onFiltersChange} refreshPage={refreshPage} /> */}
             </div>
           </div>

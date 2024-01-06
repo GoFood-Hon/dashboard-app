@@ -25,6 +25,7 @@ export default function EditMenuScreen({ itemDetails, close }) {
   const location = useLocation()
   const navigate = useNavigate()
   const dispatch = useDispatch()
+  const user = useSelector((state) => state.user.value)
 
   const restaurant = useSelector((state) => state.restaurant.value)
   const [isDataCleared, setIsDataCleared] = useState(false)
@@ -35,7 +36,7 @@ export default function EditMenuScreen({ itemDetails, close }) {
     async function getDishes() {
       try {
         const response = await dishesApi.getAllDishesByRestaurant({
-          restaurantId: restaurant.id
+          restaurantId: user.restaurantId
         })
         setDishes(response.data.data)
 

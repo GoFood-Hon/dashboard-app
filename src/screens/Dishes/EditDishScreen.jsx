@@ -15,6 +15,7 @@ import complementsApi from "../../api/complementsApi"
 export default function EditDishScreen({ close, dishDetails }) {
   const dispatch = useDispatch()
   const restaurant = useSelector((state) => state.restaurant.value)
+  const user = useSelector((state) => state.user.value)
 
   const [isDataCleared, setIsDataCleared] = useState(false)
   const [extras, setExtras] = useState([])
@@ -25,7 +26,7 @@ export default function EditDishScreen({ close, dishDetails }) {
     async function getExtras() {
       try {
         const response = await complementsApi.getAddOnByRestaurant({
-          restaurantId: restaurant.id,
+          restaurantId: user.restaurantId,
           category: "extra"
         })
         setExtras(response.data.data)

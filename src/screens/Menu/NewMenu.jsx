@@ -21,6 +21,7 @@ export default function NewMenu() {
   const dispatch = useDispatch()
 
   const restaurant = useSelector((state) => state.restaurant.value)
+  const user = useSelector((state) => state.user.value)
 
   const {
     register,
@@ -40,7 +41,7 @@ export default function NewMenu() {
     async function getDishes() {
       try {
         const response = await dishesApi.getAllDishesByRestaurant({
-          restaurantId: restaurant.id
+          restaurantId: user.restaurantId
         })
         setDishes(response.data.data)
 

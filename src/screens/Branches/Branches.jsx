@@ -33,6 +33,7 @@ export default function Branches() {
   const filters = useSelector((state) => state.branches.filters)
   const page = useSelector((state) => state.branches.currentPage)
   const restaurant = useSelector((state) => state.restaurant.value)
+  const user = useSelector((state) => state.user.value)
 
   const totalControlBtn = Math.ceil(totalItems / limit)
   const [searchDish, setSearchDish] = useState("")
@@ -44,7 +45,7 @@ export default function Branches() {
         limit,
         page,
         order: "DESC",
-        restaurantId: restaurant.id,
+        restaurantId: user.restaurantId,
         filters
       })
     )
@@ -63,7 +64,7 @@ export default function Branches() {
         limit,
         page,
         order: "DESC",
-        restaurantId: restaurant.id,
+        restaurantId: user.restaurantId,
         filters
       })
     )
@@ -84,7 +85,7 @@ export default function Branches() {
         limit,
         page,
         order: "DESC",
-        restaurantId: restaurant.id,
+        restaurantId: user.restaurantId,
         filters: data
       })
     )

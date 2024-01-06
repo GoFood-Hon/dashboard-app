@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react"
 import BaseLayout from "../../components/BaseLayout"
-import { Affix, Breadcrumbs, Grid, Pagination, Tabs } from "@mantine/core"
+import { Affix, Breadcrumbs, CloseButton, Grid, Input, Pagination, Tabs } from "@mantine/core"
 import { useLocation, useNavigate } from "react-router-dom"
 import BreadCrumbNavigation from "../../components/BreadCrumbNavigation"
 import { useDispatch, useSelector } from "react-redux"
@@ -20,12 +20,15 @@ import { Icon } from "../../components/Icon"
 import { NAVIGATION_ROUTES } from "../../routes"
 import Button from "../../components/Button"
 import { colors } from "../../theme/colors"
+import FilterPopover from "../../components/FilterPopover"
+import SortPopover from "../../components/SortPopover"
 
 export default function Complements() {
   const navigate = useNavigate()
   const location = useLocation()
   const dispatch = useDispatch()
 
+  const user = useSelector((state) => state.user.value)
   const complements = useSelector(selectAllComplements)
   const status = useSelector(selectComplementsStatus)
   const error = useSelector(selectComplementsError)
@@ -38,20 +41,45 @@ export default function Complements() {
   const totalControlBtn = Math.ceil(totalItems / limit)
 
   const [cardsSelected, setCardsSelected] = useState([])
+  const [activeTab, setActiveTab] = useState("all")
+  const [searchDish, setSearchDish] = useState("")
+  const [category, setCategory] = useState("")
 
   useEffect(() => {
+    let category
+    switch (activeTab) {
+      case "all":
+        setCategory("")
+        break
+      case "drinks":
+        setCategory("bebidas")
+        break
+      case "complements":
+        setCategory("complementos")
+        break
+      case "desserts":
+        setCategory("postres")
+        break
+      case "extras":
+        setCategory("extras")
+        break
+      default:
+        setCategory("extras")
+        break
+    }
     dispatch(
       fetchComplements({
         limit,
         page,
+        category,
         order: "DESC",
-        restaurantId: restaurant.id,
+        restaurantId: user.restaurantId,
         filters
       })
     )
 
     setCardsSelected([])
-  }, [page, dispatch, restaurant])
+  }, [page, dispatch, restaurant, activeTab])
 
   const handleNewItem = () => {
     navigate(NAVIGATION_ROUTES.Menu.submenu.Complements.submenu.NewComplement.path)
@@ -64,7 +92,7 @@ export default function Complements() {
         limit,
         page,
         order: "DESC",
-        restaurantId: restaurant.id,
+        restaurantId: user.restaurantId,
         filters
       })
     )
@@ -127,7 +155,7 @@ export default function Complements() {
         limit,
         page,
         order: "DESC",
-        restaurantId: restaurant.id,
+        restaurantId: user.restaurantId,
         filters: data
       })
     )
@@ -158,128 +186,133 @@ export default function Complements() {
           </div>
         </div>
       </section>
-      <section>
-        <Grid grow>
-          <Grid.Col span={{ base: 12, md: 4, lg: 3, xl: 2 }}>
-            <div className="w-full h-full flex items-center">
-              {/*  <Input
-                className="w-full"
-                placeholder="Buscar complemento"
-                value={searchDish}
-                onChange={(event) => setSearchDish(event.currentTarget.value)}
-                rightSectionPointerEvents="all"
-                leftSection={<Icon icon="search" size={16} color="#6d7177" />}
-                rightSection={
-                  <CloseButton
-                    aria-label="Clear input"
-                    onClick={() => setSearchDish("")}
-                    style={{ display: searchDish ? undefined : "none" }}
-                  />
-                }
-              /> */}
-            </div>
-          </Grid.Col>
-          <Grid.Col span={{ base: 12, md: 8, lg: 6, xl: 8 }}>
-            <div className="flex w-full flex-row lg:justify-end xl:justify-center justify-center">
-              <div className="w-fit bg-white rounded p-2">
-                <Tabs color={colors.primary_button} variant="pills" defaultValue="first">
-                  <Tabs.List justify="center">
-                    <Tabs.Tab value="first">Todos</Tabs.Tab>
-                    <Tabs.Tab value="second">Complementos</Tabs.Tab>
-                    <Tabs.Tab value="third">Bebidas</Tabs.Tab>
-                    <Tabs.Tab value="fourth">Postres</Tabs.Tab>
-                    <Tabs.Tab value="fifth">Extras</Tabs.Tab>
-                  </Tabs.List>
-                </Tabs>
-              </div>
-            </div>
-          </Grid.Col>
-          <Grid.Col span={{ base: 12, lg: 3, xl: 2 }}>
-            <div className="flex flex-row w-full justify-end items-center">
-              <div className="flex flex-row mr-4">
-                <span className="text-sky-950 text-base font-bold leading-normal">{page === 1 ? 1 : (page - 1) * limit + 1}</span>
-                <span className="text-zinc-500 text-base font-bold leading-normal">-</span>
-                <span className="text-sky-950 text-base font-bold leading-normal">
-                  {page === 1 ? limit : Math.min(page * limit, totalItems)}
-                </span>
-                <span className="text-zinc-500 text-base font-medium leading-normal px-1"> de </span>
-                <span className="text-sky-950 text-base font-bold leading-normal">{totalItems} complementos</span>
-              </div>
-              <div className="flex flex-row h-full items-center gap-3">
-                <span className="cursor-pointer" onClick={refreshPage}>
-                  <Icon icon="reload" size={20} />
-                </span>
-                {/*      <FilterPopover onFiltersChange={onFiltersChange} refreshPage={refreshPage} />
-                <SortPopover /> */}
-              </div>
-            </div>
-          </Grid.Col>
-        </Grid>
-      </section>
-      <section className="my-6 w-full">
-        {status === "loading" ? (
-          <div className="h-[calc(100vh-350px)] w-full flex justify-center items-center">
-            <LoadingCircle />
-          </div>
-        ) : complements && complements.length > 0 ? (
+      <Tabs color={colors.primary_button} variant="pills" defaultValue="all" value={activeTab} onChange={setActiveTab}>
+        <section>
           <Grid grow>
-            {complements.map((item, key) => (
-              <Grid.Col span={{ base: 12, md: 6, lg: 3 }} key={key}>
-                <ItemCard
-                  item={item}
-                  index={key}
-                  navigation={true}
-                  cardsSelected={cardsSelected}
-                  handleChangeSelected={handleChangeSelected}
-                  handleClick={handleClick}
+            <Grid.Col span={{ base: 1 }} />
+            {/*  <Grid.Col span={{ base: 12, md: 4, lg: 3, xl: 2 }}>
+              <div className="w-full h-full flex items-center">
+                <Input
+                  className="w-full"
+                  placeholder="Buscar complemento"
+                  value={searchDish}
+                  onChange={(event) => setSearchDish(event.currentTarget.value)}
+                  rightSectionPointerEvents="all"
+                  leftSection={<Icon icon="search" size={16} color="#6d7177" />}
+                  rightSection={
+                    <CloseButton
+                      aria-label="Clear input"
+                      onClick={() => setSearchDish("")}
+                      style={{ display: searchDish ? undefined : "none" }}
+                    />
+                  }
                 />
-              </Grid.Col>
-            ))}
+              </div>
+            </Grid.Col>
+            */}
+            <Grid.Col span={{ base: 12, md: 4, lg: 6, xl: 8 }}>
+              <div className="flex w-full flex-row  xl:justify-center justify-center">
+                <div className="w-fit bg-white rounded p-2">
+                  <Tabs.List justify="center">
+                    <Tabs.Tab value="all">Todos</Tabs.Tab>
+                    <Tabs.Tab value="complements">Complementos</Tabs.Tab>
+                    <Tabs.Tab value="drinks">Bebidas</Tabs.Tab>
+                    <Tabs.Tab value="desserts">Postres</Tabs.Tab>
+                    <Tabs.Tab value="extras">Extras</Tabs.Tab>
+                  </Tabs.List>
+                </div>
+              </div>
+            </Grid.Col>
+            <Grid.Col span={{ base: 12, lg: 3, xl: 2 }}>
+              <div className="flex flex-row w-full justify-end items-center h-full">
+                <div className="flex flex-row mr-4">
+                  <span className="text-sky-950 text-base font-bold leading-normal">
+                    {page === 1 ? 1 : (page - 1) * limit + 1}
+                  </span>
+                  <span className="text-zinc-500 text-base font-bold leading-normal">-</span>
+                  <span className="text-sky-950 text-base font-bold leading-normal">
+                    {page === 1 ? limit : Math.min(page * limit, totalItems)}
+                  </span>
+                  <span className="text-zinc-500 text-base font-medium leading-normal px-1"> de </span>
+                  <span className="text-sky-950 text-base font-bold leading-normal">{totalItems} complementos</span>
+                </div>
+                <div className="flex flex-row h-full items-center gap-3">
+                  <span className="cursor-pointer" onClick={refreshPage}>
+                    <Icon icon="reload" size={20} />
+                  </span>
+                  {/*  <FilterPopover onFiltersChange={onFiltersChange} refreshPage={refreshPage} />
+                  <SortPopover /> */}
+                </div>
+              </div>
+            </Grid.Col>
           </Grid>
-        ) : (
-          <div className="text-center mt-4 text-gray-500">Sin complementos disponibles!</div>
-        )}
-
-        {status === "error" && <div>Error: {error}</div>}
-      </section>
-      <section className="flex flex-row justify-between pb-32">
-        <div />
-        <Pagination
-          total={totalControlBtn}
-          page={page}
-          limit={limit}
-          onChange={onChangePagination}
-          color={colors.primary_button}
-        />
-      </section>
-      <section>
-        {cardsSelected.length >= 1 && (
-          <Affix position={{ bottom: 20, left: "calc(50% - 270px)" }}>
-            <div className="w-full flex flex-row justify-end mt-6 gap-3 rounded-lg bg-white px-8 py-5 border border-gray-100 shadow">
-              <Button
-                text={"Deshabilitar seleccionados"}
-                className={"text-xs border border-red-400 text-red-400 bg-white"}
-                onClick={handleDisableSelected}
-              />
-              <Button
-                text={"Habilitar seleccionados"}
-                className={"text-xs border border-emerald-400 text-emerald-400 bg-white"}
-                onClick={handleEnableSelected}
-              />
-              <Button
-                text={"Deseleccionar todos"}
-                className={"text-xs border border-sky-950 text-sky-950 bg-white"}
-                onClick={handleDeselectAll}
-              />
-              <Button
-                text={"Seleccionar todos"}
-                className={"text-xs border border-sky-950 text-white bg-sky-950"}
-                onClick={handleSelectAll}
-              />
-            </div>
-          </Affix>
-        )}
-      </section>
+        </section>
+        <Tabs.Panel value="all">
+          <section className="my-6 w-full">
+            {status === "loading" ? (
+              <div className="h-[calc(100vh-350px)] w-full flex justify-center items-center">
+                <LoadingCircle />
+              </div>
+            ) : complements && complements.length > 0 ? (
+              <Grid grow>
+                {complements.map((item, key) => (
+                  <Grid.Col span={{ base: 12, md: 6, lg: 3 }} key={key}>
+                    <ItemCard
+                      item={item}
+                      index={key}
+                      navigation={true}
+                      cardsSelected={cardsSelected}
+                      handleChangeSelected={handleChangeSelected}
+                      handleClick={handleClick}
+                    />
+                  </Grid.Col>
+                ))}
+              </Grid>
+            ) : (
+              <div className="text-center mt-4 text-gray-500">Sin complementos disponibles!</div>
+            )}
+            {status === "error" && <div>Error: {error}</div>}
+          </section>
+          <section className="flex flex-row justify-between pb-32">
+            <div />
+            <Pagination
+              total={totalControlBtn}
+              page={page}
+              limit={limit}
+              onChange={onChangePagination}
+              color={colors.primary_button}
+            />
+          </section>
+          <section>
+            {cardsSelected.length >= 1 && (
+              <Affix position={{ bottom: 20, left: "calc(50% - 270px)" }}>
+                <div className="w-full flex flex-row justify-end mt-6 gap-3 rounded-lg bg-white px-8 py-5 border border-gray-100 shadow">
+                  <Button
+                    text={"Deshabilitar seleccionados"}
+                    className={"text-xs border border-red-400 text-red-400 bg-white"}
+                    onClick={handleDisableSelected}
+                  />
+                  <Button
+                    text={"Habilitar seleccionados"}
+                    className={"text-xs border border-emerald-400 text-emerald-400 bg-white"}
+                    onClick={handleEnableSelected}
+                  />
+                  <Button
+                    text={"Deseleccionar todos"}
+                    className={"text-xs border border-sky-950 text-sky-950 bg-white"}
+                    onClick={handleDeselectAll}
+                  />
+                  <Button
+                    text={"Seleccionar todos"}
+                    className={"text-xs border border-sky-950 text-white bg-sky-950"}
+                    onClick={handleSelectAll}
+                  />
+                </div>
+              </Affix>
+            )}
+          </section>
+        </Tabs.Panel>
+      </Tabs>
     </BaseLayout>
   )
 }

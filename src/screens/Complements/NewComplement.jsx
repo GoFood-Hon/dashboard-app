@@ -120,7 +120,7 @@ export default function NewComplement() {
       // description: data.description,
       category: data.category,
       // endPrice: data.endPrice,
-      restaurantId: restaurant.id,
+      restaurantId: user.restaurantId,
       dishId: data.dishId
     })
 

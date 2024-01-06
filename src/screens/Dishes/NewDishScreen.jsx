@@ -21,6 +21,7 @@ export default function NewDish() {
   const location = useLocation()
   const dispatch = useDispatch()
   const navigate = useNavigate()
+  const user = useSelector((state) => state.user.value)
 
   const restaurant = useSelector((state) => state.restaurant.value)
 
@@ -45,7 +46,7 @@ export default function NewDish() {
     async function getExtras() {
       try {
         const response = await complementsApi.getAddOnByRestaurant({
-          restaurantId: restaurant.id,
+          restaurantId: user.restaurantId,
           category: "extra"
         })
         setExtras(response.data.data)
@@ -162,7 +163,7 @@ export default function NewDish() {
       includesDrink: data.includeDrink,
       endPrice: data.endPrice,
       categoryId: data.categoryId,
-      restaurantId: restaurant.id
+      restaurantId: user.restaurantId
     })
 
     localStorage.setItem("draft", formData)
