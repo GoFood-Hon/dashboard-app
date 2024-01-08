@@ -124,7 +124,7 @@ export const updateMenu = createAsyncThunk("menus/updateMenu", async ({ data, pr
   try {
     const formData = updateMenuFormData(data, propertyToUpdate)
 
-    const response = await menuApi.updateMenu(formData, data?.id)
+    const response = await menuApi.updateMenu(formData, data.id)
 
     if (response.error) {
       toast.error(`Fallo al actualizar el menu. Por favor intente de nuevo. ${response.message}`, {

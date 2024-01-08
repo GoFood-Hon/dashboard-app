@@ -41,6 +41,7 @@ import { NAVIGATION_ROUTES } from "../../routes"
 export default function MenuTable({ refreshPage, items, handleDisableSelected, screenType }) {
   const navigate = useNavigate()
   const [data, setData] = useState({ nodes: items })
+  const [itemsSelected, setItemsSelected] = useState([])
 
   useEffect(() => {
     setData({ nodes: items })
@@ -251,7 +252,8 @@ export default function MenuTable({ refreshPage, items, handleDisableSelected, s
   })
 
   function onSelectChange(action, state) {
-    // console.log(action, state, "selected")
+    // console.log(action, state)
+    setItemsSelected(state.ids)
   }
 
   //* Sort *//
@@ -319,7 +321,7 @@ export default function MenuTable({ refreshPage, items, handleDisableSelected, s
             <Icon icon="setting" size={20} />
           </span>
           */}
-          <span className="cursor-pointer" onClick={handleDisableSelected}>
+          <span className="cursor-pointer" onClick={() => handleDisableSelected(itemsSelected)}>
             <Icon icon="trash" size={20} />
           </span>
         </div>

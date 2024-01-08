@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react"
 import BaseLayout from "../../components/BaseLayout"
-import { Affix, Breadcrumbs, CloseButton, Grid, Input, Pagination, Tabs } from "@mantine/core"
+import { Affix, Breadcrumbs, Grid, Pagination, Tabs } from "@mantine/core"
 import { useLocation, useNavigate } from "react-router-dom"
 import BreadCrumbNavigation from "../../components/BreadCrumbNavigation"
 import { useDispatch, useSelector } from "react-redux"

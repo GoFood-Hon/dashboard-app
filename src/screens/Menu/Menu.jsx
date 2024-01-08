@@ -65,8 +65,8 @@ export default function Menu() {
 
   const handleDisableSelected = async (cardsSelected) => {
     await Promise.all(
-      cardsSelected.map(async (id) => {
-        await dispatch(updateMenu({ data: { id, isActive: false }, propertyToUpdate: "isActive" }))
+      cardsSelected.map(async (data) => {
+        await dispatch(updateMenu({ data: { id: data, isActive: false }, propertyToUpdate: "isActive" }))
       })
     )
 
