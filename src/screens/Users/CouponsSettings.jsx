@@ -32,6 +32,7 @@ export default function CouponsSettings() {
     register,
     handleSubmit,
     setValue,
+    reset,
     formState: { errors }
   } = useForm({
     resolver: yupResolver(couponValidation(dateComponentMounted))
@@ -48,6 +49,7 @@ export default function CouponsSettings() {
   }
 
   const onSubmit = async (data) => {
+    reset()
     try {
       const formData = new FormData()
 
@@ -143,7 +145,6 @@ export default function CouponsSettings() {
                     ) : discountType === "Porcentual" ? (
                       <InputCombobox
                         items={discountPercentage}
-                        placeholder="Seleccione descuento"
                         setValue={setValue}
                         errors={errors}
                         label="Valor del descuento"
