@@ -74,7 +74,7 @@ const uploadComplementImage = async (complementId, file) => {
  * CREATE COMPLEMENT
  */
 
-export const createComplement = createAsyncThunk("complements/createComplement", async ({ data, restaurant }, { dispatch }) => {
+export const createComplement = createAsyncThunk("complements/createComplement", async ({ data, restaurantId }, { dispatch }) => {
   try {
     const formData = new FormData()
     formData.append("name", data.name)
@@ -83,7 +83,7 @@ export const createComplement = createAsyncThunk("complements/createComplement",
 
     formData.append("price", data.price)
     formData.append("endPrice", data.endPrice)
-    formData.append("restaurantId", restaurant.id)
+    formData.append("restaurantId", restaurantId)
 
     const response = await complementsApi.createAddOn(formData)
 

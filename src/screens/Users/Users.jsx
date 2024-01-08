@@ -13,13 +13,13 @@ import { useSelector } from "react-redux"
 export default function Users() {
   const navigate = useNavigate()
   const location = useLocation()
-  const restaurant = useSelector((state) => state.restaurant.value)
+  const user = useSelector((state) => state.user.value)
 
   const [users, setUser] = useState([])
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await userApi.getUsersByRestaurant(restaurant.id)
+        const response = await userApi.getUsersByRestaurant(user.restaurantId)
         if (response.error) {
           toast.error("Error obteniendo la información de los usuarios")
         } else {

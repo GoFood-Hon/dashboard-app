@@ -74,9 +74,9 @@ export const fetchDishes = createAsyncThunk(
  * CREATE DISHES
  */
 
-export const createDish = createAsyncThunk("dishes/createDish", async ({ data, restaurant }, { dispatch }) => {
+export const createDish = createAsyncThunk("dishes/createDish", async ({ data, restaurantId }, { dispatch }) => {
   try {
-    const formData = createDishFormData(data, restaurant)
+    const formData = createDishFormData(data, restaurantId)
 
     const response = await dishesApi.createDish(formData)
 
@@ -96,13 +96,14 @@ export const createDish = createAsyncThunk("dishes/createDish", async ({ data, r
         })
       }
 
-      const addComplementsResponse = await addComplements(dishId, data?.extras)
-      if (addComplementsResponse.error) {
-        toast.error(`Fallo al cargar los extras. Por favor intente de nuevo. ${addImageResponse.message}`, {
-          duration: 7000
-        })
+      if (data.extras) {
+        const addComplementsResponse = await addComplements(dishId, data.extras)
+        if (addComplementsResponse.error) {
+          toast.error(`Fallo al cargar los extras. Por favor intente de nuevo. ${addImageResponse.message}`, {
+            duration: 7000
+          })
+        }
       }
-
       toast.success("Platillo creado exitosamente", { duration: 7000 })
       return response.data
     }
@@ -112,7 +113,7 @@ export const createDish = createAsyncThunk("dishes/createDish", async ({ data, r
   }
 })
 
-const createDishFormData = (data, restaurant) => {
+const createDishFormData = (data, restaurantId) => {
   const formData = new FormData()
   formData.append("name", data.name)
   formData.append("price", data.price)
@@ -120,7 +121,7 @@ const createDishFormData = (data, restaurant) => {
   formData.append("includesDrink", data.includeDrink)
   formData.append("endPrice", data.endPrice)
   formData.append("categoryId", data.categoryId)
-  formData.append("restaurantId", restaurant.id)
+  formData.append("restaurantId", restaurantId)
   formData.append("preparationTime", data?.preparationTime)
 
   return formData

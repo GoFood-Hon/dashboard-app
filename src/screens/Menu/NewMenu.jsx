@@ -100,7 +100,8 @@ export default function NewMenu() {
   ))
 
   const onSubmit = (data) => {
-    dispatch(createMenu({ data, restaurant })).then((response) => {
+    const restaurantId = user.restaurantId
+    dispatch(createMenu({ data, restaurantId })).then((response) => {
       if (response.payload) {
         reset()
         localStorage.removeItem("draft")

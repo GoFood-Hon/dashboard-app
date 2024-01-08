@@ -11,7 +11,7 @@ import { fetchDishesCategories, selectAllDishesCategoriesStatus } from "../../st
 
 export default function GeneralInformationForm({ register, errors, setValue, isDataCleared }) {
   const dispatch = useDispatch()
-  const restaurant = useSelector((state) => state.restaurant.value)
+  const user = useSelector((state) => state.user.value)
 
   const status = useSelector(selectAllDishesCategoriesStatus)
 
@@ -41,9 +41,9 @@ export default function GeneralInformationForm({ register, errors, setValue, isD
 
   useEffect(() => {
     if (status === "succeeded" || status === "idle") {
-      dispatch(fetchDishesCategories(restaurant.id))
+      dispatch(fetchDishesCategories(user.restaurantId))
     }
-  }, [restaurant])
+  }, [])
 
   const previews = images.map((file, index) => {
     const imageUrl = URL.createObjectURL(file)

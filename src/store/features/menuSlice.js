@@ -52,13 +52,13 @@ const addComplements = async (id, dishes) => {
   return await menuApi.addDishesToMenu(id, raw)
 }
 
-export const createMenu = createAsyncThunk("menus/createMenu", async ({ data, restaurant }, { dispatch }) => {
+export const createMenu = createAsyncThunk("menus/createMenu", async ({ data, restaurantId }, { dispatch }) => {
   try {
     const formData = new FormData()
     formData.append("name", data.name)
     formData.append("description", data.description)
     formData.append("type", data.type)
-    formData.append("restaurantId", restaurant.id)
+    formData.append("restaurantId", restaurantId)
 
     const response = await menuApi.createMenu(formData)
     dispatch(fetchMenus())

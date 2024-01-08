@@ -19,7 +19,7 @@ import toast from "react-hot-toast"
 
 export default function CouponsSettings() {
   const navigate = useNavigate()
-  const restaurant = useSelector((state) => state.restaurant.value)
+  const user = useSelector((state) => state.user.value)
 
   const [discountType, setDiscountType] = useState("Porcentual")
   const [couponType, setCouponType] = useState("Por fecha")
@@ -71,7 +71,7 @@ export default function CouponsSettings() {
         formData.append("timesToUse", data.timesToUse)
       }
 
-      formData.append("restaurantId", restaurant.id)
+      formData.append("restaurantId", user.restaurantId)
 
       const response = await couponApi.createCoupon(formData)
 

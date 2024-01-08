@@ -12,7 +12,7 @@ import InputCombobox from "../../components/Form/InputCombobox"
 
 export default function GeneralInformationForm({ register, errors, setValue, isDataCleared }) {
   const dispatch = useDispatch()
-  const restaurant = useSelector((state) => state.restaurant.value)
+  const user = useSelector((state) => state.user.value)
 
   const complementsType = [
     {
@@ -22,10 +22,6 @@ export default function GeneralInformationForm({ register, errors, setValue, isD
     {
       value: "bebida",
       label: "Bebidas"
-    },
-    {
-      value: "postre",
-      label: "Postres"
     },
     {
       value: "extra",
@@ -60,9 +56,9 @@ export default function GeneralInformationForm({ register, errors, setValue, isD
 
   useEffect(() => {
     if (status === "succeeded" || status === "idle") {
-      dispatch(fetchDishesCategories(restaurant.id))
+      dispatch(fetchDishesCategories(user.restaurantId))
     }
-  }, [restaurant])
+  }, [])
 
   const previews = images.map((file, index) => {
     const imageUrl = URL.createObjectURL(file)

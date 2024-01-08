@@ -23,8 +23,6 @@ export default function NewDish() {
   const navigate = useNavigate()
   const user = useSelector((state) => state.user.value)
 
-  const restaurant = useSelector((state) => state.restaurant.value)
-
   const [isDataCleared, setIsDataCleared] = useState(false)
   const [isAffixMounted, setAffixMounted] = useState(false)
   const [extras, setExtras] = useState([])
@@ -58,7 +56,7 @@ export default function NewDish() {
       }
     }
     getExtras()
-  }, [restaurant])
+  }, [])
 
   const accordionStructure = [
     {
@@ -105,7 +103,7 @@ export default function NewDish() {
     },
     {
       title: "Preparación",
-      requirement: "Opcional",
+      requirement: "Obligatorio",
       form: <PreparationForm setValue={setValue} errors={errors} />
     }
   ]
@@ -145,7 +143,8 @@ export default function NewDish() {
   }, []) */
 
   const onSubmit = (data) => {
-    dispatch(createDish({ data, restaurant })).then((response) => {
+    const restaurantId = user.restaurantId
+    dispatch(createDish({ data, restaurantId })).then((response) => {
       if (response.payload) {
         reset()
         localStorage.removeItem("draft")

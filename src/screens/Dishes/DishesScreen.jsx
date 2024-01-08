@@ -69,7 +69,6 @@ export default function Dishes() {
         filters
       })
     )
-    console.log(restaurant)
     setCardsSelected([])
   }
 

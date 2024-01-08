@@ -18,7 +18,7 @@ import { createComplement } from "../../store/features/complementsSlice"
 export default function NewComplement() {
   const location = useLocation()
   const dispatch = useDispatch()
-  const restaurant = useSelector((state) => state.restaurant.value)
+  const user = useSelector((state) => state.user.value)
 
   const [isDataCleared, setIsDataCleared] = useState(false)
   const [isAffixMounted, setAffixMounted] = useState(false)
@@ -103,7 +103,8 @@ export default function NewComplement() {
   }, []) */
 
   const onSubmit = (data) => {
-    dispatch(createComplement({ data, restaurant })).then((response) => {
+    const restaurantId = user.restaurantId
+    dispatch(createComplement({ data, restaurantId })).then((response) => {
       if (response.payload) {
         reset()
         localStorage.removeItem("complement-draft")

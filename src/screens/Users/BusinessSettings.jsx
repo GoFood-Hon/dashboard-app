@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useState } from "react"
 import BaseLayout from "../../components/BaseLayout"
 import { Breadcrumbs, CloseIcon, Grid, Group, Text, rem } from "@mantine/core"
 import BreadCrumbNavigation from "../../components/BreadCrumbNavigation"
@@ -13,39 +13,16 @@ import InputCombobox from "../../components/Form/InputCombobox"
 import Button from "../../components/Button"
 import { SETTING_NAVIGATION_ROUTES } from "../../routes"
 import { useNavigate } from "react-router-dom"
-import { useDispatch, useSelector } from "react-redux"
+import { useSelector } from "react-redux"
 import restaurantsApi from "../../api/restaurantApi"
-import { setRestaurant } from "../../store/features/restaurantSlice"
 
 export default function BusinessSettings() {
   const navigate = useNavigate()
   const user = useSelector((state) => state.user.value)
 
   const [images, setImages] = useState([])
-  const [restaurant, setRestaurant] = useState({})
+
   const [fileInformation, setFileInformation] = useState(null)
-
-  useEffect(() => {
-    const fetchRestaurantInformation = async () => {
-      try {
-        const response = await restaurantsApi.getRestaurant(user?.restaurantId)
-
-        if (response.error) {
-          toast.error(`Fallo al obtenerla información del restaurante. Por favor intente de nuevo. ${response.message}`, {
-            duration: 7000
-          })
-        } else {
-          setRestaurant(response.data)
-        }
-      } catch (error) {
-        toast.error(`Fallo al obtenerla información del restaurante. Por favor intente de nuevo.`, {
-          duration: 7000
-        })
-        throw error
-      }
-    }
-    fetchRestaurantInformation()
-  }, [])
 
   const {
     register,
@@ -121,7 +98,7 @@ export default function BusinessSettings() {
       formData.append("type", data.type)
       formData.append("isActive", data.status === "Habilitado")
 
-      const response = await restaurantsApi.updateRestaurant(formData, restaurant.id)
+      const response = await restaurantsApi.updateRestaurant(formData, user.restaurantId)
 
       if (response.error) {
         toast.error(`Fallo al actualizar la información del negocio. Por favor intente de nuevo. ${response.message}`, {
@@ -131,7 +108,7 @@ export default function BusinessSettings() {
         let imageResponse
 
         if (data && data.files) {
-          await uploadRestaurantImage(restaurant.id, data?.files?.[0])
+          await uploadRestaurantImage(user.restaurantId, data?.files?.[0])
         }
 
         toast.success("Negocio actualizado exitosamente", {
