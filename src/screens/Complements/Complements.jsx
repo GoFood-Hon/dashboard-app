@@ -46,27 +46,6 @@ export default function Complements() {
   const [category, setCategory] = useState("")
 
   useEffect(() => {
-    let category
-    switch (activeTab) {
-      case "all":
-        setCategory("")
-        break
-      case "drinks":
-        setCategory("bebidas")
-        break
-      case "complements":
-        setCategory("complementos")
-        break
-      case "desserts":
-        setCategory("postres")
-        break
-      case "extras":
-        setCategory("extras")
-        break
-      default:
-        setCategory("extras")
-        break
-    }
     dispatch(
       fetchComplements({
         limit,
@@ -77,25 +56,25 @@ export default function Complements() {
         filters
       })
     )
-
     setCardsSelected([])
-  }, [page, dispatch, restaurant, activeTab])
-
-  const handleNewItem = () => {
-    navigate(NAVIGATION_ROUTES.Menu.submenu.Complements.submenu.NewComplement.path)
-    setCardsSelected([])
-  }
+  }, [page, dispatch, restaurant, activeTab, category])
 
   const refreshPage = () => {
     dispatch(
       fetchComplements({
         limit,
         page,
+        category,
         order: "DESC",
         restaurantId: user.restaurantId,
         filters
       })
     )
+    setCardsSelected([])
+  }
+
+  const handleNewItem = () => {
+    navigate(NAVIGATION_ROUTES.Menu.submenu.Complements.submenu.NewComplement.path)
     setCardsSelected([])
   }
 
@@ -154,6 +133,7 @@ export default function Complements() {
       fetchComplements({
         limit,
         page,
+        category,
         order: "DESC",
         restaurantId: user.restaurantId,
         filters: data
@@ -166,6 +146,93 @@ export default function Complements() {
   const handleClick = (id) => {
     navigate(`${NAVIGATION_ROUTES.Menu.submenu.Complements.path}/${id}`)
   }
+
+  const handleTabChange = (newTab) => {
+    setActiveTab(newTab)
+    switch (newTab) {
+      case "all":
+        setCategory("")
+        break
+      case "drinks":
+        setCategory("bebida")
+        break
+      case "complements":
+        setCategory("complemento")
+        break
+      case "extras":
+        setCategory("extra")
+        break
+      default:
+        setCategory("all")
+        break
+    }
+  }
+
+  const renderComplementsSection = () => (
+    <section className="my-6 w-full">
+      {status === "loading" ? (
+        <div className="h-[calc(100vh-350px)] w-full flex justify-center items-center">
+          <LoadingCircle />
+        </div>
+      ) : complements && complements.length > 0 ? (
+        <Grid grow>
+          {complements.map((item, key) => (
+            <Grid.Col span={{ base: 12, md: 6, lg: 3 }} key={key}>
+              <ItemCard
+                item={item}
+                index={key}
+                navigation={true}
+                cardsSelected={cardsSelected}
+                handleChangeSelected={handleChangeSelected}
+                handleClick={handleClick}
+              />
+            </Grid.Col>
+          ))}
+        </Grid>
+      ) : (
+        <div className="text-center mt-4 text-gray-500">Sin complementos disponibles!</div>
+      )}
+      {status === "error" && <div>Error: {error}</div>}
+    </section>
+  )
+
+  const renderFooterSection = () => (
+    <section className="flex flex-row justify-between pb-32">
+      <div />
+      <Pagination total={totalControlBtn} page={page} limit={limit} onChange={onChangePagination} color={colors.primary_button} />
+    </section>
+  )
+
+  const renderSelectedButtons = () => (
+    <section>
+      {cardsSelected.length >= 1 && (
+        <Affix position={{ bottom: 20, left: "calc(50% - 270px)" }}>
+          <div className="w-full flex flex-row justify-end mt-6 gap-3 rounded-lg bg-white px-8 py-5 border border-gray-100 shadow">
+            <Button
+              text={"Deshabilitar seleccionados"}
+              className={"text-xs border border-red-400 text-red-400 bg-white"}
+              onClick={handleDisableSelected}
+            />
+            <Button
+              text={"Habilitar seleccionados"}
+              className={"text-xs border border-emerald-400 text-emerald-400 bg-white"}
+              onClick={handleEnableSelected}
+            />
+            <Button
+              text={"Deseleccionar todos"}
+              className={"text-xs border border-sky-950 text-sky-950 bg-white"}
+              onClick={handleDeselectAll}
+            />
+            <Button
+              text={"Seleccionar todos"}
+              className={"text-xs border border-sky-950 text-white bg-sky-950"}
+              onClick={handleSelectAll}
+            />
+          </div>
+        </Affix>
+      )}
+    </section>
+  )
 
   return (
     <BaseLayout>
@@ -186,7 +253,7 @@ export default function Complements() {
           </div>
         </div>
       </section>
-      <Tabs color={colors.primary_button} variant="pills" defaultValue="all" value={activeTab} onChange={setActiveTab}>
+      <Tabs color={colors.primary_button} variant="pills" defaultValue="all" value={activeTab} onChange={handleTabChange}>
         <section>
           <Grid grow>
             <Grid.Col span={{ base: 1 }} />
@@ -217,7 +284,6 @@ export default function Complements() {
                     <Tabs.Tab value="all">Todos</Tabs.Tab>
                     <Tabs.Tab value="complements">Complementos</Tabs.Tab>
                     <Tabs.Tab value="drinks">Bebidas</Tabs.Tab>
-                    <Tabs.Tab value="desserts">Postres</Tabs.Tab>
                     <Tabs.Tab value="extras">Extras</Tabs.Tab>
                   </Tabs.List>
                 </div>
@@ -247,70 +313,10 @@ export default function Complements() {
             </Grid.Col>
           </Grid>
         </section>
-        <Tabs.Panel value="all">
-          <section className="my-6 w-full">
-            {status === "loading" ? (
-              <div className="h-[calc(100vh-350px)] w-full flex justify-center items-center">
-                <LoadingCircle />
-              </div>
-            ) : complements && complements.length > 0 ? (
-              <Grid grow>
-                {complements.map((item, key) => (
-                  <Grid.Col span={{ base: 12, md: 6, lg: 3 }} key={key}>
-                    <ItemCard
-                      item={item}
-                      index={key}
-                      navigation={true}
-                      cardsSelected={cardsSelected}
-                      handleChangeSelected={handleChangeSelected}
-                      handleClick={handleClick}
-                    />
-                  </Grid.Col>
-                ))}
-              </Grid>
-            ) : (
-              <div className="text-center mt-4 text-gray-500">Sin complementos disponibles!</div>
-            )}
-            {status === "error" && <div>Error: {error}</div>}
-          </section>
-          <section className="flex flex-row justify-between pb-32">
-            <div />
-            <Pagination
-              total={totalControlBtn}
-              page={page}
-              limit={limit}
-              onChange={onChangePagination}
-              color={colors.primary_button}
-            />
-          </section>
-          <section>
-            {cardsSelected.length >= 1 && (
-              <Affix position={{ bottom: 20, left: "calc(50% - 270px)" }}>
-                <div className="w-full flex flex-row justify-end mt-6 gap-3 rounded-lg bg-white px-8 py-5 border border-gray-100 shadow">
-                  <Button
-                    text={"Deshabilitar seleccionados"}
-                    className={"text-xs border border-red-400 text-red-400 bg-white"}
-                    onClick={handleDisableSelected}
-                  />
-                  <Button
-                    text={"Habilitar seleccionados"}
-                    className={"text-xs border border-emerald-400 text-emerald-400 bg-white"}
-                    onClick={handleEnableSelected}
-                  />
-                  <Button
-                    text={"Deseleccionar todos"}
-                    className={"text-xs border border-sky-950 text-sky-950 bg-white"}
-                    onClick={handleDeselectAll}
-                  />
-                  <Button
-                    text={"Seleccionar todos"}
-                    className={"text-xs border border-sky-950 text-white bg-sky-950"}
-                    onClick={handleSelectAll}
-                  />
-                </div>
-              </Affix>
-            )}
-          </section>
+        <Tabs.Panel value={activeTab}>
+          {renderComplementsSection()}
+          {renderFooterSection()}
+          {renderSelectedButtons()}
         </Tabs.Panel>
       </Tabs>
     </BaseLayout>

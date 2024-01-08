@@ -19,7 +19,7 @@ const initialState = {
 
 export const fetchComplements = createAsyncThunk(
   "complements/fetchComplements",
-  async ({ limit, page, order, restaurantId, filters }, { dispatch }) => {
+  async ({ limit, page, order, restaurantId, filters, category }, { dispatch }) => {
     let formattedStartDate = null
     let formattedEndDate = null
     let formattedStatus = null
@@ -48,6 +48,7 @@ export const fetchComplements = createAsyncThunk(
         limit,
         page,
         order,
+        category,
         restaurantId,
         startDate: formattedStartDate,
         endDate: formattedEndDate,
