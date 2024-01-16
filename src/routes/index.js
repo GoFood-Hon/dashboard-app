@@ -142,24 +142,7 @@ export const SETTING_NAVIGATION_ROUTES = {
     path: "/usuarios/configuraciones/cupones",
     icon: "label"
   },
-  Personal: {
-    type: "button",
-    label: "Personal",
-    path: "/usuarios/configuraciones/personal",
-    icon: "users"
-  },
-  Branches: {
-    type: "button",
-    label: "Sucursales",
-    path: "/usuarios/configuraciones/sucursales",
-    icon: "warehouse"
-  },
-  Kitchen: {
-    type: "button",
-    label: "Cocina",
-    path: "/usuarios/configuraciones/cocina",
-    icon: "chefHat"
-  },
+
   Billing: {
     label: "Facturación"
   },
