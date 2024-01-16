@@ -19,7 +19,7 @@ export default function ComplementsDetails() {
   const [imageModalOpened, { open: openImageModal, close: closeImageModal }] = useDisclosure(false)
   const [formModalOpened, { open: openFormModal, close: closeFormModal }] = useDisclosure(false)
   const [complementDetails, setComplementDetails] = useState({})
-  console.log(complementDetails, "s")
+
   useEffect(() => {
     const fetchComplement = async () => {
       try {
