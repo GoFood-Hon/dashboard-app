@@ -11,6 +11,7 @@ import { useTheme } from "@table-library/react-table-library/theme"
 import { DEFAULT_OPTIONS, getTheme } from "@table-library/react-table-library/mantine"
 import { Icon } from "../../components/Icon"
 import { colors } from "../../theme/colors"
+import { useNavigate } from "react-router-dom"
 
 const nodes = [
   {
@@ -33,8 +34,10 @@ const nodes = [
   }
 ]
 
-export default function OrdersTable() {
-  const [data, setData] = React.useState({ nodes })
+export default function OrdersTable({ refreshPage, items, handleDisableSelected, screenType }) {
+  const navigate = useNavigate()
+  const [data, setData] = useState({ nodes: items })
+  const [itemsSelected, setItemsSelected] = useState([])
 
   //* Pagination *//
 

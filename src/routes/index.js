@@ -7,7 +7,11 @@ export const NAVIGATION_ROUTES = {
   Pedidos: {
     label: "Pedidos",
     path: "/pedidos",
-    icon: "shoppingCart"
+    icon: "shoppingCart",
+    OrderDetails: {
+      label: "Detalles del pedido",
+      path: "/pedidos/:pedidoId"
+    }
   },
   Menu: {
     label: "Menú",

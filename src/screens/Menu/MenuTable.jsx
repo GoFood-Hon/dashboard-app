@@ -16,28 +16,6 @@ import { colors } from "../../theme/colors"
 import { useNavigate } from "react-router-dom"
 import { NAVIGATION_ROUTES } from "../../routes"
 
-/* const nodes = [
-  {
-    id: "3f24d92a-23bc-49a7-8b94-f17f0f3e78a4",
-    name: "Hamburguesas",
-    restaurantId: "13dadca7-2d49-48c1-bac5-fd342999ba14",
-    createdAt: new Date("2023-11-15T19:28:41.812Z"),
-    typeMenu: "normal",
-    description: null,
-    images: null
-  },
-  {
-    id: "3f24d92a-23bc-49a7-8b94-f17f0f3e78a2",
-    name: "Hamburguesas",
-    restaurantId: "13dadca7-2d49-48c1-bac5-fd342999ba14",
-    createdAt: new Date("2023-11-15T19:28:41.812Z"),
-    typeMenu: "normal",
-    description: null,
-    images: null
-  }
-]
- */
-
 export default function MenuTable({ refreshPage, items, handleDisableSelected, screenType }) {
   const navigate = useNavigate()
   const [data, setData] = useState({ nodes: items })
@@ -54,6 +32,8 @@ export default function MenuTable({ refreshPage, items, handleDisableSelected, s
       navigate(`${NAVIGATION_ROUTES.Menu.path}/${id}`)
     } else if (screenType === "usersScreen") {
       navigate(`${NAVIGATION_ROUTES.Users.path}/${id}`)
+    } else if (screenType === "ordersScreen") {
+      navigate(`${NAVIGATION_ROUTES.Pedidos.path}/${id}`)
     }
   }
 
@@ -183,6 +163,65 @@ export default function MenuTable({ refreshPage, items, handleDisableSelected, s
         )
       }
     ]
+  } else if (screenType === "ordersScreen") {
+    columns = [
+      {
+        label: "ID",
+        renderCell: (item) => item.id,
+
+        select: {
+          renderHeaderCellSelect: () => (
+            <Checkbox
+              checked={select.state.all}
+              indeterminate={!select.state.all && !select.state.none}
+              onChange={select.fns.onToggleAll}
+            />
+          ),
+          renderCellSelect: (item) => (
+            <Checkbox checked={select.state.ids.includes(item.id)} onChange={() => select.fns.onToggleById(item.id)} />
+          )
+        }
+      },
+      {
+        label: "USUARIO",
+        renderCell: (item) => <div className="flex flex-row items-center gap-2">{item.name}</div>,
+        sort: { sortKey: "USER" }
+      },
+
+      {
+        label: "TELÉFONO",
+        renderCell: (item) => item.phoneNumber,
+        sort: { sortKey: "PHONE_NUMBER" }
+      },
+      {
+        label: "ESTADO",
+        renderCell: (item) => (item.active ? "Habilitado" : "Deshabilitado"),
+        sort: { sortKey: "STATUS" }
+      },
+      {
+        label: "FECHA",
+        renderCell: (item) => formatDate(item.createdAt),
+        sort: { sortKey: "DATE" }
+      },
+      {
+        label: "TIPO",
+        renderCell: (item) => item.type,
+        sort: { sortKey: "TYPE" }
+      },
+      {
+        label: "TOTAL",
+        renderCell: (item) => item.total,
+        sort: { sortKey: "TOTAL" }
+      },
+      {
+        label: "ACCIONES",
+        renderCell: (item) => (
+          <span onClick={() => handleClick(item.id)}>
+            <Icon icon="eye" size={19} />
+          </span>
+        )
+      }
+    ]
   } else {
     columns = []
   }
@@ -297,6 +336,11 @@ export default function MenuTable({ refreshPage, items, handleDisableSelected, s
 
   const formatDate = (dateString) => {
     const date = new Date(dateString)
+
+    if (isNaN(date)) {
+      return "Invalid Date"
+    }
+
     return formatDistanceToNow(date, { addSuffix: true })
   }
 

@@ -40,6 +40,7 @@ import PlanSettings from "./screens/Users/PlanSettings"
 import AdministrativeSettings from "./screens/Users/AdministrativeSettings"
 import MenuDetails from "./screens/Menu/MenuDetails"
 import UserDetails from "./screens/Users/UserDetails"
+import { OrderDetails } from "./screens/Orders/OrderDetails"
 
 function App() {
   const router = createBrowserRouter(
@@ -49,6 +50,7 @@ function App() {
           <Route path={NAVIGATION_ROUTES.Dashboard.path} element={<Home />} />
 
           <Route path={NAVIGATION_ROUTES.Pedidos.path} element={<Orders />} />
+          <Route path={NAVIGATION_ROUTES.Pedidos.OrderDetails.path} element={<OrderDetails />} />
 
           <Route path={NAVIGATION_ROUTES.Transactions.path} element={<Transactions />} />
 
