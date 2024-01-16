@@ -19,7 +19,7 @@ export default function ComplementsDetails() {
   const [imageModalOpened, { open: openImageModal, close: closeImageModal }] = useDisclosure(false)
   const [formModalOpened, { open: openFormModal, close: closeFormModal }] = useDisclosure(false)
   const [complementDetails, setComplementDetails] = useState({})
-
+  console.log(complementDetails, "s")
   useEffect(() => {
     const fetchComplement = async () => {
       try {
@@ -72,36 +72,11 @@ export default function ComplementsDetails() {
               </div>
             </Card.Section>
             <section>
-              <Grid>
-                <Grid.Col span={{ base: 12, md: 2, lg: 2 }}>
-                  <div className="p-5 bg-white flex md:items-center lg:items-start flex-col">
-                    <span className="text-sky-950 font-bold pt-20 pb-5 text-left text-2xl">{complementDetails?.name}</span>
-                    <div className="text-sky-950 text-sm font-medium pb-5 leading-snug">Pago</div>
-                    <div className="w-[125px] h-px bg-blue-100 sm:w-full" />
-                    <div className="text-sky-950 text-sm font-medium py-2 leading-snug">Precio inicial</div>
-                    <div className="text-sky-950 text-sm font-bold leading-snug pb-2">
-                      {getFormattedHNL(complementDetails?.price)}
-                    </div>
-                    <div className="text-sky-950 text-sm font-medium py-2 leading-snug">Precio final</div>
-                    <div className="text-sky-950 text-sm font-bold leading-snug pb-2">
-                      {getFormattedHNL(complementDetails?.endPrice)}
-                    </div>
-                    <div className="text-sky-950 text-sm font-medium leading-snug mb-2">Cupones</div>
-                    <div className="text-sky-950 text-sm font-bold leading-snug mb-2 p-2 bg-blue-100 rounded-2xl">XAN-DA-3DA</div>
-                    <div className="text-sky-950 text-sm font-medium leading-snug mb-2 mt-4">Preparación</div>
-                    <div className="w-[125px] h-px bg-blue-100 sm:w-full" />
-                    <div className="text-sky-950 text-sm font-medium leading-snug my-2">Tiempo estimado</div>
-                    <div className="text-sky-950 text-sm font-bold leading-snug mb-2">
-                      {complementDetails?.preparationTime} minutos
-                    </div>
-                  </div>
-                </Grid.Col>
-                <Grid.Col span={{ base: 12, md: 10, lg: 10 }}>
-                  <div className="flex w-full flex-col">
+              <Grid mt={"xl"} p={"xl"}>
+                <Grid.Col span={{ base: 12, md: 10 }}>
+                  <div className="flex w-full flex-col pt-14">
                     <div className="flex flex-row justify-between w-full">
-                      <p className="text-zinc-500 text-sm font-medium h-full w-full pt-20 p-8">
-                        {complementDetails?.description}
-                      </p>
+                      <p className="text-zinc-500 text-sm font-medium h-full w-full">{complementDetails?.description}</p>
                       <a
                         className="text-blue-600 text-base font-normal leading-normal cursor-pointer self-center"
                         onClick={() => {
@@ -110,39 +85,44 @@ export default function ComplementsDetails() {
                         Editar
                       </a>
                     </div>
-                    <div className="flex flex-row justify-between">
-                      <span className="text-sky-950 text-base font-bold leading-normal">
-                        Complementos ({complementDetails?.Addons?.length})
-                      </span>
-                    </div>
-                    {complementDetails?.Addons?.map((item) => (
-                      <div
-                        className="w-full p-5 my-3 bg-white rounded-lg border border-blue-100 flex-row justify-between items-center flex text-sm"
-                        key={item?.id}>
-                        <div className="flex flex-row items-center w-1/2">
-                          <img className="w-10 h-10" src={item?.images?.[0]?.location} />
-                          <span className="text-sky-950 pl-3">{item?.name}</span>
-                        </div>
-                        <div className="flex flex-row w-1/2 justify-end">
-                          <span className="text-sky-950 pl-3">{getFormattedHNL(item?.price)}</span>
-                        </div>
-                      </div>
-                    ))}
+                  </div>
+                </Grid.Col>
+              </Grid>
+              <Grid px={"xl"}>
+                <Grid.Col span={{ base: 12, md: "auto" }}>
+                  <div className="flex flex-col">
+                    <span className="text-zinc-500 text-sm  font-medium leading-normal">Precio inicial</span>
+                    <span className="text-sky-950 text-sm  font-bold leading-normal">
+                      {getFormattedHNL(complementDetails?.price)}
+                    </span>
+                  </div>
+                </Grid.Col>
+                <Grid.Col span={{ base: 12, md: "auto" }}>
+                  <div className="flex flex-col">
+                    <span className="text-zinc-500 text-sm  font-medium leading-normal">Precio final</span>
+                    <span className="text-sky-950 text-sm  font-bold leading-normal">
+                      {getFormattedHNL(complementDetails?.endPrice)}
+                    </span>
+                  </div>
+                </Grid.Col>
+                <Grid.Col span={{ base: 12, md: "auto" }}>
+                  <div className="flex flex-col">
+                    <span className="text-zinc-500 text-sm  font-medium leading-normal">Tipo</span>
+                    <span className="text-sky-950 text-sm  font-bold leading-normal">{complementDetails?.category}</span>
+                  </div>
+                </Grid.Col>
+                <Grid.Col span={{ base: 12, md: "auto" }}>
+                  <div className="flex flex-col">
+                    <span className="text-zinc-500 text-sm  font-medium leading-normal">Disponibilidad</span>
+                    <span className="text-sky-950 text-sm  font-bold leading-normal">
+                      {complementDetails?.isActive ? "Habilitado" : "Deshabilitado"}
+                    </span>
                   </div>
                 </Grid.Col>
               </Grid>
             </section>
           </Card>
         </section>
-        {/*  <section className="w-full xl:w-3/12 xl:pl-4 2xl:w-2/12">
-          <Grid grow>
-            {dashboardCards.map((item, key) => (
-              <Grid.Col span={{ lg: 1 }} key={key}>
-                <DashboardCard gutter={{ base: 5, xs: "md", md: "xl", xl: 50 }} data={item} />
-              </Grid.Col>
-            ))}
-          </Grid>
-        </section> */}
       </div>
       <Modal
         opened={imageModalOpened}
