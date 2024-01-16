@@ -1,4 +1,4 @@
-import { Avatar, Breadcrumbs, Grid } from "@mantine/core"
+import { Avatar, Breadcrumbs, Grid, Image, Modal } from "@mantine/core"
 import React, { useState } from "react"
 import BreadCrumbNavigation from "../../components/BreadCrumbNavigation"
 import BaseLayout from "../../components/BaseLayout"
@@ -6,11 +6,14 @@ import { Link, useLocation, useNavigate, useParams } from "react-router-dom"
 import { ArrowRightIcon } from "../../assets/icons"
 import { Icon } from "../../components/Icon"
 import Button from "../../components/Button"
+import { useDisclosure } from "@mantine/hooks"
 
 export const OrderDetails = () => {
   const { orderId } = useParams()
   const location = useLocation()
   const navigate = useNavigate()
+
+  const [orderDetailModalOpened, { open: openOrderDetailsModal, close: closeOrderDetailModal }] = useDisclosure(false)
 
   const [orderDetails, setOrderDetails] = useState({})
 
@@ -71,22 +74,23 @@ export const OrderDetails = () => {
                 </Grid.Col>
               </Grid>
               <Grid pt="xl">
-                <Grid.Col span={{ base: 12, md: "auto" }}>
-                  <img className="w-16 h-16 rounded-lg" src="https://via.placeholder.com/64x64" />
-                </Grid.Col>
-                <Grid.Col span={{ base: 12, md: "auto" }}>
-                  <div className="flex flex-col">
-                    <span className="text-zinc-500 text-sm  font-medium leading-normal">Cantidad</span>
-                    <span className="text-sky-950 text-sm  font-bold leading-normal">23</span>
+                <Grid.Col span={{ base: 12, md: 2.5 }}>
+                  <div className="flex flex-row gap-4">
+                    <img className="w-16 h-16 rounded-lg" src="https://via.placeholder.com/64x64" />
+
+                    <div className="flex flex-col">
+                      <span className="text-zinc-500 text-sm  font-medium leading-normal">Cantidad</span>
+                      <span className="text-sky-950 text-sm  font-bold leading-normal">23</span>
+                    </div>
                   </div>
                 </Grid.Col>
-                <Grid.Col span={{ base: 12, md: "auto" }}>
+                <Grid.Col span={{ base: 12, md: 2.5 }}>
                   <div className="flex flex-col">
                     <span className="text-zinc-500 text-sm  font-medium leading-normal">Promociones</span>
-                    <div className="my-1 px-3 py-1 w-full bg-blue-100 rounded-full justify-center items-center inline-flex">
+                    <div className="my-1 px-3 py-1 w-fit bg-blue-100 rounded-full justify-center items-center inline-flex">
                       <div className="text-sky-950 text-xs font-bold leading-normal">XAN-FJWI-FRJUQ</div>
                     </div>
-                    <div className="my-1 px-3 py-1 w-full bg-blue-100 rounded-full justify-center items-center inline-flex">
+                    <div className="my-1 px-3 py-1 w-fit bg-blue-100 rounded-full justify-center items-center inline-flex">
                       <div className="text-sky-950 text-xs font-bold leading-normal">DAW-FADA-ADWFS</div>
                     </div>
                   </div>
@@ -111,7 +115,13 @@ export const OrderDetails = () => {
                   <Grid.Col span={{ base: 12, md: "auto" }}>
                     <div className="flex flex-col">
                       <span className="text-zinc-500 text-sm  font-medium leading-normal">Whooper</span>
-                      <span className="text-blue-600 text-xs py-2 font-bold leading-normal">Ver orden</span>
+                      <span
+                        className="text-blue-600 text-xs py-2 font-bold leading-normal cursor-pointer"
+                        onClick={() => {
+                          openOrderDetailsModal()
+                        }}>
+                        Ver orden
+                      </span>
                     </div>
                   </Grid.Col>
                   <Grid.Col span={{ base: 12, md: "auto" }}>
@@ -244,6 +254,73 @@ export const OrderDetails = () => {
             </div>
           </Grid.Col>
         </Grid>
+      </section>
+      <section>
+        <Modal
+          opened={orderDetailModalOpened}
+          onClose={closeOrderDetailModal}
+          centered
+          size={"630px"}
+          radius={"lg"}
+          overlayProps={{
+            backgroundOpacity: 0.55,
+            blur: 3
+          }}>
+          <div className="p-4 rounded-xl pt-6 bg-gradient-to-b from-sky-200 via-slate-100 to-neutral-100">
+            <div className="flex flex-row items-center">
+              <Image
+                h={"120px"}
+                w={"130px"}
+                fit="contain"
+                src="https://via.placeholder.com/132x120"
+                radius={"xl"}
+                fallbackSrc="https://placehold.co/600x400?text=Imagen+no+disponible"
+              />
+              <div className="text-sky-950 text-2xl font-bold pl-4 leading-loose">Whopper</div>
+            </div>
+            <Grid mt={"xl"}>
+              <Grid.Col span={{ base: 12, md: "auto" }}>
+                <div className="flex flex-col">
+                  <span className="text-zinc-500 text-sm  font-medium leading-normal">Cantidad</span>
+                  <span className="text-sky-950  text-xs py-2 font-bold leading-normal">12</span>
+                </div>
+              </Grid.Col>
+              <Grid.Col span={{ base: 12, md: "auto" }}>
+                <div className="flex flex-col">
+                  <span className="text-zinc-500 text-sm  font-medium leading-normal">Precio Unit.</span>
+                  <span className="text-sky-950  text-xs py-2 font-bold leading-normal">HND 125.99 x 12</span>
+                </div>
+              </Grid.Col>
+              <Grid.Col span={{ base: 12, md: "auto" }}>
+                <div className="flex flex-col">
+                  <span className="text-zinc-500 text-sm  font-medium leading-normal">Descuento aplicado</span>
+                  <span className="text-sky-950  text-xs py-2 font-bold leading-normal">XAN-FJWI-FRJUQ</span>
+                  <span className="text-sky-950  text-xs font-bold leading-normal">25% (HND 377.97)</span>
+                </div>
+              </Grid.Col>
+              <Grid.Col span={{ base: 12, md: 2 }}>
+                <div className="flex flex-col">
+                  <span className="text-zinc-500 text-sm  font-medium leading-normal">SubTotal</span>
+                  <span className="text-sky-950  text-xs py-2 font-bold leading-normal">HND 1511.88</span>
+                </div>
+              </Grid.Col>
+              <Grid.Col span={{ base: 12, md: 2 }}>
+                <div className="flex flex-col">
+                  <span className="text-zinc-500 text-sm  font-medium leading-normal">Total</span>
+                  <span className="text-sky-950  text-xs py-2 font-bold leading-normal">HND 1133,91</span>
+                </div>
+              </Grid.Col>
+            </Grid>
+            <div className="text-sky-950 text-xl font-bold leading-loose">Complementos</div>
+            <div className="text-sky-950 text-xl font-bold leading-loose py-2">Notas de la orden</div>
+            <div className="text-sky-950 text-base font-normal leading-normal">
+              Horem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio
+              mattis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Curabitur tempus
+              urna at turpis condimentum lobortis. Ut commodo efficitur neque. Ut diam quam, semper iaculis condimentum ac,
+              vestibulum eu nisl.
+            </div>
+          </div>
+        </Modal>
       </section>
     </BaseLayout>
   )
