@@ -114,7 +114,7 @@ export default function EditMenuScreen({ itemDetails, close }) {
         <Accordion
           variant="separated"
           multiple
-          defaultValue={["Información general", "Pagos"]}
+          defaultValue={["Información general", "Platillos"]}
           classNames={{
             label: "bg-white fill-white"
           }}>

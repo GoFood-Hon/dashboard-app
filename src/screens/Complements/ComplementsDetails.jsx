@@ -147,7 +147,7 @@ export default function ComplementsDetails() {
         opened={formModalOpened}
         onClose={closeFormModal}
         centered
-        size={"2xl"}
+        size={"xl"}
         radius={"lg"}
         overlayProps={{
           backgroundOpacity: 0.55,
