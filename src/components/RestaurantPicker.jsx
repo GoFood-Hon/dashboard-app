@@ -3,11 +3,11 @@ import { Combobox, useCombobox, Image } from "@mantine/core"
 import { IconChevronDown } from "@tabler/icons-react"
 import LoadingCircle from "./LoadingCircle"
 import { useDispatch, useSelector } from "react-redux"
-import { setRestaurant } from "../store/features/restaurantSlice"
+import { setRestaurants } from "../store/features/restaurantSlice"
 
 export default function RestaurantPicker({ items }) {
   const dispatch = useDispatch()
-  const restaurant = useSelector((state) => state.restaurant.value)
+  const restaurant = useSelector((state) => state?.restaurant?.value)
 
   const [selectedItem, setSelectedItem] = useState("")
   const [loading, setLoading] = useState(true)
@@ -27,7 +27,7 @@ export default function RestaurantPicker({ items }) {
       setLoading(false)
       // si no hay store selecciona por defecto el primer restaurant
       if (Object.keys(restaurant).length === 0) {
-        dispatch(setRestaurant(items?.[0]))
+        dispatch(setRestaurants(items?.[0]))
         setSelectedItem(items?.[0])
       } else {
         setSelectedItem(restaurant)
@@ -37,7 +37,7 @@ export default function RestaurantPicker({ items }) {
 
   const handleComboboxSubmit = (val) => {
     setSelectedItem(val)
-    dispatch(setRestaurant(val))
+    dispatch(setRestaurants(val))
 
     combobox.closeDropdown()
   }

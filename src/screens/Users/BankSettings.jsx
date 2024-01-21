@@ -10,7 +10,7 @@ import toast from "react-hot-toast"
 import { useSelector } from "react-redux"
 
 export default function BankSettings() {
-  const restaurant = useSelector((state) => state.restaurant.value)
+  const restaurant = useSelector((state) => state?.restaurant?.value)
   const user = useSelector((state) => state.user.value)
 
   const [banks, setBanks] = useState([])

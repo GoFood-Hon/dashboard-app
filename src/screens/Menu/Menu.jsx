@@ -25,7 +25,7 @@ export default function Menu() {
   const page = useSelector((state) => state.menus.currentPage)
   const user = useSelector((state) => state.user.value)
 
-  const restaurant = useSelector((state) => state.restaurant.value)
+  const restaurant = useSelector((state) => state?.restaurant?.value)
 
   const totalControlBtn = Math.ceil(totalItems / limit)
   const [cardsSelected, setCardsSelected] = useState([])

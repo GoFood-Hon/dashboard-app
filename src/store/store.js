@@ -1,6 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit"
 import userReducer from "./features/userSlice"
-import restaurantReducer from "./features/restaurantSlice"
+import restaurantsReducer from "./features/restaurantSlice"
 import dishesReducer from "./features/dishesSlice"
 import complementsReducer from "./features/complementsSlice"
 import dishesCategoriesReducer from "./features/categorySlice"
@@ -12,7 +12,7 @@ export const store = configureStore({
     user: userReducer,
     menus: menuReducer,
     branches: branchReducer,
-    restaurant: restaurantReducer,
+    restaurants: restaurantsReducer,
     dishes: dishesReducer,
     complements: complementsReducer,
     dishesCategories: dishesCategoriesReducer

@@ -9,7 +9,6 @@ import toast from "react-hot-toast"
 import { AlarmIcon } from "../assets/icons/AlarmIcon"
 import { ConfigIcon } from "../assets/icons/ConfigIcon"
 import restaurantsApi from "../api/restaurantApi"
-import RestaurantPicker from "./RestaurantPicker"
 
 export default function Header() {
   const user = useSelector((state) => state.user.value)
@@ -38,7 +37,7 @@ export default function Header() {
         const response = await restaurantsApi.getRestaurant(user?.restaurantId)
 
         if (response.error) {
-          toast.error(`Fallo al obtenerla información del restaurante. Por favor intente de nuevo. ${response.message}`, {
+          toast.error(`aaFallo al obtenerla información del restaurante. Por favor intente de nuevo. ${response.message}`, {
             duration: 7000
           })
         } else {
@@ -49,29 +48,34 @@ export default function Header() {
         throw error
       }
     }
-    fetchRestaurantInformation()
+    if (user.role === "admin-restaurant") {
+      fetchRestaurantInformation()
+    }
   }, [])
 
   return (
     <div className="w-full p-4 flex flex-row justify-between text-black  bg-white dark:text-white dark:bg-slate-800 dark:border-slate-700 border border-slate-200 z-20 fixed">
       <div className="flex flex-row">
-        <div className="border-r-2 border-r-gray-300 pr-4">
+        <div className={`${user.role === "admin-restaurant" ? "border-r-2 border-r-gray-300 pr-4" : null}`}>
           <Image
             src={GoFoodLogo}
             h={50}
             w={90}
             fit="contain"
             fallbackSrc="https://placehold.co/600x400?text=Imagen+no+disponible"
+            onClick={() => navigate("/")}
           />
         </div>
         <div className="pl-1">
-          <Image
-            src={restaurants?.images?.[0]?.location}
-            h={50}
-            w={90}
-            fit="contain"
-            fallbackSrc="https://placehold.co/600x400?text=Imagen+no+disponible"
-          />
+          {user.role === "admin-restaurant" ? (
+            <Image
+              src={restaurants?.images?.[0]?.location}
+              h={50}
+              w={90}
+              fit="contain"
+              fallbackSrc="https://placehold.co/600x400?text=Imagen+no+disponible"
+            />
+          ) : null}
         </div>
       </div>
       <div className="flex flex-row text-sm items-center">

@@ -1,21 +1,35 @@
 import axiosClient from "./axiosClient"
 
 const restaurantsApi = {
-  getAllRestaurants: (page, limit) => axiosClient.get(`api/v1/restaurant?page=${page}&limit=${limit}`),
+  getAllRestaurants: ({ limit, page, order }) => {
+    const params = {
+      limit,
+      page,
+      order
+    }
+    const validParams = Object.fromEntries(Object.entries(params).filter(([_, value]) => value !== undefined && value))
 
+    const queryString = new URLSearchParams(validParams).toString()
+
+    const url = `api/v1/restaurant${queryString ? `?${queryString}` : ""}`
+
+    return axiosClient.get(url)
+  },
+
+  // GET
   getRestaurant: (restaurantId) => axiosClient.get(`api/v1/restaurant/${restaurantId}`),
 
+  // POST
   createRestaurant: (params) =>
     axiosClient.post("api/v1/restaurant", params, { contentType: `multipart/form-data; boundary=${params._boundary}` }),
 
-  updateRestaurant: (params, restaurantId) =>
-    axiosClient.patch(`api/v1/restaurant/${restaurantId}`, params, {
-      headers: {
-        "Content-Type": `multipart/form-data; boundary=${params._boundary}`
-      }
-    }),
+  // UPDATE
+  updateRestaurant: (params, restaurantId) => axiosClient.patch(`api/v1/restaurant/${restaurantId}`, params),
+
+  // DELETE
   deleteRestaurant: (restaurantId) => axiosClient.del(`api/v1/restaurant/${restaurantId}`),
 
+  // POST IMAGE
   addImage: (restaurantId, params) =>
     axiosClient.post(`api/v1/restaurant/${restaurantId}/images`, params, {
       contentType: `multipart/form-data; boundary=${params._boundary}`

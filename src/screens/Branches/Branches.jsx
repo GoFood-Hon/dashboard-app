@@ -32,7 +32,7 @@ export default function Branches() {
   const totalItems = useSelector((state) => state.branches.totalItems)
   const filters = useSelector((state) => state.branches.filters)
   const page = useSelector((state) => state.branches.currentPage)
-  const restaurant = useSelector((state) => state.restaurant.value)
+  const restaurant = useSelector((state) => state?.restaurant?.value)
   const user = useSelector((state) => state.user.value)
 
   const totalControlBtn = Math.ceil(totalItems / limit)
