@@ -1,7 +1,20 @@
 import axiosClient from "./axiosClient"
 
 const restaurantsApi = {
-  getAllRestaurants: (page, limit) => axiosClient.get(`api/v1/restaurant?page=${page}&limit=${limit}`),
+  getAllRestaurants: ({ limit, page, order }) => {
+    const params = {
+      limit,
+      page,
+      order
+    }
+    const validParams = Object.fromEntries(Object.entries(params).filter(([_, value]) => value !== undefined && value))
+
+    const queryString = new URLSearchParams(validParams).toString()
+
+    const url = `api/v1/restaurant${queryString ? `?${queryString}` : ""}`
+
+    return axiosClient.get(url)
+  },
 
   getRestaurant: (restaurantId) => axiosClient.get(`api/v1/restaurant/${restaurantId}`),
 

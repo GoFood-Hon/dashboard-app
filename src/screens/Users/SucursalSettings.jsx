@@ -14,7 +14,7 @@ export default function SucursalSettings({ setValue, errors, register }) {
   const dispatch = useDispatch()
   const limit = useSelector((state) => state.branches.itemsPerPage)
   const page = useSelector((state) => state.branches.currentPage)
-  const restaurant = useSelector((state) => state.restaurant.value)
+  const restaurant = useSelector((state) => state?.restaurant?.value)
   const filters = useSelector((state) => state.branches.filters)
   const branches = useSelector(selectAllBranches)
   const user = useSelector((state) => state.user.value)

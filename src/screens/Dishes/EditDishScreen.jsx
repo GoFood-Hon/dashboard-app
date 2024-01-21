@@ -14,7 +14,7 @@ import complementsApi from "../../api/complementsApi"
 
 export default function EditDishScreen({ close, dishDetails }) {
   const dispatch = useDispatch()
-  const restaurant = useSelector((state) => state.restaurant.value)
+  const restaurant = useSelector((state) => state?.restaurant?.value)
   const user = useSelector((state) => state.user.value)
 
   const [isDataCleared, setIsDataCleared] = useState(false)

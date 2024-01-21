@@ -1,72 +1,58 @@
 import React, { useEffect, useState } from "react"
 import BaseLayout from "../../components/BaseLayout"
-import { Affix, Breadcrumbs, CloseButton, Grid, Input, Pagination } from "@mantine/core"
 import Button from "../../components/Button"
-import { useNavigate, useLocation } from "react-router-dom"
-import { colors } from "../../theme/colors"
-import { NAVIGATION_ROUTES } from "../../routes"
+import { Affix, Breadcrumbs, Grid, Pagination } from "@mantine/core"
 import BreadCrumbNavigation from "../../components/BreadCrumbNavigation"
-import { useDispatch, useSelector } from "react-redux"
-import {
-  fetchDishes,
-  selectAllDishes,
-  selectDishesError,
-  selectDishesStatus,
-  setFilters,
-  setPage,
-  updateDish
-} from "../../store/features/dishesSlice"
+import { NAVIGATION_ROUTES } from "../../routes"
 import LoadingCircle from "../../components/LoadingCircle"
 import ItemCard from "../../components/ItemCard"
+import { fetchRestaurants, setPage, setRestaurants } from "../../store/features/restaurantSlice"
+import { useLocation, useNavigate } from "react-router-dom"
+import { useDispatch, useSelector } from "react-redux"
 import { Icon } from "../../components/Icon"
-import FilterPopover from "../../components/FilterPopover"
+import { colors } from "../../theme/colors"
 
-export default function Dishes() {
+export default function RestaurantsScreen() {
   const navigate = useNavigate()
   const location = useLocation()
   const dispatch = useDispatch()
-  const user = useSelector((state) => state.user.value)
 
-  const dishes = useSelector(selectAllDishes)
-  const status = useSelector(selectDishesStatus)
-  const error = useSelector(selectDishesError)
-  const limit = useSelector((state) => state.dishes.itemsPerPage)
-  const totalItems = useSelector((state) => state.dishes.totalItems)
-  const filters = useSelector((state) => state.dishes.filters)
-  const page = useSelector((state) => state.dishes.currentPage)
-  const restaurant = useSelector((state) => state?.restaurant?.value)
+  const user = useSelector((state) => state.user.value)
+  const limit = useSelector((state) => state.restaurants.itemsPerPage)
+  const totalItems = useSelector((state) => state.restaurants.totalItems)
+  const filters = useSelector((state) => state.restaurants.filters)
+  const page = useSelector((state) => state.restaurants.currentPage)
+  const restaurant = useSelector((state) => state?.restaurants?.value?.data)
 
   const totalControlBtn = Math.ceil(totalItems / limit)
-  const [searchDish, setSearchDish] = useState("")
+
+  const [restaurantData, setRestaurantData] = useState({})
   const [cardsSelected, setCardsSelected] = useState([])
-
-  useEffect(() => {
-    dispatch(
-      fetchDishes({
-        limit,
-        page,
-        order: "DESC",
-        restaurantId: user.restaurantId,
-        filters
-      })
-    )
-
-    setCardsSelected([])
-  }, [page, dispatch, restaurant])
+  const [activeTab, setActiveTab] = useState("all")
+  const [category, setCategory] = useState("")
 
   const handleNewItem = () => {
     navigate(NAVIGATION_ROUTES.Menu.submenu.Dishes.submenu.NewDish.path)
     setCardsSelected([])
   }
 
-  const refreshPage = () => {
+  useEffect(() => {
     dispatch(
-      fetchDishes({
+      fetchRestaurants({
         limit,
         page,
-        order: "DESC",
-        restaurantId: user.restaurantId,
-        filters
+        order: "DESC"
+      })
+    )
+    setCardsSelected([])
+  }, [dispatch, activeTab, category, page])
+
+  const refreshPage = () => {
+    dispatch(
+      fetchRestaurants({
+        limit,
+        page,
+        order: "DESC"
       })
     )
     setCardsSelected([])
@@ -78,7 +64,7 @@ export default function Dishes() {
   }
 
   const handleSelectAll = () => {
-    const allSelected = dishes.map((dish) => dish.id)
+    const allSelected = restaurant.map((item) => item.id)
     setCardsSelected(allSelected)
   }
 
@@ -95,49 +81,27 @@ export default function Dishes() {
   }
 
   const handleEnableSelected = async () => {
-    await Promise.all(
+    /*  await Promise.all(
       cardsSelected.map(async (id) => {
         await dispatch(updateDish({ data: { id, isActive: true }, propertyToUpdate: "isActive" }))
       })
     )
 
-    refreshPage()
+    refreshPage() */
   }
 
   const handleDisableSelected = async () => {
-    await Promise.all(
+    /*  await Promise.all(
       cardsSelected.map(async (id) => {
         await dispatch(updateDish({ data: { id, isActive: false }, propertyToUpdate: "isActive" }))
       })
     )
 
-    refreshPage()
-  }
-
-  const onFiltersChange = (data) => {
-    const serializableFilters = {
-      ...data,
-      startDate: data.startDate?.toISOString().split("T")[0],
-      endDate: data.endDate?.toISOString().split("T")[0]
-    }
-
-    dispatch(setFilters(serializableFilters))
-
-    dispatch(
-      fetchDishes({
-        limit,
-        page,
-        order: "DESC",
-        restaurantId: user.restaurantId,
-        filters: data
-      })
-    )
-
-    setCardsSelected([])
+    refreshPage() */
   }
 
   const handleClick = (id) => {
-    navigate(`${NAVIGATION_ROUTES.Menu.submenu.Dishes.path}/${id}`)
+    /*   navigate(`${NAVIGATION_ROUTES.Menu.submenu.Dishes.path}/${id}`) */
   }
 
   return (
@@ -145,12 +109,7 @@ export default function Dishes() {
       <section>
         <div className="flex flex-row justify-between items-center pb-6">
           <div className="flex flex-row gap-x-3 items-center">
-            <h1 className="text-white-200 text-2xl font-semibold">Platillos</h1>
-            <Button
-              text={"Nuevo Platillo"}
-              className={"text-white text-md px-3 py-2 bg-primary_button mb-0"}
-              onClick={handleNewItem}
-            />
+            <h1 className="text-white-200 text-2xl font-semibold">Restaurantes</h1>
           </div>
           <div>
             <Breadcrumbs>
@@ -161,21 +120,6 @@ export default function Dishes() {
       </section>
       <section>
         <div className="flex flex-row justify-between">
-          {/*  <Input
-            className="w-80"
-            placeholder="Buscar platillo"
-            value={searchDish}
-            onChange={(event) => setSearchDish(event.currentTarget.value)}
-            rightSectionPointerEvents="all"
-            leftSection={<Icon icon="search" size={16} color="#6d7177" />}
-            rightSection={
-              <CloseButton
-                aria-label="Clear input"
-                onClick={() => setSearchDish("")}
-                style={{ display: searchDish ? undefined : "none" }}
-              />
-            }
-          /> */}
           <div className="flex flex-row w-full justify-end items-center">
             <div className="flex flex-row mr-4">
               <span className="text-sky-950 text-base font-bold leading-normal">{page === 1 ? 1 : (page - 1) * limit + 1}</span>
@@ -184,26 +128,20 @@ export default function Dishes() {
                 {page === 1 ? limit : Math.min(page * limit, totalItems)}
               </span>
               <span className="text-zinc-500 text-base font-medium leading-normal px-1"> de </span>
-              <span className="text-sky-950 text-base font-bold leading-normal">{totalItems} platillos</span>
+              <span className="text-sky-950 text-base font-bold leading-normal">{totalItems} Restaurantes</span>
             </div>
             <div className="flex flex-row h-full items-center gap-3">
               <span className="cursor-pointer" onClick={refreshPage}>
                 <Icon icon="reload" size={20} />
               </span>
-              {/*  <FilterPopover onFiltersChange={onFiltersChange} refreshPage={refreshPage} /> */}
-              {/*   <SortPopover onFiltersChange={onFiltersChange} refreshPage={refreshPage} /> */}
             </div>
           </div>
         </div>
       </section>
       <section className="my-6 w-full">
-        {status === "loading" ? (
-          <div className="h-[calc(100vh-350px)] w-full flex justify-center items-center">
-            <LoadingCircle />
-          </div>
-        ) : dishes && dishes.length > 0 ? (
+        {restaurant && restaurant?.length > 0 ? (
           <Grid grow>
-            {dishes?.map((item, key) => (
+            {restaurant?.map((item, key) => (
               <Grid.Col span={{ base: 12, md: 6, lg: 3 }} key={key}>
                 <ItemCard
                   item={item}
@@ -217,9 +155,8 @@ export default function Dishes() {
             ))}
           </Grid>
         ) : (
-          <div className="text-center mt-4 text-gray-500">Sin platillos disponibles!</div>
+          <div className="text-center mt-4 text-gray-500">Sin restaurantes disponibles!</div>
         )}
-        {status === "error" && <div>Error: {error}</div>}
       </section>
       <section className="flex flex-row justify-between pb-32">
         <div />

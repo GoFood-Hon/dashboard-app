@@ -20,7 +20,7 @@ export default function NewMenu() {
   const navigate = useNavigate()
   const dispatch = useDispatch()
 
-  const restaurant = useSelector((state) => state.restaurant.value)
+  const restaurant = useSelector((state) => state?.restaurant?.value)
   const user = useSelector((state) => state.user.value)
 
   const {

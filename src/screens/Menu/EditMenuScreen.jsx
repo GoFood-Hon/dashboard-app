@@ -27,7 +27,7 @@ export default function EditMenuScreen({ itemDetails, close }) {
   const dispatch = useDispatch()
   const user = useSelector((state) => state.user.value)
 
-  const restaurant = useSelector((state) => state.restaurant.value)
+  const restaurant = useSelector((state) => state?.restaurant?.value)
   const [isDataCleared, setIsDataCleared] = useState(false)
 
   const [dishes, setDishes] = useState([])

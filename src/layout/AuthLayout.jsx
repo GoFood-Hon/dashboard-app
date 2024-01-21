@@ -17,6 +17,7 @@ function AuthLayout() {
   const [loading, setLoading] = useState(true)
   const { pathname } = location
   const shouldRenderSettings = pathname.includes(NAVIGATION_ROUTES.Users.submenu.Settings.path)
+  const shouldRenderSideBar = pathname.includes("/unauthorized")
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -38,7 +39,7 @@ function AuthLayout() {
   ) : (
     <>
       <Header />
-      <SideBar />
+      {!shouldRenderSideBar && <SideBar />}
       {shouldRenderSettings && <SettingsSidebar />}
       <Outlet />
     </>

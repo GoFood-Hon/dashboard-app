@@ -53,11 +53,6 @@ export const NAVIGATION_ROUTES = {
           }
         }
       }
-      /*  Combos: {
-        label: "Combos",
-        icon: "menu",
-        path: "/menu/combos"
-      } */
     }
   },
   Transactions: {
@@ -65,11 +60,7 @@ export const NAVIGATION_ROUTES = {
     path: "/transacciones",
     icon: "invoice"
   },
-  /*  Complements: {
-    label: "Complementos",
-    path: "/complements",
-    icon: "layout"
-  }, */
+
   Branches: {
     label: "Sucursales",
     path: "/sucursales",
@@ -93,15 +84,29 @@ export const NAVIGATION_ROUTES = {
       path: "/usuarios/nuevoUsuario"
     },
     submenu: {
-      /*  Admins: {
-        label: "Admins",
-        path: "/usuarios/administradores"
-      }, */
       Settings: {
         label: "Configuraciones",
         path: "/usuarios/configuraciones/"
       }
     }
+  }
+}
+
+export const NAVIGATION_ROUTES_SUPER_ADMIN = {
+  Dashboard: {
+    label: "Inicio",
+    path: "/",
+    icon: "dashboard"
+  },
+  Restaurants: {
+    label: "Restaurantes",
+    path: "/restaurantes",
+    icon: "branch"
+  },
+  Transactions: {
+    label: "Transacciones",
+    path: "/transacciones",
+    icon: "invoice"
   }
 }
 

@@ -36,14 +36,14 @@ export default function Complements() {
   const totalItems = useSelector((state) => state.complements.totalItems)
   const filters = useSelector((state) => state.complements.filters)
   const page = useSelector((state) => state.complements.currentPage)
-  const restaurant = useSelector((state) => state.restaurant.value)
+  const restaurant = useSelector((state) => state?.restaurant?.value)
 
   const totalControlBtn = Math.ceil(totalItems / limit)
 
   const [cardsSelected, setCardsSelected] = useState([])
   const [activeTab, setActiveTab] = useState("all")
-  const [searchDish, setSearchDish] = useState("")
   const [category, setCategory] = useState("")
+  const [searchDish, setSearchDish] = useState("")
 
   useEffect(() => {
     dispatch(
