@@ -4,9 +4,9 @@ import Button from "../../components/Button"
 import { Affix, Breadcrumbs, Grid, Pagination } from "@mantine/core"
 import BreadCrumbNavigation from "../../components/BreadCrumbNavigation"
 import { NAVIGATION_ROUTES } from "../../routes"
-import LoadingCircle from "../../components/LoadingCircle"
+
 import ItemCard from "../../components/ItemCard"
-import { fetchRestaurants, setPage, setRestaurants } from "../../store/features/restaurantSlice"
+import { fetchRestaurants, setPage, updateRestaurant } from "../../store/features/restaurantSlice"
 import { useLocation, useNavigate } from "react-router-dom"
 import { useDispatch, useSelector } from "react-redux"
 import { Icon } from "../../components/Icon"
@@ -20,20 +20,16 @@ export default function RestaurantsScreen() {
   const user = useSelector((state) => state.user.value)
   const limit = useSelector((state) => state.restaurants.itemsPerPage)
   const totalItems = useSelector((state) => state.restaurants.totalItems)
-  const filters = useSelector((state) => state.restaurants.filters)
   const page = useSelector((state) => state.restaurants.currentPage)
   const restaurant = useSelector((state) => state?.restaurants?.value?.data)
 
   const totalControlBtn = Math.ceil(totalItems / limit)
 
-  const [restaurantData, setRestaurantData] = useState({})
   const [cardsSelected, setCardsSelected] = useState([])
-  const [activeTab, setActiveTab] = useState("all")
-  const [category, setCategory] = useState("")
 
   const handleNewItem = () => {
-    navigate(NAVIGATION_ROUTES.Menu.submenu.Dishes.submenu.NewDish.path)
-    setCardsSelected([])
+    /* navigate(NAVIGATION_ROUTES.Menu.submenu.Dishes.submenu.NewDish.path)
+    setCardsSelected([]) */
   }
 
   useEffect(() => {
@@ -45,7 +41,7 @@ export default function RestaurantsScreen() {
       })
     )
     setCardsSelected([])
-  }, [dispatch, activeTab, category, page])
+  }, [dispatch, page])
 
   const refreshPage = () => {
     dispatch(
@@ -81,23 +77,23 @@ export default function RestaurantsScreen() {
   }
 
   const handleEnableSelected = async () => {
-    /*  await Promise.all(
+    await Promise.all(
       cardsSelected.map(async (id) => {
-        await dispatch(updateDish({ data: { id, isActive: true }, propertyToUpdate: "isActive" }))
+        await dispatch(updateRestaurant({ data: { id, isActive: true }, propertyToUpdate: "isActive" }))
       })
     )
 
-    refreshPage() */
+    refreshPage()
   }
 
   const handleDisableSelected = async () => {
-    /*  await Promise.all(
+    await Promise.all(
       cardsSelected.map(async (id) => {
-        await dispatch(updateDish({ data: { id, isActive: false }, propertyToUpdate: "isActive" }))
+        await dispatch(updateRestaurant({ data: { id, isActive: false }, propertyToUpdate: "isActive" }))
       })
     )
 
-    refreshPage() */
+    refreshPage()
   }
 
   const handleClick = (id) => {

@@ -38,6 +38,61 @@ export const fetchRestaurants = createAsyncThunk(
   }
 )
 
+/*
+ * UPDATE RES
+ */
+
+const updateFormData = (data, propertyToUpdate) => {
+  const formData = new FormData()
+
+  if (propertyToUpdate === "isActive") {
+    formData.append("isActive", data.isActive)
+  } else {
+    /*  formData.append("name", data.name)
+    formData.append("price", data.price)
+    formData.append("description", data.description)
+    formData.append("includesDrink", data.includeDrink)
+    formData.append("endPrice", data.endPrice)
+    formData.append("categoryId", data.categoryId)
+    formData.append("restaurantId", data.restaurantId)
+    formData.append("preparationTime", data?.preparationTime) */
+  }
+
+  return formData
+}
+export const updateRestaurant = createAsyncThunk(
+  "restaurant/updateRestaurant",
+  async ({ data, propertyToUpdate = "all" }, { dispatch }) => {
+    try {
+      const formData = updateFormData(data, propertyToUpdate)
+
+      const response = await restaurantsApi.updateRestaurant(formData, data?.id)
+
+      if (response.error) {
+        toast.error(`Fallo al actualizar el restaurante. Por favor intente de nuevo. ${response.message}`, {
+          duration: 7000
+        })
+      } else {
+        toast.success("Restaurante actualizado exitosamente", {
+          duration: 7000
+        })
+      }
+      return response.data
+    } catch (error) {
+      dispatch(setError("Error updating restaurant"))
+      toast.error("Fallo al actualizar el restaurante. Por favor intente de nuevo.", {
+        duration: 7000
+      })
+
+      throw error
+    }
+  }
+)
+
+/*
+ * RES SLICE
+ */
+
 export const restaurantsSlice = createSlice({
   name: "restaurants",
   initialState,

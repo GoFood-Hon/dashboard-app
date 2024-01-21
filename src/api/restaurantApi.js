@@ -16,19 +16,20 @@ const restaurantsApi = {
     return axiosClient.get(url)
   },
 
+  // GET
   getRestaurant: (restaurantId) => axiosClient.get(`api/v1/restaurant/${restaurantId}`),
 
+  // POST
   createRestaurant: (params) =>
     axiosClient.post("api/v1/restaurant", params, { contentType: `multipart/form-data; boundary=${params._boundary}` }),
 
-  updateRestaurant: (params, restaurantId) =>
-    axiosClient.patch(`api/v1/restaurant/${restaurantId}`, params, {
-      headers: {
-        "Content-Type": `multipart/form-data; boundary=${params._boundary}`
-      }
-    }),
+  // UPDATE
+  updateRestaurant: (params, restaurantId) => axiosClient.patch(`api/v1/restaurant/${restaurantId}`, params),
+
+  // DELETE
   deleteRestaurant: (restaurantId) => axiosClient.del(`api/v1/restaurant/${restaurantId}`),
 
+  // POST IMAGE
   addImage: (restaurantId, params) =>
     axiosClient.post(`api/v1/restaurant/${restaurantId}/images`, params, {
       contentType: `multipart/form-data; boundary=${params._boundary}`
