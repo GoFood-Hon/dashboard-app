@@ -59,7 +59,7 @@ export default function GeneralInformationForm({ register, errors, setValue, isD
         key={index}
         src={imageUrl}
         onLoad={() => URL.revokeObjectURL(imageUrl)}
-        className="h-14 w-14 rounded-xl object-cover object-center border m-1"
+        className="m-1 h-14 w-14 rounded-xl border object-cover object-center"
       />
     )
   })
@@ -67,8 +67,8 @@ export default function GeneralInformationForm({ register, errors, setValue, isD
   return (
     <Grid>
       <Grid.Col span={{ base: 12, md: 8, lg: 8 }}>
-        <div className="w-full h-full items-center justify-center flex bg-white rounded-2xl border border-blue-100 p-4">
-          <div className="flex flex-col w-full">
+        <div className="flex h-full w-full items-center justify-center rounded-2xl border border-blue-100 bg-white p-4">
+          <div className="flex w-full flex-col">
             <InputField
               label="Nombre (Obligatorio)"
               name="name"
@@ -85,19 +85,7 @@ export default function GeneralInformationForm({ register, errors, setValue, isD
               errors={errors}
               placeholder="Ej. Rico pollo con papas, salsas..."
             />
-            <div className="mt-1">
-              <InputSearchCombobox
-                label="Categoría del platillo"
-                name={"categoryId"}
-                placeholder="Buscar categoría"
-                emptyMessage="Sin categorías  "
-                items={categories}
-                register={register}
-                errors={errors}
-                setValue={setValue}
-                status={status}
-              />
-            </div>
+
             <div className="mt-4">
               <InputCheckbox label="Incluye bebida?" name="includeDrink" register={register} />
             </div>
@@ -105,14 +93,14 @@ export default function GeneralInformationForm({ register, errors, setValue, isD
         </div>
       </Grid.Col>
       <Grid.Col span={{ base: 12, md: 4, lg: 4 }}>
-        <div className="flex flex-col justify-center items-center w-full h-full bg-white rounded-2xl border border-blue-100 p-4">
+        <div className="flex h-full w-full flex-col items-center justify-center rounded-2xl border border-blue-100 bg-white p-4">
           {previews.length > 0 ? (
             <div className="w-full">
-              <Text size="lg" inline className="text-left mb-5">
+              <Text size="lg" inline className="mb-5 text-left">
                 Imagen seleccionada:
               </Text>
-              <div className="flex flex-row justify-center items-center rounded-2xl w-full border border-slate-200 my-3">
-                <div className="flex flex-row w-full items-center gap-2 flex-wrap p-2">
+              <div className="my-3 flex w-full flex-row items-center justify-center rounded-2xl border border-slate-200">
+                <div className="flex w-full flex-row flex-wrap items-center gap-2 p-2">
                   {previews}
                   <div className="flex flex-col">
                     <Text className="font-semibold italic">{fileInformation?.name}</Text>
@@ -129,7 +117,7 @@ export default function GeneralInformationForm({ register, errors, setValue, isD
           ) : (
             <Dropzone onDrop={handleDrop} accept={IMAGE_MIME_TYPE}>
               <Group justify="center" gap="xl" mih={220} style={{ pointerEvents: "none" }}>
-                <div className="flex items-center flex-col">
+                <div className="flex flex-col items-center">
                   <IconPhoto style={{ width: rem(52), height: rem(52), color: "var(--mantine-color-dimmed)" }} stroke={1.5} />
                   <Text size="xl" inline className="text-center">
                     Seleccione una imagen destacada
@@ -141,7 +129,7 @@ export default function GeneralInformationForm({ register, errors, setValue, isD
               </Group>
             </Dropzone>
           )}
-          {errors.files && <p className="text-red-500 text-center w-full">* Imagen es requerida.</p>}
+          {errors.files && <p className="w-full text-center text-red-500">* Imagen es requerida.</p>}
         </div>
       </Grid.Col>
     </Grid>
