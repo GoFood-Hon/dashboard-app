@@ -197,9 +197,9 @@ export default function Branches() {
             <LoadingCircle />
           </div>
         ) : branches && branches.length > 0 ? (
-          <Grid grow>
+          <Grid>
             {branches?.map((item, key) => (
-              <Grid.Col span={{ base: 12, md: 6, lg: 3 }} key={key}>
+              <Grid.Col span={{ base: 12, md: 6, lg: 4 }} key={key}>
                 <ItemCard
                   item={item}
                   index={key}
