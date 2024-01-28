@@ -64,7 +64,7 @@ export const createMenu = createAsyncThunk("menus/createMenu", async ({ data, re
     dispatch(fetchMenus())
 
     if (response.error) {
-      toast.error(`Fallo al crear el platillo. Por favor intente de nuevo. ${response.message}`, {
+      toast.error(`Fallo al crear el menu. Por favor intente de nuevo. ${response.message}`, {
         duration: 7000
       })
     } else {
@@ -84,12 +84,12 @@ export const createMenu = createAsyncThunk("menus/createMenu", async ({ data, re
         })
       }
 
-      toast.success("Platillo creado exitosamente", { duration: 7000 })
+      toast.success("Menu creado exitosamente", { duration: 7000 })
       return response.data
     }
   } catch (error) {
-    dispatch(setError("Error updating dish"))
-    toast.error("Fallo al actualizar el platillo. Por favor intente de nuevo.", {
+    dispatch(setError("Error updating menu"))
+    toast.error("Fallo al actualizar el menu. Por favor intente de nuevo.", {
       duration: 7000
     })
 
