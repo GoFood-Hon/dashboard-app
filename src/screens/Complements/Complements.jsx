@@ -175,9 +175,9 @@ export default function Complements() {
           <LoadingCircle />
         </div>
       ) : complements && complements.length > 0 ? (
-        <Grid grow>
+        <Grid>
           {complements.map((item, key) => (
-            <Grid.Col span={{ base: 12, md: 6, lg: 3 }} key={key}>
+            <Grid.Col span={{ base: 12, md: 6, lg: 4 }} key={key}>
               <ItemCard
                 item={item}
                 index={key}
