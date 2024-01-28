@@ -101,7 +101,7 @@ export default function CouponsSettings() {
           <section>
             <div className="flex flex-row justify-between items-center pb-6">
               <div className="flex flex-row gap-x-3 items-center">
-                <h1 className="text-white-200 text-2xl font-semibold">Cupones</h1>
+                <h1 className="text-white-200 text-2xl font-semibold">Promociones</h1>
               </div>
               <div>
                 <Breadcrumbs>
@@ -110,13 +110,14 @@ export default function CouponsSettings() {
               </div>
             </div>
           </section>
-          <Tabs defaultValue="newCoupon" color="#0e2946">
+          <Tabs defaultValue="newPromotion" color="#0e2946">
             <Tabs.List>
-              <Tabs.Tab value="newCoupon">Nuevo cupón</Tabs.Tab>
-              <Tabs.Tab value="activeCoupons">Cupones activos</Tabs.Tab>
+              <Tabs.Tab value="newPromotion">Nueva promoción</Tabs.Tab>
+              <Tabs.Tab value="activePromos">Promociones activas</Tabs.Tab>
+              <Tabs.Tab value="duePromos">Promociones vencidas</Tabs.Tab>
             </Tabs.List>
-            <Tabs.Panel value="newCoupon">
-              <SettingsCard title="Nuevo cupón" iconName="label">
+            <Tabs.Panel value="newPromotion">
+              <SettingsCard title="Nueva promoción" iconName="label">
                 <Grid my={20}>
                   <Grid.Col span={{ sm: 12 }}>
                     <InputField label="Titulo" name="title" register={register} errors={errors} />
@@ -210,8 +211,11 @@ export default function CouponsSettings() {
                 </div>
               </SettingsCard>
             </Tabs.Panel>
-            <Tabs.Panel value="activeCoupons">
+            <Tabs.Panel value="activePromos">
               <SettingsCard title="Tabla de cupones activos" iconName="label"></SettingsCard>
+            </Tabs.Panel>
+            <Tabs.Panel value="duePromos">
+              <SettingsCard title="Tabla de cupones vencidos" iconName="label"></SettingsCard>
             </Tabs.Panel>
           </Tabs>
         </div>

@@ -141,10 +141,10 @@ export const SETTING_NAVIGATION_ROUTES = {
     path: "/usuarios/configuraciones/negocios",
     icon: "building"
   },
-  Coupons: {
+  Promotions: {
     type: "button",
-    label: "Cupones",
-    path: "/usuarios/configuraciones/cupones",
+    label: "Promociones",
+    path: "/usuarios/configuraciones/promociones",
     icon: "label"
   },
 

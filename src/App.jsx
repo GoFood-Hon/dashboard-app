@@ -99,7 +99,7 @@ function App() {
             <Route path={SETTING_NAVIGATION_ROUTES.Cuenta.path} element={<AccountSettings />} />
             <Route path={SETTING_NAVIGATION_ROUTES.Password.path} element={<PasswordSettings />} />
             <Route path={SETTING_NAVIGATION_ROUTES.Business_btn.path} element={<BusinessSettings />} />
-            <Route path={SETTING_NAVIGATION_ROUTES.Coupons.path} element={<CouponsSettings />} />
+            <Route path={SETTING_NAVIGATION_ROUTES.Promotions.path} element={<CouponsSettings />} />
             <Route path={SETTING_NAVIGATION_ROUTES.Bank.path} element={<BankSettings />} />
             <Route path={SETTING_NAVIGATION_ROUTES.Plan.path} element={<PlanSettings />} />
           </Route>
