@@ -25,7 +25,6 @@ export default function NewDish() {
   const user = useSelector((state) => state.user.value)
 
   const [isDataCleared, setIsDataCleared] = useState(false)
-  const [isAffixMounted, setAffixMounted] = useState(false)
   const [extras, setExtras] = useState([])
 
   const containerRef = useRef(null)
@@ -124,25 +123,6 @@ export default function NewDish() {
     </Accordion.Item>
   ))
 
-  /*   useEffect(() => {
-    const container = containerRef.current
-
-    if (container) {
-      const observer = new IntersectionObserver((entries) => {
-        if (entries[0].isIntersecting) {
-          setAffixMounted(false)
-        } else {
-          setAffixMounted(true)
-        }
-      })
-
-      observer.observe(container)
-      return () => {
-        observer.disconnect()
-      }
-    }
-  }, []) */
-
   const onSubmit = (data) => {
     const restaurantId = user.restaurantId
     dispatch(createDish({ data, restaurantId })).then((response) => {
@@ -150,41 +130,10 @@ export default function NewDish() {
         reset()
         localStorage.removeItem("draft")
         setIsDataCleared(true)
+        navigate(NAVIGATION_ROUTES.Menu.submenu.Dishes.path)
       }
     })
   }
-
-  const onSaveDraft = (data) => {
-    const formData = JSON.stringify({
-      name: data.name,
-      files: data.files[0],
-      price: data.price,
-      description: data.description,
-      includesDrink: data.includeDrink,
-      endPrice: data.endPrice,
-      categoryId: data.categoryId,
-      restaurantId: user.restaurantId
-    })
-
-    localStorage.setItem("draft", formData)
-
-    toast.success("Platillo guardado como borrador")
-
-    reset()
-  }
-
-  useEffect(() => {
-    const draftData = localStorage.getItem("draft")
-
-    if (draftData) {
-      const parsedData = JSON.parse(draftData)
-
-      Object.keys(parsedData).forEach((field) => {
-        setValue(field, parsedData[field])
-      })
-      toast.success("Platillo cargado desde borrador")
-    }
-  }, [setValue])
 
   return (
     <BaseLayout>
@@ -203,7 +152,7 @@ export default function NewDish() {
           <Accordion
             variant="separated"
             multiple
-            defaultValue={["Información general", "Pagos"]}
+            defaultValue={["Información general", "Pagos", "Preparación"]}
             classNames={{
               label: "bg-white fill-white"
             }}>
@@ -211,60 +160,25 @@ export default function NewDish() {
           </Accordion>
         </section>
         <section ref={containerRef}>
-          {/*  <Affix position={{ bottom: 20, left: "calc(50% - 200px)" }}>
-            <Transition transition="slide-down" mounted={isAffixMounted} duration={400} timingFunction="ease">
-              {(transitionStyles) => (
-                <div
-                  className="w-full flex flex-row justify-end mt-6 gap-3 rounded-lg bg-white px-8 py-5 border border-gray-100 shadow"
-                  style={transitionStyles}>
-                  <Button
-                    text={"Descartar"}
-                    className={"text-xs border border-red-400 text-red-400 bg-white"}
-                    onClick={() => {
-                      reset()
-                      localStorage.removeItem("draft")
-                      toast.success("Información eliminada")
-                    }}
-                  />
-                  <Button
-                    text={"Guardar como borrador"}
-                    className={"text-xs border bg-white border-sky-950 text-sky-950"}
-                    onClick={handleSubmit(onSaveDraft)}
-                  />
-                  <Button
-                    text={"Guardar platillo"}
-                    onClick={() => handleSubmit(onSubmit)}
-                    className="flex h-10 w-full items-center justify-center px-4 rounded-md shadow-sm transition-all duration-700 focus:outline-none text-xs bg-sky-950 text-slate-50"
-                  />
-                </div>
-              )}
-            </Transition>
-          </Affix> */}
-          {!isAffixMounted && (
-            <div className="mt-6 flex w-full rounded-md border border-gray-200 bg-white px-8 py-5 md:justify-end md:gap-3">
-              <div className="lg:1/3 flex flex-row justify-end gap-3 sm:w-full sm:flex-wrap md:w-2/3 md:flex-nowrap">
-                <Button
-                  text={"Descartar"}
-                  className={"border border-red-400 bg-white text-xs text-red-400"}
-                  onClick={() => {
-                    reset()
-                    localStorage.removeItem("draft")
-                    toast.success("Información eliminada")
-                    navigate(NAVIGATION_ROUTES.Menu.submenu.Dishes.path)
-                  }}
-                />
-                {/*  <Button
-                  text={"Guardar como borrador"}
-                  className={"text-xs border bg-white border-sky-950 text-sky-950"}
-                  onClick={handleSubmit(onSaveDraft)}
-                /> */}
-                <Button
-                  text={"Guardar platillo"}
-                  className="flex h-10 w-full items-center justify-center rounded-md bg-sky-950 px-4 text-xs text-slate-50 shadow-sm transition-all duration-700 focus:outline-none"
-                />
-              </div>
+          <div className="mt-6 flex w-full rounded-md border border-gray-200 bg-white px-8 py-5 md:justify-end md:gap-3">
+            <div className="lg:1/3 flex flex-row justify-end gap-3 sm:w-full sm:flex-wrap md:w-2/3 md:flex-nowrap">
+              <Button
+                text={"Descartar"}
+                className={"border border-red-400 bg-white text-xs text-red-400"}
+                onClick={() => {
+                  reset()
+                  localStorage.removeItem("draft")
+                  toast.success("Información eliminada")
+                  navigate(NAVIGATION_ROUTES.Menu.submenu.Dishes.path)
+                }}
+              />
+              <Button
+                onClick={handleSubmit(onSubmit)}
+                text={"Guardar platillo"}
+                className="flex h-10 w-full items-center justify-center rounded-md bg-sky-950 px-4 text-xs text-slate-50 shadow-sm transition-all duration-700 focus:outline-none"
+              />
             </div>
-          )}
+          </div>
         </section>
       </form>
     </BaseLayout>

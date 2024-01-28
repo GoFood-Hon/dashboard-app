@@ -53,7 +53,6 @@ export const newItemValidationSchema = Yup.object().shape({
   description: Yup.string().required("Descripción del platillo es requerido."),
   price: Yup.string().required("Precio del platillo es requerido."),
   endPrice: Yup.string().required("Precio final del platillo es requerido."),
-  categoryId: Yup.string().required("Categoría es requerida."),
   files: Yup.array().required("Imagen es requerida").min(1, "Debe seleccionar al menos una imagen")
 })
 export const newComplementValidation = Yup.object().shape({
