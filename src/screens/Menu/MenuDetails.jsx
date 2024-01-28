@@ -10,6 +10,7 @@ import { useDisclosure } from "@mantine/hooks"
 import DashboardCard from "../../components/DashboardCard"
 import { getFormattedHNL } from "../../utils"
 import EditMenuScreen from "./EditMenuScreen"
+import BackButton from "../Dishes/components/BackButton"
 
 export default function MenuDetails() {
   const { menuId } = useParams()
@@ -64,9 +65,7 @@ export default function MenuDetails() {
     <BaseLayout>
       <section>
         <div className="flex flex-row justify-between items-center pb-6">
-          <div className="flex flex-row gap-x-3 items-center">
-            <h1 className="text-white-200 text-2xl font-semibold">{menuDetails?.name}</h1>
-          </div>
+          <BackButton title={menuDetails?.name} />
           <div>
             <Breadcrumbs>
               <BreadCrumbNavigation location={location} dynamicRoute={menuDetails?.name} />

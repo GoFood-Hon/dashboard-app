@@ -14,6 +14,7 @@ import ComplementSettings from "./ComplementSettings"
 import toast from "react-hot-toast"
 import { yupResolver } from "@hookform/resolvers/yup"
 import { createComplement } from "../../store/features/complementsSlice"
+import BackButton from "../Dishes/components/BackButton"
 
 export default function NewComplement() {
   const location = useLocation()
@@ -156,9 +157,7 @@ export default function NewComplement() {
       <form onSubmit={handleSubmit(onSubmit)}>
         <section>
           <div className="flex flex-row justify-between items-center pb-6 flex-wrap xs:gap-3">
-            <div className="flex flex-row gap-x-3 items-center">
-              <h1 className="text-white-200 md:text-2xl font-semibold">Nuevo Complemento</h1>
-            </div>
+            <BackButton title="Nuevo complemento" />
             <div>
               <Breadcrumbs>
                 <BreadCrumbNavigation location={location} />

@@ -7,11 +7,11 @@ import { ArrowRightIcon } from "../../assets/icons"
 import { Icon } from "../../components/Icon"
 import Button from "../../components/Button"
 import { useDisclosure } from "@mantine/hooks"
+import BackButton from "../Dishes/components/BackButton"
 
 export const OrderDetails = () => {
   const { orderId } = useParams()
   const location = useLocation()
-  const navigate = useNavigate()
 
   const [orderDetailModalOpened, { open: openOrderDetailsModal, close: closeOrderDetailModal }] = useDisclosure(false)
 
@@ -22,10 +22,7 @@ export const OrderDetails = () => {
       <section>
         <div className="flex flex-row justify-between items-center pb-6">
           <div className="flex flex-row gap-x-3 items-center">
-            <button onClick={() => navigate(-1)} className="flex flex-row w-full gap-2 items-center justify-center">
-              <Icon icon="arrowRight" size={17} style={{ transform: "rotate(180deg)" }} />
-              <h1 className="text-white-200 text-2xl font-semibold">Pedidos</h1>
-            </button>
+            <BackButton title="Pedidos" />
           </div>
           <div>
             <Breadcrumbs>

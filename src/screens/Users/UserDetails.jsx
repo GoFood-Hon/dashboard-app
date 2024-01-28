@@ -9,6 +9,7 @@ import DashboardCard from "../../components/DashboardCard"
 import EditMenuScreen from "../Menu/EditMenuScreen"
 import { IconCamera } from "@tabler/icons-react"
 import { getFormattedHNL } from "../../utils"
+import BackButton from "../Dishes/components/BackButton"
 
 export default function UserDetails() {
   const { usersId } = useParams()
@@ -63,9 +64,7 @@ export default function UserDetails() {
     <BaseLayout>
       <section>
         <div className="flex flex-row justify-between items-center pb-6">
-          <div className="flex flex-row gap-x-3 items-center">
-            <h1 className="text-white-200 text-2xl font-semibold">{userDetails?.name}</h1>
-          </div>
+          <BackButton title={userDetails?.name} />
           <div>
             <Breadcrumbs>
               <BreadCrumbNavigation location={location} dynamicRoute={userDetails?.name} />

@@ -12,6 +12,7 @@ import branchesApi from "../../api/branchesApi"
 import { getFormattedHNL } from "../../utils"
 import DashboardCard from "../../components/DashboardCard"
 import mapboxgl from "mapbox-gl"
+import BackButton from "../Dishes/components/BackButton"
 
 mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_KEY
 
@@ -93,9 +94,7 @@ export default function BranchesDetails() {
     <BaseLayout>
       <section>
         <div className="flex flex-row justify-between items-center pb-6">
-          <div className="flex flex-row gap-x-3 items-center">
-            <h1 className="text-white-200 text-2xl font-semibold">{details?.name}</h1>
-          </div>
+          <BackButton title={details?.name} />
           <div>
             <Breadcrumbs>
               <BreadCrumbNavigation location={location} dynamicRoute={details?.name} />

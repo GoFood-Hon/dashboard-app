@@ -13,6 +13,7 @@ import toast from "react-hot-toast"
 import { yupResolver } from "@hookform/resolvers/yup"
 import { userValidation } from "../../utils/inputRules"
 import userApi from "../../api/userApi"
+import BackButton from "../Dishes/components/BackButton"
 
 export default function NewUser() {
   const location = useLocation()
@@ -111,9 +112,7 @@ export default function NewUser() {
       <form onSubmit={handleSubmit(onSubmit)}>
         <section>
           <div className="flex flex-row justify-between items-center pb-6 flex-wrap xs:gap-3">
-            <div className="flex flex-row gap-x-3 items-center">
-              <h1 className="text-white-200 md:text-2xl font-semibold">Crear usuario</h1>
-            </div>
+            <BackButton title="Nuevo usuario" />
             <div>
               <Breadcrumbs>
                 <BreadCrumbNavigation location={location} />
@@ -145,7 +144,7 @@ export default function NewUser() {
               />
 
               <Button
-                text={"Crear usuario"}
+                text={"Nuevo usuario"}
                 className="flex h-10 w-full items-center justify-center px-4 rounded-md shadow-sm transition-all duration-700 focus:outline-none text-xs bg-sky-950 text-slate-50"
               />
             </div>

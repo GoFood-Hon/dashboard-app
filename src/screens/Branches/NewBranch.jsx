@@ -11,6 +11,7 @@ import GeneralInformationForm from "./GeneralInformationForm"
 import ComplementsForm from "../Dishes/ComplementsForm"
 import LocationForm from "./LocationForm"
 import TimeForm from "./TimeForm"
+import BackButton from "../Dishes/components/BackButton"
 
 export default function NewBranch() {
   const location = useLocation()
@@ -96,9 +97,7 @@ export default function NewBranch() {
       <form onSubmit={handleSubmit(onSubmit)}>
         <section>
           <div className="flex flex-row justify-between items-center pb-6 flex-wrap xs:gap-3">
-            <div className="flex flex-row gap-x-3 items-center">
-              <h1 className="text-white-200 md:text-2xl font-semibold">Nueva sucursal</h1>
-            </div>
+            <BackButton title="Nueva sucursal" />
             <div>
               <Breadcrumbs>
                 <BreadCrumbNavigation location={location} />

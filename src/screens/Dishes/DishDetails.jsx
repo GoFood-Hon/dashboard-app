@@ -9,6 +9,7 @@ import { IconCamera } from "@tabler/icons-react"
 import { useDisclosure } from "@mantine/hooks"
 import DashboardCard from "../../components/DashboardCard"
 import EditDishScreen from "./EditDishScreen"
+import BackButton from "./components/BackButton"
 
 export default function DishDetails() {
   const { dishId } = useParams()
@@ -64,9 +65,7 @@ export default function DishDetails() {
     <BaseLayout>
       <section>
         <div className="flex flex-row justify-between items-center pb-6">
-          <div className="flex flex-row gap-x-3 items-center">
-            <h1 className="text-white-200 text-2xl font-semibold">{dishDetails?.name}</h1>
-          </div>
+          <BackButton title={dishDetails?.name} />
           <div>
             <Breadcrumbs>
               <BreadCrumbNavigation location={location} dynamicRoute={dishDetails?.name} />

@@ -16,6 +16,7 @@ import PreparationForm from "./PreparationForm"
 import ComplementsForm from "./ComplementsForm"
 import { NAVIGATION_ROUTES } from "../../routes"
 import complementsApi from "../../api/complementsApi"
+import BackButton from "./components/BackButton"
 
 export default function NewDish() {
   const location = useLocation()
@@ -190,9 +191,7 @@ export default function NewDish() {
       <form onSubmit={handleSubmit(onSubmit)}>
         <section>
           <div className="xs:gap-3 flex flex-row flex-wrap items-center justify-between pb-6">
-            <div className="flex flex-row items-center gap-x-3">
-              <h1 className="text-white-200 font-semibold md:text-2xl">Nuevo Platillo</h1>
-            </div>
+            <BackButton title="Nuevo platillo" />
             <div>
               <Breadcrumbs>
                 <BreadCrumbNavigation location={location} />

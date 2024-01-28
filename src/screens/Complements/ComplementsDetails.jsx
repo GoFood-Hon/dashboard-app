@@ -10,6 +10,7 @@ import complementsApi from "../../api/complementsApi"
 import { useDispatch } from "react-redux"
 import { setError } from "../../store/features/complementsSlice"
 import EditComplementScreen from "./EditComplementScreen"
+import BackButton from "../Dishes/components/BackButton"
 
 export default function ComplementsDetails() {
   const { complementId } = useParams()
@@ -39,9 +40,7 @@ export default function ComplementsDetails() {
     <BaseLayout>
       <section>
         <div className="flex flex-row justify-between items-center pb-6">
-          <div className="flex flex-row gap-x-3 items-center">
-            <h1 className="text-white-200 text-2xl font-semibold">{complementDetails?.name}</h1>
-          </div>
+          <BackButton title={complementDetails?.name} />
           <div>
             <Breadcrumbs>
               <BreadCrumbNavigation location={location} dynamicRoute={complementDetails?.name} />

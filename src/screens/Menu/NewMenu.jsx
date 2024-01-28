@@ -14,6 +14,7 @@ import ComplementsForm from "../Dishes/ComplementsForm"
 import dishesApi from "../../api/dishesApi"
 import { newMenuValidation } from "../../utils/inputRules"
 import { createMenu } from "../../store/features/menuSlice"
+import BackButton from "../Dishes/components/BackButton"
 
 export default function NewMenu() {
   const location = useLocation()
@@ -117,9 +118,7 @@ export default function NewMenu() {
       <form onSubmit={handleSubmit(onSubmit)}>
         <section>
           <div className="flex flex-row justify-between items-center pb-6 flex-wrap xs:gap-3">
-            <div className="flex flex-row gap-x-3 items-center">
-              <h1 className="text-white-200 md:text-2xl font-semibold">Nuevo menu</h1>
-            </div>
+            <BackButton title="Nuevo menu" />
             <div>
               <Breadcrumbs>
                 <BreadCrumbNavigation location={location} />
