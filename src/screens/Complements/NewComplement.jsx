@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react"
 import BaseLayout from "../../components/BaseLayout"
-import { useLocation } from "react-router-dom"
+import { useLocation, useNavigate } from "react-router-dom"
 import { useDispatch, useSelector } from "react-redux"
 import { useForm } from "react-hook-form"
 import { newComplementValidation } from "../../utils/inputRules"
@@ -15,14 +15,15 @@ import toast from "react-hot-toast"
 import { yupResolver } from "@hookform/resolvers/yup"
 import { createComplement } from "../../store/features/complementsSlice"
 import BackButton from "../Dishes/components/BackButton"
+import { NAVIGATION_ROUTES } from "../../routes"
 
 export default function NewComplement() {
   const location = useLocation()
   const dispatch = useDispatch()
+  const navigate = useNavigate()
   const user = useSelector((state) => state.user.value)
 
   const [isDataCleared, setIsDataCleared] = useState(false)
-  const [isAffixMounted, setAffixMounted] = useState(false)
   const containerRef = useRef(null)
 
   const {
@@ -89,6 +90,7 @@ export default function NewComplement() {
     dispatch(createComplement({ data, restaurantId })).then((response) => {
       if (response.payload) {
         reset()
+        navigate(NAVIGATION_ROUTES.Menu.submenu.Complements.path)
         setIsDataCleared(true)
       }
     })
@@ -119,25 +121,23 @@ export default function NewComplement() {
           </Accordion>
         </section>
         <section ref={containerRef}>
-          {!isAffixMounted && (
-            <div className="w-full flex md:justify-end mt-6 md:gap-3 rounded-md bg-white px-8 py-5 border border-gray-200">
-              <div className="md:w-2/3 lg:1/3 sm:w-full flex flex-row justify-end gap-3 sm:flex-wrap md:flex-nowrap">
-                <Button
-                  text={"Descartar"}
-                  className={"text-xs border border-red-400 text-red-400 bg-white"}
-                  onClick={() => {
-                    reset()
-                    localStorage.removeItem("component-draft")
-                    toast.success("Información eliminada")
-                  }}
-                />
-                <Button
-                  text={"Guardar complemento"}
-                  className="flex h-10 w-full items-center justify-center px-4 rounded-md shadow-sm transition-all duration-700 focus:outline-none text-xs bg-sky-950 text-slate-50"
-                />
-              </div>
+          <div className="w-full flex md:justify-end mt-6 md:gap-3 rounded-md bg-white px-8 py-5 border border-gray-200">
+            <div className="md:w-2/3 lg:1/3 sm:w-full flex flex-row justify-end gap-3 sm:flex-wrap md:flex-nowrap">
+              <Button
+                text={"Descartar"}
+                className={"text-xs border border-red-400 text-red-400 bg-white"}
+                onClick={() => {
+                  reset()
+                  localStorage.removeItem("component-draft")
+                  toast.success("Información eliminada")
+                }}
+              />
+              <Button
+                text={"Guardar complemento"}
+                className="flex h-10 w-full items-center justify-center px-4 rounded-md shadow-sm transition-all duration-700 focus:outline-none text-xs bg-sky-950 text-slate-50"
+              />
             </div>
-          )}
+          </div>
         </section>
       </form>
     </BaseLayout>
