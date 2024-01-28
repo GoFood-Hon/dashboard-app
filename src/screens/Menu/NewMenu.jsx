@@ -44,14 +44,16 @@ export default function NewMenu() {
         const response = await dishesApi.getAllDishesByRestaurant({
           restaurantId: user.restaurantId
         })
-        setDishes(response.data.data)
 
+        const activeDishes = response.data.data.filter((dish) => dish.isActive)
+        setDishes(activeDishes)
         return response
       } catch (error) {
-        toast.error(`Hubo error obteniendo los extras, ${error}`)
+        toast.error(`Hubo un error obteniendo los platos, ${error}`)
         throw error
       }
     }
+
     getDishes()
   }, [restaurant])
 
