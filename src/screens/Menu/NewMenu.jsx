@@ -15,6 +15,7 @@ import dishesApi from "../../api/dishesApi"
 import { newMenuValidation } from "../../utils/inputRules"
 import { createMenu } from "../../store/features/menuSlice"
 import BackButton from "../Dishes/components/BackButton"
+import { NAVIGATION_ROUTES } from "../../routes"
 
 export default function NewMenu() {
   const location = useLocation()
@@ -107,13 +108,12 @@ export default function NewMenu() {
     dispatch(createMenu({ data, restaurantId })).then((response) => {
       if (response.payload) {
         reset()
-        localStorage.removeItem("draft")
+        // localStorage.removeItem("draft")
+        navigate(NAVIGATION_ROUTES.Menu.path)
         setIsDataCleared(true)
       }
     })
   }
-
-  const onSaveDraft = (data) => {}
 
   return (
     <BaseLayout>
@@ -132,7 +132,7 @@ export default function NewMenu() {
           <Accordion
             variant="separated"
             multiple
-            defaultValue={["Información general", "Pagos"]}
+            defaultValue={["Información general", "Platillos"]}
             classNames={{
               label: "bg-white fill-white"
             }}>
@@ -147,9 +147,9 @@ export default function NewMenu() {
                 className={"text-xs border border-red-400 text-red-400 bg-white"}
                 onClick={() => {
                   reset()
-                  localStorage.removeItem("draft")
+                  // localStorage.removeItem("draft")
                   toast.success("Información eliminada")
-                  navigate(NAVIGATION_ROUTES.Menu.submenu.Dishes.path)
+                  navigate(NAVIGATION_ROUTES.Menu.path)
                 }}
               />
               {/*    <Button
@@ -158,7 +158,7 @@ export default function NewMenu() {
                 onClick={handleSubmit(onSaveDraft)}
               /> */}
               <Button
-                text={"Guardar platillo"}
+                text={"Guardar menu"}
                 className="flex h-10 w-full items-center justify-center px-4 rounded-md shadow-sm transition-all duration-700 focus:outline-none text-xs bg-sky-950 text-slate-50"
               />
             </div>

@@ -7,7 +7,6 @@ export const fetchDishesCategories = createAsyncThunk(
   async (restaurantId, { dispatch }) => {
     try {
       const response = await dishesCategoriesApi.getCategoryByRestaurant(restaurantId)
-      console.log(response, "res")
       dispatch(setDishesCategories(response.data))
     } catch (error) {
       dispatch(setError("Error fetching dishesCategories"))
