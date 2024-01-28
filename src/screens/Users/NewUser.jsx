@@ -54,6 +54,7 @@ export default function NewUser() {
         })
         reset()
         setIsDataCleared(true)
+        navigate(NAVIGATION_ROUTES.Users.path)
       }
     } catch (error) {
       toast.error(`Fallo al crear un nuevo usuario. Por favor intente de nuevo.`, {
@@ -124,7 +125,7 @@ export default function NewUser() {
           <Accordion
             variant="separated"
             multiple
-            defaultValue={["Información general", "Pagos"]}
+            defaultValue={["Información general", "Sucursal"]}
             classNames={{
               label: "bg-white fill-white"
             }}>
@@ -142,9 +143,8 @@ export default function NewUser() {
                   navigate(NAVIGATION_ROUTES.Users.path)
                 }}
               />
-
               <Button
-                text={"Nuevo usuario"}
+                text={"Guardar usuario"}
                 className="flex h-10 w-full items-center justify-center px-4 rounded-md shadow-sm transition-all duration-700 focus:outline-none text-xs bg-sky-950 text-slate-50"
               />
             </div>

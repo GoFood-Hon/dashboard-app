@@ -12,6 +12,7 @@ import ComplementsForm from "../Dishes/ComplementsForm"
 import LocationForm from "./LocationForm"
 import TimeForm from "./TimeForm"
 import BackButton from "../Dishes/components/BackButton"
+import { NAVIGATION_ROUTES } from "../../routes"
 
 export default function NewBranch() {
   const location = useLocation()
@@ -30,8 +31,6 @@ export default function NewBranch() {
 
   const [isDataCleared, setIsDataCleared] = useState(false)
   const [personal, setPersonal] = useState([])
-
-  const onSubmit = (data) => {}
 
   const accordionStructure = [
     {
@@ -91,7 +90,10 @@ export default function NewBranch() {
     </Accordion.Item>
   ))
 
-  const onSaveDraft = (data) => {}
+  const onSubmit = async (data) => {
+    navigate(NAVIGATION_ROUTES.Branches.path)
+  }
+
   return (
     <BaseLayout>
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -109,7 +111,7 @@ export default function NewBranch() {
           <Accordion
             variant="separated"
             multiple
-            defaultValue={["Información general", "Pagos"]}
+            defaultValue={["Información general", "Personal", "Ubicación", "Horario"]}
             classNames={{
               label: "bg-white fill-white"
             }}>
@@ -129,11 +131,6 @@ export default function NewBranch() {
                   navigate(NAVIGATION_ROUTES.Menu.submenu.Dishes.path)
                 }}
               />
-              {/*  <Button
-                text={"Guardar como borrador"}
-                className={"text-xs border bg-white border-sky-950 text-sky-950"}
-                onClick={handleSubmit(onSaveDraft)}
-              /> */}
               <Button
                 text={"Guardar sucursal"}
                 className="flex h-10 w-full items-center justify-center px-4 rounded-md shadow-sm transition-all duration-700 focus:outline-none text-xs bg-sky-950 text-slate-50"
