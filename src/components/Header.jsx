@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react"
 import Button from "./Button"
-import { useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { useLocation, useNavigate } from "react-router-dom"
 import { Image, Popover, Transition } from "@mantine/core"
 import GoFoodLogo from "../assets/images/goFood.png"
@@ -8,15 +8,23 @@ import { AUTH_NAVIGATION_ROUTES, SETTING_NAVIGATION_ROUTES } from "../routes"
 import toast from "react-hot-toast"
 import { AlarmIcon } from "../assets/icons/AlarmIcon"
 import { ConfigIcon } from "../assets/icons/ConfigIcon"
-import restaurantsApi from "../api/restaurantApi"
+import { fetchRestaurantData, selectImage } from "../store/features/restaurantSlice"
 
 export default function Header() {
+  const imgUrl = useSelector(selectImage)
   const user = useSelector((state) => state.user.value)
   const location = useLocation()
+  const dispatch = useDispatch()
   const navigate = useNavigate()
-
   const [opened, setOpened] = useState(false)
-  const [restaurants, setRestaurants] = useState([])
+
+  useEffect(() => {
+    dispatch(
+      fetchRestaurantData({
+        restaurantId: user?.restaurantId
+      })
+    )
+  }, [])
 
   useEffect(() => {
     if (location.pathname === AUTH_NAVIGATION_ROUTES.Logout.path) {
@@ -30,28 +38,6 @@ export default function Header() {
     localStorage.removeItem("token")
     navigate(AUTH_NAVIGATION_ROUTES.Login.path)
   }
-
-  useEffect(() => {
-    const fetchRestaurantInformation = async () => {
-      try {
-        const response = await restaurantsApi.getRestaurant(user?.restaurantId)
-
-        if (response.error) {
-          toast.error(`aaFallo al obtenerla información del restaurante. Por favor intente de nuevo. ${response.message}`, {
-            duration: 7000
-          })
-        } else {
-          setRestaurants(response.data)
-        }
-      } catch (error) {
-        dispatch(setError("Error fetching dishesCategories"))
-        throw error
-      }
-    }
-    if (user.role === "admin-restaurant") {
-      fetchRestaurantInformation()
-    }
-  }, [])
 
   return (
     <div className="w-full p-4 flex flex-row justify-between text-black  bg-white dark:text-white dark:bg-slate-800 dark:border-slate-700 border border-slate-200 z-20 fixed">
@@ -69,7 +55,7 @@ export default function Header() {
         <div className="pl-1">
           {user.role === "admin-restaurant" ? (
             <Image
-              src={restaurants?.images?.[0]?.location}
+              src={imgUrl}
               h={50}
               w={90}
               fit="contain"

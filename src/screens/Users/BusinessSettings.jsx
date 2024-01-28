@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 import BaseLayout from "../../components/BaseLayout"
-import { Breadcrumbs, CloseIcon, Grid, Group, Text, rem } from "@mantine/core"
+import { Avatar, Breadcrumbs, Checkbox, Grid, Group, Image, Text, rem } from "@mantine/core"
 import BreadCrumbNavigation from "../../components/BreadCrumbNavigation"
 import SettingsCard from "../../components/SettingsCard"
 import { useForm } from "react-hook-form"
@@ -13,33 +13,38 @@ import InputCombobox from "../../components/Form/InputCombobox"
 import Button from "../../components/Button"
 import { SETTING_NAVIGATION_ROUTES } from "../../routes"
 import { useNavigate } from "react-router-dom"
-import { useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import restaurantsApi from "../../api/restaurantApi"
+import PreviewImageCard from "../../components/PreviewImageCard"
+import { colors } from "../../theme/colors"
+import { updateRestaurantData } from "../../store/features/restaurantSlice"
 
 export default function BusinessSettings() {
   const navigate = useNavigate()
+  const dispatch = useDispatch()
   const user = useSelector((state) => state.user.value)
-
   const [images, setImages] = useState([])
-
   const [fileInformation, setFileInformation] = useState(null)
+  const [isFreeShipping, setIsFreeShipping] = useState(false)
+  const [restaurantImg, setRestaurantImg] = useState([{}])
 
   const {
     register,
     handleSubmit,
     setValue,
+    reset,
     formState: { errors }
   } = useForm({
     defaultValues: async () => {
       try {
         const response = await restaurantsApi.getRestaurant(user?.restaurantId)
-
         if (response.error) {
           toast.error(`Failed to fetch restaurant information. Please try again. ${response.message}`, {
             duration: 7000
           })
           return {}
         } else {
+          setRestaurantImg(response.data.images)
           return response.data
         }
       } catch (error) {
@@ -63,7 +68,7 @@ export default function BusinessSettings() {
         key={index}
         src={imageUrl}
         onLoad={() => URL.revokeObjectURL(imageUrl)}
-        className="h-14 w-14 rounded-xl object-cover object-center border m-1"
+        className="m-1 h-14 w-14 rounded-xl border object-cover object-center"
       />
     )
   })
@@ -78,48 +83,29 @@ export default function BusinessSettings() {
     }
   }
 
-  const uploadRestaurantImage = async (dishId, file) => {
-    const formDataImage = new FormData()
-    formDataImage.append("files", file)
-
-    return await restaurantsApi.addImage(dishId, formDataImage)
-  }
-
   const onSubmit = async (data) => {
-    try {
-      const formData = new FormData()
-      formData.append("name", data.name)
-      formData.append("email", data.email)
-      formData.append("phoneNumber", data.phoneNumber)
-      formData.append("socialReason", data.socialReason)
-      formData.append("rtn", data.rtn)
-      formData.append("billingAddress", data.billingAddress)
-      formData.append("cai", data.cai)
-      formData.append("type", data.type)
-      formData.append("isActive", data.status === "Habilitado")
-
-      const response = await restaurantsApi.updateRestaurant(formData, user.restaurantId)
-
-      if (response.error) {
-        toast.error(`Fallo al actualizar la información del negocio. Por favor intente de nuevo. ${response.message}`, {
-          duration: 7000
-        })
-      } else {
-        let imageResponse
-
-        if (data && data.files) {
-          await uploadRestaurantImage(user.restaurantId, data?.files?.[0])
-        }
-
-        toast.success("Negocio actualizado exitosamente", {
-          duration: 7000
-        })
-      }
-    } catch (error) {
-      toast.error(`Fallo al actualizar la información del negocio. Por favor intente de nuevo!!!. ${error}`, {
-        duration: 7000
-      })
+    const formData = new FormData()
+    formData.append("name", data.name)
+    formData.append("email", data.email)
+    formData.append("phoneNumber", data.phoneNumber)
+    formData.append("socialReason", data.socialReason)
+    formData.append("rtn", data.rtn)
+    formData.append("billingAddress", data.billingAddress)
+    formData.append("cai", data.cai)
+    formData.append("shippingFree", isFreeShipping)
+    if (!isFreeShipping) {
+      formData.append("shippingPrice", data.shippingPrice)
+    } else {
+      formData.append("shippingPrice", null)
     }
+
+    dispatch(updateRestaurantData({ data, restaurantId: user.restaurantId, formData })).then((response) => {
+      if (response.payload) {
+        window.location.reload()
+        reset()
+        navigate(SETTING_NAVIGATION_ROUTES.General.path)
+      }
+    })
   }
 
   const businessType = [
@@ -142,8 +128,8 @@ export default function BusinessSettings() {
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="pl-[200px]">
           <section>
-            <div className="flex flex-row justify-between items-center pb-6">
-              <div className="flex flex-row gap-x-3 items-center">
+            <div className="flex flex-row items-center justify-between pb-6">
+              <div className="flex flex-row items-center gap-x-3">
                 <h1 className="text-white-200 text-2xl font-semibold">Negocio</h1>
               </div>
               <div>
@@ -154,43 +140,47 @@ export default function BusinessSettings() {
             </div>
           </section>
           <SettingsCard title="Logo" iconName="building">
-            <div className="flex flex-col justify-center items-center w-full h-full bg-white rounded-2xl border border-blue-100 p-4 m-4">
-              {previews.length > 0 ? (
-                <div className="w-full">
-                  <Text size="lg" inline className="text-left mb-5">
-                    Imagen seleccionada:
-                  </Text>
-                  <div className="flex flex-row justify-center items-center rounded-2xl w-full border border-slate-200 my-3">
-                    <div className="flex flex-row w-full items-center gap-2 flex-wrap p-2">
-                      {previews}
-                      <div className="flex flex-col">
-                        <Text className="font-semibold italic">{fileInformation?.name}</Text>
-                        <Text className="font-semibold" size="sm" c="dimmed" inline>
-                          {bytesToMB(fileInformation?.size)} MB
+            <div className="flex flex-row justify-between h-full">
+              {user && previews.length === 0 ? (
+                <div className="m-4 flex h-full flex-col items-center justify-center rounded-2xl border border-blue-100 bg-white p-4">
+                  <Image
+                    src={restaurantImg?.[0]?.location}
+                    h={50}
+                    w={90}
+                    fit="contain"
+                    fallbackSrc="https://placehold.co/600x400?text=Imagen+no+disponible"
+                  />
+                </div>
+              ) : null}
+
+              <div className="m-4 flex h-full w-full flex-col items-center justify-center rounded-2xl border border-blue-100 bg-white p-4">
+                {previews.length > 0 ? (
+                  <PreviewImageCard
+                    imgName={fileInformation.name}
+                    size={bytesToMB(fileInformation?.size)}
+                    previews={previews}
+                    deleteImage={deleteImage}
+                  />
+                ) : (
+                  <Dropzone onDrop={handleDrop} accept={IMAGE_MIME_TYPE}>
+                    <Group justify="center" gap="xl" mih={220} style={{ pointerEvents: "none" }}>
+                      <div className="flex flex-col items-center">
+                        <IconPhoto
+                          style={{ width: rem(52), height: rem(52), color: "var(--mantine-color-dimmed)" }}
+                          stroke={1.5}
+                        />
+                        <Text size="xl" inline className="text-center">
+                          Seleccione una imagen de su logo
+                        </Text>
+                        <Text size="sm" c="dimmed" inline mt={7} className="text-center leading-10">
+                          Haga click o arrastre una imagen que sera usada como logo
                         </Text>
                       </div>
-                    </div>
-                    <button onClick={deleteImage} className="pr-3">
-                      <CloseIcon size={24} />
-                    </button>
-                  </div>
-                </div>
-              ) : (
-                <Dropzone onDrop={handleDrop} accept={IMAGE_MIME_TYPE}>
-                  <Group justify="center" gap="xl" mih={220} style={{ pointerEvents: "none" }}>
-                    <div className="flex items-center flex-col">
-                      <IconPhoto style={{ width: rem(52), height: rem(52), color: "var(--mantine-color-dimmed)" }} stroke={1.5} />
-                      <Text size="xl" inline className="text-center">
-                        Seleccione una imagen de su logo
-                      </Text>
-                      <Text size="sm" c="dimmed" inline mt={7} className="text-center leading-10">
-                        Haga click o arrastre una imagen que sera usada como logo
-                      </Text>
-                    </div>
-                  </Group>
-                </Dropzone>
-              )}
-              {errors.files && <p className="text-red-500 text-center w-full">* Imagen es requerida.</p>}
+                    </Group>
+                  </Dropzone>
+                )}
+                {errors.files && <p className="w-full text-center text-red-500">* Imagen es requerida.</p>}
+              </div>
             </div>
           </SettingsCard>
           <SettingsCard title="General" iconName="building">
@@ -249,18 +239,33 @@ export default function BusinessSettings() {
               <Grid.Col span={{ sm: 12 }}>
                 <InputField label="Dirección facturación" name="billingAddress" register={register} errors={errors} />
               </Grid.Col>
+              <Grid.Col span={{ sm: 12 }}>
+                <Checkbox
+                  labelPosition="left"
+                  label={<div className="text-sky-950 text-sm font-bold leading-snug">Envío gratuito</div>}
+                  color={colors.primary_button}
+                  checked={isFreeShipping}
+                  size="sm"
+                  onChange={() => setIsFreeShipping(!isFreeShipping)}
+                />
+              </Grid.Col>
+              {!isFreeShipping ? (
+                <Grid.Col span={{ sm: 12 }}>
+                  <InputField label="Precio de envío" name="shippingPrice" register={register} errors={errors} />
+                </Grid.Col>
+              ) : null}
             </Grid>
           </SettingsCard>
           <SettingsCard title="Guardar cambios" iconName="building">
-            <div className="w-full flex flex-row gap-2 pt-4">
+            <div className="flex w-full flex-row gap-2 pt-4">
               <Button
                 text={"Descartar"}
-                className={"text-xs border border-red-400 text-red-400 bg-white"}
+                className={"border border-red-400 bg-white text-xs text-red-400"}
                 onClick={() => navigate(SETTING_NAVIGATION_ROUTES.General.path)}
               />
               <Button
                 text={"Guardar Cambios"}
-                className="flex h-10 w-full items-center justify-center px-4 rounded-md shadow-sm transition-all duration-700 focus:outline-none text-xs bg-sky-950 text-slate-50"
+                className="flex h-10 w-full items-center justify-center rounded-md bg-sky-950 px-4 text-xs text-slate-50 shadow-sm transition-all duration-700 focus:outline-none"
               />
             </div>
           </SettingsCard>
