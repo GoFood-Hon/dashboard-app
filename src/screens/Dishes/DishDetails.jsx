@@ -21,7 +21,6 @@ export default function DishDetails() {
   const [formModalOpened, { open: openFormModal, close: closeFormModal }] = useDisclosure(false)
   const [dishDetails, setDishDetails] = useState({})
 
-  console.log(restaurant)
   const dashboardCards = [
     {
       icon: "money",
@@ -81,7 +80,6 @@ export default function DishDetails() {
           <Card padding="lg" radius="md">
             <Card.Section>
               <div className="relative">
-                {/*    <img className="w-full h-60 object-cover" src={restaurant?.bannerDishes?.[0]?.location} /> */}
                 <Image
                   src={restaurant?.bannerDishes?.[0]?.location}
                   h={"240px"}

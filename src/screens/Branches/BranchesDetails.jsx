@@ -5,7 +5,7 @@ import { Breadcrumbs, Card, Grid, Image, Modal } from "@mantine/core"
 
 import { IconCamera } from "@tabler/icons-react"
 import { useDisclosure } from "@mantine/hooks"
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { setError } from "../../store/features/complementsSlice"
 import BreadCrumbNavigation from "../../components/BreadCrumbNavigation"
 import branchesApi from "../../api/branchesApi"
@@ -20,6 +20,7 @@ export default function BranchesDetails() {
   const { branchId } = useParams()
   const location = useLocation()
   const dispatch = useDispatch()
+  const restaurant = useSelector((state) => state.restaurants.restaurants)
 
   const [imageModalOpened, { open: openImageModal, close: closeImageModal }] = useDisclosure(false)
   const [formModalOpened, { open: openFormModal, close: closeFormModal }] = useDisclosure(false)
@@ -108,11 +109,13 @@ export default function BranchesDetails() {
             <Card padding="lg" radius="md">
               <Card.Section>
                 <div className="relative">
-                  <img
-                    className="w-full h-60 object-cover"
-                    src="https://images.pexels.com/photos/3310691/pexels-photo-3310691.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+                  <Image
+                    src={restaurant?.bannerDishes?.[0]?.location}
+                    h={"240px"}
+                    w={"100%"}
+                    fit="cover"
+                    fallbackSrc="https://placehold.co/600x400?text=Imagen+no+disponible"
                   />
-
                   <div
                     className="w-[34px] h-[34px] bg-sky-950 rounded-full absolute top-[190px] left-[20px] flex items-center justify-center cursor-pointer"
                     onClick={() => {

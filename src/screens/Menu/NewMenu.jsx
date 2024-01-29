@@ -21,8 +21,8 @@ export default function NewMenu() {
   const location = useLocation()
   const navigate = useNavigate()
   const dispatch = useDispatch()
+  const restaurant = useSelector((state) => state.restaurants.restaurants)
 
-  const restaurant = useSelector((state) => state?.restaurant?.value)
   const user = useSelector((state) => state.user.value)
 
   const {
@@ -147,16 +147,10 @@ export default function NewMenu() {
                 className={"text-xs border border-red-400 text-red-400 bg-white"}
                 onClick={() => {
                   reset()
-                  // localStorage.removeItem("draft")
                   toast.success("Información eliminada")
                   navigate(NAVIGATION_ROUTES.Menu.path)
                 }}
               />
-              {/*    <Button
-                text={"Guardar como borrador"}
-                className={"text-xs border bg-white border-sky-950 text-sky-950"}
-                onClick={handleSubmit(onSaveDraft)}
-              /> */}
               <Button
                 text={"Guardar menu"}
                 className="flex h-10 w-full items-center justify-center px-4 rounded-md shadow-sm transition-all duration-700 focus:outline-none text-xs bg-sky-950 text-slate-50"

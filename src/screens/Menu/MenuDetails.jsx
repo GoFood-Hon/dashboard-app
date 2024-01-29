@@ -11,12 +11,14 @@ import DashboardCard from "../../components/DashboardCard"
 import { getFormattedHNL } from "../../utils"
 import EditMenuScreen from "./EditMenuScreen"
 import BackButton from "../Dishes/components/BackButton"
+import { useSelector } from "react-redux"
 
 export default function MenuDetails() {
   const { menuId } = useParams()
   const location = useLocation()
-  const [menuDetails, setMenuDetails] = useState({})
+  const restaurant = useSelector((state) => state.restaurants.restaurants)
 
+  const [menuDetails, setMenuDetails] = useState({})
   const [formModalOpened, { open: openFormModal, close: closeFormModal }] = useDisclosure(false)
 
   useEffect(() => {
@@ -78,9 +80,12 @@ export default function MenuDetails() {
           <Card padding="lg" radius="md">
             <Card.Section>
               <div className="relative">
-                <img
-                  className="w-full h-60 object-cover"
-                  src="https://images.pexels.com/photos/3310691/pexels-photo-3310691.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+                <Image
+                  src={restaurant?.bannerDishes?.[0]?.location}
+                  h={"240px"}
+                  w={"100%"}
+                  fit="cover"
+                  fallbackSrc="https://placehold.co/600x400?text=Imagen+no+disponible"
                 />
               </div>
             </Card.Section>

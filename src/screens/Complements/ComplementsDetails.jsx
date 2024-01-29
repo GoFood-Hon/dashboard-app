@@ -7,7 +7,7 @@ import { getFormattedHNL } from "../../utils"
 import { IconCamera } from "@tabler/icons-react"
 import { useDisclosure } from "@mantine/hooks"
 import complementsApi from "../../api/complementsApi"
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { setError } from "../../store/features/complementsSlice"
 import EditComplementScreen from "./EditComplementScreen"
 import BackButton from "../Dishes/components/BackButton"
@@ -16,6 +16,7 @@ export default function ComplementsDetails() {
   const { complementId } = useParams()
   const location = useLocation()
   const dispatch = useDispatch()
+  const restaurant = useSelector((state) => state.restaurants.restaurants)
 
   const [imageModalOpened, { open: openImageModal, close: closeImageModal }] = useDisclosure(false)
   const [formModalOpened, { open: openFormModal, close: closeFormModal }] = useDisclosure(false)
@@ -53,9 +54,12 @@ export default function ComplementsDetails() {
           <Card padding="lg" radius="md">
             <Card.Section>
               <div className="relative">
-                <img
-                  className="w-full h-60 object-cover"
-                  src="https://images.pexels.com/photos/3310691/pexels-photo-3310691.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+                <Image
+                  src={restaurant?.bannerDishes?.[0]?.location}
+                  h={"240px"}
+                  w={"100%"}
+                  fit="cover"
+                  fallbackSrc="https://placehold.co/600x400?text=Imagen+no+disponible"
                 />
                 <img
                   className="w-44 h-44 rounded-full object-contain absolute border top-[150px] left-[50px] bg-white"

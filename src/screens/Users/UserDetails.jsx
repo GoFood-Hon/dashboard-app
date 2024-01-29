@@ -10,10 +10,13 @@ import EditMenuScreen from "../Menu/EditMenuScreen"
 import { IconCamera } from "@tabler/icons-react"
 import { getFormattedHNL } from "../../utils"
 import BackButton from "../Dishes/components/BackButton"
+import { useSelector } from "react-redux"
 
 export default function UserDetails() {
   const { usersId } = useParams()
   const location = useLocation()
+  const restaurant = useSelector((state) => state.restaurants.restaurants)
+
   const [formModalOpened, { open: openFormModal, close: closeFormModal }] = useDisclosure(false)
 
   const [userDetails, setUserDetails] = useState({})
@@ -77,9 +80,12 @@ export default function UserDetails() {
           <Card padding="lg" radius="md">
             <Card.Section>
               <div className="relative">
-                <img
-                  className="w-full h-60 object-cover"
-                  src="https://images.pexels.com/photos/3310691/pexels-photo-3310691.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+                <Image
+                  src={restaurant?.bannerDishes?.[0]?.location}
+                  h={"240px"}
+                  w={"100%"}
+                  fit="cover"
+                  fallbackSrc="https://placehold.co/600x400?text=Imagen+no+disponible"
                 />
                 <img
                   className="w-44 h-44 rounded-full object-contain absolute border top-[150px] left-[50px] bg-white"
