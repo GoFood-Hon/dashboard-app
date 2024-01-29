@@ -22,6 +22,7 @@ import Button from "../../components/Button"
 import { colors } from "../../theme/colors"
 import FilterPopover from "../../components/FilterPopover"
 import SortPopover from "../../components/SortPopover"
+import BackButton from "../Dishes/components/BackButton"
 
 export default function Complements() {
   const navigate = useNavigate()
@@ -239,7 +240,7 @@ export default function Complements() {
       <section>
         <div className="flex flex-row justify-between items-center pb-6 flex-wrap">
           <div className="flex flex-row gap-x-3 items-center">
-            <h1 className="text-white-200 text-2xl font-semibold">Complementos</h1>
+            <BackButton title="Complementos" />
             <Button
               text={"Nuevo complemento"}
               className={"text-white text-md px-3 py-2 bg-primary_button mb-0"}

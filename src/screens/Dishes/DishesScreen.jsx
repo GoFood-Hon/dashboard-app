@@ -20,6 +20,7 @@ import LoadingCircle from "../../components/LoadingCircle"
 import ItemCard from "../../components/ItemCard"
 import { Icon } from "../../components/Icon"
 import FilterPopover from "../../components/FilterPopover"
+import BackButton from "./components/BackButton"
 
 export default function Dishes() {
   const navigate = useNavigate()
@@ -145,7 +146,7 @@ export default function Dishes() {
       <section>
         <div className="flex flex-row justify-between items-center pb-6">
           <div className="flex flex-row gap-x-3 items-center">
-            <h1 className="text-white-200 text-2xl font-semibold">Platillos</h1>
+            <BackButton title="Platillos" />
             <Button
               text={"Nuevo Platillo"}
               className={"text-white text-md px-3 py-2 bg-primary_button mb-0"}
