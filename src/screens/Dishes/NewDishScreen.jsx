@@ -128,7 +128,6 @@ export default function NewDish() {
     dispatch(createDish({ data, restaurantId })).then((response) => {
       if (response.payload) {
         reset()
-        localStorage.removeItem("draft")
         setIsDataCleared(true)
         navigate(NAVIGATION_ROUTES.Menu.submenu.Dishes.path)
       }
@@ -173,7 +172,6 @@ export default function NewDish() {
                 }}
               />
               <Button
-                onClick={handleSubmit(onSubmit)}
                 text={"Guardar platillo"}
                 className="flex h-10 w-full items-center justify-center rounded-md bg-sky-950 px-4 text-xs text-slate-50 shadow-sm transition-all duration-700 focus:outline-none"
               />

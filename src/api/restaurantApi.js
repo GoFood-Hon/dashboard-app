@@ -36,7 +36,13 @@ const restaurantsApi = {
     }),
 
   // BANK INFORMATION
-  getBankList: () => axiosClient.get(`api/v1/restaurant/banks/get-all`)
+  getBankList: () => axiosClient.get(`api/v1/restaurant/banks/get-all`),
+
+  // BANNER IMAGE
+  updateBannerImage: (restaurantId, params) =>
+    axiosClient.post(`api/v1/restaurant/${restaurantId}/banner-dishes`, params, {
+      contentType: `multipart/form-data; boundary=${params._boundary}`
+    })
 }
 
 export default restaurantsApi

@@ -1,20 +1,28 @@
 import React, { useState } from "react"
 import BaseLayout from "../../components/BaseLayout"
-import { Breadcrumbs, CloseIcon, Grid, Group, Text, rem } from "@mantine/core"
+import { Breadcrumbs, CloseIcon, Group, Text, rem } from "@mantine/core"
 import BreadCrumbNavigation from "../../components/BreadCrumbNavigation"
 import SettingsCard from "../../components/SettingsCard"
-import InputField from "../../components/Form/InputField"
 import { useForm } from "react-hook-form"
 import { IconPhoto } from "@tabler/icons-react"
 import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone"
+import restaurantsApi from "../../api/restaurantApi"
+import { useSelector } from "react-redux"
+import toast from "react-hot-toast"
+import { bytesToMB } from "../../utils"
+import Button from "../../components/Button"
+import { NAVIGATION_ROUTES } from "../../routes"
+import { useNavigate } from "react-router-dom"
 
 export default function AdministrativeSettings() {
   const {
-    register,
     handleSubmit,
     setValue,
     formState: { errors }
   } = useForm({})
+
+  const user = useSelector((state) => state.user.value)
+  const navigate = useNavigate()
 
   const [images, setImages] = useState([])
   const [fileInformation, setFileInformation] = useState(null)
@@ -46,14 +54,33 @@ export default function AdministrativeSettings() {
     }
   }
 
-  const uploadRestaurantImage = async (dishId, file) => {
+  const uploadRestaurantImage = async (restauranId, file) => {
     const formDataImage = new FormData()
     formDataImage.append("files", file)
 
-    return await restaurantsApi.addImage(dishId, formDataImage)
+    return await restaurantsApi.updateBannerImage(restauranId, formDataImage)
   }
 
-  const onSubmit = async (data) => {}
+  const onSubmit = async (data) => {
+    try {
+      const response = await uploadRestaurantImage(user?.restaurantId, data?.files?.[0])
+      if (response.error) {
+        toast.error(`Fallo al actualizar el banner. ${response.message}`, {
+          duration: 7000
+        })
+      } else {
+        toast.success("Banner actualizado exitosamente.", {
+          duration: 7000
+        })
+        window.location.reload()
+        navigate(NAVIGATION_ROUTES.Users.submenu.Settings.path)
+      }
+    } catch (error) {
+      toast.error(`Fallo al actualizar el banner. Por favor intente de nuevo. ${response.message}`, {
+        duration: 7000
+      })
+    }
+  }
 
   return (
     <BaseLayout>
@@ -62,7 +89,7 @@ export default function AdministrativeSettings() {
           <section>
             <div className="flex flex-row justify-between items-center pb-6">
               <div className="flex flex-row gap-x-3 items-center">
-                <h1 className="text-white-200 text-2xl font-semibold">Personal</h1>
+                <h1 className="text-white-200 text-2xl font-semibold">Administrable</h1>
               </div>
               <div>
                 <Breadcrumbs>
@@ -71,7 +98,7 @@ export default function AdministrativeSettings() {
               </div>
             </div>
           </section>
-          <SettingsCard title="Slider" iconName="vrDesign">
+          <SettingsCard title="Banners" iconName="vrDesign">
             <div className="flex flex-col justify-center items-center w-full h-full bg-white rounded-2xl border border-blue-100 p-4 m-4">
               {previews.length > 0 ? (
                 <div className="w-full">
@@ -110,15 +137,19 @@ export default function AdministrativeSettings() {
               )}
               {errors.files && <p className="text-red-500 text-center w-full">* Imagen es requerida.</p>}
             </div>
+            <Button
+              text={"Guardar banner"}
+              className="flex h-10 w-2/6 items-center justify-center rounded-md bg-sky-950 px-4 text-xs text-slate-50 shadow-sm transition-all duration-700 focus:outline-none ml-auto"
+            />
           </SettingsCard>
 
-          <SettingsCard title="Texto del slider" iconName="vrDesign">
+          {/*  <SettingsCard title="Texto del slider" iconName="vrDesign">
             <Grid my={20}>
               <Grid.Col span={{ sm: 12 }}>
                 <InputField label="Descripción" name="description" register={register} errors={errors} />
               </Grid.Col>
             </Grid>
-          </SettingsCard>
+          </SettingsCard> */}
         </div>
       </form>
     </BaseLayout>

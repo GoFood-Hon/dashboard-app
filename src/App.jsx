@@ -1,6 +1,6 @@
 import React from "react"
 import { AUTH_NAVIGATION_ROUTES, NAVIGATION_ROUTES, NAVIGATION_ROUTES_SUPER_ADMIN, SETTING_NAVIGATION_ROUTES } from "./routes"
-import { Route, RouterProvider, createBrowserRouter, createRoutesFromElements } from "react-router-dom"
+import { Navigate, Route, RouterProvider, createBrowserRouter, createRoutesFromElements } from "react-router-dom"
 import AuthLayout from "./layout/AuthLayout"
 
 import Login from "./screens/auth/Login"
@@ -102,9 +102,10 @@ function App() {
             <Route path={SETTING_NAVIGATION_ROUTES.Promotions.path} element={<CouponsSettings />} />
             <Route path={SETTING_NAVIGATION_ROUTES.Bank.path} element={<BankSettings />} />
             <Route path={SETTING_NAVIGATION_ROUTES.Plan.path} element={<PlanSettings />} />
+            <Route path={SETTING_NAVIGATION_ROUTES.Administrative.path} element={<AdministrativeSettings />} />
           </Route>
 
-          <Route path={"/unauthorized"} element={<UnauthorizedPage />} />
+          <Route path={"/unauthorized"} element={<Navigate to="/" />} />
 
           <Route path={NAVIGATION_ROUTES.Dashboard.path} element={<Home />} />
 

@@ -10,15 +10,18 @@ import { useDisclosure } from "@mantine/hooks"
 import DashboardCard from "../../components/DashboardCard"
 import EditDishScreen from "./EditDishScreen"
 import BackButton from "./components/BackButton"
+import { useSelector } from "react-redux"
 
 export default function DishDetails() {
   const { dishId } = useParams()
   const location = useLocation()
+  const restaurant = useSelector((state) => state.restaurants.restaurants)
 
   const [imageModalOpened, { open: openImageModal, close: closeImageModal }] = useDisclosure(false)
   const [formModalOpened, { open: openFormModal, close: closeFormModal }] = useDisclosure(false)
   const [dishDetails, setDishDetails] = useState({})
 
+  console.log(restaurant)
   const dashboardCards = [
     {
       icon: "money",
@@ -78,9 +81,13 @@ export default function DishDetails() {
           <Card padding="lg" radius="md">
             <Card.Section>
               <div className="relative">
-                <img
-                  className="w-full h-60 object-cover"
-                  src="https://images.pexels.com/photos/3310691/pexels-photo-3310691.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+                {/*    <img className="w-full h-60 object-cover" src={restaurant?.bannerDishes?.[0]?.location} /> */}
+                <Image
+                  src={restaurant?.bannerDishes?.[0]?.location}
+                  h={"240px"}
+                  w={"100%"}
+                  fit="cover"
+                  fallbackSrc="https://placehold.co/600x400?text=Imagen+no+disponible"
                 />
                 <img
                   className="w-44 h-44 rounded-full object-contain absolute border top-[150px] left-[50px] bg-white"
