@@ -95,7 +95,7 @@ export default function Login() {
               }
             />
           </form>
-          <div className="w-full flex flex-col items-center justify-center text-sm text-secondary_text">
+          {/* <div className="w-full flex flex-col items-center justify-center text-sm text-secondary_text">
             <div className="flex flex-row justify-center w-full mb-3">
               <p>No tienes una cuenta?</p>
               <Link
@@ -104,7 +104,7 @@ export default function Login() {
                 Crear cuenta
               </Link>
             </div>
-          </div>
+          </div> */}
         </div>
       )}
     </>
