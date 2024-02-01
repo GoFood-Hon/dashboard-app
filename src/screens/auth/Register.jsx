@@ -25,8 +25,9 @@ export default function Register() {
   const onSubmit = async ({ name, email, password, phoneNumber }) => {
     try {
       const res = await authApi.signup({ name, email, password, phoneNumber: "+50412345678" })
-      if (res.status === "fail") {
-        toast.error(res.message)
+
+      if (res.error) {
+        toast.error(`Hubo un error. ${res.message}`)
         return
       }
       const userData = res?.data?.user
