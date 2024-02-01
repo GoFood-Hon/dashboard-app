@@ -1,15 +1,13 @@
 import React, { useEffect, useState } from "react"
+import { Breadcrumbs } from "@mantine/core"
+import { useDispatch, useSelector } from "react-redux"
+import { useLocation, useNavigate } from "react-router-dom"
 import BaseLayout from "../../components/BaseLayout"
 import Button from "../../components/Button"
-import { Breadcrumbs, Checkbox } from "@mantine/core"
-import { useLocation, useNavigate } from "react-router-dom"
 import { NAVIGATION_ROUTES } from "../../routes"
 import BreadCrumbNavigation from "../../components/BreadCrumbNavigation"
 import MenuTable from "./MenuTable"
-
-import { useDispatch, useSelector } from "react-redux"
-import { fetchMenus, selectAllMenus, selectMenusError, selectMenusStatus, updateMenu } from "../../store/features/menuSlice"
-import LoadingCircle from "../../components/LoadingCircle"
+import { fetchMenus, selectAllMenus, updateMenu } from "../../store/features/menuSlice"
 
 export default function Menu() {
   const navigate = useNavigate()
@@ -17,17 +15,11 @@ export default function Menu() {
   const dispatch = useDispatch()
 
   const menus = useSelector(selectAllMenus)
-  const status = useSelector(selectMenusStatus)
-  const error = useSelector(selectMenusError)
-  const limit = useSelector((state) => state.menus.itemsPerPage)
-  const totalItems = useSelector((state) => state.menus.totalItems)
-  const filters = useSelector((state) => state.menus.filters)
   const page = useSelector((state) => state.menus.currentPage)
   const user = useSelector((state) => state.user.value)
 
   const restaurant = useSelector((state) => state?.restaurant?.value)
 
-  const totalControlBtn = Math.ceil(totalItems / limit)
   const [cardsSelected, setCardsSelected] = useState([])
 
   const handleDishes = () => {
