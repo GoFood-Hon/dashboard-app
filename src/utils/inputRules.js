@@ -40,7 +40,7 @@ export const resetPasswordValidation = Yup.object().shape({
 })
 
 export const registrationValidationSchema = Yup.object().shape({
-  username: Yup.string().required("Nombre de usuario es requerido."),
+  name: Yup.string().required("Nombre de usuario es requerido."),
   email: Yup.string().required("Correo es requerido.").email("Correo incorrecto."),
   password: Yup.string().required("Contraseña es requerida.").min(8, "Contraseña tiene que tener al menos 8 caracteres."),
   confirmPassword: Yup.string()
