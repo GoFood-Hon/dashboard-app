@@ -75,7 +75,7 @@ export default function ForgetPassword() {
           {step === "success" && <SuccessScreen />}
           <Link
             to={AUTH_NAVIGATION_ROUTES.Login.path}
-            className="text-center items-center justify-center w-full text-primary_text cursor-pointer dark:text-dark_secondary_text hover:underline font-bold ">
+            className="text-center items-center justify-center w-full text-primary_text cursor-pointer dark:text-dark_secondary_text hover:underline font-md">
             Iniciar sesión
           </Link>
         </div>
