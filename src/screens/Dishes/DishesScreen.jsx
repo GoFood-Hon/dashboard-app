@@ -31,9 +31,9 @@ export default function Dishes() {
   const dishes = useSelector(selectAllDishes)
   const status = useSelector(selectDishesStatus)
   const error = useSelector(selectDishesError)
-  const limit = useSelector((state) => state.dishes.itemsPerPage)
   const totalItems = useSelector((state) => state.dishes.totalItems)
   const filters = useSelector((state) => state.dishes.filters)
+  const limit = useSelector((state) => state.dishes.itemsPerPage)
   const page = useSelector((state) => state.dishes.currentPage)
   const restaurant = useSelector((state) => state?.restaurant?.value)
 
