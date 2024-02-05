@@ -15,6 +15,8 @@ export default function InputCombobox({ items, label, name, placeholder, errors,
     </Combobox.Option>
   ))
 
+  const selectedOption = items.find((item) => item.value === inputValue)
+
   return (
     <React.Fragment>
       <div className="flex flex-col py-1">
@@ -35,7 +37,7 @@ export default function InputCombobox({ items, label, name, placeholder, errors,
               pointer
               rightSection={<Combobox.Chevron />}
               onClick={() => combobox.toggleDropdown()}>
-              {inputValue || <Input.Placeholder>{placeholder}</Input.Placeholder>}
+              {selectedOption ? selectedOption.label : <Input.Placeholder>{placeholder}</Input.Placeholder>}
             </InputBase>
           </Combobox.Target>
           <Combobox.Dropdown>
