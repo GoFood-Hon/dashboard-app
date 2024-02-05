@@ -5,7 +5,7 @@ import BreadCrumbNavigation from "../../components/BreadCrumbNavigation"
 import SettingsCard from "../../components/SettingsCard"
 import { CouponForm } from "../../components/CouponForm"
 import { PromotionForm } from "../../components/PromotionForm"
-import { CouponsHistory } from "../../components/CouponsHistory"
+import { HistorySection } from "../../components/HistorySection"
 
 export default function CouponsSettings() {
   const [promotionType, setPromotionType] = useState("Promoción")
@@ -29,7 +29,7 @@ export default function CouponsSettings() {
           <Tabs.List>
             <Tabs.Tab value="newPromotion">Nueva promoción</Tabs.Tab>
             <Tabs.Tab value="couponHistory">Historial de cupones</Tabs.Tab>
-            <Tabs.Tab value="duePromos">Promociones vencidas</Tabs.Tab>
+            <Tabs.Tab value="promosHistory">Historial de promociones</Tabs.Tab>
           </Tabs.List>
           <Tabs.Panel value="newPromotion">
             <SettingsCard title={`Nueva promoción de ${promotionType}`} iconName="label">
@@ -51,11 +51,13 @@ export default function CouponsSettings() {
           </Tabs.Panel>
           <Tabs.Panel value="couponHistory">
             <SettingsCard title="Tabla de historial de cupones" iconName="label">
-              <CouponsHistory />
+              <HistorySection section="coupons" />
             </SettingsCard>
           </Tabs.Panel>
-          <Tabs.Panel value="duePromos">
-            <SettingsCard title="Tabla de cupones vencidos" iconName="label"></SettingsCard>
+          <Tabs.Panel value="promosHistory">
+            <SettingsCard title="Tabla de historial de promociones" iconName="label">
+              <HistorySection section="promos" />
+            </SettingsCard>
           </Tabs.Panel>
         </Tabs>
       </div>

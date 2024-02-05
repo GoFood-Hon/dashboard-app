@@ -15,6 +15,7 @@ import { formatDistanceToNow } from "date-fns"
 import { colors } from "../../theme/colors"
 import { useNavigate } from "react-router-dom"
 import { NAVIGATION_ROUTES } from "../../routes"
+import { formatDateDistanceToNow } from "../../utils"
 
 export default function MenuTable({ refreshPage, items, handleDisableSelected, screenType }) {
   const navigate = useNavigate()
@@ -71,7 +72,7 @@ export default function MenuTable({ refreshPage, items, handleDisableSelected, s
       },
       {
         label: "FECHA",
-        renderCell: (item) => formatDate(item.createdAt),
+        renderCell: (item) => formatDateDistanceToNow(item.createdAt),
 
         sort: { sortKey: "DATE" }
       },
@@ -139,7 +140,7 @@ export default function MenuTable({ refreshPage, items, handleDisableSelected, s
       },
       {
         label: "FECHA",
-        renderCell: (item) => formatDate(item.createdAt),
+        renderCell: (item) => formatDateDistanceToNow(item.createdAt),
 
         sort: { sortKey: "DATE" }
       },
@@ -200,7 +201,7 @@ export default function MenuTable({ refreshPage, items, handleDisableSelected, s
       },
       {
         label: "FECHA",
-        renderCell: (item) => formatDate(item.createdAt),
+        renderCell: (item) => formatDateDistanceToNow(item.createdAt),
         sort: { sortKey: "DATE" }
       },
       {
@@ -333,16 +334,6 @@ export default function MenuTable({ refreshPage, items, handleDisableSelected, s
   // modifiedNodes = isHide ? modifiedNodes.filter((node) => !node.isComplete) : modifiedNodes
 
   //* Columns *//
-
-  const formatDate = (dateString) => {
-    const date = new Date(dateString)
-
-    if (isNaN(date)) {
-      return "Invalid Date"
-    }
-
-    return formatDistanceToNow(date, { addSuffix: true })
-  }
 
   return (
     <>
