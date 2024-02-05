@@ -1,23 +1,22 @@
 import React, { useEffect, useState } from "react"
-import BaseLayout from "../../components/BaseLayout"
-import Button from "../../components/Button"
+import { useLocation, useNavigate } from "react-router-dom"
 import { Affix, Breadcrumbs, Grid, Pagination } from "@mantine/core"
-import BreadCrumbNavigation from "../../components/BreadCrumbNavigation"
-import { NAVIGATION_ROUTES } from "../../routes"
+import { useDispatch, useSelector } from "react-redux"
 
+import BreadCrumbNavigation from "../../components/BreadCrumbNavigation"
+import Button from "../../components/Button"
+import BaseLayout from "../../components/BaseLayout"
 import ItemCard from "../../components/ItemCard"
 import { fetchRestaurants, setPage, updateRestaurant } from "../../store/features/restaurantSlice"
-import { useLocation, useNavigate } from "react-router-dom"
-import { useDispatch, useSelector } from "react-redux"
 import { Icon } from "../../components/Icon"
 import { colors } from "../../theme/colors"
+import { NAVIGATION_ROUTES_SUPER_ADMIN } from "../../routes"
 
 export default function RestaurantsScreen() {
-  const navigate = useNavigate()
   const location = useLocation()
+  const navigate = useNavigate()
   const dispatch = useDispatch()
 
-  const user = useSelector((state) => state.user.value)
   const limit = useSelector((state) => state.restaurants.itemsPerPage)
   const totalItems = useSelector((state) => state.restaurants.totalItems)
   const page = useSelector((state) => state.restaurants.currentPage)
@@ -26,11 +25,6 @@ export default function RestaurantsScreen() {
   const totalControlBtn = Math.ceil(totalItems / limit)
 
   const [cardsSelected, setCardsSelected] = useState([])
-
-  const handleNewItem = () => {
-    /* navigate(NAVIGATION_ROUTES.Menu.submenu.Dishes.submenu.NewDish.path)
-    setCardsSelected([]) */
-  }
 
   useEffect(() => {
     dispatch(
@@ -100,6 +94,12 @@ export default function RestaurantsScreen() {
     /*   navigate(`${NAVIGATION_ROUTES.Menu.submenu.Dishes.path}/${id}`) */
   }
 
+  const handleNewItem = () => {
+    navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Restaurants.NewUser.path)
+  }
+
+  const handleNewUser = () => {}
+
   return (
     <BaseLayout>
       <section>
@@ -136,9 +136,9 @@ export default function RestaurantsScreen() {
       </section>
       <section className="my-6 w-full">
         {restaurant && restaurant?.length > 0 ? (
-          <Grid grow>
+          <Grid>
             {restaurant?.map((item, key) => (
-              <Grid.Col span={{ base: 12, md: 6, lg: 3 }} key={key}>
+              <Grid.Col span={{ base: 12, md: 4 }} key={key}>
                 <ItemCard
                   item={item}
                   index={key}
