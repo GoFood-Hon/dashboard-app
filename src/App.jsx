@@ -43,7 +43,9 @@ import { OrderDetails } from "./screens/Orders/OrderDetails"
 import RestaurantsScreen from "./screens/Restaurants/RestaurantsScreen"
 import PrivateRoute from "./layout/PrivateRoute"
 import { useSelector } from "react-redux"
-import UnauthorizedPage from "./screens/UnauthorizedPage"
+import { NewAdminScreen } from "./screens/Restaurants/NewAdminScreen"
+import { APP_ROLES } from "./utils/constants"
+import { AdminUserScreen } from "./screens/Users/AdminUserScreen"
 
 function App() {
   const userRole = useSelector((state) => state.user.value.role)
@@ -52,8 +54,10 @@ function App() {
     createRoutesFromElements(
       <>
         <Route element={<AuthLayout />}>
-          <Route element={<PrivateRoute allowedRoles={["superadmin"]} userRole={userRole} />}>
+          <Route element={<PrivateRoute allowedRoles={[APP_ROLES.superAdmin]} userRole={userRole} />}>
             <Route path={NAVIGATION_ROUTES_SUPER_ADMIN.Restaurants.path} element={<RestaurantsScreen />} />
+            <Route path={NAVIGATION_ROUTES_SUPER_ADMIN.Users.path} element={<AdminUserScreen />} />
+            <Route path={NAVIGATION_ROUTES_SUPER_ADMIN.Users.NewUser.path} element={<NewAdminScreen />} />
           </Route>
           <Route element={<PrivateRoute allowedRoles={["admin-restaurant"]} userRole={userRole} />}>
             {/*

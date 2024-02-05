@@ -101,12 +101,23 @@ export const NAVIGATION_ROUTES_SUPER_ADMIN = {
   Restaurants: {
     label: "Restaurantes",
     path: "/restaurantes",
-    icon: "branch"
+    icon: "branch",
+    NewRestaurant: {
+      path: "/restaurantes/nuevoRestaurante"
+    }
   },
   Transactions: {
     label: "Transacciones",
     path: "/transacciones",
     icon: "invoice"
+  },
+  Users: {
+    label: "Usuarios",
+    path: "/usuarios",
+    icon: "users",
+    NewUser: {
+      path: "/usuarios/nuevoUsuario"
+    }
   }
 }
 
