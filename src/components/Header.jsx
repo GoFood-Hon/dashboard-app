@@ -9,6 +9,7 @@ import toast from "react-hot-toast"
 import { AlarmIcon } from "../assets/icons/AlarmIcon"
 import { ConfigIcon } from "../assets/icons/ConfigIcon"
 import { fetchRestaurantData, selectImage } from "../store/features/restaurantSlice"
+import { APP_ROLES } from "../utils/constants"
 
 export default function Header() {
   const imgUrl = useSelector(selectImage)
@@ -19,11 +20,13 @@ export default function Header() {
   const [opened, setOpened] = useState(false)
 
   useEffect(() => {
-    dispatch(
-      fetchRestaurantData({
-        restaurantId: user?.restaurantId
-      })
-    )
+    if (user.role === APP_ROLES.restaurantAdmin) {
+      dispatch(
+        fetchRestaurantData({
+          restaurantId: user?.restaurantId
+        })
+      )
+    }
   }, [])
 
   useEffect(() => {
