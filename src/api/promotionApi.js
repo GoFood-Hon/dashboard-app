@@ -3,7 +3,7 @@ import axiosClient from "./axiosClient"
 const promotionApi = {
   createOffer: (params) => axiosClient.post("api/v1/offer", params),
 
-  addDishesToOffer: (params, restaurantId) => axiosClient.post(`api/v1/offer/${restaurantId}/dishes`, params),
+  addDishesToOffer: (params, promotionId) => axiosClient.post(`api/v1/offer/${promotionId}/dishes`, params),
 
   deleteOffer: () => axiosClient.post("api/v1/offer"),
 

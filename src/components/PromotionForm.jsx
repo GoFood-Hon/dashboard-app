@@ -13,6 +13,7 @@ import InputCombobox from "./Form/InputCombobox"
 import { ErrorMessage } from "./Form/ErrorMessage"
 import { promotionValidationFrom } from "../utils/inputRules"
 import { fetchDishes, selectAllDishes } from "../store/features/dishesSlice"
+import promotionApi from "../api/promotionApi"
 
 export const PromotionForm = () => {
   const user = useSelector((state) => state.user.value)
@@ -26,6 +27,7 @@ export const PromotionForm = () => {
 
   const [discountType, setDiscountType] = useState("Porcentual")
   const [availabilityDiscount, setAvailabilityDiscount] = useState("En todos los platillos")
+  const [dishesAdded, setDishesAdded] = useState([])
 
   const discountPercentage = []
 
@@ -47,37 +49,66 @@ export const PromotionForm = () => {
     resolver: yupResolver(promotionValidationFrom(true))
   })
 
+  const buildPromotionFormData = (data, discountType, availabilityDiscount, user) => {
+    const formData = new FormData()
+    formData.append("title", data.title)
+
+    if (discountType === "Porcentual") {
+      formData.append("category", "porcentual")
+      formData.append("percentage", data.amount)
+    } else {
+      formData.append("category", "fijo")
+      formData.append("amount", data.amount)
+    }
+
+    formData.append("startDate", data.startDate)
+    formData.append("endDate", data.endDate)
+
+    formData.append("minPurchase", data.minPurchase)
+    formData.append("allDishes", availabilityDiscount === "En todos los platillos")
+
+    formData.append("restaurantId", user.restaurantId)
+
+    return formData
+  }
+
+  const buildDishesFormData = (dishesAdded) => {
+    const dishesFormData = new FormData()
+    dishesAdded.forEach((dishId) => {
+      dishesFormData.append("dishes[]", dishId)
+    })
+    return dishesFormData
+  }
+
   const onSubmit = async (data) => {
     reset()
     try {
-      const formData = new FormData()
-
-      formData.append("title", data.title)
-      formData.append("code", data.code)
-
-      if (discountType === "Porcentual") {
-        formData.append("category", "porcentual")
-        formData.append("percentage", data.amount)
-      } else {
-        formData.append("category", "fijo")
-        formData.append("amount", data.amount)
-      }
-
-      formData.append("startDate", data.startDate)
-      formData.append("endDate", data.endDate)
-
-      formData.append("restaurantId", user.restaurantId)
-
-      const response = await couponApi.createCoupon(formData)
+      const promotionFormData = buildPromotionFormData(data, discountType, availabilityDiscount, user)
+      const response = await promotionApi.createOffer(promotionFormData)
 
       if (response.error) {
-        toast.error(`Fallo al crear el cupón. Por favor intente de nuevo. ${response.message}`, {
+        toast.error(`Fallo al crear la promoción. Por favor intente de nuevo. ${response.message}`, {
           duration: 7000
         })
       } else {
-        toast.success("Cupón creado exitosamente", {
-          duration: 7000
-        })
+        if (availabilityDiscount === "Seleccionar platillos") {
+          const dishesFormData = buildDishesFormData(dishesAdded)
+          const res = await promotionApi.addDishesToOffer(dishesFormData, response.data.id)
+
+          if (res.error) {
+            toast.error(`Fallo al agregar los platillos a la promoción. Por favor intente de nuevo. ${response.message}`, {
+              duration: 7000
+            })
+          } else {
+            toast.success("Promoción creada exitosamente", {
+              duration: 7000
+            })
+          }
+        } else {
+          toast.success("Promoción creada exitosamente", {
+            duration: 7000
+          })
+        }
       }
       return response.data
     } catch (error) {
@@ -86,6 +117,7 @@ export const PromotionForm = () => {
       })
     }
   }
+
   useEffect(() => {
     dispatch(
       fetchDishes({
@@ -118,7 +150,13 @@ export const PromotionForm = () => {
           <Grid.Col span={{ sm: 12 }}>
             <span className="text-sky-950 text-sm font-bold leading-snug">Platillos disponibles</span>
             <div className="mt-1">
-              <MultiSelect placeholder="Seleccionar menus" size="md" data={dishes.map((menu) => menu.name)} />
+              <MultiSelect
+                placeholder="Seleccione los platillos"
+                value={dishesAdded}
+                onChange={setDishesAdded}
+                size="md"
+                data={dishes.map((item) => ({ label: item.name, value: item.id }))}
+              />
             </div>
           </Grid.Col>
         ) : null}
@@ -168,6 +206,11 @@ export const PromotionForm = () => {
             onChange={(val) => setValue("endDate", val)}
           />
           <ErrorMessage message={errors?.startDate?.message} />
+        </Grid.Col>
+
+        <Grid.Col span={{ sm: 12 }}>
+          <InputField label="Compra minima" name="minPurchase" register={register} errors={errors} />
+          <ErrorMessage message={errors?.minPurchase?.message} />
         </Grid.Col>
       </Grid>
       <div className="w-full flex flex-row gap-2 pt-4">
