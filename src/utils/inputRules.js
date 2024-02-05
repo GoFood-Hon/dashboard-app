@@ -24,6 +24,16 @@ export const passwordRules = {
   }
 }
 
+export const newAdminValidationSchema = Yup.object().shape({
+  name: Yup.string().required("*Campo requerido"),
+  email: Yup.string().required("*Campo requerido"),
+  phoneNumber: Yup.string().required("*Campo requerido"),
+  password: Yup.string().required("Contraseña es requerida.").min(8, "Contraseña tiene que tener al menos 8 caracteres."),
+  passwordConfirm: Yup.string()
+    .oneOf([Yup.ref("password"), null], "Las contraseñas no coinciden.")
+    .required("Confirme su contraseña.")
+})
+
 export const passwordValidationSchema = Yup.object().shape({
   password: Yup.string().required("Contraseña es requerida.").min(8, "Contraseña tiene que tener al menos 8 caracteres."),
   passwordConfirm: Yup.string()
@@ -55,6 +65,7 @@ export const newItemValidationSchema = Yup.object().shape({
   endPrice: Yup.string().required("Precio final del platillo es requerido."),
   files: Yup.array().required("Imagen es requerida").min(1, "Debe seleccionar al menos una imagen")
 })
+
 export const newComplementValidation = Yup.object().shape({
   name: Yup.string().required("Nombre del complemento es requerido."),
   description: Yup.string().required("Descripción del complemento es requerido."),
