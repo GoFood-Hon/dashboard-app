@@ -1,6 +1,13 @@
 export const APP_ROLES = {
   superAdmin: "superadmin",
-  restaurantAdmin: "restaurant-admin"
+  restaurantAdmin: "admin-restaurant"
+}
+
+export const USER_ROLES = {
+  kitchen: "kitchen",
+  driver: "driver",
+  cashier: "cashier",
+  Administrator: "administrator"
 }
 
 export const userTypes = [
