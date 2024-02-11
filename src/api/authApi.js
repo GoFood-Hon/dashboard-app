@@ -9,7 +9,7 @@ const authApi = {
 
   getUser: () => axiosClient.get("api/v1/users/me"),
 
-  forgotPassword: (params) => axiosClient.post("api/v1/users/forgotPassword", params),
+  forgotPassword: (params) => axiosClient.post("api/v1/users/forgot-password", params),
 
   resetPassword: (params) => axiosClient.patch("api/v1/users/resetPassword", params),
 
