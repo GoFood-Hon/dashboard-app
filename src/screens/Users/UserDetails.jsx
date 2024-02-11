@@ -4,15 +4,12 @@ import { useLocation, useParams } from "react-router-dom"
 import BaseLayout from "../../components/BaseLayout"
 import { Breadcrumbs, Card, Grid, Image, Modal } from "@mantine/core"
 import BreadCrumbNavigation from "../../components/BreadCrumbNavigation"
-import menuApi from "../../api/menuApi"
 import DashboardCard from "../../components/DashboardCard"
 import EditMenuScreen from "../Menu/EditMenuScreen"
 import { IconCamera } from "@tabler/icons-react"
-import { formatDateDistanceToNow, getFormattedHNL } from "../../utils"
 import BackButton from "../Dishes/components/BackButton"
 import { useSelector } from "react-redux"
 import authApi from "../../api/authApi"
-import { format, formatRelative, subDays } from "date-fns"
 
 export default function UserDetails() {
   const { usersId } = useParams()
@@ -29,7 +26,6 @@ export default function UserDetails() {
         const response = await authApi.getUser()
 
         const userDetails = response?.data?.data
-        console.log(userDetails, "sr")
         setUserDetails(userDetails)
       } catch (error) {
         toast.error("Hubo un error obteniendo los detalles del menu")

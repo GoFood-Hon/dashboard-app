@@ -122,6 +122,26 @@ export default function GeneralInformationForm({ register, errors, setValue, isD
                 </Grid.Col>
               </>
             )}
+            <Grid.Col span={{ base: 12, md: 6 }}>
+              <InputField
+                label="Contraseña"
+                name="password"
+                type="password"
+                register={register}
+                errors={errors}
+                placeholder="Ingrese su contraseña"
+              />
+            </Grid.Col>
+            <Grid.Col span={{ base: 12, md: 6 }}>
+              <InputField
+                label="Confirmar contraseña"
+                name="confirmPassword"
+                type="password"
+                register={register}
+                errors={errors}
+                placeholder="Ingrese su contraseña nuevamente"
+              />
+            </Grid.Col>
             <Grid.Col span={{ base: 12 }}>
               <InputTextAreaField label="Nota" name="note" register={register} errors={errors} />
             </Grid.Col>

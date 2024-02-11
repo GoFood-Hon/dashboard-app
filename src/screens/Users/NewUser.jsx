@@ -41,10 +41,10 @@ export default function NewUser() {
       // formData.append("note", data.note)
 
       formData.append("sucursalId", data.branchId)
-      formData.append("password", "Abc123def@")
-      formData.append("confirmPassword", "Abc123def@")
+      formData.append("password", data.password)
+      formData.append("confirmPassword", data.confirmPassword)
 
-      if (role === USER_ROLES.driver) {
+      if (data.role === USER_ROLES.driver) {
         formData.append("motorcycleId", data.motorcycleId)
         formData.append("nationalIdentityNumber", data.nationalIdentityNumber)
       }
