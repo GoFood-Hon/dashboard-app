@@ -42,6 +42,11 @@ export default function Header() {
     navigate(AUTH_NAVIGATION_ROUTES.Login.path)
   }
 
+  const handleAccount = () => {
+    navigate(SETTING_NAVIGATION_ROUTES.Cuenta.path)
+    setOpened(false)
+  }
+
   return (
     <div className="w-full p-4 flex flex-row justify-between text-black  bg-white dark:text-white dark:bg-slate-800 dark:border-slate-700 border border-slate-200 z-20 fixed">
       <div className="flex flex-row">
@@ -90,13 +95,15 @@ export default function Header() {
           opened={opened}
           onChange={setOpened}>
           <Popover.Target>
-            <button aria-label="Update dimensions">
-              <img
-                className="rounded-full hover:outline-dotted hover:duration-300 hover:ease-in-out hover:outline-offset-2"
-                src="https://api.dicebear.com/7.x/micah/svg?backgroundColor=b6e3f4"
-                alt="avatar"
-                width={40}
-                height={40}
+            <button
+              aria-label="Update dimensions"
+              className="rounded-full hover:outline-dotted hover:duration-300 hover:ease-in-out hover:outline-offset-2">
+              <Image
+                h={40}
+                w={40}
+                fit="contain"
+                src={user?.images?.[0]?.location}
+                fallbackSrc="https://placehold.co/60x40?text=Imagen+no+disponible"
                 onClick={() => setOpened((o) => !o)}
               />
             </button>
@@ -106,19 +113,26 @@ export default function Header() {
               {(styles) => (
                 <div className="p-3" style={styles}>
                   <div className="flex flex-col gap-2.5 justify-center items-center">
-                    <img
-                      className="rounded-full hover:outline hover:outline-cyan-500 hover:duration-75 hover:ease-in-out hover:outline-offset-2"
-                      src="https://api.dicebear.com/7.x/micah/svg?backgroundColor=b6e3f4"
-                      alt="avatar"
-                      width={70}
-                      height={70}
-                    />
+                    <div className="rounded-full">
+                      <Image
+                        h={70}
+                        w={70}
+                        fit="contain"
+                        src={user?.images?.[0]?.location}
+                        fallbackSrc="https://placehold.co/60x40?text=Imagen+no+disponible"
+                        onClick={() => setOpened((o) => !o)}
+                      />
+                    </div>
                   </div>
                   <div className="flex flex-col items-center">
                     <div className="font-semibold">{user.name}</div>
                     <div className="text-gray-400 text-sm">{user.email}</div>
                   </div>
-                  <Button text={"Manejar cuenta"} className={"mt-5 border border-slate-400 rounded text-sm"} />
+                  <Button
+                    onClick={handleAccount}
+                    text={"Manejar cuenta"}
+                    className={"mt-5 border border-slate-400 rounded text-sm"}
+                  />
                   <div className="mt-3 dark:border-slate-100 border-slate-400 rounded text-sm bg-slate-700 text-white flex h-10 w-full items-center justify-center space-x-3 shadow-sm transition-all duration-700 focus:outline-none mb-3">
                     <span onClick={logout}>Cerrar sesión</span>
                   </div>
