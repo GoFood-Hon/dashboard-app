@@ -11,6 +11,7 @@ import DashboardCard from "../../components/DashboardCard"
 import EditDishScreen from "./EditDishScreen"
 import BackButton from "./components/BackButton"
 import { useSelector } from "react-redux"
+import { dashboardCards } from "../../utils/constants"
 
 export default function DishDetails() {
   const { dishId } = useParams()
@@ -20,33 +21,6 @@ export default function DishDetails() {
   const [imageModalOpened, { open: openImageModal, close: closeImageModal }] = useDisclosure(false)
   const [formModalOpened, { open: openFormModal, close: closeFormModal }] = useDisclosure(false)
   const [dishDetails, setDishDetails] = useState({})
-
-  const dashboardCards = [
-    {
-      icon: "money",
-      amount: 3500212.0,
-      label: "Ventas totales",
-      percentage: 0.43
-    },
-    {
-      icon: "money",
-      amount: 500212.0,
-      label: "Ingresos totales",
-      percentage: 2.59
-    },
-    {
-      icon: "bag",
-      amount: 1000,
-      label: "Pedidos totales",
-      percentage: 4.43
-    },
-    {
-      icon: "search",
-      amount: 3456,
-      label: "Búsqueda totales",
-      percentage: -0.95
-    }
-  ]
 
   useEffect(() => {
     const fetchDish = async () => {
@@ -109,10 +83,7 @@ export default function DishDetails() {
                     <div className="w-[125px] h-px bg-blue-100 sm:w-full" />
                     <div className="text-sky-950 text-sm font-medium py-2 leading-snug">Precio inicial</div>
                     <div className="text-sky-950 text-sm font-bold leading-snug pb-2">{getFormattedHNL(dishDetails?.price)}</div>
-                    <div className="text-sky-950 text-sm font-medium py-2 leading-snug">Precio final</div>
-                    <div className="text-sky-950 text-sm font-bold leading-snug pb-2">
-                      {getFormattedHNL(dishDetails?.endPrice)}
-                    </div>
+
                     <div className="text-sky-950 text-sm font-medium leading-snug mb-2">Cupones</div>
                     <div className="text-sky-950 text-sm font-bold leading-snug mb-2 p-2 bg-blue-100 rounded-2xl">XAN-DA-3DA</div>
                     <div className="text-sky-950 text-sm font-medium leading-snug mb-2 mt-4">Preparación</div>
@@ -177,7 +148,7 @@ export default function DishDetails() {
         opened={imageModalOpened}
         onClose={closeImageModal}
         centered
-        size={"xl"}
+        size={"2xl"}
         radius={"lg"}
         overlayProps={{
           backgroundOpacity: 0.55,
