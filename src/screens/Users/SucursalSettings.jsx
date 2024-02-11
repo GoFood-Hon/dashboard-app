@@ -19,8 +19,6 @@ export default function SucursalSettings({ setValue, errors, register }) {
   const branches = useSelector(selectAllBranches)
   const user = useSelector((state) => state.user.value)
 
-  const [itemSelected, setItemSelected] = useState({ name: "select..." })
-
   useEffect(() => {
     dispatch(
       fetchBranches({
@@ -52,23 +50,10 @@ export default function SucursalSettings({ setValue, errors, register }) {
               errors={errors}
               setValue={setValue}
               color={colors.primary_button}
-              setItemSelected={setItemSelected}
             />
           </div>
         </Grid.Col>
-        <Grid.Col span={{ sm: 12, md: 6 }}>
-          <div className="flex flex-col gap-2 pt-4 h-full justify-center">
-            <Input.Wrapper label="Encargado">
-              <Input
-                placeholder="Seleccione una sucursal"
-                color={colors.primary_button}
-                size={"md"}
-                disabled
-                value={itemSelected?.name}
-              />
-            </Input.Wrapper>
-          </div>
-        </Grid.Col>
+
         <Grid.Col span={{ sm: 12 }}>
           <div className="text-blue-600 text-base font-normal leading-normal cursor-pointer" onClick={handleNewBranchNavigation}>
             + Añadir sucursal

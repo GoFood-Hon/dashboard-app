@@ -110,7 +110,11 @@ export const userValidation = Yup.object().shape({
   lastName: Yup.string().required("*Campo requerido"),
   email: Yup.string().required("*Campo requerido"),
   phoneNumber: Yup.string().required("*Campo requerido"),
-  role: Yup.string().required("*Campo requerido")
+  role: Yup.string().required("*Campo requerido"),
+  password: Yup.string().required("Contraseña es requerida.").min(8, "Contraseña tiene que tener al menos 8 caracteres."),
+  confirmPassword: Yup.string()
+    .oneOf([Yup.ref("password"), null], "Las contraseñas no coinciden.")
+    .required("Confirme su contraseña.")
 })
 
 export const couponsValidationFrom = (componentMounted) => {
