@@ -2,16 +2,14 @@ import React, { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 import { useDispatch, useSelector } from "react-redux"
 import { useLocation, useNavigate } from "react-router-dom"
-import { Accordion } from "@mantine/core"
 import toast from "react-hot-toast"
+import { Accordion } from "@mantine/core"
 
-import GeneralInformationForm from "./GeneralInformationForm"
-import ComplementsForm from "../Dishes/ComplementsForm"
-import dishesApi from "../../api/dishesApi"
+import SucursalSettings from "./SucursalSettings"
 import Button from "../../components/Button"
-import { updateMenu } from "../../store/features/menuSlice"
+import EditGeneralInformationForm from "./EditGeneralInformation"
 
-export default function EditMenuScreen({ itemDetails, close }) {
+export const EditUserScreen = ({ itemDetails, close }) => {
   const {
     register,
     handleSubmit,
@@ -27,35 +25,17 @@ export default function EditMenuScreen({ itemDetails, close }) {
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const user = useSelector((state) => state.user.value)
-
   const restaurant = useSelector((state) => state?.restaurant?.value)
+
   const [isDataCleared, setIsDataCleared] = useState(false)
-
   const [dishes, setDishes] = useState([])
-
-  useEffect(() => {
-    async function getDishes() {
-      try {
-        const response = await dishesApi.getAllDishesByRestaurant({
-          restaurantId: user.restaurantId
-        })
-        setDishes(response.data.data)
-
-        return response
-      } catch (error) {
-        toast.error(`Hubo error obteniendo los extras, ${error}`)
-        throw error
-      }
-    }
-    getDishes()
-  }, [restaurant])
 
   const accordionStructure = [
     {
       title: "Información general",
       requirement: "Obligatorio",
       form: (
-        <GeneralInformationForm
+        <EditGeneralInformationForm
           register={register}
           errors={errors}
           setValue={setValue}
@@ -65,20 +45,21 @@ export default function EditMenuScreen({ itemDetails, close }) {
       )
     },
     {
-      title: "Platillos",
+      title: "Sucursal",
       requirement: "Obligatorio",
       form: (
-        <ComplementsForm
+        <SucursalSettings
+          register={register}
+          errors={errors}
           setValue={setValue}
+          control={control}
           isDataCleared={isDataCleared}
-          defaultMessage="Por favor seleccione platillos para este menu"
-          itemsAvailableLabel="Platillos disponibles"
-          data={dishes}
-          name={"dishes"}
         />
       )
     }
   ]
+
+  const onSubmit = (data) => {}
 
   const items = accordionStructure.map((item, key) => (
     <Accordion.Item key={key} value={item.title}>
@@ -95,27 +76,13 @@ export default function EditMenuScreen({ itemDetails, close }) {
     </Accordion.Item>
   ))
 
-  const onSubmit = (data) => {
-    dispatch(updateMenu({ data })).then((response) => {
-      reset()
-      close()
-    })
-  }
-
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <section>
-        <div className="flex flex-row justify-between items-center pb-6 flex-wrap xs:gap-3">
-          <div className="flex flex-row gap-x-3 items-center">
-            <h1 className="text-white-200 md:text-2xl font-semibold">Editar Menu</h1>
-          </div>
-        </div>
-      </section>
       <section>
         <Accordion
           variant="separated"
           multiple
-          defaultValue={["Información general", "Platillos"]}
+          defaultValue={["Información general", "Sucursal"]}
           classNames={{
             label: "bg-white fill-white"
           }}>
@@ -129,13 +96,12 @@ export default function EditMenuScreen({ itemDetails, close }) {
               text={"Descartar"}
               className={"text-xs border border-red-400 text-red-400 bg-white"}
               onClick={() => {
-                reset()
-                close()
-                toast.success("Cambios descartados")
+                toast.success("Información eliminada")
+                navigate(NAVIGATION_ROUTES.Users.path)
               }}
             />
             <Button
-              text={"Guardar menu"}
+              text={"Guardar usuario"}
               className="flex h-10 w-full items-center justify-center px-4 rounded-md shadow-sm transition-all duration-700 focus:outline-none text-xs bg-sky-950 text-slate-50"
             />
           </div>

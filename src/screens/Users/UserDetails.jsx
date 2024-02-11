@@ -10,6 +10,7 @@ import { IconCamera } from "@tabler/icons-react"
 import BackButton from "../Dishes/components/BackButton"
 import { useSelector } from "react-redux"
 import authApi from "../../api/authApi"
+import { EditUserScreen } from "./EditUserScreen"
 
 export default function UserDetails() {
   const { usersId } = useParams()
@@ -17,6 +18,7 @@ export default function UserDetails() {
   const restaurant = useSelector((state) => state.restaurants.restaurants)
 
   const [formModalOpened, { open: openFormModal, close: closeFormModal }] = useDisclosure(false)
+  const [imageModalOpened, { open: openImageModal, close: closeImageModal }] = useDisclosure(false)
 
   const [userDetails, setUserDetails] = useState({})
 
@@ -101,9 +103,18 @@ export default function UserDetails() {
             </Card.Section>
             <section className="">
               <Grid>
-                <Grid.Col span={{ base: 12, md: 2, lg: 2 }}>
-                  <div className="p-5 bg-white flex md:items-center lg:items-start flex-col">
-                    <span className="text-sky-950 font-bold pt-20 pb-5 text-left text-2xl">{userDetails?.name}</span>
+                <Grid.Col span={{ base: 12 }}>
+                  <div className="p-5 bg-white flex md:items-center lg:items-start flex-col w-full">
+                    <div className="flex justify-between items-center  w-full pt-20 pb-5">
+                      <span className="text-sky-950 font-bold  text-left text-2xl">{userDetails?.name}</span>
+                      <a
+                        className="text-blue-600 text-base font-normal leading-normal cursor-pointer"
+                        onClick={() => {
+                          openFormModal()
+                        }}>
+                        Editar
+                      </a>
+                    </div>
                     <div className="text-sky-950 text-sm font-medium pb-5 leading-snug">{userDetails?.role}</div>
                     <div className="w-[125px] h-px bg-blue-100 sm:w-full" />
                     <div className="text-sky-950 text-sm font-medium py-2 leading-snug">Nombre</div>
@@ -115,9 +126,9 @@ export default function UserDetails() {
                     <div className="w-[125px] h-px bg-blue-100 sm:w-full" />
                   </div>
                 </Grid.Col>
+                <Grid.Col span={{ base: 12 }}></Grid.Col>
               </Grid>
             </section>
-            <section className="px-20"></section>
           </Card>
         </section>
         <section className="w-full xl:w-3/12 xl:pl-4 2xl:w-2/12">
@@ -131,8 +142,8 @@ export default function UserDetails() {
         </section>
         <section>
           <Modal
-            opened={formModalOpened}
-            onClose={closeFormModal}
+            opened={imageModalOpened}
+            onClose={closeImageModal}
             centered
             size={"xl"}
             radius={"lg"}
@@ -140,7 +151,27 @@ export default function UserDetails() {
               backgroundOpacity: 0.55,
               blur: 3
             }}>
-            <EditMenuScreen close={closeFormModal} itemDetails={userDetails} />
+            <Image
+              h={"auto"}
+              w="full"
+              fit="contain"
+              src={userDetails?.images?.[0]?.location}
+              radius={"xl"}
+              fallbackSrc="https://placehold.co/600x400?text=Imagen+no+disponible"
+            />
+          </Modal>
+
+          <Modal
+            opened={formModalOpened}
+            onClose={closeFormModal}
+            centered
+            size={"2xl"}
+            radius={"lg"}
+            overlayProps={{
+              backgroundOpacity: 0.55,
+              blur: 3
+            }}>
+            <EditUserScreen close={closeFormModal} itemDetails={userDetails} />
           </Modal>
         </section>
       </div>

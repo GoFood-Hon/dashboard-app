@@ -9,7 +9,7 @@ import { bytesToMB } from "../../utils"
 import InputCombobox from "../../components/Form/InputCombobox"
 import { USER_ROLES, userTypes } from "../../utils/constants"
 
-export default function GeneralInformationForm({ register, errors, setValue, isDataCleared }) {
+export default function EditGeneralInformationForm({ register, errors, setValue, isDataCleared }) {
   const [images, setImages] = useState([])
   const [fileInformation, setFileInformation] = useState(null)
   const [role, setRole] = useState(USER_ROLES.administrator)
@@ -106,26 +106,7 @@ export default function GeneralInformationForm({ register, errors, setValue, isD
                 </Grid.Col>
               </>
             )}
-            <Grid.Col span={{ base: 12, md: 6 }}>
-              <InputField
-                label="Contraseña"
-                name="password"
-                type="password"
-                register={register}
-                errors={errors}
-                placeholder="Ingrese su contraseña"
-              />
-            </Grid.Col>
-            <Grid.Col span={{ base: 12, md: 6 }}>
-              <InputField
-                label="Confirmar contraseña"
-                name="confirmPassword"
-                type="password"
-                register={register}
-                errors={errors}
-                placeholder="Ingrese su contraseña nuevamente"
-              />
-            </Grid.Col>
+
             <Grid.Col span={{ base: 12 }}>
               <InputTextAreaField label="Nota" name="note" register={register} errors={errors} />
             </Grid.Col>
