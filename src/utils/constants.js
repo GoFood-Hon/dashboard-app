@@ -7,7 +7,7 @@ export const USER_ROLES = {
   kitchen: "kitchen",
   driver: "driver",
   cashier: "cashier",
-  Administrator: "administrator"
+  administrator: "administrator"
 }
 
 export const userTypes = [

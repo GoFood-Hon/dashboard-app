@@ -1,4 +1,5 @@
 import * as Yup from "yup"
+import { USER_ROLES } from "./constants"
 
 export const inputRequired = {
   required: "Este campo es requerido."

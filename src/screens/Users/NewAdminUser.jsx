@@ -3,18 +3,18 @@ import { useLocation, useNavigate } from "react-router-dom"
 import { Breadcrumbs, Accordion } from "@mantine/core"
 import { useForm } from "react-hook-form"
 import toast from "react-hot-toast"
+import { yupResolver } from "@hookform/resolvers/yup"
 
-import { AdminInformationForm } from "./AdminInformationForm"
+import { AdminInformationForm } from "../Restaurants/AdminInformationForm"
 import BaseLayout from "../../components/BaseLayout"
 import BackButton from "../Dishes/components/BackButton"
 import BreadCrumbNavigation from "../../components/BreadCrumbNavigation"
 import Button from "../../components/Button"
-import { newAdminValidationSchema } from "../../utils/inputRules"
-import { yupResolver } from "@hookform/resolvers/yup"
 import { NAVIGATION_ROUTES_SUPER_ADMIN } from "../../routes"
 import authApi from "../../api/authApi"
+import { newAdminValidationSchema } from "../../utils/inputRules"
 
-export const NewAdminScreen = () => {
+export const NewAdminUser = () => {
   const location = useLocation()
   const navigate = useNavigate()
 
@@ -24,9 +24,7 @@ export const NewAdminScreen = () => {
     setValue,
     control,
     formState: { errors }
-  } = useForm({
-    resolver: yupResolver(newAdminValidationSchema)
-  })
+  } = useForm({ resolver: yupResolver(newAdminValidationSchema) })
 
   const accordionStructure = [
     {
@@ -56,19 +54,21 @@ export const NewAdminScreen = () => {
     formData.append("name", data.name)
     formData.append("email", data.email)
     formData.append("phoneNumber", data.phoneNumber)
+
     formData.append("password", data.password)
+    formData.append("confirmPassword", data.confirmPassword)
 
     const response = await authApi.createNewAdmin(formData)
 
     if (response.error) {
-      toast.error(`Fallo al crear el nuevo administrador. Por favor intente de nuevo. ${response.message}`, {
+      toast.error(`Fallo al crear el usuario. Por favor intente de nuevo. ${response.message}`, {
         duration: 7000
       })
     } else {
       toast.success("Usuario creado exitosamente.", {
         duration: 7000
       })
-      navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Restaurants.path)
+      navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Users.path)
     }
   }
 
