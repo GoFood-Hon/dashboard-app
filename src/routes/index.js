@@ -104,6 +104,9 @@ export const NAVIGATION_ROUTES_SUPER_ADMIN = {
     icon: "branch",
     NewRestaurant: {
       path: "/restaurantes/nuevoRestaurante"
+    },
+    RestaurantDetails: {
+      path: "/restaurantes/:restaurantId"
     }
   },
   Transactions: {
@@ -113,10 +116,10 @@ export const NAVIGATION_ROUTES_SUPER_ADMIN = {
   },
   Users: {
     label: "Usuarios",
-    path: "/usuarios",
+    path: "/UsuariosAdministrativos",
     icon: "users",
     NewUser: {
-      path: "/usuarios/nuevoUsuario"
+      path: "/usuarios/nuevoUsuarioAdministrativo"
     }
   }
 }
