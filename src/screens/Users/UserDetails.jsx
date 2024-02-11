@@ -8,9 +8,11 @@ import menuApi from "../../api/menuApi"
 import DashboardCard from "../../components/DashboardCard"
 import EditMenuScreen from "../Menu/EditMenuScreen"
 import { IconCamera } from "@tabler/icons-react"
-import { getFormattedHNL } from "../../utils"
+import { formatDateDistanceToNow, getFormattedHNL } from "../../utils"
 import BackButton from "../Dishes/components/BackButton"
 import { useSelector } from "react-redux"
+import authApi from "../../api/authApi"
+import { format, formatRelative, subDays } from "date-fns"
 
 export default function UserDetails() {
   const { usersId } = useParams()
@@ -24,9 +26,10 @@ export default function UserDetails() {
   useEffect(() => {
     const fetchDetails = async () => {
       try {
-        const response = await menuApi.getMenuDetails({ usersId })
+        const response = await authApi.getUser()
 
-        const userDetails = response?.data
+        const userDetails = response?.data?.data
+        console.log(userDetails, "sr")
         setUserDetails(userDetails)
       } catch (error) {
         toast.error("Hubo un error obteniendo los detalles del menu")
@@ -105,56 +108,15 @@ export default function UserDetails() {
                 <Grid.Col span={{ base: 12, md: 2, lg: 2 }}>
                   <div className="p-5 bg-white flex md:items-center lg:items-start flex-col">
                     <span className="text-sky-950 font-bold pt-20 pb-5 text-left text-2xl">{userDetails?.name}</span>
-                    <div className="text-sky-950 text-sm font-medium pb-5 leading-snug">Cocinero</div>
+                    <div className="text-sky-950 text-sm font-medium pb-5 leading-snug">{userDetails?.role}</div>
                     <div className="w-[125px] h-px bg-blue-100 sm:w-full" />
                     <div className="text-sky-950 text-sm font-medium py-2 leading-snug">Nombre</div>
-                    <div className="text-sky-950 text-sm font-bold leading-snug pb-2">Hector Luis</div>
-                    <div className="text-sky-950 text-sm font-medium py-2 leading-snug">Correo</div>
-                    <div className="text-sky-950 text-sm font-bold leading-snug pb-2">mar@da.com</div>
-                    <div className="text-sky-950 text-sm font-medium leading-snug mb-2">Teléfono</div>
-                    <div className="text-sky-950 text-sm font-bold leading-snug pb-2">+504 9043 4349</div>
+                    <div className="text-sky-950 text-sm font-bold leading-snug pb-2">{userDetails?.role}</div>
+                    <div className="text-sky-950 text-sm font-medium py-2 leading-snug">{userDetails?.name}</div>
+                    <div className="text-sky-950 text-sm font-bold leading-snug pb-2">{userDetails?.email}</div>
+                    <div className="text-sky-950 text-sm font-medium leading-snug mb-2">{userDetails?.phoneNumber}</div>
 
                     <div className="w-[125px] h-px bg-blue-100 sm:w-full" />
-                    <div className="text-sky-950 text-sm font-medium leading-snug mb-2 mt-4">Creado</div>
-                    <div className="text-sky-950 text-sm font-bold leading-snug mb-2">12/23/2020</div>
-                  </div>
-                </Grid.Col>
-                <Grid.Col span={{ base: 12, md: 10, lg: 10 }}>
-                  <div className="flex w-full flex-col">
-                    <div className="flex flex-row justify-between w-full">
-                      <p className="text-zinc-500 text-sm font-medium h-full w-full pt-20 p-8">
-                        {userDetails?.description || "Sin descripción disponible"}
-                      </p>
-                      <a
-                        className="text-blue-600 text-base font-normal leading-normal cursor-pointer self-center"
-                        onClick={() => {
-                          openFormModal()
-                        }}>
-                        Editar
-                      </a>
-                    </div>
-                    <div className="flex flex-row justify-between">
-                      <span className="text-sky-950 text-base font-bold leading-normal">Sucursal asignada</span>
-                    </div>
-                    {userDetails?.Addons?.map((item) => (
-                      <div
-                        className="w-full p-5 my-3 bg-white rounded-lg border border-blue-100 flex-row justify-between items-center flex text-sm"
-                        key={item?.id}>
-                        <div className="flex flex-row items-center w-1/2">
-                          <Image
-                            src={item?.images?.[0]?.location}
-                            h={60}
-                            w={40}
-                            fit="contain"
-                            fallbackSrc="https://placehold.co/600x400?text=Imagen+no+disponible"
-                          />
-                          <span className="text-sky-950 pl-3">{item?.name}</span>
-                        </div>
-                        <div className="flex flex-row w-1/2 justify-end">
-                          <span className="text-sky-950 pl-3">{getFormattedHNL(item?.price)}</span>
-                        </div>
-                      </div>
-                    ))}
                   </div>
                 </Grid.Col>
               </Grid>
