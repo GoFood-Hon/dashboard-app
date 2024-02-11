@@ -13,7 +13,6 @@ const initialState = {
     endDate: null,
     status: null,
     startPrice: null,
-    endPrice: null,
     dateSort: null
   }
 }

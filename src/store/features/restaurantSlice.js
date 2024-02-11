@@ -14,8 +14,7 @@ const initialState = {
     startDate: null,
     endDate: null,
     status: null,
-    startPrice: null,
-    endPrice: null
+    startPrice: null
   }
 }
 /*
@@ -88,8 +87,7 @@ const updateFormData = (data, propertyToUpdate) => {
     formData.append("price", data.price)
     formData.append("description", data.description)
     formData.append("includesDrink", data.includeDrink)
-    formData.append("endPrice", data.endPrice)
-    formData.append("categoryId", data.categoryId)
+
     formData.append("restaurantId", data.restaurantId)
     formData.append("preparationTime", data?.preparationTime) */
   }

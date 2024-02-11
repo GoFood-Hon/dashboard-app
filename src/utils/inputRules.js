@@ -63,7 +63,7 @@ export const newItemValidationSchema = Yup.object().shape({
   name: Yup.string().required("Nombre del platillo es requerido."),
   description: Yup.string().required("Descripción del platillo es requerido."),
   price: Yup.string().required("Precio del platillo es requerido."),
-  endPrice: Yup.string().required("Precio final del platillo es requerido."),
+
   files: Yup.array().required("Imagen es requerida").min(1, "Debe seleccionar al menos una imagen")
 })
 
@@ -72,8 +72,7 @@ export const newComplementValidation = Yup.object().shape({
   description: Yup.string().required("Descripción del complemento es requerido."),
   category: Yup.string().required("Categoría es requerida."),
   files: Yup.array().required("Imagen es requerida").min(1, "Debe seleccionar al menos una imagen"),
-  price: Yup.string().required("Precio es requerido."),
-  endPrice: Yup.string().required("Precio final es requerido.")
+  price: Yup.string().required("Precio es requerido.")
 })
 export const newMenuValidation = Yup.object().shape({
   name: Yup.string().required("Nombre del menu es requerido."),
@@ -99,10 +98,7 @@ export const filtersValidationSchema = Yup.object().shape({
     .required("*Fecha final es requerida")
     .min(Yup.ref("startDate"), "*Fecha final no  puede ser antes de la fecha inicial."),
   status: Yup.string().required("*El estado es requerido"),
-  startPrice: Yup.number().required("*Precio inicial es requerido").min(0, "*Precio inicial debe ser mayor o igual a 0"),
-  endPrice: Yup.number()
-    .required("*Precio final es requerido")
-    .min(Yup.ref("startPrice"), "*Precio final debe ser mayor al precio inicial")
+  startPrice: Yup.number().required("*Precio inicial es requerido").min(0, "*Precio inicial debe ser mayor o igual a 0")
 })
 
 export const userValidation = Yup.object().shape({

@@ -13,7 +13,7 @@ const initialState = {
     endDate: null,
     status: null,
     startPrice: null,
-    endPrice: null,
+
     dateSort: null
   }
 }
@@ -30,7 +30,7 @@ export const fetchDishes = createAsyncThunk(
     let formattedStatus = null
     let formattedPrice = null
 
-    const { startDate, endDate, status, startPrice, endPrice, dateSort } = filters
+    const { startDate, endDate, status, startPrice, dateSort } = filters
 
     if (startDate) {
       formattedStartDate = startDate.toISOString().split("T")[0]
@@ -44,8 +44,8 @@ export const fetchDishes = createAsyncThunk(
       formattedStatus = status === "Todos" ? null : status === "Habilitado" ? "true" : "false"
     }
 
-    if (startPrice || endPrice) {
-      formattedPrice = `${startPrice || ""}-${endPrice || ""}`
+    if (startPrice) {
+      formattedPrice = `${startPrice || ""}`
     }
 
     try {
@@ -119,8 +119,7 @@ const createDishFormData = (data, restaurantId) => {
   formData.append("price", data.price)
   formData.append("description", data.description)
   formData.append("includesDrink", data.includeDrink)
-  formData.append("endPrice", data.endPrice)
-  formData.append("categoryId", data.categoryId)
+
   formData.append("restaurantId", restaurantId)
   formData.append("preparationTime", data?.preparationTime)
 
@@ -162,8 +161,7 @@ const updateDishFormData = (data, propertyToUpdate) => {
     formData.append("price", data.price)
     formData.append("description", data.description)
     formData.append("includesDrink", data.includeDrink)
-    formData.append("endPrice", data.endPrice)
-    formData.append("categoryId", data.categoryId)
+
     formData.append("restaurantId", data.restaurantId)
     formData.append("preparationTime", data?.preparationTime)
   }

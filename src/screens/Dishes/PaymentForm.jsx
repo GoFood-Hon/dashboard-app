@@ -16,16 +16,6 @@ export default function PaymentForm({ register, errors }) {
             className="text-black"
           />
         </Grid.Col>
-        <Grid.Col span={{ base: 12, md: 6 }}>
-          <InputField
-            label="Precio final"
-            name="endPrice"
-            register={register}
-            errors={errors}
-            placeholder="Ej. HND 150.00"
-            className="text-black"
-          />
-        </Grid.Col>
       </div>
     </Grid>
   )

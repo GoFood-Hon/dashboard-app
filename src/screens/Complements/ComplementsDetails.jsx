@@ -100,14 +100,7 @@ export default function ComplementsDetails() {
                     </span>
                   </div>
                 </Grid.Col>
-                <Grid.Col span={{ base: 12, md: "auto" }}>
-                  <div className="flex flex-col">
-                    <span className="text-zinc-500 text-sm  font-medium leading-normal">Precio final</span>
-                    <span className="text-sky-950 text-sm  font-bold leading-normal">
-                      {getFormattedHNL(complementDetails?.endPrice)}
-                    </span>
-                  </div>
-                </Grid.Col>
+
                 <Grid.Col span={{ base: 12, md: "auto" }}>
                   <div className="flex flex-col">
                     <span className="text-zinc-500 text-sm  font-medium leading-normal">Tipo</span>

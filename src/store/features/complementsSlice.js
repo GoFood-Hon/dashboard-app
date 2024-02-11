@@ -12,8 +12,7 @@ const initialState = {
     startDate: null,
     endDate: null,
     status: null,
-    startPrice: null,
-    endPrice: null
+    startPrice: null
   }
 }
 
@@ -25,7 +24,7 @@ export const fetchComplements = createAsyncThunk(
     let formattedStatus = null
     let formattedPrice = null
 
-    const { startDate, endDate, status, startPrice, endPrice } = filters
+    const { startDate, endDate, status, startPrice } = filters
 
     if (startDate) {
       formattedStartDate = startDate.toISOString().split("T")[0]
@@ -39,8 +38,8 @@ export const fetchComplements = createAsyncThunk(
       formattedStatus = status === "Todos" ? null : status === "Habilitado" ? "true" : "false"
     }
 
-    if (startPrice || endPrice) {
-      formattedPrice = `${startPrice || ""}-${endPrice || ""}`
+    if (startPrice) {
+      formattedPrice = `${startPrice || ""}`
     }
 
     try {
@@ -83,7 +82,6 @@ export const createComplement = createAsyncThunk("complements/createComplement",
     formData.append("category", data.category)
 
     formData.append("price", data.price)
-    formData.append("endPrice", data.endPrice)
     formData.append("restaurantId", restaurantId)
 
     const response = await complementsApi.createAddOn(formData)
@@ -133,7 +131,6 @@ const updateFormData = (data, propertyToUpdate) => {
     formData.append("category", data.category)
 
     formData.append("price", data.price)
-    formData.append("endPrice", data.endPrice)
   }
 
   return formData
