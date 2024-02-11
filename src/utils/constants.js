@@ -24,3 +24,30 @@ export const userTypes = [
     label: "Motorista"
   }
 ]
+
+export const dashboardCards = [
+  {
+    icon: "money",
+    amount: 3500212.0,
+    label: "Ventas totales",
+    percentage: 0.43
+  },
+  {
+    icon: "money",
+    amount: 500212.0,
+    label: "Ingresos totales",
+    percentage: 2.59
+  },
+  {
+    icon: "bag",
+    amount: 1000,
+    label: "Pedidos totales",
+    percentage: 4.43
+  },
+  {
+    icon: "search",
+    amount: 3456,
+    label: "Búsqueda totales",
+    percentage: -0.95
+  }
+]
