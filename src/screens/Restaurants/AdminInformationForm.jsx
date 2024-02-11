@@ -13,11 +13,9 @@ export const AdminInformationForm = ({ register, errors, setValue }) => {
         <Grid.Col span={{ base: 12, md: 6 }}>
           <InputField label="Email" name="email" register={register} errors={errors} className="text-black" />
         </Grid.Col>
-
         <Grid.Col span={{ base: 12, md: 12 }}>
           <InputField label="Numero de teléfono" name="phoneNumber" register={register} errors={errors} className="text-black" />
         </Grid.Col>
-
         <Grid.Col span={{ base: 12, md: 6 }}>
           <InputField label="Ingrese la contraseña" name="password" register={register} errors={errors} className="text-black" />
         </Grid.Col>

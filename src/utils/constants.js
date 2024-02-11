@@ -21,10 +21,6 @@ export const userTypes = [
   },
   {
     value: "driver",
-    label: "Driver"
-  },
-  {
-    value: "admin",
-    label: "Administrador"
+    label: "Motorista"
   }
 ]

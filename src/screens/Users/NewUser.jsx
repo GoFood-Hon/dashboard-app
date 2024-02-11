@@ -14,6 +14,7 @@ import { yupResolver } from "@hookform/resolvers/yup"
 import { userValidation } from "../../utils/inputRules"
 import userApi from "../../api/userApi"
 import BackButton from "../Dishes/components/BackButton"
+import { USER_ROLES } from "../../utils/constants"
 
 export default function NewUser() {
   const location = useLocation()
@@ -35,13 +36,19 @@ export default function NewUser() {
       const formData = new FormData()
       formData.append("name", `${data.firstName} ${data.lastName}`)
       formData.append("email", data.email)
-      // formData.append("phoneNumber", data.phoneNumber)
+      formData.append("phoneNumber", data.phoneNumber)
       formData.append("role", data.role)
       // formData.append("note", data.note)
 
       formData.append("sucursalId", data.branchId)
       formData.append("password", "Abc123def@")
       formData.append("confirmPassword", "Abc123def@")
+
+      if (role === USER_ROLES.driver) {
+        formData.append("motorcycleId", data.motorcycleId)
+        formData.append("nationalIdentityNumber", data.nationalIdentityNumber)
+      }
+
       const response = await userApi.createUser(formData)
 
       if (response?.error) {

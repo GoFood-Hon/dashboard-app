@@ -7,25 +7,13 @@ import InputField from "../../components/Form/InputField"
 import InputTextAreaField from "../../components/Form/InputTextAreaField"
 import { bytesToMB } from "../../utils"
 import InputCombobox from "../../components/Form/InputCombobox"
+import { USER_ROLES, userTypes } from "../../utils/constants"
 
 export default function GeneralInformationForm({ register, errors, setValue, isDataCleared }) {
   const [images, setImages] = useState([])
   const [fileInformation, setFileInformation] = useState(null)
+  const [role, setRole] = useState(USER_ROLES.administrator)
 
-  const userTypes = [
-    {
-      value: "cajero",
-      label: "Cajero"
-    },
-    {
-      value: "kitchen",
-      label: "Cocina"
-    },
-    {
-      value: "motorista",
-      label: "Motorista"
-    }
-  ]
   const handleDrop = (acceptedFiles) => {
     if (acceptedFiles.length > 0) {
       const [file] = acceptedFiles
@@ -57,6 +45,11 @@ export default function GeneralInformationForm({ register, errors, setValue, isD
       />
     )
   })
+
+  const handleChangeRol = (value, name) => {
+    setRole(name)
+    setValue(value, name)
+  }
 
   return (
     <Grid>
@@ -101,13 +94,34 @@ export default function GeneralInformationForm({ register, errors, setValue, isD
               <InputCombobox
                 items={userTypes}
                 placeholder="Seleccione el tipo de usuario"
-                setValue={setValue}
+                setValue={handleChangeRol}
                 errors={errors}
                 label="Tipo de usuario (Obligatorio)"
                 name="role"
               />
             </Grid.Col>
-
+            {role === USER_ROLES.driver && (
+              <>
+                <Grid.Col span={{ base: 12, md: 6 }}>
+                  <InputField
+                    label="Id del vehículo"
+                    name="motorcycleId"
+                    register={register}
+                    errors={errors}
+                    className="text-black"
+                  />
+                </Grid.Col>
+                <Grid.Col span={{ base: 12, md: 6 }}>
+                  <InputField
+                    label="Numero de identidad"
+                    name="nationalIdentityNumber"
+                    register={register}
+                    errors={errors}
+                    className="text-black"
+                  />
+                </Grid.Col>
+              </>
+            )}
             <Grid.Col span={{ base: 12 }}>
               <InputTextAreaField label="Nota" name="note" register={register} errors={errors} />
             </Grid.Col>
