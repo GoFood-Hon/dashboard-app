@@ -16,7 +16,6 @@ import Branches from "./screens/Branches/Branches"
 import Users from "./screens/Users/Users"
 import Logout from "./screens/Logout"
 import Dishes from "./screens/Dishes/DishesScreen"
-import Combos from "./screens/Combos"
 import NewDish from "./screens/Dishes/NewDishScreen"
 import DishDetails from "./screens/Dishes/DishDetails"
 import ComplementsDetails from "./screens/Complements/ComplementsDetails"
@@ -26,15 +25,12 @@ import NewMenu from "./screens/Menu/NewMenu"
 import NewBranch from "./screens/Branches/NewBranch"
 import BranchesDetails from "./screens/Branches/BranchesDetails"
 import NewUser from "./screens/Users/NewUser"
-import UserSettings from "./screens/Users/UserSettings"
 import GeneralSettings from "./screens/Users/GeneralSettings"
 import AccountSettings from "./screens/Users/AccountSettings"
 import PasswordSettings from "./screens/Users/PasswordSettings"
 import BusinessSettings from "./screens/Users/BusinessSettings"
 import CouponsSettings from "./screens/Users/CouponsSettings"
-import PersonalSettings from "./screens/Users/PersonalSettings"
 import BankSettings from "./screens/Users/BankSettings"
-import BranchesSettings from "./screens/Users/BranchesSettings"
 import PlanSettings from "./screens/Users/PlanSettings"
 import AdministrativeSettings from "./screens/Users/AdministrativeSettings"
 import MenuDetails from "./screens/Menu/MenuDetails"
@@ -43,9 +39,14 @@ import { OrderDetails } from "./screens/Orders/OrderDetails"
 import RestaurantsScreen from "./screens/Restaurants/RestaurantsScreen"
 import PrivateRoute from "./layout/PrivateRoute"
 import { useSelector } from "react-redux"
-import { NewAdminScreen } from "./screens/Restaurants/NewAdminScreen"
 import { APP_ROLES } from "./utils/constants"
+import { RestaurantDetailScreen } from "./screens/Restaurants/RestaurantDetailScreen"
+import { NewAdminUser } from "./screens/Users/NewAdminUser"
 import { AdminUserScreen } from "./screens/Users/AdminUserScreen"
+import BranchesSettings from "./screens/Users/BranchesSettings"
+import PersonalSettings from "./screens/Users/PersonalSettings"
+import UserSettings from "./screens/Users/UserSettings"
+import Combos from "./screens/Combos"
 
 function App() {
   const userRole = useSelector((state) => state.user.value.role)
@@ -55,9 +56,16 @@ function App() {
       <>
         <Route element={<AuthLayout />}>
           <Route element={<PrivateRoute allowedRoles={[APP_ROLES.superAdmin]} userRole={userRole} />}>
+            {/*
+             * RESTAURANT
+             */}
             <Route path={NAVIGATION_ROUTES_SUPER_ADMIN.Restaurants.path} element={<RestaurantsScreen />} />
+            <Route path={NAVIGATION_ROUTES_SUPER_ADMIN.Restaurants.RestaurantDetails.path} element={<RestaurantDetailScreen />} />
+            {/*
+             * USERS
+             */}
             <Route path={NAVIGATION_ROUTES_SUPER_ADMIN.Users.path} element={<AdminUserScreen />} />
-            <Route path={NAVIGATION_ROUTES_SUPER_ADMIN.Users.NewUser.path} element={<NewAdminScreen />} />
+            <Route path={NAVIGATION_ROUTES_SUPER_ADMIN.Users.NewUser.path} element={<NewAdminUser />} />
           </Route>
           <Route element={<PrivateRoute allowedRoles={["admin-restaurant"]} userRole={userRole} />}>
             {/*

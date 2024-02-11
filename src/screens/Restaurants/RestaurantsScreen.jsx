@@ -91,7 +91,7 @@ export default function RestaurantsScreen() {
   }
 
   const handleClick = (id) => {
-    /*   navigate(`${NAVIGATION_ROUTES.Menu.submenu.Dishes.path}/${id}`) */
+    navigate(`${NAVIGATION_ROUTES_SUPER_ADMIN.Restaurants.path}/${id}`)
   }
 
   const handleNewItem = () => {
