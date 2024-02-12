@@ -119,10 +119,10 @@ export const NAVIGATION_ROUTES_SUPER_ADMIN = {
     path: "/administradores",
     icon: "users",
     NewUser: {
-      path: "/usuarios/nuevoAdministrador"
+      path: "/administradores/nuevoAdministrador"
     },
     UserDetails: {
-      path: "/usuarios/:adminId"
+      path: "/administradores/:adminId"
     }
   }
 }
