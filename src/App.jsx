@@ -43,10 +43,7 @@ import { APP_ROLES } from "./utils/constants"
 import { RestaurantDetailScreen } from "./screens/Restaurants/RestaurantDetailScreen"
 import { NewAdminUser } from "./screens/Users/NewAdminUser"
 import { AdminUserScreen } from "./screens/Users/AdminUserScreen"
-import BranchesSettings from "./screens/Users/BranchesSettings"
-import PersonalSettings from "./screens/Users/PersonalSettings"
-import UserSettings from "./screens/Users/UserSettings"
-import Combos from "./screens/Combos"
+import { AdminUserDetails } from "./screens/Users/AdminUserDetails"
 
 function App() {
   const userRole = useSelector((state) => state.user.value.role)
@@ -62,10 +59,11 @@ function App() {
             <Route path={NAVIGATION_ROUTES_SUPER_ADMIN.Restaurants.path} element={<RestaurantsScreen />} />
             <Route path={NAVIGATION_ROUTES_SUPER_ADMIN.Restaurants.RestaurantDetails.path} element={<RestaurantDetailScreen />} />
             {/*
-             * USERS
+             * ADMIN USERS
              */}
             <Route path={NAVIGATION_ROUTES_SUPER_ADMIN.Users.path} element={<AdminUserScreen />} />
             <Route path={NAVIGATION_ROUTES_SUPER_ADMIN.Users.NewUser.path} element={<NewAdminUser />} />
+            <Route path={NAVIGATION_ROUTES_SUPER_ADMIN.Users.UserDetails.path} element={<AdminUserDetails />} />
           </Route>
           <Route element={<PrivateRoute allowedRoles={["admin-restaurant"]} userRole={userRole} />}>
             {/*

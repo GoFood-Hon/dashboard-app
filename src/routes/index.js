@@ -115,11 +115,14 @@ export const NAVIGATION_ROUTES_SUPER_ADMIN = {
     icon: "invoice"
   },
   Users: {
-    label: "Usuarios",
-    path: "/UsuariosAdministrativos",
+    label: "Administradores",
+    path: "/administradores",
     icon: "users",
     NewUser: {
-      path: "/usuarios/nuevoUsuarioAdministrativo"
+      path: "/usuarios/nuevoAdministrador"
+    },
+    UserDetails: {
+      path: "/usuarios/:adminId"
     }
   }
 }
