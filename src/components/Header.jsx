@@ -95,13 +95,12 @@ export default function Header() {
           opened={opened}
           onChange={setOpened}>
           <Popover.Target>
-            <button
-              aria-label="Update dimensions"
-              className="rounded-full hover:outline-dotted hover:duration-300 hover:ease-in-out hover:outline-offset-2">
+            <button aria-label="Update dimensions">
               <Image
                 h={40}
                 w={40}
-                fit="contain"
+                fit="cover"
+                radius="xl"
                 src={user?.images?.[0]?.location}
                 fallbackSrc="https://placehold.co/60x40?text=Imagen+no+disponible"
                 onClick={() => setOpened((o) => !o)}
@@ -117,6 +116,7 @@ export default function Header() {
                       <Image
                         h={70}
                         w={70}
+                        radius="md"
                         fit="contain"
                         src={user?.images?.[0]?.location}
                         fallbackSrc="https://placehold.co/60x40?text=Imagen+no+disponible"

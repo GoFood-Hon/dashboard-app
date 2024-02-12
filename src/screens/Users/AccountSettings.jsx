@@ -84,11 +84,11 @@ export default function AccountSettings() {
     }
   }
 
-  const uploadProfileImage = async (dishId, file) => {
+  const uploadProfileImage = async (file) => {
     const formDataImage = new FormData()
     formDataImage.append("files", file)
 
-    return await dishesApi.addImage(dishId, formDataImage)
+    return await authApi.addImage(formDataImage)
   }
 
   const onSubmit = async (data) => {
@@ -106,7 +106,7 @@ export default function AccountSettings() {
           duration: 7000
         })
       } else {
-        // await uploadProfileImage(userData?.id, data?.files?.[0])
+        await uploadProfileImage(data?.files?.[0])
         toast.success("Usuario actualizado exitosamente", {
           duration: 7000
         })
@@ -137,9 +137,9 @@ export default function AccountSettings() {
           </section>
           <SettingsCard title="Información general" iconName="user">
             <div className="flex flex-row gap-2">
-              <div className="cursor-pointer">
+              <div className="cursor-pointer my-4">
                 <Avatar
-                  size="xl"
+                  size="lg"
                   src={userData?.images?.[0]?.location}
                   onClick={() => {
                     openImageModal()
@@ -171,7 +171,6 @@ export default function AccountSettings() {
                 className={"text-xs border border-red-400 text-red-400 bg-white"}
                 onClick={() => navigate(SETTING_NAVIGATION_ROUTES.General.path)}
               />
-
               <Button
                 text={"Guardar Cambios"}
                 className="flex h-10 w-full items-center justify-center px-4 rounded-md shadow-sm transition-all duration-700 focus:outline-none text-xs bg-sky-950 text-slate-50"

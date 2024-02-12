@@ -17,6 +17,11 @@ const authApi = {
 
   updateUser: (params) => axiosClient.post("api/v1/users/update-me", params),
 
+  addImage: (params) =>
+    axiosClient.post("api/v1/users/update-image", params, {
+      contentType: `multipart/form-data; boundary=${params._boundary}`
+    }),
+
   changePassword: (params) => axiosClient.patch("api/v1/users/change-password", params),
 
   createNewAdmin: (params) => axiosClient.post("api/v1/users/signup", params),
