@@ -148,6 +148,7 @@ export default function NewBranch() {
     const formData = JSON.stringify({
       restaurantId: restaurant.id,
       name: data.name,
+      email: data.email,
       phoneNumber: data.phoneNumber,
       address: data.address,
       city: data.city,
