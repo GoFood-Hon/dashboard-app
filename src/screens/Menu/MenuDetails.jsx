@@ -12,6 +12,7 @@ import { getFormattedHNL } from "../../utils"
 import EditMenuScreen from "./EditMenuScreen"
 import BackButton from "../Dishes/components/BackButton"
 import { useSelector } from "react-redux"
+import { dashboardCards } from "../../utils/constants"
 
 export default function MenuDetails() {
   const { menuId } = useParams()
@@ -35,33 +36,6 @@ export default function MenuDetails() {
     }
     fetchMenu()
   }, [closeFormModal, formModalOpened])
-
-  const dashboardCards = [
-    {
-      icon: "money",
-      amount: 3500212.0,
-      label: "Ventas totales",
-      percentage: 0.43
-    },
-    {
-      icon: "money",
-      amount: 500212.0,
-      label: "Ingresos totales",
-      percentage: 2.59
-    },
-    {
-      icon: "bag",
-      amount: 1000,
-      label: "Pedidos totales",
-      percentage: 4.43
-    },
-    {
-      icon: "search",
-      amount: 3456,
-      label: "Búsqueda totales",
-      percentage: -0.95
-    }
-  ]
 
   return (
     <BaseLayout>

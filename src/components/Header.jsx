@@ -37,7 +37,7 @@ export default function Header() {
   }, [location.pathname])
 
   const logout = () => {
-    toast.error("Cerrando sesión")
+    toast.success("Cerrando sesión")
     localStorage.removeItem("token")
     navigate(AUTH_NAVIGATION_ROUTES.Login.path)
   }
@@ -133,7 +133,7 @@ export default function Header() {
                     text={"Manejar cuenta"}
                     className={"mt-5 border border-slate-400 rounded text-sm"}
                   />
-                  <div className="mt-3 dark:border-slate-100 border-slate-400 rounded text-sm bg-slate-700 text-white flex h-10 w-full items-center justify-center space-x-3 shadow-sm transition-all duration-700 focus:outline-none mb-3">
+                  <div className="mt-3 dark:border-slate-100 border-slate-400 rounded text-sm bg-slate-700 text-white flex h-10 w-full items-center justify-center space-x-3 shadow-sm transition-all duration-700 focus:outline-none mb-3 cursor-pointer">
                     <span onClick={logout}>Cerrar sesión</span>
                   </div>
                 </div>
