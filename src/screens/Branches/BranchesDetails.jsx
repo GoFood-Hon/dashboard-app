@@ -60,7 +60,6 @@ export default function BranchesDetails() {
     fetchData()
   }, [closeFormModal, formModalOpened])
 
-  console.log(details, "det")
   const todayIndex = new Date().getDay()
 
   return (
