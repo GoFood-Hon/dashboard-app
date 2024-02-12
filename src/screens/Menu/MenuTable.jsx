@@ -14,7 +14,7 @@ import { ITEMS_PER_PAGE } from "../../utils/paginationConfig"
 import { formatDistanceToNow } from "date-fns"
 import { colors } from "../../theme/colors"
 import { useNavigate } from "react-router-dom"
-import { NAVIGATION_ROUTES } from "../../routes"
+import { NAVIGATION_ROUTES, NAVIGATION_ROUTES_SUPER_ADMIN } from "../../routes"
 import { formatDateDistanceToNow } from "../../utils"
 
 export default function MenuTable({ refreshPage, items, handleDisableSelected, screenType }) {
@@ -35,6 +35,8 @@ export default function MenuTable({ refreshPage, items, handleDisableSelected, s
       navigate(`${NAVIGATION_ROUTES.Users.path}/${id}`)
     } else if (screenType === "ordersScreen") {
       navigate(`${NAVIGATION_ROUTES.Pedidos.path}/${id}`)
+    } else if (screenType === "adminUserScreen") {
+      navigate(`${NAVIGATION_ROUTES_SUPER_ADMIN.Users.path}/${id}`)
     }
   }
 
@@ -97,7 +99,7 @@ export default function MenuTable({ refreshPage, items, handleDisableSelected, s
         }
       }
     ]
-  } else if (screenType === "usersScreen") {
+  } else if (screenType === "usersScreen" || screenType === "adminUserScreen") {
     columns = [
       {
         label: "ID",
