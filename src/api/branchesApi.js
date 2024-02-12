@@ -10,6 +10,13 @@ const branchesApi = {
 
   updateBranches: (params, id) => axiosClient.patch(`api/v1/sucursal/${id}`, params),
 
+  createBranch: (params) => axiosClient.post(`api/v1/sucursal/`, params),
+
+  addImage: (branchId, params) =>
+    axiosClient.post(`api/v1/sucursal/${branchId}/images`, params, {
+      contentType: `multipart/form-data; boundary=${params._boundary}`
+    }),
+
   getBranchesByRestaurant: ({ limit, page, order, startDate, endDate, status, price, dateSort }) => {
     const params = {
       limit,

@@ -83,13 +83,12 @@ export const newMenuValidation = Yup.object().shape({
 
 export const newBranchValidation = Yup.object().shape({
   name: Yup.string().required("Nombre de la sucursal es requerido."),
-  email: Yup.string().required("Correo es requerido."),
-  phone: Yup.string().required("Teléfono es requerido."),
-  files: Yup.array().required("Imagen es requerida").min(1, "Debe seleccionar al menos una imagen"),
   address: Yup.string().required("Dirección es requerido."),
-  zipCode: Yup.string().required("Código postal es requerido."),
+  email: Yup.string().required("Correo es requerido."),
+  phoneNumber: Yup.string().required("Teléfono es requerido."),
+  city: Yup.string().required("Ciudad es requerido."),
   state: Yup.string().required("Departamento es requerido."),
-  city: Yup.string().required("Ciudad es requerido.")
+  files: Yup.array().required("Imagen es requerida").min(1, "Debe seleccionar al menos una imagen")
 })
 
 export const filtersValidationSchema = Yup.object().shape({

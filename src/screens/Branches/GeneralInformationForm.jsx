@@ -1,13 +1,15 @@
-import { CloseIcon, Grid, Group, Text, rem } from "@mantine/core"
+import React, { useEffect, useState } from "react"
+import { Checkbox, CloseIcon, Grid, Group, Text, rem } from "@mantine/core"
 import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone"
 import { IconPhoto } from "@tabler/icons-react"
-import React, { useEffect, useState } from "react"
+import toast from "react-hot-toast"
+import { useDispatch, useSelector } from "react-redux"
+
 import InputTextAreaField from "../../components/Form/InputTextAreaField"
 import InputField from "../../components/Form/InputField"
-import toast from "react-hot-toast"
 import { bytesToMB } from "../../utils"
-import { useDispatch, useSelector } from "react-redux"
 import { fetchDishesCategories, selectAllDishesCategoriesStatus } from "../../store/features/categorySlice"
+import { colors } from "../../theme/colors"
 
 export default function GeneralInformationForm({ register, errors, setValue, isDataCleared }) {
   const dispatch = useDispatch()
@@ -17,6 +19,10 @@ export default function GeneralInformationForm({ register, errors, setValue, isD
 
   const [images, setImages] = useState([])
   const [fileInformation, setFileInformation] = useState(null)
+
+  const [isDelivery, setIsDelivery] = useState(false)
+  const [isPickUp, setIsPickUp] = useState(false)
+  const [isOnSite, setIsOnSite] = useState(false)
 
   const handleDrop = (acceptedFiles) => {
     if (acceptedFiles.length > 0) {
@@ -57,13 +63,36 @@ export default function GeneralInformationForm({ register, errors, setValue, isD
     )
   })
 
+  const handleHasDelivery = () => {
+    setIsDelivery((prevState) => {
+      const newValue = !prevState
+      setValue("delivery", newValue)
+      return newValue
+    })
+  }
+
+  const handleHasPickUp = () => {
+    setIsPickUp((prevState) => {
+      const newValue = !prevState
+      setValue("pickup", newValue)
+      return newValue
+    })
+  }
+
+  const handleHasOnSite = () => {
+    setIsOnSite((prevState) => {
+      const newValue = !prevState
+      setValue("onSite", newValue)
+      return newValue
+    })
+  }
+
   return (
     <Grid>
       <Grid.Col span={{ base: 12, md: 8, lg: 8 }}>
         <div className="w-full h-full items-center justify-center flex bg-white rounded-2xl border border-blue-100 p-4">
           <div className="flex flex-col w-full">
             <InputField label="Nombre (Obligatorio)" name="name" register={register} errors={errors} className="text-black" />
-
             <div className="flex flex-row w-full justify-end flex-wrap">
               <div className="w-1/2 pr-2">
                 <InputField
@@ -77,7 +106,7 @@ export default function GeneralInformationForm({ register, errors, setValue, isD
               <div className="w-1/2 pl-2">
                 <InputField
                   label="Teléfono (Obligatorio)"
-                  name="phone"
+                  name="phoneNumber"
                   register={register}
                   errors={errors}
                   className="text-black"
@@ -85,6 +114,37 @@ export default function GeneralInformationForm({ register, errors, setValue, isD
               </div>
             </div>
             <InputTextAreaField label="Nota" name="note" register={register} errors={errors} />
+            <Checkbox
+              mt={"md"}
+              labelPosition="left"
+              label={<div className="text-sky-950 text-sm font-bold leading-snug">¿Cuenta con delivery?</div>}
+              color={colors.primary_button}
+              checked={isDelivery}
+              size="sm"
+              onChange={handleHasDelivery}
+            />
+            <Checkbox
+              mt={"md"}
+              labelPosition="left"
+              label={<div className="text-sky-950 text-sm font-bold leading-snug">¿Cuenta con retiro en restaurante?</div>}
+              color={colors.primary_button}
+              checked={isPickUp}
+              size="sm"
+              onChange={handleHasPickUp}
+            />
+            <Checkbox
+              mt={"md"}
+              labelPosition="left"
+              label={
+                <div className="text-sky-950 text-sm font-bold leading-snug">
+                  ¿Cuenta con disponibilidad para comer en el restaurante?
+                </div>
+              }
+              color={colors.primary_button}
+              checked={isOnSite}
+              size="sm"
+              onChange={handleHasOnSite}
+            />
           </div>
         </div>
       </Grid.Col>

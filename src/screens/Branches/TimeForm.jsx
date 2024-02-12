@@ -1,16 +1,18 @@
-/* eslint-disable react-hooks/rules-of-hooks */
 import { ActionIcon, Flex, Grid, Switch, Text, Tooltip, rem } from "@mantine/core"
 import { TimeInput } from "@mantine/dates"
 import { IconClock } from "@tabler/icons-react"
 import React, { useEffect, useRef, useState } from "react"
 import { colors } from "../../theme/colors"
 import { Icon } from "../../components/Icon"
+import Button from "../../components/Button"
+import toast from "react-hot-toast"
 
-export default function TimeForm() {
+export default function TimeForm({ setValue }) {
   const daysOfWeek = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"]
 
-  const [alwaysAvailable, setAlwaysAvailable] = useState(true)
+  const [alwaysAvailable, setAlwaysAvailable] = useState(false)
   const [switchStatus, setSwitchStatus] = useState(daysOfWeek.reduce((acc, day) => ({ ...acc, [day]: false }), {}))
+  const [schedule, setSchedule] = useState([])
 
   const timeRefs = useRef(daysOfWeek.map(() => ({ from: React.createRef(), until: React.createRef() }))).current
 
@@ -22,6 +24,38 @@ export default function TimeForm() {
 
   useEffect(() => {}, [switchStatus])
 
+  const handleIsAlwaysAvailable = (event) => {
+    setAlwaysAvailable(event.currentTarget.checked)
+    setValue("alwaysOpen", event.currentTarget.checked)
+  }
+
+  const generateSchedule = () => {
+    return daysOfWeek.map((day) => {
+      if (switchStatus[day]) {
+        const fromRef = timeRefs[daysOfWeek.indexOf(day)].from.current
+        const untilRef = timeRefs[daysOfWeek.indexOf(day)].until.current
+
+        const openingTime = fromRef ? fromRef.value : null
+        const closingTime = untilRef ? untilRef.value : null
+
+        return {
+          day,
+          openingTime,
+          closingTime
+        }
+      } else {
+        return {
+          day,
+          openingTime: null,
+          closingTime: null
+        }
+      }
+    })
+  }
+  const setBranchSchedule = () => {
+    setValue("schedule", generateSchedule())
+    toast.success("Horario establecido!")
+  }
   return (
     <div className="w-full h-full bg-white rounded-2xl border border-blue-100 p-4">
       <section>
@@ -32,25 +66,19 @@ export default function TimeForm() {
               Habilita o deshabilita el horario de la sucursal. El deshabilitar el horario de la sucursal la convierte 24/7
             </Text>
           </Grid.Col>
-
           <Grid.Col span="auto">
             <Flex justify="flex-end">
               <Tooltip label="Si se deshabilita el horario sera 24/7" refProp="rootRef">
-                <Switch
-                  checked={alwaysAvailable}
-                  color="teal"
-                  size="sm"
-                  onChange={(event) => setAlwaysAvailable(event.currentTarget.checked)}
-                />
+                <Switch checked={alwaysAvailable} color="teal" size="sm" onChange={handleIsAlwaysAvailable} />
               </Tooltip>
             </Flex>
           </Grid.Col>
-
           {daysOfWeek.map((day, index) => (
             <React.Fragment key={day}>
               <Grid.Col span={{ base: 6 }}>
                 <div className="flex flex-row items-center h-full w-full">
                   <Switch
+                    disabled={alwaysAvailable}
                     color="teal"
                     size="sm"
                     checked={switchStatus[day]}
@@ -101,6 +129,15 @@ export default function TimeForm() {
               )}
             </React.Fragment>
           ))}
+          <div className="m-4 w-full flex justify-end">
+            <div
+              className="cursor-pointer space-x-3 flex h-10 w-auto items-center justify-center px-4 rounded-md shadow-sm transition-all duration-700 focus:outline-none text-xs bg-sky-950 text-slate-50"
+              onClick={() => setBranchSchedule()}>
+              <React.Fragment>
+                <p className="w-full whitespace-nowrap px-4">Establecer horario</p>
+              </React.Fragment>
+            </div>
+          </div>
         </Grid>
       </section>
     </div>

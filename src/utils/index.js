@@ -1,5 +1,6 @@
 import { format, formatDistanceToNow, parseISO } from "date-fns"
 import { es } from "date-fns/locale"
+import { hondurasDepartments } from "./constants"
 
 export function getFormattedHNL(amount) {
   return new Intl.NumberFormat("en-US", {
@@ -32,7 +33,6 @@ export const formatDateDistanceToNow = (dateString) => {
  * @param {string} dateString Input 2024-02-01T06:00:00.000Z
  * @returns {string} Output: "13 julio, 2024"
  */
-
 export const formatDateToString = (dateString) => {
   let parsedDate
   try {
@@ -44,5 +44,12 @@ export const formatDateToString = (dateString) => {
   }
 }
 
-// fecha mala:  "2024-01-28T23:27:43.612Z"
-// fecha buena: "2024-02-01T23:03:29.046Z"
+/**
+ *
+ * @param {number} id
+ * @returns {string}
+ */
+export function getDepartmentNameById(id) {
+  const department = hondurasDepartments.find((department) => department.id === id)
+  return department ? department.name : null
+}
