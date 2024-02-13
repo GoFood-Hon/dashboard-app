@@ -14,6 +14,7 @@ import DashboardCard from "../../components/DashboardCard"
 import BackButton from "../Dishes/components/BackButton"
 import { dashboardCards, mapBoxStyles } from "../../utils/constants"
 import { MAPBOX_KEY } from "../../services/env"
+import { EditBranch } from "./EditBranch"
 
 export default function BranchesDetails() {
   const { branchId } = useParams()
@@ -221,7 +222,7 @@ export default function BranchesDetails() {
             backgroundOpacity: 0.55,
             blur: 3
           }}>
-          <span>editar</span>
+          <EditBranch close={closeFormModal} itemDetails={details} />
         </Modal>
       </section>
     </BaseLayout>

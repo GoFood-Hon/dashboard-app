@@ -8,26 +8,18 @@ import InputField from "../../components/Form/InputField"
 import { hondurasDepartments, mapBoxStyles } from "../../utils/constants"
 import { MAPBOX_KEY } from "../../services/env"
 
-export default function LocationForm({ register, errors, setValue }) {
-  const [selectedDepartment, setSelectedDepartment] = useState(null)
+export default function LocationForm({ register, errors, setValue, itemDetails }) {
+  console.log(itemDetails, "det")
   const [marker, setMarker] = useState({
-    longitude: -88.025,
-    latitude: 15.50417
+    longitude: itemDetails?.geolocation?.coordinates?.[0] ?? -88.025,
+    latitude: itemDetails?.geolocation?.coordinates?.[1] ?? 15.50417
   })
 
   const [viewState, setViewState] = useState({
-    longitude: -88.025,
-    latitude: 15.50417,
+    longitude: itemDetails?.geolocation?.coordinates?.[0] ?? -88.025,
+    latitude: itemDetails?.geolocation?.coordinates?.[1] ?? 15.50417,
     zoom: 12.2
   })
-
-  const getCitiesByDepartment = async (departmentId) => {}
-
-  useEffect(() => {
-    if (selectedDepartment) {
-      getCitiesByDepartment(selectedDepartment.id)
-    }
-  }, [selectedDepartment])
 
   const onDrag = (evt) => {
     const { lng, lat } = evt.lngLat

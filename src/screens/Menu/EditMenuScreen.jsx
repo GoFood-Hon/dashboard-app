@@ -23,8 +23,6 @@ export default function EditMenuScreen({ itemDetails, close }) {
     defaultValues: itemDetails
   })
 
-  const location = useLocation()
-  const navigate = useNavigate()
   const dispatch = useDispatch()
   const user = useSelector((state) => state.user.value)
 

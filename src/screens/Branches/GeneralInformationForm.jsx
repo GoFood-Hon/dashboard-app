@@ -11,7 +11,7 @@ import { bytesToMB } from "../../utils"
 import { fetchDishesCategories, selectAllDishesCategoriesStatus } from "../../store/features/categorySlice"
 import { colors } from "../../theme/colors"
 
-export default function GeneralInformationForm({ register, errors, setValue, isDataCleared }) {
+export default function GeneralInformationForm({ register, errors, setValue, isDataCleared, itemDetails }) {
   const dispatch = useDispatch()
   const user = useSelector((state) => state.user.value)
 
@@ -20,9 +20,9 @@ export default function GeneralInformationForm({ register, errors, setValue, isD
   const [images, setImages] = useState([])
   const [fileInformation, setFileInformation] = useState(null)
 
-  const [isDelivery, setIsDelivery] = useState(false)
-  const [isPickUp, setIsPickUp] = useState(false)
-  const [isOnSite, setIsOnSite] = useState(false)
+  const [isDelivery, setIsDelivery] = useState(itemDetails?.delivery ?? false)
+  const [isPickUp, setIsPickUp] = useState(itemDetails?.pickup ?? false)
+  const [isOnSite, setIsOnSite] = useState(itemDetails?.onSite ?? false)
 
   const handleDrop = (acceptedFiles) => {
     if (acceptedFiles.length > 0) {
