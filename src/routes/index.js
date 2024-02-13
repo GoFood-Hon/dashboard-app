@@ -78,7 +78,7 @@ export const NAVIGATION_ROUTES = {
     icon: "users",
     UserDetails: {
       label: "Detalles de usuario",
-      path: "/usuarios/:usuarioId"
+      path: "/usuarios/:userId"
     },
     NewUser: {
       path: "/usuarios/nuevoUsuario"

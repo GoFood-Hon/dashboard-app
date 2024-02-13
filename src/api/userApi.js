@@ -22,6 +22,27 @@ const userApi = {
     const url = `api/v1/users/${id}/restaurant${queryString ? `?${queryString}` : ""}`
 
     return axiosClient.get(url)
+  },
+
+  getUsersByBranch: ({ limit, page, order, id, startDate, endDate, status, price, dateSort }) => {
+    const params = {
+      limit,
+      page,
+      order,
+      startDate,
+      endDate,
+      status,
+      price,
+      dateSort
+    }
+
+    const validParams = Object.fromEntries(Object.entries(params).filter(([_, value]) => value !== undefined && value))
+
+    const queryString = new URLSearchParams(validParams).toString()
+
+    const url = `api/v1/users/${id}/sucursal${queryString ? `?${queryString}` : ""}`
+
+    return axiosClient.get(url)
   }
 }
 

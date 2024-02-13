@@ -5,15 +5,16 @@ import BaseLayout from "../../components/BaseLayout"
 import { Breadcrumbs, Card, Grid, Image, Modal } from "@mantine/core"
 import BreadCrumbNavigation from "../../components/BreadCrumbNavigation"
 import DashboardCard from "../../components/DashboardCard"
-import EditMenuScreen from "../Menu/EditMenuScreen"
+
 import { IconCamera } from "@tabler/icons-react"
 import BackButton from "../Dishes/components/BackButton"
 import { useSelector } from "react-redux"
 import authApi from "../../api/authApi"
 import { EditUserScreen } from "./EditUserScreen"
+import { dashboardCards } from "../../utils/constants"
 
 export default function UserDetails() {
-  const { usersId } = useParams()
+  const { userId } = useParams()
   const location = useLocation()
   const restaurant = useSelector((state) => state.restaurants.restaurants)
 
@@ -25,44 +26,16 @@ export default function UserDetails() {
   useEffect(() => {
     const fetchDetails = async () => {
       try {
-        const response = await authApi.getUser()
-
-        const userDetails = response?.data?.data
+        const response = await authApi.getUserDetails(userId)
+        const userDetails = response?.data
         setUserDetails(userDetails)
       } catch (error) {
-        toast.error("Hubo un error obteniendo los detalles del menu")
+        toast.error("Hubo un error obteniendo los detalles del usuario")
         throw error
       }
     }
     fetchDetails()
   }, [closeFormModal, formModalOpened])
-
-  const dashboardCards = [
-    {
-      icon: "money",
-      amount: 3500212.0,
-      label: "Ventas totales",
-      percentage: 0.43
-    },
-    {
-      icon: "money",
-      amount: 500212.0,
-      label: "Ingresos totales",
-      percentage: 2.59
-    },
-    {
-      icon: "bag",
-      amount: 1000,
-      label: "Pedidos totales",
-      percentage: 4.43
-    },
-    {
-      icon: "search",
-      amount: 3456,
-      label: "Búsqueda totales",
-      percentage: -0.95
-    }
-  ]
 
   return (
     <BaseLayout>
