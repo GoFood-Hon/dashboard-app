@@ -49,9 +49,7 @@ export default function OrdersTable({ refreshPage, items, handleDisableSelected,
     onChange: onPaginationChange
   })
 
-  function onPaginationChange(action, state) {
-    console.log(action, state)
-  }
+  function onPaginationChange(action, state) {}
 
   //* Theme *//
 
@@ -79,7 +77,6 @@ export default function OrdersTable({ refreshPage, items, handleDisableSelected,
   })
 
   function onSearchChange(action, state) {
-    console.log(action, state)
     pagination.fns.onSetPage(0)
   }
 
@@ -93,7 +90,6 @@ export default function OrdersTable({ refreshPage, items, handleDisableSelected,
   })
 
   function onFilterChange(action, state) {
-    console.log(action, state)
     pagination.fns.onSetPage(0)
   }
 
@@ -103,9 +99,7 @@ export default function OrdersTable({ refreshPage, items, handleDisableSelected,
     onChange: onSelectChange
   })
 
-  function onSelectChange(action, state) {
-    console.log(action, state)
-  }
+  function onSelectChange(action, state) {}
 
   //* Sort *//
 
@@ -130,9 +124,7 @@ export default function OrdersTable({ refreshPage, items, handleDisableSelected,
     }
   )
 
-  function onSortChange(action, state) {
-    console.log(action, state)
-  }
+  function onSortChange(action, state) {}
 
   //* Custom Modifiers *//
 

@@ -47,7 +47,6 @@ export const RestaurantDetailScreen = () => {
       const response = await restaurantsApi.getRestaurant(restaurantId)
 
       const details = response?.data
-      console.log(details)
       setRestaurantDetails(details)
     }
     fetchDish()
