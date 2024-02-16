@@ -112,6 +112,18 @@ export const userValidation = Yup.object().shape({
     .required("Confirme su contraseña.")
 })
 
+export const restaurantValidation = Yup.object().shape({
+  name: Yup.string().required("*Campo requerido"),
+  email: Yup.string().required("*Campo requerido"),
+  phoneNumber: Yup.string().required("*Campo requerido"),
+  socialReason: Yup.string().required("*Campo requerido"),
+  rtn: Yup.string().required("*Campo requerido"),
+  billingAddress: Yup.string().required("*Campo requerido"),
+  cai: Yup.string().required("*Campo requerido"),
+  maxDistanceShipping: Yup.string().required("*Campo requerido"),
+  files: Yup.array().required("Imagen es requerida").min(1, "Debe seleccionar al menos una imagen")
+})
+
 export const couponsValidationFrom = (componentMounted) => {
   return Yup.object().shape({
     title: Yup.string().required("*Campo requerido"),

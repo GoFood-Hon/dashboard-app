@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form"
 import toast from "react-hot-toast"
 import { yupResolver } from "@hookform/resolvers/yup"
 
-import { AdminInformationForm } from "../Restaurants/AdminInformationForm"
+import { AdminInformationForm } from "./AdminInformationForm"
 import BaseLayout from "../../components/BaseLayout"
 import BackButton from "../Dishes/components/BackButton"
 import BreadCrumbNavigation from "../../components/BreadCrumbNavigation"

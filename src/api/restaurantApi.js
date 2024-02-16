@@ -20,8 +20,7 @@ const restaurantsApi = {
   getRestaurant: (restaurantId) => axiosClient.get(`api/v1/restaurant/${restaurantId}`),
 
   // POST
-  createRestaurant: (params) =>
-    axiosClient.post("api/v1/restaurant", params, { contentType: `multipart/form-data; boundary=${params._boundary}` }),
+  createRestaurant: (params) => axiosClient.post("api/v1/restaurant/", params),
 
   // UPDATE
   updateRestaurant: (params, restaurantId) => axiosClient.patch(`api/v1/restaurant/${restaurantId}`, params),

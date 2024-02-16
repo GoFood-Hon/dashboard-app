@@ -44,6 +44,7 @@ import { RestaurantDetailScreen } from "./screens/Restaurants/RestaurantDetailSc
 import { NewAdminUser } from "./screens/Users/NewAdminUser"
 import { AdminUserScreen } from "./screens/Users/AdminUserScreen"
 import { AdminUserDetails } from "./screens/Users/AdminUserDetails"
+import { NewRestaurant } from "./screens/Restaurants/NewRestaurant"
 
 function App() {
   const userRole = useSelector((state) => state.user.value.role)
@@ -58,6 +59,7 @@ function App() {
              */}
             <Route path={NAVIGATION_ROUTES_SUPER_ADMIN.Restaurants.path} element={<RestaurantsScreen />} />
             <Route path={NAVIGATION_ROUTES_SUPER_ADMIN.Restaurants.RestaurantDetails.path} element={<RestaurantDetailScreen />} />
+            <Route path={NAVIGATION_ROUTES_SUPER_ADMIN.Restaurants.NewRestaurant.path} element={<NewRestaurant />} />
             {/*
              * ADMIN USERS
              */}

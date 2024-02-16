@@ -11,6 +11,7 @@ import { fetchRestaurants, setPage, updateRestaurant } from "../../store/feature
 import { Icon } from "../../components/Icon"
 import { colors } from "../../theme/colors"
 import { NAVIGATION_ROUTES_SUPER_ADMIN } from "../../routes"
+import BackButton from "../Dishes/components/BackButton"
 
 export default function RestaurantsScreen() {
   const location = useLocation()
@@ -95,7 +96,7 @@ export default function RestaurantsScreen() {
   }
 
   const handleNewItem = () => {
-    navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Restaurants.NewUser.path)
+    navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Restaurants.NewRestaurant.path)
   }
 
   const handleNewUser = () => {}
@@ -105,7 +106,12 @@ export default function RestaurantsScreen() {
       <section>
         <div className="flex flex-row justify-between items-center pb-6">
           <div className="flex flex-row gap-x-3 items-center">
-            <h1 className="text-white-200 text-2xl font-semibold">Restaurantes</h1>
+            <BackButton title="Restaurantes" />
+            <Button
+              text={"Nuevo restaurante"}
+              className={"text-white text-md px-3 py-2 bg-primary_button mb-0"}
+              onClick={handleNewItem}
+            />
           </div>
           <div>
             <Breadcrumbs>
