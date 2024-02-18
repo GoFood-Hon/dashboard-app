@@ -8,7 +8,7 @@ import { colors } from "../../theme/colors"
 import { bytesToMB } from "../../utils"
 
 export const GeneralInformationForm = ({ register, errors, setValue, isDataCleared }) => {
-  const [isFreeDelivery, setIsFreeDelivery] = useState(false)
+  const [isFreeDelivery, setIsFreeDelivery] = useState(true)
   const [images, setImages] = useState([])
   const [fileInformation, setFileInformation] = useState(null)
 
@@ -29,6 +29,7 @@ export const GeneralInformationForm = ({ register, errors, setValue, isDataClear
       toast.success("Archivos aceptados 👍", { duration: 7000 })
     }
   }
+
   const deleteImage = () => {
     setFileInformation(null)
     setImages([])
@@ -97,6 +98,12 @@ export const GeneralInformationForm = ({ register, errors, setValue, isDataClear
               onChange={handleHasFreeDelivery}
             />
           </Grid.Col>
+
+          {isFreeDelivery ? null : (
+            <Grid.Col span={{ base: 6 }}>
+              <InputField label="Precio del envío" name="shippingPrice" register={register} errors={errors} />
+            </Grid.Col>
+          )}
         </Grid>
       </Grid.Col>
       <Grid.Col span={{ base: 12, md: 4, lg: 4 }}>

@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from "react"
 import { useLocation, useParams } from "react-router-dom"
-import { Breadcrumbs, Card, Grid, Image } from "@mantine/core"
+import { Breadcrumbs, Card, Grid, Image, Modal } from "@mantine/core"
 
 import BaseLayout from "../../components/BaseLayout"
 import BackButton from "../Dishes/components/BackButton"
 import BreadCrumbNavigation from "../../components/BreadCrumbNavigation"
 import restaurantsApi from "../../api/restaurantApi"
-import { IconCamera } from "@tabler/icons-react"
-import { getFormattedHNL } from "../../utils"
+import { useDisclosure } from "@mantine/hooks"
+import EditComplementScreen from "../Complements/EditComplementScreen"
+import { EditRestaurant } from "./EditRestaurant"
 
 export const RestaurantDetailScreen = () => {
   const { restaurantId } = useParams()
@@ -15,32 +16,9 @@ export const RestaurantDetailScreen = () => {
 
   const [restaurantsDetails, setRestaurantDetails] = useState({})
 
-  const dashboardCards = [
-    {
-      icon: "money",
-      amount: 3500212.0,
-      label: "Ventas totales",
-      percentage: 0.43
-    },
-    {
-      icon: "money",
-      amount: 500212.0,
-      label: "Ingresos totales",
-      percentage: 2.59
-    },
-    {
-      icon: "bag",
-      amount: 1000,
-      label: "Pedidos totales",
-      percentage: 4.43
-    },
-    {
-      icon: "search",
-      amount: 3456,
-      label: "Búsqueda totales",
-      percentage: -0.95
-    }
-  ]
+  const [imageModalOpened, { open: openImageModal, close: closeImageModal }] = useDisclosure(false)
+  const [formModalOpened, { open: openFormModal, close: closeFormModal }] = useDisclosure(false)
+  const [complementDetails, setComplementDetails] = useState({})
 
   useEffect(() => {
     const fetchDish = async () => {
@@ -70,10 +48,10 @@ export const RestaurantDetailScreen = () => {
             <Card.Section>
               <div className="relative">
                 <Image
-                  // src={restaurant?.bannerDishes?.[0]?.location}
+                  src={restaurantsDetails?.images?.[0]?.location}
                   h={"240px"}
                   w={"100%"}
-                  fit="cover"
+                  fit="contain"
                   fallbackSrc="https://placehold.co/600x400?text=Imagen+no+disponible"
                 />
               </div>
@@ -85,15 +63,15 @@ export const RestaurantDetailScreen = () => {
                     <h1 className="h-full w-full pt-12  text-2xl font-semibold">{restaurantsDetails?.name}</h1>
                     <div className="flex w-full flex-row justify-between items-center">
                       <p className="text-zinc-500 text-sm font-medium pt-4">
-                        {restaurantsDetails?.description || "Sin descripción disponible"}
+                        {restaurantsDetails?.billingAddress || "Sin dirección disponible"}
                       </p>
-                      {/*   <a
+                      <a
                         className="text-blue-600 text-base font-normal leading-normal cursor-pointer self-center"
                         onClick={() => {
                           openFormModal()
                         }}>
                         Editar
-                      </a> */}
+                      </a>
                     </div>
                   </div>
                 </Grid.Col>
@@ -101,38 +79,33 @@ export const RestaurantDetailScreen = () => {
             </section>
             <section className="px-20">
               <div className="pt-8">
-                <span className="text-sky-950 text-base font-bold  leading-normal">Platillos </span>
-                <span className="text-sky-950 text-base font-normal leading-normal">
-                  ( {restaurantsDetails.Dishes?.length ?? 0} )
-                </span>
-
-                {restaurantsDetails?.Dishes?.map((item) => (
-                  <div
-                    className="w-full p-5 my-3 bg-white rounded-lg border border-blue-100 flex-row justify-between items-center flex text-sm"
-                    key={item?.id}>
-                    <div className="flex flex-row items-center w-1/2">
-                      <div className="w-10 h-10 grid place-items-center">
-                        <Image
-                          h={"full"}
-                          w="full"
-                          fit="contain"
-                          src={item?.images?.[0]?.location}
-                          radius={"xs"}
-                          fallbackSrc="https://placehold.co/600x400?text=Imagen+no+disponible"
-                        />
-                      </div>
-                      <span className="text-sky-950 pl-3">{item?.name}</span>
-                    </div>
-                    <div className="flex flex-row w-1/2 justify-end">
-                      <span className="text-sky-950 pl-3">{getFormattedHNL(item?.price)}</span>
-                    </div>
-                  </div>
-                ))}
+                <span className="text-sky-950 text-base font-bold leading-normal">Razón social</span>
+                <p className="text-zinc-500 text-sm font-medium py-2">{restaurantsDetails?.socialReason}</p>
+                <span className="text-sky-950 text-base font-bold leading-normal">Email </span>
+                <p className="text-zinc-500 text-sm font-medium py-2">{restaurantsDetails?.email}</p>
+                <span className="text-sky-950 text-base font-bold leading-normal">CAI </span>
+                <p className="text-zinc-500 text-sm font-medium py-2">{restaurantsDetails?.cai}</p>
+                <span className="text-sky-950 text-base font-bold leading-normal">RTN </span>
+                <p className="text-zinc-500 text-sm font-medium py-2">{restaurantsDetails?.rtn}</p>
+                <span className="text-sky-950 text-base font-bold leading-normal">Maxima distancia permitida</span>
+                <p className="text-zinc-500 text-sm font-medium py-2">{restaurantsDetails?.maxDistanceShipping}</p>
               </div>
             </section>
           </Card>
         </section>
       </div>
+      <Modal
+        opened={formModalOpened}
+        onClose={closeFormModal}
+        centered
+        size={"xl"}
+        radius={"lg"}
+        overlayProps={{
+          backgroundOpacity: 0.55,
+          blur: 3
+        }}>
+        <EditRestaurant close={closeFormModal} details={restaurantsDetails} restaurantId={restaurantId} />
+      </Modal>
     </BaseLayout>
   )
 }
