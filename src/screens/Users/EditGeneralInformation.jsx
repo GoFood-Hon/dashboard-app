@@ -3,6 +3,7 @@ import { CloseIcon, Grid, Group, Text, rem } from "@mantine/core"
 import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone"
 import { IconPhoto } from "@tabler/icons-react"
 import toast from "react-hot-toast"
+
 import InputField from "../../components/Form/InputField"
 import InputTextAreaField from "../../components/Form/InputTextAreaField"
 import { bytesToMB } from "../../utils"

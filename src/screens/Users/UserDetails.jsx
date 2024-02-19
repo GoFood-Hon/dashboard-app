@@ -90,11 +90,17 @@ export default function UserDetails() {
                     </div>
                     <div className="text-sky-950 text-sm font-medium pb-5 leading-snug">{userDetails?.role}</div>
                     <div className="w-[125px] h-px bg-blue-100 sm:w-full" />
-                    <div className="text-sky-950 text-sm font-medium py-2 leading-snug">Nombre</div>
-                    <div className="text-sky-950 text-sm font-bold leading-snug pb-2">{userDetails?.role}</div>
-                    <div className="text-sky-950 text-sm font-medium py-2 leading-snug">{userDetails?.name}</div>
+                    <div className="text-sky-950 text-sm font-medium py-2 leading-snug">Correo</div>
                     <div className="text-sky-950 text-sm font-bold leading-snug pb-2">{userDetails?.email}</div>
-                    <div className="text-sky-950 text-sm font-medium leading-snug mb-2">{userDetails?.phoneNumber}</div>
+
+                    <div className="text-sky-950 text-sm font-medium py-2 leading-snug">Numero de teléfono</div>
+                    <div className="text-sky-950 text-sm font-bold leading-snug pb-2">
+                      {userDetails?.phoneNumber || "No disponible"}
+                    </div>
+                    <div className="text-sky-950 text-sm font-medium py-2 leading-snug">Estado</div>
+                    <div className="text-sky-950 text-sm font-bold leading-snug pb-2">
+                      {userDetails?.active ? `Activo` : `No activo`}
+                    </div>
 
                     <div className="w-[125px] h-px bg-blue-100 sm:w-full" />
                   </div>
@@ -144,7 +150,7 @@ export default function UserDetails() {
               backgroundOpacity: 0.55,
               blur: 3
             }}>
-            <EditUserScreen close={closeFormModal} itemDetails={userDetails} />
+            <EditUserScreen userId={userId} close={closeFormModal} itemDetails={userDetails} />
           </Modal>
         </section>
       </div>

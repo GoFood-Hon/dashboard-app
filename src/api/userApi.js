@@ -43,7 +43,9 @@ const userApi = {
     const url = `api/v1/users/${id}/sucursal${queryString ? `?${queryString}` : ""}`
 
     return axiosClient.get(url)
-  }
+  },
+
+  updateUserRestaurant: (params, userId) => axiosClient.put(`api/v1/users/update-user/${userId}`, params)
 }
 
 export default userApi

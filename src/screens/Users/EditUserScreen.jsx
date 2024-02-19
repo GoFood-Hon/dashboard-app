@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
-import { useDispatch, useSelector } from "react-redux"
 import { useLocation, useNavigate } from "react-router-dom"
 import toast from "react-hot-toast"
 import { Accordion } from "@mantine/core"
@@ -8,8 +7,11 @@ import { Accordion } from "@mantine/core"
 import SucursalSettings from "./SucursalSettings"
 import Button from "../../components/Button"
 import EditGeneralInformationForm from "./EditGeneralInformation"
+import { USER_ROLES } from "../../utils/constants"
+import { NAVIGATION_ROUTES } from "../../routes"
+import userApi from "../../api/userApi"
 
-export const EditUserScreen = ({ itemDetails, close }) => {
+export const EditUserScreen = ({ itemDetails, close, userId }) => {
   const {
     register,
     handleSubmit,
@@ -21,14 +23,9 @@ export const EditUserScreen = ({ itemDetails, close }) => {
     defaultValues: itemDetails
   })
 
-  const location = useLocation()
   const navigate = useNavigate()
-  const dispatch = useDispatch()
-  const user = useSelector((state) => state.user.value)
-  const restaurant = useSelector((state) => state?.restaurant?.value)
 
   const [isDataCleared, setIsDataCleared] = useState(false)
-  const [dishes, setDishes] = useState([])
 
   const accordionStructure = [
     {
@@ -59,7 +56,43 @@ export const EditUserScreen = ({ itemDetails, close }) => {
     }
   ]
 
-  const onSubmit = (data) => {}
+  const onSubmit = async (data) => {
+    try {
+      const formData = new FormData()
+      formData.append("name", data.name)
+      formData.append("email", data.email)
+      formData.append("phoneNumber", data.phoneNumber)
+      formData.append("role", data.role)
+      // formData.append("note", data.note)
+
+      formData.append("sucursalId", data.branchId)
+
+      if (data.role === USER_ROLES.driver) {
+        formData.append("motorcycleId", data.motorcycleId)
+        formData.append("nationalIdentityNumber", data.nationalIdentityNumber)
+      }
+
+      const response = await userApi.updateUserRestaurant(formData, userId)
+
+      if (response?.error) {
+        toast.error(`Fallo al crear un nuevo usuario. Por favor intente de nuevo. ${response.message}`, {
+          duration: 7000
+        })
+      } else {
+        toast.success(`Usuario creado exitosamente`, {
+          duration: 7000
+        })
+        reset()
+        setIsDataCleared(true)
+        navigate(NAVIGATION_ROUTES.Users.path)
+      }
+    } catch (error) {
+      toast.error(`Fallo al crear un nuevo usuario. Por favor intente de nuevo.`, {
+        duration: 7000
+      })
+      throw error
+    }
+  }
 
   const items = accordionStructure.map((item, key) => (
     <Accordion.Item key={key} value={item.title}>
