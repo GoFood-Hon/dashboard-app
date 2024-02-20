@@ -56,15 +56,14 @@ export const NewAdminUser = () => {
     formData.append("phoneNumber", data.phoneNumber)
 
     formData.append("password", data.password)
-    formData.append("confirmPassword", data.confirmPassword)
-
+    // formData.append("confirmPassword", data.confirmPassword)
+    formData.append("restaurantId", data.restaurantId)
     const response = await authApi.createNewAdmin(formData)
-
     if (response.error) {
       toast.error(`Fallo al crear el usuario. Por favor intente de nuevo. ${response.message}`, {
         duration: 7000
       })
-    } else {
+    } else if (response.status === "success") {
       toast.success("Usuario creado exitosamente.", {
         duration: 7000
       })
@@ -108,7 +107,7 @@ export const NewAdminUser = () => {
                 }}
               />
               <Button
-                text={"Crear Restaurante"}
+                text={"Crear administrador"}
                 className="flex h-10 w-full items-center justify-center rounded-md bg-sky-950 px-4 text-xs text-slate-50 shadow-sm transition-all duration-700 focus:outline-none"
               />
             </div>

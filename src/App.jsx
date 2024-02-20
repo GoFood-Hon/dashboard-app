@@ -82,6 +82,7 @@ function App() {
              * Menu routes
              */}
             <Route path={NAVIGATION_ROUTES.Menu.NewMenu.path} element={<NewMenu />} />
+            <Route path={NAVIGATION_ROUTES.Menu.path} element={<Menu />} />
             {/*
              * Dishes routes
              */}

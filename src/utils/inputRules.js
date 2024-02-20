@@ -29,6 +29,7 @@ export const newAdminValidationSchema = Yup.object().shape({
   name: Yup.string().required("*Campo requerido"),
   email: Yup.string().required("*Campo requerido"),
   phoneNumber: Yup.string().required("*Campo requerido"),
+  restaurantId: Yup.string().required("*Campo requerido"),
   password: Yup.string().required("Contraseña es requerida.").min(8, "Contraseña tiene que tener al menos 8 caracteres."),
   passwordConfirm: Yup.string()
     .oneOf([Yup.ref("password"), null], "Las contraseñas no coinciden.")

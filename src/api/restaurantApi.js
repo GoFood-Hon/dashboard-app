@@ -1,7 +1,7 @@
 import axiosClient from "./axiosClient"
 
 const restaurantsApi = {
-  getAllRestaurants: ({ limit, page, order }) => {
+  getAllRestaurants: ({ limit = undefined, page = undefined, order = undefined } = {}) => {
     const params = {
       limit,
       page,
