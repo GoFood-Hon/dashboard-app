@@ -3,11 +3,13 @@ import { CloseIcon, Grid, Group, Text, rem } from "@mantine/core"
 import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone"
 import { IconPhoto } from "@tabler/icons-react"
 import toast from "react-hot-toast"
+
 import InputField from "../../components/Form/InputField"
 import InputTextAreaField from "../../components/Form/InputTextAreaField"
 import InputSearchCombobox from "../../components/Form/InputSearchCombobox"
 import { colors } from "../../theme/colors"
 import { bytesToMB } from "../../utils"
+import { menuType } from "../../utils/constants"
 
 export default function GeneralInformationForm({ register, errors, setValue, isDataCleared }) {
   const [images, setImages] = useState([])
@@ -44,17 +46,6 @@ export default function GeneralInformationForm({ register, errors, setValue, isD
       />
     )
   })
-
-  const menuType = [
-    {
-      id: 1,
-      name: "Normal"
-    },
-    {
-      id: 2,
-      name: "Familiar"
-    }
-  ]
 
   return (
     <Grid>

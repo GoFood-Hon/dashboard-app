@@ -74,3 +74,14 @@ export const hondurasDepartments = [
   { id: 17, name: "Valle" },
   { id: 18, name: "Yoro" }
 ]
+
+export const menuType = [
+  {
+    id: 1,
+    name: "Normal"
+  },
+  {
+    id: 2,
+    name: "Familiar"
+  }
+]
