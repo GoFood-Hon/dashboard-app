@@ -45,6 +45,7 @@ import { NewAdminUser } from "./screens/Users/NewAdminUser"
 import { AdminUserScreen } from "./screens/Users/AdminUserScreen"
 import { AdminUserDetails } from "./screens/Users/AdminUserDetails"
 import { NewRestaurant } from "./screens/Restaurants/NewRestaurant"
+import { Plans } from "./screens/Plans/Plans"
 
 function App() {
   const userRole = useSelector((state) => state.user.value.role)
@@ -66,22 +67,24 @@ function App() {
             <Route path={NAVIGATION_ROUTES_SUPER_ADMIN.Users.path} element={<AdminUserScreen />} />
             <Route path={NAVIGATION_ROUTES_SUPER_ADMIN.Users.NewUser.path} element={<NewAdminUser />} />
             <Route path={NAVIGATION_ROUTES_SUPER_ADMIN.Users.UserDetails.path} element={<AdminUserDetails />} />
+            {/*
+             * PLAN
+             */}
+            <Route path={NAVIGATION_ROUTES_SUPER_ADMIN.Plans.path} element={<Plans />} />
           </Route>
           <Route element={<PrivateRoute allowedRoles={["admin-restaurant"]} userRole={userRole} />}>
             {/*
              * Order routes
              */}
-
             <Route path={NAVIGATION_ROUTES.Pedidos.path} element={<Orders />} />
             <Route path={NAVIGATION_ROUTES.Pedidos.OrderDetails.path} element={<OrderDetails />} />
-
             {/*
              * Menu routes
              */}
-
-            <Route path={NAVIGATION_ROUTES.Menu.path} element={<Menu />} />
             <Route path={NAVIGATION_ROUTES.Menu.NewMenu.path} element={<NewMenu />} />
-
+            {/*
+             * Dishes routes
+             */}
             <Route path={NAVIGATION_ROUTES.Menu.submenu.Dishes.path} element={<Dishes />} />
             <Route path={NAVIGATION_ROUTES.Menu.submenu.Dishes.DishDetails.path} element={<DishDetails />} />
             <Route path={NAVIGATION_ROUTES.Menu.submenu.Dishes.submenu.NewDish.path} element={<NewDish />} />

@@ -37,6 +37,8 @@ export default function MenuTable({ refreshPage, items, handleDisableSelected, s
       navigate(`${NAVIGATION_ROUTES.Pedidos.path}/${id}`)
     } else if (screenType === "adminUserScreen") {
       navigate(`${NAVIGATION_ROUTES_SUPER_ADMIN.Users.path}/${id}`)
+    } else if (screenType === "planScreen") {
+      navigate(`${NAVIGATION_ROUTES_SUPER_ADMIN.Users.path}/${id}`)
     }
   }
 
@@ -225,6 +227,55 @@ export default function MenuTable({ refreshPage, items, handleDisableSelected, s
         )
       }
     ]
+  } else if (screenType === "planScreen") {
+    columns = [
+      {
+        label: "ID",
+        renderCell: (item) => item.id,
+
+        select: {
+          renderHeaderCellSelect: () => (
+            <Checkbox
+              checked={select.state.all}
+              indeterminate={!select.state.all && !select.state.none}
+              onChange={select.fns.onToggleAll}
+            />
+          ),
+          renderCellSelect: (item) => (
+            <Checkbox checked={select.state.ids.includes(item.id)} onChange={() => select.fns.onToggleById(item.id)} />
+          )
+        }
+      },
+      {
+        label: "Nombre del plan",
+        renderCell: (item) => <div className="flex flex-row items-center gap-2">{item.name}</div>,
+        sort: { sortKey: "NAME" }
+      },
+
+      {
+        label: "Tipo de pago",
+        renderCell: (item) => item.paymentType,
+        sort: { sortKey: "PAYMENT_TYPE" }
+      },
+      {
+        label: "Precio",
+        renderCell: (item) => item.price,
+        sort: { sortKey: "PRICE" }
+      },
+      {
+        label: "Ultima actualización",
+        renderCell: (item) => formatDateDistanceToNow(item.updatedAt),
+        sort: { sortKey: "LAST_UPDATE" }
+      },
+      {
+        label: "Acciones",
+        renderCell: (item) => (
+          <span onClick={() => handleClick(item.id)}>
+            <Icon icon="eye" size={19} />
+          </span>
+        )
+      }
+    ]
   } else {
     columns = []
   }
@@ -244,7 +295,6 @@ export default function MenuTable({ refreshPage, items, handleDisableSelected, s
   }
 
   //* Theme *//
-
   const mantineTheme = getTheme({
     ...DEFAULT_OPTIONS,
     striped: false,
@@ -260,7 +310,6 @@ export default function MenuTable({ refreshPage, items, handleDisableSelected, s
   const theme = useTheme([mantineTheme, customTheme])
 
   //* Search *//
-
   const [search, setSearch] = useState("")
 
   useCustom("search", data, {

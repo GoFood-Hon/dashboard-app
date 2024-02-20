@@ -98,6 +98,7 @@ export const NAVIGATION_ROUTES_SUPER_ADMIN = {
     path: "/",
     icon: "dashboard"
   },
+
   Restaurants: {
     label: "Restaurantes",
     path: "/restaurantes",
@@ -120,6 +121,12 @@ export const NAVIGATION_ROUTES_SUPER_ADMIN = {
     UserDetails: {
       path: "/administradores/:adminId"
     }
+  },
+
+  Plans: {
+    label: "Planes",
+    path: "/planes",
+    icon: "creditCard"
   }
 }
 
