@@ -1,13 +1,12 @@
-import BaseLayout from "../../components/BaseLayout"
-
 import React, { useEffect, useState } from "react"
 import { useLocation, useNavigate } from "react-router-dom"
 import { Breadcrumbs, Accordion } from "@mantine/core"
 import { useForm } from "react-hook-form"
-import BreadCrumbNavigation from "../../components/BreadCrumbNavigation"
 import { useDispatch, useSelector } from "react-redux"
 import { yupResolver } from "@hookform/resolvers/yup"
 import toast from "react-hot-toast"
+
+import BreadCrumbNavigation from "../../components/BreadCrumbNavigation"
 import GeneralInformationForm from "./GeneralInformationForm"
 import Button from "../../components/Button"
 import ComplementsForm from "../Dishes/ComplementsForm"
@@ -16,6 +15,7 @@ import { newMenuValidation } from "../../utils/inputRules"
 import { createMenu } from "../../store/features/menuSlice"
 import BackButton from "../Dishes/components/BackButton"
 import { NAVIGATION_ROUTES } from "../../routes"
+import BaseLayout from "../../components/BaseLayout"
 
 export default function NewMenu() {
   const location = useLocation()
