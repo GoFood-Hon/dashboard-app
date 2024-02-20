@@ -42,9 +42,6 @@ export const NewRestaurant = () => {
       formData.append("cai", data.cai)
       formData.append("maxDistanceShipping", data.maxDistanceShipping)
       formData.append("shippingFree", data.shippingFree ?? false)
-      if (!data.shippingFree) {
-        formData.append("shippingPrice", data.shippingPrice)
-      }
 
       const response = await restaurantsApi.createRestaurant(formData)
 
