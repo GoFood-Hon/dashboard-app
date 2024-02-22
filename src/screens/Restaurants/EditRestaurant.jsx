@@ -41,11 +41,11 @@ export const EditRestaurant = ({ close, details, restaurantId }) => {
       const response = await restaurantsApi.updateRestaurant(formData, restaurantId)
 
       if (response.error) {
-        toast.error(`Fallo al crear el restaurante. Por favor intente de nuevo. ${response.message}`, {
+        toast.error(`Fallo al actualizar el restaurante. Por favor intente de nuevo. ${response.message}`, {
           duration: 7000
         })
       } else {
-        const restaurantId = response.data.id
+        const updatedRestaurantId = response.data.data.id
 
         const uploadImage = async (restaurantId, file) => {
           const formDataImage = new FormData()
@@ -54,21 +54,28 @@ export const EditRestaurant = ({ close, details, restaurantId }) => {
           return await restaurantsApi.addImage(restaurantId, formDataImage)
         }
 
-        const addImageResponse = await uploadImage(restaurantId, data?.files?.[0])
+        if (data?.files?.[0]) {
+          const addImageResponse = await uploadImage(updatedRestaurantId, data.files[0])
 
-        if (addImageResponse.error) {
-          toast.error(`Fallo al subir la imagen. Por favor intente de nuevo. ${addImageResponse.message}`, {
-            duration: 7000
-          })
+          if (addImageResponse.error) {
+            toast.error(`Fallo al subir la imagen. Por favor intente de nuevo. ${addImageResponse.message}`, {
+              duration: 7000
+            })
+          } else {
+            toast.success("Restaurante actualizado exitosamente", {
+              duration: 7000
+            })
+            navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Restaurants.path)
+          }
         } else {
-          toast.success("Restaurante creado exitosamente", {
+          toast.success("Restaurante actualizado exitosamente", {
             duration: 7000
           })
           navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Restaurants.path)
         }
       }
     } catch (error) {
-      toast.error(`Error. Por favor intente de nuevo. ${e}`, {
+      toast.error(`Error. Por favor intente de nuevo. ${error}`, {
         duration: 7000
       })
     }

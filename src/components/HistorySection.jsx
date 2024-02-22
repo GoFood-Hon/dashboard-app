@@ -51,10 +51,10 @@ export const HistorySection = ({ section }) => {
   return (
     <div className="w-full">
       {data.map((item, idx) => (
-        <>
-          <HistoryTable item={item} key={idx} />
+        <div key={idx}>
+          <HistoryTable item={item} />
           <hr />
-        </>
+        </div>
       ))}
     </div>
   )

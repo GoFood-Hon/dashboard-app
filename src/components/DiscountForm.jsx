@@ -81,6 +81,7 @@ export const DiscountForm = () => {
           duration: 7000
         })
       } else {
+        navigate(SETTING_NAVIGATION_ROUTES.General.path)
         toast.success("Cupón creado exitosamente", {
           duration: 7000
         })

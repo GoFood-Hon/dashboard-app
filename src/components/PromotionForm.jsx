@@ -81,7 +81,6 @@ export const PromotionForm = () => {
   }
 
   const onSubmit = async (data) => {
-    reset()
     try {
       const promotionFormData = buildPromotionFormData(data, discountType, availabilityDiscount, user)
       const response = await promotionApi.createOffer(promotionFormData)
@@ -100,11 +99,13 @@ export const PromotionForm = () => {
               duration: 7000
             })
           } else {
+            navigate(SETTING_NAVIGATION_ROUTES.General.path)
             toast.success("Promoción creada exitosamente", {
               duration: 7000
             })
           }
         } else {
+          navigate(SETTING_NAVIGATION_ROUTES.General.path)
           toast.success("Promoción creada exitosamente", {
             duration: 7000
           })
