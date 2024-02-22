@@ -16,23 +16,29 @@ export default function Users() {
   const user = useSelector((state) => state.user.value)
 
   const [users, setUser] = useState([])
-  useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const response = await userApi.getUsersByRestaurant(user.restaurantId)
-        if (response.error) {
-          toast.error("Error obteniendo la información de los usuarios")
-        } else {
-          setUser(response.data)
-        }
-      } catch (error) {
-        toast.error("Fallo obtener los datos del usuario")
+
+  const fetchUsers = async () => {
+    try {
+      const response = await userApi.getUsersByRestaurant(user.restaurantId)
+      if (response.error) {
+        toast.error("Error obteniendo la información de los usuarios")
+      } else {
+        setUser(response.data)
       }
+    } catch (error) {
+      toast.error("Fallo obtener los datos del usuario")
     }
+  }
+
+  useEffect(() => {
     fetchUsers()
   }, [])
 
-  const refreshPage = () => {}
+  const refreshPage = () => {
+    fetchUsers()
+  }
+
+  // TODO
   const handleDisableSelected = () => {}
 
   const handleNavigateNewUser = () => {
