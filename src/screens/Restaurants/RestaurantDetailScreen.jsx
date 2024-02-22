@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react"
 import { useLocation, useParams } from "react-router-dom"
 import { Breadcrumbs, Card, Grid, Image, Modal } from "@mantine/core"
+import { useDisclosure } from "@mantine/hooks"
 
 import BaseLayout from "../../components/BaseLayout"
 import BackButton from "../Dishes/components/BackButton"
 import BreadCrumbNavigation from "../../components/BreadCrumbNavigation"
 import restaurantsApi from "../../api/restaurantApi"
-import { useDisclosure } from "@mantine/hooks"
 import EditComplementScreen from "../Complements/EditComplementScreen"
 import { EditRestaurant } from "./EditRestaurant"
 
@@ -21,13 +21,12 @@ export const RestaurantDetailScreen = () => {
   const [complementDetails, setComplementDetails] = useState({})
 
   useEffect(() => {
-    const fetchDish = async () => {
+    ;(async () => {
       const response = await restaurantsApi.getRestaurant(restaurantId)
 
       const details = response?.data
       setRestaurantDetails(details)
-    }
-    fetchDish()
+    })()
   }, [])
 
   return (

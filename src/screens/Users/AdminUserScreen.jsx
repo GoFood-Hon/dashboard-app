@@ -19,24 +19,40 @@ export const AdminUserScreen = () => {
   const [adminUsers, setAdminUsers] = useState([])
 
   useEffect(() => {
-    ;(async () => {
-      try {
-        const response = await userApi.getAdminUsers()
-
-        if (response.error) {
-          toast.error("Error obteniendo la información de los usuarios")
-        } else if (response.status === "success") {
-          setAdminUsers(response.data)
-        }
-      } catch (error) {
-        toast.error("Fallo obtener los datos del usuario")
-      }
-    })()
+    fetchData()
   }, [])
 
-  const handleDisableSelected = () => {}
+  const fetchData = async () => {
+    try {
+      const response = await userApi.getAdminUsers()
 
-  const refreshPage = () => {}
+      if (response.error) {
+        toast.error("Error obteniendo la información de los usuarios")
+      } else if (response.status === "success") {
+        setAdminUsers(response.data)
+      }
+    } catch (e) {
+      toast.error("Fallo obtener los datos del usuario", e)
+    }
+  }
+
+  const refreshPage = () => {
+    fetchData()
+  }
+  const handleDisableSelected = async (id) => {
+    try {
+      const response = await userApi.deleteAdminUser(id)
+
+      if (response.status === 204) {
+        toast.success("Usuario eliminado!")
+        refreshPage()
+      } else {
+        toast.error("Fallo al eliminar el administrador")
+      }
+    } catch (e) {
+      toast.error("Fallo obtener los datos del usuario", e)
+    }
+  }
 
   return (
     <BaseLayout>

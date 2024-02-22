@@ -7,10 +7,6 @@ import Button from "./Button"
 export default function SortPopover() {
   const [dateChecked, setDateChecked] = useState(false)
 
-  const handleApplyFilters = () => {}
-
-  const handleResetFilters = () => {}
-
   return (
     <Popover width={300} position="bottom" withArrow shadow="md" radius={20} offset={{ mainAxis: 2, crossAxis: -130 }}>
       <Popover.Target>

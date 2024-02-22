@@ -99,8 +99,6 @@ export default function RestaurantsScreen() {
     navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Restaurants.NewRestaurant.path)
   }
 
-  const handleNewUser = () => {}
-
   return (
     <BaseLayout>
       <section>
