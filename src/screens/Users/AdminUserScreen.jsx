@@ -8,6 +8,7 @@ import BreadCrumbNavigation from "../../components/BreadCrumbNavigation"
 import { NAVIGATION_ROUTES_SUPER_ADMIN } from "../../routes"
 import MenuTable from "../Menu/MenuTable"
 import toast from "react-hot-toast"
+import userApi from "../../api/userApi"
 
 export const AdminUserScreen = () => {
   const navigate = useNavigate()
@@ -20,18 +21,11 @@ export const AdminUserScreen = () => {
   useEffect(() => {
     ;(async () => {
       try {
-        const response = {
-          data: [
-            {
-              id: 1,
-              name: "Don Jorge"
-            }
-          ]
-        }
+        const response = await userApi.getAdminUsers()
 
         if (response.error) {
           toast.error("Error obteniendo la información de los usuarios")
-        } else {
+        } else if (response.status === "success") {
           setAdminUsers(response.data)
         }
       } catch (error) {

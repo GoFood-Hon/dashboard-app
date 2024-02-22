@@ -45,7 +45,9 @@ const userApi = {
     return axiosClient.get(url)
   },
 
-  updateUserRestaurant: (params, userId) => axiosClient.put(`api/v1/users/update-user/${userId}`, params)
+  updateUserRestaurant: (params, userId) => axiosClient.put(`api/v1/users/update-user/${userId}`, params),
+
+  getAdminUsers: () => axiosClient.get("api/v1/users/admin-restaurant/get-all")
 }
 
 export default userApi
