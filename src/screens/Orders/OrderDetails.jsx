@@ -2,15 +2,12 @@ import { Avatar, Breadcrumbs, Grid, Image, Modal } from "@mantine/core"
 import React, { useEffect, useState } from "react"
 import BreadCrumbNavigation from "../../components/BreadCrumbNavigation"
 import BaseLayout from "../../components/BaseLayout"
-import { Link, useLocation, useNavigate, useParams } from "react-router-dom"
-import { ArrowRightIcon } from "../../assets/icons"
-import { Icon } from "../../components/Icon"
+import { useLocation, useParams } from "react-router-dom"
 import Button from "../../components/Button"
 import { useDisclosure } from "@mantine/hooks"
 import BackButton from "../Dishes/components/BackButton"
 import toast from "react-hot-toast"
 import orderApi from "../../api/orderApi"
-import { formatDistanceToNow } from "date-fns"
 import { formatDateDistanceToNow, getFormattedHNL } from "../../utils"
 
 export const OrderDetails = () => {
@@ -25,7 +22,6 @@ export const OrderDetails = () => {
     ;(async () => {
       try {
         const response = await orderApi.getOrderDetails(orderId)
-        console.log(response)
         setOrderDetails(response.data)
 
         if (response.status !== "success") {
@@ -293,7 +289,7 @@ export const OrderDetails = () => {
               <div className="flex flex-col mt-4">
                 <div className="text-sky-950 text-base font-semibold mb-2">Dirección envío</div>
                 <div className="text-sky-950 text-sm py-2 font-normal leading-normal">
-                  {orderDetails?.Order?.User?.UserAddress || "Dirección no disponible"}
+                  {orderDetails?.Order?.User?.UserAddress || "Dirección no disponible "}
                 </div>
 
                 <div className="text-sky-950 text-base font-semibold mt-4 mb-2">Dirección de facturación</div>
