@@ -23,7 +23,7 @@ export const OrderDetails = () => {
       try {
         const response = await orderApi.getOrderDetails(orderId)
         setOrderDetails(response.data)
-
+        console.log(response.data)
         if (response.status !== "success") {
           toast.error(`Fallo al crear el cupón. Por favor intente de nuevo. ${response.message}`, {
             duration: 7000
@@ -138,10 +138,11 @@ export const OrderDetails = () => {
                 <Grid gutter={"xs"}>
                   <Grid.Col span={{ base: 12, md: "auto" }}>
                     <Image
-                      src={orderDetails?.OrderDetails?.[0]?.Dish?.images?.[0]?.location}
-                      h={50}
-                      w={90}
+                      h={"120px"}
+                      w={"130px"}
                       fit="contain"
+                      src="https://via.placeholder.com/132x120"
+                      radius={"xl"}
                       fallbackSrc="https://placehold.co/600x400?text=Imagen+no+disponible"
                     />
                   </Grid.Col>
@@ -278,11 +279,9 @@ export const OrderDetails = () => {
                 <Avatar size="lg" />
                 <div className="flex flex-col text-sm justify-center pl-2">
                   <span>{orderDetails?.Order?.User?.name}</span>
-                  <span className="text-blue-600 text-sm font-normal">Ver perfil</span>
                 </div>
               </div>
               <div className="flex flex-col mt-2">
-                <div className="text-blue-600 text-sm font-normal">alejandro@onetouch.hn</div>
                 <div className="text-blue-600 text-sm font-normal mt-2">{orderDetails?.Order?.User?.phoneNumber}</div>
               </div>
 
@@ -293,9 +292,7 @@ export const OrderDetails = () => {
                 </div>
 
                 <div className="text-sky-950 text-base font-semibold mt-4 mb-2">Dirección de facturación</div>
-                <div className="text-sky-950 text-sm py-2 font-normal leading-normal">
-                  Alejandro Navarro OneTouch 22 calle, Casa color zapote Casa #1 21104 San Pedro Sula +(504) 9999-9999
-                </div>
+                <div className="text-sky-950 text-sm py-2 font-normal leading-normal"></div>
               </div>
             </div>
           </Grid.Col>
@@ -322,49 +319,54 @@ export const OrderDetails = () => {
                 radius={"xl"}
                 fallbackSrc="https://placehold.co/600x400?text=Imagen+no+disponible"
               />
-              <div className="text-sky-950 text-2xl font-bold pl-4 leading-loose">Whopper</div>
+              <div className="text-sky-950 text-2xl font-bold pl-4 leading-loose">
+                {orderDetails?.OrderDetails?.[0]?.Dish?.name}
+              </div>
             </div>
             <Grid mt={"xl"}>
               <Grid.Col span={{ base: 12, md: "auto" }}>
                 <div className="flex flex-col">
                   <span className="text-zinc-500 text-sm  font-medium leading-normal">Cantidad</span>
-                  <span className="text-sky-950  text-xs py-2 font-bold leading-normal">12</span>
+                  <span className="text-sky-950  text-xs py-2 font-bold leading-normal">
+                    {orderDetails?.OrderDetails?.[0]?.quantity}
+                  </span>
                 </div>
               </Grid.Col>
               <Grid.Col span={{ base: 12, md: "auto" }}>
                 <div className="flex flex-col">
                   <span className="text-zinc-500 text-sm  font-medium leading-normal">Precio Unit.</span>
-                  <span className="text-sky-950  text-xs py-2 font-bold leading-normal">HND 125.99 x 12</span>
+                  {getFormattedHNL(orderDetails?.OrderDetails?.[0]?.price)}
+                  <span className="text-sky-950  text-xs py-2 font-bold leading-normal"></span>
                 </div>
               </Grid.Col>
               <Grid.Col span={{ base: 12, md: "auto" }}>
                 <div className="flex flex-col">
                   <span className="text-zinc-500 text-sm  font-medium leading-normal">Descuento aplicado</span>
                   <span className="text-sky-950  text-xs py-2 font-bold leading-normal">XAN-FJWI-FRJUQ</span>
-                  <span className="text-sky-950  text-xs font-bold leading-normal">25% (HND 377.97)</span>
+                  {getFormattedHNL(orderDetails?.OrderDetails?.[0]?.discount)}
+                  <span className="text-sky-950  text-xs font-bold leading-normal"></span>
                 </div>
               </Grid.Col>
               <Grid.Col span={{ base: 12, md: 2 }}>
                 <div className="flex flex-col">
                   <span className="text-zinc-500 text-sm  font-medium leading-normal">SubTotal</span>
-                  <span className="text-sky-950  text-xs py-2 font-bold leading-normal">HND 1511.88</span>
+                  <span className="text-sky-950  text-xs py-2 font-bold leading-normal">
+                    {getFormattedHNL(orderDetails?.OrderDetails?.[0]?.subtotal)}
+                  </span>
                 </div>
               </Grid.Col>
               <Grid.Col span={{ base: 12, md: 2 }}>
                 <div className="flex flex-col">
                   <span className="text-zinc-500 text-sm  font-medium leading-normal">Total</span>
-                  <span className="text-sky-950  text-xs py-2 font-bold leading-normal">HND 1133,91</span>
+                  <span className="text-sky-950  text-xs py-2 font-bold leading-normal">
+                    {getFormattedHNL(orderDetails?.total)}
+                  </span>
                 </div>
               </Grid.Col>
             </Grid>
             <div className="text-sky-950 text-xl font-bold leading-loose">Complementos</div>
             <div className="text-sky-950 text-xl font-bold leading-loose py-2">Notas de la orden</div>
-            <div className="text-sky-950 text-base font-normal leading-normal">
-              Horem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio
-              mattis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Curabitur tempus
-              urna at turpis condimentum lobortis. Ut commodo efficitur neque. Ut diam quam, semper iaculis condimentum ac,
-              vestibulum eu nisl.
-            </div>
+            <div className="text-sky-950 text-base font-normal leading-normal"></div>
           </div>
         </Modal>
       </section>
