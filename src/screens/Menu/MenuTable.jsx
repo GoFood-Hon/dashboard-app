@@ -189,18 +189,18 @@ export default function MenuTable({ refreshPage, items, handleDisableSelected, s
       },
       {
         label: "USUARIO",
-        renderCell: (item) => <div className="flex flex-row items-center gap-2">{item.name}</div>,
+        renderCell: (item) => <div className="flex flex-row items-center gap-2">{item?.Order?.User?.name}</div>,
         sort: { sortKey: "USER" }
       },
 
       {
         label: "TELÉFONO",
-        renderCell: (item) => item.phoneNumber,
+        renderCell: (item) => item?.Order?.User?.phoneNumber,
         sort: { sortKey: "PHONE_NUMBER" }
       },
       {
         label: "ESTADO",
-        renderCell: (item) => (item.active ? "Habilitado" : "Deshabilitado"),
+        renderCell: (item) => item.status,
         sort: { sortKey: "STATUS" }
       },
       {
@@ -210,7 +210,7 @@ export default function MenuTable({ refreshPage, items, handleDisableSelected, s
       },
       {
         label: "TIPO",
-        renderCell: (item) => item.type,
+        renderCell: (item) => item?.Order?.type,
         sort: { sortKey: "TYPE" }
       },
       {
@@ -379,7 +379,10 @@ export default function MenuTable({ refreshPage, items, handleDisableSelected, s
   let modifiedNodes = data.nodes
 
   // search
-  modifiedNodes = modifiedNodes.filter((node) => node.name.toLowerCase().includes(search.toLowerCase()))
+  modifiedNodes = modifiedNodes.filter((node) => {
+    const searchField = screenType === "ordersScreen" ? node.Order.User.name : node.name
+    return searchField.toLowerCase().includes(search.toLowerCase())
+  })
 
   // filter
   // modifiedNodes = isHide ? modifiedNodes.filter((node) => !node.isComplete) : modifiedNodes

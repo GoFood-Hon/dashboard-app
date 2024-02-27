@@ -1,5 +1,5 @@
 import { Avatar, Breadcrumbs, Grid, Image, Modal } from "@mantine/core"
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import BreadCrumbNavigation from "../../components/BreadCrumbNavigation"
 import BaseLayout from "../../components/BaseLayout"
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom"
@@ -8,6 +8,10 @@ import { Icon } from "../../components/Icon"
 import Button from "../../components/Button"
 import { useDisclosure } from "@mantine/hooks"
 import BackButton from "../Dishes/components/BackButton"
+import toast from "react-hot-toast"
+import orderApi from "../../api/orderApi"
+import { formatDistanceToNow } from "date-fns"
+import { formatDateDistanceToNow, getFormattedHNL } from "../../utils"
 
 export const OrderDetails = () => {
   const { orderId } = useParams()
@@ -17,6 +21,25 @@ export const OrderDetails = () => {
 
   const [orderDetails, setOrderDetails] = useState({})
 
+  useEffect(() => {
+    ;(async () => {
+      try {
+        const response = await orderApi.getOrderDetails(orderId)
+        console.log(response)
+        setOrderDetails(response.data)
+
+        if (response.status !== "success") {
+          toast.error(`Fallo al crear el cupón. Por favor intente de nuevo. ${response.message}`, {
+            duration: 7000
+          })
+        }
+      } catch (e) {
+        toast.error(`Error. Por favor intente de nuevo. ${e.message}`, {
+          duration: 7000
+        })
+      }
+    })()
+  }, [])
   return (
     <BaseLayout>
       <section>
@@ -26,7 +49,7 @@ export const OrderDetails = () => {
           </div>
           <div>
             <Breadcrumbs>
-              <BreadCrumbNavigation location={location} dynamicRoute={orderDetails?.name} />
+              <BreadCrumbNavigation location={location} dynamicRoute={orderDetails?.id} />
             </Breadcrumbs>
           </div>
         </div>
@@ -42,42 +65,52 @@ export const OrderDetails = () => {
                 <Grid.Col span={{ base: 12, md: "auto" }}>
                   <div className="flex flex-col">
                     <span className="text-zinc-500 font-medium text-sm leading-normal">Pedido</span>
-                    <span className="text-sky-950 text-sm  font-bold leading-normal">#180A9DA3384B39CE</span>
+                    <span className="text-sky-950 text-sm  font-bold leading-normal">{`#${orderDetails.id}`}</span>
                   </div>
                 </Grid.Col>
                 <Grid.Col span={{ base: 12, md: "auto" }}>
                   <div className="flex flex-col">
                     <span className="text-zinc-500 text-sm  font-medium leading-normal">Estado</span>
-                    <span className="text-sky-950 text-sm  font-bold leading-normal">En espera</span>
+                    <span className="text-sky-950 text-sm  font-bold leading-normal">{orderDetails.status}</span>
                   </div>
                 </Grid.Col>
-                <Grid.Col span={{ base: 12, md: "auto" }}>
+                {/*  <Grid.Col span={{ base: 12, md: "auto" }}>
                   <div className="flex flex-col">
                     <span className="text-zinc-500 text-sm  font-medium leading-normal">Método de envío</span>
                     <span className="text-sky-950 text-sm  font-bold leading-normal">Delivery</span>
                   </div>
-                </Grid.Col>
+                </Grid.Col> */}
                 <Grid.Col span={{ base: 12, md: "auto" }}>
                   <div className="flex flex-col">
                     <span className="text-zinc-500 text-sm  font-medium leading-normal">Fecha</span>
-                    <span className="text-sky-950 text-sm  font-bold leading-normal">6 de septiembre de 2023</span>
+                    <span className="text-sky-950 text-sm  font-bold leading-normal">
+                      {formatDateDistanceToNow(orderDetails.createdAt)}
+                    </span>
                   </div>
                 </Grid.Col>
                 <Grid.Col span={{ base: 12, md: "auto" }}>
                   <div className="flex flex-col">
-                    <span className="text-zinc-500 text-sm  font-medium leading-normal">Hora</span>
-                    <span className="text-sky-950 text-sm  font-bold leading-normal">21:20</span>
+                    <span className="text-zinc-500 text-sm  font-medium leading-normal">Tiempo de preparación</span>
+                    <span className="text-sky-950 text-sm  font-bold leading-normal">
+                      {orderDetails?.OrderDetails?.[0]?.Dish?.preparationTime?.maxTime}
+                      {" - "}
+                      {orderDetails?.OrderDetails?.[0]?.Dish?.preparationTime?.minTime} mins
+                    </span>
                   </div>
                 </Grid.Col>
               </Grid>
+
               <Grid pt="xl">
+                {/*
                 <Grid.Col span={{ base: 12, md: 2.5 }}>
                   <div className="flex flex-row gap-4">
                     <img className="w-16 h-16 rounded-lg" src="https://via.placeholder.com/64x64" />
 
                     <div className="flex flex-col">
                       <span className="text-zinc-500 text-sm  font-medium leading-normal">Cantidad</span>
-                      <span className="text-sky-950 text-sm  font-bold leading-normal">23</span>
+                      <span className="text-sky-950 text-sm  font-bold leading-normal">
+                        {orderDetails?.OrderDetails?.[0]?.quantity}
+                      </span>
                     </div>
                   </div>
                 </Grid.Col>
@@ -91,11 +124,12 @@ export const OrderDetails = () => {
                       <div className="text-sky-950 text-xs font-bold leading-normal">DAW-FADA-ADWFS</div>
                     </div>
                   </div>
-                </Grid.Col>
+                </Grid.Col>{" "}
+                */}
                 <Grid.Col span={{ base: 12, md: "auto" }}>
                   <div className="flex flex-col">
                     <span className="text-zinc-500 text-sm  font-medium leading-normal">Total compra</span>
-                    <span className="text-sky-950 text-sm  font-bold leading-normal">HND 2,800.00</span>
+                    <span className="text-sky-950 text-sm  font-bold leading-normal">{getFormattedHNL(orderDetails.total)}</span>
                   </div>
                 </Grid.Col>
               </Grid>
@@ -107,11 +141,19 @@ export const OrderDetails = () => {
               <div className="w-full bg-white rounded-2xl border border-blue-100 p-4 mt-4">
                 <Grid gutter={"xs"}>
                   <Grid.Col span={{ base: 12, md: "auto" }}>
-                    <img src="https://via.placeholder.com/88x80" />
+                    <Image
+                      src={orderDetails?.OrderDetails?.[0]?.Dish?.images?.[0]?.location}
+                      h={50}
+                      w={90}
+                      fit="contain"
+                      fallbackSrc="https://placehold.co/600x400?text=Imagen+no+disponible"
+                    />
                   </Grid.Col>
                   <Grid.Col span={{ base: 12, md: "auto" }}>
                     <div className="flex flex-col">
-                      <span className="text-zinc-500 text-sm  font-medium leading-normal">Whooper</span>
+                      <span className="text-zinc-500 text-sm  font-medium leading-normal">
+                        {orderDetails?.OrderDetails?.[0]?.Dish?.name}
+                      </span>
                       <span
                         className="text-blue-600 text-xs py-2 font-bold leading-normal cursor-pointer"
                         onClick={() => {
@@ -121,35 +163,41 @@ export const OrderDetails = () => {
                       </span>
                     </div>
                   </Grid.Col>
-                  <Grid.Col span={{ base: 12, md: "auto" }}>
+                  {/*  <Grid.Col span={{ base: 12, md: "auto" }}>
                     <div className="flex flex-col">
                       <span className="text-zinc-500 text-sm  font-medium leading-normal">Cantidad</span>
                       <span className="text-sky-950  text-xs py-2 font-bold leading-normal">12</span>
                     </div>
-                  </Grid.Col>
+                  </Grid.Col> */}
                   <Grid.Col span={{ base: 12, md: 2 }}>
                     <div className="flex flex-col">
                       <span className="text-zinc-500 text-sm  font-medium leading-normal">Precio Unit.</span>
-                      <span className="text-sky-950  text-xs py-2 font-bold leading-normal">HND 125.99 x 12</span>
+                      <span className="text-sky-950  text-xs py-2 font-bold leading-normal">
+                        {getFormattedHNL(orderDetails?.OrderDetails?.[0]?.Dish?.price)}
+                      </span>
                     </div>
                   </Grid.Col>
-                  <Grid.Col span={{ base: 12, md: 2 }}>
+                  {/* <Grid.Col span={{ base: 12, md: 2 }}>
                     <div className="flex flex-col">
                       <span className="text-zinc-500 text-sm  font-medium leading-normal">Descuento aplicado</span>
                       <span className="text-sky-950  text-xs py-2 font-bold leading-normal">XAN-FJWI-FRJUQ</span>
                       <span className="text-sky-950  text-xs font-bold leading-normal">25% (HND 377.97)</span>
                     </div>
-                  </Grid.Col>
+                  </Grid.Col> */}
                   <Grid.Col span={{ base: 12, md: 2 }}>
                     <div className="flex flex-col">
                       <span className="text-zinc-500 text-sm  font-medium leading-normal">SubTotal</span>
-                      <span className="text-sky-950  text-xs py-2 font-bold leading-normal">HND 1511.88</span>
+                      <span className="text-sky-950  text-xs py-2 font-bold leading-normal">
+                        {getFormattedHNL(orderDetails?.OrderDetails?.[0]?.subtotal)}
+                      </span>
                     </div>
                   </Grid.Col>
                   <Grid.Col span={{ base: 12, md: 2 }}>
                     <div className="flex flex-col">
                       <span className="text-zinc-500 text-sm  font-medium leading-normal">Total</span>
-                      <span className="text-sky-950  text-xs py-2 font-bold leading-normal">HND 1133,91</span>
+                      <span className="text-sky-950  text-xs py-2 font-bold leading-normal">
+                        {getFormattedHNL(orderDetails.total)}
+                      </span>
                     </div>
                   </Grid.Col>
                 </Grid>
@@ -181,12 +229,18 @@ export const OrderDetails = () => {
                 </Grid.Col>
                 <Grid.Col span={{ base: 12, md: "auto" }}>
                   <div className="flex flex-col">
-                    <span className="text-sky-950 text-sm py-2 font-normal leading-normal">HND 10,212.50</span>
-                    <span className="text-sky-950 text-sm py-2 font-normal leading-normal">- HND 200.00</span>
-                    <span className="text-sky-950 text-sm py-2 font-normal leading-normal">+ HND 200.00</span>
+                    <span className="text-sky-950 text-sm py-2 font-normal leading-normal">
+                      + {getFormattedHNL(orderDetails?.OrderDetails?.[0]?.subtotal)}
+                    </span>
+                    <span className="text-sky-950 text-sm py-2 font-normal leading-normal">
+                      - {getFormattedHNL(orderDetails?.OrderDetails?.[0]?.discount)}
+                    </span>
+                    <span className="text-sky-950 text-sm py-2 font-normal leading-normal">+ {orderDetails.shippingPrice}</span>
                     <span className="text-sky-950 text-sm py-2 font-normal leading-normal">+ HND 1500.00</span>
                     <div className="w-full border border-blue-100" />
-                    <span className="text-sky-950 text-sm pt-4 font-normal leading-normal">HND 1,531.8</span>
+                    <span className="text-sky-950 text-sm pt-4 font-normal leading-normal">
+                      {getFormattedHNL(orderDetails.total)}
+                    </span>
                   </div>
                 </Grid.Col>
               </Grid>
@@ -218,29 +272,28 @@ export const OrderDetails = () => {
               <span>Nota del pedido</span>
               <div className="w-full border border-blue-100 mt-4" />
               <div className="w-full text-sky-950 text-xs font-normal mt-4">
-                Casa color blanco, preguntar por Luis Gustillo. Cuidado con acercarse al portón, hay perro grande y muerde.
+                {orderDetails?.OrderDetails?.[0]?.orderDetailNote}
               </div>
             </div>
-
             <div className="w-full bg-white rounded-md  border border-blue-100 p-5 mt-4">
               <span>Cliente</span>
               <div className="w-full border border-blue-100 mt-4" />
               <div className="my-4 flex flex-row">
                 <Avatar size="lg" />
                 <div className="flex flex-col text-sm justify-center pl-2">
-                  <span>Alejandro Pail</span>
+                  <span>{orderDetails?.Order?.User?.name}</span>
                   <span className="text-blue-600 text-sm font-normal">Ver perfil</span>
                 </div>
               </div>
               <div className="flex flex-col mt-2">
                 <div className="text-blue-600 text-sm font-normal">alejandro@onetouch.hn</div>
-                <div className="text-blue-600 text-sm font-normal mt-2">+(504) 9999-9999</div>
+                <div className="text-blue-600 text-sm font-normal mt-2">{orderDetails?.Order?.User?.phoneNumber}</div>
               </div>
 
               <div className="flex flex-col mt-4">
                 <div className="text-sky-950 text-base font-semibold mb-2">Dirección envío</div>
                 <div className="text-sky-950 text-sm py-2 font-normal leading-normal">
-                  Alejandro Navarro OneTouch 22 calle, Casa color zapote Casa #1 21104 San Pedro Sula +(504) 9999-9999
+                  {orderDetails?.Order?.User?.UserAddress || "Dirección no disponible"}
                 </div>
 
                 <div className="text-sky-950 text-base font-semibold mt-4 mb-2">Dirección de facturación</div>

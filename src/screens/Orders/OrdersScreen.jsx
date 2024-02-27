@@ -1,22 +1,16 @@
-import React from "react"
+import React, { useEffect, useState } from "react"
 import BaseLayout from "../../components/BaseLayout"
 import { Breadcrumbs } from "@mantine/core"
 import BreadCrumbNavigation from "../../components/BreadCrumbNavigation"
 import { useLocation } from "react-router-dom"
-import OrdersTable from "./OrdersTable"
+
 import MenuTable from "../Menu/MenuTable"
+import orderApi from "../../api/orderApi"
+import toast from "react-hot-toast"
 
 export default function OrdersScreen() {
   const location = useLocation()
-
-  const refreshPage = () => {
-    /*   dispatch(
-      fetchMenus({
-        restaurantId: user.restaurantId
-      })
-    )
-    setCardsSelected([]) */
-  }
+  const [orders, setOrders] = useState([])
 
   const handleDisableSelected = async (cardsSelected) => {
     /*  await Promise.all(
@@ -26,6 +20,30 @@ export default function OrdersScreen() {
     )
  */
     refreshPage()
+  }
+
+  const fetchOrders = async () => {
+    try {
+      const response = await orderApi.getAllOrders()
+      setOrders(response?.data)
+      if (response.error) {
+        toast.error(`Fallo al obtener los últimos pedidos. Por favor intente de nuevo. ${response.message}`, {
+          duration: 7000
+        })
+      }
+    } catch (e) {
+      toast.error(`Fallo al crear el cupón. Por favor intente de nuevo. ${e.message}`, {
+        duration: 7000
+      })
+    }
+  }
+
+  useEffect(() => {
+    fetchOrders()
+  }, [])
+
+  const refreshPage = () => {
+    fetchOrders()
   }
 
   return (
@@ -59,33 +77,3 @@ export default function OrdersScreen() {
     </BaseLayout>
   )
 }
-
-const orders = [
-  {
-    id: 1,
-    name: "Alfonso",
-    phoneNumber: "+2323232",
-    status: "Entregado",
-    date: new Date(2020, 1, 2),
-    type: "Domicilio",
-    total: "233.31"
-  },
-  {
-    id: 2,
-    name: "Adrian",
-    phoneNumber: "+2323232",
-    status: "Entregado",
-    date: new Date(2020, 1, 2),
-    type: "Domicilio",
-    total: "233.31"
-  },
-  {
-    id: 3,
-    name: "Antonio",
-    phoneNumber: "+2323232",
-    status: "Entregado",
-    date: new Date(2020, 1, 2),
-    type: "Domicilio",
-    total: "233.31"
-  }
-]

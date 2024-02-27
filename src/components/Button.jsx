@@ -8,7 +8,7 @@ export default function Button({ icon, text, className, onClick, textClassName }
       onClick={onClick}>
       <React.Fragment>
         {icon && <Icon icon={icon} size={20} className="h-5 w-5" />}
-        <p className={`w-full whitespace-nowrap px-4 ${textClassName}`}>{text}</p>
+        <span className={`w-full whitespace-wrap text-center px-4 ${textClassName}`}>{text}</span>
       </React.Fragment>
     </button>
   )

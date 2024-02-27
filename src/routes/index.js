@@ -10,7 +10,7 @@ export const NAVIGATION_ROUTES = {
     icon: "shoppingCart",
     OrderDetails: {
       label: "Detalles del pedido",
-      path: "/pedidos/:pedidoId"
+      path: "/pedidos/:orderId"
     }
   },
   Menu: {
