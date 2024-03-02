@@ -6,7 +6,7 @@ import SettingsCard from "../../components/SettingsCard"
 import { useForm } from "react-hook-form"
 import { IconPhoto } from "@tabler/icons-react"
 import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone"
-import { bytesToMB } from "../../utils"
+import { bytesToMB, convertToDecimal } from "../../utils"
 import toast from "react-hot-toast"
 import InputField from "../../components/Form/InputField"
 import InputCombobox from "../../components/Form/InputCombobox"
@@ -94,7 +94,7 @@ export default function BusinessSettings() {
     formData.append("cai", data.cai)
     formData.append("shippingFree", isFreeShipping)
     if (!isFreeShipping) {
-      formData.append("shippingPrice", data.shippingPrice)
+      formData.append("shippingPrice", convertToDecimal(data.shippingPrice))
     } else {
       formData.append("shippingPrice", null)
     }

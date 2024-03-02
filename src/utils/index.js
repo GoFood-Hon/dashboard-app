@@ -39,7 +39,6 @@ export const formatDateToString = (dateString) => {
     parsedDate = parseISO(dateString)
     return format(parsedDate, "dd LLLL, yyyy", { locale: es })
   } catch (error) {
-    console.error(`Error al formatear la fecha: ${error.message} date: ${parsedDate}`)
     return "Fecha inválida"
   }
 }
@@ -52,4 +51,13 @@ export const formatDateToString = (dateString) => {
 export function getDepartmentNameById(id) {
   const department = hondurasDepartments.find((department) => department.id === id)
   return department ? department.name : null
+}
+
+/**
+ * @param {string} priceString
+ * @returns {float} 23.00
+ */
+export function convertToDecimal(priceString) {
+  // Convert the string to a decimal number with two decimal places
+  return parseFloat(priceString).toFixed(2)
 }

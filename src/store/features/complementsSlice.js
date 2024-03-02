@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 import complementsApi from "../../api/complementsApi"
 import { ITEMS_PER_PAGE } from "../../utils/paginationConfig"
 import toast from "react-hot-toast"
+import { convertToDecimal } from "../../utils"
 
 const initialState = {
   complements: [],
@@ -81,7 +82,7 @@ export const createComplement = createAsyncThunk("complements/createComplement",
     formData.append("description", data.description)
     formData.append("category", data.category)
 
-    formData.append("price", data.price)
+    formData.append("price", convertToDecimal(data.price))
     formData.append("restaurantId", restaurantId)
 
     const response = await complementsApi.createAddOn(formData)
@@ -129,8 +130,7 @@ const updateFormData = (data, propertyToUpdate) => {
     formData.append("name", data.name)
     formData.append("description", data.description)
     formData.append("category", data.category)
-
-    formData.append("price", data.price)
+    formData.append("price", convertToDecimal(data.price))
   }
 
   return formData

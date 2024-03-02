@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 import dishesApi from "../../api/dishesApi"
 import toast from "react-hot-toast"
 import { ITEMS_PER_PAGE } from "../../utils/paginationConfig"
+import { convertToDecimal } from "../../utils"
 
 const initialState = {
   dishes: [],
@@ -116,7 +117,7 @@ export const createDish = createAsyncThunk("dishes/createDish", async ({ data, r
 const createDishFormData = (data, restaurantId) => {
   const formData = new FormData()
   formData.append("name", data.name)
-  formData.append("price", data.price)
+  formData.append("price", convertToDecimal(data.price))
   formData.append("description", data.description)
   formData.append("includesDrink", data.includeDrink)
 
@@ -158,7 +159,7 @@ const updateDishFormData = (data, propertyToUpdate) => {
     formData.append("isActive", data.isActive)
   } else {
     formData.append("name", data.name)
-    formData.append("price", data.price)
+    formData.append("price", convertToDecimal(data.price))
     formData.append("description", data.description)
     formData.append("includesDrink", data.includeDrink)
 

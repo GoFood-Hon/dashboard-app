@@ -14,6 +14,7 @@ import { ErrorMessage } from "./Form/ErrorMessage"
 import Button from "./Button"
 import { SETTING_NAVIGATION_ROUTES } from "../routes"
 import couponApi from "../api/couponApi"
+import { convertToDecimal } from "../utils"
 
 export const CouponForm = () => {
   const user = useSelector((state) => state.user.value)
@@ -56,10 +57,11 @@ export const CouponForm = () => {
 
       if (discountType === "Porcentual") {
         formData.append("category", "porcentual")
-        formData.append("percentage", data.amount)
+
+        formData.append("percentage", convertToDecimal(data.amount))
       } else {
         formData.append("category", "fijo")
-        formData.append("amount", data.amount)
+        formData.append("amount", convertToDecimal(data.amount))
       }
 
       if (couponType === "Por fecha") {

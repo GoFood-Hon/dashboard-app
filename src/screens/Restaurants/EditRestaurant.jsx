@@ -8,6 +8,7 @@ import { GeneralInformationForm } from "./GeneralInformationForm"
 import Button from "../../components/Button"
 import restaurantsApi from "../../api/restaurantApi"
 import { NAVIGATION_ROUTES_SUPER_ADMIN } from "../../routes"
+import { convertToDecimal } from "../../utils"
 
 export const EditRestaurant = ({ close, details, restaurantId }) => {
   const navigate = useNavigate()
@@ -36,7 +37,7 @@ export const EditRestaurant = ({ close, details, restaurantId }) => {
       formData.append("maxDistanceShipping", data.maxDistanceShipping)
       formData.append("shippingFree", data.shippingFree ?? false)
       if (!data.shippingFree) {
-        formData.append("shippingPrice", data.shippingPrice)
+        formData.append("shippingPrice", convertToDecimal(data.shippingPrice))
       }
       const response = await restaurantsApi.updateRestaurant(formData, restaurantId)
 

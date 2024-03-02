@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 import { ITEMS_PER_PAGE } from "../../utils/paginationConfig"
 import branchesApi from "../../api/branchesApi"
 import toast from "react-hot-toast"
+import { convertToDecimal } from "../../utils"
 
 const initialState = {
   branches: [],
@@ -86,8 +87,7 @@ const updateFormData = (data, propertyToUpdate) => {
     formData.append("name", data.name)
     formData.append("description", data.description)
     formData.append("category", data.category)
-
-    formData.append("price", data.price)
+    formData.append("price", convertToDecimal(data.price))
   }
 
   return formData

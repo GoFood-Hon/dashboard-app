@@ -14,6 +14,7 @@ import { ErrorMessage } from "./Form/ErrorMessage"
 import { promotionValidationFrom } from "../utils/inputRules"
 import { fetchDishes, selectAllDishes } from "../store/features/dishesSlice"
 import promotionApi from "../api/promotionApi"
+import { convertToDecimal } from "../utils"
 
 export const PromotionForm = () => {
   const user = useSelector((state) => state.user.value)
@@ -58,13 +59,13 @@ export const PromotionForm = () => {
       formData.append("percentage", data.amount)
     } else {
       formData.append("category", "fijo")
-      formData.append("amount", data.amount)
+      formData.append("amount", convertToDecimal(data.amount))
     }
 
     formData.append("startDate", data.startDate)
     formData.append("endDate", data.endDate)
 
-    formData.append("minPurchase", data.minPurchase)
+    formData.append("minPurchase", convertToDecimal(data.minPurchase))
     formData.append("allDishes", availabilityDiscount === "En todos los platillos")
 
     formData.append("restaurantId", user.restaurantId)

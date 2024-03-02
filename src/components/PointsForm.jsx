@@ -11,6 +11,7 @@ import Button from "./Button"
 import { ErrorMessage } from "./Form/ErrorMessage"
 import InputField from "./Form/InputField"
 import InputCombobox from "./Form/InputCombobox"
+import { convertToDecimal } from "../utils"
 
 export const PointsForm = () => {
   const user = useSelector((state) => state.user.value)
@@ -58,7 +59,8 @@ export const PointsForm = () => {
         formData.append("percentage", data.amount)
       } else {
         formData.append("category", "fijo")
-        formData.append("amount", data.amount)
+
+        formData.append("amount", convertToDecimal(data.amount))
       }
 
       if (couponType === "Por fecha") {
