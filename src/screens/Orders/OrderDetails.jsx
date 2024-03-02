@@ -23,7 +23,6 @@ export const OrderDetails = () => {
       try {
         const response = await orderApi.getOrderDetails(orderId)
         setOrderDetails(response.data)
-        console.log(response.data)
         if (response.status !== "success") {
           toast.error(`Fallo al crear el cupón. Por favor intente de nuevo. ${response.message}`, {
             duration: 7000
