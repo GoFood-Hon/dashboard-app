@@ -22,7 +22,8 @@ export const palette = {
   cream_can: "#F1C652",
   biscay: "#334154",
   light_slate_gray: "#94a3b8",
-  alice_bluer: "#EFF4FB"
+  alice_bluer: "#EFF4FB",
+  soft_yellow: "#FAF2AD"
 }
 
 export const colors = {

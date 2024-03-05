@@ -46,6 +46,7 @@ import { AdminUserScreen } from "./screens/Users/AdminUserScreen"
 import { AdminUserDetails } from "./screens/Users/AdminUserDetails"
 import { NewRestaurant } from "./screens/Restaurants/NewRestaurant"
 import { Plans } from "./screens/Plans/Plans"
+import { NotFound } from "./screens/NotFound"
 
 function App() {
   const userRole = useSelector((state) => state.user.value.role)
@@ -134,6 +135,7 @@ function App() {
           <Route path={AUTH_NAVIGATION_ROUTES.Register.path} element={<Register />} />
           <Route path={AUTH_NAVIGATION_ROUTES.ForgetPassword.path} element={<ForgetPassword />} />
         </Route>
+        <Route path="*" element={<NotFound />} />
       </>
     )
   )
