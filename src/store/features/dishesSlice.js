@@ -3,6 +3,7 @@ import dishesApi from "../../api/dishesApi"
 import toast from "react-hot-toast"
 import { ITEMS_PER_PAGE } from "../../utils/paginationConfig"
 import { convertToDecimal } from "../../utils"
+import extrasApi from "../../api/extrasApi"
 
 const initialState = {
   dishes: [],
@@ -75,7 +76,7 @@ export const fetchDishes = createAsyncThunk(
  * CREATE DISHES
  */
 
-export const createDish = createAsyncThunk("dishes/createDish", async ({ data, restaurantId }, { dispatch }) => {
+export const createDish = createAsyncThunk("dishes/createDish", async ({ data, restaurantId, additional }, { dispatch }) => {
   try {
     const formData = createDishFormData(data, restaurantId)
 
@@ -88,6 +89,9 @@ export const createDish = createAsyncThunk("dishes/createDish", async ({ data, r
         duration: 7000
       })
     } else {
+      /**
+       * Add images to the dish
+       */
       const dishId = response.data.id
       const addImageResponse = await uploadDishImage(dishId, data?.files?.[0])
 
@@ -97,14 +101,71 @@ export const createDish = createAsyncThunk("dishes/createDish", async ({ data, r
         })
       }
 
-      if (data.extras) {
-        const addComplementsResponse = await addComplements(dishId, data.extras)
-        if (addComplementsResponse.error) {
-          toast.error(`Fallo al cargar los extras. Por favor intente de nuevo. ${addImageResponse.message}`, {
-            duration: 7000
-          })
+      /**
+        Object additionalItem Structure:
+        const extraCategories = [
+        {
+          name: "Apple",
+          required: true,
+          requiredMinimum: 32,
+          extraDetail: [
+            {
+              name: "Green Apple",
+              isFree: true,
+              price: "125.00"
+            },
+            {
+              name: "Red Apple",
+              isFree: true,
+              price: "125.00"
+            }
+          ]
+        },
+        {
+          name: "Eggs",
+          required: true,
+          requiredMinimum: 21,
+          extraDetail: [
+            {
+              name: "Farm eggs",
+              isFree: true,
+              price: "125.00"
+            }
+          ]
+        }
+      ]
+       */
+
+      /**
+       * Add Additional to the dish
+       */
+      for (const category of additional) {
+        const { name, required, requiredMinimum } = category
+
+        const additionalFormData = new FormData()
+        additionalFormData.append("name", name)
+        additionalFormData.append("required", required)
+        additionalFormData.append("dishId", dishId)
+        if (required) {
+          additionalFormData.append("requiredMinimum", requiredMinimum)
+        }
+
+        const addExtraResponse = await extrasApi.createExtra(additionalFormData)
+
+        const extraId = addExtraResponse.data.id
+
+        for (const extraDetail of category.extraDetail) {
+          const extraDetailFormData = new FormData()
+          extraDetailFormData.append("name", extraDetail.name)
+          extraDetailFormData.append("isFree", extraDetail.isFree)
+          extraDetailFormData.append("price", convertToDecimal(extraDetail.price))
+
+          await extrasApi.createExtraDetails(extraId, extraDetailFormData)
         }
       }
+      /**
+       * All was success
+       */
       toast.success("Platillo creado exitosamente", { duration: 7000 })
       return response.data
     }

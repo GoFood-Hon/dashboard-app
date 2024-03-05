@@ -106,29 +106,29 @@ export default function DishDetails() {
                     </div>
                     <div className="flex flex-row justify-between">
                       <span className="text-sky-950 text-base font-bold leading-normal">
-                        Complementos ({dishDetails?.Addons?.length})
+                        Adicionales ({dishDetails?.Extras?.length})
                       </span>
                     </div>
-                    {dishDetails?.Addons?.map((item) => (
-                      <div
-                        className="w-full p-5 my-3 bg-white rounded-lg border border-blue-100 flex-row justify-between items-center flex text-sm"
-                        key={item?.id}>
-                        <div className="flex flex-row items-center w-1/2">
-                          <Image
-                            src={item?.images?.[0]?.location}
-                            h={60}
-                            w={40}
-                            fit="contain"
-                            fallbackSrc="https://placehold.co/600x400?text=Imagen+no+disponible"
-                          />
-                          <span className="text-sky-950 pl-3">{item?.name}</span>
-                        </div>
-                        <div className="flex flex-row w-1/2 justify-end">
-                          <span className="text-sky-950 pl-3">{getFormattedHNL(item?.price)}</span>
-                        </div>
-                      </div>
-                    ))}
                   </div>
+
+                  {dishDetails?.Extras?.map((category, i) => {
+                    return (
+                      <div key={i} className="w-full p-5 my-3 bg-white rounded-lg border border-blue-100  text-sm">
+                        <div className="flex-row justify-between items-center flex">
+                          <h3 className="font-bold text-lg">{category.name}</h3>
+                          <div>{category.requiredMinimum ? `(min: ${category.requiredMinimum})` : null}</div>
+                        </div>
+                        <ul>
+                          {category?.ExtraDetails?.map((item, i) => (
+                            <li key={i} className="flex flex-row gap-6">
+                              <span>{item?.name}</span>
+                              <span>{item?.price}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )
+                  })}
                 </Grid.Col>
               </Grid>
             </section>

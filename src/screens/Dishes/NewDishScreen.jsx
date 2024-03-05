@@ -14,20 +14,17 @@ import BreadCrumbNavigation from "../../components/BreadCrumbNavigation"
 import { createDish } from "../../store/features/dishesSlice"
 import { newItemValidationSchema } from "../../utils/inputRules"
 import PreparationForm from "./PreparationForm"
-import ComplementsForm from "./ComplementsForm"
 import { NAVIGATION_ROUTES } from "../../routes"
-import complementsApi from "../../api/complementsApi"
 import BackButton from "./components/BackButton"
-import { CategoriesForm } from "./CategoriesForm"
+import { AdditionalForm } from "./AdditionalForm"
 
 export default function NewDish() {
   const location = useLocation()
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const user = useSelector((state) => state.user.value)
-
   const [isDataCleared, setIsDataCleared] = useState(false)
-  const [extras, setExtras] = useState([])
+  const [additional, setAdditional] = useState([])
 
   const containerRef = useRef(null)
 
@@ -41,24 +38,6 @@ export default function NewDish() {
   } = useForm({
     resolver: yupResolver(newItemValidationSchema)
   })
-
-  useEffect(() => {
-    async function getExtras() {
-      try {
-        const response = await complementsApi.getAddOnByRestaurant({
-          restaurantId: user.restaurantId,
-          category: "extra"
-        })
-        setExtras(response.data.data)
-
-        return response
-      } catch (error) {
-        toast.error(`Hubo error obteniendo los extras, ${error}`)
-        throw error
-      }
-    }
-    getExtras()
-  }, [])
 
   const accordionStructure = [
     {
@@ -75,6 +54,22 @@ export default function NewDish() {
       )
     },
     {
+      title: "Adicionales",
+      requirement: "Opcional",
+      form: <AdditionalForm additional={additional} setAdditional={setAdditional} />
+    },
+    {
+      title: "Pagos",
+      requirement: "Obligatorio",
+      form: <PaymentForm register={register} errors={errors} />
+    },
+    {
+      title: "Preparación",
+      requirement: "Obligatorio",
+      form: <PreparationForm setValue={setValue} errors={errors} />
+    }
+    /*
+     {
       title: "Extras",
       requirement: "Opcional",
       form: (
@@ -87,24 +82,8 @@ export default function NewDish() {
           name={"extras"}
         />
       )
-    },
-    {
-      title: "Categorías",
-      requirement: "Opcional",
-      form: (
-        <CategoriesForm
-          register={register}
-          errors={errors}
-          setValue={setValue}
-          control={control}
-          isDataCleared={isDataCleared}
-          defaultMessage="Por favor seleccione complementos extras para este platillo"
-          itemsAvailableLabel="Extras disponibles"
-          data={extras}
-          name={"extras"}
-        />
-      )
-    },
+    }, */
+
     /*  {
       title: "Bebidas",
       requirement: "Opcional",
@@ -114,17 +93,8 @@ export default function NewDish() {
       title: "Extras",
       requirement: "Opcional",
       form: <ExtrasForm />
-    }, */
-    {
-      title: "Pagos",
-      requirement: "Obligatorio",
-      form: <PaymentForm register={register} errors={errors} />
     },
-    {
-      title: "Preparación",
-      requirement: "Obligatorio",
-      form: <PreparationForm setValue={setValue} errors={errors} />
-    }
+  */
   ]
 
   const items = accordionStructure.map((item, key) => (
@@ -144,7 +114,7 @@ export default function NewDish() {
 
   const onSubmit = (data) => {
     const restaurantId = user.restaurantId
-    dispatch(createDish({ data, restaurantId })).then((response) => {
+    dispatch(createDish({ data, restaurantId, additional })).then((response) => {
       if (response.payload) {
         reset()
         setIsDataCleared(true)
