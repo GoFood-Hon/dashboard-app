@@ -74,7 +74,7 @@ export default function Header() {
       </div>
       <div className="flex flex-row text-sm items-center">
         <span className="mx-1 hover:bg-light_selected_element p-2 rounded-full cursor-pointer duration-500 dark:hover:bg-dark_selected_element">
-          <AlarmIcon />
+          {/* <AlarmIcon /> */}
         </span>
         <span
           className="hover:bg-light_selected_element p-2 rounded-full cursor-pointer duration-500 dark:hover:bg-dark_selected_element"
