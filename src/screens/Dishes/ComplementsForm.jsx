@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react"
-import { CloseButton, Grid, Image, Input, Text } from "@mantine/core"
-import { SortableList } from "./components"
-import { getFormattedHNL } from "../../utils"
-import LoadingCircle from "../../components/LoadingCircle"
-import { selectComplementsError, selectComplementsStatus } from "../../store/features/complementsSlice"
+import { Grid, Image, Text } from "@mantine/core"
 import { useSelector } from "react-redux"
 
+import { getFormattedHNL } from "../../utils"
+import { SortableList } from "./components"
+import LoadingCircle from "../../components/LoadingCircle"
+import { selectComplementsError, selectComplementsStatus } from "../../store/features/complementsSlice"
 import { TrashIcon } from "../../assets/icons/TrashIcon"
 
 const AvailableComplementsCard = ({ item, onItemClick }) => {
@@ -73,7 +73,6 @@ export default function ComplementsForm({ setValue, isDataCleared, defaultMessag
   const status = useSelector(selectComplementsStatus)
   const error = useSelector(selectComplementsError)
 
-  const [searchComplement, setSearchComplement] = useState("")
   const [addedComplements, setAddedComplements] = useState([])
   const [extras, setExtras] = useState([])
 

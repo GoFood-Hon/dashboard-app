@@ -18,6 +18,7 @@ import ComplementsForm from "./ComplementsForm"
 import { NAVIGATION_ROUTES } from "../../routes"
 import complementsApi from "../../api/complementsApi"
 import BackButton from "./components/BackButton"
+import { CategoriesForm } from "./CategoriesForm"
 
 export default function NewDish() {
   const location = useLocation()
@@ -79,6 +80,23 @@ export default function NewDish() {
       form: (
         <ComplementsForm
           setValue={setValue}
+          isDataCleared={isDataCleared}
+          defaultMessage="Por favor seleccione complementos extras para este platillo"
+          itemsAvailableLabel="Extras disponibles"
+          data={extras}
+          name={"extras"}
+        />
+      )
+    },
+    {
+      title: "Categorías",
+      requirement: "Opcional",
+      form: (
+        <CategoriesForm
+          register={register}
+          errors={errors}
+          setValue={setValue}
+          control={control}
           isDataCleared={isDataCleared}
           defaultMessage="Por favor seleccione complementos extras para este platillo"
           itemsAvailableLabel="Extras disponibles"
