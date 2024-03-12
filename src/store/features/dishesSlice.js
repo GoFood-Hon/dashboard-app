@@ -180,7 +180,7 @@ const createDishFormData = (data, restaurantId) => {
   formData.append("name", data.name)
   formData.append("price", convertToDecimal(data.price))
   formData.append("description", data.description)
-  formData.append("includesDrink", data.includeDrink)
+  formData.append("includesDrink", data.includesDrink)
 
   formData.append("restaurantId", restaurantId)
   formData.append("preparationTime", data?.preparationTime)
@@ -222,7 +222,7 @@ const updateDishFormData = (data, propertyToUpdate) => {
     formData.append("name", data.name)
     formData.append("price", convertToDecimal(data.price))
     formData.append("description", data.description)
-    formData.append("includesDrink", data.includeDrink)
+    formData.append("includesDrink", data.includesDrink)
 
     formData.append("restaurantId", data.restaurantId)
     formData.append("preparationTime", data?.preparationTime)
@@ -242,8 +242,8 @@ export const updateDish = createAsyncThunk("dishes/updateDish", async ({ data, p
       })
     } else {
       if (propertyToUpdate !== "isActive") {
-        await uploadDishImage(data?.id, data?.files?.[0])
-        await addComplements(data?.id, data?.extras)
+        if (data.files) await uploadDishImage(data?.id, data?.files?.[0])
+        // await addComplements(data?.id, data?.extras)
       }
 
       toast.success("Platillo actualizado exitosamente", {
