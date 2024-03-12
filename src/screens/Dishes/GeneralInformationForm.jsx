@@ -14,6 +14,7 @@ import {
   selectAllDishesCategories,
   selectAllDishesCategoriesStatus
 } from "../../store/features/categorySlice"
+import { colors } from "../../theme/colors"
 
 export default function GeneralInformationForm({ register, errors, setValue, isDataCleared, preloadImage }) {
   const dispatch = useDispatch()
@@ -87,7 +88,7 @@ export default function GeneralInformationForm({ register, errors, setValue, isD
             />
 
             <div className="mt-4">
-              <InputCheckbox label="Incluye bebida?" name="includeDrink" register={register} />
+              <InputCheckbox label="Incluye bebida?" name="includesDrink" register={register} />
             </div>
           </div>
         </div>

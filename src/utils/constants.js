@@ -85,3 +85,22 @@ export const menuType = [
     name: "Familiar"
   }
 ]
+
+export const preparationTime = [
+  {
+    value: "5-9",
+    label: "5 - 9 minutos"
+  },
+  {
+    value: "10-19",
+    label: "10 - 19 minutos"
+  },
+  {
+    value: "20-29",
+    label: "20 - 29 minutos"
+  },
+  {
+    value: "+30",
+    label: "+30 minutos"
+  }
+]

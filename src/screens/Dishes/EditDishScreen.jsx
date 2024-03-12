@@ -1,45 +1,23 @@
 import Button from "../../components/Button"
 import { Accordion } from "@mantine/core"
-import React, { useEffect, useRef, useState } from "react"
+import React, { useRef, useState } from "react"
 import { useForm } from "react-hook-form"
 
 import GeneralInformationForm from "./GeneralInformationForm"
 import PaymentForm from "./PaymentForm"
-import { useDispatch, useSelector } from "react-redux"
+import { useDispatch } from "react-redux"
 import toast from "react-hot-toast"
 import PreparationForm from "./PreparationForm"
 import { updateDish } from "../../store/features/dishesSlice"
-import ComplementsForm from "./ComplementsForm"
-import complementsApi from "../../api/complementsApi"
+import { AdditionalForm } from "./AdditionalForm"
 
 export default function EditDishScreen({ close, dishDetails }) {
   const dispatch = useDispatch()
-  const restaurant = useSelector((state) => state?.restaurant?.value)
-  const user = useSelector((state) => state.user.value)
 
   const [isDataCleared, setIsDataCleared] = useState(false)
-  const [extras, setExtras] = useState([])
+  const [additional, setAdditional] = useState([])
 
   const containerRef = useRef(null)
-
-  useEffect(() => {
-    async function getExtras() {
-      try {
-        const response = await complementsApi.getAddOnByRestaurant({
-          restaurantId: user.restaurantId,
-          category: "extra"
-        })
-        setExtras(response.data.data)
-
-        return response
-      } catch (error) {
-        toast.error(`Hubo error obteniendo los extras, ${error}`)
-        throw error
-      }
-    }
-    getExtras()
-  }, [restaurant])
-
   const {
     register,
     handleSubmit,
@@ -62,23 +40,13 @@ export default function EditDishScreen({ close, dishDetails }) {
           setValue={setValue}
           control={control}
           isDataCleared={isDataCleared}
-          preloadImage={dishDetails?.images}
         />
       )
     },
     {
-      title: "Extras",
+      title: "Adicionales",
       requirement: "Opcional",
-      form: (
-        <ComplementsForm
-          setValue={setValue}
-          isDataCleared={isDataCleared}
-          defaultMessage="Por favor seleccione complementos extras para este platillo"
-          itemsAvailableLabel="Extras disponibles"
-          data={extras}
-          name={"extras"}
-        />
-      )
+      form: <AdditionalForm additional={additional} setAdditional={setAdditional} />
     },
     {
       title: "Pagos",
@@ -88,7 +56,7 @@ export default function EditDishScreen({ close, dishDetails }) {
     {
       title: "Preparación",
       requirement: "Opcional",
-      form: <PreparationForm setValue={setValue} errors={errors} isDataCleared={isDataCleared} />
+      form: <PreparationForm setValue={setValue} errors={errors} isDataCleared={isDataCleared} register={register} />
     }
   ]
   const items = accordionStructure.map((item, key) => (
