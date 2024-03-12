@@ -110,8 +110,8 @@ export const AdditionalForm = ({ additional, setAdditional }) => {
           </div>
           <div className="p-2 my-4 bg-white rounded-lg border border-blue-100">
             {additionalItem.map((item, index) => (
-              <>
-                <div className="flex flex-row w-full gap-4 my-2 items-center justify-center" key={index}>
+              <div key={index}>
+                <div className="flex flex-row w-full gap-4 my-2 items-center justify-center">
                   <div className="w-2/5">
                     <span className="text-sm font-semibold w-full">Nombre</span>
                     <div>
@@ -150,7 +150,7 @@ export const AdditionalForm = ({ additional, setAdditional }) => {
                   className="mb-4"
                   onChange={(e) => handleIsFree(index, e.target.checked)}
                 />
-              </>
+              </div>
             ))}
             <Button className="my-2" color={colors.primary_button} leftSection={<IconPlus size={14} />} onClick={handleAddItem}>
               Agregar

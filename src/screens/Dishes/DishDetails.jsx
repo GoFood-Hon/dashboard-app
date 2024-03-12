@@ -84,8 +84,9 @@ export default function DishDetails() {
                     <div className="text-sky-950 text-sm font-medium py-2 leading-snug">Precio inicial</div>
                     <div className="text-sky-950 text-sm font-bold leading-snug pb-2">{getFormattedHNL(dishDetails?.price)}</div>
 
-                    <div className="text-sky-950 text-sm font-medium leading-snug mb-2">Cupones</div>
-                    <div className="text-sky-950 text-sm font-bold leading-snug mb-2 p-2 bg-blue-100 rounded-2xl">XAN-DA-3DA</div>
+                    {/* <div className="text-sky-950 text-sm font-medium leading-snug mb-2">Cupones</div>
+                    <div className="text-sky-950 text-sm font-bold leading-snug mb-2 p-2 bg-blue-100 rounded-2xl">XAN-DA-3DA</div> */}
+
                     <div className="text-sky-950 text-sm font-medium leading-snug mb-2 mt-4">Preparación</div>
                     <div className="w-[125px] h-px bg-blue-100 sm:w-full" />
                     <div className="text-sky-950 text-sm font-medium leading-snug my-2">Tiempo estimado</div>
