@@ -186,12 +186,10 @@ export const updateDish = createAsyncThunk(
 
       const response = await dishesApi.updateDishWithExtra(dishId, payloadData)
       if (response.error) {
-        toast.error(`Fallo al actualizar el platillo. Por favor intente de nuevo. ${response.message}`, {
+        toast.error(`Fallo al actualizar el platillo. Por favor intente de nuevo. ${response?.message}`, {
           duration: 7000
         })
       } else {
-        // const dishId = response.data.data.id
-
         if (propertyToUpdate !== "isActive") {
           /**
            * Update images to the dish
