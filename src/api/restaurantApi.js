@@ -26,7 +26,7 @@ const restaurantsApi = {
   updateRestaurant: (params, restaurantId) => axiosClient.patch(`api/v1/restaurant/${restaurantId}`, params),
 
   // DELETE
-  deleteRestaurant: (restaurantId) => axiosClient.del(`api/v1/restaurant/${restaurantId}`),
+  deleteRestaurant: (restaurantId) => axiosClient.delete(`api/v1/restaurant/${restaurantId}`),
 
   // POST IMAGE
   addImage: (restaurantId, params) =>

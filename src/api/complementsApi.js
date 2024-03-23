@@ -32,7 +32,7 @@ const complementsApi = {
   createAddOn: (params) => axiosClient.post("api/v1/addon/", params),
 
   updateAddOn: (params, addonId) => axiosClient.patch(`api/v1/addon/${addonId}`, params),
-  deleteAddOn: (addonId) => axiosClient.del(`api/v1/addon/${addonId}`)
+  deleteAddOn: (addonId) => axiosClient.delete(`api/v1/addon/${addonId}`)
 }
 
 export default complementsApi
