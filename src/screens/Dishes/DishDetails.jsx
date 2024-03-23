@@ -26,7 +26,6 @@ export default function DishDetails() {
     const fetchDish = async () => {
       try {
         const response = await dishesApi.getDish(dishId)
-
         const details = response?.data
         setDishDetails(details)
       } catch (error) {
@@ -107,20 +106,20 @@ export default function DishDetails() {
                     </div>
                     <div className="flex flex-row justify-between">
                       <span className="text-sky-950 text-base font-bold leading-normal">
-                        Adicionales ({dishDetails?.Extras?.length})
+                        Adicionales ({dishDetails?.additionals?.length})
                       </span>
                     </div>
                   </div>
 
-                  {dishDetails?.Extras?.map((category, i) => {
+                  {dishDetails?.additionals?.map((category, i) => {
                     return (
                       <div key={i} className="w-full p-5 my-3 bg-white rounded-lg border border-blue-100  text-sm">
                         <div className="flex-row justify-between items-center flex">
                           <h3 className="font-bold text-lg">{category.name}</h3>
-                          <div>{category.requiredMinimum ? `(min: ${category.requiredMinimum})` : null}</div>
+                          <div>{category.requiredMinimum ? `(min: ${getFormattedHNL(category.requiredMinimum)})` : null}</div>
                         </div>
                         <ul>
-                          {category?.ExtraDetails?.map((item, i) => (
+                          {category?.additionalsDetails?.map((item, i) => (
                             <li key={i} className="flex flex-row gap-6">
                               <span>{item?.name}</span>
                               <span>{item?.price}</span>
