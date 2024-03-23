@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react"
+import React, { useRef, useState } from "react"
 import { useLocation, useNavigate } from "react-router-dom"
 import { Breadcrumbs, Accordion } from "@mantine/core"
 import { useForm } from "react-hook-form"
@@ -17,6 +17,7 @@ import PreparationForm from "./PreparationForm"
 import { NAVIGATION_ROUTES } from "../../routes"
 import BackButton from "./components/BackButton"
 import { AdditionalForm } from "./AdditionalForm"
+import { convertToDecimal } from "../../utils"
 
 export default function NewDish() {
   const location = useLocation()
@@ -66,7 +67,7 @@ export default function NewDish() {
     {
       title: "Preparación",
       requirement: "Obligatorio",
-      form: <PreparationForm setValue={setValue} errors={errors} />
+      form: <PreparationForm setValue={setValue} errors={errors} register={register} />
     }
     /*
      {
@@ -114,6 +115,7 @@ export default function NewDish() {
 
   const onSubmit = (data) => {
     const restaurantId = user.restaurantId
+
     dispatch(createDish({ data, restaurantId, additional })).then((response) => {
       if (response.payload) {
         reset()
