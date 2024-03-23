@@ -2,6 +2,35 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.5](https://github.com/GoFood-Hon/dashboard-app/compare/v0.0.4...v0.0.5) (2024-03-23)
+
+### [0.0.4](https://github.com/GoFood-Hon/dashboard-app/compare/v0.0.3...v0.0.4) (2024-03-23)
+
+### [0.0.3](https://github.com/GoFood-Hon/dashboard-app/compare/v0.0.1...v0.0.3) (2024-03-23)
+
+
+### Features
+
+* add additional to dish ([2374d16](https://github.com/GoFood-Hon/dashboard-app/commit/2374d1663c672f515d9d3ff253eb22db51a00d7e))
+* added 404 screen ([540e70a](https://github.com/GoFood-Hon/dashboard-app/commit/540e70a3e59edacbafb128585c3e4cd5953d783c))
+* added additional form ([50f3fdd](https://github.com/GoFood-Hon/dashboard-app/commit/50f3fdd0a7d1ef4805572f69e5081677df9601cd))
+* added new endpoints to dishes ([d53693e](https://github.com/GoFood-Hon/dashboard-app/commit/d53693e2a45209dbe791ff5666ef198b31a2e268))
+* changed the api to get additional details ([f90e262](https://github.com/GoFood-Hon/dashboard-app/commit/f90e26248f5795115fa1a48206b3f50ec2607a6e))
+* component to populate data to comboboxes ([9ac5cf9](https://github.com/GoFood-Hon/dashboard-app/commit/9ac5cf9e44b25f74143b5b7df15ac3224e5c24ee))
+* created new extrasAPI ([6e59745](https://github.com/GoFood-Hon/dashboard-app/commit/6e597454a4bf7084cf37bcf1a1ca872b71354d27))
+* new edit form to delete, and create new additional ([8cc1ef4](https://github.com/GoFood-Hon/dashboard-app/commit/8cc1ef44d1beda5892b28581a355f18ac0035c2c))
+* sending dishData to additional form ([b95f35b](https://github.com/GoFood-Hon/dashboard-app/commit/b95f35b6a866319001c61c15423d7e264714323e))
+* updated api structure for additional ([aa55a1e](https://github.com/GoFood-Hon/dashboard-app/commit/aa55a1ee6e2642fa540c7364993364d8d5390298))
+* updated business logic for updateDish ([2be73c0](https://github.com/GoFood-Hon/dashboard-app/commit/2be73c0e580482cd9fc16fbeb6958ad1a1229559))
+
+
+### Bug Fixes
+
+* formatted values to be decimal before sending to be ([4fc0f9b](https://github.com/GoFood-Hon/dashboard-app/commit/4fc0f9b6364bbf92bc944b5e68e45299696b3929))
+* notifications not implemented yet ([f5ac7fb](https://github.com/GoFood-Hon/dashboard-app/commit/f5ac7fbf5091a5789360dd5b6e2cdd7a3163872f))
+* populate checkboxes ([d550e47](https://github.com/GoFood-Hon/dashboard-app/commit/d550e476b9b0e147abdfdfcadc56b6ea6a43dd76))
+* updated delete on api config ([be1aa70](https://github.com/GoFood-Hon/dashboard-app/commit/be1aa707a95fbebc6b373ea04c22a642c07464e0))
+
 ### 0.0.2 (2024-03-05)
 
 

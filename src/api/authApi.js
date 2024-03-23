@@ -30,7 +30,7 @@ const authApi = {
 
   createNewUser: (params) => axiosClient.post("api/v1/users/create-user", params),
 
-  deleteAdmin: (adminId) => axiosClient.del(`api/v1/users/admin-restaurant/${adminId}`)
+  deleteAdmin: (adminId) => axiosClient.delete(`api/v1/users/admin-restaurant/${adminId}`)
 }
 
 export default authApi

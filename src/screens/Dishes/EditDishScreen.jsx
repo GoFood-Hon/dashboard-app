@@ -9,13 +9,14 @@ import { useDispatch } from "react-redux"
 import toast from "react-hot-toast"
 import PreparationForm from "./PreparationForm"
 import { updateDish } from "../../store/features/dishesSlice"
-import { AdditionalForm } from "./AdditionalForm"
+import { EditAdditionalForm } from "./EditAdditionalForm"
+import { convertToDecimal } from "../../utils"
 
 export default function EditDishScreen({ close, dishDetails }) {
   const dispatch = useDispatch()
 
   const [isDataCleared, setIsDataCleared] = useState(false)
-  const [additional, setAdditional] = useState([])
+  const [additional, setAdditional] = useState(dishDetails.additionals)
 
   const containerRef = useRef(null)
   const {
@@ -46,7 +47,7 @@ export default function EditDishScreen({ close, dishDetails }) {
     {
       title: "Adicionales",
       requirement: "Opcional",
-      form: <AdditionalForm additional={additional} setAdditional={setAdditional} />
+      form: <EditAdditionalForm additional={additional} setAdditional={setAdditional} dishDetails={dishDetails} />
     },
     {
       title: "Pagos",
@@ -74,13 +75,21 @@ export default function EditDishScreen({ close, dishDetails }) {
     </Accordion.Item>
   ))
 
-  const onSubmit = (data) => {
-    dispatch(updateDish({ data })).then((response) => {
+  const onSubmit = async (data) => {
+    const dishId = data.id
+    const dishData = {
+      ...data,
+      price: convertToDecimal(data?.price),
+      additionals: additional
+    }
+
+    dispatch(updateDish({ dishData, dishId })).then((response) => {
       if (response.payload) {
         reset()
         close()
       }
     })
+    close()
   }
 
   return (

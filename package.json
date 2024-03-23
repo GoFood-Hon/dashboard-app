@@ -1,14 +1,14 @@
 {
   "name": "simple-dashboard",
   "private": true,
-  "version": "0.0.2",
+  "version": "0.0.5",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
-    "release": "standard-version"
+    "release": "npm run build && standard-version"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.1.0",

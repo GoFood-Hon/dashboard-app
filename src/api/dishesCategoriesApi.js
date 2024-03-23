@@ -9,7 +9,7 @@ const dishesCategoriesApi = {
 
   updateCategory: (params, categoryId) => axiosClient.patch(`api/v1/addon/categories/${categoryId}`, params),
 
-  deleteCategory: (categoryId) => axiosClient.del(`api/v1/restaurant/categories/${categoryId}`)
+  deleteCategory: (categoryId) => axiosClient.delete(`api/v1/restaurant/categories/${categoryId}`)
 }
 
 export default dishesCategoriesApi

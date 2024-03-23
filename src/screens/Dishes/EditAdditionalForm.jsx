@@ -4,9 +4,10 @@ import { IconPlus, IconX } from "@tabler/icons-react"
 import toast from "react-hot-toast"
 
 import { colors } from "../../theme/colors"
-import { convertToDecimal } from "../../utils"
+import { convertToDecimal, getFormattedHNL } from "../../utils"
+import extrasApi from "../../api/extrasApi"
 
-export const AdditionalForm = ({ additional, setAdditional }) => {
+export const EditAdditionalForm = ({ additional, setAdditional, dishDetails }) => {
   const [newAdditionalTitle, setNewAdditionalTitle] = useState("")
   const [isRequired, setIsRequired] = useState(false)
   const [minRequired, setMinRequired] = useState("")
@@ -25,6 +26,7 @@ export const AdditionalForm = ({ additional, setAdditional }) => {
       const newItemObject = {
         name: newAdditionalTitle,
         required: isRequired,
+        dishId: dishDetails.id,
         requiredMinimum: isRequired ? minRequired : null,
         additionalsDetails: additionalItem?.map((item) => ({
           name: item.name,
@@ -32,7 +34,6 @@ export const AdditionalForm = ({ additional, setAdditional }) => {
           price: convertToDecimal(item.price)
         }))
       }
-
       setAdditional([...additional, newItemObject])
 
       setNewAdditionalTitle("")
@@ -48,14 +49,26 @@ export const AdditionalForm = ({ additional, setAdditional }) => {
     }
   }
 
-  const handleDeleteAdditional = (index) => {
-    const updatedCategories = [...additional]
-    updatedCategories.splice(index, 1)
-    setAdditional(updatedCategories)
+  const handleDeleteAdditional = async (index, category) => {
+    const additionalId = category?.id
+
+    try {
+      const response = await extrasApi.deleteExtra(additionalId)
+      if (response.status === 204) {
+        toast.success("Adicional eliminado exitosamente!")
+        const updatedCategories = [...additional]
+        updatedCategories.splice(index, 1)
+        setAdditional(updatedCategories)
+      } else {
+        throw new Error("Error ocurrido durante la eliminación del adicional.")
+      }
+    } catch (error) {
+      toast.error("Se produjo un error al intentar eliminar el adicional. Inténtelo nuevamente.")
+    }
   }
 
   const handleAddItem = () => {
-    setAdditionalItem([...additionalItem, { name: "", price: "", isFree: "" }])
+    setAdditionalItem([...additionalItem, { name: "", price: "", isFree: false }])
   }
   const handleDeleteItem = (index) => {
     setAdditionalItem(additionalItem.filter((_, i) => i !== index))
@@ -170,7 +183,7 @@ export const AdditionalForm = ({ additional, setAdditional }) => {
         <div className="w-full h-full p-6 bg-white rounded-lg border border-blue-100">
           <span className="text-sm font-semibold">Adicionales del platillo:</span>
           <ul>
-            {additional.length > 0 ? (
+            {additional?.length > 0 ? (
               additional?.map((category, index) => (
                 <li
                   key={index}
@@ -184,12 +197,12 @@ export const AdditionalForm = ({ additional, setAdditional }) => {
                       {category?.additionalsDetails?.map((item, i) => (
                         <li key={i} className="flex flex-row gap-6">
                           <span>{item.name}</span>
-                          <span className="italic">{item.price} Lps</span>
+                          <span className="italic">{getFormattedHNL(item.price)} Lps</span>
                         </li>
                       ))}
                     </ul>
                   </article>
-                  <span onClick={() => handleDeleteAdditional(index)} className="cursor-pointer">
+                  <span onClick={() => handleDeleteAdditional(index, category)} className="cursor-pointer">
                     <IconX />
                   </span>
                 </li>

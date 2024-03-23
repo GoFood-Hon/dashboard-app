@@ -102,41 +102,6 @@ export const createDish = createAsyncThunk("dishes/createDish", async ({ data, r
       }
 
       /**
-        Object additionalItem Structure:
-        const extraCategories = [
-        {
-          name: "Apple",
-          required: true,
-          requiredMinimum: 32,
-          extraDetail: [
-            {
-              name: "Green Apple",
-              isFree: true,
-              price: "125.00"
-            },
-            {
-              name: "Red Apple",
-              isFree: true,
-              price: "125.00"
-            }
-          ]
-        },
-        {
-          name: "Eggs",
-          required: true,
-          requiredMinimum: 21,
-          extraDetail: [
-            {
-              name: "Farm eggs",
-              isFree: true,
-              price: "125.00"
-            }
-          ]
-        }
-      ]
-       */
-
-      /**
        * Add Additional to the dish
        */
       for (const category of additional) {
@@ -154,11 +119,11 @@ export const createDish = createAsyncThunk("dishes/createDish", async ({ data, r
 
         const extraId = addExtraResponse.data.id
 
-        for (const extraDetail of category.extraDetail) {
+        for (const additionalsDetails of category.additionalsDetails) {
           const extraDetailFormData = new FormData()
-          extraDetailFormData.append("name", extraDetail.name)
-          extraDetailFormData.append("isFree", extraDetail.isFree)
-          extraDetailFormData.append("price", convertToDecimal(extraDetail.price))
+          extraDetailFormData.append("name", additionalsDetails.name)
+          extraDetailFormData.append("isFree", additionalsDetails.isFree)
+          extraDetailFormData.append("price", convertToDecimal(additionalsDetails.price))
 
           await extrasApi.createExtraDetails(extraId, extraDetailFormData)
         }
@@ -188,13 +153,6 @@ const createDishFormData = (data, restaurantId) => {
   return formData
 }
 
-const addComplements = async (dishId, extras) => {
-  const raw = JSON.stringify({
-    extras
-  })
-
-  return await dishesApi.addExtras(dishId, raw)
-}
 const uploadDishImage = async (dishId, file) => {
   const formDataImage = new FormData()
   formDataImage.append("files", file)
@@ -208,58 +166,57 @@ const handleErrorOnCreateDish = (error, dispatch) => {
     duration: 7000
   })
 }
-
 /*
  * UPDATE DISHES
  */
 
-const updateDishFormData = (data, propertyToUpdate) => {
-  const formData = new FormData()
+export const updateDish = createAsyncThunk(
+  "dishes/updateDish",
+  async ({ dishData, propertyToUpdate = "all", dishId }, { dispatch }) => {
+    try {
+      const formData = new FormData()
+      let payloadData
 
-  if (propertyToUpdate === "isActive") {
-    formData.append("isActive", data.isActive)
-  } else {
-    formData.append("name", data.name)
-    formData.append("price", convertToDecimal(data.price))
-    formData.append("description", data.description)
-    formData.append("includesDrink", data.includesDrink)
-
-    formData.append("restaurantId", data.restaurantId)
-    formData.append("preparationTime", data?.preparationTime)
-  }
-
-  return formData
-}
-export const updateDish = createAsyncThunk("dishes/updateDish", async ({ data, propertyToUpdate = "all" }, { dispatch }) => {
-  try {
-    const formData = updateDishFormData(data, propertyToUpdate)
-
-    const response = await dishesApi.updateDish(formData, data?.id)
-
-    if (response.error) {
-      toast.error(`Fallo al actualizar el platillo. Por favor intente de nuevo. ${response.message}`, {
-        duration: 7000
-      })
-    } else {
-      if (propertyToUpdate !== "isActive") {
-        if (data.files) await uploadDishImage(data?.id, data?.files?.[0])
-        // await addComplements(data?.id, data?.extras)
+      if (propertyToUpdate === "isActive") {
+        formData.append("isActive", dishData.isActive)
+        payloadData = formData
+      } else {
+        payloadData = dishData
       }
 
-      toast.success("Platillo actualizado exitosamente", {
+      const response = await dishesApi.updateDishWithExtra(dishId, payloadData)
+      if (response.error) {
+        toast.error(`Fallo al actualizar el platillo. Por favor intente de nuevo. ${response?.message}`, {
+          duration: 7000
+        })
+      } else {
+        if (propertyToUpdate !== "isActive") {
+          /**
+           * Update images to the dish
+           */
+
+          if (dishData.files) await uploadDishImage(dishData?.id, dishData?.files?.[0])
+        }
+
+        /**
+         * All was success
+         */
+
+        toast.success("Platillo actualizado exitosamente", {
+          duration: 7000
+        })
+      }
+      return response.dishData
+    } catch (error) {
+      dispatch(setError("Error updating dish"))
+      toast.error("Fallo al actualizar el platillo. Por favor intente de nuevo.", {
         duration: 7000
       })
-    }
-    return response.data
-  } catch (error) {
-    dispatch(setError("Error updating dish"))
-    toast.error("Fallo al actualizar el platillo. Por favor intente de nuevo.", {
-      duration: 7000
-    })
 
-    throw error
+      throw error
+    }
   }
-})
+)
 
 /*
  * DISHES SLICE
