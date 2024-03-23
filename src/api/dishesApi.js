@@ -27,6 +27,10 @@ const dishesApi = {
 
   createDish: (formData) => axiosClient.post("api/v1/dish/", formData),
 
+  createDishWithExtra: (formData) => axiosClient.post("api/v1/dish/create/with-extras", formData),
+
+  updateDishWithExtra: (dishId, formData) => axiosClient.put(`api/v1/dish/update/with-extras/${dishId}`, formData),
+
   addImage: (dishId, params) =>
     axiosClient.post(`api/v1/dish/${dishId}/images`, params, {
       contentType: `multipart/form-data; boundary=${params._boundary}`
@@ -36,7 +40,7 @@ const dishesApi = {
 
   updateDish: (params, dishId) => axiosClient.patch(`api/v1/dish/${dishId}`, params),
 
-  deleteDish: (dishId) => axiosClient.del(`api/v1/dish/${dishId}`)
+  deleteDish: (dishId) => axiosClient.delete(`api/v1/dish/${dishId}`)
 }
 
 export default dishesApi
