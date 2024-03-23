@@ -4,6 +4,7 @@ import { IconPlus, IconX } from "@tabler/icons-react"
 import toast from "react-hot-toast"
 
 import { colors } from "../../theme/colors"
+import { convertToDecimal } from "../../utils"
 
 export const AdditionalForm = ({ additional, setAdditional }) => {
   const [newAdditionalTitle, setNewAdditionalTitle] = useState("")
@@ -16,6 +17,7 @@ export const AdditionalForm = ({ additional, setAdditional }) => {
       isFree: false
     }
   ])
+
   const handleNewCategory = () => {
     if (newAdditionalTitle === "") {
       toast.error("Complete todos los campos.")
@@ -23,15 +25,16 @@ export const AdditionalForm = ({ additional, setAdditional }) => {
       const newItemObject = {
         name: newAdditionalTitle,
         required: isRequired,
-        requiredMinimum: minRequired,
-        extraDetail: additionalItem.map((item) => ({
+        requiredMinimum: isRequired ? minRequired : null,
+        additionalsDetails: additionalItem?.map((item) => ({
           name: item.name,
           isFree: item.isFree,
-          price: item.price
+          price: convertToDecimal(item.price)
         }))
       }
 
       setAdditional([...additional, newItemObject])
+
       setNewAdditionalTitle("")
       setIsRequired(false)
       setMinRequired("")
@@ -109,7 +112,7 @@ export const AdditionalForm = ({ additional, setAdditional }) => {
             ) : null}
           </div>
           <div className="p-2 my-4 bg-white rounded-lg border border-blue-100">
-            {additionalItem.map((item, index) => (
+            {additionalItem?.map((item, index) => (
               <div key={index}>
                 <div className="flex flex-row w-full gap-4 my-2 items-center justify-center">
                   <div className="w-2/5">
@@ -168,7 +171,7 @@ export const AdditionalForm = ({ additional, setAdditional }) => {
           <span className="text-sm font-semibold">Adicionales del platillo:</span>
           <ul>
             {additional.length > 0 ? (
-              additional.map((category, index) => (
+              additional?.map((category, index) => (
                 <li
                   key={index}
                   className="p-2 my-4 bg-white rounded-lg border border-blue-100 flex flex-row justify-between items-center">
@@ -178,7 +181,7 @@ export const AdditionalForm = ({ additional, setAdditional }) => {
                     </h3>
 
                     <ul>
-                      {category.extraDetail.map((item, i) => (
+                      {category?.additionalsDetails?.map((item, i) => (
                         <li key={i} className="flex flex-row gap-6">
                           <span>{item.name}</span>
                           <span className="italic">{item.price} Lps</span>
