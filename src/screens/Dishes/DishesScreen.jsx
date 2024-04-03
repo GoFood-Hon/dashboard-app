@@ -21,6 +21,7 @@ import ItemCard from "../../components/ItemCard"
 import { Icon } from "../../components/Icon"
 import FilterPopover from "../../components/FilterPopover"
 import BackButton from "./components/BackButton"
+import { APP_ROLES } from "../../utils/constants"
 
 export default function Dishes() {
   const navigate = useNavigate()
@@ -147,11 +148,13 @@ export default function Dishes() {
         <div className="flex flex-row justify-between items-center pb-6">
           <div className="flex flex-row gap-x-3 items-center">
             <BackButton title="Platillos" />
-            <Button
-              text={"Nuevo Platillo"}
-              className={"text-white text-md px-3 py-2 bg-primary_button mb-0"}
-              onClick={handleNewItem}
-            />
+            {user.role !== APP_ROLES.branchAdmin && (
+              <Button
+                text={"Nuevo Platillo"}
+                className={"text-white text-md px-3 py-2 bg-primary_button mb-0"}
+                onClick={handleNewItem}
+              />
+            )}
           </div>
           <div>
             <Breadcrumbs>

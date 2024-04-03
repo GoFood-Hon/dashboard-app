@@ -54,6 +54,7 @@ import { NewRestaurant } from "./screens/Restaurants/NewRestaurant"
 import { Plans } from "./screens/Plans/Plans"
 import { NotFound } from "./screens/NotFound"
 import { ProfileScreen } from "./screens/Profile/ProfileScreen"
+import { WelcomeScreen } from "./screens/Welcome/WelcomeScreen"
 
 function App() {
   const userRole = useSelector((state) => state.user.value.role)
@@ -72,28 +73,27 @@ function App() {
             <Route path={NAVIGATION_ROUTES.Pedidos.path} element={<Orders />} />
           </>
         )
-      case APP_ROLES.sucursalAdmin:
+      case APP_ROLES.branchAdmin:
         return (
           <>
-            <Route path={NAVIGATION_ROUTES_BRANCH_ADMIN.Profile.path} element={<ProfileScreen />} />
-
-            <Route path={NAVIGATION_ROUTES_BRANCH_ADMIN.Menu.path} element={<Menu />} />
-
-            <Route path={NAVIGATION_ROUTES_BRANCH_ADMIN.Menu.MenuDetails.path} element={<MenuDetails />} />
-
-            <Route path={NAVIGATION_ROUTES_BRANCH_ADMIN.Menu.NewMenu.path} element={<NewMenu />} />
+            <Route path={NAVIGATION_ROUTES_BRANCH_ADMIN.Home.path} element={<WelcomeScreen />} />
 
             <Route path={NAVIGATION_ROUTES_BRANCH_ADMIN.Pedidos.path} element={<Orders />} />
 
             <Route path={NAVIGATION_ROUTES_BRANCH_ADMIN.Pedidos.OrderDetails.path} element={<OrderDetails />} />
 
-            <Route path={NAVIGATION_ROUTES_BRANCH_ADMIN.Users.path} element={<Users />} />
+            <Route path={NAVIGATION_ROUTES_BRANCH_ADMIN.Menu.path} element={<Menu />} />
 
-            <Route path={NAVIGATION_ROUTES_BRANCH_ADMIN.Users.UserDetails.path} element={<UserDetails />} />
+            <Route path={NAVIGATION_ROUTES_BRANCH_ADMIN.Dishes.path} element={<Dishes />} />
+            <Route path={NAVIGATION_ROUTES_BRANCH_ADMIN.Dishes.DishDetails.path} element={<DishDetails />} />
 
-            <Route path={NAVIGATION_ROUTES_BRANCH_ADMIN.Users.NewUser.path} element={<NewUser />} />
+            {/*
+             * good
+             */}
 
-            <Route path={NAVIGATION_ROUTES_BRANCH_ADMIN.Users.path} element={<Users />} />
+            <Route path={NAVIGATION_ROUTES_BRANCH_ADMIN.Menu.MenuDetails.path} element={<MenuDetails />} />
+
+            <Route path={NAVIGATION_ROUTES_BRANCH_ADMIN.Profile.path} element={<ProfileScreen />} />
           </>
         )
       default:
@@ -108,14 +108,14 @@ function App() {
           <Route
             element={
               <PrivateRoute
-                allowedRoles={[APP_ROLES.superAdmin, APP_ROLES.restaurantAdmin, APP_ROLES.sucursalAdmin]}
+                allowedRoles={[APP_ROLES.superAdmin, APP_ROLES.restaurantAdmin, APP_ROLES.branchAdmin]}
                 userRole={userRole}
               />
             }>
             {renderRoutesForRole(userRole)}
           </Route>
 
-          <Route path={"/unauthorized"} element={<Navigate to="/" />} />
+          <Route path={"/unauthorized"} element={<Navigate to="/orders" />} />
 
           <Route path={NAVIGATION_ROUTES.Dashboard.path} element={<Home />} />
 

@@ -202,6 +202,11 @@ export const SETTING_NAVIGATION_ROUTES = {
 }
 
 export const NAVIGATION_ROUTES_BRANCH_ADMIN = {
+  Home: {
+    label: "Inicio",
+    path: "/",
+    icon: "dashboard"
+  },
   Pedidos: {
     label: "Pedidos",
     path: "/pedidos",
@@ -221,50 +226,18 @@ export const NAVIGATION_ROUTES_BRANCH_ADMIN = {
     },
     NewMenu: {
       path: "/menu/nuevoMenu"
-    },
-    submenu: {
-      Dishes: {
-        label: "Platillos",
-        icon: "menu",
-        path: "/menu/platillos",
-        DishDetails: {
-          label: "Detalles del platillo",
-          path: "/menu/platillos/:dishId"
-        },
-        submenu: {
-          NewDish: {
-            path: "/menu/platillos/nuevoPlatillo"
-          }
-        }
-      },
-      Complements: {
-        label: "Complementos",
-        icon: "menu",
-        path: "/menu/complementos",
-        ComplementDetails: {
-          label: "Detalles del complemento",
-          path: "/menu/complementos/:complementId"
-        },
-        submenu: {
-          NewComplement: {
-            path: "/menu/complementos/nuevoComplemento"
-          }
-        }
-      }
     }
   },
-  Users: {
-    label: "Usuarios",
-    path: "/usuarios",
-    icon: "users",
-    UserDetails: {
-      label: "Detalles de usuario",
-      path: "/usuarios/:userId"
-    },
-    NewUser: {
-      path: "/usuarios/nuevoUsuario"
+  Dishes: {
+    label: "Platillos",
+    icon: "menu",
+    path: "/platillos",
+    DishDetails: {
+      label: "Detalles del platillo",
+      path: "/menu/platillos/:dishId"
     }
   },
+
   Profile: {
     label: "Perfil",
     path: "/profile",
