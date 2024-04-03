@@ -1,5 +1,11 @@
 import React from "react"
-import { AUTH_NAVIGATION_ROUTES, NAVIGATION_ROUTES, NAVIGATION_ROUTES_SUPER_ADMIN, SETTING_NAVIGATION_ROUTES } from "./routes"
+import {
+  AUTH_NAVIGATION_ROUTES,
+  NAVIGATION_ROUTES,
+  NAVIGATION_ROUTES_BRANCH_ADMIN,
+  NAVIGATION_ROUTES_SUPER_ADMIN,
+  SETTING_NAVIGATION_ROUTES
+} from "./routes"
 import { Navigate, Route, RouterProvider, createBrowserRouter, createRoutesFromElements } from "react-router-dom"
 import AuthLayout from "./layout/AuthLayout"
 
@@ -47,79 +53,66 @@ import { AdminUserDetails } from "./screens/Users/AdminUserDetails"
 import { NewRestaurant } from "./screens/Restaurants/NewRestaurant"
 import { Plans } from "./screens/Plans/Plans"
 import { NotFound } from "./screens/NotFound"
+import { ProfileScreen } from "./screens/Profile/ProfileScreen"
 
 function App() {
   const userRole = useSelector((state) => state.user.value.role)
+
+  const renderRoutesForRole = (role) => {
+    switch (role) {
+      case APP_ROLES.superAdmin:
+        return (
+          <>
+            <Route path={NAVIGATION_ROUTES_SUPER_ADMIN.Restaurants.path} element={<RestaurantsScreen />} />
+          </>
+        )
+      case APP_ROLES.restaurantAdmin:
+        return (
+          <>
+            <Route path={NAVIGATION_ROUTES.Pedidos.path} element={<Orders />} />
+          </>
+        )
+      case APP_ROLES.sucursalAdmin:
+        return (
+          <>
+            <Route path={NAVIGATION_ROUTES_BRANCH_ADMIN.Profile.path} element={<ProfileScreen />} />
+
+            <Route path={NAVIGATION_ROUTES_BRANCH_ADMIN.Menu.path} element={<Menu />} />
+
+            <Route path={NAVIGATION_ROUTES_BRANCH_ADMIN.Menu.MenuDetails.path} element={<MenuDetails />} />
+
+            <Route path={NAVIGATION_ROUTES_BRANCH_ADMIN.Menu.NewMenu.path} element={<NewMenu />} />
+
+            <Route path={NAVIGATION_ROUTES_BRANCH_ADMIN.Pedidos.path} element={<Orders />} />
+
+            <Route path={NAVIGATION_ROUTES_BRANCH_ADMIN.Pedidos.OrderDetails.path} element={<OrderDetails />} />
+
+            <Route path={NAVIGATION_ROUTES_BRANCH_ADMIN.Users.path} element={<Users />} />
+
+            <Route path={NAVIGATION_ROUTES_BRANCH_ADMIN.Users.UserDetails.path} element={<UserDetails />} />
+
+            <Route path={NAVIGATION_ROUTES_BRANCH_ADMIN.Users.NewUser.path} element={<NewUser />} />
+
+            <Route path={NAVIGATION_ROUTES_BRANCH_ADMIN.Users.path} element={<Users />} />
+          </>
+        )
+      default:
+        return <Route path="*" element={<NotFound />} />
+    }
+  }
 
   const router = createBrowserRouter(
     createRoutesFromElements(
       <>
         <Route element={<AuthLayout />}>
-          <Route element={<PrivateRoute allowedRoles={[APP_ROLES.superAdmin]} userRole={userRole} />}>
-            {/*
-             * RESTAURANT
-             */}
-            <Route path={NAVIGATION_ROUTES_SUPER_ADMIN.Restaurants.path} element={<RestaurantsScreen />} />
-            <Route path={NAVIGATION_ROUTES_SUPER_ADMIN.Restaurants.RestaurantDetails.path} element={<RestaurantDetailScreen />} />
-            <Route path={NAVIGATION_ROUTES_SUPER_ADMIN.Restaurants.NewRestaurant.path} element={<NewRestaurant />} />
-            {/*
-             * ADMIN USERS
-             */}
-            <Route path={NAVIGATION_ROUTES_SUPER_ADMIN.Users.path} element={<AdminUserScreen />} />
-            <Route path={NAVIGATION_ROUTES_SUPER_ADMIN.Users.NewUser.path} element={<NewAdminUser />} />
-            <Route path={NAVIGATION_ROUTES_SUPER_ADMIN.Users.UserDetails.path} element={<AdminUserDetails />} />
-            {/*
-             * PLAN
-             */}
-            <Route path={NAVIGATION_ROUTES_SUPER_ADMIN.Plans.path} element={<Plans />} />
-          </Route>
-          <Route element={<PrivateRoute allowedRoles={["admin-restaurant"]} userRole={userRole} />}>
-            {/*
-             * Order routes
-             */}
-            <Route path={NAVIGATION_ROUTES.Pedidos.path} element={<Orders />} />
-            <Route path={NAVIGATION_ROUTES.Pedidos.OrderDetails.path} element={<OrderDetails />} />
-            {/*
-             * Menu routes
-             */}
-            <Route path={NAVIGATION_ROUTES.Menu.NewMenu.path} element={<NewMenu />} />
-            <Route path={NAVIGATION_ROUTES.Menu.path} element={<Menu />} />
-            {/*
-             * Dishes routes
-             */}
-            <Route path={NAVIGATION_ROUTES.Menu.submenu.Dishes.path} element={<Dishes />} />
-            <Route path={NAVIGATION_ROUTES.Menu.submenu.Dishes.DishDetails.path} element={<DishDetails />} />
-            <Route path={NAVIGATION_ROUTES.Menu.submenu.Dishes.submenu.NewDish.path} element={<NewDish />} />
-
-            <Route path={NAVIGATION_ROUTES.Menu.submenu.Complements.path} element={<Complements />} />
-            <Route path={NAVIGATION_ROUTES.Menu.submenu.Complements.ComplementDetails.path} element={<ComplementsDetails />} />
-            <Route path={NAVIGATION_ROUTES.Menu.submenu.Complements.submenu.NewComplement.path} element={<NewComplement />} />
-            <Route path={NAVIGATION_ROUTES.Menu.MenuDetails.path} element={<MenuDetails />} />
-
-            {/*
-             * Branches routes
-             */}
-
-            <Route path={NAVIGATION_ROUTES.Branches.path} element={<Branches />} />
-            <Route path={NAVIGATION_ROUTES.Branches.NewBranch.path} element={<NewBranch />} />
-            <Route path={NAVIGATION_ROUTES.Branches.BranchDetail.path} element={<BranchesDetails />} />
-            {/*
-             * User routes
-             */}
-
-            <Route path={NAVIGATION_ROUTES.Users.path} element={<Users />} />
-            <Route path={NAVIGATION_ROUTES.Users.UserDetails.path} element={<UserDetails />} />
-            <Route path={NAVIGATION_ROUTES.Users.NewUser.path} element={<NewUser />} />
-
-            <Route path={NAVIGATION_ROUTES.Users.submenu.Settings.path} element={<GeneralSettings />} />
-            <Route path={SETTING_NAVIGATION_ROUTES.General.path} element={<GeneralSettings />} />
-            <Route path={SETTING_NAVIGATION_ROUTES.Cuenta.path} element={<AccountSettings />} />
-            <Route path={SETTING_NAVIGATION_ROUTES.Password.path} element={<PasswordSettings />} />
-            <Route path={SETTING_NAVIGATION_ROUTES.Business_btn.path} element={<BusinessSettings />} />
-            <Route path={SETTING_NAVIGATION_ROUTES.Promotions.path} element={<CouponsSettings />} />
-            <Route path={SETTING_NAVIGATION_ROUTES.Bank.path} element={<BankSettings />} />
-            <Route path={SETTING_NAVIGATION_ROUTES.Plan.path} element={<PlanSettings />} />
-            <Route path={SETTING_NAVIGATION_ROUTES.Administrative.path} element={<AdministrativeSettings />} />
+          <Route
+            element={
+              <PrivateRoute
+                allowedRoles={[APP_ROLES.superAdmin, APP_ROLES.restaurantAdmin, APP_ROLES.sucursalAdmin]}
+                userRole={userRole}
+              />
+            }>
+            {renderRoutesForRole(userRole)}
           </Route>
 
           <Route path={"/unauthorized"} element={<Navigate to="/" />} />
