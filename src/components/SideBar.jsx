@@ -2,11 +2,17 @@ import React, { useEffect, useState } from "react"
 import { Link, useLocation, useNavigate } from "react-router-dom"
 import { Icon } from "./Icon"
 import toast from "react-hot-toast"
-import { AUTH_NAVIGATION_ROUTES, NAVIGATION_ROUTES, NAVIGATION_ROUTES_SUPER_ADMIN } from "../routes"
+import {
+  AUTH_NAVIGATION_ROUTES,
+  NAVIGATION_ROUTES,
+  NAVIGATION_ROUTES_BRANCH_ADMIN,
+  NAVIGATION_ROUTES_SUPER_ADMIN
+} from "../routes"
 import NavigationItem from "./NavigationItem"
 import { AlarmIcon } from "../assets/icons/AlarmIcon"
 import { MailIcon } from "../assets/icons/MailIcon"
 import { useSelector } from "react-redux"
+import { APP_ROLES } from "../utils/constants"
 
 export default function SideBar() {
   const navigate = useNavigate()
@@ -18,19 +24,28 @@ export default function SideBar() {
   const [selectedSubmenuRoute, setSelectedSubmenuRoute] = useState(null)
 
   useEffect(() => {
-    const routeArray = Object.values(user.role === "admin-restaurant" ? NAVIGATION_ROUTES : NAVIGATION_ROUTES_SUPER_ADMIN)
-    const currentRoute = routeArray.find((item) => location.pathname === item.path)
+    const roleRoutesMap = {
+      [APP_ROLES.restaurantAdmin]: NAVIGATION_ROUTES,
+      [APP_ROLES.superAdmin]: NAVIGATION_ROUTES_SUPER_ADMIN,
+      [APP_ROLES.branchAdmin]: NAVIGATION_ROUTES_BRANCH_ADMIN
+    }
 
-    if (currentRoute !== undefined) {
-      setSelectedRoute(currentRoute)
-      setSelectedSubmenuRoute(null)
-    } else {
-      const submenuItems = routeArray.filter((item) => item.submenu).flatMap((item) => Object.values(item.submenu))
+    const routeArray = roleRoutesMap[user.role] || []
 
-      const currentSubmenuRoute = submenuItems.find((item) => location.pathname === item.path)
+    if (Array.isArray(routeArray)) {
+      const currentRoute = routeArray.find((item) => location.pathname === item.path)
 
-      setSelectedRoute(null)
-      setSelectedSubmenuRoute(currentSubmenuRoute)
+      if (currentRoute !== undefined) {
+        setSelectedRoute(currentRoute)
+        setSelectedSubmenuRoute(null)
+      } else {
+        const submenuItems = routeArray.filter((item) => item.submenu).flatMap((item) => Object.values(item.submenu))
+
+        const currentSubmenuRoute = submenuItems.find((item) => location.pathname === item.path)
+
+        setSelectedRoute(null)
+        setSelectedSubmenuRoute(currentSubmenuRoute)
+      }
     }
   }, [location.pathname])
 
@@ -47,23 +62,29 @@ export default function SideBar() {
     }))
   }
 
-  const renderedItems = Object.values(user.role === "admin-restaurant" ? NAVIGATION_ROUTES : NAVIGATION_ROUTES_SUPER_ADMIN).map(
-    (item) => {
-      const isSelected = item === selectedRoute
-      const isOpen = submenuState[item.label]
+  const roleRoutesMap = {
+    [APP_ROLES.restaurantAdmin]: NAVIGATION_ROUTES,
+    [APP_ROLES.superAdmin]: NAVIGATION_ROUTES_SUPER_ADMIN,
+    [APP_ROLES.branchAdmin]: NAVIGATION_ROUTES_BRANCH_ADMIN
+  }
 
-      return (
-        <NavigationItem
-          key={item.label}
-          item={item}
-          isSelected={isSelected}
-          isOpen={isOpen}
-          toggleSubMenu={toggleSubMenu}
-          selectedSubmenuRoute={selectedSubmenuRoute}
-        />
-      )
-    }
-  )
+  const selectedRoutes = roleRoutesMap[user.role] || NAVIGATION_ROUTES_SUPER_ADMIN
+
+  const renderedItems = Object.values(selectedRoutes).map((item) => {
+    const isSelected = item === selectedRoute
+    const isOpen = submenuState[item.label]
+
+    return (
+      <NavigationItem
+        key={item.label}
+        item={item}
+        isSelected={isSelected}
+        isOpen={isOpen}
+        toggleSubMenu={toggleSubMenu}
+        selectedSubmenuRoute={selectedSubmenuRoute}
+      />
+    )
+  })
 
   return (
     <div className="w-[200px] pt-[76px] h-full flex flex-col start-0 fixed overflow-y-hidden top-0 bg-white border-slate-200 border z-10 font-semibold dark:text-white dark:bg-slate-800 dark:border-slate-700">
