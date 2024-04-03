@@ -1,6 +1,7 @@
 export const APP_ROLES = {
   superAdmin: "superadmin",
-  restaurantAdmin: "admin-restaurant"
+  restaurantAdmin: "admin-restaurant",
+  sucursalAdmin: "admin-sucursal"
 }
 
 export const USER_ROLES = {

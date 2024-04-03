@@ -201,6 +201,77 @@ export const SETTING_NAVIGATION_ROUTES = {
   }   */
 }
 
+export const NAVIGATION_ROUTES_BRANCH_ADMIN = {
+  Pedidos: {
+    label: "Pedidos",
+    path: "/pedidos",
+    icon: "shoppingCart",
+    OrderDetails: {
+      label: "Detalles del pedido",
+      path: "/pedidos/:orderId"
+    }
+  },
+  Menu: {
+    label: "Menú",
+    icon: "menu",
+    path: "/menu",
+    MenuDetails: {
+      label: "Detalles del menu",
+      path: "/menu/:menuId"
+    },
+    NewMenu: {
+      path: "/menu/nuevoMenu"
+    },
+    submenu: {
+      Dishes: {
+        label: "Platillos",
+        icon: "menu",
+        path: "/menu/platillos",
+        DishDetails: {
+          label: "Detalles del platillo",
+          path: "/menu/platillos/:dishId"
+        },
+        submenu: {
+          NewDish: {
+            path: "/menu/platillos/nuevoPlatillo"
+          }
+        }
+      },
+      Complements: {
+        label: "Complementos",
+        icon: "menu",
+        path: "/menu/complementos",
+        ComplementDetails: {
+          label: "Detalles del complemento",
+          path: "/menu/complementos/:complementId"
+        },
+        submenu: {
+          NewComplement: {
+            path: "/menu/complementos/nuevoComplemento"
+          }
+        }
+      }
+    }
+  },
+  Users: {
+    label: "Usuarios",
+    path: "/usuarios",
+    icon: "users",
+    UserDetails: {
+      label: "Detalles de usuario",
+      path: "/usuarios/:userId"
+    },
+    NewUser: {
+      path: "/usuarios/nuevoUsuario"
+    }
+  },
+  Profile: {
+    label: "Perfil",
+    path: "/profile",
+    icon: "users"
+  }
+}
+
 export const AUTH_NAVIGATION_ROUTES = {
   Login: {
     label: "Login",
