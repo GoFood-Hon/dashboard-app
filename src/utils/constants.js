@@ -4,6 +4,39 @@ export const APP_ROLES = {
   sucursalAdmin: "admin-sucursal"
 }
 
+export const welcomeCards = [
+  {
+    title: "Ver mis pedidos",
+    description: "Lista de pedidos actuales",
+    link: "/pedidos"
+  },
+  {
+    title: "Ver mi menú",
+    description: "Visualiza y gestiona tu menú",
+    link: "/menu"
+  },
+  {
+    title: "Ver platillos",
+    description: "Explora y gestiona tus platillos",
+    link: "/menu/platillos"
+  },
+  {
+    title: "Ver complementos",
+    description: "Consulta y administra tus complementos",
+    link: "/menu/complementos"
+  },
+  {
+    title: "Nuevo menú",
+    description: "Crea un nuevo menú para tu restaurante",
+    link: "/menu/nuevoMenu"
+  },
+  {
+    title: "Nuevo platillo",
+    description: "Añade un nuevo platillo a tu menú",
+    link: "/menu/platillos/nuevoPlatillo"
+  }
+]
+
 export const USER_ROLES = {
   kitchen: "kitchen",
   driver: "driver",
