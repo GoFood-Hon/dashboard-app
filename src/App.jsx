@@ -91,10 +91,6 @@ function App() {
 
             <Route path={NAVIGATION_ROUTES_BRANCH_ADMIN.Password.path} element={<PasswordSettings />} />
 
-            {/*
-             * good
-             */}
-
             <Route path={NAVIGATION_ROUTES_BRANCH_ADMIN.Menu.MenuDetails.path} element={<MenuDetails />} />
           </>
         )
