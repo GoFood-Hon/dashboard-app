@@ -73,7 +73,7 @@ export default function PasswordSettings() {
             <Grid my={20}>
               <Grid.Col span={{ sm: 12 }}>
                 <InputField
-                  label="Ingresar nueva contraseña"
+                  label="Ingresar contraseña actual"
                   name="currentPassword"
                   register={register}
                   errors={errors}
