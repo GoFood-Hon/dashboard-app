@@ -53,7 +53,6 @@ import { AdminUserDetails } from "./screens/Users/AdminUserDetails"
 import { NewRestaurant } from "./screens/Restaurants/NewRestaurant"
 import { Plans } from "./screens/Plans/Plans"
 import { NotFound } from "./screens/NotFound"
-import { ProfileScreen } from "./screens/Profile/ProfileScreen"
 import { WelcomeScreen } from "./screens/Welcome/WelcomeScreen"
 
 function App() {
@@ -85,15 +84,18 @@ function App() {
             <Route path={NAVIGATION_ROUTES_BRANCH_ADMIN.Menu.path} element={<Menu />} />
 
             <Route path={NAVIGATION_ROUTES_BRANCH_ADMIN.Dishes.path} element={<Dishes />} />
+
             <Route path={NAVIGATION_ROUTES_BRANCH_ADMIN.Dishes.DishDetails.path} element={<DishDetails />} />
+
+            <Route path={NAVIGATION_ROUTES_BRANCH_ADMIN.Account.path} element={<AccountSettings />} />
+
+            <Route path={NAVIGATION_ROUTES_BRANCH_ADMIN.Password.path} element={<PasswordSettings />} />
 
             {/*
              * good
              */}
 
             <Route path={NAVIGATION_ROUTES_BRANCH_ADMIN.Menu.MenuDetails.path} element={<MenuDetails />} />
-
-            <Route path={NAVIGATION_ROUTES_BRANCH_ADMIN.Profile.path} element={<ProfileScreen />} />
           </>
         )
       default:

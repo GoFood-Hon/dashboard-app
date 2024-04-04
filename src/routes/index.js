@@ -234,14 +234,19 @@ export const NAVIGATION_ROUTES_BRANCH_ADMIN = {
     path: "/platillos",
     DishDetails: {
       label: "Detalles del platillo",
-      path: "/menu/platillos/:dishId"
+      path: "/platillos/:dishId"
     }
   },
 
-  Profile: {
-    label: "Perfil",
-    path: "/profile",
-    icon: "users"
+  Account: {
+    label: "Cuenta",
+    icon: "users",
+    path: "/miCuenta"
+  },
+  Password: {
+    label: "Contraseña",
+    icon: "users",
+    path: "/contraseña"
   }
 }
 

@@ -11,13 +11,16 @@ import { useNavigate } from "react-router-dom"
 import { useDisclosure } from "@mantine/hooks"
 import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone"
 import { IconPhoto } from "@tabler/icons-react"
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { bytesToMB } from "../../utils"
 import toast from "react-hot-toast"
 import { SETTING_NAVIGATION_ROUTES } from "../../routes"
+import { APP_ROLES } from "../../utils/constants"
+import BackButton from "../Dishes/components/BackButton"
 
 export default function AccountSettings() {
   const navigate = useNavigate()
+  const user = useSelector((state) => state.user.value)
 
   const [imageModalOpened, { open: openImageModal, close: closeImageModal }] = useDisclosure(false)
   const [formModalOpened, { open: openFormModal, close: closeFormModal }] = useDisclosure(false)
@@ -122,11 +125,11 @@ export default function AccountSettings() {
   return (
     <BaseLayout>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="pl-[200px]">
+        <div className={`${user.role !== APP_ROLES.branchAdmin && "pl-[200px]"}`}>
           <section>
             <div className="flex flex-row justify-between items-center pb-6">
               <div className="flex flex-row gap-x-3 items-center">
-                <h1 className="text-white-200 text-2xl font-semibold">Cuenta</h1>
+                <BackButton title="Mi Cuenta" />
               </div>
               <div>
                 <Breadcrumbs>

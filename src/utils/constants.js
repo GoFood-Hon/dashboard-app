@@ -18,22 +18,22 @@ export const welcomeCards = [
   {
     title: "Ver platillos",
     description: "Explora y gestiona tus platillos",
-    link: "/menu/platillos"
+    link: "/platillos"
   },
   {
-    title: "Ver complementos",
-    description: "Consulta y administra tus complementos",
-    link: "/menu/complementos"
+    title: "Ver mi Cuenta",
+    description: "Consulta y administra tu cuenta",
+    link: "/miCuenta"
   },
   {
-    title: "Nuevo menú",
-    description: "Crea un nuevo menú para tu restaurante",
-    link: "/menu/nuevoMenu"
+    title: "Actualizar contraseña",
+    description: "Crea o actualiza tu contraseña",
+    link: "/contraseña"
   },
   {
-    title: "Nuevo platillo",
-    description: "Añade un nuevo platillo a tu menú",
-    link: "/menu/platillos/nuevoPlatillo"
+    title: "Ver Notificaciones",
+    description: "Ver las ultimas actualizaciones",
+    link: "/"
   }
 ]
 
