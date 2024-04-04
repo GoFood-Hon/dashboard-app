@@ -4,7 +4,7 @@ import { Affix, Breadcrumbs, CloseButton, Grid, Input, Pagination } from "@manti
 import Button from "../../components/Button"
 import { useNavigate, useLocation } from "react-router-dom"
 import { colors } from "../../theme/colors"
-import { NAVIGATION_ROUTES } from "../../routes"
+import { NAVIGATION_ROUTES, NAVIGATION_ROUTES_BRANCH_ADMIN } from "../../routes"
 import BreadCrumbNavigation from "../../components/BreadCrumbNavigation"
 import { useDispatch, useSelector } from "react-redux"
 import {
@@ -139,7 +139,20 @@ export default function Dishes() {
   }
 
   const handleClick = (id) => {
-    navigate(`${NAVIGATION_ROUTES.Menu.submenu.Dishes.path}/${id}`)
+    let route = ""
+
+    switch (user.role) {
+      case APP_ROLES.branchAdmin:
+        route = `${NAVIGATION_ROUTES_BRANCH_ADMIN.Dishes.path}/${id}`
+        break
+      case APP_ROLES.restaurantAdmin:
+        route = `${NAVIGATION_ROUTES.Menu.submenu.Dishes.path}/${id}`
+        break
+      default:
+        break
+    }
+
+    navigate(route)
   }
 
   return (
