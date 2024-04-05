@@ -10,6 +10,7 @@ import BaseLayout from "../../components/BaseLayout"
 import BackButton from "../Dishes/components/BackButton"
 import BreadCrumbNavigation from "../../components/BreadCrumbNavigation"
 import Button from "../../components/Button"
+import { newMenuValidation } from "../../utils/inputRules"
 
 export const NewPlan = () => {
   const location = useLocation()
@@ -95,7 +96,7 @@ export const NewPlan = () => {
                 onClick={() => {
                   reset()
                   toast.success("Información eliminada")
-                  navigate(NAVIGATION_ROUTES.Menu.path)
+                  navigate(NAVIGATION_ROUTES_RES_ADMIN.Menu.path)
                 }}
               />
               <Button

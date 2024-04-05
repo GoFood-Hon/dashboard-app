@@ -5,7 +5,7 @@ import { Breadcrumbs, Text } from "@mantine/core"
 import BreadCrumbNavigation from "../../components/BreadCrumbNavigation"
 import MenuTable from "../Menu/MenuTable"
 import { useLocation, useNavigate } from "react-router-dom"
-import { NAVIGATION_ROUTES } from "../../routes"
+import { NAVIGATION_ROUTES_RES_ADMIN } from "../../routes"
 import toast from "react-hot-toast"
 import userApi from "../../api/userApi"
 import { useSelector } from "react-redux"
@@ -42,7 +42,7 @@ export default function Users() {
   const handleDisableSelected = () => {}
 
   const handleNavigateNewUser = () => {
-    navigate(NAVIGATION_ROUTES.Users.NewUser.path)
+    navigate(NAVIGATION_ROUTES_RES_ADMIN.Users.NewUser.path)
   }
   return (
     <BaseLayout>

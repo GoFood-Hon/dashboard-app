@@ -11,13 +11,16 @@ import { useNavigate } from "react-router-dom"
 import { useDisclosure } from "@mantine/hooks"
 import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone"
 import { IconPhoto } from "@tabler/icons-react"
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { bytesToMB } from "../../utils"
 import toast from "react-hot-toast"
-import { SETTING_NAVIGATION_ROUTES } from "../../routes"
+import { NAVIGATION_ROUTES_BRANCH_ADMIN, SETTING_NAVIGATION_ROUTES } from "../../routes"
+import { APP_ROLES } from "../../utils/constants"
+import BackButton from "../Dishes/components/BackButton"
 
 export default function AccountSettings() {
   const navigate = useNavigate()
+  const user = useSelector((state) => state.user.value)
 
   const [imageModalOpened, { open: openImageModal, close: closeImageModal }] = useDisclosure(false)
   const [formModalOpened, { open: openFormModal, close: closeFormModal }] = useDisclosure(false)
@@ -45,10 +48,13 @@ export default function AccountSettings() {
         const userData = response.data.data
         setUserData(userData)
 
+        const phoneNumberWithoutCountryCode = userData?.phoneNumber?.replace("+504", "")
+
         return {
           firstName: userData?.name || "",
           email: userData?.email || "",
-          phoneNumber: userData?.phoneNumber || "",
+          phoneNumber: phoneNumberWithoutCountryCode || "",
+
           image: userData?.images?.[0]?.location
         }
       } catch (error) {
@@ -69,6 +75,7 @@ export default function AccountSettings() {
         key={index}
         src={imageUrl}
         onLoad={() => URL.revokeObjectURL(imageUrl)}
+        alt={`Preview ${index + 1}`}
         className="h-14 w-14 rounded-xl object-cover object-center border m-1"
       />
     )
@@ -97,7 +104,7 @@ export default function AccountSettings() {
 
       formData.append("name", data.firstName)
       formData.append("email", data.email)
-      formData.append("phoneNumber", data.phoneNumber)
+      formData.append("phoneNumber", `+504${data.phoneNumber}`)
 
       const response = await authApi.updateUser(formData)
 
@@ -111,6 +118,7 @@ export default function AccountSettings() {
           duration: 7000
         })
       }
+      window.location.reload()
       return response.data
     } catch (error) {
       toast.error("Fallo al actualizar usuario. Por favor intente de nuevo.", {
@@ -122,11 +130,11 @@ export default function AccountSettings() {
   return (
     <BaseLayout>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="pl-[200px]">
+        <div className={`${user.role !== APP_ROLES.branchAdmin && "pl-[200px]"}`}>
           <section>
             <div className="flex flex-row justify-between items-center pb-6">
               <div className="flex flex-row gap-x-3 items-center">
-                <h1 className="text-white-200 text-2xl font-semibold">Cuenta</h1>
+                <BackButton title="Mi Cuenta" />
               </div>
               <div>
                 <Breadcrumbs>
@@ -138,13 +146,11 @@ export default function AccountSettings() {
           <SettingsCard title="Información general" iconName="user">
             <div className="flex flex-row gap-2">
               <div className="cursor-pointer my-4">
-                <Avatar
-                  size="lg"
-                  src={userData?.images?.[0]?.location}
-                  onClick={() => {
-                    openImageModal()
-                  }}
-                />
+                {previews.length !== 0 ? (
+                  previews
+                ) : (
+                  <Avatar size="lg" src={userData?.images?.[0]?.location} onClick={openImageModal} />
+                )}
               </div>
               <a
                 className="text-blue-600 text-base font-normal leading-normal cursor-pointer self-center"
@@ -162,7 +168,13 @@ export default function AccountSettings() {
               <InputField label="Correo" name="email" register={register} errors={errors} />
             </div>
             <div className="flex flex-col w-full py-2">
-              <InputField label="Numero de teléfono" name="phoneNumber" register={register} errors={errors} />
+              <InputField
+                label="Número de teléfono"
+                name="phoneNumber"
+                register={register}
+                errors={errors}
+                countryPrefix="+504"
+              />
             </div>
 
             <div className="w-full flex flex-row gap-2">

@@ -1,7 +1,43 @@
+import { NAVIGATION_ROUTES_BRANCH_ADMIN } from "../routes"
+
 export const APP_ROLES = {
   superAdmin: "superadmin",
-  restaurantAdmin: "admin-restaurant"
+  restaurantAdmin: "admin-restaurant",
+  branchAdmin: "admin-sucursal"
 }
+
+export const welcomeCards = [
+  {
+    title: "Ver mis pedidos",
+    description: "Lista de pedidos actuales",
+    link: NAVIGATION_ROUTES_BRANCH_ADMIN.Dishes.path
+  },
+  {
+    title: "Ver mi menú",
+    description: "Visualiza y gestiona tu menú",
+    link: NAVIGATION_ROUTES_BRANCH_ADMIN.Menu.path
+  },
+  {
+    title: "Ver platillos",
+    description: "Explora y gestiona tus platillos",
+    link: NAVIGATION_ROUTES_BRANCH_ADMIN.Dishes.path
+  },
+  {
+    title: "Ver mi Cuenta",
+    description: "Consulta y administra tu cuenta",
+    link: NAVIGATION_ROUTES_BRANCH_ADMIN.Account.path
+  },
+  {
+    title: "Actualizar contraseña",
+    description: "Crea o actualiza tu contraseña",
+    link: NAVIGATION_ROUTES_BRANCH_ADMIN.Password.path
+  },
+  {
+    title: "Ver Notificaciones",
+    description: "Ver las ultimas actualizaciones",
+    link: NAVIGATION_ROUTES_BRANCH_ADMIN.Home.path
+  }
+]
 
 export const USER_ROLES = {
   kitchen: "kitchen",

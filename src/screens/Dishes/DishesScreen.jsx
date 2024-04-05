@@ -4,7 +4,7 @@ import { Affix, Breadcrumbs, CloseButton, Grid, Input, Pagination } from "@manti
 import Button from "../../components/Button"
 import { useNavigate, useLocation } from "react-router-dom"
 import { colors } from "../../theme/colors"
-import { NAVIGATION_ROUTES } from "../../routes"
+import { NAVIGATION_ROUTES_RES_ADMIN, NAVIGATION_ROUTES_BRANCH_ADMIN } from "../../routes"
 import BreadCrumbNavigation from "../../components/BreadCrumbNavigation"
 import { useDispatch, useSelector } from "react-redux"
 import {
@@ -21,6 +21,7 @@ import ItemCard from "../../components/ItemCard"
 import { Icon } from "../../components/Icon"
 import FilterPopover from "../../components/FilterPopover"
 import BackButton from "./components/BackButton"
+import { APP_ROLES } from "../../utils/constants"
 
 export default function Dishes() {
   const navigate = useNavigate()
@@ -56,7 +57,7 @@ export default function Dishes() {
   }, [page, dispatch, restaurant])
 
   const handleNewItem = () => {
-    navigate(NAVIGATION_ROUTES.Menu.submenu.Dishes.submenu.NewDish.path)
+    navigate(NAVIGATION_ROUTES_RES_ADMIN.Menu.submenu.Dishes.NewDish.path)
     setCardsSelected([])
   }
 
@@ -138,7 +139,20 @@ export default function Dishes() {
   }
 
   const handleClick = (id) => {
-    navigate(`${NAVIGATION_ROUTES.Menu.submenu.Dishes.path}/${id}`)
+    let route = ""
+
+    switch (user.role) {
+      case APP_ROLES.branchAdmin:
+        route = `${NAVIGATION_ROUTES_BRANCH_ADMIN.Dishes.path}/${id}`
+        break
+      case APP_ROLES.restaurantAdmin:
+        route = `${NAVIGATION_ROUTES_RES_ADMIN.Menu.submenu.Dishes.path}/${id}`
+        break
+      default:
+        break
+    }
+
+    navigate(route)
   }
 
   return (
@@ -147,11 +161,13 @@ export default function Dishes() {
         <div className="flex flex-row justify-between items-center pb-6">
           <div className="flex flex-row gap-x-3 items-center">
             <BackButton title="Platillos" />
-            <Button
-              text={"Nuevo Platillo"}
-              className={"text-white text-md px-3 py-2 bg-primary_button mb-0"}
-              onClick={handleNewItem}
-            />
+            {user.role !== APP_ROLES.branchAdmin && (
+              <Button
+                text={"Nuevo Platillo"}
+                className={"text-white text-md px-3 py-2 bg-primary_button mb-0"}
+                onClick={handleNewItem}
+              />
+            )}
           </div>
           <div>
             <Breadcrumbs>

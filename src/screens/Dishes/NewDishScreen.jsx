@@ -14,7 +14,7 @@ import BreadCrumbNavigation from "../../components/BreadCrumbNavigation"
 import { createDish } from "../../store/features/dishesSlice"
 import { newItemValidationSchema } from "../../utils/inputRules"
 import PreparationForm from "./PreparationForm"
-import { NAVIGATION_ROUTES } from "../../routes"
+import { NAVIGATION_ROUTES_RES_ADMIN } from "../../routes"
 import BackButton from "./components/BackButton"
 import { AdditionalForm } from "./AdditionalForm"
 import { convertToDecimal } from "../../utils"
@@ -120,7 +120,7 @@ export default function NewDish() {
       if (response.payload) {
         reset()
         setIsDataCleared(true)
-        navigate(NAVIGATION_ROUTES.Menu.submenu.Dishes.path)
+        navigate(NAVIGATION_ROUTES_RES_ADMIN.Menu.submenu.Dishes.path)
       }
     })
   }
@@ -159,7 +159,7 @@ export default function NewDish() {
                   reset()
                   localStorage.removeItem("draft")
                   toast.success("Información eliminada")
-                  navigate(NAVIGATION_ROUTES.Menu.submenu.Dishes.path)
+                  navigate(NAVIGATION_ROUTES_RES_ADMIN.Menu.submenu.Dishes.path)
                 }}
               />
               <Button

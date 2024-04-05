@@ -5,10 +5,12 @@ import { useLocation, useNavigate } from "react-router-dom"
 
 import BaseLayout from "../../components/BaseLayout"
 import Button from "../../components/Button"
-import { NAVIGATION_ROUTES } from "../../routes"
+import { NAVIGATION_ROUTES_RES_ADMIN } from "../../routes"
 import BreadCrumbNavigation from "../../components/BreadCrumbNavigation"
 import MenuTable from "./MenuTable"
 import { fetchMenus, selectAllMenus, updateMenu } from "../../store/features/menuSlice"
+import { APP_ROLES } from "../../utils/constants"
+import BackButton from "../Dishes/components/BackButton"
 
 export default function Menu() {
   const navigate = useNavigate()
@@ -24,13 +26,13 @@ export default function Menu() {
   const [cardsSelected, setCardsSelected] = useState([])
 
   const handleDishes = () => {
-    navigate(NAVIGATION_ROUTES.Menu.submenu.Dishes.path)
+    navigate(NAVIGATION_ROUTES_RES_ADMIN.Menu.submenu.Dishes.path)
   }
   const handleComplements = () => {
-    navigate(NAVIGATION_ROUTES.Menu.submenu.Complements.path)
+    navigate(NAVIGATION_ROUTES_RES_ADMIN.Menu.submenu.Complements.path)
   }
   const handleNewMenu = () => {
-    navigate(NAVIGATION_ROUTES.Menu.NewMenu.path)
+    navigate(NAVIGATION_ROUTES_RES_ADMIN.Menu.NewMenu.path)
   }
 
   //* Fetch menu data *//
@@ -83,19 +85,25 @@ export default function Menu() {
       <section>
         <div className="flex flex-row justify-between items-center pb-6">
           <div className="flex flex-row gap-x-3 items-center">
-            <h1 className="text-white-200 text-2xl font-semibold">Menu</h1>
-            <Button text={"Nuevo Menu"} className={"text-white text-md px-3 py-2 bg-primary_button"} onClick={handleNewMenu} />
+            <BackButton title="Menu" />
 
-            <Button
-              text={"Ver platillos"}
-              className={"text-white text-md px-3 py-2 bg-primary_button mb-0"}
-              onClick={handleDishes}
-            />
-            <Button
-              text={"Ver complementos"}
-              className={"text-white text-md px-3 py-2 bg-primary_button"}
-              onClick={handleComplements}
-            />
+            {user.role !== APP_ROLES.branchAdmin && (
+              <Button text="Nuevo Menu" className="text-white text-md px-3 py-2 bg-primary_button" onClick={handleNewMenu} />
+            )}
+            {user.role !== APP_ROLES.branchAdmin && (
+              <>
+                <Button
+                  text={"Ver platillos"}
+                  className={"text-white text-md px-3 py-2 bg-primary_button mb-0"}
+                  onClick={handleDishes}
+                />
+                <Button
+                  text={"Ver complementos"}
+                  className={"text-white text-md px-3 py-2 bg-primary_button"}
+                  onClick={handleComplements}
+                />
+              </>
+            )}
           </div>
           <div>
             <Breadcrumbs>

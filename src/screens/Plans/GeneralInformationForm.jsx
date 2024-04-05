@@ -5,7 +5,7 @@ import { IconPhoto } from "@tabler/icons-react"
 import toast from "react-hot-toast"
 import InputField from "../../components/Form/InputField"
 
-export const GeneralInformationForm = () => {
+export const GeneralInformationForm = ({ register, errors }) => {
   return (
     <Grid>
       <Grid.Col span={{ base: 12, md: 8, lg: 8 }}>

@@ -11,7 +11,7 @@ import { useSelector } from "react-redux"
 import toast from "react-hot-toast"
 import { bytesToMB } from "../../utils"
 import Button from "../../components/Button"
-import { NAVIGATION_ROUTES } from "../../routes"
+import { NAVIGATION_ROUTES_RES_ADMIN } from "../../routes"
 import { useNavigate } from "react-router-dom"
 
 export default function AdministrativeSettings() {
@@ -73,7 +73,7 @@ export default function AdministrativeSettings() {
           duration: 7000
         })
         window.location.reload()
-        navigate(NAVIGATION_ROUTES.Users.submenu.Settings.path)
+        navigate(NAVIGATION_ROUTES_RES_ADMIN.Settings.path)
       }
     } catch (error) {
       toast.error(`Fallo al actualizar el banner. Por favor intente de nuevo. ${response.message}`, {

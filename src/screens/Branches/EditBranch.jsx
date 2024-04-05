@@ -10,7 +10,7 @@ import TimeForm from "./TimeForm"
 import Button from "../../components/Button"
 import { getDepartmentNameById } from "../../utils"
 import branchesApi from "../../api/branchesApi"
-import { NAVIGATION_ROUTES } from "../../routes"
+import { NAVIGATION_ROUTES_RES_ADMIN } from "../../routes"
 
 export const EditBranch = ({ itemDetails, close }) => {
   const {
@@ -126,7 +126,7 @@ export const EditBranch = ({ itemDetails, close }) => {
             })
             reset()
             close()
-            navigate(NAVIGATION_ROUTES.Branches.path)
+            navigate(NAVIGATION_ROUTES_RES_ADMIN.Branches.path)
           }
         } else {
           toast.success("Sucursal actualizada exitosamente", {
@@ -134,7 +134,7 @@ export const EditBranch = ({ itemDetails, close }) => {
           })
           reset()
           close()
-          navigate(NAVIGATION_ROUTES.Branches.path)
+          navigate(NAVIGATION_ROUTES_RES_ADMIN.Branches.path)
         }
       }
       return response.data
@@ -168,7 +168,7 @@ export const EditBranch = ({ itemDetails, close }) => {
                 reset()
                 localStorage.removeItem("draft")
                 toast.success("Información eliminada")
-                navigate(NAVIGATION_ROUTES.Menu.submenu.Dishes.path)
+                navigate(NAVIGATION_ROUTES_RES_ADMIN.Menu.submenu.Dishes.path)
               }}
             />
             <Button

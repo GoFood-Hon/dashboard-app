@@ -11,9 +11,10 @@ import DashboardCard from "../../components/DashboardCard"
 import EditDishScreen from "./EditDishScreen"
 import BackButton from "./components/BackButton"
 import { useSelector } from "react-redux"
-import { dashboardCards } from "../../utils/constants"
+import { APP_ROLES, dashboardCards } from "../../utils/constants"
 
 export default function DishDetails() {
+  const user = useSelector((state) => state.user.value)
   const { dishId } = useParams()
   const location = useLocation()
   const restaurant = useSelector((state) => state.restaurants.restaurants)
@@ -96,13 +97,15 @@ export default function DishDetails() {
                   <div className="flex w-full flex-col">
                     <div className="flex flex-row justify-between w-full">
                       <p className="text-zinc-500 text-sm font-medium h-full w-full pt-20 p-8">{dishDetails?.description}</p>
-                      <a
-                        className="text-blue-600 text-base font-normal leading-normal cursor-pointer self-center"
-                        onClick={() => {
-                          openFormModal()
-                        }}>
-                        Editar
-                      </a>
+                      {user.role !== APP_ROLES.branchAdmin && (
+                        <a
+                          className="text-blue-600 text-base font-normal leading-normal cursor-pointer self-center"
+                          onClick={() => {
+                            openFormModal()
+                          }}>
+                          Editar
+                        </a>
+                      )}
                     </div>
                     <div className="flex flex-row justify-between">
                       <span className="text-sky-950 text-base font-bold leading-normal">

@@ -14,7 +14,7 @@ import dishesApi from "../../api/dishesApi"
 import { newMenuValidation } from "../../utils/inputRules"
 import { createMenu } from "../../store/features/menuSlice"
 import BackButton from "../Dishes/components/BackButton"
-import { NAVIGATION_ROUTES } from "../../routes"
+import { NAVIGATION_ROUTES_RES_ADMIN } from "../../routes"
 import BaseLayout from "../../components/BaseLayout"
 
 export default function NewMenu() {
@@ -109,7 +109,7 @@ export default function NewMenu() {
       if (response.payload) {
         reset()
         // localStorage.removeItem("draft")
-        navigate(NAVIGATION_ROUTES.Menu.path)
+        navigate(NAVIGATION_ROUTES_RES_ADMIN.Menu.path)
         setIsDataCleared(true)
       }
     })
@@ -148,7 +148,7 @@ export default function NewMenu() {
                 onClick={() => {
                   reset()
                   toast.success("Información eliminada")
-                  navigate(NAVIGATION_ROUTES.Menu.path)
+                  navigate(NAVIGATION_ROUTES_RES_ADMIN.Menu.path)
                 }}
               />
               <Button

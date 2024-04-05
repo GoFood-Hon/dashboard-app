@@ -4,9 +4,8 @@ import { useDispatch, useSelector } from "react-redux"
 import { useLocation, useNavigate } from "react-router-dom"
 import { Image, Popover, Transition } from "@mantine/core"
 import GoFoodLogo from "../assets/images/goFood.png"
-import { AUTH_NAVIGATION_ROUTES, SETTING_NAVIGATION_ROUTES } from "../routes"
+import { AUTH_NAVIGATION_ROUTES, NAVIGATION_ROUTES_BRANCH_ADMIN, SETTING_NAVIGATION_ROUTES } from "../routes"
 import toast from "react-hot-toast"
-import { AlarmIcon } from "../assets/icons/AlarmIcon"
 import { ConfigIcon } from "../assets/icons/ConfigIcon"
 import { fetchRestaurantData, selectImage } from "../store/features/restaurantSlice"
 import { APP_ROLES } from "../utils/constants"
@@ -43,14 +42,26 @@ export default function Header() {
   }
 
   const handleAccount = () => {
-    navigate(SETTING_NAVIGATION_ROUTES.Cuenta.path)
+    let route = ""
+    switch (user.role) {
+      case APP_ROLES.branchAdmin:
+        route = NAVIGATION_ROUTES_BRANCH_ADMIN.Account.path
+        break
+      case APP_ROLES.restaurantAdmin:
+        route = SETTING_NAVIGATION_ROUTES.Cuenta.path
+        break
+      default:
+        route = "/"
+        break
+    }
+    navigate(route)
     setOpened(false)
   }
 
   return (
     <div className="w-full p-4 flex flex-row justify-between text-black  bg-white dark:text-white dark:bg-slate-800 dark:border-slate-700 border border-slate-200 z-20 fixed">
       <div className="flex flex-row">
-        <div className={`${user.role === "admin-restaurant" ? "border-r-2 border-r-gray-300 pr-4" : null}`}>
+        <div className={`cursor-pointer ${user.role === "admin-restaurant" ? "border-r-2 border-r-gray-300 pr-4" : null}`}>
           <Image
             src={GoFoodLogo}
             h={50}
@@ -61,7 +72,7 @@ export default function Header() {
           />
         </div>
         <div className="pl-1">
-          {user.role === "admin-restaurant" ? (
+          {user.role !== APP_ROLES.superAdmin ? (
             <Image
               src={imgUrl}
               h={50}
@@ -73,12 +84,10 @@ export default function Header() {
         </div>
       </div>
       <div className="flex flex-row text-sm items-center">
-        <span className="mx-1 hover:bg-light_selected_element p-2 rounded-full cursor-pointer duration-500 dark:hover:bg-dark_selected_element">
-          {/* <AlarmIcon /> */}
-        </span>
+        <span className="mx-1 hover:bg-light_selected_element p-2 rounded-full cursor-pointer duration-500 dark:hover:bg-dark_selected_element"></span>
         <span
           className="hover:bg-light_selected_element p-2 rounded-full cursor-pointer duration-500 dark:hover:bg-dark_selected_element"
-          onClick={() => navigate(SETTING_NAVIGATION_ROUTES.General.path)}>
+          onClick={handleAccount}>
           <ConfigIcon />
         </span>
         <div className="flex flex-col items-end px-3">

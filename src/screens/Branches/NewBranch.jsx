@@ -9,7 +9,7 @@ import { useSelector } from "react-redux"
 import toast from "react-hot-toast"
 
 import { newBranchValidation } from "../../utils/inputRules"
-import { NAVIGATION_ROUTES } from "../../routes"
+import { NAVIGATION_ROUTES_RES_ADMIN } from "../../routes"
 import Button from "../../components/Button"
 import GeneralInformationForm from "./GeneralInformationForm"
 import LocationForm from "./LocationForm"
@@ -124,7 +124,7 @@ export default function NewBranch() {
           toast.success("Sucursal creada exitosamente", {
             duration: 7000
           })
-          navigate(NAVIGATION_ROUTES.Branches.path)
+          navigate(NAVIGATION_ROUTES_RES_ADMIN.Branches.path)
         }
       }
       return response.data
@@ -169,7 +169,7 @@ export default function NewBranch() {
                   reset()
                   localStorage.removeItem("draft")
                   toast.success("Información eliminada")
-                  navigate(NAVIGATION_ROUTES.Menu.submenu.Dishes.path)
+                  navigate(NAVIGATION_ROUTES_RES_ADMIN.Menu.submenu.Dishes.path)
                 }}
               />
               <Button

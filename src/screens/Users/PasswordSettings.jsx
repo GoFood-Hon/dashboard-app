@@ -12,8 +12,13 @@ import { resetPasswordValidation } from "../../utils/inputRules"
 import toast from "react-hot-toast"
 import authApi from "../../api/authApi"
 import { useNavigate } from "react-router-dom"
+import { useSelector } from "react-redux"
+import { APP_ROLES } from "../../utils/constants"
+import BackButton from "../Dishes/components/BackButton"
 
 export default function PasswordSettings() {
+  const user = useSelector((state) => state.user.value)
+
   const navigate = useNavigate()
   const {
     register,
@@ -51,11 +56,11 @@ export default function PasswordSettings() {
   return (
     <BaseLayout>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="pl-[200px]">
+        <div className={`${user.role !== APP_ROLES.branchAdmin && "pl-[200px]"}`}>
           <section>
             <div className="flex flex-row justify-between items-center pb-6">
               <div className="flex flex-row gap-x-3 items-center">
-                <h1 className="text-white-200 text-2xl font-semibold">Contraseña</h1>
+                <BackButton title="Contraseña" />
               </div>
               <div>
                 <Breadcrumbs>
@@ -68,7 +73,7 @@ export default function PasswordSettings() {
             <Grid my={20}>
               <Grid.Col span={{ sm: 12 }}>
                 <InputField
-                  label="Ingresar nueva contraseña"
+                  label="Ingresar contraseña actual"
                   name="currentPassword"
                   register={register}
                   errors={errors}
