@@ -1,7 +1,7 @@
 import React from "react"
 import {
   AUTH_NAVIGATION_ROUTES,
-  NAVIGATION_ROUTES,
+  NAVIGATION_ROUTES_RES_ADMIN,
   NAVIGATION_ROUTES_BRANCH_ADMIN,
   NAVIGATION_ROUTES_SUPER_ADMIN,
   SETTING_NAVIGATION_ROUTES
@@ -89,7 +89,68 @@ function App() {
       case APP_ROLES.restaurantAdmin:
         return (
           <>
-            <Route path={NAVIGATION_ROUTES.Pedidos.path} element={<Orders />} />
+            {/* Main routes */}
+
+            <Route path={NAVIGATION_ROUTES_RES_ADMIN.Dashboard.path} element={<Home />} />
+
+            <Route path={NAVIGATION_ROUTES_RES_ADMIN.Pedidos.path} element={<Orders />} />
+
+            <Route path={NAVIGATION_ROUTES_RES_ADMIN.Pedidos.OrderDetails.path} element={<OrderDetails />} />
+
+            <Route path={NAVIGATION_ROUTES_RES_ADMIN.Menu.path} element={<Menu />} />
+
+            <Route path={NAVIGATION_ROUTES_RES_ADMIN.Menu.MenuDetails.path} element={<MenuDetails />} />
+
+            <Route path={NAVIGATION_ROUTES_RES_ADMIN.Menu.NewMenu.path} element={<NewMenu />} />
+
+            <Route path={NAVIGATION_ROUTES_RES_ADMIN.Menu.submenu.Dishes.path} element={<Dishes />} />
+
+            <Route path={NAVIGATION_ROUTES_RES_ADMIN.Menu.submenu.Dishes.DishDetails.path} element={<DishDetails />} />
+
+            <Route path={NAVIGATION_ROUTES_RES_ADMIN.Menu.submenu.Dishes.NewDish.path} element={<NewDish />} />
+
+            <Route path={NAVIGATION_ROUTES_RES_ADMIN.Menu.submenu.Complements.path} element={<Complements />} />
+
+            <Route
+              path={NAVIGATION_ROUTES_RES_ADMIN.Menu.submenu.Complements.ComplementDetails.path}
+              element={<ComplementsDetails />}
+            />
+
+            <Route path={NAVIGATION_ROUTES_RES_ADMIN.Menu.submenu.Complements.NewComplement.path} element={<NewComplement />} />
+
+            <Route path={NAVIGATION_ROUTES_RES_ADMIN.Transactions.path} element={<Transactions />} />
+
+            <Route path={NAVIGATION_ROUTES_RES_ADMIN.Branches.path} element={<Branches />} />
+
+            <Route path={NAVIGATION_ROUTES_RES_ADMIN.Branches.NewBranch.path} element={<NewBranch />} />
+
+            <Route path={NAVIGATION_ROUTES_RES_ADMIN.Branches.BranchDetail.path} element={<BranchesDetails />} />
+
+            <Route path={NAVIGATION_ROUTES_RES_ADMIN.Users.path} element={<Users />} />
+
+            <Route path={NAVIGATION_ROUTES_RES_ADMIN.Users.UserDetails.path} element={<UserDetails />} />
+
+            <Route path={NAVIGATION_ROUTES_RES_ADMIN.Users.NewUser.path} element={<NewUser />} />
+
+            <Route path={NAVIGATION_ROUTES_RES_ADMIN.Settings.path} element={<GeneralSettings />} />
+
+            {/* Settings Routes */}
+
+            <Route path={SETTING_NAVIGATION_ROUTES.General.path} element={<GeneralSettings />} />
+
+            <Route path={SETTING_NAVIGATION_ROUTES.Cuenta.path} element={<AccountSettings />} />
+
+            <Route path={SETTING_NAVIGATION_ROUTES.Password.path} element={<PasswordSettings />} />
+
+            <Route path={SETTING_NAVIGATION_ROUTES.Business_btn.path} element={<BusinessSettings />} />
+
+            <Route path={SETTING_NAVIGATION_ROUTES.Promotions.path} element={<CouponsSettings />} />
+
+            <Route path={SETTING_NAVIGATION_ROUTES.Bank.path} element={<BankSettings />} />
+
+            <Route path={SETTING_NAVIGATION_ROUTES.Plan.path} element={<PlanSettings />} />
+
+            <Route path={SETTING_NAVIGATION_ROUTES.Administrative.path} element={<AdministrativeSettings />} />
           </>
         )
       case APP_ROLES.branchAdmin:
@@ -135,9 +196,9 @@ function App() {
 
           <Route path={"/unauthorized"} element={<Navigate to="/orders" />} />
 
-          <Route path={NAVIGATION_ROUTES.Dashboard.path} element={<Home />} />
+          <Route path={NAVIGATION_ROUTES_RES_ADMIN.Dashboard.path} element={<Home />} />
 
-          <Route path={NAVIGATION_ROUTES.Transactions.path} element={<Transactions />} />
+          <Route path={NAVIGATION_ROUTES_RES_ADMIN.Transactions.path} element={<Transactions />} />
 
           <Route path={AUTH_NAVIGATION_ROUTES.Logout.path} element={<Logout />} />
         </Route>

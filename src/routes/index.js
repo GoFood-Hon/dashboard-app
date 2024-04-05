@@ -33,10 +33,8 @@ export const NAVIGATION_ROUTES_RES_ADMIN = {
           label: "Detalles del platillo",
           path: "/menu/platillos/:dishId"
         },
-        submenu: {
-          NewDish: {
-            path: "/menu/platillos/nuevoPlatillo"
-          }
+        NewDish: {
+          path: "/menu/platillos/nuevoPlatillo"
         }
       },
       Complements: {
@@ -47,10 +45,8 @@ export const NAVIGATION_ROUTES_RES_ADMIN = {
           label: "Detalles del complemento",
           path: "/menu/complementos/:complementId"
         },
-        submenu: {
-          NewComplement: {
-            path: "/menu/complementos/nuevoComplemento"
-          }
+        NewComplement: {
+          path: "/menu/complementos/nuevoComplemento"
         }
       }
     }
@@ -82,13 +78,12 @@ export const NAVIGATION_ROUTES_RES_ADMIN = {
     },
     NewUser: {
       path: "/usuarios/nuevoUsuario"
-    },
-    submenu: {
-      Settings: {
-        label: "Configuraciones",
-        path: "/usuarios/configuraciones/"
-      }
     }
+  },
+  Settings: {
+    label: "Configuraciones",
+    icon: "setting",
+    path: "/usuarios/configuraciones/"
   }
 }
 

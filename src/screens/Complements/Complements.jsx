@@ -75,7 +75,7 @@ export default function Complements() {
   }
 
   const handleNewItem = () => {
-    navigate(NAVIGATION_ROUTES_RES_ADMIN.Menu.submenu.Complements.submenu.NewComplement.path)
+    navigate(NAVIGATION_ROUTES_RES_ADMIN.Menu.submenu.Complements.NewComplement.path)
     setCardsSelected([])
   }
 

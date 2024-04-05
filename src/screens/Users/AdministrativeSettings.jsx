@@ -73,7 +73,7 @@ export default function AdministrativeSettings() {
           duration: 7000
         })
         window.location.reload()
-        navigate(NAVIGATION_ROUTES_RES_ADMIN.Users.submenu.Settings.path)
+        navigate(NAVIGATION_ROUTES_RES_ADMIN.Settings.path)
       }
     } catch (error) {
       toast.error(`Fallo al actualizar el banner. Por favor intente de nuevo. ${response.message}`, {

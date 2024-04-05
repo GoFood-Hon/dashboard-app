@@ -16,7 +16,7 @@ function AuthLayout() {
   const dispatch = useDispatch()
   const [loading, setLoading] = useState(true)
   const { pathname } = location
-  const shouldRenderSettings = pathname.includes(NAVIGATION_ROUTES_RES_ADMIN.Users.submenu.Settings.path)
+  const shouldRenderSettings = pathname.includes(NAVIGATION_ROUTES_RES_ADMIN.Settings.path)
   const shouldRenderSideBar = pathname.includes("/unauthorized")
 
   useEffect(() => {

@@ -57,7 +57,7 @@ export default function Dishes() {
   }, [page, dispatch, restaurant])
 
   const handleNewItem = () => {
-    navigate(NAVIGATION_ROUTES_RES_ADMIN.Menu.submenu.Dishes.submenu.NewDish.path)
+    navigate(NAVIGATION_ROUTES_RES_ADMIN.Menu.submenu.Dishes.NewDish.path)
     setCardsSelected([])
   }
 
