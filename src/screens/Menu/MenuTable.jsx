@@ -14,7 +14,7 @@ import { ITEMS_PER_PAGE } from "../../utils/paginationConfig"
 import { formatDistanceToNow } from "date-fns"
 import { colors } from "../../theme/colors"
 import { useNavigate } from "react-router-dom"
-import { NAVIGATION_ROUTES, NAVIGATION_ROUTES_SUPER_ADMIN } from "../../routes"
+import { NAVIGATION_ROUTES_RES_ADMIN, NAVIGATION_ROUTES_SUPER_ADMIN } from "../../routes"
 import { formatDateDistanceToNow } from "../../utils"
 
 export default function MenuTable({ refreshPage, items, handleDisableSelected, screenType }) {
@@ -30,11 +30,11 @@ export default function MenuTable({ refreshPage, items, handleDisableSelected, s
 
   const handleClick = (id) => {
     if (screenType === "menuScreen") {
-      navigate(`${NAVIGATION_ROUTES.Menu.path}/${id}`)
+      navigate(`${NAVIGATION_ROUTES_RES_ADMIN.Menu.path}/${id}`)
     } else if (screenType === "usersScreen") {
-      navigate(`${NAVIGATION_ROUTES.Users.path}/${id}`)
+      navigate(`${NAVIGATION_ROUTES_RES_ADMIN.Users.path}/${id}`)
     } else if (screenType === "ordersScreen") {
-      navigate(`${NAVIGATION_ROUTES.Pedidos.path}/${id}`)
+      navigate(`${NAVIGATION_ROUTES_RES_ADMIN.Pedidos.path}/${id}`)
     } else if (screenType === "adminUserScreen") {
       navigate(`${NAVIGATION_ROUTES_SUPER_ADMIN.Users.path}/${id}`)
     } else if (screenType === "planScreen") {

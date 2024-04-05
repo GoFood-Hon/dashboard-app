@@ -5,7 +5,7 @@ import { useLocation, useNavigate } from "react-router-dom"
 
 import BaseLayout from "../../components/BaseLayout"
 import Button from "../../components/Button"
-import { NAVIGATION_ROUTES } from "../../routes"
+import { NAVIGATION_ROUTES_RES_ADMIN } from "../../routes"
 import BreadCrumbNavigation from "../../components/BreadCrumbNavigation"
 import MenuTable from "./MenuTable"
 import { fetchMenus, selectAllMenus, updateMenu } from "../../store/features/menuSlice"
@@ -26,13 +26,13 @@ export default function Menu() {
   const [cardsSelected, setCardsSelected] = useState([])
 
   const handleDishes = () => {
-    navigate(NAVIGATION_ROUTES.Menu.submenu.Dishes.path)
+    navigate(NAVIGATION_ROUTES_RES_ADMIN.Menu.submenu.Dishes.path)
   }
   const handleComplements = () => {
-    navigate(NAVIGATION_ROUTES.Menu.submenu.Complements.path)
+    navigate(NAVIGATION_ROUTES_RES_ADMIN.Menu.submenu.Complements.path)
   }
   const handleNewMenu = () => {
-    navigate(NAVIGATION_ROUTES.Menu.NewMenu.path)
+    navigate(NAVIGATION_ROUTES_RES_ADMIN.Menu.NewMenu.path)
   }
 
   //* Fetch menu data *//

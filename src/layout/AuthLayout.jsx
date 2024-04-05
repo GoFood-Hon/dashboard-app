@@ -6,7 +6,7 @@ import authUtils from "../utils/authUtils"
 import LoadingCircle from "../components/LoadingCircle"
 import { useDispatch } from "react-redux"
 import { setUser } from "../store/features/userSlice"
-import { AUTH_NAVIGATION_ROUTES, NAVIGATION_ROUTES } from "../routes"
+import { AUTH_NAVIGATION_ROUTES, NAVIGATION_ROUTES_RES_ADMIN } from "../routes"
 import SettingsSidebar from "../screens/Users/SettingsSidebar"
 
 function AuthLayout() {
@@ -16,7 +16,7 @@ function AuthLayout() {
   const dispatch = useDispatch()
   const [loading, setLoading] = useState(true)
   const { pathname } = location
-  const shouldRenderSettings = pathname.includes(NAVIGATION_ROUTES.Users.submenu.Settings.path)
+  const shouldRenderSettings = pathname.includes(NAVIGATION_ROUTES_RES_ADMIN.Users.submenu.Settings.path)
   const shouldRenderSideBar = pathname.includes("/unauthorized")
 
   useEffect(() => {

@@ -4,7 +4,7 @@ import { Icon } from "./Icon"
 import toast from "react-hot-toast"
 import {
   AUTH_NAVIGATION_ROUTES,
-  NAVIGATION_ROUTES,
+  NAVIGATION_ROUTES_RES_ADMIN,
   NAVIGATION_ROUTES_BRANCH_ADMIN,
   NAVIGATION_ROUTES_SUPER_ADMIN
 } from "../routes"
@@ -25,7 +25,7 @@ export default function SideBar() {
 
   useEffect(() => {
     const roleRoutesMap = {
-      [APP_ROLES.restaurantAdmin]: NAVIGATION_ROUTES,
+      [APP_ROLES.restaurantAdmin]: NAVIGATION_ROUTES_RES_ADMIN,
       [APP_ROLES.superAdmin]: NAVIGATION_ROUTES_SUPER_ADMIN,
       [APP_ROLES.branchAdmin]: NAVIGATION_ROUTES_BRANCH_ADMIN
     }
@@ -63,7 +63,7 @@ export default function SideBar() {
   }
 
   const roleRoutesMap = {
-    [APP_ROLES.restaurantAdmin]: NAVIGATION_ROUTES,
+    [APP_ROLES.restaurantAdmin]: NAVIGATION_ROUTES_RES_ADMIN,
     [APP_ROLES.superAdmin]: NAVIGATION_ROUTES_SUPER_ADMIN,
     [APP_ROLES.branchAdmin]: NAVIGATION_ROUTES_BRANCH_ADMIN
   }

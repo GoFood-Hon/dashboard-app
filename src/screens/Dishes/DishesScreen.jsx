@@ -4,7 +4,7 @@ import { Affix, Breadcrumbs, CloseButton, Grid, Input, Pagination } from "@manti
 import Button from "../../components/Button"
 import { useNavigate, useLocation } from "react-router-dom"
 import { colors } from "../../theme/colors"
-import { NAVIGATION_ROUTES, NAVIGATION_ROUTES_BRANCH_ADMIN } from "../../routes"
+import { NAVIGATION_ROUTES_RES_ADMIN, NAVIGATION_ROUTES_BRANCH_ADMIN } from "../../routes"
 import BreadCrumbNavigation from "../../components/BreadCrumbNavigation"
 import { useDispatch, useSelector } from "react-redux"
 import {
@@ -57,7 +57,7 @@ export default function Dishes() {
   }, [page, dispatch, restaurant])
 
   const handleNewItem = () => {
-    navigate(NAVIGATION_ROUTES.Menu.submenu.Dishes.submenu.NewDish.path)
+    navigate(NAVIGATION_ROUTES_RES_ADMIN.Menu.submenu.Dishes.submenu.NewDish.path)
     setCardsSelected([])
   }
 
@@ -146,7 +146,7 @@ export default function Dishes() {
         route = `${NAVIGATION_ROUTES_BRANCH_ADMIN.Dishes.path}/${id}`
         break
       case APP_ROLES.restaurantAdmin:
-        route = `${NAVIGATION_ROUTES.Menu.submenu.Dishes.path}/${id}`
+        route = `${NAVIGATION_ROUTES_RES_ADMIN.Menu.submenu.Dishes.path}/${id}`
         break
       default:
         break

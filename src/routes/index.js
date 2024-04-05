@@ -1,4 +1,4 @@
-export const NAVIGATION_ROUTES = {
+export const NAVIGATION_ROUTES_RES_ADMIN = {
   Dashboard: {
     label: "Inicio",
     path: "/",

@@ -17,7 +17,7 @@ import LoadingCircle from "../../components/LoadingCircle"
 import ItemCard from "../../components/ItemCard"
 import { Icon } from "../../components/Icon"
 
-import { NAVIGATION_ROUTES } from "../../routes"
+import { NAVIGATION_ROUTES_RES_ADMIN } from "../../routes"
 import Button from "../../components/Button"
 import { colors } from "../../theme/colors"
 import FilterPopover from "../../components/FilterPopover"
@@ -75,7 +75,7 @@ export default function Complements() {
   }
 
   const handleNewItem = () => {
-    navigate(NAVIGATION_ROUTES.Menu.submenu.Complements.submenu.NewComplement.path)
+    navigate(NAVIGATION_ROUTES_RES_ADMIN.Menu.submenu.Complements.submenu.NewComplement.path)
     setCardsSelected([])
   }
 
@@ -145,7 +145,7 @@ export default function Complements() {
   }
 
   const handleClick = (id) => {
-    navigate(`${NAVIGATION_ROUTES.Menu.submenu.Complements.path}/${id}`)
+    navigate(`${NAVIGATION_ROUTES_RES_ADMIN.Menu.submenu.Complements.path}/${id}`)
   }
 
   const handleTabChange = (newTab) => {

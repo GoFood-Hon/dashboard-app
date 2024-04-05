@@ -96,7 +96,7 @@ export const NewPlan = () => {
                 onClick={() => {
                   reset()
                   toast.success("Información eliminada")
-                  navigate(NAVIGATION_ROUTES.Menu.path)
+                  navigate(NAVIGATION_ROUTES_RES_ADMIN.Menu.path)
                 }}
               />
               <Button

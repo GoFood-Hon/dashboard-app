@@ -15,7 +15,7 @@ import toast from "react-hot-toast"
 import { yupResolver } from "@hookform/resolvers/yup"
 import { createComplement } from "../../store/features/complementsSlice"
 import BackButton from "../Dishes/components/BackButton"
-import { NAVIGATION_ROUTES } from "../../routes"
+import { NAVIGATION_ROUTES_RES_ADMIN } from "../../routes"
 
 export default function NewComplement() {
   const location = useLocation()
@@ -90,7 +90,7 @@ export default function NewComplement() {
     dispatch(createComplement({ data, restaurantId })).then((response) => {
       if (response.payload) {
         reset()
-        navigate(NAVIGATION_ROUTES.Menu.submenu.Complements.path)
+        navigate(NAVIGATION_ROUTES_RES_ADMIN.Menu.submenu.Complements.path)
         setIsDataCleared(true)
       }
     })

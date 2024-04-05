@@ -10,7 +10,7 @@ import BreadCrumbNavigation from "../../components/BreadCrumbNavigation"
 import GeneralInformationForm from "./GeneralInformationForm"
 import SucursalSettings from "./SucursalSettings"
 import Button from "../../components/Button"
-import { NAVIGATION_ROUTES } from "../../routes"
+import { NAVIGATION_ROUTES_RES_ADMIN } from "../../routes"
 import { userValidation } from "../../utils/inputRules"
 import userApi from "../../api/userApi"
 import BackButton from "../Dishes/components/BackButton"
@@ -61,7 +61,7 @@ export default function NewUser() {
         })
         reset()
         setIsDataCleared(true)
-        navigate(NAVIGATION_ROUTES.Users.path)
+        navigate(NAVIGATION_ROUTES_RES_ADMIN.Users.path)
       }
     } catch (error) {
       toast.error(`Fallo al crear un nuevo usuario. Por favor intente de nuevo.`, {
@@ -147,7 +147,7 @@ export default function NewUser() {
                 className={"text-xs border border-red-400 text-red-400 bg-white"}
                 onClick={() => {
                   toast.success("Información eliminada")
-                  navigate(NAVIGATION_ROUTES.Users.path)
+                  navigate(NAVIGATION_ROUTES_RES_ADMIN.Users.path)
                 }}
               />
               <Button

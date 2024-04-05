@@ -18,7 +18,7 @@ import {
 import LoadingCircle from "../../components/LoadingCircle"
 import ItemCard from "../../components/ItemCard"
 import { colors } from "../../theme/colors"
-import { NAVIGATION_ROUTES } from "../../routes"
+import { NAVIGATION_ROUTES_RES_ADMIN } from "../../routes"
 
 export default function Branches() {
   const navigate = useNavigate()
@@ -54,7 +54,7 @@ export default function Branches() {
   }, [page, dispatch, restaurant])
 
   const handleNewItem = () => {
-    navigate(NAVIGATION_ROUTES.Branches.NewBranch.path)
+    navigate(NAVIGATION_ROUTES_RES_ADMIN.Branches.NewBranch.path)
     setCardsSelected([])
   }
 
@@ -134,7 +134,7 @@ export default function Branches() {
   }
 
   const handleClick = (id) => {
-    navigate(`${NAVIGATION_ROUTES.Branches.path}/${id}`)
+    navigate(`${NAVIGATION_ROUTES_RES_ADMIN.Branches.path}/${id}`)
   }
   return (
     <BaseLayout>
