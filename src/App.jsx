@@ -4,7 +4,8 @@ import {
   NAVIGATION_ROUTES_RES_ADMIN,
   NAVIGATION_ROUTES_BRANCH_ADMIN,
   NAVIGATION_ROUTES_SUPER_ADMIN,
-  SETTING_NAVIGATION_ROUTES
+  SETTING_NAVIGATION_ROUTES,
+  NAVIGATION_ROUTES_KITCHEN
 } from "./routes"
 import { Navigate, Route, RouterProvider, createBrowserRouter, createRoutesFromElements } from "react-router-dom"
 import AuthLayout from "./layout/AuthLayout"
@@ -56,6 +57,9 @@ import { NotFound } from "./screens/NotFound"
 import { WelcomeScreen } from "./screens/Welcome/WelcomeScreen"
 import { NewPlan } from "./screens/Plans/NewPlan"
 import { PlanDetails } from "./screens/Plans/PlanDetails"
+import { KitchenOrder } from "./screens/Orders/KitchenOrder"
+import { OrderHistory } from "./screens/Orders/OrderHistory"
+import { OrderHistoryDetails } from "./screens/Orders/OrderHistoryDetails"
 
 function App() {
   const userRole = useSelector((state) => state.user.value.role)
@@ -175,6 +179,21 @@ function App() {
             <Route path={NAVIGATION_ROUTES_BRANCH_ADMIN.Menu.MenuDetails.path} element={<MenuDetails />} />
           </>
         )
+      case APP_ROLES.kitchenUser:
+        return (
+          <>
+            <Route path={NAVIGATION_ROUTES_KITCHEN.Home.path} element={<WelcomeScreen />} />
+
+            <Route path={NAVIGATION_ROUTES_KITCHEN.Orders.path} element={<KitchenOrder />} />
+
+            <Route path={NAVIGATION_ROUTES_KITCHEN.Orders.OrderDetails.path} element={<OrderDetails />} />
+
+            <Route path={NAVIGATION_ROUTES_KITCHEN.OrderHistory.path} element={<OrderHistory />} />
+
+            <Route path={NAVIGATION_ROUTES_KITCHEN.OrderHistory.OrderHistoryDetails.path} element={<OrderHistoryDetails />} />
+          </>
+        )
+
       default:
         return <Route path="*" element={<NotFound />} />
     }
@@ -187,7 +206,7 @@ function App() {
           <Route
             element={
               <PrivateRoute
-                allowedRoles={[APP_ROLES.superAdmin, APP_ROLES.restaurantAdmin, APP_ROLES.branchAdmin]}
+                allowedRoles={[APP_ROLES.superAdmin, APP_ROLES.restaurantAdmin, APP_ROLES.branchAdmin, APP_ROLES.kitchenUser]}
                 userRole={userRole}
               />
             }>

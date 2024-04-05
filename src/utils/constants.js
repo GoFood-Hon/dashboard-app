@@ -3,7 +3,8 @@ import { NAVIGATION_ROUTES_BRANCH_ADMIN } from "../routes"
 export const APP_ROLES = {
   superAdmin: "superadmin",
   restaurantAdmin: "admin-restaurant",
-  branchAdmin: "admin-sucursal"
+  branchAdmin: "admin-sucursal",
+  kitchenUser: "kitchen"
 }
 
 export const welcomeCards = [

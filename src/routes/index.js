@@ -247,6 +247,32 @@ export const NAVIGATION_ROUTES_BRANCH_ADMIN = {
   }
 }
 
+export const NAVIGATION_ROUTES_KITCHEN = {
+  Home: {
+    label: "Inicio",
+    path: "/",
+    icon: "dashboard"
+  },
+  Orders: {
+    label: "Pedidos",
+    path: "/pedidos",
+    icon: "shoppingCart",
+    OrderDetails: {
+      label: "Detalles del pedido",
+      path: "/pedidos/:orderId"
+    }
+  },
+  OrderHistory: {
+    label: "Historial",
+    path: "/historialDelPedido",
+    icon: "invoice",
+    OrderHistoryDetails: {
+      label: "Detalles del historial del pedido",
+      path: "/pedidos/:orderId"
+    }
+  }
+}
+
 export const AUTH_NAVIGATION_ROUTES = {
   Login: {
     label: "Login",

@@ -6,7 +6,8 @@ import {
   AUTH_NAVIGATION_ROUTES,
   NAVIGATION_ROUTES_RES_ADMIN,
   NAVIGATION_ROUTES_BRANCH_ADMIN,
-  NAVIGATION_ROUTES_SUPER_ADMIN
+  NAVIGATION_ROUTES_SUPER_ADMIN,
+  NAVIGATION_ROUTES_KITCHEN
 } from "../routes"
 import NavigationItem from "./NavigationItem"
 import { AlarmIcon } from "../assets/icons/AlarmIcon"
@@ -65,7 +66,8 @@ export default function SideBar() {
   const roleRoutesMap = {
     [APP_ROLES.restaurantAdmin]: NAVIGATION_ROUTES_RES_ADMIN,
     [APP_ROLES.superAdmin]: NAVIGATION_ROUTES_SUPER_ADMIN,
-    [APP_ROLES.branchAdmin]: NAVIGATION_ROUTES_BRANCH_ADMIN
+    [APP_ROLES.branchAdmin]: NAVIGATION_ROUTES_BRANCH_ADMIN,
+    [APP_ROLES.kitchenUser]: NAVIGATION_ROUTES_KITCHEN
   }
 
   const selectedRoutes = roleRoutesMap[user.role] || NAVIGATION_ROUTES_SUPER_ADMIN
