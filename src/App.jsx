@@ -193,13 +193,7 @@ function App() {
             }>
             {renderRoutesForRole(userRole)}
           </Route>
-
           <Route path={"/unauthorized"} element={<Navigate to="/orders" />} />
-
-          <Route path={NAVIGATION_ROUTES_RES_ADMIN.Dashboard.path} element={<Home />} />
-
-          <Route path={NAVIGATION_ROUTES_RES_ADMIN.Transactions.path} element={<Transactions />} />
-
           <Route path={AUTH_NAVIGATION_ROUTES.Logout.path} element={<Logout />} />
         </Route>
         <Route element={<UnauthenticatedLayout />}>
