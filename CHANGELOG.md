@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.6](https://github.com/GoFood-Hon/dashboard-app/compare/v0.0.5...v0.0.6) (2024-04-05)
+
+
+### Features
+
+* added logo to header and redirect to account ([88b1b9a](https://github.com/GoFood-Hon/dashboard-app/commit/88b1b9afb7c5266eb6d3bba1ef34aa6238c6b5cd))
+* added welcome screen ([91206d9](https://github.com/GoFood-Hon/dashboard-app/commit/91206d952cb07688efb368623bddcac18332e2fd))
+* config added for new role ([b470ae8](https://github.com/GoFood-Hon/dashboard-app/commit/b470ae85ba999e9ad61add0c9f2453c6984f93b2))
+* dishes and menus wired correctly ([344ec25](https://github.com/GoFood-Hon/dashboard-app/commit/344ec2583178faa38ed89f098d7c79a3087dd100))
+* my account working good ([8718b6e](https://github.com/GoFood-Hon/dashboard-app/commit/8718b6ee5de15fd6a1fc714e59f6227f0f99a321))
+* new structure for res admins ([16841ab](https://github.com/GoFood-Hon/dashboard-app/commit/16841abb2fafb24491eca57f008c7e04032d74cc))
+* routes for sucursalAdmin ([75d53e7](https://github.com/GoFood-Hon/dashboard-app/commit/75d53e7449e6dddf21eccce8c71baa49401ffa58))
+* updated routes of my profile for branch admin ([5fdbf34](https://github.com/GoFood-Hon/dashboard-app/commit/5fdbf34bfb7d7507b3b11b48087aed79ba55d2ca))
+
+
+### Bug Fixes
+
+* changed label text of current password input ([75ffcae](https://github.com/GoFood-Hon/dashboard-app/commit/75ffcae9bd32eb5eccfc6e33591abedbb0e672e5))
+* Dishes redirecting correctly ([47aee57](https://github.com/GoFood-Hon/dashboard-app/commit/47aee57d264ba95e6cfbd0b1460523567fb1b888))
+
 ### [0.0.5](https://github.com/GoFood-Hon/dashboard-app/compare/v0.0.4...v0.0.5) (2024-03-23)
 
 ### [0.0.4](https://github.com/GoFood-Hon/dashboard-app/compare/v0.0.3...v0.0.4) (2024-03-23)
