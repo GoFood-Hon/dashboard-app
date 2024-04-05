@@ -8,15 +8,20 @@ import Button from "../../components/Button"
 import plansApi from "../../api/plansApi"
 import toast from "react-hot-toast"
 import MenuTable from "../Menu/MenuTable"
+import { NAVIGATION_ROUTES_SUPER_ADMIN } from "../../routes"
 
 export const Plans = () => {
+  const navigate = useNavigate()
+
   const location = useLocation()
   const dispatch = useDispatch()
 
   const [plans, setPlans] = useState([])
   const [cardsSelected, setCardsSelected] = useState([])
 
-  const handleNewPlan = () => {}
+  const handleNewPlan = () => {
+    navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Plans.NewPlan.path)
+  }
 
   //* Fetch plans data *//
   useEffect(() => {

@@ -61,7 +61,7 @@ export default function Header() {
   return (
     <div className="w-full p-4 flex flex-row justify-between text-black  bg-white dark:text-white dark:bg-slate-800 dark:border-slate-700 border border-slate-200 z-20 fixed">
       <div className="flex flex-row">
-        <div className={`${user.role === "admin-restaurant" ? "border-r-2 border-r-gray-300 pr-4" : null}`}>
+        <div className={`cursor-pointer ${user.role === "admin-restaurant" ? "border-r-2 border-r-gray-300 pr-4" : null}`}>
           <Image
             src={GoFoodLogo}
             h={50}

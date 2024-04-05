@@ -10,6 +10,7 @@ import BaseLayout from "../../components/BaseLayout"
 import BackButton from "../Dishes/components/BackButton"
 import BreadCrumbNavigation from "../../components/BreadCrumbNavigation"
 import Button from "../../components/Button"
+import { newMenuValidation } from "../../utils/inputRules"
 
 export const NewPlan = () => {
   const location = useLocation()

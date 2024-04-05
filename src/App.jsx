@@ -54,6 +54,8 @@ import { NewRestaurant } from "./screens/Restaurants/NewRestaurant"
 import { Plans } from "./screens/Plans/Plans"
 import { NotFound } from "./screens/NotFound"
 import { WelcomeScreen } from "./screens/Welcome/WelcomeScreen"
+import { NewPlan } from "./screens/Plans/NewPlan"
+import { PlanDetails } from "./screens/Plans/PlanDetails"
 
 function App() {
   const userRole = useSelector((state) => state.user.value.role)
@@ -63,7 +65,25 @@ function App() {
       case APP_ROLES.superAdmin:
         return (
           <>
+            <Route path={NAVIGATION_ROUTES_SUPER_ADMIN.Dashboard.path} element={<Home />} />
+
             <Route path={NAVIGATION_ROUTES_SUPER_ADMIN.Restaurants.path} element={<RestaurantsScreen />} />
+
+            <Route path={NAVIGATION_ROUTES_SUPER_ADMIN.Restaurants.NewRestaurant.path} element={<NewRestaurant />} />
+
+            <Route path={NAVIGATION_ROUTES_SUPER_ADMIN.Restaurants.RestaurantDetails.path} element={<RestaurantDetailScreen />} />
+
+            <Route path={NAVIGATION_ROUTES_SUPER_ADMIN.Users.path} element={<AdminUserScreen />} />
+
+            <Route path={NAVIGATION_ROUTES_SUPER_ADMIN.Users.NewUser.path} element={<NewAdminUser />} />
+
+            <Route path={NAVIGATION_ROUTES_SUPER_ADMIN.Users.UserDetails.path} element={<AdminUserDetails />} />
+
+            <Route path={NAVIGATION_ROUTES_SUPER_ADMIN.Plans.path} element={<Plans />} />
+
+            <Route path={NAVIGATION_ROUTES_SUPER_ADMIN.Plans.NewPlan.path} element={<NewPlan />} />
+
+            <Route path={NAVIGATION_ROUTES_SUPER_ADMIN.Plans.PlanDetails.path} element={<PlanDetails />} />
           </>
         )
       case APP_ROLES.restaurantAdmin:

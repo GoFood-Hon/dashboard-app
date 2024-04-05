@@ -126,7 +126,15 @@ export const NAVIGATION_ROUTES_SUPER_ADMIN = {
   Plans: {
     label: "Planes",
     path: "/planes",
-    icon: "creditCard"
+    icon: "creditCard",
+    NewPlan: {
+      label: "Nuevo Plan",
+      path: "/planes/nuevoPlan"
+    },
+    PlanDetails: {
+      label: "Detalles del Plan",
+      path: "/planes/:planId"
+    }
   }
 }
 
