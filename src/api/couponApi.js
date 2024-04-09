@@ -11,7 +11,9 @@ const couponApi = {
   addImage: (couponId, params) =>
     axiosClient.post(`api/v1/coupon/${couponId}/images`, params, {
       contentType: `multipart/form-data; boundary=${params._boundary}`
-    })
+    }),
+  // Activate or Deactivate coupon
+  updateStatus: (couponId, params) => axiosClient.patch(`api/v1/coupon/status/${couponId}`, params)
 }
 
 export default couponApi

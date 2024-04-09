@@ -4,10 +4,36 @@ import { formatDateDistanceToNow, formatDateToString } from "../utils"
 import { Icon } from "./Icon"
 import { useDisclosure } from "@mantine/hooks"
 import { EditOfferForm } from "./EditOfferForm"
+import couponApi from "../api/couponApi"
+import toast from "react-hot-toast"
+import promotionApi from "../api/promotionApi"
 
 export const HistoryTable = ({ item, section }) => {
   const [imageModalOpened, { open: openImageModal, close: closeImageModal }] = useDisclosure(false)
   const [formModalOpened, { open: openFormModal, close: closeFormModal }] = useDisclosure(false)
+
+  const toggleAvailability = async () => {
+    try {
+      const formData = new FormData()
+      formData.append("isActive", !item.isActive)
+
+      let response
+      if (section === "Cupones") {
+        response = await couponApi.updateStatus(item.id, formData)
+      } else {
+        response = await promotionApi.updateStatus(item.id, formData)
+      }
+
+      if (response.status === "success") {
+        toast.success(`Cupón ${response.isActive ? "activado" : "desactivado"} exitosamente`)
+        window.location.reload()
+      } else {
+        toast.error(`Fallo al cambiar el estado del cupón. Por favor intente de nuevo. ${response.message}`)
+      }
+    } catch (error) {
+      toast.error(`Error al cambiar el estado del cupón. Por favor intente de nuevo. ${error}`)
+    }
+  }
 
   return (
     <Grid my={20} grow justify="space-between" align="center">
@@ -59,13 +85,14 @@ export const HistoryTable = ({ item, section }) => {
         </div>
       </Grid.Col>
       <Grid.Col span={{ sm: 12, md: 3 }}>
-        <div
+        <button
           className={`flex gap-2 px-2 py-2 rounded-full flex-row items-end justify-center text-md font-semibold ${
-            item.available ? "text-green-600 bg-green-100" : "bg-red-100 text-red-600"
-          }`}>
+            item.isActive ? "text-green-600 bg-green-100" : "bg-red-100 text-red-600"
+          }`}
+          onClick={toggleAvailability}>
           <span>Cupón</span>
-          <span>{item.available ? "Activo" : "Inactivo"}</span>
-        </div>
+          <span>{item.isActive ? "Activo" : "Inactivo"}</span>
+        </button>
       </Grid.Col>
       <Grid.Col span={{ sm: 12, md: 2 }}>
         <div className="flex gap-2 items-center justify-center font-bold cursor-pointer">
