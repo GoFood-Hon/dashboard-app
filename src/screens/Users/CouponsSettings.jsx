@@ -51,12 +51,12 @@ export default function CouponsSettings() {
           </Tabs.Panel>
           <Tabs.Panel value="couponHistory">
             <SettingsCard title="Tabla de historial de cupones" iconName="label">
-              <HistorySection section="coupons" />
+              <HistorySection section="Cupones" />
             </SettingsCard>
           </Tabs.Panel>
           <Tabs.Panel value="promosHistory">
             <SettingsCard title="Tabla de historial de promociones" iconName="label">
-              <HistorySection section="promos" />
+              <HistorySection section="Promociones" />
             </SettingsCard>
           </Tabs.Panel>
         </Tabs>

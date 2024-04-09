@@ -35,11 +35,11 @@ export const HistorySection = ({ section }) => {
 
     const fetchPromosHistory = () => fetchData(promotionApi.getPromotionByRestaurant)
 
-    if (section === "coupons") {
+    if (section === "Cupones") {
       fetchCouponHistory()
     }
 
-    if (section === "promos") {
+    if (section === "Promociones") {
       fetchPromosHistory()
     }
   }, [section])
@@ -52,7 +52,7 @@ export const HistorySection = ({ section }) => {
     <div className="w-full">
       {data.map((item, idx) => (
         <div key={idx}>
-          <HistoryTable item={item} />
+          <HistoryTable item={item} section={section} />
           <hr />
         </div>
       ))}

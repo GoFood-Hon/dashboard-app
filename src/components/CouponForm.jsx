@@ -18,7 +18,7 @@ import couponApi from "../api/couponApi"
 import { bytesToMB, capitalizeFirstLetter, convertToDecimal } from "../utils"
 import { CouponTypes, DEFAULT_CATEGORY, DEFAULT_COUPON_TYPE, DEFAULT_DISCOUNT_PERCENTAGE } from "../utils/constants"
 
-export const CouponForm = ({ offerData }) => {
+export const CouponForm = ({ offerData, editing = false }) => {
   const navigate = useNavigate()
   const user = useSelector((state) => state.user.value)
 
@@ -39,6 +39,7 @@ export const CouponForm = ({ offerData }) => {
     initialDate: initialStartDate || new Date(),
     endDate: initialEndDate || new Date()
   })
+
   const discountPercentage = []
 
   for (let i = 5; i <= 100; i += 5) {
@@ -48,6 +49,7 @@ export const CouponForm = ({ offerData }) => {
   useEffect(() => {
     setDateComponentMounted(couponType === DEFAULT_COUPON_TYPE)
   }, [couponType])
+
   const {
     register,
     handleSubmit,
@@ -67,15 +69,28 @@ export const CouponForm = ({ offerData }) => {
   }
 
   const onSubmit = async (data) => {
-    try {
-      const formData = prepareFormData(data)
-      const response = await couponApi.createCoupon(formData)
+    if (!editing) {
+      try {
+        const formData = prepareFormData(data)
+        const response = await couponApi.createCoupon(formData)
 
-      handleResponse(response, data)
+        handleResponse(response, data)
 
-      return response.data
-    } catch (error) {
-      handleError(error)
+        return response.data
+      } catch (error) {
+        handleError(error)
+      }
+    } else {
+      try {
+        const formData = prepareFormData(data)
+        const response = await couponApi.createCoupon(formData)
+
+        handleResponse(response, data)
+
+        return response.data
+      } catch (error) {
+        handleError(error)
+      }
     }
   }
 
@@ -87,7 +102,7 @@ export const CouponForm = ({ offerData }) => {
 
     if (discountType === "Porcentual") {
       formData.append("category", "porcentual")
-      formData.append("percentage", 10)
+      formData.append("percentage", parseInt(discount))
     } else {
       formData.append("category", "fijo")
       formData.append("amount", convertToDecimal(data.amount))
