@@ -1,22 +1,25 @@
 import React, { useEffect, useState } from "react"
-import { Grid, MultiSelect, Select } from "@mantine/core"
-import { DatePickerInput } from "@mantine/dates"
 import { useDispatch, useSelector } from "react-redux"
-import { yupResolver } from "@hookform/resolvers/yup"
 import { useForm } from "react-hook-form"
 import toast from "react-hot-toast"
 import { useNavigate } from "react-router-dom"
+import { CloseIcon, Grid, Group, MultiSelect, Select, Text, rem } from "@mantine/core"
+import { DatePickerInput } from "@mantine/dates"
+import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone"
+import { IconPhoto } from "@tabler/icons-react"
+import { yupResolver } from "@hookform/resolvers/yup"
 
 import Button from "./Button"
 import InputField from "./Form/InputField"
-import InputCombobox from "./Form/InputCombobox"
 import { ErrorMessage } from "./Form/ErrorMessage"
 import { promotionValidationFrom } from "../utils/inputRules"
 import { fetchDishes, selectAllDishes } from "../store/features/dishesSlice"
 import promotionApi from "../api/promotionApi"
-import { convertToDecimal } from "../utils"
+import { bytesToMB, capitalizeFirstLetter, convertToDecimal } from "../utils"
+import { SETTING_NAVIGATION_ROUTES } from "../routes"
+import { CouponTypes, DEFAULT_CATEGORY, DEFAULT_COUPON_TYPE, DEFAULT_DISCOUNT_PERCENTAGE } from "../utils/constants"
 
-export const PromotionForm = () => {
+export const PromotionForm = ({ offerData }) => {
   const user = useSelector((state) => state.user.value)
   const navigate = useNavigate()
   const dishes = useSelector(selectAllDishes)
@@ -26,29 +29,53 @@ export const PromotionForm = () => {
   const limit = useSelector((state) => state.dishes.itemsPerPage)
   const page = useSelector((state) => state.dishes.currentPage)
 
-  const [discountType, setDiscountType] = useState("Porcentual")
+  const initialDiscount = offerData?.percentage ? `${offerData.percentage}%` : DEFAULT_DISCOUNT_PERCENTAGE
+  const initialCouponType = offerData?.couponType === "cantidad" ? CouponTypes.AMOUNT : CouponTypes.DATE
+  const initialStartDate = offerData?.startDate ? new Date(offerData.startDate) : null
+  const initialEndDate = offerData?.endDate ? new Date(offerData.endDate) : null
+
   const [availabilityDiscount, setAvailabilityDiscount] = useState("En todos los platillos")
   const [dishesAdded, setDishesAdded] = useState([])
+  const [discountType, setDiscountType] = useState(
+    offerData?.category ? capitalizeFirstLetter(offerData.category) : DEFAULT_CATEGORY
+  )
+  const [discount, setDiscount] = useState(initialDiscount)
+  const [couponType, setCouponType] = useState(initialCouponType)
+  const [dateComponentMounted, setDateComponentMounted] = useState(false)
+  const [images, setImages] = useState([])
+  const [fileInformation, setFileInformation] = useState(null)
+  const [dateRange, setDateRange] = useState({
+    initialDate: initialStartDate || new Date(),
+    endDate: initialEndDate || new Date()
+  })
 
   const discountPercentage = []
 
   for (let i = 5; i <= 100; i += 5) {
-    const option = {
-      value: i,
-      label: `${i} %`
-    }
-    discountPercentage.push(option)
+    discountPercentage.push(`${i}%`)
   }
 
   const {
     register,
     handleSubmit,
     setValue,
-    reset,
     formState: { errors }
   } = useForm({
+    defaultValues: offerData,
     resolver: yupResolver(promotionValidationFrom(true))
   })
+
+  useEffect(() => {
+    setDateComponentMounted(couponType === DEFAULT_COUPON_TYPE)
+  }, [couponType])
+
+  const handleDateChange = (date, type) => {
+    setDateRange((prevState) => ({
+      ...prevState,
+      [type]: date
+    }))
+    setValue(type === "initialDate" ? "startDate" : "endDate", date)
+  }
 
   const buildPromotionFormData = (data, discountType, availabilityDiscount, user) => {
     const formData = new FormData()
@@ -56,7 +83,7 @@ export const PromotionForm = () => {
 
     if (discountType === "Porcentual") {
       formData.append("category", "porcentual")
-      formData.append("percentage", data.amount)
+      formData.append("percentage", parseInt(discount))
     } else {
       formData.append("category", "fijo")
       formData.append("amount", convertToDecimal(data.amount))
@@ -87,31 +114,32 @@ export const PromotionForm = () => {
       const response = await promotionApi.createOffer(promotionFormData)
 
       if (response.error) {
-        toast.error(`Fallo al crear la promoción. Por favor intente de nuevo. ${response.message}`, {
-          duration: 7000
-        })
-      } else {
-        if (availabilityDiscount === "Seleccionar platillos") {
-          const dishesFormData = buildDishesFormData(dishesAdded)
-          const res = await promotionApi.addDishesToOffer(dishesFormData, response.data.id)
+        throw new Error(`Fallo al crear la promoción. Por favor intente de nuevo. ${response.message}`)
+      }
 
-          if (res.error) {
-            toast.error(`Fallo al agregar los platillos a la promoción. Por favor intente de nuevo. ${response.message}`, {
-              duration: 7000
-            })
-          } else {
-            navigate(SETTING_NAVIGATION_ROUTES.General.path)
-            toast.success("Promoción creada exitosamente", {
-              duration: 7000
-            })
-          }
-        } else {
-          navigate(SETTING_NAVIGATION_ROUTES.General.path)
-          toast.success("Promoción creada exitosamente", {
-            duration: 7000
-          })
+      const formDataImage = new FormData()
+      formDataImage.append("files", data.files[0])
+
+      const addImageResponse = await promotionApi.addImage(response.data.id, formDataImage)
+
+      if (addImageResponse.error) {
+        throw new Error(`Fallo al subir la imagen. Por favor intente de nuevo. ${addImageResponse.message}`)
+      }
+
+      if (availabilityDiscount === "Seleccionar platillos") {
+        const dishesFormData = buildDishesFormData(dishesAdded)
+        const res = await promotionApi.addDishesToOffer(dishesFormData, response.data.id)
+
+        if (res.error) {
+          throw new Error(`Fallo al agregar los platillos a la promoción. Por favor intente de nuevo. ${response.message}`)
         }
       }
+
+      navigate(SETTING_NAVIGATION_ROUTES.General.path)
+      toast.success("Promoción creada exitosamente", {
+        duration: 7000
+      })
+
       return response.data
     } catch (error) {
       toast.error(`Error. Por favor intente de nuevo. ${error}`, {
@@ -132,13 +160,81 @@ export const PromotionForm = () => {
     )
   }, [availabilityDiscount])
 
+  const handleDrop = (acceptedFiles) => {
+    if (acceptedFiles.length > 0) {
+      const [file] = acceptedFiles
+      setFileInformation(file)
+      setImages(acceptedFiles)
+      setValue("files", acceptedFiles)
+      toast.success("Archivos aceptados 👍", { duration: 7000 })
+    }
+  }
+
+  const deleteImage = () => {
+    setFileInformation(null)
+    setImages([])
+  }
+
+  const previews = images.map((file, index) => {
+    const imageUrl = URL.createObjectURL(file)
+    return (
+      <img
+        key={index}
+        src={imageUrl}
+        onLoad={() => URL.revokeObjectURL(imageUrl)}
+        className="h-14 w-14 rounded-xl object-cover object-center border m-1"
+      />
+    )
+  })
+
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <Grid my={20}>
         <Grid.Col span={{ sm: 12 }}>
           <InputField label="Titulo" name="title" register={register} errors={errors} />
         </Grid.Col>
-        <Grid.Col span={{ sm: 12 }}>
+        <Grid.Col span={{ base: 12 }}>
+          <label className="text-sky-950 text-sm font-bold leading-snug">Seleccione una imagen</label>
+          <div className="flex flex-col justify-center items-center w-full h-full bg-white rounded-2xl border border-blue-100 p-4 mb-8">
+            {previews.length > 0 ? (
+              <div className="w-full">
+                <Text size="lg" inline className="text-left mb-5">
+                  Imagen seleccionada:
+                </Text>
+                <div className="flex flex-row justify-center items-center rounded-2xl w-full border border-slate-200 my-3">
+                  <div className="flex flex-row w-full items-center gap-2 flex-wrap p-2">
+                    {previews}
+                    <div className="flex flex-col">
+                      <Text className="font-semibold italic">{fileInformation?.name}</Text>
+                      <Text className="font-semibold" size="sm" c="dimmed" inline>
+                        {bytesToMB(fileInformation?.size)} MB
+                      </Text>
+                    </div>
+                  </div>
+                  <button onClick={deleteImage} className="pr-3">
+                    <CloseIcon size={24} />
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <Dropzone onDrop={handleDrop} accept={IMAGE_MIME_TYPE}>
+                <Group justify="center" gap="xl" mih={220} style={{ pointerEvents: "none" }}>
+                  <div className="flex items-center flex-col">
+                    <IconPhoto style={{ width: rem(52), height: rem(52), color: "var(--mantine-color-dimmed)" }} stroke={1.5} />
+                    <Text size="xl" inline className="text-center">
+                      Seleccione una imagen destacada
+                    </Text>
+                    <Text size="sm" c="dimmed" inline mt={7} className="text-center leading-10">
+                      Haga click o arrastre una imagen que sera usada junto con la sucursal
+                    </Text>
+                  </div>
+                </Group>
+              </Dropzone>
+            )}
+            {errors.files && <p className="text-red-500 text-center w-full">* Imagen es requerida.</p>}
+          </div>
+        </Grid.Col>
+        <Grid.Col mt={20} span={{ sm: 12 }}>
           <span className="text-sky-950 text-sm font-bold leading-snug">Disponibilidad de la promoción</span>
           <Select
             data={["En todos los platillos", "Seleccionar platillos"]}
@@ -180,32 +276,33 @@ export const PromotionForm = () => {
               <InputField label="Valor del descuento" name="amount" register={register} errors={errors} />
             </div>
           ) : discountType === "Porcentual" ? (
-            <InputCombobox
-              items={discountPercentage}
-              setValue={setValue}
-              errors={errors}
-              label="Valor del descuento"
-              name="amount"
-            />
+            <>
+              <span className="text-sky-950 text-sm font-bold leading-snug">Tipo de descuento</span>
+              <div className="mt-1">
+                <Select data={discountPercentage} allowDeselect={false} size="md" value={discount} onChange={setDiscount} />
+              </div>
+            </>
           ) : null}
         </Grid.Col>
         <Grid.Col span={{ sm: 12, md: 6 }}>
           <DatePickerInput
             size="md"
+            value={dateRange.initialDate}
             label="Fecha inicial"
             placeholder="Seleccionar fecha"
             popoverProps={{ withinPortal: false }}
-            onChange={(val) => setValue("startDate", val)}
+            onChange={(val) => handleDateChange(val, "initialDate")}
           />
           <ErrorMessage message={errors?.startDate?.message} />
         </Grid.Col>
         <Grid.Col span={{ sm: 12, md: 6 }}>
           <DatePickerInput
             size="md"
+            value={dateRange.endDate}
             label="Fecha final"
             placeholder="Seleccionar fecha"
             popoverProps={{ withinPortal: false }}
-            onChange={(val) => setValue("endDate", val)}
+            onChange={(val) => handleDateChange(val, "endDate")}
           />
           <ErrorMessage message={errors?.startDate?.message} />
         </Grid.Col>
