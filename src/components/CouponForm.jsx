@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { Grid, Select } from "@mantine/core"
+import { CloseIcon, Grid, Group, Select, Text, rem } from "@mantine/core"
 import { DatePickerInput } from "@mantine/dates"
 import { useSelector } from "react-redux"
 import { yupResolver } from "@hookform/resolvers/yup"
@@ -9,29 +9,38 @@ import { useNavigate } from "react-router-dom"
 
 import { couponsValidationFrom } from "../utils/inputRules"
 import InputField from "./Form/InputField"
-import InputCombobox from "./Form/InputCombobox"
 import { ErrorMessage } from "./Form/ErrorMessage"
 import Button from "./Button"
 import { SETTING_NAVIGATION_ROUTES } from "../routes"
 import couponApi from "../api/couponApi"
-import { convertToDecimal } from "../utils"
+import { bytesToMB, convertToDecimal } from "../utils"
+import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone"
+import { IconPhoto } from "@tabler/icons-react"
 
-export const CouponForm = () => {
-  const user = useSelector((state) => state.user.value)
+export const CouponForm = ({ offerData }) => {
   const navigate = useNavigate()
+  const user = useSelector((state) => state.user.value)
 
-  const [discountType, setDiscountType] = useState("Porcentual")
-  const [couponType, setCouponType] = useState("Por fecha")
+  const initialDiscount = offerData && offerData?.percentage ? `${offerData.percentage.toString()}%` : "5%"
+  const initialCouponType = offerData && offerData.couponType === "cantidad" ? "Por cantidad de usos" : "Por fecha"
+  const initialStartDate = offerData && offerData.startDate ? new Date(offerData.startDate) : null
+  const initialEndDate = offerData && offerData.endDate ? new Date(offerData.endDate) : null
+
+  const [discountType, setDiscountType] = useState(
+    offerData?.category ? offerData.category.charAt(0).toUpperCase() + offerData.category.slice(1) : "Porcentual"
+  )
+  const [discount, setDiscount] = useState(initialDiscount)
+  const [couponType, setCouponType] = useState(initialCouponType)
   const [dateComponentMounted, setDateComponentMounted] = useState(false)
+  const [images, setImages] = useState([])
+  const [fileInformation, setFileInformation] = useState(null)
+  const [initialDate, setInitialDate] = useState(initialStartDate || new Date())
+  const [endDate, setEndDate] = useState(initialEndDate || new Date())
 
   const discountPercentage = []
 
   for (let i = 5; i <= 100; i += 5) {
-    const option = {
-      value: i,
-      label: `${i} %`
-    }
-    discountPercentage.push(option)
+    discountPercentage.push(`${i}%`)
   }
 
   useEffect(() => {
@@ -41,14 +50,13 @@ export const CouponForm = () => {
     register,
     handleSubmit,
     setValue,
-    reset,
     formState: { errors }
   } = useForm({
+    defaultValues: offerData,
     resolver: yupResolver(couponsValidationFrom(dateComponentMounted))
   })
 
   const onSubmit = async (data) => {
-    reset()
     try {
       const formData = new FormData()
 
@@ -57,8 +65,7 @@ export const CouponForm = () => {
 
       if (discountType === "Porcentual") {
         formData.append("category", "porcentual")
-
-        formData.append("percentage", convertToDecimal(data.amount))
+        formData.append("percentage", 10)
       } else {
         formData.append("category", "fijo")
         formData.append("amount", convertToDecimal(data.amount))
@@ -82,6 +89,14 @@ export const CouponForm = () => {
           duration: 7000
         })
       } else {
+        const formDataImage = new FormData()
+        formDataImage.append("files", data.files[0])
+
+        const addImageResponse = await couponApi.addImage(response.data.id, formDataImage)
+
+        if (addImageResponse.error) {
+          throw new Error(`Fallo al subir la imagen. Por favor intente de nuevo. ${addImageResponse.message}`)
+        }
         navigate(SETTING_NAVIGATION_ROUTES.General.path)
 
         toast.success("Cupón creado exitosamente", {
@@ -96,13 +111,81 @@ export const CouponForm = () => {
     }
   }
 
+  const handleDrop = (acceptedFiles) => {
+    if (acceptedFiles.length > 0) {
+      const [file] = acceptedFiles
+      setFileInformation(file)
+      setImages(acceptedFiles)
+      setValue("files", acceptedFiles)
+      toast.success("Archivos aceptados 👍", { duration: 7000 })
+    }
+  }
+
+  const deleteImage = () => {
+    setFileInformation(null)
+    setImages([])
+  }
+
+  const previews = images.map((file, index) => {
+    const imageUrl = URL.createObjectURL(file)
+    return (
+      <img
+        key={index}
+        src={imageUrl}
+        onLoad={() => URL.revokeObjectURL(imageUrl)}
+        className="h-14 w-14 rounded-xl object-cover object-center border m-1"
+      />
+    )
+  })
+
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <Grid my={20}>
         <Grid.Col span={{ sm: 12 }}>
           <InputField label="Titulo" name="title" register={register} errors={errors} />
         </Grid.Col>
-        <Grid.Col span={{ sm: 12 }}>
+        <Grid.Col span={{ base: 12 }}>
+          <label className="text-sky-950 text-sm font-bold leading-snug">Seleccione una imagen</label>
+          <div className="flex flex-col justify-center items-center w-full h-full bg-white rounded-2xl border border-blue-100 p-4 mb-8">
+            {previews.length > 0 ? (
+              <div className="w-full">
+                <Text size="lg" inline className="text-left mb-5">
+                  Imagen seleccionada:
+                </Text>
+                <div className="flex flex-row justify-center items-center rounded-2xl w-full border border-slate-200 my-3">
+                  <div className="flex flex-row w-full items-center gap-2 flex-wrap p-2">
+                    {previews}
+                    <div className="flex flex-col">
+                      <Text className="font-semibold italic">{fileInformation?.name}</Text>
+                      <Text className="font-semibold" size="sm" c="dimmed" inline>
+                        {bytesToMB(fileInformation?.size)} MB
+                      </Text>
+                    </div>
+                  </div>
+                  <button onClick={deleteImage} className="pr-3">
+                    <CloseIcon size={24} />
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <Dropzone onDrop={handleDrop} accept={IMAGE_MIME_TYPE}>
+                <Group justify="center" gap="xl" mih={220} style={{ pointerEvents: "none" }}>
+                  <div className="flex items-center flex-col">
+                    <IconPhoto style={{ width: rem(52), height: rem(52), color: "var(--mantine-color-dimmed)" }} stroke={1.5} />
+                    <Text size="xl" inline className="text-center">
+                      Seleccione una imagen destacada
+                    </Text>
+                    <Text size="sm" c="dimmed" inline mt={7} className="text-center leading-10">
+                      Haga click o arrastre una imagen que sera usada junto con la sucursal
+                    </Text>
+                  </div>
+                </Group>
+              </Dropzone>
+            )}
+            {errors.files && <p className="text-red-500 text-center w-full">* Imagen es requerida.</p>}
+          </div>
+        </Grid.Col>
+        <Grid.Col mt={20} span={{ sm: 12 }}>
           <InputField label="Código de cupón" name="code" register={register} errors={errors} />
         </Grid.Col>
         <Grid.Col span={{ sm: 12, md: 6 }}>
@@ -124,13 +207,12 @@ export const CouponForm = () => {
               <InputField label="Valor del descuento" name="amount" register={register} errors={errors} />
             </div>
           ) : discountType === "Porcentual" ? (
-            <InputCombobox
-              items={discountPercentage}
-              setValue={setValue}
-              errors={errors}
-              label="Valor del descuento"
-              name="amount"
-            />
+            <>
+              <span className="text-sky-950 text-sm font-bold leading-snug">Tipo de descuento</span>
+              <div className="mt-1">
+                <Select data={discountPercentage} allowDeselect={false} size="md" value={discount} onChange={setDiscount} />
+              </div>
+            </>
           ) : null}
         </Grid.Col>
         <Grid.Col span={{ sm: 12 }}>
@@ -157,20 +239,28 @@ export const CouponForm = () => {
             <Grid.Col span={{ sm: 12, md: 6 }}>
               <DatePickerInput
                 size="md"
+                value={initialDate}
                 label="Fecha inicial"
                 placeholder="Seleccionar fecha"
                 popoverProps={{ withinPortal: false }}
-                onChange={(val) => setValue("startDate", val)}
+                onChange={(val) => {
+                  setInitialDate(val)
+                  setValue("startDate", val)
+                }}
               />
               <ErrorMessage message={errors?.startDate?.message} />
             </Grid.Col>
             <Grid.Col span={{ sm: 12, md: 6 }}>
               <DatePickerInput
                 size="md"
+                value={endDate}
                 label="Fecha final"
                 placeholder="Seleccionar fecha"
                 popoverProps={{ withinPortal: false }}
-                onChange={(val) => setValue("endDate", val)}
+                onChange={(val) => {
+                  setEndDate(val)
+                  setValue("endDate", val)
+                }}
               />
               <ErrorMessage message={errors?.startDate?.message} />
             </Grid.Col>
