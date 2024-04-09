@@ -61,3 +61,5 @@ export function convertToDecimal(priceString) {
   // Convert the string to a decimal number with two decimal places
   return parseFloat(priceString).toFixed(2)
 }
+
+export const capitalizeFirstLetter = (str) => str.charAt(0).toUpperCase() + str.slice(1)
