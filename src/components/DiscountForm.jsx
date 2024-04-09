@@ -128,13 +128,12 @@ export const DiscountForm = () => {
               <InputField label="Valor del descuento" name="amount" register={register} errors={errors} />
             </div>
           ) : discountType === "Porcentual" ? (
-            <InputCombobox
-              items={discountPercentage}
-              setValue={setValue}
-              errors={errors}
-              label="Valor del descuento"
-              name="amount"
-            />
+            <>
+              <span className="text-sky-950 text-sm font-bold leading-snug">Tipo de descuento</span>
+              <div className="mt-1">
+                <Select data={discountPercentage} allowDeselect={false} size="md" value={discount} onChange={setDiscount} />
+              </div>
+            </>
           ) : null}
         </Grid.Col>
         <Grid.Col span={{ sm: 12 }}>
