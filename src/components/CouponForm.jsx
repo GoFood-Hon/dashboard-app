@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react"
-import { CloseIcon, Grid, Group, Select, Text, rem } from "@mantine/core"
-import { DatePickerInput } from "@mantine/dates"
 import { useSelector } from "react-redux"
-import { yupResolver } from "@hookform/resolvers/yup"
 import { useForm } from "react-hook-form"
 import toast from "react-hot-toast"
 import { useNavigate } from "react-router-dom"
+import { CloseIcon, Grid, Group, Select, Text, rem } from "@mantine/core"
+import { DatePickerInput } from "@mantine/dates"
+import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone"
+import { IconPhoto } from "@tabler/icons-react"
+import { yupResolver } from "@hookform/resolvers/yup"
 
 import { couponsValidationFrom } from "../utils/inputRules"
 import InputField from "./Form/InputField"
@@ -13,30 +15,30 @@ import { ErrorMessage } from "./Form/ErrorMessage"
 import Button from "./Button"
 import { SETTING_NAVIGATION_ROUTES } from "../routes"
 import couponApi from "../api/couponApi"
-import { bytesToMB, convertToDecimal } from "../utils"
-import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone"
-import { IconPhoto } from "@tabler/icons-react"
+import { bytesToMB, capitalizeFirstLetter, convertToDecimal } from "../utils"
+import { CouponTypes, DEFAULT_CATEGORY, DEFAULT_COUPON_TYPE, DEFAULT_DISCOUNT_PERCENTAGE } from "../utils/constants"
 
 export const CouponForm = ({ offerData }) => {
   const navigate = useNavigate()
   const user = useSelector((state) => state.user.value)
 
-  const initialDiscount = offerData && offerData?.percentage ? `${offerData.percentage.toString()}%` : "5%"
-  const initialCouponType = offerData && offerData.couponType === "cantidad" ? "Por cantidad de usos" : "Por fecha"
-  const initialStartDate = offerData && offerData.startDate ? new Date(offerData.startDate) : null
-  const initialEndDate = offerData && offerData.endDate ? new Date(offerData.endDate) : null
+  const initialDiscount = offerData?.percentage ? `${offerData.percentage}%` : DEFAULT_DISCOUNT_PERCENTAGE
+  const initialCouponType = offerData?.couponType === "cantidad" ? CouponTypes.AMOUNT : CouponTypes.DATE
+  const initialStartDate = offerData?.startDate ? new Date(offerData.startDate) : null
+  const initialEndDate = offerData?.endDate ? new Date(offerData.endDate) : null
 
   const [discountType, setDiscountType] = useState(
-    offerData?.category ? offerData.category.charAt(0).toUpperCase() + offerData.category.slice(1) : "Porcentual"
+    offerData?.category ? capitalizeFirstLetter(offerData.category) : DEFAULT_CATEGORY
   )
   const [discount, setDiscount] = useState(initialDiscount)
   const [couponType, setCouponType] = useState(initialCouponType)
   const [dateComponentMounted, setDateComponentMounted] = useState(false)
   const [images, setImages] = useState([])
   const [fileInformation, setFileInformation] = useState(null)
-  const [initialDate, setInitialDate] = useState(initialStartDate || new Date())
-  const [endDate, setEndDate] = useState(initialEndDate || new Date())
-
+  const [dateRange, setDateRange] = useState({
+    initialDate: initialStartDate || new Date(),
+    endDate: initialEndDate || new Date()
+  })
   const discountPercentage = []
 
   for (let i = 5; i <= 100; i += 5) {
@@ -44,7 +46,7 @@ export const CouponForm = ({ offerData }) => {
   }
 
   useEffect(() => {
-    setDateComponentMounted(couponType === "Por fecha")
+    setDateComponentMounted(couponType === DEFAULT_COUPON_TYPE)
   }, [couponType])
   const {
     register,
@@ -56,59 +58,87 @@ export const CouponForm = ({ offerData }) => {
     resolver: yupResolver(couponsValidationFrom(dateComponentMounted))
   })
 
+  const handleDateChange = (date, type) => {
+    setDateRange((prevState) => ({
+      ...prevState,
+      [type]: date
+    }))
+    setValue(type === "initialDate" ? "startDate" : "endDate", date)
+  }
+
   const onSubmit = async (data) => {
     try {
-      const formData = new FormData()
-
-      formData.append("title", data.title)
-      formData.append("code", data.code)
-
-      if (discountType === "Porcentual") {
-        formData.append("category", "porcentual")
-        formData.append("percentage", 10)
-      } else {
-        formData.append("category", "fijo")
-        formData.append("amount", convertToDecimal(data.amount))
-      }
-
-      if (couponType === "Por fecha") {
-        formData.append("couponType", "fecha")
-        formData.append("startDate", data.startDate)
-        formData.append("endDate", data.endDate)
-      } else {
-        formData.append("couponType", "cantidad")
-        formData.append("timesToUse", data.timesToUse)
-      }
-
-      formData.append("restaurantId", user.restaurantId)
-
+      const formData = prepareFormData(data)
       const response = await couponApi.createCoupon(formData)
 
-      if (response.error) {
-        toast.error(`Fallo al crear el cupón. Por favor intente de nuevo. ${response.message}`, {
-          duration: 7000
-        })
-      } else {
-        const formDataImage = new FormData()
-        formDataImage.append("files", data.files[0])
+      handleResponse(response, data)
 
-        const addImageResponse = await couponApi.addImage(response.data.id, formDataImage)
-
-        if (addImageResponse.error) {
-          throw new Error(`Fallo al subir la imagen. Por favor intente de nuevo. ${addImageResponse.message}`)
-        }
-        navigate(SETTING_NAVIGATION_ROUTES.General.path)
-
-        toast.success("Cupón creado exitosamente", {
-          duration: 7000
-        })
-      }
       return response.data
     } catch (error) {
-      toast.error(`Error. Por favor intente de nuevo. ${error}`, {
+      handleError(error)
+    }
+  }
+
+  const prepareFormData = (data) => {
+    const formData = new FormData()
+
+    formData.append("title", data.title)
+    formData.append("code", data.code)
+
+    if (discountType === "Porcentual") {
+      formData.append("category", "porcentual")
+      formData.append("percentage", 10)
+    } else {
+      formData.append("category", "fijo")
+      formData.append("amount", convertToDecimal(data.amount))
+    }
+
+    if (couponType === "Por fecha") {
+      formData.append("couponType", "fecha")
+      formData.append("startDate", data.startDate)
+      formData.append("endDate", data.endDate)
+    } else {
+      formData.append("couponType", "cantidad")
+      formData.append("timesToUse", data.timesToUse)
+    }
+
+    formData.append("restaurantId", user.restaurantId)
+
+    return formData
+  }
+
+  const handleResponse = (response, data) => {
+    if (response.error) {
+      toast.error(`Fallo al crear el cupón. Por favor intente de nuevo. ${response.message}`, {
+        duration: 7000
+      })
+    } else {
+      addImage(response.data.id, data)
+      navigate(SETTING_NAVIGATION_ROUTES.General.path)
+      toast.success("Cupón creado exitosamente", {
         duration: 7000
       })
     }
+  }
+
+  const addImage = async (couponId, data) => {
+    try {
+      const formDataImage = new FormData()
+      formDataImage.append("files", data.files[0])
+      const addImageResponse = await couponApi.addImage(couponId, formDataImage)
+
+      if (addImageResponse.error) {
+        throw new Error(`Fallo al subir la imagen. Por favor intente de nuevo. ${addImageResponse.message}`)
+      }
+    } catch (error) {
+      handleError(error)
+    }
+  }
+
+  const handleError = (error) => {
+    toast.error(`Error. Por favor intente de nuevo. ${error}`, {
+      duration: 7000
+    })
   }
 
   const handleDrop = (acceptedFiles) => {
@@ -234,38 +264,32 @@ export const CouponForm = ({ offerData }) => {
           </Grid.Col>
         ) : null}
 
-        {couponType === "Por fecha" ? (
+        {couponType === "Por fecha" && (
           <>
             <Grid.Col span={{ sm: 12, md: 6 }}>
               <DatePickerInput
                 size="md"
-                value={initialDate}
+                value={dateRange.initialDate}
                 label="Fecha inicial"
                 placeholder="Seleccionar fecha"
                 popoverProps={{ withinPortal: false }}
-                onChange={(val) => {
-                  setInitialDate(val)
-                  setValue("startDate", val)
-                }}
+                onChange={(val) => handleDateChange(val, "initialDate")}
               />
               <ErrorMessage message={errors?.startDate?.message} />
             </Grid.Col>
             <Grid.Col span={{ sm: 12, md: 6 }}>
               <DatePickerInput
                 size="md"
-                value={endDate}
+                value={dateRange.endDate}
                 label="Fecha final"
                 placeholder="Seleccionar fecha"
                 popoverProps={{ withinPortal: false }}
-                onChange={(val) => {
-                  setEndDate(val)
-                  setValue("endDate", val)
-                }}
+                onChange={(val) => handleDateChange(val, "endDate")}
               />
-              <ErrorMessage message={errors?.startDate?.message} />
+              <ErrorMessage message={errors?.endDate?.message} />
             </Grid.Col>
           </>
-        ) : null}
+        )}
       </Grid>
       <div className="w-full flex flex-row gap-2 pt-4">
         <Button
