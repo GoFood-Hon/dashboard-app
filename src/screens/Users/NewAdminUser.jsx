@@ -13,6 +13,7 @@ import Button from "../../components/Button"
 import { NAVIGATION_ROUTES_SUPER_ADMIN } from "../../routes"
 import authApi from "../../api/authApi"
 import { newAdminValidationSchema } from "../../utils/inputRules"
+import userApi from "../../api/userApi"
 
 export const NewAdminUser = () => {
   const location = useLocation()
@@ -53,22 +54,44 @@ export const NewAdminUser = () => {
     const formData = new FormData()
     formData.append("name", data.name)
     formData.append("email", data.email)
-    formData.append("phoneNumber", data.phoneNumber)
+    formData.append("phoneNumber", `+504${data.phoneNumber}`)
 
     formData.append("password", data.password)
     // formData.append("confirmPassword", data.confirmPassword)
     formData.append("restaurantId", data.restaurantId)
     const response = await authApi.createNewAdmin(formData)
+
     if (response.error) {
       toast.error(`Fallo al crear el usuario. Por favor intente de nuevo. ${response.message}`, {
         duration: 7000
       })
     } else if (response.status === "success") {
+      addImage(response.data.data.id, data)
+      navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Users.path)
       toast.success("Usuario creado exitosamente.", {
         duration: 7000
       })
-      navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Users.path)
     }
+  }
+
+  const addImage = async (id, data) => {
+    try {
+      const formDataImage = new FormData()
+      formDataImage.append("files", data.files[0])
+      const addImageResponse = await userApi.addImage(id, formDataImage)
+
+      if (addImageResponse.error) {
+        throw new Error(`Fallo al subir la imagen. Por favor intente de nuevo. ${addImageResponse.message}`)
+      }
+    } catch (error) {
+      handleError(error)
+    }
+  }
+
+  const handleError = (error) => {
+    toast.error(`Error. Por favor intente de nuevo. ${error}`, {
+      duration: 7000
+    })
   }
 
   return (

@@ -51,7 +51,12 @@ const userApi = {
 
   updateAdminUser: (id, params) => axiosClient.put(`api/v1/users/admin-restaurant/${id}`, params),
 
-  deleteAdminUser: (id) => axiosClient.delete(`api/v1/users/admin-restaurant/${id}`)
+  deleteAdminUser: (id) => axiosClient.delete(`api/v1/users/admin-restaurant/${id}`),
+
+  addImage: (id, params) =>
+    axiosClient.post(`api/v1/users/update-image-user/${id}`, params, {
+      contentType: `multipart/form-data; boundary=${params._boundary}`
+    })
 }
 
 export default userApi

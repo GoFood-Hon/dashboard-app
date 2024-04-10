@@ -18,7 +18,7 @@ export default function InputField({
 
       <div className="flex items-center">
         {countryPrefix && (
-          <div className="text-sky-900 font-bold text-sm mr-2 mb-4 p-2 bg-light_selected_element rounded-md h-full">
+          <div className="text-sky-900 font-bold text-sm mr-2 mb-4 p-2 bg-light_selected_element rounded-md h-full min-w-[4rem]">
             {countryPrefix}
           </div>
         )}

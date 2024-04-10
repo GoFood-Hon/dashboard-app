@@ -11,6 +11,12 @@ import userApi from "../../api/userApi"
 export const EditAdminUser = ({ close, details, adminId }) => {
   const navigate = useNavigate()
 
+  const formatPhoneNumber = (phoneNumber) => {
+    return phoneNumber.replace("+504", "")
+  }
+
+  const formattedPhoneNumber = formatPhoneNumber(details?.phoneNumber)
+
   const {
     register,
     handleSubmit,
@@ -18,13 +24,13 @@ export const EditAdminUser = ({ close, details, adminId }) => {
     control,
     reset,
     formState: { errors }
-  } = useForm({ defaultValues: details })
+  } = useForm({ defaultValues: { ...details, phoneNumber: formattedPhoneNumber } })
 
   const onSubmit = async (data) => {
     const formData = new FormData()
     formData.append("name", data.name)
     formData.append("email", data.email)
-    formData.append("phoneNumber", data.phoneNumber)
+    formData.append("phoneNumber", `+504${data.phoneNumber}`)
 
     formData.append("restaurantId", data.restaurantId)
 

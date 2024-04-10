@@ -38,7 +38,14 @@ export const AdminGeneralInformationForm = ({ register, errors, setValue }) => {
           <InputField label="Email" name="email" register={register} errors={errors} className="text-black" />
         </Grid.Col>
         <Grid.Col span={{ base: 12, md: 12 }}>
-          <InputField label="Numero de teléfono" name="phoneNumber" register={register} errors={errors} className="text-black" />
+          <InputField
+            label="Numero de teléfono"
+            name="phoneNumber"
+            register={register}
+            errors={errors}
+            className="text-black"
+            countryPrefix="+504"
+          />
         </Grid.Col>
         <Grid.Col span={{ base: 12 }}>
           <InputSearchCombobox
