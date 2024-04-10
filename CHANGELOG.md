@@ -2,6 +2,35 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.7](https://github.com/GoFood-Hon/dashboard-app/compare/v0.0.5...v0.0.7) (2024-04-10)
+
+
+### Features
+
+* added api for offers ([80a128b](https://github.com/GoFood-Hon/dashboard-app/commit/80a128b47b2877316d903cc009b0f53d6a8f23cd))
+* added click to update status ([c1a944a](https://github.com/GoFood-Hon/dashboard-app/commit/c1a944ae2fe13e41174664116eec36ab14017169))
+* added logo to header and redirect to account ([88b1b9a](https://github.com/GoFood-Hon/dashboard-app/commit/88b1b9afb7c5266eb6d3bba1ef34aa6238c6b5cd))
+* added new function ([ba6a94a](https://github.com/GoFood-Hon/dashboard-app/commit/ba6a94a58bbbe9f487b7a8c10008c5db71cc50d9))
+* added populated values ([ca9b939](https://github.com/GoFood-Hon/dashboard-app/commit/ca9b93965f6aaa6c27a55271e5bb3cf94fafc16e))
+* added user role kitchen ([98d6574](https://github.com/GoFood-Hon/dashboard-app/commit/98d657448e8d3f138bec8c73f3cfdc1408666d4d))
+* added welcome screen ([91206d9](https://github.com/GoFood-Hon/dashboard-app/commit/91206d952cb07688efb368623bddcac18332e2fd))
+* config added for new role ([b470ae8](https://github.com/GoFood-Hon/dashboard-app/commit/b470ae85ba999e9ad61add0c9f2453c6984f93b2))
+* dishes and menus wired correctly ([344ec25](https://github.com/GoFood-Hon/dashboard-app/commit/344ec2583178faa38ed89f098d7c79a3087dd100))
+* editing offers ([6817061](https://github.com/GoFood-Hon/dashboard-app/commit/68170616ac19c7efeab0ff5ceb2a86c92c66c6ad))
+* images can be added to admin ([9dfc758](https://github.com/GoFood-Hon/dashboard-app/commit/9dfc758f3fd79f3fcc012acd057434c5834b4e4e))
+* my account working good ([8718b6e](https://github.com/GoFood-Hon/dashboard-app/commit/8718b6ee5de15fd6a1fc714e59f6227f0f99a321))
+* new structure for res admins ([16841ab](https://github.com/GoFood-Hon/dashboard-app/commit/16841abb2fafb24491eca57f008c7e04032d74cc))
+* routes for sucursalAdmin ([75d53e7](https://github.com/GoFood-Hon/dashboard-app/commit/75d53e7449e6dddf21eccce8c71baa49401ffa58))
+* updated routes of my profile for branch admin ([5fdbf34](https://github.com/GoFood-Hon/dashboard-app/commit/5fdbf34bfb7d7507b3b11b48087aed79ba55d2ca))
+
+
+### Bug Fixes
+
+* changed label text of current password input ([75ffcae](https://github.com/GoFood-Hon/dashboard-app/commit/75ffcae9bd32eb5eccfc6e33591abedbb0e672e5))
+* changed to Select component ([0199e58](https://github.com/GoFood-Hon/dashboard-app/commit/0199e588042de0fd4de69b5e2319c9fd892c5d80))
+* Dishes redirecting correctly ([47aee57](https://github.com/GoFood-Hon/dashboard-app/commit/47aee57d264ba95e6cfbd0b1460523567fb1b888))
+* enable dishes working ([a0f1053](https://github.com/GoFood-Hon/dashboard-app/commit/a0f1053fdb50217cf2bde23e0419dac5eda93a0d))
+
 ### [0.0.6](https://github.com/GoFood-Hon/dashboard-app/compare/v0.0.5...v0.0.6) (2024-04-05)
 
 
