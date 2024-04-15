@@ -61,7 +61,7 @@ export const fetchRestaurantData = createAsyncThunk("restaurants/fetchRestaurant
     } else {
       dispatch(setRestaurantData(response.data))
       dispatch(setLoading(false))
-      dispatch(setImageUrl(response.data.images[0].location))
+      dispatch(setImageUrl(response?.data?.images[0].location))
       return response.data
     }
   } catch (error) {

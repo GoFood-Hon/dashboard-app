@@ -6,9 +6,11 @@ import { convertToDecimal } from "../../utils"
 
 const initialState = {
   branches: [],
+  currentBranch: null,
   currentPage: 1,
   itemsPerPage: ITEMS_PER_PAGE,
   totalItems: 0,
+  imageUrl: "",
   filters: {
     startDate: null,
     endDate: null,
@@ -17,6 +19,32 @@ const initialState = {
     dateSort: null
   }
 }
+
+/*
+ * GET RESTAURANT INDIVIDUAL
+ */
+
+export const fetchBranchData = createAsyncThunk("branches/fetchBranchData", async ({ branchId }, { dispatch }) => {
+  try {
+    const response = await branchesApi.getBranch(branchId)
+    if (response.error) {
+      toast.error(`Fallo obtener la información de la sucursal ${response.message}`, {
+        duration: 7000
+      })
+      return {}
+    } else {
+      dispatch(setBranchData(response.data))
+      dispatch(setImageUrl(response?.data?.images?.[0]?.location))
+      return response.data
+    }
+  } catch (error) {
+    toast.error(`Fallo al obtener la información de la sucursal. Intente de nuevo.`, {
+      duration: 7000
+    })
+
+    throw error
+  }
+})
 
 /*
  * GET BRANCHES
@@ -134,6 +162,12 @@ export const branchesSlice = createSlice({
   name: "branches",
   initialState,
   reducers: {
+    setImageUrl(state, action) {
+      state.imageUrl = action.payload
+    },
+    setBranchData(state, action) {
+      state.currentBranch = action.payload
+    },
     setFilters: (state, action) => {
       state.filters = action.payload
     },
@@ -169,7 +203,7 @@ export const branchesSlice = createSlice({
   }
 })
 
-export const { setBranches, setError, setPage, setFilters } = branchesSlice.actions
+export const { setBranches, setError, setPage, setFilters, setBranchData, setImageUrl } = branchesSlice.actions
 
 export const setLoading = (state) => state.branches.loading
 
