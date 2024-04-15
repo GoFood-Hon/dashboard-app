@@ -57,7 +57,7 @@ import { NotFound } from "./screens/NotFound"
 import { WelcomeScreen } from "./screens/Welcome/WelcomeScreen"
 import { NewPlan } from "./screens/Plans/NewPlan"
 import { PlanDetails } from "./screens/Plans/PlanDetails"
-import { KitchenOrder } from "./screens/Orders/KitchenOrder"
+
 import { OrderHistory } from "./screens/Orders/OrderHistory"
 import { OrderHistoryDetails } from "./screens/Orders/OrderHistoryDetails"
 
@@ -184,7 +184,7 @@ function App() {
           <>
             <Route path={NAVIGATION_ROUTES_KITCHEN.Home.path} element={<WelcomeScreen />} />
 
-            <Route path={NAVIGATION_ROUTES_KITCHEN.Orders.path} element={<KitchenOrder />} />
+            <Route path={NAVIGATION_ROUTES_KITCHEN.Orders.path} element={<Orders />} />
 
             <Route path={NAVIGATION_ROUTES_KITCHEN.Orders.OrderDetails.path} element={<OrderDetails />} />
 
