@@ -5,6 +5,20 @@ export const DEFAULT_COUPON_TYPE = "Por fecha"
 export const DEFAULT_CATEGORY = "Porcentual"
 export const DEFAULT_INITIAL_DATE = new Date()
 export const DEFAULT_END_DATE = new Date()
+
+export const DEFAULT_CURRENCY = "HNL"
+export const DEFAULT_PAYMENT_TYPE = "Mensual"
+
+export const orderStatusValues = {
+  pending: "pending",
+  onHold: "on-hold",
+  confirmed: "confirmed",
+  ready: "ready",
+  driverAssigned: "driver-assigned",
+  onDelivery: " on-delivery",
+  delivered: "delivered"
+}
+
 export const CouponTypes = {
   AMOUNT: "Por cantidad de usos",
   DATE: "Por fecha"
