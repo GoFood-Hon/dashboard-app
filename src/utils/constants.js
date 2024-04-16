@@ -1,10 +1,24 @@
-import { NAVIGATION_ROUTES_BRANCH_ADMIN } from "../routes"
+import { NAVIGATION_ROUTES_BRANCH_ADMIN, NAVIGATION_ROUTES_KITCHEN } from "../routes"
 
 export const DEFAULT_DISCOUNT_PERCENTAGE = "5%"
 export const DEFAULT_COUPON_TYPE = "Por fecha"
 export const DEFAULT_CATEGORY = "Porcentual"
 export const DEFAULT_INITIAL_DATE = new Date()
 export const DEFAULT_END_DATE = new Date()
+
+export const DEFAULT_CURRENCY = "HNL"
+export const DEFAULT_PAYMENT_TYPE = "Mensual"
+
+export const orderStatusValues = {
+  pending: "pending",
+  onHold: "on-hold",
+  confirmed: "confirmed",
+  ready: "ready",
+  driverAssigned: "driver-assigned",
+  onDelivery: " on-delivery",
+  delivered: "delivered"
+}
+
 export const CouponTypes = {
   AMOUNT: "Por cantidad de usos",
   DATE: "Por fecha"
@@ -17,7 +31,7 @@ export const APP_ROLES = {
   kitchenUser: "kitchen"
 }
 
-export const welcomeCards = [
+export const branchWelcomeCards = [
   {
     title: "Ver mis pedidos",
     description: "Lista de pedidos actuales",
@@ -47,6 +61,24 @@ export const welcomeCards = [
     title: "Ver Notificaciones",
     description: "Ver las ultimas actualizaciones",
     link: NAVIGATION_ROUTES_BRANCH_ADMIN.Home.path
+  }
+]
+
+export const kitchenWelcomeCards = [
+  {
+    title: "Ver mis pedidos",
+    description: "Lista de pedidos",
+    link: NAVIGATION_ROUTES_KITCHEN.Orders.path
+  },
+  {
+    title: "Ver el historial",
+    description: "Historial de pedidos",
+    link: NAVIGATION_ROUTES_KITCHEN.OrderHistory.path
+  },
+  {
+    title: "Ver mis configuraciones",
+    description: "Ajustar configuraciones",
+    link: NAVIGATION_ROUTES_KITCHEN.Home.path
   }
 ]
 

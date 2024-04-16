@@ -9,6 +9,7 @@ import toast from "react-hot-toast"
 import { ConfigIcon } from "../assets/icons/ConfigIcon"
 import { fetchRestaurantData, selectImage } from "../store/features/restaurantSlice"
 import { APP_ROLES } from "../utils/constants"
+import { fetchBranchData } from "../store/features/branchesSlice"
 
 export default function Header() {
   const imgUrl = useSelector(selectImage)
@@ -23,6 +24,12 @@ export default function Header() {
       dispatch(
         fetchRestaurantData({
           restaurantId: user?.restaurantId
+        })
+      )
+    } else if (user.role === APP_ROLES.branchAdmin || user.role === APP_ROLES.kitchenUser) {
+      dispatch(
+        fetchBranchData({
+          branchId: user?.sucursalId
         })
       )
     }

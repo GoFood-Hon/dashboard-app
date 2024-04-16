@@ -1,12 +1,30 @@
-import React from "react"
+import React, { useEffect, useState } from "react"
 import BaseLayout from "../../components/BaseLayout"
 import { useSelector } from "react-redux"
 import { Grid } from "@mantine/core"
 import Cards from "../../components/Cards"
-import { welcomeCards } from "../../utils/constants"
+import { APP_ROLES, branchWelcomeCards, kitchenWelcomeCards } from "../../utils/constants"
 
 export const WelcomeScreen = () => {
   const user = useSelector((state) => state.user.value)
+
+  const [welcomeCards, setWelcomeCards] = useState([])
+
+  useEffect(() => {
+    if (user && user.role) {
+      switch (user.role) {
+        case APP_ROLES.branchAdmin:
+          setWelcomeCards(branchWelcomeCards)
+          break
+        case APP_ROLES.kitchenUser:
+          setWelcomeCards(kitchenWelcomeCards)
+          break
+        default:
+          setWelcomeCards([])
+          break
+      }
+    }
+  }, [user])
 
   return (
     <BaseLayout>
@@ -19,7 +37,7 @@ export const WelcomeScreen = () => {
         <Grid>
           {welcomeCards.map((item, key) => (
             <Grid.Col span={{ base: 12, md: 6, lg: 4 }} key={key}>
-              <Cards gutter={{ base: 5, xs: "md", md: "xl", xl: 50 }} data={item} />
+              <Cards data={item} />
             </Grid.Col>
           ))}
         </Grid>

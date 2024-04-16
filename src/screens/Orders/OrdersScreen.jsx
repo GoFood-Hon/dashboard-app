@@ -1,38 +1,47 @@
 import React, { useEffect, useState } from "react"
-import BaseLayout from "../../components/BaseLayout"
 import { Breadcrumbs } from "@mantine/core"
-import BreadCrumbNavigation from "../../components/BreadCrumbNavigation"
 import { useLocation } from "react-router-dom"
+import toast from "react-hot-toast"
+
+import BaseLayout from "../../components/BaseLayout"
+import BreadCrumbNavigation from "../../components/BreadCrumbNavigation"
 
 import MenuTable from "../Menu/MenuTable"
 import orderApi from "../../api/orderApi"
-import toast from "react-hot-toast"
+import { useSocket } from "../../hooks/useOrderSocket"
 
 export default function OrdersScreen() {
   const location = useLocation()
   const [orders, setOrders] = useState([])
+  const orderSocket = useSocket()
 
-  const handleDisableSelected = async (cardsSelected) => {
-    /*  await Promise.all(
-      cardsSelected.map(async (data) => {
-        await dispatch(updateMenu({ data: { id: data, isActive: false }, propertyToUpdate: "isActive" }))
+  useEffect(() => {
+    if (orderSocket) {
+      orderSocket.on("orderUpdate", (order) => {
+        refreshPage()
       })
-    )
- */
-    refreshPage()
-  }
+      orderSocket.on("orderReady", (order) => {
+        refreshPage()
+      })
+
+      return () => {
+        orderSocket.off("orderUpdate")
+        orderSocket.off("orderReady")
+      }
+    }
+  }, [orderSocket])
 
   const fetchOrders = async () => {
     try {
       const response = await orderApi.getAllOrders()
       setOrders(response?.data)
       if (response.error) {
-        toast.error(`Fallo al obtener los últimos pedidos. Por favor intente de nuevo. ${response.message}`, {
+        toast.error(`Fallo al obtener los últimos pedidos. ${response.message}`, {
           duration: 7000
         })
       }
     } catch (e) {
-      toast.error(`Fallo al crear el cupón. Por favor intente de nuevo. ${e.message}`, {
+      toast.error(`Fallo al obtener la información de las ordenes. Por favor intente de nuevo. ${e.message}`, {
         duration: 7000
       })
     }
@@ -46,6 +55,10 @@ export default function OrdersScreen() {
     fetchOrders()
   }
 
+  // TODO
+  const handleDisableSelected = async (cardsSelected) => {
+    refreshPage()
+  }
   return (
     <BaseLayout>
       <section>

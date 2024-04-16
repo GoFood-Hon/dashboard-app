@@ -2,7 +2,6 @@ import React, { useState } from "react"
 import { Accordion, Breadcrumbs } from "@mantine/core"
 import { useLocation, useNavigate } from "react-router-dom"
 import { useForm } from "react-hook-form"
-import { yupResolver } from "@hookform/resolvers/yup"
 import toast from "react-hot-toast"
 
 import BaseLayout from "../../components/BaseLayout"
@@ -11,7 +10,6 @@ import GeneralInformationForm from "./GeneralInformationForm"
 import SucursalSettings from "./SucursalSettings"
 import Button from "../../components/Button"
 import { NAVIGATION_ROUTES_RES_ADMIN } from "../../routes"
-import { userValidation } from "../../utils/inputRules"
 import userApi from "../../api/userApi"
 import BackButton from "../Dishes/components/BackButton"
 import { USER_ROLES } from "../../utils/constants"
@@ -27,14 +25,14 @@ export default function NewUser() {
     control,
     reset,
     formState: { errors }
-  } = useForm({ resolver: yupResolver(userValidation) })
+  } = useForm()
 
   const [isDataCleared, setIsDataCleared] = useState(false)
 
   const onSubmit = async (data) => {
     try {
       const formData = new FormData()
-      formData.append("name", `${data.firstName} ${data.lastName}`)
+      formData.append("name", data.name)
       formData.append("email", data.email)
       formData.append("phoneNumber", data.phoneNumber)
       formData.append("role", data.role)
