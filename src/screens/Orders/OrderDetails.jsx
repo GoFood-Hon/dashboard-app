@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react"
 import { useLocation, useNavigate, useParams } from "react-router-dom"
 import toast from "react-hot-toast"
 import { useDisclosure } from "@mantine/hooks"
-import { Avatar, Breadcrumbs, Grid, Image, Modal } from "@mantine/core"
+import { Avatar, Breadcrumbs, Grid, Image, Modal, Select } from "@mantine/core"
 import BaseLayout from "../../components/BaseLayout"
 import BreadCrumbNavigation from "../../components/BreadCrumbNavigation"
 import { formatDateDistanceToNow, getFormattedHNL } from "../../utils"
@@ -22,26 +22,33 @@ export const OrderDetails = () => {
 
   const [orderDetailModalOpened, { open: openOrderDetailsModal, close: closeOrderDetailModal }] = useDisclosure(false)
   const [orderDetails, setOrderDetails] = useState({})
-  const [orderStatus, setOrderStatus] = useState(orderDetails?.status)
+  const [driver, setDriver] = useState(null)
+  const [driverList, setDriverList] = useState(null)
 
   useEffect(() => {
     ;(async () => {
       try {
         const response = await orderApi.getOrderDetails(orderId)
         setOrderDetails(response?.data)
-        setOrderStatus(response?.data?.status)
+
+        const driversResponseRequest = await orderApi.getDrivers("ea6ceeb0-5cd4-4f6e-8c20-2a71cfb79324")
+        // TODO: change to driver name
+        const newDriverList = driversResponseRequest.data.map((item) => item.driverId)
+
+        setDriverList(newDriverList)
+
         if (response.status !== "success") {
-          toast.error(`Fallo al crear el cupón. Por favor intente de nuevo. ${response.message}`, {
+          toast.error(`Fallo al obtener la información de la orden. ${response.message}`, {
             duration: 7000
           })
         }
-      } catch (e) {
-        toast.error(`Error. Por favor intente de nuevo. ${e.message}`, {
+      } catch (error) {
+        toast.error(`Error. Por favor intente de nuevo. ${error.message}`, {
           duration: 7000
         })
       }
     })()
-  }, [orderStatus])
+  }, [])
 
   const confirmOrder = async () => {
     const response = await orderApi.confirmOrder(orderId)
@@ -78,6 +85,25 @@ export const OrderDetails = () => {
       }
     } catch (error) {
       toast.error("Fallo la solicitud, ", error)
+    }
+  }
+
+  const confirmDriver = async () => {
+    try {
+      const formData = new FormData()
+      formData.append("driverId", driver)
+      formData.append("suborderId", orderId)
+
+      const response = await orderApi.assignDriver(formData)
+
+      if (response.status === "success") {
+        navigate(NAVIGATION_ROUTES_RES_ADMIN.Pedidos.path)
+        toast.success("Orden enviada al conductor!")
+      } else {
+        toast.error("Hubo un error en la orden.")
+      }
+    } catch (error) {
+      toast.error("Fallo la confirmación del motorista, ", error)
     }
   }
 
@@ -258,9 +284,34 @@ export const OrderDetails = () => {
                 </div>
 
                 <div className="text-sky-950 text-base font-semibold mt-4 mb-2">Dirección de facturación</div>
-                <div className="text-sky-950 text-sm py-2 font-normal leading-normal"></div>
+                <div className="text-sky-950 text-sm py-2 font-normal leading-normal">
+                  {orderDetails?.Order?.User?.UserAddress || "Dirección no disponible "}
+                </div>
               </div>
             </div>
+            {(user.role === APP_ROLES.restaurantAdmin) & (orderDetails.status === orderStatusValues.ready) ? (
+              <div className="w-full bg-white rounded-md border border-blue-100 p-5 mt-4">
+                <span>Seleccionar motorista</span>
+                <div className="w-full border border-blue-100 mt-4" />
+                <div className="my-4 flex flex-col gap-4">
+                  <Select
+                    placeholder="Seleccione motorista"
+                    data={driverList}
+                    allowDeselect={false}
+                    size="md"
+                    value={driver}
+                    onChange={setDriver}
+                    searchable
+                    nothingFoundMessage="No se ha encontrado"
+                  />
+                  <Button
+                    text={"Confirmar motorista"}
+                    onClick={() => confirmDriver()}
+                    className={"text-md px-3 py-2 text-white bg-primary_button font-bold"}
+                  />
+                </div>
+              </div>
+            ) : null}
           </Grid.Col>
         </Grid>
       </section>

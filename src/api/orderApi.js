@@ -17,7 +17,16 @@ const orderApi = {
   confirmOrder: (id) => axiosClient.patch(`api/v1/order/confirm-order/${id}`),
 
   // Cancel order, Restaurant
-  cancelOrder: (id) => axiosClient.patch(`api/v1/order/cancel-order/${id}`)
+  cancelOrder: (id) => axiosClient.patch(`api/v1/order/cancel-order/${id}`),
+
+  // Get Order History (kitchen)
+  // getOrderHistory: (id) => axiosClient.patch(`api/v1/order/cancel-order/${id}`)
+
+  // Get Drivers by Sucursal (admin sucursal, admin restaurant)
+  getDrivers: (sucursalId) => axiosClient.get(`api/v1/order/get-drivers/${sucursalId}`),
+
+  // Assign Driver (admin restaurant, admin sucursal)
+  assignDriver: (params) => axiosClient.patch("api/v1/order/assign-driver", params)
 }
 
 export default orderApi

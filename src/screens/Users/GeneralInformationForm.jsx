@@ -124,7 +124,7 @@ export default function GeneralInformationForm({ register, errors, setValue, isD
                 type="password"
                 register={register}
                 errors={errors}
-                placeholder="Ingrese su contraseña nuevamente"
+                placeholder="Ingrese nuevamente"
               />
             </Grid.Col>
             <Grid.Col span={{ base: 12 }}>
