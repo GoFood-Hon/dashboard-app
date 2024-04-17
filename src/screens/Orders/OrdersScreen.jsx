@@ -9,6 +9,7 @@ import BreadCrumbNavigation from "../../components/BreadCrumbNavigation"
 import MenuTable from "../Menu/MenuTable"
 import orderApi from "../../api/orderApi"
 import { useSocket } from "../../hooks/useOrderSocket"
+import BackButton from "../Dishes/components/BackButton"
 
 export default function OrdersScreen() {
   const location = useLocation()
@@ -64,7 +65,7 @@ export default function OrdersScreen() {
       <section>
         <div className="flex flex-row justify-between items-center pb-6">
           <div className="flex flex-row gap-x-3 items-center">
-            <h1 className="text-white-200 text-2xl font-semibold">Pedidos</h1>
+            <BackButton title="Pedidos" />
           </div>
           <div>
             <Breadcrumbs>

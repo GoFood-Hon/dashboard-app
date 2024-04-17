@@ -11,7 +11,6 @@ import { useTheme } from "@table-library/react-table-library/theme"
 import { DEFAULT_OPTIONS, getTheme } from "@table-library/react-table-library/mantine"
 import { Icon } from "../../components/Icon"
 import { ITEMS_PER_PAGE } from "../../utils/paginationConfig"
-import { formatDistanceToNow } from "date-fns"
 import { colors } from "../../theme/colors"
 import { useNavigate } from "react-router-dom"
 import { NAVIGATION_ROUTES_RES_ADMIN, NAVIGATION_ROUTES_SUPER_ADMIN } from "../../routes"
@@ -39,6 +38,8 @@ export default function MenuTable({ refreshPage, items, handleDisableSelected, s
       navigate(`${NAVIGATION_ROUTES_SUPER_ADMIN.Users.path}/${id}`)
     } else if (screenType === "planScreen") {
       navigate(`${NAVIGATION_ROUTES_SUPER_ADMIN.Users.path}/${id}`)
+    } else if (screenType === "orderHistoryScreen") {
+      navigate(`${NAVIGATION_ROUTES_KITCHEN.OrderHistory.path}/${id}`)
     }
   }
 
@@ -276,6 +277,65 @@ export default function MenuTable({ refreshPage, items, handleDisableSelected, s
         )
       }
     ]
+  } else if (screenType === "orderHistoryScreen") {
+    columns = [
+      {
+        label: "ID",
+        renderCell: (item) => item.id,
+
+        select: {
+          renderHeaderCellSelect: () => (
+            <Checkbox
+              checked={select.state.all}
+              indeterminate={!select.state.all && !select.state.none}
+              onChange={select.fns.onToggleAll}
+            />
+          ),
+          renderCellSelect: (item) => (
+            <Checkbox checked={select.state.ids.includes(item.id)} onChange={() => select.fns.onToggleById(item.id)} />
+          )
+        }
+      },
+      {
+        label: "USUARIO",
+        renderCell: (item) => <div className="flex flex-row items-center gap-2">{item?.Order?.User?.name}</div>,
+        sort: { sortKey: "USER" }
+      },
+
+      {
+        label: "TELÉFONO",
+        renderCell: (item) => item?.Order?.User?.phoneNumber,
+        sort: { sortKey: "PHONE_NUMBER" }
+      },
+      {
+        label: "ESTADO",
+        renderCell: (item) => item.status,
+        sort: { sortKey: "STATUS" }
+      },
+      {
+        label: "FECHA",
+        renderCell: (item) => formatDateDistanceToNow(item.createdAt),
+        sort: { sortKey: "DATE" }
+      },
+      {
+        label: "TIPO",
+        renderCell: (item) => item?.Order?.type,
+        sort: { sortKey: "TYPE" }
+      },
+      {
+        label: "TOTAL",
+        renderCell: (item) => item.total,
+        sort: { sortKey: "TOTAL" }
+      },
+      {
+        label: "ACCIONES",
+        renderCell: (item) => (
+          <span onClick={() => handleClick(item.id)}>
+            <Icon icon="eye" size={19} />
+          </span>
+        )
+      }
+    ]
   } else {
     columns = []
   }
@@ -374,20 +434,16 @@ export default function MenuTable({ refreshPage, items, handleDisableSelected, s
     // console.log(action, state)
   }
 
-  //* Custom Modifiers *//
-
   let modifiedNodes = data.nodes
 
   // search
   modifiedNodes = modifiedNodes.filter((node) => {
-    const searchField = screenType === "ordersScreen" ? node.Order.User.name : node.name
+    const searchField = screenType === "ordersScreen" || screenType === "orderHistoryScreen" ? node.Order.User.name : node.name
     return searchField.toLowerCase().includes(search.toLowerCase())
   })
 
   // filter
   // modifiedNodes = isHide ? modifiedNodes.filter((node) => !node.isComplete) : modifiedNodes
-
-  //* Columns *//
 
   return (
     <>

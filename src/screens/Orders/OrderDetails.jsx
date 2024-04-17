@@ -1,8 +1,8 @@
+import { Avatar, Breadcrumbs, Grid, Image, Modal, Select } from "@mantine/core"
 import React, { useEffect, useState } from "react"
 import { useLocation, useNavigate, useParams } from "react-router-dom"
 import toast from "react-hot-toast"
 import { useDisclosure } from "@mantine/hooks"
-import { Avatar, Breadcrumbs, Grid, Image, Modal, Select } from "@mantine/core"
 import BaseLayout from "../../components/BaseLayout"
 import BreadCrumbNavigation from "../../components/BreadCrumbNavigation"
 import { formatDateDistanceToNow, getFormattedHNL } from "../../utils"
@@ -31,16 +31,18 @@ export const OrderDetails = () => {
         const response = await orderApi.getOrderDetails(orderId)
         setOrderDetails(response?.data)
 
-        const driversResponseRequest = await orderApi.getDrivers("ea6ceeb0-5cd4-4f6e-8c20-2a71cfb79324")
-        // TODO: change to driver name
-        const newDriverList = driversResponseRequest.data.map((item) => item.driverId)
+        if (user.role === APP_ROLES.restaurantAdmin) {
+          const driversResponseRequest = await orderApi.getDrivers("ea6ceeb0-5cd4-4f6e-8c20-2a71cfb79324")
+          // TODO: change to driver name
+          const newDriverList = driversResponseRequest?.data?.map((item) => item?.driverId)
 
-        setDriverList(newDriverList)
+          setDriverList(newDriverList)
 
-        if (response.status !== "success") {
-          toast.error(`Fallo al obtener la información de la orden. ${response.message}`, {
-            duration: 7000
-          })
+          if (response?.status !== "success") {
+            toast.error(`Fallo al obtener la información de la orden. ${response.message}`, {
+              duration: 7000
+            })
+          }
         }
       } catch (error) {
         toast.error(`Error. Por favor intente de nuevo. ${error.message}`, {
@@ -52,7 +54,7 @@ export const OrderDetails = () => {
 
   const confirmOrder = async () => {
     const response = await orderApi.confirmOrder(orderId)
-    if (response.status === "success") {
+    if (response?.status === "success") {
       toast.success("Pedido confirmado!")
       navigate(NAVIGATION_ROUTES_RES_ADMIN.Pedidos.path)
     } else {
@@ -63,7 +65,7 @@ export const OrderDetails = () => {
   const cancelOrder = async () => {
     try {
       const response = await orderApi.cancelOrder(orderId)
-      if (response.status === "success") {
+      if (response?.status === "success") {
         toast.success("Orden cancelada exitosamente")
         navigate(NAVIGATION_ROUTES_RES_ADMIN.Pedidos.path)
       } else {
@@ -77,7 +79,7 @@ export const OrderDetails = () => {
   const orderReady = async () => {
     try {
       const response = await orderApi.updateOrderStatus(orderId)
-      if (response.status === "success") {
+      if (response?.status === "success") {
         navigate(NAVIGATION_ROUTES_RES_ADMIN.Pedidos.path)
         toast.success("Orden lista!")
       } else {
@@ -96,7 +98,7 @@ export const OrderDetails = () => {
 
       const response = await orderApi.assignDriver(formData)
 
-      if (response.status === "success") {
+      if (response?.status === "success") {
         navigate(NAVIGATION_ROUTES_RES_ADMIN.Pedidos.path)
         toast.success("Orden enviada al conductor!")
       } else {
@@ -289,7 +291,8 @@ export const OrderDetails = () => {
                 </div>
               </div>
             </div>
-            {(user.role === APP_ROLES.restaurantAdmin) & (orderDetails.status === orderStatusValues.ready) ? (
+            {(user.role === APP_ROLES.restaurantAdmin || user.role === APP_ROLES.branchAdmin) &
+            (orderDetails?.status === orderStatusValues.ready) ? (
               <div className="w-full bg-white rounded-md border border-blue-100 p-5 mt-4">
                 <span>Seleccionar motorista</span>
                 <div className="w-full border border-blue-100 mt-4" />
