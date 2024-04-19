@@ -14,7 +14,7 @@ export const orderStatusValues = {
   onHold: "on-hold",
   confirmed: "confirmed",
   ready: "ready",
-  driverAssigned: "driver-assigned",
+  driverAssigned: "ready-to-pick-up",
   onDelivery: " on-delivery",
   delivered: "delivered"
 }
