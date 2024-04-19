@@ -227,7 +227,7 @@ export const NAVIGATION_ROUTES_BRANCH_ADMIN = {
   },
   Dishes: {
     label: "Platillos",
-    icon: "menu",
+    icon: "chefHat",
     path: "/platillos",
     DishDetails: {
       label: "Detalles del platillo",
@@ -242,7 +242,7 @@ export const NAVIGATION_ROUTES_BRANCH_ADMIN = {
   },
   Password: {
     label: "Contraseña",
-    icon: "users",
+    icon: "eye",
     path: "/contraseña"
   }
 }

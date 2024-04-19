@@ -11,7 +11,6 @@ import {
 } from "../routes"
 import NavigationItem from "./NavigationItem"
 import { AlarmIcon } from "../assets/icons/AlarmIcon"
-import { MailIcon } from "../assets/icons/MailIcon"
 import { useSelector } from "react-redux"
 import { APP_ROLES } from "../utils/constants"
 
