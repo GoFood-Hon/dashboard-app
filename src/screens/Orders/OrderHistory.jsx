@@ -18,7 +18,7 @@ export const OrderHistory = () => {
   const [orders, setOrders] = useState([])
   const fetchOrders = async () => {
     try {
-      const response = await orderApi.getOrderHistory(user.restaurantId)
+      const response = await orderApi.getKitchenOrders(user.restaurantId)
       setOrders(response?.data)
       if (response.error) {
         toast.error(`Fallo al obtener el historial pedidos. ${response.message}`, {

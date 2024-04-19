@@ -206,7 +206,9 @@ export const OrderDetails = () => {
                       - {getFormattedHNL(orderDetails?.OrderDetails?.[0]?.discount)}
                     </span>
                     <span className="text-sky-950 text-sm py-2 font-normal leading-normal">+ {orderDetails?.shippingPrice}</span>
-                    <span className="text-sky-950 text-sm py-2 font-normal leading-normal">+ HND 1500.00</span>
+                    <span className="text-sky-950 text-sm py-2 font-normal leading-normal">
+                      + {getFormattedHNL(orderDetails?.isv)}
+                    </span>
                     <div className="w-full border border-blue-100" />
                     <span className="text-sky-950 text-sm pt-4 font-normal leading-normal">
                       {getFormattedHNL(orderDetails?.total)}
@@ -259,14 +261,14 @@ export const OrderDetails = () => {
                 className={"text-white text-md px-3 py-2 mb-4 bg-green-500  font-bold"}
               />
             ) : null}
-            <div className="w-full bg-white rounded-md border border-blue-100 p-5">
+            {/*  <div className="w-full bg-white rounded-md border border-blue-100 p-5">
               <span>Nota del pedido</span>
               <div className="w-full border border-blue-100 mt-4" />
               <div className="w-full text-sky-950 text-xs font-normal mt-4">
                 {orderDetails?.OrderDetails?.[0]?.orderDetailNote}
               </div>
-            </div>
-            <div className="w-full bg-white rounded-md  border border-blue-100 p-5 mt-4">
+            </div> */}
+            <div className="w-full bg-white rounded-md  border border-blue-100 p-5">
               <span>Cliente</span>
               <div className="w-full border border-blue-100 mt-4" />
               <div className="my-4 flex flex-row">
@@ -285,10 +287,10 @@ export const OrderDetails = () => {
                   {orderDetails?.Order?.User?.UserAddress || "Dirección no disponible "}
                 </div>
 
-                <div className="text-sky-950 text-base font-semibold mt-4 mb-2">Dirección de facturación</div>
+                {/* <div className="text-sky-950 text-base font-semibold mt-4 mb-2">Dirección de facturación</div>
                 <div className="text-sky-950 text-sm py-2 font-normal leading-normal">
                   {orderDetails?.Order?.User?.UserAddress || "Dirección no disponible "}
-                </div>
+                </div> */}
               </div>
             </div>
             {(user.role === APP_ROLES.restaurantAdmin || user.role === APP_ROLES.branchAdmin) &

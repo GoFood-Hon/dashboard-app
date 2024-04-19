@@ -297,35 +297,35 @@ export default function MenuTable({ refreshPage, items, handleDisableSelected, s
         }
       },
       {
-        label: "USUARIO",
-        renderCell: (item) => <div className="flex flex-row items-center gap-2">{item?.Order?.User?.name}</div>,
-        sort: { sortKey: "USER" }
+        label: "COSTO DE ENVÍO",
+        renderCell: (item) => <div className="flex flex-row items-center gap-2">{item.shippingPrice}</div>,
+        sort: { sortKey: "SHIPPING_PRICE" }
       },
 
       {
-        label: "TELÉFONO",
-        renderCell: (item) => item?.Order?.User?.phoneNumber,
-        sort: { sortKey: "PHONE_NUMBER" }
+        label: "DESCUENTO",
+        renderCell: (item) => item?.discount,
+        sort: { sortKey: "DISCOUNT" }
       },
       {
-        label: "ESTADO",
-        renderCell: (item) => item.status,
-        sort: { sortKey: "STATUS" }
+        label: "SUBTOTAL",
+        renderCell: (item) => item.subtotal,
+        sort: { sortKey: "SUBTOTAL" }
       },
       {
-        label: "FECHA",
-        renderCell: (item) => formatDateDistanceToNow(item.createdAt),
-        sort: { sortKey: "DATE" }
-      },
-      {
-        label: "TIPO",
-        renderCell: (item) => item?.Order?.type,
-        sort: { sortKey: "TYPE" }
+        label: "ISV",
+        renderCell: (item) => formatDateDistanceToNow(item?.isv),
+        sort: { sortKey: "ISV" }
       },
       {
         label: "TOTAL",
-        renderCell: (item) => item.total,
+        renderCell: (item) => item?.total,
         sort: { sortKey: "TOTAL" }
+      },
+      {
+        label: "FECHA DE PAGO",
+        renderCell: (item) => item.paidDate,
+        sort: { sortKey: "PAID_DATE" }
       },
       {
         label: "ACCIONES",
@@ -421,6 +421,7 @@ export default function MenuTable({ refreshPage, items, handleDisableSelected, s
         iconDown: <IconChevronDown />
       },
       sortFns: {
+        // TODO:
         MENU: (array) => array.sort((a, b) => a.name.localeCompare(b.name)),
 
         TYPE: (array) => array.sort((a, b) => a.typeMenu.localeCompare(b.typeMenu)),
@@ -438,8 +439,8 @@ export default function MenuTable({ refreshPage, items, handleDisableSelected, s
 
   // search
   modifiedNodes = modifiedNodes.filter((node) => {
-    const searchField = screenType === "ordersScreen" || screenType === "orderHistoryScreen" ? node.Order.User.name : node.name
-    return searchField.toLowerCase().includes(search.toLowerCase())
+    const searchField = screenType === "ordersScreen" || screenType === "orderHistoryScreen" ? node.Order?.User?.name : node.name
+    return searchField?.toLowerCase().includes(search?.toLowerCase())
   })
 
   // filter

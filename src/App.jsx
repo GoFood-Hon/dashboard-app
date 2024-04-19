@@ -59,7 +59,6 @@ import { NewPlan } from "./screens/Plans/NewPlan"
 import { PlanDetails } from "./screens/Plans/PlanDetails"
 
 import { OrderHistory } from "./screens/Orders/OrderHistory"
-import { OrderHistoryDetails } from "./screens/Orders/OrderHistoryDetails"
 
 function App() {
   const userRole = useSelector((state) => state.user.value.role)
@@ -190,7 +189,7 @@ function App() {
 
             <Route path={NAVIGATION_ROUTES_KITCHEN.OrderHistory.path} element={<OrderHistory />} />
 
-            <Route path={NAVIGATION_ROUTES_KITCHEN.OrderHistory.OrderHistoryDetails.path} element={<OrderHistoryDetails />} />
+            <Route path={NAVIGATION_ROUTES_KITCHEN.OrderHistory.OrderHistoryDetails.path} element={<OrderDetails />} />
           </>
         )
 
