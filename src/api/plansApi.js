@@ -5,10 +5,10 @@ const plansApi = {
   createPlan: (params) => axiosClient.post(`api/v1/plan`, params),
 
   // Get plan (super admin)
-  getPlan: (params, id) => axiosClient.get(`api/v1/plan/${id}/get`, params),
+  getPlan: (id) => axiosClient.get(`api/v1/plan/${id}/get`),
 
   // Get features (super admin)
-  getFeatures: (params) => axiosClient.get("api/v1/plan/feature", params),
+  getFeatures: () => axiosClient.get("api/v1/plan/feature"),
 
   // Update feature (super admin)
   updateFeature: (params, id) => axiosClient.patch(`api/v1/plan/feature/${id}`, params),

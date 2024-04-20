@@ -37,7 +37,7 @@ export default function MenuTable({ refreshPage, items, handleDisableSelected, s
     } else if (screenType === "adminUserScreen") {
       navigate(`${NAVIGATION_ROUTES_SUPER_ADMIN.Users.path}/${id}`)
     } else if (screenType === "planScreen") {
-      navigate(`${NAVIGATION_ROUTES_SUPER_ADMIN.Users.path}/${id}`)
+      navigate(`${NAVIGATION_ROUTES_SUPER_ADMIN.Plans.path}/${id}`)
     } else if (screenType === "orderHistoryScreen") {
       navigate(`${NAVIGATION_ROUTES_KITCHEN.OrderHistory.path}/${id}`)
     }
