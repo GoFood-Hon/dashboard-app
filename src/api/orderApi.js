@@ -20,7 +20,7 @@ const orderApi = {
   cancelOrder: (id) => axiosClient.patch(`api/v1/order/cancel-order/${id}`),
 
   // Get Order History (kitchen)
-  getKitchenOrders: () => axiosClient.get("api/v1/order/kitchen/get-orders"),
+  getKitchenOrders: () => axiosClient.get("api/v1/order/get-kitchen-order-history"),
 
   // Get Drivers by Sucursal (admin sucursal, admin restaurant)
   getDrivers: (sucursalId) => axiosClient.get(`api/v1/order/get-drivers/${sucursalId}`),
