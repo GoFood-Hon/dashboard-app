@@ -10,10 +10,13 @@ import MenuTable from "../Menu/MenuTable"
 import orderApi from "../../api/orderApi"
 import { useSocket } from "../../hooks/useOrderSocket"
 import BackButton from "../Dishes/components/BackButton"
+import LoadingCircle from "../../components/LoadingCircle"
 
 export default function OrdersScreen() {
   const location = useLocation()
   const [orders, setOrders] = useState([])
+  const [isLoading, setIsLoading] = useState(false)
+
   const orderSocket = useSocket()
 
   useEffect(() => {
@@ -34,6 +37,8 @@ export default function OrdersScreen() {
 
   const fetchOrders = async () => {
     try {
+      setIsLoading(true)
+
       const response = await orderApi.getAllOrders()
       setOrders(response?.data)
       if (response.error) {
@@ -45,6 +50,8 @@ export default function OrdersScreen() {
       toast.error(`Fallo al obtener la información de las ordenes. Por favor intente de nuevo. ${e.message}`, {
         duration: 7000
       })
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -56,10 +63,6 @@ export default function OrdersScreen() {
     fetchOrders()
   }
 
-  // TODO
-  const handleDisableSelected = async (cardsSelected) => {
-    refreshPage()
-  }
   return (
     <BaseLayout>
       <section>
@@ -75,14 +78,13 @@ export default function OrdersScreen() {
         </div>
       </section>
       <section>
-        {orders && orders.length > 0 ? (
+        {isLoading ? (
+          <div className="flex justify-center items-center">
+            <LoadingCircle />
+          </div>
+        ) : orders && orders.length > 0 ? (
           <div className="w-full p-4 h-full bg-white rounded-2xl border border-blue-100">
-            <MenuTable
-              refreshPage={refreshPage}
-              items={orders}
-              handleDisableSelected={handleDisableSelected}
-              screenType="ordersScreen"
-            />
+            <MenuTable refreshPage={refreshPage} items={orders} screenType="ordersScreen" />
           </div>
         ) : (
           <div className="text-center mt-4 text-gray-500">Sin ordenes disponibles!</div>

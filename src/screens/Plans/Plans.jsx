@@ -83,7 +83,7 @@ export const Plans = () => {
       </section>
       <section>
         {isLoading ? (
-          <div className="flex justify-center items-center h-screen">
+          <div className="flex justify-center items-center">
             <LoadingCircle />
           </div>
         ) : plans && plans.length > 0 ? (
