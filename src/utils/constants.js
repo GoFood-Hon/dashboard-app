@@ -3,11 +3,12 @@ import { NAVIGATION_ROUTES_BRANCH_ADMIN, NAVIGATION_ROUTES_KITCHEN } from "../ro
 export const DEFAULT_DISCOUNT_PERCENTAGE = "5%"
 export const DEFAULT_COUPON_TYPE = "Por fecha"
 export const DEFAULT_CATEGORY = "Porcentual"
+
 export const DEFAULT_INITIAL_DATE = new Date()
 export const DEFAULT_END_DATE = new Date()
 
 export const DEFAULT_CURRENCY = "HNL"
-export const DEFAULT_PAYMENT_TYPE = "Mensual"
+export const DEFAULT_PAYMENT_TYPE = "MENSUAL"
 
 export const orderStatusValues = {
   pending: "pending",

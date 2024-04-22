@@ -1,3 +1,49 @@
+export const NAVIGATION_ROUTES_SUPER_ADMIN = {
+  Dashboard: {
+    label: "Inicio",
+    path: "/",
+    icon: "dashboard"
+  },
+
+  Restaurants: {
+    label: "Restaurantes",
+    path: "/restaurantes",
+    icon: "branch",
+    NewRestaurant: {
+      path: "/restaurantes/nuevoRestaurante"
+    },
+    RestaurantDetails: {
+      path: "/restaurantes/:restaurantId"
+    }
+  },
+
+  Users: {
+    label: "Administradores",
+    path: "/administradores",
+    icon: "users",
+    NewUser: {
+      path: "/administradores/nuevoAdministrador"
+    },
+    UserDetails: {
+      path: "/administradores/:adminId"
+    }
+  },
+
+  Plans: {
+    label: "Planes",
+    path: "/planes",
+    icon: "creditCard",
+    NewPlan: {
+      label: "Nuevo Plan",
+      path: "/planes/nuevoPlan"
+    },
+    PlanDetails: {
+      label: "Detalles del Plan",
+      path: "/planes/:planId"
+    }
+  }
+}
+
 export const NAVIGATION_ROUTES_RES_ADMIN = {
   Dashboard: {
     label: "Inicio",
@@ -87,117 +133,6 @@ export const NAVIGATION_ROUTES_RES_ADMIN = {
   }
 }
 
-export const SETTING_NAVIGATION_ROUTES = {
-  General: {
-    type: "button",
-    label: "General",
-    path: "/configuraciones/general",
-    icon: "configuration"
-  },
-  Profile: {
-    label: "Perfil"
-  },
-  Cuenta: {
-    type: "button",
-    label: "Cuenta",
-    path: "/configuraciones/cuenta",
-    icon: "user"
-  },
-  Password: {
-    type: "button",
-    label: "Contraseña",
-    path: "/configuraciones/contraseña",
-    icon: "password"
-  },
-  Business: {
-    label: "Negocio"
-  },
-  Business_btn: {
-    type: "button",
-    label: "Negocios",
-    path: "/configuraciones/negocios",
-    icon: "building"
-  },
-  Promotions: {
-    type: "button",
-    label: "Promociones",
-    path: "/configuraciones/promociones",
-    icon: "label"
-  },
-
-  Billing: {
-    label: "Facturación"
-  },
-  Bank: {
-    type: "button",
-    label: "Bancos",
-    path: "/configuraciones/bancos",
-    icon: "bank"
-  },
-  Plan: {
-    type: "button",
-    label: "Plan",
-    path: "/configuraciones/plan",
-    icon: "creditCard"
-  },
-
-  More: {
-    label: "Mas"
-  },
-  Administrative: {
-    type: "button",
-    label: "Administrable",
-    path: "/configuraciones/administrable",
-    icon: "vrDesign"
-  }
-}
-
-export const NAVIGATION_ROUTES_SUPER_ADMIN = {
-  Dashboard: {
-    label: "Inicio",
-    path: "/",
-    icon: "dashboard"
-  },
-
-  Restaurants: {
-    label: "Restaurantes",
-    path: "/restaurantes",
-    icon: "branch",
-    NewRestaurant: {
-      path: "/restaurantes/nuevoRestaurante"
-    },
-    RestaurantDetails: {
-      path: "/restaurantes/:restaurantId"
-    }
-  },
-
-  Users: {
-    label: "Administradores",
-    path: "/administradores",
-    icon: "users",
-    NewUser: {
-      path: "/administradores/nuevoAdministrador"
-    },
-    UserDetails: {
-      path: "/administradores/:adminId"
-    }
-  },
-
-  Plans: {
-    label: "Planes",
-    path: "/planes",
-    icon: "creditCard",
-    NewPlan: {
-      label: "Nuevo Plan",
-      path: "/planes/nuevoPlan"
-    },
-    PlanDetails: {
-      label: "Detalles del Plan",
-      path: "/planes/:planId"
-    }
-  }
-}
-
 export const NAVIGATION_ROUTES_BRANCH_ADMIN = {
   Home: {
     label: "Inicio",
@@ -270,6 +205,71 @@ export const NAVIGATION_ROUTES_KITCHEN = {
       label: "Detalles del historial del pedido",
       path: "/pedidos/:orderId"
     }
+  }
+}
+
+export const SETTING_NAVIGATION_ROUTES = {
+  General: {
+    type: "button",
+    label: "General",
+    path: "/configuraciones/general",
+    icon: "configuration"
+  },
+  Profile: {
+    label: "Perfil"
+  },
+  Cuenta: {
+    type: "button",
+    label: "Cuenta",
+    path: "/configuraciones/cuenta",
+    icon: "user"
+  },
+  Password: {
+    type: "button",
+    label: "Contraseña",
+    path: "/configuraciones/contraseña",
+    icon: "password"
+  },
+  Business: {
+    label: "Negocio"
+  },
+  Business_btn: {
+    type: "button",
+    label: "Negocios",
+    path: "/configuraciones/negocios",
+    icon: "building"
+  },
+  Promotions: {
+    type: "button",
+    label: "Promociones",
+    path: "/configuraciones/promociones",
+    icon: "label"
+  },
+
+  Billing: {
+    label: "Facturación"
+  },
+  Bank: {
+    type: "button",
+    label: "Bancos",
+    path: "/configuraciones/bancos",
+    icon: "bank"
+  },
+  Plan: {
+    type: "button",
+    label: "Plan",
+    path: "/configuraciones/plan",
+    icon: "creditCard"
+  },
+
+  More: {
+    label: "Mas"
+  },
+  Administrative: {
+    type: "button",
+    label: "Administrable",
+    path: "/configuraciones/administrable",
+    icon: "vrDesign"
   }
 }
 

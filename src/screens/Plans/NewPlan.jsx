@@ -1,21 +1,22 @@
-import React, { useEffect, useState } from "react"
+import React, { useState } from "react"
 import { useLocation, useNavigate } from "react-router-dom"
 import { Breadcrumbs, Accordion } from "@mantine/core"
 import { useForm } from "react-hook-form"
-import { useDispatch, useSelector } from "react-redux"
-import { yupResolver } from "@hookform/resolvers/yup"
 import toast from "react-hot-toast"
 import { GeneralInformationForm } from "./GeneralInformationForm"
 import BaseLayout from "../../components/BaseLayout"
 import BackButton from "../Dishes/components/BackButton"
 import BreadCrumbNavigation from "../../components/BreadCrumbNavigation"
 import Button from "../../components/Button"
-import { newMenuValidation } from "../../utils/inputRules"
+
+import { NAVIGATION_ROUTES_SUPER_ADMIN } from "../../routes"
+import { DEFAULT_CURRENCY, DEFAULT_PAYMENT_TYPE } from "../../utils/constants"
+import plansApi from "../../api/plansApi"
+import { convertToDecimal } from "../../utils"
 
 export const NewPlan = () => {
   const location = useLocation()
   const navigate = useNavigate()
-  const dispatch = useDispatch()
 
   const {
     register,
@@ -24,11 +25,9 @@ export const NewPlan = () => {
     control,
     reset,
     formState: { errors }
-  } = useForm({
-    resolver: yupResolver(newMenuValidation)
-  })
+  } = useForm({})
 
-  const [isDataCleared, setIsDataCleared] = useState(false)
+  const [featuresList, setFeaturesList] = useState([])
 
   const accordionStructure = [
     {
@@ -40,7 +39,8 @@ export const NewPlan = () => {
           errors={errors}
           setValue={setValue}
           control={control}
-          isDataCleared={isDataCleared}
+          featuresList={featuresList}
+          setFeaturesList={setFeaturesList}
         />
       )
     }
@@ -61,14 +61,61 @@ export const NewPlan = () => {
     </Accordion.Item>
   ))
 
-  const onSubmit = (data) => {}
+  const handleError = (error) => {
+    toast.error(`Error. Por favor intente de nuevo. ${error}`, {
+      duration: 7000
+    })
+  }
+
+  const handleResponse = (response) => {
+    if (response.error) {
+      toast.error(`Fallo al crear el plan. Por favor intente de nuevo. ${response.message}`, {
+        duration: 7000
+      })
+    } else {
+      navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Plans.path)
+      toast.success("Plan creado exitosamente", {
+        duration: 7000
+      })
+    }
+  }
+  const onSubmit = async (data) => {
+    try {
+      const features = featuresList
+        .map((feature) => {
+          if (data.featureIds.includes(feature.id)) {
+            if (feature.type === "amount") {
+              return { id: feature.id, quantity: parseInt(data[feature.featureCode]) || 0 }
+            } else if (feature.type === "boolean") {
+              return { id: feature.id, available: true }
+            }
+          }
+          return null
+        })
+        .filter((feature) => feature !== null)
+
+      const requestBody = JSON.stringify({
+        name: data.name,
+        price: convertToDecimal(data.price),
+        tax: convertToDecimal(data.tax),
+        paymentType: data.paymentType ?? DEFAULT_PAYMENT_TYPE,
+        currency: data.currency ?? DEFAULT_CURRENCY,
+        features
+      })
+
+      const response = await plansApi.createPlan(requestBody)
+      handleResponse(response)
+    } catch (error) {
+      handleError(error)
+    }
+  }
 
   return (
     <BaseLayout>
       <form onSubmit={handleSubmit(onSubmit)}>
         <section>
           <div className="flex flex-row justify-between items-center pb-6 flex-wrap xs:gap-3">
-            <BackButton title="Nuevo menu" />
+            <BackButton title="Nuevo plan" />
             <div>
               <Breadcrumbs>
                 <BreadCrumbNavigation location={location} />
@@ -96,11 +143,11 @@ export const NewPlan = () => {
                 onClick={() => {
                   reset()
                   toast.success("Información eliminada")
-                  navigate(NAVIGATION_ROUTES_RES_ADMIN.Menu.path)
+                  navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Plans.path)
                 }}
               />
               <Button
-                text={"Guardar menu"}
+                text={"Guardar Plan"}
                 className="flex h-10 w-full items-center justify-center px-4 rounded-md shadow-sm transition-all duration-700 focus:outline-none text-xs bg-sky-950 text-slate-50"
               />
             </div>

@@ -5,8 +5,8 @@ import InputField from "../../components/Form/InputField"
 import plansApi from "../../api/plansApi"
 import { DEFAULT_CURRENCY, DEFAULT_PAYMENT_TYPE } from "../../utils/constants"
 
-export const GeneralInformationForm = ({ register, errors, setValue, featuresList, setFeaturesList }) => {
-  const [paymentType, setPaymentType] = useState(DEFAULT_PAYMENT_TYPE)
+export const EditGeneralInformationForm = ({ register, errors, setValue, featuresList, setFeaturesList, data }) => {
+  const [paymentType, setPaymentType] = useState(data?.paymentType ?? DEFAULT_PAYMENT_TYPE)
   const [currency, setCurrency] = useState(DEFAULT_CURRENCY)
   const [dishesAdded, setDishesAdded] = useState([])
 
@@ -31,7 +31,7 @@ export const GeneralInformationForm = ({ register, errors, setValue, featuresLis
   }, [])
 
   const RenderInputs = () => {
-    const inputs = featuresList.filter((feature) => dishesAdded.includes(feature.id))
+    const inputs = data.PlanFeatures.filter((feature) => dishesAdded.includes(feature.id))
     return (
       <>
         {inputs.map(
@@ -58,13 +58,19 @@ export const GeneralInformationForm = ({ register, errors, setValue, featuresLis
 
   const onChangePaymentType = (value) => {
     setPaymentType(value)
-    setValue("paymentType", paymentType)
+    setValue("paymentType", value)
   }
 
   const onChangeDishesAdded = (value) => {
     setValue("featureIds", value)
     setDishesAdded(value)
   }
+
+  const defaultSelectedFeatures = data.PlanFeatures.map((feature) => feature.id)
+
+  useEffect(() => {
+    setDishesAdded(defaultSelectedFeatures)
+  }, [data.PlanFeatures])
 
   return (
     <Grid>

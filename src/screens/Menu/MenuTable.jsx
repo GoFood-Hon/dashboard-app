@@ -16,7 +16,7 @@ import { useNavigate } from "react-router-dom"
 import { NAVIGATION_ROUTES_RES_ADMIN, NAVIGATION_ROUTES_SUPER_ADMIN } from "../../routes"
 import { formatDateDistanceToNow } from "../../utils"
 
-export default function MenuTable({ refreshPage, items, handleDisableSelected, screenType }) {
+export default function MenuTable({ refreshPage, items, handleDisableSelected, screenType, isLoading }) {
   const navigate = useNavigate()
   const [data, setData] = useState({ nodes: items })
   const [itemsSelected, setItemsSelected] = useState([])
@@ -37,7 +37,7 @@ export default function MenuTable({ refreshPage, items, handleDisableSelected, s
     } else if (screenType === "adminUserScreen") {
       navigate(`${NAVIGATION_ROUTES_SUPER_ADMIN.Users.path}/${id}`)
     } else if (screenType === "planScreen") {
-      navigate(`${NAVIGATION_ROUTES_SUPER_ADMIN.Users.path}/${id}`)
+      navigate(`${NAVIGATION_ROUTES_SUPER_ADMIN.Plans.path}/${id}`)
     } else if (screenType === "orderHistoryScreen") {
       navigate(`${NAVIGATION_ROUTES_KITCHEN.OrderHistory.path}/${id}`)
     }
@@ -463,13 +463,11 @@ export default function MenuTable({ refreshPage, items, handleDisableSelected, s
           <span className="cursor-pointer" onClick={refreshPage}>
             <Icon icon="reload" size={20} />
           </span>
-          {/*  <span className="cursor-pointer">
-            <Icon icon="setting" size={20} />
-          </span>
-          */}
-          <span className="cursor-pointer" onClick={() => handleDisableSelected(itemsSelected)}>
-            <Icon icon="trash" size={20} />
-          </span>
+          {handleDisableSelected && (
+            <span className="cursor-pointer" onClick={() => handleDisableSelected(itemsSelected)}>
+              <Icon icon="trash" size={20} />
+            </span>
+          )}
         </div>
       </div>
 
