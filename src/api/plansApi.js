@@ -17,7 +17,7 @@ const plansApi = {
   createFeature: (params) => axiosClient.post("api/v1/plan/feature", params),
 
   // Update plan (super admin)
-  updatePlan: (params, id) => axiosClient.patch(`api/v1/plan/${id}`, params),
+  updatePlan: (id, params) => axiosClient.put(`api/v1/plan/${id}`, params),
 
   // Update or create plan feature
   updatePlanFeature: (params) => axiosClient.post(`api/v1/plan/plan-feature`, params),
