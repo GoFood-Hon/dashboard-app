@@ -23,7 +23,6 @@ export default function MenuTable({ refreshPage, items, handleDisableSelected, s
 
   useEffect(() => {
     setData({ nodes: items })
-    console.log(items)
   }, [items])
 
   let columns = []
