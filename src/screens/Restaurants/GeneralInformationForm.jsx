@@ -85,7 +85,7 @@ export const GeneralInformationForm = ({ register, errors, setValue, isDataClear
             <InputField label="Dirección de facturación" name="billingAddress" register={register} errors={errors} />
           </Grid.Col>
           <Grid.Col span={{ base: 6 }}>
-            <InputField label="Máximo de distancia permitido" name="maxDistanceShipping" register={register} errors={errors} />
+            <InputField label="Rango de distancia de entrega" name="maxDistanceShipping" register={register} errors={errors} />
           </Grid.Col>
           <Grid.Col span={{ base: 12, md: 6 }}>
             <Checkbox
