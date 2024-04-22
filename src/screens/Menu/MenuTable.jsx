@@ -23,6 +23,7 @@ export default function MenuTable({ refreshPage, items, handleDisableSelected, s
 
   useEffect(() => {
     setData({ nodes: items })
+    console.log(items)
   }, [items])
 
   let columns = []
@@ -70,11 +71,11 @@ export default function MenuTable({ refreshPage, items, handleDisableSelected, s
         sort: { sortKey: "MENU" }
       },
 
-      {
+      /*   {
         label: "TIPO",
         renderCell: (item) => item.typeMenu,
         sort: { sortKey: "TYPE" }
-      },
+      }, */
       {
         label: "FECHA",
         renderCell: (item) => formatDateDistanceToNow(item.createdAt),
@@ -421,10 +422,9 @@ export default function MenuTable({ refreshPage, items, handleDisableSelected, s
         iconDown: <IconChevronDown />
       },
       sortFns: {
-        // TODO:
         MENU: (array) => array.sort((a, b) => a.name.localeCompare(b.name)),
 
-        TYPE: (array) => array.sort((a, b) => a.typeMenu.localeCompare(b.typeMenu)),
+        TYPE: (array) => array.sort((a, b) => a.Order.type.localeCompare(b.Order.type)),
 
         DATE: (array) => array.sort((a, b) => a.createdAt - b.createdAt)
       }
