@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react"
 import { Breadcrumbs } from "@mantine/core"
-import { useDispatch, useSelector } from "react-redux"
 import { useLocation, useNavigate } from "react-router-dom"
 import BaseLayout from "../../components/BaseLayout"
 import BreadCrumbNavigation from "../../components/BreadCrumbNavigation"
@@ -9,15 +8,16 @@ import plansApi from "../../api/plansApi"
 import toast from "react-hot-toast"
 import MenuTable from "../Menu/MenuTable"
 import { NAVIGATION_ROUTES_SUPER_ADMIN } from "../../routes"
+import LoadingCircle from "../../components/LoadingCircle"
 
 export const Plans = () => {
   const navigate = useNavigate()
 
   const location = useLocation()
-  const dispatch = useDispatch()
 
   const [plans, setPlans] = useState([])
   const [cardsSelected, setCardsSelected] = useState([])
+  const [isLoading, setIsLoading] = useState(false)
 
   const handleNewPlan = () => {
     navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Plans.NewPlan.path)
@@ -46,6 +46,7 @@ export const Plans = () => {
 
   const refreshPage = async () => {
     try {
+      setIsLoading(true)
       const response = await plansApi.getAllPlans()
 
       if (response.error) {
@@ -59,31 +60,10 @@ export const Plans = () => {
       toast.error(`Error. Por favor intente de nuevo. ${error}`, {
         duration: 7000
       })
+    } finally {
+      setIsLoading(false)
+      setCardsSelected([])
     }
-
-    setCardsSelected([])
-  }
-
-  //* disable menu data *//
-
-  const handleDisableSelected = async (cardsSelected) => {
-    await Promise.all(
-      cardsSelected.map(async (data) => {
-        await dispatch(updateMenu({ data: { id: data, isActive: false }, propertyToUpdate: "isActive" }))
-      })
-    )
-
-    refreshPage()
-  }
-
-  const handleEnableSelected = async (cardsSelected) => {
-    await Promise.all(
-      cardsSelected.map(async (id) => {
-        await dispatch(updateDish({ data: { id, isActive: true }, propertyToUpdate: "isActive" }))
-      })
-    )
-
-    refreshPage()
   }
 
   return (
@@ -102,17 +82,16 @@ export const Plans = () => {
         </div>
       </section>
       <section>
-        {plans && plans.length > 0 ? (
+        {isLoading ? (
+          <div className="flex justify-center items-center h-screen">
+            <LoadingCircle />
+          </div>
+        ) : plans && plans.length > 0 ? (
           <div className="w-full p-4 h-full bg-white rounded-2xl border border-blue-100">
-            <MenuTable
-              refreshPage={refreshPage}
-              items={plans}
-              handleDisableSelected={handleDisableSelected}
-              screenType="planScreen"
-            />
+            <MenuTable refreshPage={refreshPage} items={plans} screenType="planScreen" />
           </div>
         ) : (
-          <div className="text-center mt-4 text-gray-500">Sin menu disponibles!</div>
+          <div className="text-center mt-4 text-gray-500">Sin Plans disponibles!</div>
         )}
       </section>
     </BaseLayout>

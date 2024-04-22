@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react"
-import { useLocation, useParams } from "react-router-dom"
-import { Breadcrumbs, Card, Grid, Image, Modal } from "@mantine/core"
+import { useParams } from "react-router-dom"
+import { Breadcrumbs, Card, Grid, Modal } from "@mantine/core"
 import { useDisclosure } from "@mantine/hooks"
 import BaseLayout from "../../components/BaseLayout"
 import BackButton from "../Dishes/components/BackButton"
@@ -8,32 +8,27 @@ import BreadCrumbNavigation from "../../components/BreadCrumbNavigation"
 import plansApi from "../../api/plansApi"
 import { formatDateDistanceToNow, getFormattedHNL } from "../../utils"
 
+import { EditPlan } from "./EditPlan"
+
 export const PlanDetails = () => {
   const { planId } = useParams()
 
   const [planDetails, setPlanDetails] = useState({})
 
-  const [imageModalOpened, { open: openImageModal, close: closeImageModal }] = useDisclosure(false)
   const [formModalOpened, { open: openFormModal, close: closeFormModal }] = useDisclosure(false)
 
   useEffect(() => {
     ;(async () => {
-      const response = await plansApi.getPlan(planId)
-
-      setPlanDetails(response.data.plan)
+      try {
+        const response = await plansApi.getPlan(planId)
+        setPlanDetails(response.data.plan)
+      } catch (error) {
+        toast.error(`Fallo al obtener el plan. Por favor intente de nuevo. ${error}`, {
+          duration: 7000
+        })
+      }
     })()
   }, [])
-
-  function getFeatureValue(feature) {
-    if (feature?.type === "amount") {
-      return feature?.PlanPlanFeatures?.quantity || "N/A" // Use PlanPlanFeatures.quantity if available, otherwise 'N/A'
-    } else if (feature?.type === "boolean") {
-      return feature?.PlanPlanFeatures?.available ? "Habilitado" : "Deshabilitado" // Translate based on availability
-    }
-    return "N/A" // Default for other cases
-  }
-
-  console.log(planDetails, "pl")
 
   return (
     <BaseLayout>
@@ -109,7 +104,7 @@ export const PlanDetails = () => {
           backgroundOpacity: 0.55,
           blur: 3
         }}>
-        {/* <EditRestaurant close={closeFormModal} details={planDetails} restaurantId={restaurantId} /> */}
+        <EditPlan closeFormModal={closeFormModal} data={planDetails} />
       </Modal>
     </BaseLayout>
   )
