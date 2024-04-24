@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.9](https://github.com/GoFood-Hon/dashboard-app/compare/v0.0.8...v0.0.9) (2024-04-24)
+
+
+### Bug Fixes
+
+* bug on plans related to navigation ([14ec3e0](https://github.com/GoFood-Hon/dashboard-app/commit/14ec3e0ee75f4e81a616e9eaf52dfa37cb38e206))
+
 ### [0.0.8](https://github.com/GoFood-Hon/dashboard-app/compare/v0.0.7...v0.0.8) (2024-04-24)
 
 
