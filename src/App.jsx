@@ -156,7 +156,7 @@ function App() {
             <Route path={SETTING_NAVIGATION_ROUTES.Administrative.path} element={<AdministrativeSettings />} />
           </>
         )
-      case APP_ROLES.branchAdmin || APP_ROLES.cashierUser:
+      case APP_ROLES.branchAdmin:
         return (
           <>
             <Route path={NAVIGATION_ROUTES_BRANCH_ADMIN.Home.path} element={<WelcomeScreen />} />
@@ -169,7 +169,33 @@ function App() {
 
             <Route path={NAVIGATION_ROUTES_BRANCH_ADMIN.Dishes.path} element={<Dishes />} />
 
+            <Route path={NAVIGATION_ROUTES_RES_ADMIN.Menu.submenu.Complements.path} element={<Complements />} />
+
             <Route path={NAVIGATION_ROUTES_BRANCH_ADMIN.Dishes.DishDetails.path} element={<DishDetails />} />
+
+            <Route path={NAVIGATION_ROUTES_BRANCH_ADMIN.Account.path} element={<AccountSettings />} />
+
+            <Route path={NAVIGATION_ROUTES_BRANCH_ADMIN.Password.path} element={<PasswordSettings />} />
+
+            <Route path={NAVIGATION_ROUTES_BRANCH_ADMIN.Menu.MenuDetails.path} element={<MenuDetails />} />
+          </>
+        )
+      case APP_ROLES.cashierUser:
+        return (
+          <>
+            <Route path={NAVIGATION_ROUTES_BRANCH_ADMIN.Home.path} element={<WelcomeScreen />} />
+
+            <Route path={NAVIGATION_ROUTES_BRANCH_ADMIN.Pedidos.path} element={<Orders />} />
+
+            <Route path={NAVIGATION_ROUTES_BRANCH_ADMIN.Pedidos.OrderDetails.path} element={<OrderDetails />} />
+
+            <Route path={NAVIGATION_ROUTES_BRANCH_ADMIN.Menu.path} element={<Menu />} />
+
+            <Route path={NAVIGATION_ROUTES_BRANCH_ADMIN.Dishes.path} element={<Dishes />} />
+
+            <Route path={NAVIGATION_ROUTES_RES_ADMIN.Menu.submenu.Dishes.DishDetails.path} element={<DishDetails />} />
+
+            <Route path={NAVIGATION_ROUTES_RES_ADMIN.Menu.submenu.Complements.path} element={<Complements />} />
 
             <Route path={NAVIGATION_ROUTES_BRANCH_ADMIN.Account.path} element={<AccountSettings />} />
 
@@ -189,7 +215,7 @@ function App() {
 
             <Route path={NAVIGATION_ROUTES_KITCHEN.OrderHistory.path} element={<OrderHistory />} />
 
-            <Route path={NAVIGATION_ROUTES_KITCHEN.OrderHistory.OrderHistoryDetails.path} element={<OrderDetails />} />
+            <Route path={NAVIGATION_ROUTES_KITCHEN.Orders.OrderDetails.path} element={<OrderDetails />} />
           </>
         )
 
@@ -205,7 +231,13 @@ function App() {
           <Route
             element={
               <PrivateRoute
-                allowedRoles={[APP_ROLES.superAdmin, APP_ROLES.restaurantAdmin, APP_ROLES.branchAdmin, APP_ROLES.kitchenUser]}
+                allowedRoles={[
+                  APP_ROLES.superAdmin,
+                  APP_ROLES.restaurantAdmin,
+                  APP_ROLES.branchAdmin,
+                  APP_ROLES.cashierUser,
+                  APP_ROLES.kitchenUser
+                ]}
                 userRole={userRole}
               />
             }>

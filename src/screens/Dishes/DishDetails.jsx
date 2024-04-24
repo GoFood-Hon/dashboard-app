@@ -97,7 +97,7 @@ export default function DishDetails() {
                   <div className="flex w-full flex-col">
                     <div className="flex flex-row justify-between w-full">
                       <p className="text-zinc-500 text-sm font-medium h-full w-full pt-20 p-8">{dishDetails?.description}</p>
-                      {user.role !== APP_ROLES.branchAdmin && (
+                      {user.role !== APP_ROLES.branchAdmin && user.role !== APP_ROLES.cashierUser ? (
                         <a
                           className="text-blue-600 text-base font-normal leading-normal cursor-pointer self-center"
                           onClick={() => {
@@ -105,7 +105,7 @@ export default function DishDetails() {
                           }}>
                           Editar
                         </a>
-                      )}
+                      ) : null}
                     </div>
                     <div className="flex flex-row justify-between">
                       <span className="text-sky-950 text-base font-bold leading-normal">

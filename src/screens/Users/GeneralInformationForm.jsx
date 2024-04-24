@@ -68,6 +68,7 @@ export default function GeneralInformationForm({ register, errors, setValue, isD
             <Grid.Col span={{ base: 12, md: 6 }}>
               <InputField
                 label="Teléfono (Obligatorio)"
+                countryPrefix="+504"
                 name="phoneNumber"
                 register={register}
                 errors={errors}

@@ -54,13 +54,15 @@ export const PlanDetails = () => {
                       <p className="text-zinc-500 text-sm font-medium pt-4">
                         {planDetails?.details || "Sin descripción disponible"}
                       </p>
-                      <a
-                        className="text-blue-600 text-base font-normal leading-normal cursor-pointer self-center"
-                        onClick={() => {
-                          openFormModal()
-                        }}>
-                        Editar
-                      </a>
+                      {user.role !== APP_ROLES.branchAdmin && user.role !== APP_ROLES.cashierUser ? (
+                        <a
+                          className="text-blue-600 text-base font-normal leading-normal cursor-pointer self-center"
+                          onClick={() => {
+                            openFormModal()
+                          }}>
+                          Editar
+                        </a>
+                      ) : null}
                     </div>
                   </div>
                 </Grid.Col>

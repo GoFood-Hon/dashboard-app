@@ -37,7 +37,7 @@ export const branchWelcomeCards = [
   {
     title: "Ver mis pedidos",
     description: "Lista de pedidos actuales",
-    link: NAVIGATION_ROUTES_BRANCH_ADMIN.Dishes.path
+    link: NAVIGATION_ROUTES_BRANCH_ADMIN.Pedidos.path
   },
   {
     title: "Ver mi menú",
@@ -92,6 +92,10 @@ export const USER_ROLES = {
 }
 
 export const userTypes = [
+  {
+    value: "admin-sucursal",
+    label: "Administrador de sucursal"
+  },
   {
     value: "kitchen",
     label: "Cocina"

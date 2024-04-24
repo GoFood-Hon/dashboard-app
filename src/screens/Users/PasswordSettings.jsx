@@ -56,7 +56,7 @@ export default function PasswordSettings() {
   return (
     <BaseLayout>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <div className={`${user.role !== APP_ROLES.branchAdmin && "pl-[200px]"}`}>
+        <div className={`${user.role !== APP_ROLES.branchAdmin && user.role !== APP_ROLES.cashierUser && "pl-[200px]"}`}>
           <section>
             <div className="flex flex-row justify-between items-center pb-6">
               <div className="flex flex-row gap-x-3 items-center">

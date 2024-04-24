@@ -143,7 +143,10 @@ export default function Dishes() {
 
     switch (user.role) {
       case APP_ROLES.branchAdmin:
-        route = `${NAVIGATION_ROUTES_BRANCH_ADMIN.Dishes.path}/${id}`
+        route = `${NAVIGATION_ROUTES_RES_ADMIN.Menu.submenu.Dishes.path}/${id}`
+        break
+      case APP_ROLES.cashierUser:
+        route = `${NAVIGATION_ROUTES_RES_ADMIN.Menu.submenu.Dishes.path}/${id}`
         break
       case APP_ROLES.restaurantAdmin:
         route = `${NAVIGATION_ROUTES_RES_ADMIN.Menu.submenu.Dishes.path}/${id}`
@@ -161,13 +164,13 @@ export default function Dishes() {
         <div className="flex flex-row justify-between items-center pb-6">
           <div className="flex flex-row gap-x-3 items-center">
             <BackButton title="Platillos" />
-            {user.role !== APP_ROLES.branchAdmin && (
+            {user.role !== APP_ROLES.branchAdmin && user.role !== APP_ROLES.cashierUser ? (
               <Button
                 text={"Nuevo Platillo"}
                 className={"text-white text-md px-3 py-2 bg-primary_button mb-0"}
                 onClick={handleNewItem}
               />
-            )}
+            ) : null}
           </div>
           <div>
             <Breadcrumbs>

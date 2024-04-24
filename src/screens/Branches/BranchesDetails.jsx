@@ -125,13 +125,15 @@ export default function BranchesDetails() {
                     <div className="flex w-full flex-col">
                       <div className="flex flex-row justify-between w-full">
                         <p />
-                        <a
-                          className="text-blue-600 text-base font-normal leading-normal cursor-pointer self-center"
-                          onClick={() => {
-                            openFormModal()
-                          }}>
-                          Editar
-                        </a>
+                        {user.role !== APP_ROLES.branchAdmin && user.role !== APP_ROLES.cashierUser ? (
+                          <a
+                            className="text-blue-600 text-base font-normal leading-normal cursor-pointer self-center"
+                            onClick={() => {
+                              openFormModal()
+                            }}>
+                            Editar
+                          </a>
+                        ) : null}
                       </div>
                       <div className="flex flex-col justify-between w-full h-96 py-4">
                         <span className="text-sky-950 text-base font-bold leading-normal pb-4">Ubicación</span>

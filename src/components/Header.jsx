@@ -26,7 +26,11 @@ export default function Header() {
           restaurantId: user?.restaurantId
         })
       )
-    } else if (user.role === APP_ROLES.branchAdmin || user.role === APP_ROLES.kitchenUser) {
+    } else if (
+      user.role === APP_ROLES.branchAdmin ||
+      user.role === APP_ROLES.kitchenUser ||
+      user.role === APP_ROLES.cashierUser
+    ) {
       dispatch(
         fetchBranchData({
           branchId: user?.sucursalId

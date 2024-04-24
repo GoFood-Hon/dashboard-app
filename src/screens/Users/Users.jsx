@@ -66,12 +66,7 @@ export default function Users() {
       <section>
         <div className="w-full p-4 h-full bg-white rounded-2xl border border-blue-100">
           {users.length > 0 ? (
-            <MenuTable
-              refreshPage={refreshPage}
-              items={users}
-              handleDisableSelected={handleDisableSelected}
-              screenType="usersScreen"
-            />
+            <MenuTable refreshPage={refreshPage} items={users} screenType="usersScreen" />
           ) : (
             <div className="w-full h-screen flex justify-center items-center">
               <Text className="font-semibold" size="sm" c="dimmed" inline>

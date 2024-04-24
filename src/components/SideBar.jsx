@@ -27,7 +27,8 @@ export default function SideBar() {
     const roleRoutesMap = {
       [APP_ROLES.restaurantAdmin]: NAVIGATION_ROUTES_RES_ADMIN,
       [APP_ROLES.superAdmin]: NAVIGATION_ROUTES_SUPER_ADMIN,
-      [APP_ROLES.branchAdmin]: NAVIGATION_ROUTES_BRANCH_ADMIN
+      [APP_ROLES.branchAdmin]: NAVIGATION_ROUTES_BRANCH_ADMIN,
+      [APP_ROLES.cashierUser]: NAVIGATION_ROUTES_BRANCH_ADMIN
     }
 
     const routeArray = roleRoutesMap[user.role] || []
@@ -66,7 +67,8 @@ export default function SideBar() {
     [APP_ROLES.restaurantAdmin]: NAVIGATION_ROUTES_RES_ADMIN,
     [APP_ROLES.superAdmin]: NAVIGATION_ROUTES_SUPER_ADMIN,
     [APP_ROLES.branchAdmin]: NAVIGATION_ROUTES_BRANCH_ADMIN,
-    [APP_ROLES.kitchenUser]: NAVIGATION_ROUTES_KITCHEN
+    [APP_ROLES.kitchenUser]: NAVIGATION_ROUTES_KITCHEN,
+    [APP_ROLES.cashierUser]: NAVIGATION_ROUTES_BRANCH_ADMIN
   }
 
   const selectedRoutes = roleRoutesMap[user.role] || NAVIGATION_ROUTES_SUPER_ADMIN

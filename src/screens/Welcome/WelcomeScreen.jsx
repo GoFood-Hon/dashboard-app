@@ -16,6 +16,9 @@ export const WelcomeScreen = () => {
         case APP_ROLES.branchAdmin:
           setWelcomeCards(branchWelcomeCards)
           break
+        case APP_ROLES.cashierUser:
+          setWelcomeCards(branchWelcomeCards)
+          break
         case APP_ROLES.kitchenUser:
           setWelcomeCards(kitchenWelcomeCards)
           break

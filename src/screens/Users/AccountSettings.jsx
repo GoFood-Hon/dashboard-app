@@ -14,7 +14,7 @@ import { IconPhoto } from "@tabler/icons-react"
 import { useDispatch, useSelector } from "react-redux"
 import { bytesToMB } from "../../utils"
 import toast from "react-hot-toast"
-import { NAVIGATION_ROUTES_BRANCH_ADMIN, SETTING_NAVIGATION_ROUTES } from "../../routes"
+import { SETTING_NAVIGATION_ROUTES } from "../../routes"
 import { APP_ROLES } from "../../utils/constants"
 import BackButton from "../Dishes/components/BackButton"
 
@@ -130,7 +130,7 @@ export default function AccountSettings() {
   return (
     <BaseLayout>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <div className={`${user.role !== APP_ROLES.branchAdmin && "pl-[200px]"}`}>
+        <div className={`${user.role !== APP_ROLES.branchAdmin && user.role !== APP_ROLES.cashierUser ? "pl-[200px]" : null}`}>
           <section>
             <div className="flex flex-row justify-between items-center pb-6">
               <div className="flex flex-row gap-x-3 items-center">
@@ -152,13 +152,15 @@ export default function AccountSettings() {
                   <Avatar size="lg" src={userData?.images?.[0]?.location} onClick={openImageModal} />
                 )}
               </div>
-              <a
-                className="text-blue-600 text-base font-normal leading-normal cursor-pointer self-center"
-                onClick={() => {
-                  openFormModal()
-                }}>
-                Editar
-              </a>
+              {user.role !== APP_ROLES.branchAdmin && user.role !== APP_ROLES.cashierUser ? (
+                <a
+                  className="text-blue-600 text-base font-normal leading-normal cursor-pointer self-center"
+                  onClick={() => {
+                    openFormModal()
+                  }}>
+                  Editar
+                </a>
+              ) : null}
             </div>
 
             <div className="flex flex-col w-full py-2">

@@ -87,10 +87,10 @@ export default function Menu() {
           <div className="flex flex-row gap-x-3 items-center">
             <BackButton title="Menu" />
 
-            {user.role !== APP_ROLES.branchAdmin && (
+            {user.role !== APP_ROLES.branchAdmin && user.role !== APP_ROLES.cashierUser && (
               <Button text="Nuevo Menu" className="text-white text-md px-3 py-2 bg-primary_button" onClick={handleNewMenu} />
             )}
-            {user.role !== APP_ROLES.branchAdmin && (
+            {(user.role !== APP_ROLES.branchAdmin || user.role !== APP_ROLES.cashierUser) && (
               <>
                 <Button
                   text={"Ver platillos"}

@@ -163,13 +163,24 @@ export const NAVIGATION_ROUTES_BRANCH_ADMIN = {
   Dishes: {
     label: "Platillos",
     icon: "chefHat",
-    path: "/platillos",
+    path: "menu/platillos",
     DishDetails: {
       label: "Detalles del platillo",
-      path: "/platillos/:dishId"
+      path: "menu/platillos/:dishId"
     }
   },
-
+  Complements: {
+    label: "Complementos",
+    icon: "menu",
+    path: "/menu/complementos",
+    ComplementDetails: {
+      label: "Detalles del complemento",
+      path: "/menu/complementos/:complementId"
+    },
+    NewComplement: {
+      path: "/menu/complementos/nuevoComplemento"
+    }
+  },
   Account: {
     label: "Cuenta",
     icon: "users",

@@ -23,6 +23,7 @@ import { colors } from "../../theme/colors"
 import FilterPopover from "../../components/FilterPopover"
 import SortPopover from "../../components/SortPopover"
 import BackButton from "../Dishes/components/BackButton"
+import { APP_ROLES } from "../../utils/constants"
 
 export default function Complements() {
   const navigate = useNavigate()
@@ -241,11 +242,13 @@ export default function Complements() {
         <div className="flex flex-row justify-between items-center pb-6 flex-wrap">
           <div className="flex flex-row gap-x-3 items-center">
             <BackButton title="Complementos" />
-            <Button
-              text={"Nuevo complemento"}
-              className={"text-white text-md px-3 py-2 bg-primary_button mb-0"}
-              onClick={handleNewItem}
-            />
+            {user.role !== APP_ROLES.branchAdmin && user.role !== APP_ROLES.cashierUser ? (
+              <Button
+                text={"Nuevo complemento"}
+                className={"text-white text-md px-3 py-2 bg-primary_button mb-0"}
+                onClick={handleNewItem}
+              />
+            ) : null}
           </div>
           <div>
             <Breadcrumbs>

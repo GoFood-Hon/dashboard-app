@@ -12,10 +12,11 @@ import { getFormattedHNL } from "../../utils"
 import EditMenuScreen from "./EditMenuScreen"
 import BackButton from "../Dishes/components/BackButton"
 import { useSelector } from "react-redux"
-import { dashboardCards } from "../../utils/constants"
+import { APP_ROLES, dashboardCards } from "../../utils/constants"
 
 export default function MenuDetails() {
   const { menuId } = useParams()
+  const user = useSelector((state) => state.user.value)
   const location = useLocation()
   const restaurant = useSelector((state) => state.restaurants.restaurants)
 
@@ -72,13 +73,15 @@ export default function MenuDetails() {
                       <p className="text-zinc-500 text-sm font-medium pt-4">
                         {menuDetails?.description || "Sin descripción disponible"}
                       </p>
-                      <a
-                        className="text-blue-600 text-base font-normal leading-normal cursor-pointer self-center"
-                        onClick={() => {
-                          openFormModal()
-                        }}>
-                        Editar
-                      </a>
+                      {user.role !== APP_ROLES.branchAdmin && user.role !== APP_ROLES.cashierUser ? (
+                        <a
+                          className="text-blue-600 text-base font-normal leading-normal cursor-pointer self-center"
+                          onClick={() => {
+                            openFormModal()
+                          }}>
+                          Editar
+                        </a>
+                      ) : null}
                     </div>
                   </div>
                 </Grid.Col>
@@ -87,7 +90,7 @@ export default function MenuDetails() {
             <section className="px-20">
               <div className="pt-8">
                 <span className="text-sky-950 text-base font-bold  leading-normal">Platillos </span>
-                <span className="text-sky-950 text-base font-normal leading-normal">( {menuDetails.Dishes?.length ?? 0} )</span>
+                <span className="text-sky-950 text-base font-normal leading-normal">( {menuDetails?.Dishes?.length ?? 0} )</span>
 
                 {menuDetails?.Dishes?.map((item) => (
                   <div

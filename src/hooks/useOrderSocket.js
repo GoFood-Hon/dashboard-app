@@ -23,6 +23,9 @@ export const useSocket = () => {
       case APP_ROLES.branchAdmin:
         url = `${API_URL}admin-sucursal?sucursalId=${user.sucursalId}`
         break
+      case APP_ROLES.cashierUser:
+        url = `${API_URL}admin-sucursal?sucursalId=${user.sucursalId}`
+        break
       default:
         return
     }

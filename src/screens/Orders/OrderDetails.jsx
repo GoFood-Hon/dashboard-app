@@ -52,6 +52,8 @@ export const OrderDetails = () => {
     })()
   }, [])
 
+  console.log(user.role, "ur")
+
   const confirmOrder = async () => {
     const response = await orderApi.confirmOrder(orderId)
     if (response?.status === "success") {
@@ -238,7 +240,10 @@ export const OrderDetails = () => {
            * 2nd GRID
            */}
           <Grid.Col span={4}>
-            {orderDetails?.status === orderStatusValues.onHold && (
+            {orderDetails?.status === orderStatusValues.onHold &&
+            (user.role === APP_ROLES.branchAdmin ||
+              user.role === APP_ROLES.cashierUser ||
+              user.role === APP_ROLES.restaurantAdmin) ? (
               <>
                 <Button
                   type="submit"
@@ -252,7 +257,7 @@ export const OrderDetails = () => {
                   className={"text-md px-3 py-2 mb-4 text-white bg-red-500 font-bold"}
                 />
               </>
-            )}
+            ) : null}
             {(orderDetails?.status === orderStatusValues.confirmed) & (user.role === APP_ROLES.kitchenUser) ? (
               <Button
                 type="submit"
@@ -293,7 +298,9 @@ export const OrderDetails = () => {
                 </div> */}
               </div>
             </div>
-            {(user.role === APP_ROLES.restaurantAdmin || user.role === APP_ROLES.branchAdmin) &
+            {(user.role === APP_ROLES.restaurantAdmin ||
+              user.role === APP_ROLES.branchAdmin ||
+              user.role === APP_ROLES.cashierUser) &
             (orderDetails?.status === orderStatusValues.ready) ? (
               <div className="w-full bg-white rounded-md border border-blue-100 p-5 mt-4">
                 <span>Seleccionar motorista</span>

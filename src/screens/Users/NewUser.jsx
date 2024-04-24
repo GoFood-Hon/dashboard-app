@@ -34,9 +34,9 @@ export default function NewUser() {
       const formData = new FormData()
       formData.append("name", data.name)
       formData.append("email", data.email)
-      formData.append("phoneNumber", data.phoneNumber)
+      formData.append("phoneNumber", `+504${data.phoneNumber}`)
       formData.append("role", data.role)
-      // formData.append("note", data.note)
+      formData.append("note", data.note)
 
       formData.append("sucursalId", data.branchId)
       formData.append("password", data.password)

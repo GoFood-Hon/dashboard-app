@@ -39,7 +39,7 @@ export default function MenuTable({ refreshPage, items, handleDisableSelected, s
     } else if (screenType === "planScreen") {
       navigate(`${NAVIGATION_ROUTES_SUPER_ADMIN.Plans.path}/${id}`)
     } else if (screenType === "orderHistoryScreen") {
-      navigate(`${NAVIGATION_ROUTES_KITCHEN.OrderHistory.path}/${id}`)
+      navigate(`${NAVIGATION_ROUTES_KITCHEN.Orders.path}/${id}`)
     }
   }
 
@@ -131,6 +131,12 @@ export default function MenuTable({ refreshPage, items, handleDisableSelected, s
           </div>
         ),
         sort: { sortKey: "USER" }
+      },
+
+      {
+        label: "ROL",
+        renderCell: (item) => item.role,
+        sort: { sortKey: "ROLE" }
       },
 
       {
@@ -420,8 +426,11 @@ export default function MenuTable({ refreshPage, items, handleDisableSelected, s
         iconUp: <IconChevronUp />,
         iconDown: <IconChevronDown />
       },
+      // TODO: add more sorts keys
       sortFns: {
         MENU: (array) => array.sort((a, b) => a.name.localeCompare(b.name)),
+
+        ROLE: (array) => array.sort((a, b) => a.role.localeCompare(b.role)),
 
         TYPE: (array) => array.sort((a, b) => a.Order.type.localeCompare(b.Order.type)),
 

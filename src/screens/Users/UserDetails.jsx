@@ -80,13 +80,15 @@ export default function UserDetails() {
                   <div className="p-5 bg-white flex md:items-center lg:items-start flex-col w-full">
                     <div className="flex justify-between items-center  w-full pt-20 pb-5">
                       <span className="text-sky-950 font-bold  text-left text-2xl">{userDetails?.name}</span>
-                      <a
-                        className="text-blue-600 text-base font-normal leading-normal cursor-pointer"
-                        onClick={() => {
-                          openFormModal()
-                        }}>
-                        Editar
-                      </a>
+                      {user.role !== APP_ROLES.branchAdmin && user.role !== APP_ROLES.cashierUser ? (
+                        <a
+                          className="text-blue-600 text-base font-normal leading-normal cursor-pointer"
+                          onClick={() => {
+                            openFormModal()
+                          }}>
+                          Editar
+                        </a>
+                      ) : null}
                     </div>
                     <div className="text-sky-950 text-sm font-medium pb-5 leading-snug">{userDetails?.role}</div>
                     <div className="w-[125px] h-px bg-blue-100 sm:w-full" />
@@ -109,15 +111,6 @@ export default function UserDetails() {
               </Grid>
             </section>
           </Card>
-        </section>
-        <section className="w-full xl:w-3/12 xl:pl-4 2xl:w-2/12">
-          <Grid grow>
-            {dashboardCards.map((item, key) => (
-              <Grid.Col span={{ lg: 1 }} key={key}>
-                <DashboardCard gutter={{ base: 5, xs: "md", md: "xl", xl: 50 }} data={item} />
-              </Grid.Col>
-            ))}
-          </Grid>
         </section>
         <section>
           <Modal
