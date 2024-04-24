@@ -23,7 +23,6 @@ export default function MenuTable({ refreshPage, items, handleDisableSelected, s
 
   useEffect(() => {
     setData({ nodes: items })
-    console.log(screenType, "aja")
   }, [items])
 
   let columns = []
@@ -439,7 +438,6 @@ export default function MenuTable({ refreshPage, items, handleDisableSelected, s
 
   // search
   modifiedNodes = modifiedNodes.filter((node) => {
-    console.log(node, "nod")
     const searchField =
       screenType === "ordersScreen" ? node.Order?.User?.name : screenType === "orderHistoryScreen" ? node?.orderId : node.name
     return searchField?.toLowerCase().includes(search?.toLowerCase())
