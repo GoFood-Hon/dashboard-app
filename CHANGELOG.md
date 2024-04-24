@@ -2,6 +2,30 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.8](https://github.com/GoFood-Hon/dashboard-app/compare/v0.0.7...v0.0.8) (2024-04-24)
+
+
+### Features
+
+* added cashier ([102b067](https://github.com/GoFood-Hon/dashboard-app/commit/102b067a4916a451dce1ea55f2964f627460f2c1))
+* added cashier user ([e4ce57e](https://github.com/GoFood-Hon/dashboard-app/commit/e4ce57ef00638fcc6047fb7cb0eaa0d16e165d72))
+* added icons to sidebar ([d41cc21](https://github.com/GoFood-Hon/dashboard-app/commit/d41cc21ce5fada620fec67dcf8fda806e4f4581f))
+* added new plan ([2b3898a](https://github.com/GoFood-Hon/dashboard-app/commit/2b3898aeeab1057ef6057cd96bf5c18e7526e95d))
+* added socket io ([0b00027](https://github.com/GoFood-Hon/dashboard-app/commit/0b00027005902709b79a935468352f8c0650fc25))
+* created custom hook for socket ([4169a92](https://github.com/GoFood-Hon/dashboard-app/commit/4169a92c495ce8bf70c037becdd32a6e84419fd7))
+* historial de ordenes disponibles ([5c3a9c9](https://github.com/GoFood-Hon/dashboard-app/commit/5c3a9c946fd1a4daef9843916e523b5c7c4f1d17))
+* introduced loading to order table ([3cb49fd](https://github.com/GoFood-Hon/dashboard-app/commit/3cb49fdae8b2906d21061e13f4bc02f9790ed3de))
+* order flow res->kitchen->driver ([674907b](https://github.com/GoFood-Hon/dashboard-app/commit/674907bbe97eaa658ab08ec3ad030b1ea9f790de))
+* Plans in table ([04b543c](https://github.com/GoFood-Hon/dashboard-app/commit/04b543cf9273eef91aebba176de21f534195e650))
+* show plan ([b73db93](https://github.com/GoFood-Hon/dashboard-app/commit/b73db935d606ecca0722d8f370bd3680a58f94ad))
+* update plan feature ([417e564](https://github.com/GoFood-Hon/dashboard-app/commit/417e5644f349d459c9194cac6d964995f6f99a0a))
+
+
+### Bug Fixes
+
+* bug on sort table ([69eb565](https://github.com/GoFood-Hon/dashboard-app/commit/69eb5657072fd015a46de5db2378b2951d2017fa))
+* bug solved order history not displaying ([2c0b565](https://github.com/GoFood-Hon/dashboard-app/commit/2c0b5650bf0c1852257dac4fc9f2901c9a68b7ec))
+
 ### [0.0.7](https://github.com/GoFood-Hon/dashboard-app/compare/v0.0.5...v0.0.7) (2024-04-10)
 
 
