@@ -29,7 +29,8 @@ export const APP_ROLES = {
   superAdmin: "superadmin",
   restaurantAdmin: "admin-restaurant",
   branchAdmin: "admin-sucursal",
-  kitchenUser: "kitchen"
+  kitchenUser: "kitchen",
+  cashierUser: "cashier"
 }
 
 export const branchWelcomeCards = [

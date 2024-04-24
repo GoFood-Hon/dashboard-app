@@ -156,7 +156,7 @@ function App() {
             <Route path={SETTING_NAVIGATION_ROUTES.Administrative.path} element={<AdministrativeSettings />} />
           </>
         )
-      case APP_ROLES.branchAdmin:
+      case APP_ROLES.branchAdmin || APP_ROLES.cashierUser:
         return (
           <>
             <Route path={NAVIGATION_ROUTES_BRANCH_ADMIN.Home.path} element={<WelcomeScreen />} />
