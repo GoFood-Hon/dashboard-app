@@ -23,6 +23,7 @@ export default function MenuTable({ refreshPage, items, handleDisableSelected, s
 
   useEffect(() => {
     setData({ nodes: items })
+    console.log(screenType, "aja")
   }, [items])
 
   let columns = []
@@ -279,8 +280,8 @@ export default function MenuTable({ refreshPage, items, handleDisableSelected, s
   } else if (screenType === "orderHistoryScreen") {
     columns = [
       {
-        label: "ID",
-        renderCell: (item) => item.id,
+        label: "Orden ID",
+        renderCell: (item) => item.orderId,
 
         select: {
           renderHeaderCellSelect: () => (
@@ -291,7 +292,7 @@ export default function MenuTable({ refreshPage, items, handleDisableSelected, s
             />
           ),
           renderCellSelect: (item) => (
-            <Checkbox checked={select.state.ids.includes(item.id)} onChange={() => select.fns.onToggleById(item.id)} />
+            <Checkbox checked={select.state.ids.includes(item.orderId)} onChange={() => select.fns.onToggleById(item.orderId)} />
           )
         }
       },
@@ -320,7 +321,6 @@ export default function MenuTable({ refreshPage, items, handleDisableSelected, s
         renderCell: (item) => item?.total,
         sort: { sortKey: "TOTAL" }
       },
-
       {
         label: "FECHA DE PAGO",
         renderCell: (item) => item.paidDate,
@@ -439,7 +439,9 @@ export default function MenuTable({ refreshPage, items, handleDisableSelected, s
 
   // search
   modifiedNodes = modifiedNodes.filter((node) => {
-    const searchField = screenType === "ordersScreen" ? node.Order?.User?.name : node.name
+    console.log(node, "nod")
+    const searchField =
+      screenType === "ordersScreen" ? node.Order?.User?.name : screenType === "orderHistoryScreen" ? node?.orderId : node.name
     return searchField?.toLowerCase().includes(search?.toLowerCase())
   })
 

@@ -22,8 +22,7 @@ export const OrderHistory = () => {
   const fetchOrders = async () => {
     try {
       setIsLoading(true)
-      // TODO: change to order history
-      const response = await orderApi.getAllOrders()
+      const response = await orderApi.getKitchenOrders()
       if (response.error) {
         toast.error(`Fallo al obtener el historial pedidos. ${response.message}`, {
           duration: 7000
@@ -69,7 +68,7 @@ export const OrderHistory = () => {
           </div>
         ) : orders && orders.length > 0 ? (
           <div className="w-full p-4 h-full bg-white rounded-2xl border border-blue-100">
-            <MenuTable refreshPage={refreshPage} items={orders} screenType="ordersScreen" />
+            <MenuTable refreshPage={refreshPage} items={orders} screenType="orderHistoryScreen" />
           </div>
         ) : (
           <div className="text-center mt-4 text-gray-500">Sin historial de ordenes disponibles!</div>
