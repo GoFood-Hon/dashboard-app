@@ -13,10 +13,10 @@ import { Icon } from "../../components/Icon"
 import { ITEMS_PER_PAGE } from "../../utils/paginationConfig"
 import { colors } from "../../theme/colors"
 import { useNavigate } from "react-router-dom"
-import { NAVIGATION_ROUTES_RES_ADMIN, NAVIGATION_ROUTES_SUPER_ADMIN } from "../../routes"
+import { NAVIGATION_ROUTES_KITCHEN, NAVIGATION_ROUTES_RES_ADMIN, NAVIGATION_ROUTES_SUPER_ADMIN } from "../../routes"
 import { formatDateDistanceToNow } from "../../utils"
 
-export default function MenuTable({ refreshPage, items, handleDisableSelected, screenType, isLoading }) {
+export default function MenuTable({ refreshPage, items, handleDisableSelected, screenType }) {
   const navigate = useNavigate()
   const [data, setData] = useState({ nodes: items })
   const [itemsSelected, setItemsSelected] = useState([])
@@ -193,7 +193,6 @@ export default function MenuTable({ refreshPage, items, handleDisableSelected, s
         renderCell: (item) => <div className="flex flex-row items-center gap-2">{item?.Order?.User?.name}</div>,
         sort: { sortKey: "USER" }
       },
-
       {
         label: "TELÉFONO",
         renderCell: (item) => item?.Order?.User?.phoneNumber,
@@ -301,7 +300,6 @@ export default function MenuTable({ refreshPage, items, handleDisableSelected, s
         renderCell: (item) => <div className="flex flex-row items-center gap-2">{item.shippingPrice}</div>,
         sort: { sortKey: "SHIPPING_PRICE" }
       },
-
       {
         label: "DESCUENTO",
         renderCell: (item) => item?.discount,
@@ -322,10 +320,11 @@ export default function MenuTable({ refreshPage, items, handleDisableSelected, s
         renderCell: (item) => item?.total,
         sort: { sortKey: "TOTAL" }
       },
+
       {
         label: "FECHA DE PAGO",
         renderCell: (item) => item.paidDate,
-        sort: { sortKey: "PAID_DATE" }
+        sort: { sortKey: "DATE" }
       },
       {
         label: "ACCIONES",
@@ -360,6 +359,7 @@ export default function MenuTable({ refreshPage, items, handleDisableSelected, s
     striped: false,
     highlightOnHover: true
   })
+
   const customTheme = {
     Table: `
       --data-table-library_grid-template-columns:  44px repeat(5, minmax(0, 1fr));
@@ -367,6 +367,7 @@ export default function MenuTable({ refreshPage, items, handleDisableSelected, s
       margin: 16px 0px;
     `
   }
+
   const theme = useTheme([mantineTheme, customTheme])
 
   //* Search *//
@@ -438,7 +439,7 @@ export default function MenuTable({ refreshPage, items, handleDisableSelected, s
 
   // search
   modifiedNodes = modifiedNodes.filter((node) => {
-    const searchField = screenType === "ordersScreen" || screenType === "orderHistoryScreen" ? node.Order?.User?.name : node.name
+    const searchField = screenType === "ordersScreen" ? node.Order?.User?.name : node.name
     return searchField?.toLowerCase().includes(search?.toLowerCase())
   })
 

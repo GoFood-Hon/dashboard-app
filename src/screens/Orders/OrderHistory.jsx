@@ -10,25 +10,33 @@ import MenuTable from "../Menu/MenuTable"
 import orderApi from "../../api/orderApi"
 import BackButton from "../Dishes/components/BackButton"
 import { useSelector } from "react-redux"
+import LoadingCircle from "../../components/LoadingCircle"
 
 export const OrderHistory = () => {
   const location = useLocation()
   const user = useSelector((state) => state.user.value)
 
   const [orders, setOrders] = useState([])
+  const [isLoading, setIsLoading] = useState(false)
+
   const fetchOrders = async () => {
     try {
-      const response = await orderApi.getKitchenOrders(user.restaurantId)
-      setOrders(response?.data)
+      setIsLoading(true)
+      // TODO: change to order history
+      const response = await orderApi.getAllOrders()
       if (response.error) {
         toast.error(`Fallo al obtener el historial pedidos. ${response.message}`, {
           duration: 7000
         })
+      } else {
+        setOrders(response?.data)
       }
     } catch (e) {
       toast.error(`Fallo al obtener el historial de las ordenes. Por favor intente de nuevo. ${e.message}`, {
         duration: 7000
       })
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -38,11 +46,6 @@ export const OrderHistory = () => {
 
   const refreshPage = () => {
     fetchOrders()
-  }
-
-  // TODO
-  const handleDisableSelected = async (cardsSelected) => {
-    refreshPage()
   }
 
   return (
@@ -60,14 +63,13 @@ export const OrderHistory = () => {
         </div>
       </section>
       <section>
-        {orders && orders.length > 0 ? (
+        {isLoading ? (
+          <div className="flex justify-center items-center">
+            <LoadingCircle />
+          </div>
+        ) : orders && orders.length > 0 ? (
           <div className="w-full p-4 h-full bg-white rounded-2xl border border-blue-100">
-            <MenuTable
-              refreshPage={refreshPage}
-              items={orders}
-              handleDisableSelected={handleDisableSelected}
-              screenType="orderHistoryScreen"
-            />
+            <MenuTable refreshPage={refreshPage} items={orders} screenType="ordersScreen" />
           </div>
         ) : (
           <div className="text-center mt-4 text-gray-500">Sin historial de ordenes disponibles!</div>
