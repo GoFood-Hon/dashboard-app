@@ -7,8 +7,12 @@ import Button from "../../components/Button"
 import plansApi from "../../api/plansApi"
 import { convertToDecimal } from "../../utils"
 import { EditGeneralInformationForm } from "./EditGeneralInformationForm"
+import { useNavigate } from "react-router-dom"
+import { NAVIGATION_ROUTES_SUPER_ADMIN, SETTING_NAVIGATION_ROUTES } from "../../routes"
 
 export const EditPlan = ({ closeFormModal, data }) => {
+  const navigate = useNavigate()
+
   const {
     register,
     handleSubmit,
@@ -58,7 +62,8 @@ export const EditPlan = ({ closeFormModal, data }) => {
         duration: 7000
       })
     } else {
-      navigate(SETTING_NAVIGATION_ROUTES.General.path)
+      navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Plans.path)
+
       toast.success("Plan actualizado exitosamente", {
         duration: 7000
       })

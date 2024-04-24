@@ -9,9 +9,12 @@ import plansApi from "../../api/plansApi"
 import { formatDateDistanceToNow, getFormattedHNL } from "../../utils"
 
 import { EditPlan } from "./EditPlan"
+import { useSelector } from "react-redux"
+import { APP_ROLES } from "../../utils/constants"
 
 export const PlanDetails = () => {
   const { planId } = useParams()
+  const user = useSelector((state) => state.user.value.role)
 
   const [planDetails, setPlanDetails] = useState({})
 
