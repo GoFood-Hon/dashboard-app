@@ -2,6 +2,59 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.10](https://github.com/GoFood-Hon/dashboard-app/compare/v0.0.2...v0.0.10) (2024-04-25)
+
+
+### Features
+
+* added api for offers ([80a128b](https://github.com/GoFood-Hon/dashboard-app/commit/80a128b47b2877316d903cc009b0f53d6a8f23cd))
+* added cashier ([102b067](https://github.com/GoFood-Hon/dashboard-app/commit/102b067a4916a451dce1ea55f2964f627460f2c1))
+* added cashier user ([e4ce57e](https://github.com/GoFood-Hon/dashboard-app/commit/e4ce57ef00638fcc6047fb7cb0eaa0d16e165d72))
+* added click to update status ([c1a944a](https://github.com/GoFood-Hon/dashboard-app/commit/c1a944ae2fe13e41174664116eec36ab14017169))
+* added icons to sidebar ([d41cc21](https://github.com/GoFood-Hon/dashboard-app/commit/d41cc21ce5fada620fec67dcf8fda806e4f4581f))
+* added logo to header and redirect to account ([88b1b9a](https://github.com/GoFood-Hon/dashboard-app/commit/88b1b9afb7c5266eb6d3bba1ef34aa6238c6b5cd))
+* added new endpoints to dishes ([d53693e](https://github.com/GoFood-Hon/dashboard-app/commit/d53693e2a45209dbe791ff5666ef198b31a2e268))
+* added new function ([ba6a94a](https://github.com/GoFood-Hon/dashboard-app/commit/ba6a94a58bbbe9f487b7a8c10008c5db71cc50d9))
+* added new plan ([2b3898a](https://github.com/GoFood-Hon/dashboard-app/commit/2b3898aeeab1057ef6057cd96bf5c18e7526e95d))
+* added populated values ([ca9b939](https://github.com/GoFood-Hon/dashboard-app/commit/ca9b93965f6aaa6c27a55271e5bb3cf94fafc16e))
+* added socket io ([0b00027](https://github.com/GoFood-Hon/dashboard-app/commit/0b00027005902709b79a935468352f8c0650fc25))
+* added user role kitchen ([98d6574](https://github.com/GoFood-Hon/dashboard-app/commit/98d657448e8d3f138bec8c73f3cfdc1408666d4d))
+* added welcome screen ([91206d9](https://github.com/GoFood-Hon/dashboard-app/commit/91206d952cb07688efb368623bddcac18332e2fd))
+* changed the api to get additional details ([f90e262](https://github.com/GoFood-Hon/dashboard-app/commit/f90e26248f5795115fa1a48206b3f50ec2607a6e))
+* component to populate data to comboboxes ([9ac5cf9](https://github.com/GoFood-Hon/dashboard-app/commit/9ac5cf9e44b25f74143b5b7df15ac3224e5c24ee))
+* config added for new role ([b470ae8](https://github.com/GoFood-Hon/dashboard-app/commit/b470ae85ba999e9ad61add0c9f2453c6984f93b2))
+* created custom hook for socket ([4169a92](https://github.com/GoFood-Hon/dashboard-app/commit/4169a92c495ce8bf70c037becdd32a6e84419fd7))
+* dishes and menus wired correctly ([344ec25](https://github.com/GoFood-Hon/dashboard-app/commit/344ec2583178faa38ed89f098d7c79a3087dd100))
+* editing offers ([6817061](https://github.com/GoFood-Hon/dashboard-app/commit/68170616ac19c7efeab0ff5ceb2a86c92c66c6ad))
+* historial de ordenes disponibles ([5c3a9c9](https://github.com/GoFood-Hon/dashboard-app/commit/5c3a9c946fd1a4daef9843916e523b5c7c4f1d17))
+* images can be added to admin ([9dfc758](https://github.com/GoFood-Hon/dashboard-app/commit/9dfc758f3fd79f3fcc012acd057434c5834b4e4e))
+* introduced loading to order table ([3cb49fd](https://github.com/GoFood-Hon/dashboard-app/commit/3cb49fdae8b2906d21061e13f4bc02f9790ed3de))
+* my account working good ([8718b6e](https://github.com/GoFood-Hon/dashboard-app/commit/8718b6ee5de15fd6a1fc714e59f6227f0f99a321))
+* new edit form to delete, and create new additional ([8cc1ef4](https://github.com/GoFood-Hon/dashboard-app/commit/8cc1ef44d1beda5892b28581a355f18ac0035c2c))
+* new structure for res admins ([16841ab](https://github.com/GoFood-Hon/dashboard-app/commit/16841abb2fafb24491eca57f008c7e04032d74cc))
+* order flow res->kitchen->driver ([674907b](https://github.com/GoFood-Hon/dashboard-app/commit/674907bbe97eaa658ab08ec3ad030b1ea9f790de))
+* Plans in table ([04b543c](https://github.com/GoFood-Hon/dashboard-app/commit/04b543cf9273eef91aebba176de21f534195e650))
+* routes for sucursalAdmin ([75d53e7](https://github.com/GoFood-Hon/dashboard-app/commit/75d53e7449e6dddf21eccce8c71baa49401ffa58))
+* sending dishData to additional form ([b95f35b](https://github.com/GoFood-Hon/dashboard-app/commit/b95f35b6a866319001c61c15423d7e264714323e))
+* show plan ([b73db93](https://github.com/GoFood-Hon/dashboard-app/commit/b73db935d606ecca0722d8f370bd3680a58f94ad))
+* update plan feature ([417e564](https://github.com/GoFood-Hon/dashboard-app/commit/417e5644f349d459c9194cac6d964995f6f99a0a))
+* updated api structure for additional ([aa55a1e](https://github.com/GoFood-Hon/dashboard-app/commit/aa55a1ee6e2642fa540c7364993364d8d5390298))
+* updated business logic for updateDish ([2be73c0](https://github.com/GoFood-Hon/dashboard-app/commit/2be73c0e580482cd9fc16fbeb6958ad1a1229559))
+* updated routes of my profile for branch admin ([5fdbf34](https://github.com/GoFood-Hon/dashboard-app/commit/5fdbf34bfb7d7507b3b11b48087aed79ba55d2ca))
+
+
+### Bug Fixes
+
+* bug on plans related to navigation ([14ec3e0](https://github.com/GoFood-Hon/dashboard-app/commit/14ec3e0ee75f4e81a616e9eaf52dfa37cb38e206))
+* bug on sort table ([69eb565](https://github.com/GoFood-Hon/dashboard-app/commit/69eb5657072fd015a46de5db2378b2951d2017fa))
+* bug solved order history not displaying ([2c0b565](https://github.com/GoFood-Hon/dashboard-app/commit/2c0b5650bf0c1852257dac4fc9f2901c9a68b7ec))
+* changed label text of current password input ([75ffcae](https://github.com/GoFood-Hon/dashboard-app/commit/75ffcae9bd32eb5eccfc6e33591abedbb0e672e5))
+* changed to Select component ([0199e58](https://github.com/GoFood-Hon/dashboard-app/commit/0199e588042de0fd4de69b5e2319c9fd892c5d80))
+* Dishes redirecting correctly ([47aee57](https://github.com/GoFood-Hon/dashboard-app/commit/47aee57d264ba95e6cfbd0b1460523567fb1b888))
+* enable dishes working ([a0f1053](https://github.com/GoFood-Hon/dashboard-app/commit/a0f1053fdb50217cf2bde23e0419dac5eda93a0d))
+* populate checkboxes ([d550e47](https://github.com/GoFood-Hon/dashboard-app/commit/d550e476b9b0e147abdfdfcadc56b6ea6a43dd76))
+* updated delete on api config ([be1aa70](https://github.com/GoFood-Hon/dashboard-app/commit/be1aa707a95fbebc6b373ea04c22a642c07464e0))
+
 ### [0.0.9](https://github.com/GoFood-Hon/dashboard-app/compare/v0.0.8...v0.0.9) (2024-04-24)
 
 
