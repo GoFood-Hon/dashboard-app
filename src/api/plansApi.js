@@ -26,6 +26,12 @@ const plansApi = {
   updateFeatureToPlan: (params) => axiosClient.patch(`api/v1/plan/plan-feature`, params),
 
   // Get all plans
-  getAllPlans: (params) => axiosClient.get(`api/v1/plan/`, params)
+  getAllPlans: (params) => axiosClient.get(`api/v1/plan/`, params),
+
+  // Add card to restaurant (Admin restaurant)
+  addCard: (params) => axiosClient.post(`api/v1/plan/credit-card/add-card`, params),
+
+  // Get card to restaurant (Admin restaurant)
+  getCard: () => axiosClient.get("api/v1/plan/credit-card/get-card")
 }
 export default plansApi

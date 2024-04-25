@@ -16,7 +16,7 @@ export default function SettingsCard({ title, iconName, linkPage, children }) {
           </Link>
         ) : null}
       </div>
-      <div className="px-20">{children}</div>
+      <div className="px-20 py-4">{children}</div>
     </section>
   )
 }

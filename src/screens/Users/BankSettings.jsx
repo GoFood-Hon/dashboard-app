@@ -10,14 +10,12 @@ import toast from "react-hot-toast"
 import { useSelector } from "react-redux"
 
 export default function BankSettings() {
-  const restaurant = useSelector((state) => state?.restaurant?.value)
   const user = useSelector((state) => state.user.value)
 
   const [banks, setBanks] = useState([])
+
   const {
     register,
-    handleSubmit,
-    setValue,
     control,
     formState: { errors }
   } = useForm({
@@ -92,7 +90,6 @@ export default function BankSettings() {
               <Tabs.Tab value="banks">Bancos</Tabs.Tab>
               <Tabs.Tab value="api">API</Tabs.Tab>
             </Tabs.List>
-
             <Tabs.Panel value="banks">
               <SettingsCard title="Banco" iconName="bank">
                 <Grid my={20}>
