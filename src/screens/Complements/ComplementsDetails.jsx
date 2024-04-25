@@ -11,9 +11,12 @@ import { useDispatch, useSelector } from "react-redux"
 import { setError } from "../../store/features/complementsSlice"
 import EditComplementScreen from "./EditComplementScreen"
 import BackButton from "../Dishes/components/BackButton"
+import { APP_ROLES } from "../../utils/constants"
 
 export default function ComplementsDetails() {
   const { complementId } = useParams()
+  const user = useSelector((state) => state.user.value.role)
+
   const location = useLocation()
   const dispatch = useDispatch()
   const restaurant = useSelector((state) => state.restaurants.restaurants)

@@ -5,19 +5,21 @@ import { Breadcrumbs, Card, Grid, Image, Modal } from "@mantine/core"
 import { IconCamera } from "@tabler/icons-react"
 import { useDisclosure } from "@mantine/hooks"
 import { Map, Marker } from "react-map-gl"
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 
 import { setError } from "../../store/features/complementsSlice"
 import BreadCrumbNavigation from "../../components/BreadCrumbNavigation"
 import branchesApi from "../../api/branchesApi"
 import DashboardCard from "../../components/DashboardCard"
 import BackButton from "../Dishes/components/BackButton"
-import { dashboardCards, mapBoxStyles } from "../../utils/constants"
+import { APP_ROLES, dashboardCards, mapBoxStyles } from "../../utils/constants"
 import { MAPBOX_KEY } from "../../services/env"
 import { EditBranch } from "./EditBranch"
 
 export default function BranchesDetails() {
   const { branchId } = useParams()
+  const user = useSelector((state) => state.user.value.role)
+
   const location = useLocation()
   const dispatch = useDispatch()
 

@@ -4,17 +4,18 @@ import { useLocation, useParams } from "react-router-dom"
 import BaseLayout from "../../components/BaseLayout"
 import { Breadcrumbs, Card, Grid, Image, Modal } from "@mantine/core"
 import BreadCrumbNavigation from "../../components/BreadCrumbNavigation"
-import DashboardCard from "../../components/DashboardCard"
 
 import { IconCamera } from "@tabler/icons-react"
 import BackButton from "../Dishes/components/BackButton"
 import { useSelector } from "react-redux"
 import authApi from "../../api/authApi"
 import { EditUserScreen } from "./EditUserScreen"
-import { dashboardCards } from "../../utils/constants"
+import { APP_ROLES } from "../../utils/constants"
 
 export default function UserDetails() {
   const { userId } = useParams()
+  const user = useSelector((state) => state.user.value.role)
+
   const location = useLocation()
   const restaurant = useSelector((state) => state.restaurants.restaurants)
 
