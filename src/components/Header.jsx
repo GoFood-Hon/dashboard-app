@@ -55,11 +55,20 @@ export default function Header() {
   const handleAccount = () => {
     let route = ""
     switch (user.role) {
-      case APP_ROLES.branchAdmin:
+      case APP_ROLES.superAdmin:
         route = NAVIGATION_ROUTES_BRANCH_ADMIN.Account.path
         break
       case APP_ROLES.restaurantAdmin:
         route = SETTING_NAVIGATION_ROUTES.Cuenta.path
+        break
+      case APP_ROLES.branchAdmin:
+        route = NAVIGATION_ROUTES_BRANCH_ADMIN.Account.path
+        break
+      case APP_ROLES.cashierUser:
+        route = SETTING_NAVIGATION_ROUTES.Cuenta.path
+        break
+      case APP_ROLES.kitchenUser:
+        route = NAVIGATION_ROUTES_BRANCH_ADMIN.Account.path
         break
       default:
         route = "/"

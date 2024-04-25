@@ -41,6 +41,16 @@ export const NAVIGATION_ROUTES_SUPER_ADMIN = {
       label: "Detalles del Plan",
       path: "/planes/:planId"
     }
+  },
+  Account: {
+    label: "Cuenta",
+    icon: "users",
+    path: "/miCuenta"
+  },
+  Password: {
+    label: "Contraseña",
+    icon: "eye",
+    path: "/contraseña"
   }
 }
 
@@ -216,6 +226,16 @@ export const NAVIGATION_ROUTES_KITCHEN = {
       label: "Detalles del historial del pedido",
       path: "/pedidos/:orderId"
     }
+  },
+  Account: {
+    label: "Cuenta",
+    icon: "users",
+    path: "/miCuenta"
+  },
+  Password: {
+    label: "Contraseña",
+    icon: "eye",
+    path: "/contraseña"
   }
 }
 

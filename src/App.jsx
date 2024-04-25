@@ -87,6 +87,10 @@ function App() {
             <Route path={NAVIGATION_ROUTES_SUPER_ADMIN.Plans.NewPlan.path} element={<NewPlan />} />
 
             <Route path={NAVIGATION_ROUTES_SUPER_ADMIN.Plans.PlanDetails.path} element={<PlanDetails />} />
+
+            <Route path={NAVIGATION_ROUTES_SUPER_ADMIN.Account.path} element={<AccountSettings />} />
+
+            <Route path={NAVIGATION_ROUTES_SUPER_ADMIN.Password.path} element={<PasswordSettings />} />
           </>
         )
       case APP_ROLES.restaurantAdmin:
@@ -216,6 +220,10 @@ function App() {
             <Route path={NAVIGATION_ROUTES_KITCHEN.OrderHistory.path} element={<OrderHistory />} />
 
             <Route path={NAVIGATION_ROUTES_KITCHEN.Orders.OrderDetails.path} element={<OrderDetails />} />
+
+            <Route path={NAVIGATION_ROUTES_KITCHEN.Account.path} element={<AccountSettings />} />
+
+            <Route path={NAVIGATION_ROUTES_KITCHEN.Password.path} element={<PasswordSettings />} />
           </>
         )
 
