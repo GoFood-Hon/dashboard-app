@@ -9,9 +9,12 @@ import BreadCrumbNavigation from "../../components/BreadCrumbNavigation"
 import authApi from "../../api/authApi"
 import { formatDateDistanceToNow } from "../../utils"
 import { EditAdminUser } from "./EditAdminUser"
+import { useSelector } from "react-redux"
+import { APP_ROLES } from "../../utils/constants"
 
 export const AdminUserDetails = () => {
   const { adminId } = useParams()
+  const user = useSelector((state) => state.user.value)
 
   const location = useLocation()
 

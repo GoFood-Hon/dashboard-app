@@ -7,10 +7,12 @@ import BaseLayout from "../../components/BaseLayout"
 import BackButton from "../Dishes/components/BackButton"
 import BreadCrumbNavigation from "../../components/BreadCrumbNavigation"
 import restaurantsApi from "../../api/restaurantApi"
-import EditComplementScreen from "../Complements/EditComplementScreen"
 import { EditRestaurant } from "./EditRestaurant"
+import { useSelector } from "react-redux"
+import { APP_ROLES } from "../../utils/constants"
 
 export const RestaurantDetailScreen = () => {
+  const user = useSelector((state) => state.user.value)
   const { restaurantId } = useParams()
   const location = useLocation()
 
