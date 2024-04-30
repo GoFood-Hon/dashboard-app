@@ -25,13 +25,13 @@ export const HistoryTable = ({ item, section }) => {
       }
 
       if (response.status === "success") {
-        toast.success(`Cupón ${response.isActive ? "activado" : "desactivado"} exitosamente`)
+        toast.success(`Oferta ${response.isActive ? "activado" : "desactivado"} exitosamente`)
         window.location.reload()
       } else {
-        toast.error(`Fallo al cambiar el estado del cupón. Por favor intente de nuevo. ${response.message}`)
+        toast.error(`Fallo al cambiar el estado de la oferta. ${response.message}`)
       }
     } catch (error) {
-      toast.error(`Error al cambiar el estado del cupón. Por favor intente de nuevo. ${error}`)
+      toast.error(`Error al cambiar el estado de la oferta. Por favor intente de nuevo. ${error}`)
     }
   }
 

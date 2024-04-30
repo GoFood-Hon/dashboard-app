@@ -52,8 +52,6 @@ export const OrderDetails = () => {
     })()
   }, [])
 
-  console.log(user.role, "ur")
-
   const confirmOrder = async () => {
     const response = await orderApi.confirmOrder(orderId)
     if (response?.status === "success") {

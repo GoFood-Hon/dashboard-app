@@ -22,7 +22,7 @@ const promotionApi = {
       contentType: `multipart/form-data; boundary=${params._boundary}`
     }),
   // Update offer status
-  updateStatus: (promotionId, params) => axiosClient.post(`api/v1/offer/status/${promotionId}`, params)
+  updateStatus: (promotionId, params) => axiosClient.patch(`api/v1/offer/status/${promotionId}`, params)
 }
 
 export default promotionApi
