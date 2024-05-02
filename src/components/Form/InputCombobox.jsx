@@ -2,20 +2,38 @@ import React, { useState } from "react"
 import { Combobox, InputBase, Input, useCombobox } from "@mantine/core"
 import { ErrorMessage } from "./ErrorMessage"
 
-export default function InputCombobox({ items, label, name, placeholder, errors, setValue, disabled = false }) {
+export default function InputCombobox({
+  items,
+  label,
+  name,
+  placeholder,
+  errors,
+  setValue,
+  disabled = false,
+  nothingFoundMessage = "Sin opciones disponibles"
+}) {
   const combobox = useCombobox({
     onDropdownClose: () => combobox.resetSelectedOption()
   })
 
   const [inputValue, setInputValue] = useState(null)
 
-  const options = items.map((item) => (
-    <Combobox.Option value={item.value} key={item.value}>
-      {item.label}
-    </Combobox.Option>
-  ))
+  let options
 
-  const selectedOption = items.find((item) => item.value === inputValue)
+  if (items && items.length > 0) {
+    options = items.map((item) => (
+      <Combobox.Option value={item.value} key={item.value}>
+        {item.label}
+      </Combobox.Option>
+    ))
+  } else {
+    options = (
+      <Combobox.Option disabled value="no_drivers">
+        {nothingFoundMessage}
+      </Combobox.Option>
+    )
+  }
+  const selectedOption = items?.find((item) => item?.value === inputValue)
 
   return (
     <React.Fragment>
