@@ -105,7 +105,9 @@ export default function PlanSettings() {
           <Tabs.Panel value="paymentMethod">
             <SettingsCard title="Tarjeta actual" iconName="creditCard">
               {creditCard ? (
-                <CreditCardInfo data={creditCard} />
+                <div className="flex justify-center items-center">
+                  <CreditCardInfo data={creditCard} />
+                </div>
               ) : (
                 <div className="flex flex-row justify-center items-center p-10 text-gray-400">Sin tarjeta disponible</div>
               )}
@@ -168,7 +170,7 @@ const CreditCardInfo = ({ data }) => {
   const expMonth = validThru?.substring(0, 2)
   const expYear = validThru?.substring(2)
   return (
-    <div className="bg-sky-50  shadow-xl border-blue-100 border-2 rounded-lg p-4 m-10">
+    <div className="bg-sky-50 w-2/4 shadow-xl border-blue-100 border-2 rounded-lg p-4 m-10">
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-lg font-semibold text-gray-800">Tarjeta actual</h2>
         <span className="text-gray-600">
