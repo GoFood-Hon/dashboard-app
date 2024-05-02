@@ -37,6 +37,8 @@ export const OrderDetails = () => {
           let sucursalId = 0
           sucursalId = response?.data?.sucursalId
 
+          // TODO: change to sucursal ID
+
           const driversResponseRequest = await orderApi.getDrivers("ea6ceeb0-5cd4-4f6e-8c20-2a71cfb79324")
 
           const newDriverList = driversResponseRequest?.data?.map((item) => ({
