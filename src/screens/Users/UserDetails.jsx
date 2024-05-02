@@ -11,6 +11,9 @@ import { useSelector } from "react-redux"
 import authApi from "../../api/authApi"
 import { EditUserScreen } from "./EditUserScreen"
 import { APP_ROLES } from "../../utils/constants"
+import Button from "../../components/Button"
+import driverApi from "../../api/driverApi"
+import toast from "react-hot-toast"
 
 export default function UserDetails() {
   const { userId } = useParams()
@@ -37,6 +40,20 @@ export default function UserDetails() {
     }
     fetchDetails()
   }, [closeFormModal, formModalOpened])
+
+  const changeDriverStatus = async () => {
+    try {
+      const response = await driverApi.changeDriverStatus(userDetails.driverId)
+      if (response?.status === "success") {
+        toast.success("Estado actualizado!")
+      } else {
+        toast.error(`Hubo un error actualizando el estado. ${response.message}`)
+      }
+    } catch (error) {
+      toast.error("Hubo un error, intente nuevamente.", error)
+      throw error
+    }
+  }
 
   return (
     <BaseLayout>
@@ -104,6 +121,13 @@ export default function UserDetails() {
                     <div className="text-sky-950 text-sm font-bold leading-snug pb-2">
                       {userDetails?.active ? `Activo` : `No activo`}
                     </div>
+                    {userDetails?.role === "driver" ? (
+                      <Button
+                        text={userDetails?.active ? `Desactivar` : `Activar`}
+                        className={`${userDetails?.active ? "border-red-400" : "border-green-400"} text-xs border border-red-400 text-red-400 bg-white`}
+                        onClick={changeDriverStatus}
+                      />
+                    ) : null}
 
                     <div className="w-[125px] h-px bg-blue-100 sm:w-full" />
                   </div>
