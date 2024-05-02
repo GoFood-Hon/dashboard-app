@@ -8,7 +8,6 @@ import BreadCrumbNavigation from "../../components/BreadCrumbNavigation"
 
 import MenuTable from "../Menu/MenuTable"
 import orderApi from "../../api/orderApi"
-import { useSocket } from "../../hooks/useOrderSocket"
 import BackButton from "../Dishes/components/BackButton"
 import LoadingCircle from "../../components/LoadingCircle"
 
@@ -16,24 +15,6 @@ export default function OrdersScreen() {
   const location = useLocation()
   const [orders, setOrders] = useState([])
   const [isLoading, setIsLoading] = useState(false)
-
-  const orderSocket = useSocket()
-
-  useEffect(() => {
-    if (orderSocket) {
-      orderSocket.on("orderUpdate", (order) => {
-        refreshPage()
-      })
-      orderSocket.on("orderReady", (order) => {
-        refreshPage()
-      })
-
-      return () => {
-        orderSocket.off("orderUpdate")
-        orderSocket.off("orderReady")
-      }
-    }
-  }, [orderSocket])
 
   const fetchOrders = async () => {
     try {
