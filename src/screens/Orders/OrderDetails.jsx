@@ -16,15 +16,16 @@ import { DishOrderDetailCard } from "./DishOrderDetailCard"
 import { useSelector } from "react-redux"
 
 export const OrderDetails = () => {
-  const user = useSelector((state) => state.user.value)
   const { orderId } = useParams()
+
+  const user = useSelector((state) => state.user.value)
   const location = useLocation()
   const navigate = useNavigate()
 
   const [orderDetailModalOpened, { open: openOrderDetailsModal, close: closeOrderDetailModal }] = useDisclosure(false)
   const [orderDetails, setOrderDetails] = useState({})
   const [driver, setDriver] = useState(null)
-  const [driverList, setDriverList] = useState(null)
+  const [driverList, setDriverList] = useState([])
 
   useEffect(() => {
     ;(async () => {
@@ -33,9 +34,15 @@ export const OrderDetails = () => {
         setOrderDetails(response?.data)
 
         if (user.role === APP_ROLES.restaurantAdmin) {
+          let sucursalId = 0
+          sucursalId = response?.data?.sucursalId
+
           const driversResponseRequest = await orderApi.getDrivers("ea6ceeb0-5cd4-4f6e-8c20-2a71cfb79324")
-          // TODO: change to driver name
-          const newDriverList = driversResponseRequest?.data?.map((item) => item?.driverId)
+
+          const newDriverList = driversResponseRequest?.data?.map((item) => ({
+            label: item.AdminUser.name,
+            value: item.driverId
+          }))
 
           setDriverList(newDriverList)
 
@@ -103,10 +110,10 @@ export const OrderDetails = () => {
         navigate(NAVIGATION_ROUTES_RES_ADMIN.Pedidos.path)
         toast.success("Orden enviada al conductor!")
       } else {
-        toast.error("Hubo un error en la orden.")
+        toast.error(`Hubo un error en la orden. ${response.message}`)
       }
     } catch (error) {
-      toast.error("Fallo la confirmación del motorista, ", error)
+      toast.error(`Fallo la confirmación del motorista, por favor intente nuevamente. ${error}`)
     }
   }
 
@@ -334,7 +341,7 @@ export const OrderDetails = () => {
                   />
                   <Button
                     text={"Confirmar motorista"}
-                    onClick={() => confirmDriver()}
+                    onClick={confirmDriver}
                     className={"text-md px-3 py-2 text-white bg-primary_button font-bold"}
                   />
                 </div>
