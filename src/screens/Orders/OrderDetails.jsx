@@ -1,3 +1,4 @@
+/* eslint-disable indent */
 import { Avatar, Breadcrumbs, Grid, Image, Modal, Select } from "@mantine/core"
 import React, { useEffect, useState } from "react"
 import { useLocation, useNavigate, useParams } from "react-router-dom"
@@ -9,7 +10,7 @@ import { formatDateDistanceToNow, getFormattedHNL } from "../../utils"
 import Button from "../../components/Button"
 import BackButton from "../Dishes/components/BackButton"
 import orderApi from "../../api/orderApi"
-import { APP_ROLES, orderStatusValues } from "../../utils/constants"
+import { APP_ROLES, orderDeliveryTypes, orderStatusValues } from "../../utils/constants"
 import { NAVIGATION_ROUTES_RES_ADMIN } from "../../routes"
 import { DishOrderDetailCard } from "./DishOrderDetailCard"
 import { useSelector } from "react-redux"
@@ -109,6 +110,20 @@ export const OrderDetails = () => {
     }
   }
 
+  const confirmDelivery = async () => {
+    try {
+      const response = await orderApi.markOrderDelivered(orderId)
+      if (response?.status === "success") {
+        toast.success("Orden marcada como entregada!")
+        navigate(NAVIGATION_ROUTES_RES_ADMIN.Pedidos.path)
+      } else {
+        toast.error(`Hubo un error en la orden. ${response.message}`)
+      }
+    } catch (error) {
+      toast.error(`Fallo confirmar el pedido como entregado, intente nuevamente. ${error}`)
+    }
+  }
+
   return (
     <BaseLayout>
       <section>
@@ -143,6 +158,12 @@ export const OrderDetails = () => {
                   <div className="flex flex-col">
                     <span className="text-zinc-500 text-sm  font-medium leading-normal">Estado</span>
                     <span className="text-sky-950 text-sm  font-bold leading-normal">{orderDetails?.status}</span>
+                  </div>
+                </Grid.Col>
+                <Grid.Col span={{ base: 12, md: "auto" }}>
+                  <div className="flex flex-col">
+                    <span className="text-zinc-500 text-sm  font-medium leading-normal">Tipo</span>
+                    <span className="text-sky-950 text-sm  font-bold leading-normal">{orderDetails?.Order?.type}</span>
                   </div>
                 </Grid.Col>
                 <Grid.Col span={{ base: 12, md: "auto" }}>
@@ -289,17 +310,14 @@ export const OrderDetails = () => {
                 <div className="text-sky-950 text-sm py-2 font-normal leading-normal">
                   {orderDetails?.Order?.User?.UserAddress || "Dirección no disponible "}
                 </div>
-
-                {/* <div className="text-sky-950 text-base font-semibold mt-4 mb-2">Dirección de facturación</div>
-                <div className="text-sky-950 text-sm py-2 font-normal leading-normal">
-                  {orderDetails?.Order?.User?.UserAddress || "Dirección no disponible "}
-                </div> */}
               </div>
             </div>
-            {(user.role === APP_ROLES.restaurantAdmin ||
+
+            {orderDetails?.Order?.type === orderDeliveryTypes.delivery &&
+            (user.role === APP_ROLES.restaurantAdmin ||
               user.role === APP_ROLES.branchAdmin ||
-              user.role === APP_ROLES.cashierUser) &
-            (orderDetails?.status === orderStatusValues.ready) ? (
+              user.role === APP_ROLES.cashierUser) &&
+            orderDetails?.status === orderStatusValues.ready ? (
               <div className="w-full bg-white rounded-md border border-blue-100 p-5 mt-4">
                 <span>Seleccionar motorista</span>
                 <div className="w-full border border-blue-100 mt-4" />
@@ -321,6 +339,12 @@ export const OrderDetails = () => {
                   />
                 </div>
               </div>
+            ) : orderDetails?.status === orderStatusValues.readyForCustomer ? (
+              <Button
+                text={"Confirmar pedido entregado"}
+                onClick={confirmDelivery}
+                className={"mt-4 text-md px-3 py-2 text-white bg-primary_button font-bold"}
+              />
             ) : null}
           </Grid.Col>
         </Grid>
