@@ -116,7 +116,7 @@ export default function NewDish() {
   const onSubmit = (data) => {
     const restaurantId = user.restaurantId
 
-    dispatch(createDish({ data, restaurantId, additional })).then((response) => {
+    dispatch(createDish({ data, restaurantId, additionals: additional })).then((response) => {
       if (response.payload) {
         reset()
         setIsDataCleared(true)
