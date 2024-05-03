@@ -26,13 +26,25 @@ const initialState = {
 
 export const fetchDishes = createAsyncThunk(
   "dishes/fetchDishes",
-  async ({ limit, page, order, restaurantId, filters }, { dispatch }) => {
+  async ({
+    limit,
+    page,
+    order,
+    restaurantId,
+    filters
+  }, { dispatch }) => {
     let formattedStartDate = null
     let formattedEndDate = null
     let formattedStatus = null
     let formattedPrice = null
 
-    const { startDate, endDate, status, startPrice, dateSort } = filters
+    const {
+      startDate,
+      endDate,
+      status,
+      startPrice,
+      dateSort
+    } = filters
 
     if (startDate) {
       formattedStartDate = startDate.toISOString().split("T")[0]
@@ -76,11 +88,17 @@ export const fetchDishes = createAsyncThunk(
  * CREATE DISHES
  */
 
-export const createDish = createAsyncThunk("dishes/createDish", async ({ data, restaurantId, additional }, { dispatch }) => {
+export const createDish = createAsyncThunk("dishes/createDish", async ({
+  data,
+  restaurantId,
+  additionals
+}, { dispatch }) => {
   try {
-    const formData = createDishFormData(data, restaurantId)
-
-    const response = await dishesApi.createDish(formData)
+    const response = await dishesApi.createDish({
+      ...data,
+      restaurantId,
+      additionals
+    })
 
     dispatch(fetchDishes())
 
@@ -100,34 +118,6 @@ export const createDish = createAsyncThunk("dishes/createDish", async ({ data, r
           duration: 7000
         })
       }
-
-      /**
-       * Add Additional to the dish
-       */
-      for (const category of additional) {
-        const { name, required, requiredMinimum } = category
-
-        const additionalFormData = new FormData()
-        additionalFormData.append("name", name)
-        additionalFormData.append("required", required)
-        additionalFormData.append("dishId", dishId)
-        if (required) {
-          additionalFormData.append("requiredMinimum", requiredMinimum)
-        }
-
-        const addExtraResponse = await extrasApi.createExtra(additionalFormData)
-
-        const extraId = addExtraResponse.data.id
-
-        for (const additionalsDetails of category.additionalsDetails) {
-          const extraDetailFormData = new FormData()
-          extraDetailFormData.append("name", additionalsDetails.name)
-          extraDetailFormData.append("isFree", additionalsDetails.isFree)
-          extraDetailFormData.append("price", convertToDecimal(additionalsDetails.price))
-
-          await extrasApi.createExtraDetails(extraId, extraDetailFormData)
-        }
-      }
       /**
        * All was success
        */
@@ -140,24 +130,11 @@ export const createDish = createAsyncThunk("dishes/createDish", async ({ data, r
   }
 })
 
-const createDishFormData = (data, restaurantId) => {
-  const formData = new FormData()
-  formData.append("name", data.name)
-  formData.append("price", convertToDecimal(data.price))
-  formData.append("description", data.description)
-  formData.append("includesDrink", data.includesDrink)
-
-  formData.append("restaurantId", restaurantId)
-  formData.append("preparationTime", data?.preparationTime)
-
-  return formData
-}
-
 const uploadDishImage = async (dishId, file) => {
   const formDataImage = new FormData()
   formDataImage.append("files", file)
 
-  return await dishesApi.addImage(dishId, formDataImage)
+  return dishesApi.addImage(dishId, formDataImage)
 }
 
 const handleErrorOnCreateDish = (error, dispatch) => {
@@ -172,7 +149,11 @@ const handleErrorOnCreateDish = (error, dispatch) => {
 
 export const updateDish = createAsyncThunk(
   "dishes/updateDish",
-  async ({ dishData, propertyToUpdate = "all", dishId }, { dispatch }) => {
+  async ({
+    dishData,
+    propertyToUpdate = "all",
+    dishId
+  }, { dispatch }) => {
     try {
       const formData = new FormData()
       let payloadData
@@ -261,7 +242,12 @@ export const dishesSlice = createSlice({
   }
 })
 
-export const { setDishes, setError, setPage, setFilters } = dishesSlice.actions
+export const {
+  setDishes,
+  setError,
+  setPage,
+  setFilters
+} = dishesSlice.actions
 
 export const setLoading = (state) => state.dishes.loading
 
