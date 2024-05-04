@@ -84,7 +84,7 @@ export default function BranchesDetails() {
               <Card.Section>
                 <div className="relative">
                   <Image
-                    src={details.images?.[0]?.location}
+                    src={details?.images?.[0]?.location}
                     h={"240px"}
                     w={"100%"}
                     fit="contain"
@@ -118,9 +118,9 @@ export default function BranchesDetails() {
                       <div className="text-sky-950 text-sm font-bold leading-snug py-3">{details?.address}</div>
 
                       <div className="text-sky-950 text-sm font-medium leading-snug my-2">Ciudad</div>
-                      <div className="text-sky-950 text-sm font-bold leading-snug mb-2">{details.city}</div>
+                      <div className="text-sky-950 text-sm font-bold leading-snug mb-2">{details?.city}</div>
                       <div className="text-sky-950 text-sm font-medium leading-snug my-2">Departamento</div>
-                      <div className="text-sky-950 text-sm font-bold leading-snug mb-2">{details.state}</div>
+                      <div className="text-sky-950 text-sm font-bold leading-snug mb-2">{details?.state}</div>
                     </div>
                   </Grid.Col>
                   <Grid.Col span={{ base: 12, md: 10, lg: 10 }}>
@@ -152,7 +152,7 @@ export default function BranchesDetails() {
                       <div className="flex flex-col justify-between mt-4">
                         <span className="text-sky-950 text-base font-bold leading-normal mb-4">Horario</span>
 
-                        {details.alwaysOpen ? (
+                        {details?.alwaysOpen ? (
                           <div className="flex py-2 bg-green-500 text-white text-lg font-bold rounded-lg px-4">
                             Siempre Abierto
                           </div>
