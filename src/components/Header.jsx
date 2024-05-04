@@ -26,7 +26,7 @@ export default function Header() {
         })
       )
     }
-    // TODO:
+    // TODO: 2nd - add branch to fetch data
     /*  else if (
       user.role === APP_ROLES.branchAdmin ||
       user.role === APP_ROLES.kitchenUser ||

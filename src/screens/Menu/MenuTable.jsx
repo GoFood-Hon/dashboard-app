@@ -426,7 +426,7 @@ export default function MenuTable({ refreshPage, items, handleDisableSelected, s
         iconUp: <IconChevronUp />,
         iconDown: <IconChevronDown />
       },
-      // TODO: add more sorts keys
+      // TODO: 2nd - add more sorts keys
       sortFns: {
         MENU: (array) => array.sort((a, b) => a.name.localeCompare(b.name)),
 
