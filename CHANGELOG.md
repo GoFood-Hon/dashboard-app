@@ -2,6 +2,33 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.11](https://github.com/GoFood-Hon/dashboard-app/compare/v0.0.10...v0.0.11) (2024-05-04)
+
+
+### Features
+
+* active a driver feature updated ([6c13171](https://github.com/GoFood-Hon/dashboard-app/commit/6c1317161ae2dbc9da3ae19b844ef631f47a7877))
+* added button ([3178ca8](https://github.com/GoFood-Hon/dashboard-app/commit/3178ca87e36e3ba065129dc97da543374a9a28fe))
+* added comments to TODOs ([1a396ab](https://github.com/GoFood-Hon/dashboard-app/commit/1a396ab71c82f05e2157003137066a7f74ef3c91))
+* added configuration ([2eda8fb](https://github.com/GoFood-Hon/dashboard-app/commit/2eda8fb5828f442a10683bdd3f91cb0eda2a1a0f))
+* added new constants ([0cab4b6](https://github.com/GoFood-Hon/dashboard-app/commit/0cab4b621493e6f00b330e9f0b8900c93960e2e4))
+* added new endpoints ([9ad948f](https://github.com/GoFood-Hon/dashboard-app/commit/9ad948f3d0f495be06c24d13e779aa3fb07cb212))
+* added notification library ([6c35d12](https://github.com/GoFood-Hon/dashboard-app/commit/6c35d1241f3ef3cb1e8686fb699411f97f528671))
+* added notifications to the app ([5c547a0](https://github.com/GoFood-Hon/dashboard-app/commit/5c547a0ffbb5d91d01af3e664be4b21f45833523))
+* feature to activate a user ([ece68aa](https://github.com/GoFood-Hon/dashboard-app/commit/ece68aa96905f373352d120d8e8a67cee61d22b3))
+* full flow of the plans done ([e4fa571](https://github.com/GoFood-Hon/dashboard-app/commit/e4fa571b6811c90bf89b89913625e3fff5089604))
+* implemented logic for pick up ([c6b94ef](https://github.com/GoFood-Hon/dashboard-app/commit/c6b94ef211f5913a7faaeb21c673955cfed69efd))
+
+
+### Bug Fixes
+
+* added nullish ([c7a7dee](https://github.com/GoFood-Hon/dashboard-app/commit/c7a7dee17871190100bc2657abab2db59bf7b6f5))
+* assign driver fixed ([03e0aad](https://github.com/GoFood-Hon/dashboard-app/commit/03e0aad9ece7eb435294beacdb13564d85c6c510))
+* bug fixed on promotion ([89c970f](https://github.com/GoFood-Hon/dashboard-app/commit/89c970f867b9c843fa458a928caabebeaf48551b))
+* bug with the user broken screen ([bea8e6a](https://github.com/GoFood-Hon/dashboard-app/commit/bea8e6a297f39813ea20ee2595a70ca3caec93e1))
+* removed fetch branch data no needed for the moment ([02f7f56](https://github.com/GoFood-Hon/dashboard-app/commit/02f7f563db714abf3bfcd12af2a791392b0ae398))
+* removed fetch branch data, waiting feature ([fb99d5f](https://github.com/GoFood-Hon/dashboard-app/commit/fb99d5f3d8504c2a7ffc3add34c4099e300d8b77))
+
 ### [0.0.10](https://github.com/GoFood-Hon/dashboard-app/compare/v0.0.2...v0.0.10) (2024-04-25)
 
 
