@@ -7,15 +7,19 @@ import LoadingCircle from "./components/LoadingCircle"
 import { Toaster } from "react-hot-toast"
 import { Provider } from "react-redux"
 import { store } from "./store/store"
+import { MantineProvider } from "@mantine/core"
+import { Notifications } from "@mantine/notifications"
+
 import "@mantine/core/styles.css"
 import "mapbox-gl/dist/mapbox-gl.css"
+import "@mantine/notifications/styles.css"
 
-import { MantineProvider } from "@mantine/core"
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <Provider store={store}>
       <React.Suspense fallback={LoadingCircle}>
         <MantineProvider>
+          <Notifications />
           <App />
           <Toaster position="top-right" />
         </MantineProvider>

@@ -26,7 +26,10 @@ const orderApi = {
   getDrivers: (sucursalId) => axiosClient.get(`api/v1/order/get-drivers/${sucursalId}`),
 
   // Assign Driver (admin restaurant, admin sucursal)
-  assignDriver: (params) => axiosClient.patch("api/v1/order/assign-driver", params)
+  assignDriver: (params) => axiosClient.patch("api/v1/order/assign-driver", params),
+
+  // Mark order as delivered (Admin sucursal, admin restaurant)
+  markOrderDelivered: (id) => axiosClient.patch(`api/v1/order/mark-order-as-delivered/${id}`)
 }
 
 export default orderApi

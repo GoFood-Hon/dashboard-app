@@ -1,6 +1,6 @@
 import { useDisclosure } from "@mantine/hooks"
 import React, { useEffect, useState } from "react"
-import { useLocation, useParams } from "react-router-dom"
+import { Navigate, useLocation, useNavigate, useParams } from "react-router-dom"
 import BaseLayout from "../../components/BaseLayout"
 import { Breadcrumbs, Card, Grid, Image, Modal } from "@mantine/core"
 import BreadCrumbNavigation from "../../components/BreadCrumbNavigation"
@@ -11,10 +11,15 @@ import { useSelector } from "react-redux"
 import authApi from "../../api/authApi"
 import { EditUserScreen } from "./EditUserScreen"
 import { APP_ROLES } from "../../utils/constants"
+import Button from "../../components/Button"
+import driverApi from "../../api/driverApi"
+import toast from "react-hot-toast"
+import { NAVIGATION_ROUTES_RES_ADMIN } from "../../routes"
 
 export default function UserDetails() {
   const { userId } = useParams()
   const user = useSelector((state) => state.user.value.role)
+  const navigate = useNavigate()
 
   const location = useLocation()
   const restaurant = useSelector((state) => state.restaurants.restaurants)
@@ -28,8 +33,8 @@ export default function UserDetails() {
     const fetchDetails = async () => {
       try {
         const response = await authApi.getUserDetails(userId)
-        const userDetails = response?.data
-        setUserDetails(userDetails)
+        const userDetailsData = response?.data
+        setUserDetails(userDetailsData)
       } catch (error) {
         toast.error("Hubo un error obteniendo los detalles del usuario")
         throw error
@@ -37,6 +42,22 @@ export default function UserDetails() {
     }
     fetchDetails()
   }, [closeFormModal, formModalOpened])
+
+  const changeDriverStatus = async () => {
+    try {
+      const response = await driverApi.changeDriverStatus(userDetails?.Driver?.driverId)
+      if (response?.status === "success") {
+        toast.success("Estado actualizado!")
+
+        navigate(NAVIGATION_ROUTES_RES_ADMIN.Users.path)
+      } else {
+        toast.error(`Hubo un error actualizando el estado. ${response.message}`)
+      }
+    } catch (error) {
+      toast.error("Hubo un error, intente nuevamente.", error)
+      throw error
+    }
+  }
 
   return (
     <BaseLayout>
@@ -102,8 +123,15 @@ export default function UserDetails() {
                     </div>
                     <div className="text-sky-950 text-sm font-medium py-2 leading-snug">Estado</div>
                     <div className="text-sky-950 text-sm font-bold leading-snug pb-2">
-                      {userDetails?.active ? `Activo` : `No activo`}
+                      {userDetails?.Driver?.active ? `Activo` : `No activo`}
                     </div>
+                    {userDetails?.role === "driver" ? (
+                      <Button
+                        text={userDetails?.Driver?.active ? `Desactivar` : `Activar`}
+                        className={`${userDetails?.Driver?.active ? "border-red-400 text-red-400" : "border-green-400 text-green-400"} text-md font-bold border bg-white`}
+                        onClick={changeDriverStatus}
+                      />
+                    ) : null}
 
                     <div className="w-[125px] h-px bg-blue-100 sm:w-full" />
                   </div>

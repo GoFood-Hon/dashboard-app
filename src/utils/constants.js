@@ -10,6 +10,11 @@ export const DEFAULT_END_DATE = new Date()
 export const DEFAULT_CURRENCY = "HNL"
 export const DEFAULT_PAYMENT_TYPE = "MENSUAL"
 
+export const orderDeliveryTypes = {
+  delivery: "delivery",
+  pickUp: "pickup",
+  onSite: "on-site"
+}
 export const orderStatusValues = {
   pending: "pending",
   onHold: "on-hold",
@@ -17,7 +22,9 @@ export const orderStatusValues = {
   ready: "ready",
   driverAssigned: "ready-to-pick-up",
   onDelivery: " on-delivery",
-  delivered: "delivered"
+  delivered: "delivered",
+
+  readyForCustomer: "ready-for-customer"
 }
 
 export const CouponTypes = {

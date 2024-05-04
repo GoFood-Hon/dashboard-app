@@ -24,7 +24,8 @@ const initialState = {
  * GET RESTAURANT INDIVIDUAL
  */
 
-export const fetchBranchData = createAsyncThunk("branches/fetchBranchData", async ({ branchId }, { dispatch }) => {
+// TODO:
+/* export const fetchBranchData = createAsyncThunk("branches/fetchBranchData", async ({ branchId }, { dispatch }) => {
   try {
     const response = await branchesApi.getBranch(branchId)
     if (response.error) {
@@ -45,7 +46,7 @@ export const fetchBranchData = createAsyncThunk("branches/fetchBranchData", asyn
     throw error
   }
 })
-
+ */
 /*
  * GET BRANCHES
  */
