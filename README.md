@@ -1,6 +1,6 @@
 # GoFood - Dashboard Web App
 
-React SPA for Admins of restaurants
+React App for Admins of restaurants
 
 ## Check the page in:
 
