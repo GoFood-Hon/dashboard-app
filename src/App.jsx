@@ -125,7 +125,7 @@ function App() {
 
             <Route path={NAVIGATION_ROUTES_RES_ADMIN.Menu.submenu.Complements.NewComplement.path} element={<NewComplement />} />
 
-            <Route path={NAVIGATION_ROUTES_RES_ADMIN.Transactions.path} element={<Transactions />} />
+            {/* <Route path={NAVIGATION_ROUTES_RES_ADMIN.Transactions.path} element={<Transactions />} /> */}
 
             <Route path={NAVIGATION_ROUTES_RES_ADMIN.Branches.path} element={<Branches />} />
 
