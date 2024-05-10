@@ -25,7 +25,7 @@ const dishesApi = {
 
   getDish: (dishId) => axiosClient.get(`api/v1/dish/${dishId}`),
 
-  createDish: (formData) => axiosClient.post("api/v1/dish/create/with-extras", formData),
+  createDish: (formData) => axiosClient.post("api/v1/dish/", formData),
 
   createDishWithExtra: (formData) => axiosClient.post("api/v1/dish/create/with-extras", formData),
 
