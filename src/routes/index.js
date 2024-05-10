@@ -107,11 +107,13 @@ export const NAVIGATION_ROUTES_RES_ADMIN = {
       }
     }
   },
-  Transactions: {
-    label: "Transacciones",
-    path: "/transacciones",
-    icon: "invoice"
-  },
+  // TODO: Transactions never defined
+
+  // Transactions: {
+  //   label: "Transacciones",
+  //   path: "/transacciones",
+  //   icon: "invoice"
+  // },
 
   Branches: {
     label: "Sucursales",
