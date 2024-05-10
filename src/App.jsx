@@ -57,8 +57,8 @@ import { NotFound } from "./screens/NotFound"
 import { WelcomeScreen } from "./screens/Welcome/WelcomeScreen"
 import { NewPlan } from "./screens/Plans/NewPlan"
 import { PlanDetails } from "./screens/Plans/PlanDetails"
-
 import { OrderHistory } from "./screens/Orders/OrderHistory"
+import { NotificationProvider } from "./components/NotificationProvider"
 
 function App() {
   const userRole = useSelector((state) => state.user.value.role)
@@ -253,6 +253,7 @@ function App() {
           </Route>
           <Route path={"/unauthorized"} element={<Navigate to="/orders" />} />
           <Route path={AUTH_NAVIGATION_ROUTES.Logout.path} element={<Logout />} />
+          {/* <Route path={"/notificaciones"} element={<NotificationScreen />} /> */}
         </Route>
         <Route element={<UnauthenticatedLayout />}>
           <Route path={AUTH_NAVIGATION_ROUTES.Login.path} element={<Login />} />
@@ -263,7 +264,11 @@ function App() {
       </>
     )
   )
-  return <RouterProvider router={router} />
+  return (
+    <NotificationProvider>
+      <RouterProvider router={router} />
+    </NotificationProvider>
+  )
 }
 
 export default App

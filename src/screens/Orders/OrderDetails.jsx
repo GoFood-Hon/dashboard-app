@@ -1,3 +1,4 @@
+/* eslint-disable indent */
 import { Avatar, Breadcrumbs, Grid, Image, Modal, Select } from "@mantine/core"
 import React, { useEffect, useState } from "react"
 import { useLocation, useNavigate, useParams } from "react-router-dom"
@@ -9,21 +10,22 @@ import { formatDateDistanceToNow, getFormattedHNL } from "../../utils"
 import Button from "../../components/Button"
 import BackButton from "../Dishes/components/BackButton"
 import orderApi from "../../api/orderApi"
-import { APP_ROLES, orderStatusValues } from "../../utils/constants"
+import { APP_ROLES, orderDeliveryTypes, orderStatusValues } from "../../utils/constants"
 import { NAVIGATION_ROUTES_RES_ADMIN } from "../../routes"
 import { DishOrderDetailCard } from "./DishOrderDetailCard"
 import { useSelector } from "react-redux"
 
 export const OrderDetails = () => {
-  const user = useSelector((state) => state.user.value)
   const { orderId } = useParams()
+
+  const user = useSelector((state) => state.user.value)
   const location = useLocation()
   const navigate = useNavigate()
 
   const [orderDetailModalOpened, { open: openOrderDetailsModal, close: closeOrderDetailModal }] = useDisclosure(false)
   const [orderDetails, setOrderDetails] = useState({})
   const [driver, setDriver] = useState(null)
-  const [driverList, setDriverList] = useState(null)
+  const [driverList, setDriverList] = useState([])
 
   useEffect(() => {
     ;(async () => {
@@ -32,9 +34,17 @@ export const OrderDetails = () => {
         setOrderDetails(response?.data)
 
         if (user.role === APP_ROLES.restaurantAdmin) {
-          const driversResponseRequest = await orderApi.getDrivers("ea6ceeb0-5cd4-4f6e-8c20-2a71cfb79324")
-          // TODO: change to driver name
-          const newDriverList = driversResponseRequest?.data?.map((item) => item?.driverId)
+          let sucursalId = 0
+          sucursalId = response?.data?.sucursalId
+
+          // TODO: change to sucursal ID "ea6ceeb0-5cd4-4f6e-8c20-2a71cfb79324" if want to make it work
+
+          const driversResponseRequest = await orderApi.getDrivers(sucursalId)
+
+          const newDriverList = driversResponseRequest?.data?.map((item) => ({
+            label: item.AdminUser.name,
+            value: item.driverId
+          }))
 
           setDriverList(newDriverList)
 
@@ -102,10 +112,24 @@ export const OrderDetails = () => {
         navigate(NAVIGATION_ROUTES_RES_ADMIN.Pedidos.path)
         toast.success("Orden enviada al conductor!")
       } else {
-        toast.error("Hubo un error en la orden.")
+        toast.error(`Hubo un error en la orden. ${response.message}`)
       }
     } catch (error) {
-      toast.error("Fallo la confirmación del motorista, ", error)
+      toast.error(`Fallo la confirmación del motorista, por favor intente nuevamente. ${error}`)
+    }
+  }
+
+  const confirmDelivery = async () => {
+    try {
+      const response = await orderApi.markOrderDelivered(orderId)
+      if (response?.status === "success") {
+        toast.success("Orden marcada como entregada!")
+        navigate(NAVIGATION_ROUTES_RES_ADMIN.Pedidos.path)
+      } else {
+        toast.error(`Hubo un error en la orden. ${response.message}`)
+      }
+    } catch (error) {
+      toast.error(`Fallo confirmar el pedido como entregado, intente nuevamente. ${error}`)
     }
   }
 
@@ -143,6 +167,12 @@ export const OrderDetails = () => {
                   <div className="flex flex-col">
                     <span className="text-zinc-500 text-sm  font-medium leading-normal">Estado</span>
                     <span className="text-sky-950 text-sm  font-bold leading-normal">{orderDetails?.status}</span>
+                  </div>
+                </Grid.Col>
+                <Grid.Col span={{ base: 12, md: "auto" }}>
+                  <div className="flex flex-col">
+                    <span className="text-zinc-500 text-sm  font-medium leading-normal">Tipo</span>
+                    <span className="text-sky-950 text-sm  font-bold leading-normal">{orderDetails?.Order?.type}</span>
                   </div>
                 </Grid.Col>
                 <Grid.Col span={{ base: 12, md: "auto" }}>
@@ -289,17 +319,14 @@ export const OrderDetails = () => {
                 <div className="text-sky-950 text-sm py-2 font-normal leading-normal">
                   {orderDetails?.Order?.User?.UserAddress || "Dirección no disponible "}
                 </div>
-
-                {/* <div className="text-sky-950 text-base font-semibold mt-4 mb-2">Dirección de facturación</div>
-                <div className="text-sky-950 text-sm py-2 font-normal leading-normal">
-                  {orderDetails?.Order?.User?.UserAddress || "Dirección no disponible "}
-                </div> */}
               </div>
             </div>
-            {(user.role === APP_ROLES.restaurantAdmin ||
+
+            {orderDetails?.Order?.type === orderDeliveryTypes.delivery &&
+            (user.role === APP_ROLES.restaurantAdmin ||
               user.role === APP_ROLES.branchAdmin ||
-              user.role === APP_ROLES.cashierUser) &
-            (orderDetails?.status === orderStatusValues.ready) ? (
+              user.role === APP_ROLES.cashierUser) &&
+            orderDetails?.status === orderStatusValues.ready ? (
               <div className="w-full bg-white rounded-md border border-blue-100 p-5 mt-4">
                 <span>Seleccionar motorista</span>
                 <div className="w-full border border-blue-100 mt-4" />
@@ -316,11 +343,17 @@ export const OrderDetails = () => {
                   />
                   <Button
                     text={"Confirmar motorista"}
-                    onClick={() => confirmDriver()}
+                    onClick={confirmDriver}
                     className={"text-md px-3 py-2 text-white bg-primary_button font-bold"}
                   />
                 </div>
               </div>
+            ) : orderDetails?.status === orderStatusValues.readyForCustomer ? (
+              <Button
+                text={"Confirmar pedido entregado"}
+                onClick={confirmDelivery}
+                className={"mt-4 text-md px-3 py-2 text-white bg-primary_button font-bold"}
+              />
             ) : null}
           </Grid.Col>
         </Grid>

@@ -1,7 +1,7 @@
 {
   "name": "simple-dashboard",
   "private": true,
-  "version": "0.0.10",
+  "version": "0.0.11",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -19,6 +19,7 @@
     "@mantine/dates": "^7.2.1",
     "@mantine/dropzone": "^7.2.1",
     "@mantine/hooks": "^7.2.1",
+    "@mantine/notifications": "^7.8.1",
     "@reduxjs/toolkit": "^1.9.7",
     "@table-library/react-table-library": "^4.1.7",
     "@tabler/icons-react": "^2.40.0",
