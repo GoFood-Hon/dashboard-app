@@ -19,6 +19,19 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### Features
 
+- added configuration ([2eda8fb](https://github.com/GoFood-Hon/dashboard-app/commit/2eda8fb5828f442a10683bdd3f91cb0eda2a1a0f))
+- added reports ([70c28e9](https://github.com/GoFood-Hon/dashboard-app/commit/70c28e9dad5ffe687883a41bd25404786ed06efe))
+- full flow of the plans done ([e4fa571](https://github.com/GoFood-Hon/dashboard-app/commit/e4fa571b6811c90bf89b89913625e3fff5089604))
+
+### Bug Fixes
+
+- bug fixed on promotion ([89c970f](https://github.com/GoFood-Hon/dashboard-app/commit/89c970f867b9c843fa458a928caabebeaf48551b))
+- bug with the user broken screen ([bea8e6a](https://github.com/GoFood-Hon/dashboard-app/commit/bea8e6a297f39813ea20ee2595a70ca3caec93e1))
+
+### [0.0.10](https://github.com/GoFood-Hon/dashboard-app/compare/v0.0.2...v0.0.10) (2024-04-25)
+
+### Features
+
 - added api for offers ([80a128b](https://github.com/GoFood-Hon/dashboard-app/commit/80a128b47b2877316d903cc009b0f53d6a8f23cd))
 - added cashier ([102b067](https://github.com/GoFood-Hon/dashboard-app/commit/102b067a4916a451dce1ea55f2964f627460f2c1))
 - added cashier user ([e4ce57e](https://github.com/GoFood-Hon/dashboard-app/commit/e4ce57ef00638fcc6047fb7cb0eaa0d16e165d72))
