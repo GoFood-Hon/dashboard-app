@@ -13,6 +13,7 @@ import Button from "../../components/Button"
 import { NAVIGATION_ROUTES_SUPER_ADMIN } from "../../routes"
 import { restaurantValidation } from "../../utils/inputRules"
 import restaurantsApi from "../../api/restaurantApi"
+import { convertToDecimal } from "../../utils"
 
 export const NewRestaurant = () => {
   const location = useLocation()
@@ -30,6 +31,7 @@ export const NewRestaurant = () => {
   const [isDataCleared, setIsDataCleared] = useState(false)
 
   const onSubmit = async (data) => {
+    console.log(convertToDecimal(data.shippingPrice))
     try {
       const formData = new FormData()
 
@@ -47,7 +49,7 @@ export const NewRestaurant = () => {
         formData.append("shippingPrice", "0.00")
       } else {
         formData.append("shippingFree", false)
-        formData.append("shippingPrice", data.shippingPrice)
+        formData.append("shippingPrice", convertToDecimal(data.shippingPrice))
       }
 
       const response = await restaurantsApi.createRestaurant(formData)
