@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.14](https://github.com/MGeovany/dashboard-app/compare/v0.0.13...v0.0.14) (2024-05-15)
+
+
+### Bug Fixes
+
+* added convert to decimal ([4dfe08a](https://github.com/MGeovany/dashboard-app/commit/4dfe08a2cce7ba54b65e026e18239c4b892eb97d))
+
 ### [0.0.13](https://github.com/MGeovany/dashboard-app/compare/v0.0.12...v0.0.13) (2024-05-15)
 
 
