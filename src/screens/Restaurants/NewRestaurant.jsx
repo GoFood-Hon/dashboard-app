@@ -35,13 +35,20 @@ export const NewRestaurant = () => {
 
       formData.append("name", data.name)
       formData.append("email", data.email)
-      formData.append("phoneNumber", data.phoneNumber)
+      formData.append("phoneNumber", `+504${data.phoneNumber}`)
       formData.append("socialReason", data.socialReason)
       formData.append("rtn", data.rtn)
       formData.append("billingAddress", data.billingAddress)
       formData.append("cai", data.cai)
       formData.append("maxDistanceShipping", data.maxDistanceShipping)
-      formData.append("shippingFree", data.shippingFree ?? false)
+
+      if (data.shippingFree) {
+        formData.append("shippingFree", true)
+        formData.append("shippingPrice", "0.00")
+      } else {
+        formData.append("shippingFree", false)
+        formData.append("shippingPrice", data.shippingPrice)
+      }
 
       const response = await restaurantsApi.createRestaurant(formData)
 

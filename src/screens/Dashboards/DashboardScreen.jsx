@@ -19,9 +19,9 @@ export const DashboardScreen = () => {
 
         const response = await reportsApi.getDailySales(currentDate.toLocaleDateString(), currentDate.toLocaleDateString())
 
-        setDailySales(response?.data.total_ventas || 0)
+        setDailySales(response?.data?.total_ventas || 0)
       } catch (error) {
-        toast.error(`Error. Por favor intente de nuevo. ${error}`, {
+        toast.error(`Hubo un error.  ${error}`, {
           duration: 7000
         })
       }

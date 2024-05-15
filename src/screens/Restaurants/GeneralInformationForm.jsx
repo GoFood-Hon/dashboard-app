@@ -67,6 +67,7 @@ export const GeneralInformationForm = ({ register, errors, setValue, isDataClear
             <InputField
               label="Teléfono (Obligatorio)"
               name="phoneNumber"
+              countryPrefix="+504"
               register={register}
               errors={errors}
               className="text-black"
