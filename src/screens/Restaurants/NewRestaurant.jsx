@@ -31,7 +31,6 @@ export const NewRestaurant = () => {
   const [isDataCleared, setIsDataCleared] = useState(false)
 
   const onSubmit = async (data) => {
-    console.log(convertToDecimal(data.shippingPrice))
     try {
       const formData = new FormData()
 
