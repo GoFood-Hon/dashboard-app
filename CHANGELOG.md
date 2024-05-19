@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.15](https://github.com/MGeovany/dashboard-app/compare/v0.0.14...v0.0.15) (2024-05-19)
+
+
+### Bug Fixes
+
+* updated response ([b810e38](https://github.com/MGeovany/dashboard-app/commit/b810e38ebde00b8645afd987420ac82d32ae869f))
+
 ### [0.0.14](https://github.com/MGeovany/dashboard-app/compare/v0.0.13...v0.0.14) (2024-05-15)
 
 
