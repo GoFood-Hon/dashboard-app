@@ -46,7 +46,7 @@ export const EditRestaurant = ({ close, details, restaurantId }) => {
           duration: 7000
         })
       } else {
-        const updatedRestaurantId = response.data.data.id
+        const updatedRestaurantId = response.data.id
 
         const uploadImage = async (restaurantId, file) => {
           const formDataImage = new FormData()
@@ -76,6 +76,7 @@ export const EditRestaurant = ({ close, details, restaurantId }) => {
         }
       }
     } catch (error) {
+      console.log(error, "error")
       toast.error(`Error. Por favor intente de nuevo. ${error}`, {
         duration: 7000
       })
