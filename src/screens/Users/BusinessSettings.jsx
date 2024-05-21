@@ -18,6 +18,7 @@ import restaurantsApi from "../../api/restaurantApi"
 import PreviewImageCard from "../../components/PreviewImageCard"
 import { colors } from "../../theme/colors"
 import { updateRestaurantData } from "../../store/features/restaurantSlice"
+import { InputComboboxSelected } from "../../components/Form/InputComboboxSelected"
 
 export default function BusinessSettings() {
   const navigate = useNavigate()
@@ -45,6 +46,7 @@ export default function BusinessSettings() {
           return {}
         } else {
           setRestaurantImg(response.data.images)
+
           return response.data
         }
       } catch (error) {
@@ -107,21 +109,6 @@ export default function BusinessSettings() {
       }
     })
   }
-
-  const businessType = [
-    {
-      value: "darkKitchen",
-      label: "Dark Kitchen"
-    },
-    {
-      value: "cocina",
-      label: "Cocina"
-    },
-    {
-      value: "Glorieta",
-      label: "glorieta"
-    }
-  ]
 
   return (
     <BaseLayout>
@@ -193,35 +180,6 @@ export default function BusinessSettings() {
               </Grid.Col>
               <Grid.Col span={{ sm: 12, md: 6 }}>
                 <InputField label="Teléfono" name="phoneNumber" register={register} errors={errors} />
-              </Grid.Col>
-              <Grid.Col span={{ sm: 12, md: 6 }}>
-                <InputCombobox
-                  items={businessType}
-                  placeholder="Seleccione el tipo"
-                  setValue={setValue}
-                  errors={errors}
-                  label="Tipo de negocio"
-                  name="type"
-                />
-              </Grid.Col>
-              <Grid.Col span={{ sm: 12, md: 6 }}>
-                <InputCombobox
-                  items={[
-                    {
-                      value: "Habilitado",
-                      label: "Habilitado"
-                    },
-                    {
-                      value: "Deshabilitado",
-                      label: "Deshabilitado"
-                    }
-                  ]}
-                  placeholder="Seleccione el estado"
-                  setValue={setValue}
-                  errors={errors}
-                  label="Estado del negocio"
-                  name="status"
-                />
               </Grid.Col>
             </Grid>
           </SettingsCard>
