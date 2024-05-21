@@ -14,7 +14,8 @@ import toast from "react-hot-toast"
 
 export default function PlanSettings() {
   const user = useSelector((state) => state.user.value)
-  const planData = user.Restaurant.Subscription.Plan
+  const planData = user?.Restaurant?.Subscription?.Plan
+
   const navigate = useNavigate()
   const [creditCard, setCreditCard] = useState()
 

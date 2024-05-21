@@ -46,7 +46,7 @@ export const EditRestaurant = ({ close, details, restaurantId }) => {
           duration: 7000
         })
       } else {
-        const updatedRestaurantId = response.data.id
+        const updatedRestaurantId = response?.data?.id
 
         const uploadImage = async (restaurantId, file) => {
           const formDataImage = new FormData()
