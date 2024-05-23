@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.16](https://github.com/MGeovany/dashboard-app/compare/v0.0.15...v0.0.16) (2024-05-23)
+
+
+### Features
+
+* remove inputs, it's not being accepted by the be ([5bb2c15](https://github.com/MGeovany/dashboard-app/commit/5bb2c1556ab523013e06a0814952796f48fdcfe9))
+
+
+### Bug Fixes
+
+* bug accessing new plan and edit restaurant ([6166c74](https://github.com/MGeovany/dashboard-app/commit/6166c74258a51ce5c02ce32a3000aa7bdf10bcc8))
+
 ### [0.0.15](https://github.com/MGeovany/dashboard-app/compare/v0.0.14...v0.0.15) (2024-05-19)
 
 
