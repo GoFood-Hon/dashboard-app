@@ -76,9 +76,9 @@ export const fetchDishes = createAsyncThunk(
  * CREATE DISHES
  */
 
-export const createDish = createAsyncThunk("dishes/createDish", async ({ data, restaurantId, additional }, { dispatch }) => {
+export const createDish = createAsyncThunk("dishes/createDish", async ({ data, restaurantId, additionals }, { dispatch }) => {
   try {
-    const formData = createDishFormData(data, restaurantId)
+    const formData = createDishFormData(data, restaurantId, additionals)
 
     const response = await dishesApi.createDish(formData)
 
@@ -92,7 +92,8 @@ export const createDish = createAsyncThunk("dishes/createDish", async ({ data, r
       /**
        * Add images to the dish
        */
-      const dishId = response.data.id
+      const dishId = response?.data?.id
+
       const addImageResponse = await uploadDishImage(dishId, data?.files?.[0])
 
       if (addImageResponse.error) {
@@ -101,33 +102,6 @@ export const createDish = createAsyncThunk("dishes/createDish", async ({ data, r
         })
       }
 
-      /**
-       * Add Additional to the dish
-       */
-      for (const category of additional) {
-        const { name, required, requiredMinimum } = category
-
-        const additionalFormData = new FormData()
-        additionalFormData.append("name", name)
-        additionalFormData.append("required", required)
-        additionalFormData.append("dishId", dishId)
-        if (required) {
-          additionalFormData.append("requiredMinimum", requiredMinimum)
-        }
-
-        const addExtraResponse = await extrasApi.createExtra(additionalFormData)
-
-        const extraId = addExtraResponse.data.id
-
-        for (const additionalsDetails of category.additionalsDetails) {
-          const extraDetailFormData = new FormData()
-          extraDetailFormData.append("name", additionalsDetails.name)
-          extraDetailFormData.append("isFree", additionalsDetails.isFree)
-          extraDetailFormData.append("price", convertToDecimal(additionalsDetails.price))
-
-          await extrasApi.createExtraDetails(extraId, extraDetailFormData)
-        }
-      }
       /**
        * All was success
        */
@@ -140,17 +114,31 @@ export const createDish = createAsyncThunk("dishes/createDish", async ({ data, r
   }
 })
 
-const createDishFormData = (data, restaurantId) => {
-  const formData = new FormData()
-  formData.append("name", data.name)
-  formData.append("price", convertToDecimal(data.price))
-  formData.append("description", data.description)
-  formData.append("includesDrink", data.includesDrink)
+const createDishFormData = (data, restaurantId, additionals) => {
+  const transformedAdditionals = additionals.map((additional) => ({
+    name: additional.name,
+    required: additional.required,
+    requiredMinimum: additional.required ? additional.requiredMinimum : 1,
+    additionalsDetails: additional.additionalsDetails.map((detail) => ({
+      name: detail.name,
+      isFree: detail.isFree || false,
+      price: convertToDecimal(detail.price)
+    }))
+  }))
 
-  formData.append("restaurantId", restaurantId)
-  formData.append("preparationTime", data?.preparationTime)
+  const dishData = {
+    name: data.name,
+    description: data.description,
+    price: convertToDecimal(data.price),
+    isActive: data.isActive || false,
+    includesDrink: data.includesDrink,
+    restaurantId,
+    preparationTime: data.preparationTime,
+    additionals: transformedAdditionals,
+    CategoryDishTags: []
+  }
 
-  return formData
+  return dishData
 }
 
 const uploadDishImage = async (dishId, file) => {
