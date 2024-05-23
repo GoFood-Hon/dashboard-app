@@ -116,14 +116,14 @@ function App() {
 
             <Route path={NAVIGATION_ROUTES_RES_ADMIN.Menu.submenu.Dishes.NewDish.path} element={<NewDish />} />
 
-            <Route path={NAVIGATION_ROUTES_RES_ADMIN.Menu.submenu.Complements.path} element={<Complements />} />
+            {/* <Route path={NAVIGATION_ROUTES_RES_ADMIN.Menu.submenu.Complements.path} element={<Complements />} /> */}
 
             <Route
-              path={NAVIGATION_ROUTES_RES_ADMIN.Menu.submenu.Complements.ComplementDetails.path}
+              // path={NAVIGATION_ROUTES_RES_ADMIN.Menu.submenu.Complements.ComplementDetails.path}
               element={<ComplementsDetails />}
             />
 
-            <Route path={NAVIGATION_ROUTES_RES_ADMIN.Menu.submenu.Complements.NewComplement.path} element={<NewComplement />} />
+            {/* <Route path={NAVIGATION_ROUTES_RES_ADMIN.Menu.submenu.Complements.NewComplement.path} element={<NewComplement />} /> */}
 
             {/* <Route path={NAVIGATION_ROUTES_RES_ADMIN.Transactions.path} element={<Transactions />} /> */}
 
@@ -173,7 +173,7 @@ function App() {
 
             <Route path={NAVIGATION_ROUTES_BRANCH_ADMIN.Dishes.path} element={<Dishes />} />
 
-            <Route path={NAVIGATION_ROUTES_RES_ADMIN.Menu.submenu.Complements.path} element={<Complements />} />
+            {/* <Route path={NAVIGATION_ROUTES_RES_ADMIN.Menu.submenu.Complements.path} element={<Complements />} /> */}
 
             <Route path={NAVIGATION_ROUTES_BRANCH_ADMIN.Dishes.DishDetails.path} element={<DishDetails />} />
 
@@ -199,7 +199,7 @@ function App() {
 
             <Route path={NAVIGATION_ROUTES_RES_ADMIN.Menu.submenu.Dishes.DishDetails.path} element={<DishDetails />} />
 
-            <Route path={NAVIGATION_ROUTES_RES_ADMIN.Menu.submenu.Complements.path} element={<Complements />} />
+            {/* <Route path={NAVIGATION_ROUTES_RES_ADMIN.Menu.submenu.Complements.path} element={<Complements />} /> */}
 
             <Route path={NAVIGATION_ROUTES_BRANCH_ADMIN.Account.path} element={<AccountSettings />} />
 

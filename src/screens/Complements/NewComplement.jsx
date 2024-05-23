@@ -90,7 +90,7 @@ export default function NewComplement() {
     dispatch(createComplement({ data, restaurantId })).then((response) => {
       if (response.payload) {
         reset()
-        navigate(NAVIGATION_ROUTES_RES_ADMIN.Menu.submenu.Complements.path)
+        // navigate(NAVIGATION_ROUTES_RES_ADMIN.Menu.submenu.Complements.path)
         setIsDataCleared(true)
       }
     })

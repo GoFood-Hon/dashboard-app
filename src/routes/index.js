@@ -92,8 +92,8 @@ export const NAVIGATION_ROUTES_RES_ADMIN = {
         NewDish: {
           path: "/menu/platillos/nuevoPlatillo"
         }
-      },
-      Complements: {
+      }
+      /*   Complements: {
         label: "Complementos",
         icon: "menu",
         path: "/menu/complementos",
@@ -104,7 +104,7 @@ export const NAVIGATION_ROUTES_RES_ADMIN = {
         NewComplement: {
           path: "/menu/complementos/nuevoComplemento"
         }
-      }
+      } */
     }
   },
   // TODO: Transactions never defined

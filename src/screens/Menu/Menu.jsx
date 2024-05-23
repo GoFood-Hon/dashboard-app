@@ -29,7 +29,7 @@ export default function Menu() {
     navigate(NAVIGATION_ROUTES_RES_ADMIN.Menu.submenu.Dishes.path)
   }
   const handleComplements = () => {
-    navigate(NAVIGATION_ROUTES_RES_ADMIN.Menu.submenu.Complements.path)
+    // navigate(NAVIGATION_ROUTES_RES_ADMIN.Menu.submenu.Complements.path)
   }
   const handleNewMenu = () => {
     navigate(NAVIGATION_ROUTES_RES_ADMIN.Menu.NewMenu.path)
@@ -97,11 +97,11 @@ export default function Menu() {
                   className={"text-white text-md px-3 py-2 bg-primary_button mb-0"}
                   onClick={handleDishes}
                 />
-                <Button
+                {/*   <Button
                   text={"Ver complementos"}
                   className={"text-white text-md px-3 py-2 bg-primary_button"}
                   onClick={handleComplements}
-                />
+                /> */}
               </>
             )}
           </div>

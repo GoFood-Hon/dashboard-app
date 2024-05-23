@@ -76,7 +76,7 @@ export default function Complements() {
   }
 
   const handleNewItem = () => {
-    navigate(NAVIGATION_ROUTES_RES_ADMIN.Menu.submenu.Complements.NewComplement.path)
+    // navigate(NAVIGATION_ROUTES_RES_ADMIN.Menu.submenu.Complements.NewComplement.path)
     setCardsSelected([])
   }
 
@@ -146,7 +146,7 @@ export default function Complements() {
   }
 
   const handleClick = (id) => {
-    navigate(`${NAVIGATION_ROUTES_RES_ADMIN.Menu.submenu.Complements.path}/${id}`)
+    // navigate(`${NAVIGATION_ROUTES_RES_ADMIN.Menu.submenu.Complements.path}/${id}`)
   }
 
   const handleTabChange = (newTab) => {
