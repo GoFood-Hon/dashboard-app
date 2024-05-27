@@ -9,8 +9,7 @@ export const PopularFoodChart = () => {
   useEffect(() => {
     ;(async () => {
       try {
-        const response = await reportsApi.getTopSellingDishes()
-
+        const response = await reportsApi.getMenuSales()
         const formattedData = response?.data?.map((item) => [item?.name, parseInt(item.cantidad_vendidas)])
         setDishes(formattedData)
       } catch (error) {
@@ -31,8 +30,14 @@ export const PopularFoodChart = () => {
         <h2 className="text-white-200 text-xl font-semibold">Top platillos vendidos</h2>
       </div>
       <span className="border border-blue-100" />
-      <div className="pb-6 flex justify-center items-center">
-        <Chart chartType="PieChart" width="100%" height="400px" data={[["Dishes", "Amount"], ...dishes]} options={options} />
+      <div className="pb-6 flex justify-center items-center h-full">
+        {dishes ? (
+          <Chart chartType="PieChart" width="100%" height="400px" data={[["Dishes", "Amount"], ...dishes]} options={options} />
+        ) : (
+          <div className="text-center flex flex-col justify-center h-full">
+            <p className="text-secondary_text">No hay datos disponibles</p>
+          </div>
+        )}
       </div>
     </div>
   )

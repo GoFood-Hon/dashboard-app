@@ -76,7 +76,6 @@ export const EditRestaurant = ({ close, details, restaurantId }) => {
         }
       }
     } catch (error) {
-      console.log(error, "error")
       toast.error(`Error. Por favor intente de nuevo. ${error}`, {
         duration: 7000
       })
