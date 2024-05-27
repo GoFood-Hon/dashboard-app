@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.17](https://github.com/MGeovany/dashboard-app/compare/v0.0.16...v0.0.17) (2024-05-27)
+
+
+### Features
+
+* integrated charts ([c70e4fc](https://github.com/MGeovany/dashboard-app/commit/c70e4fc53865f3a16fcbe04954ca83291d6cb27a))
+
+
+### Bug Fixes
+
+* removed cards and removed no needed rule for promotion ([05e8be5](https://github.com/MGeovany/dashboard-app/commit/05e8be52b53f0074c908f7c6096e7f745c7af82f))
+
 ### [0.0.16](https://github.com/MGeovany/dashboard-app/compare/v0.0.15...v0.0.16) (2024-05-23)
 
 
