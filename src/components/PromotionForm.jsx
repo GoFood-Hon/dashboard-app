@@ -102,7 +102,7 @@ export const PromotionForm = ({ offerData }) => {
 
   const buildDishesFormData = (dishesAdded) => {
     const dishesFormData = new FormData()
-    dishesAdded.forEach((dishId) => {
+    dishesAdded?.forEach((dishId) => {
       dishesFormData.append("dishes[]", dishId)
     })
     return dishesFormData
