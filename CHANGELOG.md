@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.18](https://github.com/MGeovany/dashboard-app/compare/v0.0.17...v0.0.18) (2024-05-27)
+
+
+### Features
+
+* added select plan component ([927726c](https://github.com/MGeovany/dashboard-app/commit/927726c9382d8d1a963354ec8dd6852672573331))
+
+
+### Bug Fixes
+
+* fixed reports for super admin ([0b09bcc](https://github.com/MGeovany/dashboard-app/commit/0b09bccdf8a48e47f7c32c0b450f399417ed23ee))
+
 ### [0.0.17](https://github.com/MGeovany/dashboard-app/compare/v0.0.16...v0.0.17) (2024-05-27)
 
 
