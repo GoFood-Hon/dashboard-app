@@ -137,7 +137,7 @@ export default function DishDetails() {
             </section>
           </Card>
         </section>
-        <section className="w-full xl:w-3/12 xl:pl-4 2xl:w-2/12">
+        {/*  <section className="w-full xl:w-3/12 xl:pl-4 2xl:w-2/12">
           <Grid grow>
             {dashboardCards.map((item, key) => (
               <Grid.Col span={{ lg: 1 }} key={key}>
@@ -145,7 +145,7 @@ export default function DishDetails() {
               </Grid.Col>
             ))}
           </Grid>
-        </section>
+        </section> */}
       </div>
       <Modal
         opened={imageModalOpened}

@@ -142,7 +142,6 @@ export const couponsValidationFrom = (componentMounted) => {
 export const promotionValidationFrom = (componentMounted) => {
   return Yup.object().shape({
     title: Yup.string().required("*Campo requerido"),
-    amount: Yup.string().required("*Campo requerido"),
     minPurchase: Yup.string().required("*Campo requerido"),
     startDate: componentMounted ? Yup.date().required("*Fecha inicial es requerida") : Yup.date(),
     endDate: componentMounted

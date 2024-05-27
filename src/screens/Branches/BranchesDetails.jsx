@@ -186,13 +186,13 @@ export default function BranchesDetails() {
             </Card>
           </section>
           <section className="w-full xl:w-3/12 xl:pl-4 2xl:w-2/12">
-            <Grid grow>
+            {/*  <Grid grow>
               {dashboardCards.map((item, key) => (
                 <Grid.Col span={{ lg: 1 }} key={key}>
                   <DashboardCard gutter={{ base: 5, xs: "md", md: "xl", xl: 50 }} data={item} />
                 </Grid.Col>
               ))}
-            </Grid>
+            </Grid> */}
           </section>
         </div>
       </section>
