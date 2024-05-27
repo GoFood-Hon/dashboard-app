@@ -11,6 +11,7 @@ import { formatDateDistanceToNow } from "../../utils"
 import { EditAdminUser } from "./EditAdminUser"
 import { useSelector } from "react-redux"
 import { APP_ROLES } from "../../utils/constants"
+import { SelectPlan } from "./SelectPlan"
 
 export const AdminUserDetails = () => {
   const { adminId } = useParams()
@@ -43,8 +44,8 @@ export const AdminUserDetails = () => {
           </div>
         </div>
       </section>
-      <div className="flex flex-row w-full flex-wrap gap-2 xl:flex-nowrap">
-        <section className="w-full xl:w-9/12 2xl:w-10/12 border border-blue-100 rounded-lg ">
+      <div className="flex flex-row w-full flex-wrap gap-2">
+        <section className="w-full border border-blue-100 rounded-lg">
           <Card padding="lg" radius="md">
             <Card.Section>
               <div className="relative">
@@ -84,6 +85,10 @@ export const AdminUserDetails = () => {
               <div className="pt-8">
                 <span className="text-sky-950 text-base font-bold leading-normal">Numero de teléfono</span>
                 <p className="text-zinc-500 text-sm font-medium py-2">{userDetails?.phoneNumber}</p>
+                <span className="text-sky-950 text-base font-bold leading-normal">Restaurante seleccionado</span>
+                <p className="text-zinc-500 text-sm font-medium py-2">{userDetails?.restaurantName}</p>
+                <span className="text-sky-950 text-base font-bold leading-normal">Plan seleccionado</span>
+                <p className="text-zinc-500 text-sm font-medium py-2">{userDetails?.planName || "Sin plan asignado"}</p>
                 <span className="text-sky-950 text-base font-bold leading-normal">Email </span>
                 <p className="text-zinc-500 text-sm font-medium py-2">{userDetails?.email}</p>
                 <span className="text-sky-950 text-base font-bold leading-normal">Ultima actualización </span>
@@ -96,6 +101,7 @@ export const AdminUserDetails = () => {
             </section>
           </Card>
         </section>
+        <SelectPlan restaurantId={userDetails?.restaurantId} />
       </div>
       <Modal
         opened={formModalOpened}
