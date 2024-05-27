@@ -1,5 +1,7 @@
-import React from "react"
+import React, { useEffect, useState } from "react"
 import Chart from "react-google-charts"
+import toast from "react-hot-toast"
+import reportsApi from "../../api/reportsApi"
 
 export const data = [
   ["Horas del dia", "Series 1", "Series 2"],
@@ -17,14 +19,37 @@ export const options = {
 }
 
 export const DailySalesChart = () => {
+  const [data, setData] = useState([])
+  useEffect(() => {
+    const getSales = async () => {
+      try {
+        const response = await reportsApi.getOrderSalesByChannel()
+        // TODO: Fix this response
+        setData(response?.data || [])
+      } catch (error) {
+        toast.error(`Error. Por favor intente de nuevo. ${error}`, {
+          duration: 7000
+        })
+      }
+    }
+
+    getSales()
+  }, [])
+
   return (
     <div className="min-h-[600px] h-[600px] w-full bg-white rounded-2xl shadow border border-blue-100 flex flex-col p-2 mr-6">
       <div className="flex flex-row justify-between items-center p-6">
         <h2 className="text-white-200 text-xl font-semibold">Venta por dia de los diferentes canales de entrega.</h2>
       </div>
       <span className="border border-blue-100" />
-      <div className="pb-6 flex justify-center items-center">
-        <Chart chartType="AreaChart" width="100%" height="400px" data={data} options={options} />
+      <div className="pb-6 flex justify-center items-center h-full">
+        {data.length > 0 ? (
+          <Chart chartType="AreaChart" width="100%" height="400px" data={data} options={options} />
+        ) : (
+          <div className="text-center flex flex-col justify-center h-full">
+            <p className="text-secondary_text">No hay datos disponibles</p>
+          </div>
+        )}
       </div>
     </div>
   )

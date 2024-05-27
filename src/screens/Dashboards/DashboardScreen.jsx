@@ -27,11 +27,9 @@ export const DashboardScreen = () => {
       }
     }
 
-    getDailySales()
-
     const getNewUsers = async () => {
       try {
-        const response = await reportsApi.getNewUsers()
+        const response = await reportsApi.getUsersCount()
 
         setTotalClients(response?.results || 0)
       } catch (error) {
@@ -40,6 +38,23 @@ export const DashboardScreen = () => {
         })
       }
     }
+
+    const getAverageTicketDailyData = async () => {
+      try {
+        const response = await reportsApi.getAverageTicketDaily()
+        // TODO: Fix this response
+        setDailyOrders(response?.data?.total || 0)
+        setDailyTicket(response?.data?.total || 0)
+      } catch (error) {
+        toast.error(`Error. Por favor intente de nuevo. ${error}`, {
+          duration: 7000
+        })
+      }
+    }
+
+    getAverageTicketDailyData()
+
+    getDailySales()
 
     getNewUsers()
   }, [])
