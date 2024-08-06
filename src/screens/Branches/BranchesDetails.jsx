@@ -139,14 +139,7 @@ export default function BranchesDetails() {
                       </div>
                       <div className="flex flex-col justify-between w-full h-96 py-4">
                         <span className="text-sky-950 text-base font-bold leading-normal pb-4">Ubicación</span>
-                        <Map
-                          {...viewState}
-                          onMove={(evt) => setViewState(evt.viewState)}
-                          mapboxAccessToken={MAPBOX_KEY}
-                          style={{ borderRadius: "1rem", width: "auto", height: "30rem", borderWidth: "2px" }}
-                          mapStyle={mapBoxStyles}>
-                          <Marker longitude={marker.longitude} latitude={marker.latitude} anchor="bottom" />
-                        </Map>
+                        
                       </div>
 
                       <div className="flex flex-col justify-between mt-4">

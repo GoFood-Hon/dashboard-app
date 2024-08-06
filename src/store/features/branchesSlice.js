@@ -3,6 +3,8 @@ import { ITEMS_PER_PAGE } from "../../utils/paginationConfig"
 import branchesApi from "../../api/branchesApi"
 import toast from "react-hot-toast"
 import { convertToDecimal } from "../../utils"
+import { IconX, IconCheck } from "@tabler/icons-react"
+import { Notification, rem } from "@mantine/core"
 
 const initialState = {
   branches: [],
@@ -125,6 +127,8 @@ const updateFormData = (data, propertyToUpdate) => {
 export const updateBranches = createAsyncThunk(
   "complements/updateBranches",
   async ({ data, propertyToUpdate = "all" }, { dispatch }) => {
+    // const xIcon = <IconX style={{ width: rem(20), height: rem(20) }} />
+    // const checkIcon = <IconCheck style={{ width: rem(20), height: rem(20) }} />
     try {
       const formData = updateFormData(data, propertyToUpdate)
 
@@ -139,9 +143,7 @@ export const updateBranches = createAsyncThunk(
           await uploadComplementImage(data?.id, data?.files?.[0])
         } */
 
-        toast.success("Sucursal actualizado exitosamente", {
-          duration: 7000
-        })
+        toast.success("Simón")
       }
       return response.data
     } catch (error) {

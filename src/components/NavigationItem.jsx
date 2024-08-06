@@ -9,7 +9,7 @@ export default function NavigationItem({ item, isSelected, isOpen, toggleSubMenu
         <>
           <Link
             to={item.path}
-            className={`flex w-full items-center justify-between duration-300 hover:bg-light_selected_element rounded-lg py-3 my-2 pl-2 pr-3 hover:pl-4 ${
+            className={`flex w-full items-center justify-between duration-300 hover:bg-light_selected_element rounded-lg py-3 my-2 pl-2 pr-3 ${
               isSelected && "bg-light_selected_element"
             }`}>
             <div className="flex flex-row items-center">
@@ -26,7 +26,7 @@ export default function NavigationItem({ item, isSelected, isOpen, toggleSubMenu
                 <li key={subItem.label} className="h-12 w-full items-center">
                   <Link
                     to={subItem.path}
-                    className={`flex w-full items-center duration-300 hover:bg-light_selected_element rounded-lg py-3 pl-2 pr-3 hover:pl-4 ${
+                    className={`flex w-full items-center duration-300 hover:bg-light_selected_element rounded-lg py-3 pl-2 pr-3 ${
                       subItem === selectedSubmenuRoute && "bg-light_selected_element"
                     }`}>
                     <span className="font-sans ml-3">{subItem.label}</span>
@@ -39,7 +39,7 @@ export default function NavigationItem({ item, isSelected, isOpen, toggleSubMenu
       ) : (
         <Link
           to={item.path}
-          className={`flex w-full items-center duration-300 hover:bg-light_selected_element rounded-lg py-3 pl-2 pr-3 my-1 hover:pl-4 ${
+          className={`flex w-full items-center duration-300 hover:bg-light_selected_element rounded-lg py-3 pl-2 pr-3 my-1 ${
             isSelected && "bg-light_selected_element"
           }`}>
           <Icon icon={item.icon} size={17} className="" />

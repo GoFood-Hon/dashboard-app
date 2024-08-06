@@ -51,11 +51,6 @@ export default function OrdersScreen() {
           <div className="flex flex-row gap-x-3 items-center">
             <BackButton title="Pedidos" />
           </div>
-          <div>
-            <Breadcrumbs>
-              <BreadCrumbNavigation location={location} />
-            </Breadcrumbs>
-          </div>
         </div>
       </section>
       <section>
@@ -68,7 +63,7 @@ export default function OrdersScreen() {
             <MenuTable refreshPage={refreshPage} items={orders} screenType="ordersScreen" />
           </div>
         ) : (
-          <div className="text-center mt-4 text-gray-500">Sin ordenes disponibles!</div>
+          <div className="text-center mt-4 text-gray-500">Aún no tienes ningún pedido</div>
         )}
       </section>
     </BaseLayout>

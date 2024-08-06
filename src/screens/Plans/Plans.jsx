@@ -70,15 +70,8 @@ export const Plans = () => {
     <BaseLayout>
       <section>
         <div className="flex flex-row justify-between items-center pb-6">
-          <div className="flex flex-row gap-x-3 items-center">
-            <h1 className="text-white-200 text-2xl font-semibold">Planes</h1>
-            <Button text={"Nuevo Plan"} className={"text-white text-md px-3 py-2 bg-primary_button"} onClick={handleNewPlan} />
-          </div>
-          <div>
-            <Breadcrumbs>
-              <BreadCrumbNavigation location={location} />
-            </Breadcrumbs>
-          </div>
+          <h1 className="text-white-200 text-2xl font-semibold">Planes</h1>
+          <Button text={"Nuevo"} className={"text-white text-md px-3 py-2 bg-primary_button"} onClick={handleNewPlan} />
         </div>
       </section>
       <section>

@@ -9,10 +9,10 @@ export default function SettingsSidebar() {
   const renderRouteItem = (value, path) => {
     if (value.type === "button") {
       return (
-        <li key={path.toLowerCase()} className="flex h-12 w-full items-center">
+        <li key={path.toLowerCase()} className="flex h-10 w-full items-center">
           <Link
             to={path.toLowerCase()}
-            className={`flex w-full items-center duration-300 hover:bg-light_selected_element rounded-lg py-3 pl-2 pr-3 my-1 hover:pl-4`}>
+            className={`flex w-full items-center duration-300 hover:bg-light_selected_element rounded-lg py-3 pl-2 pr-3 my-1 `}>
             <Icon icon={value.icon} size={17} />
             <span className="font-sans ml-3">{value.label}</span>
           </Link>

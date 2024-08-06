@@ -80,7 +80,7 @@ export default function Header() {
   }
 
   return (
-    <div className="w-full p-4 flex flex-row justify-between text-black  bg-white dark:text-white dark:bg-slate-800 dark:border-slate-700 border border-slate-200 z-20 fixed">
+    <div className="w-full p-2 flex flex-row justify-between text-black  bg-white dark:text-white dark:bg-slate-800 dark:border-slate-700 border border-slate-200 z-20 fixed">
       <div className="flex flex-row">
         <div className={`cursor-pointer ${user.role === "admin-restaurant" ? "border-r-2 border-r-gray-300 pr-4" : null}`}>
           <Image
@@ -162,6 +162,7 @@ export default function Header() {
                     onClick={handleAccount}
                     text={"Manejar cuenta"}
                     className={"mt-5 border border-slate-400 rounded text-sm"}
+                    full
                   />
                   <div className="mt-3 dark:border-slate-100 border-slate-400 rounded text-sm bg-slate-700 text-white flex h-10 w-full items-center justify-center space-x-3 shadow-sm transition-all duration-700 focus:outline-none mb-3 cursor-pointer">
                     <span onClick={logout}>Cerrar sesión</span>

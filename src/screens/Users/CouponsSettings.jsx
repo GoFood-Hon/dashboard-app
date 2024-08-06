@@ -12,16 +12,11 @@ export default function CouponsSettings() {
 
   return (
     <BaseLayout>
-      <div className="pl-[200px]">
+      <div className="pl-[130px]">
         <section>
-          <div className="flex flex-row justify-between items-center pb-6">
+          <div className="flex flex-row justify-between items-center pb-3">
             <div className="flex flex-row gap-x-3 items-center">
               <h1 className="text-white-200 text-2xl font-semibold">Promociones</h1>
-            </div>
-            <div>
-              <Breadcrumbs>
-                <BreadCrumbNavigation location={location} />
-              </Breadcrumbs>
             </div>
           </div>
         </section>

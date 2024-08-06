@@ -8,7 +8,7 @@ import Button from "../../components/Button"
 import { NAVIGATION_ROUTES_RES_ADMIN } from "../../routes"
 import BreadCrumbNavigation from "../../components/BreadCrumbNavigation"
 import MenuTable from "./MenuTable"
-import { fetchMenus, selectAllMenus, updateMenu } from "../../store/features/menuSlice"
+import { fetchMenus, selectAllMenus, updateMenu, selectMenusStatus, selectMenusError } from "../../store/features/menuSlice"
 import { APP_ROLES } from "../../utils/constants"
 import BackButton from "../Dishes/components/BackButton"
 
@@ -18,9 +18,10 @@ export default function Menu() {
   const dispatch = useDispatch()
 
   const menus = useSelector(selectAllMenus)
+  const status = useSelector(selectMenusStatus)
+  const error = useSelector(selectMenusError)
   const page = useSelector((state) => state.menus.currentPage)
   const user = useSelector((state) => state.user.value)
-
   const restaurant = useSelector((state) => state?.restaurant?.value)
 
   const [cardsSelected, setCardsSelected] = useState([])
@@ -38,14 +39,11 @@ export default function Menu() {
   //* Fetch menu data *//
 
   useEffect(() => {
-    dispatch(
-      fetchMenus({
-        restaurantId: user.restaurantId
-      })
-    )
-
+    if (user?.restaurantId) {
+      dispatch(fetchMenus({ restaurantId: user.restaurantId }))
+    }
     setCardsSelected([])
-  }, [page, dispatch, restaurant])
+  }, [page, dispatch, user])
 
   const refreshPage = () => {
     dispatch(
@@ -84,35 +82,29 @@ export default function Menu() {
     <BaseLayout>
       <section>
         <div className="flex flex-row justify-between items-center pb-6">
-          <div className="flex flex-row gap-x-3 items-center">
-            <BackButton title="Menu" />
-
-            {user.role !== APP_ROLES.branchAdmin && user.role !== APP_ROLES.cashierUser && (
-              <Button text="Nuevo Menu" className="text-white text-md px-3 py-2 bg-primary_button" onClick={handleNewMenu} />
-            )}
-            {(user.role !== APP_ROLES.branchAdmin || user.role !== APP_ROLES.cashierUser) && (
-              <>
-                <Button
-                  text={"Ver platillos"}
-                  className={"text-white text-md px-3 py-2 bg-primary_button mb-0"}
-                  onClick={handleDishes}
-                />
-                {/*   <Button
+          <BackButton title="Menús" />
+          <div className="flex flex-row gap-x-3 items-center justify-between">
+            <Button
+              text="Nuevo"
+              className={`text-white text-md px-3 py-2 bg-primary_button ${user.role !== APP_ROLES.branchAdmin && user.role !== APP_ROLES.cashierUser ? "" : "hidden"}`}
+              onClick={handleNewMenu}
+            />
+            <Button
+              text={"Ver platillos"}
+              className={`text-white text-md px-3 py-2 bg-primary_button mb-0 ${user.role !== APP_ROLES.branchAdmin || user.role !== APP_ROLES.cashierUser ? "" : "hidden"}`}
+              onClick={handleDishes}
+            />
+            {/*   <Button
                   text={"Ver complementos"}
                   className={"text-white text-md px-3 py-2 bg-primary_button"}
                   onClick={handleComplements}
                 /> */}
-              </>
-            )}
-          </div>
-          <div>
-            <Breadcrumbs>
-              <BreadCrumbNavigation location={location} />
-            </Breadcrumbs>
           </div>
         </div>
       </section>
       <section>
+        {status === "loading" && <div className="text-center mt-4 text-gray-500">Cargando menús...</div>}
+        {status === "failed" && <div className="text-center mt-4 text-gray-500">Error: {error}</div>}
         {menus && menus.length > 0 ? (
           <div className="w-full p-4 h-full bg-white rounded-2xl border border-blue-100">
             <MenuTable
@@ -123,7 +115,7 @@ export default function Menu() {
             />
           </div>
         ) : (
-          <div className="text-center mt-4 text-gray-500">Sin menu disponibles!</div>
+          <div className="text-center mt-4 text-gray-500">No tienes menús creados</div>
         )}
       </section>
     </BaseLayout>

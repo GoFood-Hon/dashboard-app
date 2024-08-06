@@ -33,12 +33,10 @@ export default function Login() {
       const userData = res?.data?.user
 
       if (userData) {
-        toast.success("Inicio de session exitoso, bienvenido de vuelta!")
         setIsLoading(false)
         localStorage.setItem("token", res.token)
         localStorage.setItem("refreshToken", res.refreshToken)
         dispatch(setUser(res.data.user))
-
         navigate("/")
       }
     } catch (err) {
@@ -60,8 +58,8 @@ export default function Login() {
       ) : (
         <div className="w-full">
           <div className="mb-5">
-            <p className="text-sm text-gray-500 pb-2">Panel GoFood</p>
-            <h1 className="text-3xl font-bold text-zinc-800 dark:text-white">Inicia sesión</h1>
+            <p className="text-sm text-gray-500 pb-2">PANEL GOFOOD</p>
+            <h1 className="text-3xl font-bold text-zinc-800 dark:text-white">Inicio de sesión</h1>
           </div>
           <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col">
             <InputField
@@ -85,26 +83,16 @@ export default function Login() {
             <Link
               to={AUTH_NAVIGATION_ROUTES.ForgetPassword.path}
               className="mb-3 mt-3 hover:underline hover:cursor-pointer text-sm text-secondary_text">
-              Olvidaste tu contraseña?
+              ¿Olvidaste tu contraseña?
             </Link>
             <input
               value={"Iniciar sesión"}
               type="submit"
               className={
-                "bg-primary_button text-white flex h-10 w-full items-center justify-center space-x-3 rounded-md text-sm shadow-sm transition-all duration-700 focus:outline-none my-3 dark:bg-slate-900"
+                "bg-primary_button text-white flex h-10 w-full items-center justify-center space-x-3 rounded-md text-sm shadow-sm transition-all duration-700 focus:outline-none my-3 dark:bg-slate-900 cursor-pointer"
               }
             />
           </form>
-          {/* <div className="w-full flex flex-col items-center justify-center text-sm text-secondary_text">
-            <div className="flex flex-row justify-center w-full mb-3">
-              <p>No tienes una cuenta?</p>
-              <Link
-                to={AUTH_NAVIGATION_ROUTES.Register.path}
-                className="hover:underline text-primary_text cursor-pointer pl-1 dark:text-dark_secondary_text">
-                Crear cuenta
-              </Link>
-            </div>
-          </div> */}
         </div>
       )}
     </>

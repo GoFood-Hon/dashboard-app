@@ -28,7 +28,7 @@ export const fetchMenus = createAsyncThunk("menus/fetchMenus", async ({ restaura
     })
 
     dispatch(setMenus(response.data))
-    return response
+    return response.data
   } catch (error) {
     dispatch(setError("Error fetching menus"))
     throw error
@@ -102,7 +102,7 @@ export const createMenu = createAsyncThunk("menus/createMenu", async ({ data, re
 
 const updateComplements = async (id, dishes) => {
   const raw = JSON.stringify({ dishes })
-  return await menuApi.updateDishesToMenu(id, raw)
+  return await menuApi.addDishesToMenu(id, raw)
 }
 
 const updateMenuFormData = (data, propertyToUpdate) => {
@@ -186,7 +186,7 @@ export const menusSlice = createSlice({
       state.error = action.payload
     },
     setLoading: (state, action) => {
-      state.loading = action.payload
+      state.loading = "loading"
     }
   },
 
@@ -197,12 +197,11 @@ export const menusSlice = createSlice({
       })
       .addCase(fetchMenus.fulfilled, (state, action) => {
         state.status = "succeeded"
-        state.totalItems = action.payload.results
-        state.value = action.payload
+        state.menus = action.payload
       })
       .addCase(fetchMenus.rejected, (state, action) => {
         state.status = "failed"
-        state.error = action.error
+        state.error = action.error.message
       })
   }
 })

@@ -41,7 +41,7 @@ export const OrderAmountChart = () => {
     <div className="min-h-[600px] w-full h-[600px] bg-white rounded-2xl shadow border border-blue-100 flex flex-col p-2 mr-6">
       <div className="flex flex-row justify-between items-center p-6">
         <h2 className="text-white-200 text-xl font-semibold">
-          Cantidad de pedidos generados por dia en sus diferentes canales de entrega
+          Gráfico de cantidad de pedidos diarios
         </h2>
       </div>
       <span className="border border-blue-100" />

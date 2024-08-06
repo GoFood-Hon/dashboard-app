@@ -162,21 +162,12 @@ export default function Dishes() {
     <BaseLayout>
       <section>
         <div className="flex flex-row justify-between items-center pb-6">
-          <div className="flex flex-row gap-x-3 items-center">
-            <BackButton title="Platillos" />
-            {user.role !== APP_ROLES.branchAdmin && user.role !== APP_ROLES.cashierUser ? (
-              <Button
-                text={"Nuevo Platillo"}
-                className={"text-white text-md px-3 py-2 bg-primary_button mb-0"}
-                onClick={handleNewItem}
-              />
-            ) : null}
-          </div>
-          <div>
-            <Breadcrumbs>
-              <BreadCrumbNavigation location={location} />
-            </Breadcrumbs>
-          </div>
+          <BackButton title="Platillos" />
+          <Button
+            text={"Nuevo"}
+            className={`text-white text-md px-3 py-2 bg-primary_button mb-0 ${user.role !== APP_ROLES.branchAdmin && user.role !== APP_ROLES.cashierUser ? "" : "hidden"}`}
+            onClick={handleNewItem}
+          />
         </div>
       </section>
       <section>

@@ -140,19 +140,8 @@ export default function Branches() {
     <BaseLayout>
       <section>
         <div className="flex flex-row justify-between items-center pb-6">
-          <div className="flex flex-row gap-x-3 items-center">
-            <h1 className="text-white-200 text-2xl font-semibold">Sucursales</h1>
-            <Button
-              text={"Nueva sucursal"}
-              className={"text-white text-md px-3 py-2 bg-primary_button mb-0"}
-              onClick={handleNewItem}
-            />
-          </div>
-          <div>
-            <Breadcrumbs>
-              <BreadCrumbNavigation location={location} />
-            </Breadcrumbs>
-          </div>
+          <h1 className="text-white-200 text-2xl font-semibold">Sucursales</h1>
+          <Button text={"Nueva"} className={"text-white text-md px-3 py-2 bg-primary_button mb-0"} onClick={handleNewItem} />
         </div>
       </section>
       <section>

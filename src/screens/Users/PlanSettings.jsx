@@ -74,16 +74,11 @@ export default function PlanSettings() {
 
   return (
     <BaseLayout>
-      <div className="pl-[200px]">
+      <div className="pl-[130px]">
         <section>
-          <div className="flex flex-row justify-between items-center pb-6">
+          <div className="flex flex-row justify-between items-center pb-3">
             <div className="flex flex-row gap-x-3 items-center">
               <h1 className="text-white-200 text-2xl font-semibold">Plan</h1>
-            </div>
-            <div>
-              <Breadcrumbs>
-                <BreadCrumbNavigation location={location} />
-              </Breadcrumbs>
             </div>
           </div>
         </section>
@@ -131,8 +126,8 @@ export default function PlanSettings() {
                     onClick={() => navigate(SETTING_NAVIGATION_ROUTES.General.path)}
                   />
                   <Button
-                    text={"Guardar Cambios"}
-                    className="flex h-10 w-full items-center justify-center px-4 rounded-md shadow-sm transition-all duration-700 focus:outline-none text-xs bg-sky-950 text-slate-50"
+                    text={"Guardar"}
+                    className="flex h-10 items-center justify-center px-4 rounded-md shadow-sm transition-all duration-700 focus:outline-none text-xs bg-sky-950 text-slate-50"
                   />
                 </div>
               </form>

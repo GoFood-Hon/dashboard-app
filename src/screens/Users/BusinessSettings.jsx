@@ -113,16 +113,11 @@ export default function BusinessSettings() {
   return (
     <BaseLayout>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="pl-[200px]">
+        <div className="pl-[130px]">
           <section>
-            <div className="flex flex-row items-center justify-between pb-6">
+            <div className="flex flex-row items-center justify-between pb-3">
               <div className="flex flex-row items-center gap-x-3">
                 <h1 className="text-white-200 text-2xl font-semibold">Negocio</h1>
-              </div>
-              <div>
-                <Breadcrumbs>
-                  <BreadCrumbNavigation location={location} />
-                </Breadcrumbs>
               </div>
             </div>
           </section>
@@ -222,8 +217,8 @@ export default function BusinessSettings() {
                 onClick={() => navigate(SETTING_NAVIGATION_ROUTES.General.path)}
               />
               <Button
-                text={"Guardar Cambios"}
-                className="flex h-10 w-full items-center justify-center rounded-md bg-sky-950 px-4 text-xs text-slate-50 shadow-sm transition-all duration-700 focus:outline-none"
+                text={"Guardar"}
+                className="flex h-10 items-center justify-center rounded-md bg-sky-950 px-4 text-xs text-slate-50 shadow-sm transition-all duration-700 focus:outline-none"
               />
             </div>
           </SettingsCard>

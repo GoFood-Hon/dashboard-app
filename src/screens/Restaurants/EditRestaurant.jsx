@@ -42,8 +42,9 @@ export const EditRestaurant = ({ close, details, restaurantId }) => {
       const response = await restaurantsApi.updateRestaurant(formData, restaurantId)
 
       if (response.error) {
-        toast.error(`Fallo al actualizar el restaurante. Por favor intente de nuevo. ${response.message}`, {
-          duration: 7000
+        toast.error(`No fue posible actualizar. ${response.message.split(":")[2].trim()}`, {
+          duration: 7000,
+          position: 'bottom-right'
         })
       } else {
         const updatedRestaurantId = response?.data?.id
@@ -133,7 +134,6 @@ export const EditRestaurant = ({ close, details, restaurantId }) => {
               text={"Descartar"}
               className={"text-xs border border-red-400 text-red-400 bg-white"}
               onClick={() => {
-                toast.success("Información eliminada")
                 navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Restaurants.path)
               }}
             />

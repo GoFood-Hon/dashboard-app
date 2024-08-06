@@ -10,7 +10,7 @@ const menuApi = {
       contentType: `multipart/form-data; boundary=${params._boundary}`
     }),
 
-  addDishesToMenu: (dishId, params) => axiosClient.post(`api/v1/dish/${dishId}/category`, params),
+  addDishesToMenu: (dishId, params) => axiosClient.put(`api/v1/dish/${dishId}/category`, params),
 
   updateMenu: (params, menuId) => axiosClient.patch(`api/v1/restaurant/categories/${menuId}`, params),
 

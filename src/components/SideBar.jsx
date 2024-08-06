@@ -90,7 +90,7 @@ export default function SideBar() {
   })
 
   return (
-    <div className="w-[200px] pt-[76px] h-full flex flex-col start-0 fixed overflow-y-hidden top-0 bg-white border-slate-200 border z-10 font-semibold dark:text-white dark:bg-slate-800 dark:border-slate-700">
+    <div className="w-[280px] pt-[76px] h-full flex flex-col start-0 fixed overflow-y-hidden top-0 bg-white border-slate-200 border z-10 font-semibold dark:text-white dark:bg-slate-800 dark:border-slate-700">
       <div className="p-5 h-full">
         <div className="flex flex-col justify-between h-full">
           <div>
@@ -108,15 +108,14 @@ export default function SideBar() {
                 </Link>
               </li> */}
             </ul>
-            <h1 className="text-light_secondary_text uppercase pt-5 text-sm dark:text-dark_secondary_text">General</h1>
             <ul className="py-4 text-sm">{renderedItems}</ul>
           </div>
           <div>
             <button
-              className="flex flex-row items-center duration-300 hover:bg-red-400 hover:rounded-lg pb-3 hover:p-3"
+              className="flex flex-row w-full items-center duration-300 hover:bg-red-400 hover:rounded-lg p-3"
               onClick={logout}>
               <Icon icon="exit" size={17} />
-              <span className="text-sm ml-3">Cerrar session</span>
+              <span className="text-sm ml-3">Cerrar sesión</span>
             </button>
           </div>
         </div>

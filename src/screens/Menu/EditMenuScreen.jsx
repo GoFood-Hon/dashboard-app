@@ -23,6 +23,8 @@ export default function EditMenuScreen({ itemDetails, close }) {
     defaultValues: itemDetails
   })
 
+  console.log(itemDetails)
+
   const dispatch = useDispatch()
   const user = useSelector((state) => state.user.value)
 
@@ -94,6 +96,7 @@ export default function EditMenuScreen({ itemDetails, close }) {
   ))
 
   const onSubmit = (data) => {
+    console.log(data)
     dispatch(updateMenu({ data })).then((response) => {
       reset()
       close()

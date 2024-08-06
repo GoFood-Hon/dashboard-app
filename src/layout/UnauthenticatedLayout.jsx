@@ -42,13 +42,13 @@ export default function UnauthenticatedLayout() {
     <>
       <div className="w-screen h-screen flex flex-col items-center justify-between dark:bg-slate-900 bg-slate-100 text-black dark:text-white">
         <div className="w-full p-3 bg-white flex justify-center mb-5 border-slate-200 border  dark:bg-slate-800 dark:border-slate-700 ">
-          <img className="w-44 h-[54px]" src={logoImage} />
+          <img className="w-44 h-[54px] " src={logoImage} />
         </div>
         <div className="w-full xs:h-fit xs:rounded-2xl xs:drop-shadow-none xs:shadow-none sm:w-5/6 md:w-3/6 lg:w-5/6 lg:max-w-[1100px] xl:w-5/6 2xl:w-5/6 lg:justify-between bg-light_bg_child rounded-2xl dark:bg-slate-800 dark:border-slate-700 md:drop-shadow-xl md:shadow-slate-100 overflow-hidden md:shadow-xl md:border dark:shadow-slate-800 flex flex-row mb-8">
           <div className="lg:w-full lg:min-w-[500px] lg:max-w-[620px] lg:h-[660px] relative -left-2 hidden md:hidden lg:flex">
             <img
               src={bgImage}
-              className="lg:w-full h-[700px] left-0 -top-2 absolute bg-opacity-20 rounded-2xl"
+              className="lg:w-full h-[700px] left-0 -top-2 absolute bg-opacity-20 rounded-2xl object-cover"
               style={{ clipPath: "inset(8px)" }}
               alt="hamburger"
             />

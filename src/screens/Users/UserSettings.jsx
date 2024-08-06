@@ -4,7 +4,7 @@ import SettingsSidebar from "./SettingsSidebar"
 
 export default function UserSettings() {
   return (
-    <BaseLayout>
+    <BaseLayout >
       <SettingsSidebar />
     </BaseLayout>
   )

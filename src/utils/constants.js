@@ -144,7 +144,7 @@ export const dashboardCards = [
   }
 ]
 
-export const mapBoxStyles = "mapbox://styles/onetouchstudio/clopr8g1x00il01nz2nw7045t"
+export const mapBoxStyles = "mapbox://styles/ot-dev/clyxy5xuc012m01p99fld27px"
 
 export const hondurasDepartments = [
   { id: 1, name: "Atlántida" },

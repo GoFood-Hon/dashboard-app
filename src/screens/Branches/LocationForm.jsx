@@ -1,40 +1,31 @@
 import React, { useEffect, useState, useRef } from "react"
 import { Grid } from "@mantine/core"
-import Map, { Source, Layer, Marker } from "react-map-gl"
-
+import Map, { GeolocateControl, Marker } from "react-map-gl"
+import "mapbox-gl/dist/mapbox-gl.css"
 import InputSearchCombobox from "../../components/Form/InputSearchCombobox"
-
 import InputField from "../../components/Form/InputField"
 import { hondurasDepartments, mapBoxStyles } from "../../utils/constants"
 import { MAPBOX_KEY } from "../../services/env"
 
 export default function LocationForm({ register, errors, setValue, itemDetails }) {
-  const [marker, setMarker] = useState({
-    longitude: itemDetails?.geolocation?.coordinates?.[0] ?? -88.025,
-    latitude: itemDetails?.geolocation?.coordinates?.[1] ?? 15.50417
-  })
+  const [markerPosition, setMarkerPosition] = useState(null)
+  const [errorLocalizacion, setErrorLocalizacion] = useState(false)
+  const [lng, setLng] = useState(0)
+  const [lat, setLat] = useState(0)
 
-  const [viewState, setViewState] = useState({
-    longitude: itemDetails?.geolocation?.coordinates?.[0] ?? -88.025,
-    latitude: itemDetails?.geolocation?.coordinates?.[1] ?? 15.50417,
-    zoom: 12.2
-  })
-
-  const onDrag = (evt) => {
-    const { lng, lat } = evt.lngLat
-    setMarker({
-      longitude: lng,
-      latitude: lat
-    })
-    setValue("geolocation", [lng, lat])
+  const handleMapClick = (event) => {
+    const { lngLat } = event
+    setLng(lngLat.lng)
+    setLat(lngLat.lat)
+    setMarkerPosition({ longitude: lngLat.lng, latitude: lngLat.lat })
+    setValue("geolocation", [lngLat.lng, lngLat.lat])
+    setErrorLocalizacion(false)
   }
 
-  const resetLocation = () => {
-    setViewState({
-      longitude: -88.025,
-      latitude: 15.50417,
-      zoom: 12.2
-    })
+  const handleMapInput = () => {
+    setErrorLocalizacion(false)
+    setMarkerPosition({ longitude: lng, latitude: lat })
+    setValue("geolocation", [lng, lat])
   }
 
   return (
@@ -63,17 +54,31 @@ export default function LocationForm({ register, errors, setValue, itemDetails }
             <div className="min-h-[25rem] flex flex-col w-full h-full bg-white rounded-2xl border border-blue-100 p-4">
               <label className="text-sky-950 text-sm font-bold leading-snug pb-4">Ubicación en mapa (Obligatorio)</label>
               <label className="text-gray-500 text-sm font-bold leading-snug pb-4">(Mueva el pin a la dirección exacta)</label>
-              <label onClick={resetLocation} className="text-sky-950 text-sm font-bold leading-snug pb-4 cursor-pointer w-fit">
-                Reiniciar vista
-              </label>
-              <Map
-                {...viewState}
-                onMove={(evt) => setViewState(evt.viewState)}
-                mapboxAccessToken={MAPBOX_KEY}
-                style={{ borderRadius: "1rem", width: "auto", height: "30rem", borderWidth: "2px" }}
-                mapStyle={mapBoxStyles}>
-                <Marker draggable onDrag={onDrag} longitude={marker.longitude} latitude={marker.latitude} anchor="bottom" />
-              </Map>
+              {/* Select direction from map */}
+              <div className="flex flex-col gap-2">
+                <div className="h-72 relative">
+                  <Map
+                    initialViewState={{
+                      longitude: `${import.meta.env.VITE_MAPBOX_LNG_DEFAULT}`,
+                      latitude: `${import.meta.env.VITE_MAPBOX_LAT_DEFAULT}`,
+                      zoom: 10
+                    }}
+                    mapStyle={import.meta.env.VITE_MAPBOX_STYLE_URL}
+                    mapboxAccessToken={import.meta.env.VITE_MAPBOX_ACCESS_TOKEN}
+                    onClick={handleMapClick}>
+                    {markerPosition && <Marker {...markerPosition} longitude={lng} latitude={lat} color="red"/>}
+                    <GeolocateControl
+                      positionOptions={{ enableHighAccuracy: true }}
+                      trackUserLocation={true}
+                      onGeolocate={(position) => {
+                        setLng(position.coords.longitude)
+                        setLat(position.coords.latitude)
+                        handleMapInput()
+                      }}
+                    />
+                  </Map>
+                </div>
+              </div>
             </div>
           </div>
         </div>

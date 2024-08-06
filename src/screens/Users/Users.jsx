@@ -48,19 +48,12 @@ export default function Users() {
     <BaseLayout>
       <section>
         <div className="flex flex-row justify-between items-center pb-6">
-          <div className="flex flex-row gap-x-3 items-center">
-            <h1 className="text-white-200 text-2xl font-semibold">Usuarios</h1>
-            <Button
-              text={"Nuevo usuario"}
-              className={"text-white text-md px-3 py-2 bg-primary_button mb-0"}
-              onClick={handleNavigateNewUser}
-            />
-          </div>
-          <div>
-            <Breadcrumbs>
-              <BreadCrumbNavigation location={location} />
-            </Breadcrumbs>
-          </div>
+          <h1 className="text-white-200 text-2xl font-semibold">Usuarios</h1>
+          <Button
+            text={"Nuevo"}
+            className={"text-white text-md px-3 py-2 bg-primary_button mb-0"}
+            onClick={handleNavigateNewUser}
+          />
         </div>
       </section>
       <section>

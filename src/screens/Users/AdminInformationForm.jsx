@@ -22,7 +22,6 @@ export const AdminInformationForm = ({ register, errors, setValue }) => {
       setFileInformation(file)
       setImages(acceptedFiles)
       setValue("files", acceptedFiles)
-      toast.success("Archivos aceptados 👍", { duration: 7000 })
     }
   }
   const deleteImage = () => {
@@ -89,6 +88,7 @@ export const AdminInformationForm = ({ register, errors, setValue }) => {
               register={register}
               errors={errors}
               className="text-black"
+              type="password"
             />
           </Grid.Col>
           <Grid.Col span={{ base: 12, md: 6 }}>
@@ -98,6 +98,7 @@ export const AdminInformationForm = ({ register, errors, setValue }) => {
               register={register}
               errors={errors}
               className="text-black"
+              type="password"
             />
           </Grid.Col>
           <Grid.Col span={{ base: 12 }}>

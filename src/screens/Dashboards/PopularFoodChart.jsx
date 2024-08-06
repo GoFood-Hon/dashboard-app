@@ -27,7 +27,7 @@ export const PopularFoodChart = () => {
   return (
     <div className="min-h-[600px] w-full h-[600px] bg-white rounded-2xl shadow border border-blue-100 flex flex-col p-2 mr-6">
       <div className="flex flex-row justify-between items-center p-6">
-        <h2 className="text-white-200 text-xl font-semibold">Top platillos vendidos</h2>
+        <h2 className="text-white-200 text-xl font-semibold">Gráfico de platillos más vendidos</h2>
       </div>
       <span className="border border-blue-100" />
       <div className="pb-6 flex justify-center items-center h-full">
