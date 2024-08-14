@@ -19,6 +19,8 @@ export default function UserDetails() {
   const { userId } = useParams()
   const user = useSelector((state) => state.user.value.role)
   const navigate = useNavigate()
+
+
   const location = useLocation()
   const restaurant = useSelector((state) => state.restaurants.restaurants)
 
@@ -76,7 +78,7 @@ export default function UserDetails() {
             />
             <img
               className="w-44 h-44 rounded-full object-contain absolute border top-[150px] left-[50px] bg-white"
-              src={userDetails?.images[0]?.location}
+              src={''}
             />
             <div
               className="w-[34px] h-[34px] bg-sky-950 rounded-full absolute top-[280px] left-[190px] flex items-center justify-center cursor-pointer"
