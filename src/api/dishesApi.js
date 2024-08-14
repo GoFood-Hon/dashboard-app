@@ -38,7 +38,7 @@ const dishesApi = {
 
   addExtras: (dishId, params) => axiosClient.post(`api/v1/dish/${dishId}/extras`, params),
 
-  updateDish: (params, dishId) => axiosClient.patch(`api/v1/dish/${dishId}`, params),
+  updateDish: (dishId, params) => axiosClient.patch(`api/v1/dish/${dishId}`, params),
 
   deleteDish: (dishId) => axiosClient.delete(`api/v1/dish/${dishId}`)
 }

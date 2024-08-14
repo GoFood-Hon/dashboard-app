@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react"
 import BaseLayout from "../../components/BaseLayout"
 import { useLocation, useParams } from "react-router-dom"
-import { Breadcrumbs, Card, Grid, Image, Modal } from "@mantine/core"
+import { Breadcrumbs, Card, Grid, Image, Modal, Table } from "@mantine/core"
 import { IconCamera, IconEdit } from "@tabler/icons-react"
 import { useDisclosure } from "@mantine/hooks"
 import { Map, Marker, GeolocateControl } from "react-map-gl"
@@ -15,6 +15,7 @@ import BackButton from "../Dishes/components/BackButton"
 import { APP_ROLES, dashboardCards, mapBoxStyles } from "../../utils/constants"
 import { MAPBOX_KEY } from "../../services/env"
 import { EditBranch } from "./EditBranch"
+import { formatDay, formatTime } from "../../utils"
 
 export default function BranchesDetails() {
   const { branchId } = useParams()
@@ -85,7 +86,13 @@ export default function BranchesDetails() {
     fetchData()
   }, [closeFormModal, formModalOpened])
 
-  const todayIndex = new Date().getDay()
+  const rows = details?.ScheduleModels?.map((schedule) => (
+    <Table.Tr key={schedule.id}>
+      <Table.Td>{formatDay(schedule.day)}</Table.Td>
+      <Table.Td>{schedule.openTime}</Table.Td>
+      <Table.Td>{schedule.closeTime}</Table.Td>
+    </Table.Tr>
+  ))
 
   return (
     <BaseLayout>
@@ -172,29 +179,21 @@ export default function BranchesDetails() {
                 </div>
                 <div className="w-[125px] h-px bg-blue-100 sm:w-full" />
                 <div className="flex flex-col justify-between w-full mt-5">
-                  <span className="text-sky-950 text-base font-bold leading-normal">Horario</span>
+                  <span className="text-sky-950 text-base font-bold leading-normal">Horarios de atención</span>
                   {details?.alwaysOpen ? (
                     <div className="flex py-2 bg-green-500 text-white text-lg font-bold rounded-lg px-4">Siempre Abierto</div>
                   ) : (
-                    <div className="container mx-auto mt-8">
-                      <table className="table-auto border w-full">
-                        <thead>
-                          <tr>
-                            <th className="px-4 py-2 border">Día</th>
-                            <th className="px-4 py-2 border">Apertura</th>
-                            <th className="px-4 py-2 border">Cierre</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {details?.schedule?.map((day, index) => (
-                            <tr key={index} className={todayIndex === index ? "bg-blue-100" : ""}>
-                              <td className="px-4 py-2 border">{day.day}</td>
-                              <td className="px-4 py-2 border">{day.openingTime ?? "Cerrado"}</td>
-                              <td className="px-4 py-2 border">{day.closingTime ?? "Cerrado"}</td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
+                    <div className="container mx-auto mt-2">
+                      <Table withTableBorder withColumnBorders>
+                        <Table.Thead>
+                          <Table.Tr>
+                            <Table.Th>Día</Table.Th>
+                            <Table.Th>Hora de apertura</Table.Th>
+                            <Table.Th>Hora de cierre</Table.Th>
+                          </Table.Tr>
+                        </Table.Thead>
+                        <Table.Tbody>{rows}</Table.Tbody>
+                      </Table>
                     </div>
                   )}
                 </div>

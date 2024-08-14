@@ -1,12 +1,24 @@
 import React, { useEffect, useState } from "react"
 import BaseLayout from "../../components/BaseLayout"
-import { Affix, Breadcrumbs, CloseButton, Grid, Input, Pagination } from "@mantine/core"
+import {
+  Affix,
+  Breadcrumbs,
+  CloseButton,
+  Grid,
+  Input,
+  Pagination,
+  MantineProvider,
+  createTheme,
+  Switch,
+  rem
+} from "@mantine/core"
 import Button from "../../components/Button"
 import { useNavigate, useLocation } from "react-router-dom"
 import { colors } from "../../theme/colors"
 import { NAVIGATION_ROUTES_RES_ADMIN, NAVIGATION_ROUTES_BRANCH_ADMIN } from "../../routes"
 import BreadCrumbNavigation from "../../components/BreadCrumbNavigation"
 import { useDispatch, useSelector } from "react-redux"
+import { IconX, IconCheck } from "@tabler/icons-react"
 import {
   fetchDishes,
   selectAllDishes,
@@ -42,6 +54,10 @@ export default function Dishes() {
   const totalControlBtn = Math.ceil(totalItems / limit)
   const [searchDish, setSearchDish] = useState("")
   const [cardsSelected, setCardsSelected] = useState([])
+
+  const theme = createTheme({
+    cursorType: "pointer"
+  })
 
   useEffect(() => {
     dispatch(
@@ -97,23 +113,13 @@ export default function Dishes() {
     }
   }
 
-  const handleEnableSelected = async () => {
-    await Promise.all(
-      cardsSelected.map(async (id) => {
-        await dispatch(updateDish({ dishData: { isActive: true }, propertyToUpdate: "isActive", dishId: id }))
-      })
-    )
-
+  const handleEnableSelected = async (id) => {
+    await dispatch(updateDish({ dishData: { isActive: true }, propertyToUpdate: "isActive", dishId: id }))
     refreshPage()
   }
 
-  const handleDisableSelected = async () => {
-    await Promise.all(
-      cardsSelected.map(async (id) => {
-        await dispatch(updateDish({ dishData: { isActive: false }, propertyToUpdate: "isActive", dishId: id }))
-      })
-    )
-
+  const handleDisableSelected = async (id) => {
+    await dispatch(updateDish({ dishData: { isActive: false }, propertyToUpdate: "isActive", dishId: id }))
     refreshPage()
   }
 
@@ -219,21 +225,33 @@ export default function Dishes() {
                   handleClick={handleClick}
                 /> */}
                 <div className="bg-white border border-gray-100 transition transform duration-700 shadow-lg p-4 rounded-lg relative">
-                  <div className="flex justify-end mb-4">
-                    <span className="border border-[#F37181] rounded-full text-[#F37181] text-sm poppins px-4 py-1 inline-block">
-                      {item.isActive || item.active ? "Habilitado" : "Deshabilitado"}
-                    </span>
-                  </div>
                   <img className="w-48 h-48 mx-auto object-contain" src={item.images?.[0]?.location} alt="" />
                   <div className="flex flex-col my-3 space-y-2">
                     <h1 className="text-gray-900 poppins text-lg">{item.name}</h1>
-                    {/* <p className="text-gray-500 poppins text-sm">{description}</p> */}
+
                     <h2 className="text-gray-900 poppins text-lg font-bold">{getFormattedHNL(item.price)}</h2>
-                    <button
-                      className="bg-primary_button text-white px-8 py-2 focus:outline-none poppins rounded-lg mt-24 transform transition duration-300"
-                      onClick={() => handleClick(item.id)}>
-                      Editar
-                    </button>
+                    <div className="flex items-center justify-between">
+                      <Button
+                        text={"Editar"}
+                        className={"text-white text-md px-3 py-2 bg-primary_button mb-0"}
+                        onClick={() => handleClick(item.id)}
+                      />
+                      <MantineProvider theme={theme}>
+                        <Switch
+                          checked={item.isActive}
+                          onChange={() => (item.isActive ? handleDisableSelected(item.id) : handleEnableSelected(item.id))}
+                          color="teal"
+                          size="md"
+                          thumbIcon={
+                            item.isActive ? (
+                              <IconCheck style={{ width: rem(12), height: rem(12) }} stroke={3} color="teal" />
+                            ) : (
+                              <IconX style={{ width: rem(12), height: rem(12) }} stroke={3} color="red" />
+                            )
+                          }
+                        />
+                      </MantineProvider>
+                    </div>
                   </div>
                 </div>
               </Grid.Col>

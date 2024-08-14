@@ -1,6 +1,7 @@
 import { format, formatDistanceToNow, parseISO } from "date-fns"
 import { es } from "date-fns/locale"
 import { hondurasDepartments } from "./constants"
+import dayjs from "dayjs"
 
 export function getFormattedHNL(amount) {
   return new Intl.NumberFormat("en-US", {
@@ -8,6 +9,21 @@ export function getFormattedHNL(amount) {
     currency: "HNL"
   }).format(amount)
 }
+
+export const formatDay = (day) => {
+  const daysInSpanish = {
+    monday: "Lunes",
+    tuesday: "Martes",
+    wednesday: "Miércoles",
+    thursday: "Jueves",
+    friday: "Viernes",
+    saturday: "Sábado",
+    sunday: "Domingo"
+  };
+  return daysInSpanish[day];
+};
+
+export const formatTime = (time) => dayjs(time, "HH:mm:ss").format("hh:mm A");
 
 export function bytesToMB(bytes) {
   const megabytes = bytes / (1024 * 1024)

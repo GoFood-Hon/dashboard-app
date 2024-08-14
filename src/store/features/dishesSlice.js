@@ -4,6 +4,7 @@ import toast from "react-hot-toast"
 import { ITEMS_PER_PAGE } from "../../utils/paginationConfig"
 import { convertToDecimal } from "../../utils"
 import extrasApi from "../../api/extrasApi"
+import { showNotification } from "@mantine/notifications"
 
 const initialState = {
   dishes: [],
@@ -85,7 +86,10 @@ export const createDish = createAsyncThunk("dishes/createDish", async ({ data, r
     dispatch(fetchDishes())
 
     if (response.error) {
-      toast.error(`Fallo al crear el platillo. Por favor intente de nuevo. ${response.message}`, {
+      showNotification({
+        title: "Error",
+        message: response.message,
+        color: "red",
         duration: 7000
       })
     } else {
@@ -97,7 +101,10 @@ export const createDish = createAsyncThunk("dishes/createDish", async ({ data, r
       const addImageResponse = await uploadDishImage(dishId, data?.files?.[0])
 
       if (addImageResponse.error) {
-        toast.error(`Fallo al subir la imagen. Por favor intente de nuevo. ${addImageResponse.message}`, {
+        showNotification({
+          title: "Error",
+          message: addImageResponse.message,
+          color: "red",
           duration: 7000
         })
       }
@@ -105,7 +112,12 @@ export const createDish = createAsyncThunk("dishes/createDish", async ({ data, r
       /**
        * All was success
        */
-      toast.success("Platillo creado exitosamente", { duration: 7000 })
+      showNotification({
+        title: "Creación exitosa",
+        message: response.message,
+        color: "green",
+        duration: 7000
+      })
       return response.data
     }
   } catch (error) {
@@ -162,44 +174,43 @@ export const updateDish = createAsyncThunk(
   "dishes/updateDish",
   async ({ dishData, propertyToUpdate = "all", dishId }, { dispatch }) => {
     try {
-      const formData = new FormData()
       let payloadData
 
       if (propertyToUpdate === "isActive") {
+        const formData = new FormData()
         formData.append("isActive", dishData.isActive)
         payloadData = formData
       } else {
-        payloadData = dishData
+        payloadData = dishData // En caso de actualizar otros campos
       }
-
-      console.log(payloadData)
-
+      
       const response = await dishesApi.updateDish(dishId, payloadData)
       if (response.error) {
-        toast.error(`Fallo al actualizar el platillo. Por favor intente de nuevo. ${response?.message}`, {
+        showNotification({
+          title: "Error",
+          message: response.message,
+          color: "red",
           duration: 7000
         })
       } else {
-        if (propertyToUpdate !== "isActive") {
-          /**
-           * Update images to the dish
-           */
-
-          if (dishData.files) await uploadDishImage(dishData?.id, dishData?.files?.[0])
+        if (propertyToUpdate !== "isActive" && dishData.files) {
+          await uploadDishImage(dishData?.id, dishData?.files?.[0])
         }
 
-        /**
-         * All was success
-         */
-
-        toast.success("Platillo actualizado exitosamente", {
+        showNotification({
+          title: "Actualización exitosa",
+          message: response.message,
+          color: "green",
           duration: 7000
         })
       }
-      return response.dishData
+      return response.data
     } catch (error) {
       dispatch(setError("Error updating dish"))
-      toast.error("Fallo al actualizar el platillo. Por favor intente de nuevo.", {
+      showNotification({
+        title: "Error",
+        message: error,
+        color: "red",
         duration: 7000
       })
 
