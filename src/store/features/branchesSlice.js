@@ -3,8 +3,7 @@ import { ITEMS_PER_PAGE } from "../../utils/paginationConfig"
 import branchesApi from "../../api/branchesApi"
 import toast from "react-hot-toast"
 import { convertToDecimal } from "../../utils"
-import { IconX, IconCheck } from "@tabler/icons-react"
-import { Notification, rem } from "@mantine/core"
+import { showNotification } from "@mantine/notifications"
 
 const initialState = {
   branches: [],
@@ -134,16 +133,22 @@ export const updateBranches = createAsyncThunk(
 
       const response = await branchesApi.updateBranches(formData, data?.id)
 
+      console.log(response)
+
       if (response.error) {
-        toast.error(`Fallo al actualizar la sucursal. Por favor intente de nuevo. ${response.message}`, {
+        showNotification({
+          title: "Error",
+          message: response.message,
+          color: "red",
           duration: 7000
         })
       } else {
-        /*  if (propertyToUpdate !== "isActive") {
-          await uploadComplementImage(data?.id, data?.files?.[0])
-        } */
-
-        toast.success("Simón")
+        showNotification({
+          title: "¡Estado actualizado!",
+          message: `La sucursal ${response.data.name} fue ${response.data.isActive ? "habilitada" : "deshabilitada"}`,
+          color: "green",
+          radius: "md"
+        })
       }
       return response.data
     } catch (error) {

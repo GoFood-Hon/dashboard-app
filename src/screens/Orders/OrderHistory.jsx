@@ -54,11 +54,6 @@ export const OrderHistory = () => {
           <div className="flex flex-row gap-x-3 items-center">
             <BackButton title="Historial de Pedidos" />
           </div>
-          <div>
-            <Breadcrumbs>
-              <BreadCrumbNavigation location={location} />
-            </Breadcrumbs>
-          </div>
         </div>
       </section>
       <section>

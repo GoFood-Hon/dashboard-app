@@ -172,7 +172,9 @@ export const updateDish = createAsyncThunk(
         payloadData = dishData
       }
 
-      const response = await dishesApi.updateDishWithExtra(dishId, payloadData)
+      console.log(payloadData)
+
+      const response = await dishesApi.updateDish(dishId, payloadData)
       if (response.error) {
         toast.error(`Fallo al actualizar el platillo. Por favor intente de nuevo. ${response?.message}`, {
           duration: 7000

@@ -103,25 +103,18 @@ export default function RestaurantsScreen() {
       <section>
         <div className="flex flex-row justify-between items-center py-3 w-full">
           <BackButton title="Restaurantes" />
-          <Button text={"Nuevo"} className={"text-white text-md px-3 py-2 bg-primary_button mb-0"} onClick={handleNewItem} />
-        </div>
-      </section>
-      <section>
-        <div className="flex flex-row justify-between">
-          <div className="flex flex-row w-full justify-end items-center">
-            <div className="flex flex-row mr-4">
-              <span className="text-sky-950 text-base font-bold leading-normal">{page === 1 ? 1 : (page - 1) * limit + 1}</span>
-              <span className="text-zinc-500 text-base font-bold leading-normal">-</span>
-              <span className="text-sky-950 text-base font-bold leading-normal">
-                {page === 1 ? limit : Math.min(page * limit, totalItems)}
-              </span>
-              <span className="text-zinc-500 text-base font-medium leading-normal px-1"> de </span>
-              <span className="text-sky-950 text-base font-bold leading-normal">{totalItems} Restaurantes</span>
-            </div>
-            <div className="flex flex-row h-full items-center gap-3">
-              <span className="cursor-pointer" onClick={refreshPage}>
-                <Icon icon="reload" size={20} />
-              </span>
+          <div className="flex flex-row justify-between">
+            <div className="flex flex-row w-full justify-end items-center">
+              <div className="flex flex-row mr-4">
+                <span className="text-sky-950 text-base font-bold leading-normal">{page === 1 ? 1 : (page - 1) * limit + 1}</span>
+                <span className="text-zinc-500 text-base font-bold leading-normal">-</span>
+                <span className="text-sky-950 text-base font-bold leading-normal">
+                  {page === 1 ? limit : Math.min(page * limit, totalItems)}
+                </span>
+                <span className="text-zinc-500 text-base font-medium leading-normal px-1"> de </span>
+                <span className="text-sky-950 text-base font-bold leading-normal">{totalItems} restaurantes</span>
+              </div>
+              <Button text={"Nuevo"} className={"text-white text-md px-3 py-2 bg-primary_button mb-0"} onClick={handleNewItem} />
             </div>
           </div>
         </div>

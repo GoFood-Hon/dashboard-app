@@ -6,7 +6,6 @@ export default function Logout() {
   return (
     <BaseLayout>
       <div className="flex w-full h-screen justify-center items-center flex-col gap-4">
-        <span>Cerrando sesión 👋</span>
         <LoadingCircle />
       </div>
     </BaseLayout>

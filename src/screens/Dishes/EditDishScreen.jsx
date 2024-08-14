@@ -76,6 +76,7 @@ export default function EditDishScreen({ close, dishDetails }) {
   ))
 
   const onSubmit = async (data) => {
+    console.log(data)
     const dishId = data.id
     const dishData = {
       ...data,
@@ -125,9 +126,9 @@ export default function EditDishScreen({ close, dishDetails }) {
               }}
             />
             <Button
-              text={"Guardar platillo"}
+              text={"Actualizar"}
               onClick={handleSubmit(onSubmit)}
-              className="flex h-10 w-full items-center justify-center px-4 rounded-md shadow-sm transition-all duration-700 focus:outline-none text-xs bg-sky-950 text-slate-50"
+              className="flex h-10 items-center justify-center px-4 rounded-md shadow-sm transition-all duration-700 focus:outline-none text-xs bg-sky-950 text-slate-50"
             />
           </div>
         </div>

@@ -102,11 +102,6 @@ export default function NewComplement() {
         <section>
           <div className="flex flex-row justify-between items-center pb-6 flex-wrap xs:gap-3">
             <BackButton title="Nuevo complemento" />
-            <div>
-              <Breadcrumbs>
-                <BreadCrumbNavigation location={location} />
-              </Breadcrumbs>
-            </div>
           </div>
         </section>
         <section>
@@ -129,7 +124,6 @@ export default function NewComplement() {
                 onClick={() => {
                   reset()
                   localStorage.removeItem("component-draft")
-                  toast.success("Información eliminada")
                 }}
               />
               <Button

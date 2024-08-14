@@ -48,7 +48,6 @@ export default function Header() {
   }, [location.pathname])
 
   const logout = () => {
-    toast.success("Cerrando sesión")
     localStorage.removeItem("token")
     navigate(AUTH_NAVIGATION_ROUTES.Login.path)
   }
@@ -92,12 +91,13 @@ export default function Header() {
             onClick={() => navigate("/")}
           />
         </div>
-        <div className="pl-1">
+        <div className="pl-4">
           {user.role !== APP_ROLES.superAdmin ? (
             <Image
               src={imgUrl}
               h={50}
-              w={90}
+              w={50}
+              radius={"md"}
               fit="contain"
               fallbackSrc="https://placehold.co/600x400?text=Imagen+no+disponible"
             />

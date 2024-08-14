@@ -21,7 +21,6 @@ export default function EditGeneralInformationForm({ register, errors, setValue,
       setFileInformation(file)
       setImages(acceptedFiles)
       setValue("files", acceptedFiles)
-      toast.success("Archivos aceptados 👍", { duration: 7000 })
     }
   }
   const deleteImage = () => {

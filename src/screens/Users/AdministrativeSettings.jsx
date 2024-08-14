@@ -50,7 +50,6 @@ export default function AdministrativeSettings() {
       setFileInformation(file)
       setImages(acceptedFiles)
       setValue("files", acceptedFiles)
-      toast.success("Archivos aceptados 👍", { duration: 7000 })
     }
   }
 
@@ -133,8 +132,8 @@ export default function AdministrativeSettings() {
               {errors.files && <p className="text-red-500 text-center w-full">* Imagen es requerida.</p>}
             </div>
             <Button
-              text={"Guardar banner"}
-              className="flex h-10 w-2/6 items-center justify-center rounded-md bg-sky-950 px-4 text-xs text-slate-50 shadow-sm transition-all duration-700 focus:outline-none ml-auto"
+              text={"Guardar"}
+              className="flex h-10 items-center justify-center rounded-md bg-sky-950 px-4 text-xs text-slate-50 shadow-sm transition-all duration-700 focus:outline-none ml-auto"
             />
           </SettingsCard>
 

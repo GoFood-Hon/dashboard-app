@@ -162,7 +162,6 @@ export const CouponForm = ({ offerData, editing = false }) => {
       setFileInformation(file)
       setImages(acceptedFiles)
       setValue("files", acceptedFiles)
-      toast.success("Archivos aceptados 👍", { duration: 7000 })
     }
   }
 

@@ -138,8 +138,8 @@ export const EditRestaurant = ({ close, details, restaurantId }) => {
               }}
             />
             <Button
-              text={"Guardar restaurante"}
-              className="flex h-10 w-full items-center justify-center px-4 rounded-md shadow-sm transition-all duration-700 focus:outline-none text-xs bg-sky-950 text-slate-50"
+              text={"Actualizar"}
+              className="flex h-10 items-center justify-center px-4 rounded-md shadow-sm transition-all duration-700 focus:outline-none text-xs bg-sky-950 text-slate-50"
             />
           </div>
         </div>

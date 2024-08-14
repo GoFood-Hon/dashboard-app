@@ -250,11 +250,6 @@ export default function Complements() {
               />
             ) : null}
           </div>
-          <div>
-            <Breadcrumbs>
-              <BreadCrumbNavigation location={location} />
-            </Breadcrumbs>
-          </div>
         </div>
       </section>
       <Tabs color={colors.primary_button} variant="pills" defaultValue="all" value={activeTab} onChange={handleTabChange}>

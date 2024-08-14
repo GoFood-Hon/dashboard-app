@@ -38,11 +38,6 @@ export const PlanDetails = () => {
       <section>
         <div className="flex flex-row justify-between items-center pb-6">
           <BackButton title={planDetails?.name} />
-          <div>
-            <Breadcrumbs>
-              <BreadCrumbNavigation location={location} dynamicRoute={planDetails?.name} />
-            </Breadcrumbs>
-          </div>
         </div>
       </section>
       <div className="flex flex-row w-full flex-wrap gap-2 xl:flex-nowrap">
@@ -103,7 +98,7 @@ export const PlanDetails = () => {
         opened={formModalOpened}
         onClose={closeFormModal}
         centered
-        size={"xl"}
+        size={"2xl"}
         radius={"lg"}
         overlayProps={{
           backgroundOpacity: 0.55,

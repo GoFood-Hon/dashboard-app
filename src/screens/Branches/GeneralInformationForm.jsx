@@ -30,7 +30,6 @@ export default function GeneralInformationForm({ register, errors, setValue, isD
       setFileInformation(file)
       setImages(acceptedFiles)
       setValue("files", acceptedFiles)
-      toast.success("Archivos aceptados 👍", { duration: 7000 })
     }
   }
 

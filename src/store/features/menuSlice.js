@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 import { ITEMS_PER_PAGE } from "../../utils/paginationConfig"
 import toast from "react-hot-toast"
 import menuApi from "../../api/menuApi"
+import { showNotification } from "@mantine/notifications"
 
 const initialState = {
   menus: [],

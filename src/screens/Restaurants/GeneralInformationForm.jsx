@@ -26,7 +26,6 @@ export const GeneralInformationForm = ({ register, errors, setValue, isDataClear
       setFileInformation(file)
       setImages(acceptedFiles)
       setValue("files", acceptedFiles)
-      toast.success("Archivos aceptados 👍", { duration: 7000 })
     }
   }
 

@@ -51,7 +51,6 @@ export default function SideBar() {
   }, [location.pathname])
 
   const logout = () => {
-    toast.success("Cerrando sesión")
     localStorage.removeItem("token")
     navigate(AUTH_NAVIGATION_ROUTES.Login.path)
   }

@@ -99,12 +99,7 @@ export const NewAdminUser = () => {
       <form onSubmit={handleSubmit(onSubmit)}>
         <section>
           <div className="xs:gap-3 flex flex-row flex-wrap items-center justify-between pb-6">
-            <BackButton title="Nuevo Administrador" />
-            <div>
-              <Breadcrumbs>
-                <BreadCrumbNavigation location={location} />
-              </Breadcrumbs>
-            </div>
+            <BackButton title="Nuevo administrador" />
           </div>
         </section>
         <section>
@@ -125,13 +120,12 @@ export const NewAdminUser = () => {
                 text={"Descartar"}
                 className={"border border-red-400 bg-white text-xs text-red-400"}
                 onClick={() => {
-                  toast.success("Información eliminada")
                   navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Restaurants.path)
                 }}
               />
               <Button
-                text={"Crear administrador"}
-                className="flex h-10 w-full items-center justify-center rounded-md bg-sky-950 px-4 text-xs text-slate-50 shadow-sm transition-all duration-700 focus:outline-none"
+                text={"Guardar"}
+                className="flex h-10 items-center justify-center rounded-md bg-sky-950 px-4 text-xs text-slate-50 shadow-sm transition-all duration-700 focus:outline-none"
               />
             </div>
           </div>

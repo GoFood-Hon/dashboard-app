@@ -87,7 +87,6 @@ export default function AccountSettings() {
       setFileInformation(file)
       setImages(acceptedFiles)
       setValue("files", acceptedFiles)
-      toast.success("Archivos aceptados 👍", { duration: 7000 })
     }
   }
 
@@ -210,7 +209,7 @@ export default function AccountSettings() {
           opened={formModalOpened}
           onClose={closeFormModal}
           centered
-          size={"xl"}
+          size={"2xl"}
           radius={"lg"}
           overlayProps={{
             backgroundOpacity: 0.55,

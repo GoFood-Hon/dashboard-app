@@ -24,11 +24,6 @@ export default function BranchesSettings() {
               <div className="flex flex-row gap-x-3 items-center">
                 <h1 className="text-white-200 text-2xl font-semibold">Sucursales</h1>
               </div>
-              <div>
-                <Breadcrumbs>
-                  <BreadCrumbNavigation location={location} />
-                </Breadcrumbs>
-              </div>
             </div>
           </section>
           <SettingsCard title="Información general" iconName="warehouse"></SettingsCard>

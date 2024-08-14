@@ -23,8 +23,6 @@ export default function EditMenuScreen({ itemDetails, close }) {
     defaultValues: itemDetails
   })
 
-  console.log(itemDetails)
-
   const dispatch = useDispatch()
   const user = useSelector((state) => state.user.value)
 
@@ -108,7 +106,7 @@ export default function EditMenuScreen({ itemDetails, close }) {
       <section>
         <div className="flex flex-row justify-between items-center pb-6 flex-wrap xs:gap-3">
           <div className="flex flex-row gap-x-3 items-center">
-            <h1 className="text-white-200 md:text-2xl font-semibold">Editar Menu</h1>
+            <h1 className="text-white-200 md:text-2xl font-semibold">Editar menú</h1>
           </div>
         </div>
       </section>
@@ -136,8 +134,8 @@ export default function EditMenuScreen({ itemDetails, close }) {
               }}
             />
             <Button
-              text={"Guardar menu"}
-              className="flex h-10 w-full items-center justify-center px-4 rounded-md shadow-sm transition-all duration-700 focus:outline-none text-xs bg-sky-950 text-slate-50"
+              text={"Actualizar"}
+              className="flex h-10 items-center justify-center px-4 rounded-md shadow-sm transition-all duration-700 focus:outline-none text-xs bg-sky-950 text-slate-50"
             />
           </div>
         </div>

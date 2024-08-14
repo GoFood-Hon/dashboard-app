@@ -90,7 +90,6 @@ export const EditAdminUser = ({ close, details, adminId }) => {
               text={"Descartar"}
               className={"text-xs border border-red-400 text-red-400 bg-white"}
               onClick={() => {
-                toast.success("Información eliminada")
                 navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Restaurants.path)
               }}
             />

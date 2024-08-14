@@ -120,12 +120,7 @@ export default function NewMenu() {
       <form onSubmit={handleSubmit(onSubmit)}>
         <section>
           <div className="flex flex-row justify-between items-center pb-6 flex-wrap xs:gap-3">
-            <BackButton title="Nuevo menu" />
-            <div>
-              <Breadcrumbs>
-                <BreadCrumbNavigation location={location} />
-              </Breadcrumbs>
-            </div>
+            <BackButton title="Nuevo menú" />
           </div>
         </section>
         <section>
@@ -147,13 +142,12 @@ export default function NewMenu() {
                 className={"text-xs border border-red-400 text-red-400 bg-white"}
                 onClick={() => {
                   reset()
-                  toast.success("Información eliminada")
                   navigate(NAVIGATION_ROUTES_RES_ADMIN.Menu.path)
                 }}
               />
               <Button
-                text={"Guardar menu"}
-                className="flex h-10 w-full items-center justify-center px-4 rounded-md shadow-sm transition-all duration-700 focus:outline-none text-xs bg-sky-950 text-slate-50"
+                text={"Guardar"}
+                className="flex h-10 items-center justify-center px-4 rounded-md shadow-sm transition-all duration-700 focus:outline-none text-xs bg-sky-950 text-slate-50"
               />
             </div>
           </div>

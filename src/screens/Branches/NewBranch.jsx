@@ -141,11 +141,6 @@ export default function NewBranch() {
         <section>
           <div className="flex flex-row justify-between items-center pb-6 flex-wrap xs:gap-3">
             <BackButton title="Nueva sucursal" />
-            <div>
-              <Breadcrumbs>
-                <BreadCrumbNavigation location={location} />
-              </Breadcrumbs>
-            </div>
           </div>
         </section>
         <section>
@@ -168,13 +163,12 @@ export default function NewBranch() {
                 onClick={() => {
                   reset()
                   localStorage.removeItem("draft")
-                  toast.success("Información eliminada")
                   navigate(NAVIGATION_ROUTES_RES_ADMIN.Menu.submenu.Dishes.path)
                 }}
               />
               <Button
-                text={"Guardar sucursal"}
-                className="flex h-10 w-full items-center justify-center px-4 rounded-md shadow-sm transition-all duration-700 focus:outline-none text-xs bg-sky-950 text-slate-50"
+                text={"Guardar"}
+                className="flex h-10 items-center justify-center px-4 rounded-md shadow-sm transition-all duration-700 focus:outline-none text-xs bg-sky-950 text-slate-50"
               />
             </div>
           </div>

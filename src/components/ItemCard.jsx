@@ -7,7 +7,7 @@ import { getFormattedHNL } from "../utils"
 import { colors } from "../theme/colors"
 
 export default function ItemCard({ item, cardsSelected, handleChangeSelected, handleClick }) {
-  const { id, isActive, active, name, images, price, isUserSearch, isUserLove, isPromotion } = item
+  const { id, isActive, active, name, images, price, isUserSearch, isUserLove, isPromotion, description } = item
 
   const checked = cardsSelected.includes(id)
 
@@ -16,7 +16,7 @@ export default function ItemCard({ item, cardsSelected, handleChangeSelected, ha
       className={`w-full h-full px-6 py-3 rounded-2xl border border-blue-100 flex-col justify-start items-center inline-flex `}
       style={{ backgroundColor: `${checked ? colors.selected_card : colors.light_bg_child}` }}>
       <div className="flex flex-row justify-end w-full">
-        <Checkbox color={colors.primary_button} checked={checked} size="sm" onChange={() => handleChangeSelected(id)} />
+        <Checkbox checked={checked} size="sm" onChange={() => handleChangeSelected(id)} />
       </div>
       <div onClick={() => handleClick(id)} className="cursor-pointer w-full flex flex-col items-center justify-between h-full">
         {isActive || active ? (

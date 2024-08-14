@@ -116,11 +116,6 @@ export const NewPlan = () => {
         <section>
           <div className="flex flex-row justify-between items-center pb-6 flex-wrap xs:gap-3">
             <BackButton title="Nuevo plan" />
-            <div>
-              <Breadcrumbs>
-                <BreadCrumbNavigation location={location} />
-              </Breadcrumbs>
-            </div>
           </div>
         </section>
         <section>
@@ -142,7 +137,6 @@ export const NewPlan = () => {
                 className={"text-xs border border-red-400 text-red-400 bg-white"}
                 onClick={() => {
                   reset()
-                  toast.success("Información eliminada")
                   navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Plans.path)
                 }}
               />

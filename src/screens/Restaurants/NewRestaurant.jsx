@@ -30,6 +30,8 @@ export const NewRestaurant = () => {
   const [isDataCleared, setIsDataCleared] = useState(false)
 
   const onSubmit = async (data) => {
+    console.log(data)
+
     try {
       const formData = new FormData()
 
@@ -122,12 +124,7 @@ export const NewRestaurant = () => {
       <form onSubmit={handleSubmit(onSubmit)}>
         <section>
           <div className="flex flex-row justify-between items-center pb-6 flex-wrap xs:gap-3">
-            <BackButton title="Nuevo Restaurante" />
-            <div>
-              <Breadcrumbs>
-                <BreadCrumbNavigation location={location} />
-              </Breadcrumbs>
-            </div>
+            <BackButton title="Nuevo restaurante" />
           </div>
         </section>
         <section>
@@ -148,13 +145,12 @@ export const NewRestaurant = () => {
                 text={"Descartar"}
                 className={"text-xs border border-red-400 text-red-400 bg-white"}
                 onClick={() => {
-                  toast.success("Información eliminada")
                   navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Restaurants.path)
                 }}
               />
               <Button
-                text={"Guardar restaurante"}
-                className="flex h-10 w-full items-center justify-center px-4 rounded-md shadow-sm transition-all duration-700 focus:outline-none text-xs bg-sky-950 text-slate-50"
+                text={"Guardar"}
+                className="flex h-10 items-center justify-center px-4 rounded-md shadow-sm transition-all duration-700 focus:outline-none text-xs bg-sky-950 text-slate-50"
               />
             </div>
           </div>

@@ -166,7 +166,6 @@ export const PromotionForm = ({ offerData }) => {
       setFileInformation(file)
       setImages(acceptedFiles)
       setValue("files", acceptedFiles)
-      toast.success("Archivos aceptados 👍", { duration: 7000 })
     }
   }
 

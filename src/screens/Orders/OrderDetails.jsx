@@ -140,11 +140,6 @@ export const OrderDetails = () => {
           <div className="flex flex-row gap-x-3 items-center">
             <BackButton title="Pedidos" />
           </div>
-          <div>
-            <Breadcrumbs>
-              <BreadCrumbNavigation location={location} dynamicRoute={orderDetails?.id} />
-            </Breadcrumbs>
-          </div>
         </div>
       </section>
 
@@ -363,7 +358,7 @@ export const OrderDetails = () => {
           opened={orderDetailModalOpened}
           onClose={closeOrderDetailModal}
           centered
-          size={"630px"}
+          size={"2xl"}
           radius={"lg"}
           overlayProps={{
             backgroundOpacity: 0.55,

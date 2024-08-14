@@ -2,11 +2,11 @@ import React, { useEffect, useState } from "react"
 import BaseLayout from "../../components/BaseLayout"
 import { useLocation, useParams } from "react-router-dom"
 import { Breadcrumbs, Card, Grid, Image, Modal } from "@mantine/core"
-import { IconCamera } from "@tabler/icons-react"
+import { IconCamera, IconEdit } from "@tabler/icons-react"
 import { useDisclosure } from "@mantine/hooks"
-import { Map, Marker } from "react-map-gl"
+import { Map, Marker, GeolocateControl } from "react-map-gl"
 import { useDispatch, useSelector } from "react-redux"
-
+import "mapbox-gl/dist/mapbox-gl.css"
 import { setError } from "../../store/features/complementsSlice"
 import BreadCrumbNavigation from "../../components/BreadCrumbNavigation"
 import branchesApi from "../../api/branchesApi"
@@ -19,6 +19,26 @@ import { EditBranch } from "./EditBranch"
 export default function BranchesDetails() {
   const { branchId } = useParams()
   const user = useSelector((state) => state.user.value.role)
+
+  const [markerPosition, setMarkerPosition] = useState(null)
+  const [errorLocalizacion, setErrorLocalizacion] = useState(false)
+  const [lng, setLng] = useState(0)
+  const [lat, setLat] = useState(0)
+
+  const handleMapClick = (event) => {
+    const { lngLat } = event
+    setLng(lngLat.lng)
+    setLat(lngLat.lat)
+    setMarkerPosition({ longitude: lngLat.lng, latitude: lngLat.lat })
+    setValue("geolocation", [lngLat.lng, lngLat.lat])
+    setErrorLocalizacion(false)
+  }
+
+  const handleMapInput = () => {
+    setErrorLocalizacion(false)
+    setMarkerPosition({ longitude: lng, latitude: lat })
+    setValue("geolocation", [lng, lat])
+  }
 
   const location = useLocation()
   const dispatch = useDispatch()
@@ -60,6 +80,8 @@ export default function BranchesDetails() {
       }
     }
 
+    console.log(details)
+
     fetchData()
   }, [closeFormModal, formModalOpened])
 
@@ -70,122 +92,115 @@ export default function BranchesDetails() {
       <section>
         <div className="flex flex-row justify-between items-center pb-6">
           <BackButton title={details?.name} />
-          <div>
-            <Breadcrumbs>
-              <BreadCrumbNavigation location={location} dynamicRoute={details?.name} />
-            </Breadcrumbs>
-          </div>
         </div>
       </section>
-      <section>
+      <section className="bg-white">
         <div className="flex flex-row w-full flex-wrap gap-2 xl:flex-nowrap">
-          <section className="w-full xl:w-9/12 2xl:w-10/12 border border-blue-100 rounded-lg">
-            <Card padding="lg" radius="md">
-              <Card.Section>
-                <div className="relative">
-                  <Image
-                    src={details?.images?.[0]?.location}
-                    h={"240px"}
-                    w={"100%"}
-                    fit="contain"
-                    fallbackSrc="https://placehold.co/600x400?text=Imagen+no+disponible"
-                  />
-                  <div
-                    className="w-[34px] h-[34px] bg-sky-950 rounded-full absolute top-[190px] left-[20px] flex items-center justify-center cursor-pointer"
-                    onClick={() => {
-                      openImageModal()
-                    }}>
-                    <IconCamera color="white" size={18} />
+          <section className="w-full border border-blue-100 rounded-lg">
+            <div className="relative mt-2">
+              <Image
+                src={details?.images?.[0]?.location}
+                h={"300px"}
+                fit="contain"
+                fallbackSrc="https://placehold.co/600x400?text=Imagen+no+disponible"
+              />
+              <div
+                className="w-[34px] h-[34px] bg-sky-950 rounded-full absolute top-2 left-[20px] flex items-center justify-center cursor-pointer"
+                onClick={() => {
+                  openImageModal()
+                }}>
+                <IconCamera color="white" size={18} />
+              </div>
+              {user.role !== APP_ROLES.branchAdmin && user.role !== APP_ROLES.cashierUser ? (
+                <div
+                  className="w-[34px] h-[34px] bg-sky-950 rounded-full absolute top-2 right-[20px] flex items-center justify-center cursor-pointer"
+                  onClick={() => {
+                    openFormModal()
+                  }}>
+                  <IconEdit color="white" size={18} />
+                </div>
+              ) : null}
+            </div>
+            <section>
+              <div className="p-5 bg-white flex md:items-center lg:items-start flex-col">
+                <div className="text-sky-950 text-xl font-bold pb-5 leading-snug">Información general</div>
+                <div className="w-[125px] h-px bg-blue-100 sm:w-full" />
+                <div className="flex justify-between w-full px-2 py-4">
+                  <div>
+                    <div className="text-sky-950 text-sm font-medium leading-snug my-2">Dirección</div>
+                    <div className="text-sky-950 text-sm font-bold leading-snug pb-2">{details?.address}</div>
+
+                    <div className="text-sky-950 text-sm font-medium leading-snug my-2">Ciudad</div>
+                    <div className="text-sky-950 text-sm font-bold leading-snug mb-2">{details?.city}</div>
+                    <div className="text-sky-950 text-sm font-medium leading-snug my-2">Departamento</div>
+                    <div className="text-sky-950 text-sm font-bold leading-snug mb-2">{details?.state}</div>
+                  </div>
+                  <div>
+                    <div className="text-sky-950 text-sm font-medium py-2 leading-snug">Correo</div>
+                    <div className="text-sky-950 text-sm font-bold leading-snug pb-2">
+                      {details?.email || "Sin correo asociado"}
+                    </div>
+                    <div className="text-sky-950 text-sm font-medium py-2 leading-snug">Teléfono</div>
+                    <div className="text-sky-950 text-sm font-bold leading-snug pb-4">{details?.phoneNumber}</div>
                   </div>
                 </div>
-              </Card.Section>
-              <section>
-                <Grid>
-                  <Grid.Col span={{ base: 12, md: 2, lg: 2 }}>
-                    <div className="p-5 bg-white flex md:items-center lg:items-start flex-col">
-                      <span className="text-sky-950 font-bold pt-10 pb-5 text-left text-2xl">{details?.name}</span>
-                      <div className="text-sky-950 text-sm font-medium pb-5 leading-snug">Información general</div>
-                      <div className="w-[125px] h-px bg-blue-100 sm:w-full" />
-                      <div className="text-sky-950 text-sm font-medium py-2 leading-snug">Correo</div>
-                      <div className="text-sky-950 text-sm font-bold leading-snug pb-2">
-                        {details?.email || "Sin correo asociado"}
-                      </div>
-                      <div className="text-sky-950 text-sm font-medium py-2 leading-snug">Teléfono</div>
-                      <div className="text-sky-950 text-sm font-bold leading-snug pb-4">{details?.phoneNumber}</div>
-                      <div className="w-[125px] h-px bg-blue-100 sm:w-full" />
-                      <div className="text-sky-950 text-sm font-medium leading-snug my-2">Dirección</div>
-                      <div className="w-[125px] h-px bg-blue-100 sm:w-full" />
-                      <div className="text-sky-950 text-sm font-bold leading-snug py-3">{details?.address}</div>
-
-                      <div className="text-sky-950 text-sm font-medium leading-snug my-2">Ciudad</div>
-                      <div className="text-sky-950 text-sm font-bold leading-snug mb-2">{details?.city}</div>
-                      <div className="text-sky-950 text-sm font-medium leading-snug my-2">Departamento</div>
-                      <div className="text-sky-950 text-sm font-bold leading-snug mb-2">{details?.state}</div>
+                <div className="w-[125px] h-px bg-blue-100 sm:w-full" />
+                <div className="flex flex-col justify-between w-full py-4 space-y-4">
+                  <span className="text-sky-950 text-base font-bold leading-normal">Ubicación</span>
+                  <div className="h-72 relative">
+                    <Map
+                      initialViewState={{
+                        longitude: `${import.meta.env.VITE_MAPBOX_LNG_DEFAULT}`,
+                        latitude: `${import.meta.env.VITE_MAPBOX_LAT_DEFAULT}`,
+                        zoom: 10
+                      }}
+                      mapStyle={import.meta.env.VITE_MAPBOX_STYLE_URL}
+                      mapboxAccessToken={import.meta.env.VITE_MAPBOX_ACCESS_TOKEN}
+                      onClick={"handleMapClick"}>
+                      {markerPosition && <Marker {...markerPosition} longitude={lng} latitude={lat} color="red" />}
+                      <GeolocateControl
+                        positionOptions={{ enableHighAccuracy: true }}
+                        trackUserLocation={true}
+                        onGeolocate={(position) => {
+                          setLng(position.coords.longitude)
+                          setLat(position.coords.latitude)
+                          handleMapInput()
+                        }}
+                      />
+                    </Map>
+                  </div>
+                </div>
+                <div className="w-[125px] h-px bg-blue-100 sm:w-full" />
+                <div className="flex flex-col justify-between w-full mt-5">
+                  <span className="text-sky-950 text-base font-bold leading-normal">Horario</span>
+                  {details?.alwaysOpen ? (
+                    <div className="flex py-2 bg-green-500 text-white text-lg font-bold rounded-lg px-4">Siempre Abierto</div>
+                  ) : (
+                    <div className="container mx-auto mt-8">
+                      <table className="table-auto border w-full">
+                        <thead>
+                          <tr>
+                            <th className="px-4 py-2 border">Día</th>
+                            <th className="px-4 py-2 border">Apertura</th>
+                            <th className="px-4 py-2 border">Cierre</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {details?.schedule?.map((day, index) => (
+                            <tr key={index} className={todayIndex === index ? "bg-blue-100" : ""}>
+                              <td className="px-4 py-2 border">{day.day}</td>
+                              <td className="px-4 py-2 border">{day.openingTime ?? "Cerrado"}</td>
+                              <td className="px-4 py-2 border">{day.closingTime ?? "Cerrado"}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
                     </div>
-                  </Grid.Col>
-                  <Grid.Col span={{ base: 12, md: 10, lg: 10 }}>
-                    <div className="flex w-full flex-col">
-                      <div className="flex flex-row justify-between w-full">
-                        <p />
-                        {user.role !== APP_ROLES.branchAdmin && user.role !== APP_ROLES.cashierUser ? (
-                          <a
-                            className="text-blue-600 text-base font-normal leading-normal cursor-pointer self-center"
-                            onClick={() => {
-                              openFormModal()
-                            }}>
-                            Editar
-                          </a>
-                        ) : null}
-                      </div>
-                      <div className="flex flex-col justify-between w-full h-96 py-4">
-                        <span className="text-sky-950 text-base font-bold leading-normal pb-4">Ubicación</span>
-                        
-                      </div>
-
-                      <div className="flex flex-col justify-between mt-4">
-                        <span className="text-sky-950 text-base font-bold leading-normal mb-4">Horario</span>
-
-                        {details?.alwaysOpen ? (
-                          <div className="flex py-2 bg-green-500 text-white text-lg font-bold rounded-lg px-4">
-                            Siempre Abierto
-                          </div>
-                        ) : (
-                          <div className="container mx-auto mt-8">
-                            <table className="table-auto border w-full">
-                              <thead>
-                                <tr>
-                                  <th className="px-4 py-2 border">Día</th>
-                                  <th className="px-4 py-2 border">Apertura</th>
-                                  <th className="px-4 py-2 border">Cierre</th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                {details?.schedule?.map((day, index) => (
-                                  <tr key={index} className={todayIndex === index ? "bg-blue-100" : ""}>
-                                    <td className="px-4 py-2 border">{day.day}</td>
-                                    <td className="px-4 py-2 border">{day.openingTime ?? "Cerrado"}</td>
-                                    <td className="px-4 py-2 border">{day.closingTime ?? "Cerrado"}</td>
-                                  </tr>
-                                ))}
-                              </tbody>
-                            </table>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  </Grid.Col>
-                </Grid>
-              </section>
-            </Card>
-          </section>
-          <section className="w-full xl:w-3/12 xl:pl-4 2xl:w-2/12">
-            {/*  <Grid grow>
-              {dashboardCards.map((item, key) => (
-                <Grid.Col span={{ lg: 1 }} key={key}>
-                  <DashboardCard gutter={{ base: 5, xs: "md", md: "xl", xl: 50 }} data={item} />
-                </Grid.Col>
-              ))}
-            </Grid> */}
+                  )}
+                </div>
+              </div>
+              <div className="flex w-full flex-col"></div>
+            </section>
           </section>
         </div>
       </section>
@@ -195,7 +210,7 @@ export default function BranchesDetails() {
           onClose={closeImageModal}
           centered
           size={"xl"}
-          radius={"lg"}
+          radius={"md"}
           overlayProps={{
             backgroundOpacity: 0.55,
             blur: 3
@@ -205,7 +220,7 @@ export default function BranchesDetails() {
             w="full"
             fit="contain"
             src={details?.images?.[0]?.location}
-            radius={"xl"}
+            radius={"md"}
             fallbackSrc="https://placehold.co/600x400?text=Imagen+no+disponible"
           />
         </Modal>
@@ -213,7 +228,7 @@ export default function BranchesDetails() {
           opened={formModalOpened}
           onClose={closeFormModal}
           centered
-          size={"xl"}
+          size={"2xl"}
           radius={"lg"}
           overlayProps={{
             backgroundOpacity: 0.55,

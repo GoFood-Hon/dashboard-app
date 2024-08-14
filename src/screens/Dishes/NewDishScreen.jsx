@@ -131,11 +131,6 @@ export default function NewDish() {
         <section>
           <div className="xs:gap-3 flex flex-row flex-wrap items-center justify-between pb-6">
             <BackButton title="Nuevo platillo" />
-            <div>
-              <Breadcrumbs>
-                <BreadCrumbNavigation location={location} />
-              </Breadcrumbs>
-            </div>
           </div>
         </section>
         <section>
@@ -158,13 +153,12 @@ export default function NewDish() {
                 onClick={() => {
                   reset()
                   localStorage.removeItem("draft")
-                  toast.success("Información eliminada")
                   navigate(NAVIGATION_ROUTES_RES_ADMIN.Menu.submenu.Dishes.path)
                 }}
               />
               <Button
-                text={"Guardar platillo"}
-                className="flex h-10 w-full items-center justify-center rounded-md bg-sky-950 px-4 text-xs text-slate-50 shadow-sm transition-all duration-700 focus:outline-none"
+                text={"Guardar"}
+                className="flex h-10 items-center justify-center rounded-md bg-sky-950 px-4 text-xs text-slate-50 shadow-sm transition-all duration-700 focus:outline-none"
               />
             </div>
           </div>

@@ -22,6 +22,7 @@ import { Icon } from "../../components/Icon"
 import FilterPopover from "../../components/FilterPopover"
 import BackButton from "./components/BackButton"
 import { APP_ROLES } from "../../utils/constants"
+import { getFormattedHNL } from "../../utils"
 
 export default function Dishes() {
   const navigate = useNavigate()
@@ -163,11 +164,22 @@ export default function Dishes() {
       <section>
         <div className="flex flex-row justify-between items-center pb-6">
           <BackButton title="Platillos" />
-          <Button
-            text={"Nuevo"}
-            className={`text-white text-md px-3 py-2 bg-primary_button mb-0 ${user.role !== APP_ROLES.branchAdmin && user.role !== APP_ROLES.cashierUser ? "" : "hidden"}`}
-            onClick={handleNewItem}
-          />
+          <div className="flex flex-row w-full justify-end items-center">
+            <div className="flex flex-row mr-4">
+              <span className="text-sky-950 text-base font-bold leading-normal">{page === 1 ? 1 : (page - 1) * limit + 1}</span>
+              <span className="text-zinc-500 text-base font-bold leading-normal">-</span>
+              <span className="text-sky-950 text-base font-bold leading-normal">
+                {page === 1 ? limit : Math.min(page * limit, totalItems)}
+              </span>
+              <span className="text-zinc-500 text-base font-medium leading-normal px-1"> de </span>
+              <span className="text-sky-950 text-base font-bold leading-normal">{totalItems} platillos</span>
+            </div>
+            <Button
+              text={"Nuevo"}
+              className={`text-white text-md px-3 py-2 bg-primary_button mb-0 ${user.role !== APP_ROLES.branchAdmin && user.role !== APP_ROLES.cashierUser ? "" : "hidden"}`}
+              onClick={handleNewItem}
+            />
+          </div>
         </div>
       </section>
       <section>
@@ -187,27 +199,9 @@ export default function Dishes() {
               />
             }
           /> */}
-          <div className="flex flex-row w-full justify-end items-center">
-            <div className="flex flex-row mr-4">
-              <span className="text-sky-950 text-base font-bold leading-normal">{page === 1 ? 1 : (page - 1) * limit + 1}</span>
-              <span className="text-zinc-500 text-base font-bold leading-normal">-</span>
-              <span className="text-sky-950 text-base font-bold leading-normal">
-                {page === 1 ? limit : Math.min(page * limit, totalItems)}
-              </span>
-              <span className="text-zinc-500 text-base font-medium leading-normal px-1"> de </span>
-              <span className="text-sky-950 text-base font-bold leading-normal">{totalItems} platillos</span>
-            </div>
-            <div className="flex flex-row h-full items-center gap-3">
-              <span className="cursor-pointer" onClick={refreshPage}>
-                <Icon icon="reload" size={20} />
-              </span>
-              {/*  <FilterPopover onFiltersChange={onFiltersChange} refreshPage={refreshPage} /> */}
-              {/*   <SortPopover onFiltersChange={onFiltersChange} refreshPage={refreshPage} /> */}
-            </div>
-          </div>
         </div>
       </section>
-      <section className="my-6 w-full">
+      <section className="w-full">
         {status === "loading" ? (
           <div className="h-[calc(100vh-350px)] w-full flex justify-center items-center">
             <LoadingCircle />
@@ -216,14 +210,32 @@ export default function Dishes() {
           <Grid>
             {dishes?.map((item, key) => (
               <Grid.Col span={{ base: 12, md: 6, lg: 4 }} key={key}>
-                <ItemCard
+                {/* <ItemCard
                   item={item}
                   index={key}
                   navigation={true}
                   cardsSelected={cardsSelected}
                   handleChangeSelected={handleChangeSelected}
                   handleClick={handleClick}
-                />
+                /> */}
+                <div className="bg-white border border-gray-100 transition transform duration-700 shadow-lg p-4 rounded-lg relative">
+                  <div className="flex justify-end mb-4">
+                    <span className="border border-[#F37181] rounded-full text-[#F37181] text-sm poppins px-4 py-1 inline-block">
+                      {item.isActive || item.active ? "Habilitado" : "Deshabilitado"}
+                    </span>
+                  </div>
+                  <img className="w-48 h-48 mx-auto object-contain" src={item.images?.[0]?.location} alt="" />
+                  <div className="flex flex-col my-3 space-y-2">
+                    <h1 className="text-gray-900 poppins text-lg">{item.name}</h1>
+                    {/* <p className="text-gray-500 poppins text-sm">{description}</p> */}
+                    <h2 className="text-gray-900 poppins text-lg font-bold">{getFormattedHNL(item.price)}</h2>
+                    <button
+                      className="bg-primary_button text-white px-8 py-2 focus:outline-none poppins rounded-lg mt-24 transform transition duration-300"
+                      onClick={() => handleClick(item.id)}>
+                      Editar
+                    </button>
+                  </div>
+                </div>
               </Grid.Col>
             ))}
           </Grid>
@@ -232,7 +244,7 @@ export default function Dishes() {
         )}
         {status === "error" && <div>Error: {error}</div>}
       </section>
-      <section className="flex flex-row justify-between pb-32">
+      <section className="flex flex-row justify-between mt-5">
         <div />
         <Pagination
           total={totalControlBtn}
