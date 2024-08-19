@@ -1,8 +1,7 @@
 import Button from "../../components/Button"
 import { Accordion } from "@mantine/core"
-import React, { useRef, useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import { useForm } from "react-hook-form"
-
 import GeneralInformationForm from "./GeneralInformationForm"
 import PaymentForm from "./PaymentForm"
 import { useDispatch } from "react-redux"
@@ -11,12 +10,19 @@ import PreparationForm from "./PreparationForm"
 import { updateDish } from "../../store/features/dishesSlice"
 import { EditAdditionalForm } from "./EditAdditionalForm"
 import { convertToDecimal } from "../../utils"
+import dishesApi from "../../api/dishesApi"
+import { useNavigate, useParams } from "react-router-dom"
+import BaseLayout from "../../components/BaseLayout"
+import BackButton from "./components/BackButton"
+import { NAVIGATION_ROUTES_RES_ADMIN } from "../../routes"
 
-export default function EditDishScreen({ close, dishDetails }) {
+export default function EditDishScreen() {
   const dispatch = useDispatch()
-
+  const navigate = useNavigate()
+  const { dishId } = useParams()
   const [isDataCleared, setIsDataCleared] = useState(false)
-  const [additional, setAdditional] = useState(dishDetails.additionals)
+  const [dishDetails, setDishDetails] = useState({})
+  const [additional, setAdditional] = useState([])
 
   const containerRef = useRef(null)
   const {
@@ -27,8 +33,31 @@ export default function EditDishScreen({ close, dishDetails }) {
     reset,
     formState: { errors }
   } = useForm({
-    defaultValues: dishDetails
+    defaultValues: dishDetails || {}
   })
+
+  useEffect(() => {
+    const fetchDish = async () => {
+      try {
+        const response = await dishesApi.getDish(dishId)
+        const details = response?.data
+        setDishDetails(details)
+        if (details?.additionals) {
+          setAdditional(details.additionals)
+        }
+      } catch (error) {
+        dispatch(setError("Error fetching dishes"))
+        throw error
+      }
+    }
+    fetchDish()
+  }, [])
+
+  useEffect(() => {
+    if (Object.keys(dishDetails).length > 0) {
+      reset(dishDetails)
+    }
+  }, [dishDetails, reset])
 
   const accordionStructure = [
     {
@@ -85,54 +114,50 @@ export default function EditDishScreen({ close, dishDetails }) {
     }
 
     dispatch(updateDish({ dishData, dishId })).then((response) => {
-      if (response.payload) {
-        reset()
-        close()
+      if (!response.payload.status) {
+        navigate(NAVIGATION_ROUTES_RES_ADMIN.Menu.submenu.Dishes.path)
       }
     })
     close()
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="w-full h-full ">
-      <section>
-        <div className="flex flex-row justify-between items-center pb-6 flex-wrap xs:gap-3">
-          <div className="flex flex-row gap-x-3 items-center">
-            <h1 className="text-white-200 md:text-2xl font-semibold">Editar Platillo</h1>
+    <BaseLayout>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <section>
+          <div className="xs:gap-3 flex flex-row flex-wrap items-center justify-between pb-6">
+            <BackButton title="Editar platillo" />
           </div>
-        </div>
-      </section>
-      <section>
-        <Accordion
-          variant="separated"
-          multiple
-          defaultValue={["Información general", "Pagos"]}
-          classNames={{
-            label: "bg-white fill-white"
-          }}>
-          {items}
-        </Accordion>
-      </section>
-      <section ref={containerRef}>
-        <div className="w-full flex md:justify-end mt-6 md:gap-3 rounded-md bg-white px-8 py-5 border border-gray-200">
-          <div className="md:w-2/3 lg:1/3 sm:w-full flex flex-row justify-end gap-3 sm:flex-wrap md:flex-nowrap">
-            <Button
-              text={"Descartar"}
-              className={"text-xs border border-red-400 text-red-400 bg-white"}
-              onClick={() => {
-                reset()
-                close()
-                toast.success("Cambios descartados")
-              }}
-            />
-            <Button
-              text={"Actualizar"}
-              onClick={handleSubmit(onSubmit)}
-              className="flex h-10 items-center justify-center px-4 rounded-md shadow-sm transition-all duration-700 focus:outline-none text-xs bg-sky-950 text-slate-50"
-            />
+        </section>
+        <section>
+          <Accordion
+            variant="separated"
+            multiple
+            defaultValue={["Información general", "Pagos", "Preparación"]}
+            classNames={{
+              label: "bg-white fill-white"
+            }}>
+            {items}
+          </Accordion>
+        </section>
+        <section ref={containerRef}>
+          <div className="mt-6 flex w-full rounded-md border border-gray-200 bg-white px-8 py-5 md:justify-end md:gap-3">
+            <div className="lg:1/3 flex flex-row justify-end gap-3 sm:w-full sm:flex-wrap md:w-2/3 md:flex-nowrap">
+              <Button
+                text={"Descartar"}
+                className={"border border-red-400 bg-white text-xs text-red-400"}
+                onClick={() => {
+                  navigate(NAVIGATION_ROUTES_RES_ADMIN.Menu.submenu.Dishes.path)
+                }}
+              />
+              <Button
+                text={"Actualizar"}
+                className="flex h-10 items-center justify-center rounded-md bg-sky-950 px-4 text-xs text-slate-50 shadow-sm transition-all duration-700 focus:outline-none"
+              />
+            </div>
           </div>
-        </div>
-      </section>
-    </form>
+        </section>
+      </form>
+    </BaseLayout>
   )
 }

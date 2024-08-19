@@ -131,8 +131,9 @@ export default function EditMenuScreen() {
 
   const onSubmit = (data) => {
     dispatch(updateMenu({ data })).then((response) => {
-      reset()
-      navigate(NAVIGATION_ROUTES_RES_ADMIN.Menu.path)
+      if (!response.payload.status) {
+        navigate(NAVIGATION_ROUTES_RES_ADMIN.Menu.path)
+      }
     })
   }
 

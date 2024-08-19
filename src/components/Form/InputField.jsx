@@ -25,7 +25,7 @@ export default function InputField({
 
       <div className="flex items-center justify-center relative">
         {countryPrefix && (
-          <div className="text-sky-900 font-bold text-sm mr-2 mb-4 p-2 bg-light_selected_element rounded-md h-full min-w-[4rem]">
+          <div className="text-sky-900 font-bold text-sm mr-2 py-3 text-center border rounded-md h-full min-w-[4rem]">
             {countryPrefix}
           </div>
         )}
@@ -39,7 +39,10 @@ export default function InputField({
           {...register(name, rules)}
         />
         {type === "password" && (
-          <button type="button" className="focus:outline-none pl-1 absolute right-2 top-0 bottom-0" onClick={togglePasswordVisibility}>
+          <button
+            type="button"
+            className="focus:outline-none pl-1 absolute right-2 top-0 bottom-0"
+            onClick={togglePasswordVisibility}>
             <Icon icon="eye" size={20} />
           </button>
         )}

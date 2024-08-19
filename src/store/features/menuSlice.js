@@ -70,6 +70,8 @@ export const createMenu = createAsyncThunk("menus/createMenu", async ({ data, re
         color: "red",
         duration: 7000
       })
+
+      return response.error
     } else {
       const dishId = response.data.id
       const addImageResponse = await uploadMenuImage(dishId, data?.files?.[0])
@@ -81,21 +83,25 @@ export const createMenu = createAsyncThunk("menus/createMenu", async ({ data, re
           color: "red",
           duration: 7000
         })
+
+        return addImageResponse.error
       }
       const addComplementsResponse = await addComplements(dishId, data?.dishes)
 
       if (addComplementsResponse.error) {
         showNotification({
           title: "Error",
-          message: addImageResponse.message,
+          message: addComplementsResponse.message,
           color: "red",
           duration: 7000
         })
+
+        return addComplementsResponse.error
       }
 
       showNotification({
         title: "Creación exitosa",
-        message: 'El menú fue creado correctamente',
+        message: "El menú fue creado correctamente",
         color: "green",
         duration: 7000
       })
@@ -147,6 +153,8 @@ export const updateMenu = createAsyncThunk("menus/updateMenu", async ({ data, pr
         color: "red",
         duration: 7000
       })
+
+      return response.error
     } else {
       if (data?.files) {
         const imageResponse = await uploadMenuImage(data?.id, data?.files?.[0])
@@ -154,10 +162,12 @@ export const updateMenu = createAsyncThunk("menus/updateMenu", async ({ data, pr
         if (imageResponse.error) {
           showNotification({
             title: "Error",
-            message: response.message,
+            message: imageResponse.message,
             color: "red",
             duration: 7000
           })
+
+          return imageResponse.error
         }
       }
 
@@ -166,10 +176,12 @@ export const updateMenu = createAsyncThunk("menus/updateMenu", async ({ data, pr
         if (complementsResponse.error) {
           showNotification({
             title: "Error",
-            message: response.message,
+            message: complementsResponse.message,
             color: "red",
             duration: 7000
           })
+
+          return complementsResponse.error
         }
       }
 
@@ -179,6 +191,8 @@ export const updateMenu = createAsyncThunk("menus/updateMenu", async ({ data, pr
         color: "green",
         duration: 7000
       })
+
+      return response.data
     }
   } catch (error) {
     dispatch(setError("Error updating menu"))

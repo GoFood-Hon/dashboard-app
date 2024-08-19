@@ -92,6 +92,8 @@ export const createDish = createAsyncThunk("dishes/createDish", async ({ data, r
         color: "red",
         duration: 7000
       })
+
+      return response.error
     } else {
       /**
        * Add images to the dish
@@ -107,6 +109,8 @@ export const createDish = createAsyncThunk("dishes/createDish", async ({ data, r
           color: "red",
           duration: 7000
         })
+
+        return addImageResponse.error
       }
 
       /**
@@ -192,6 +196,8 @@ export const updateDish = createAsyncThunk(
           color: "red",
           duration: 7000
         })
+
+        return response.error
       } else {
         if (propertyToUpdate !== "isActive" && dishData.files) {
           await uploadDishImage(dishData?.id, dishData?.files?.[0])
@@ -203,6 +209,8 @@ export const updateDish = createAsyncThunk(
           color: "green",
           duration: 7000
         })
+
+        return response.data
       }
       return response.data
     } catch (error) {

@@ -1,11 +1,11 @@
 import React, { useState } from "react"
 import { Button, Checkbox, Grid, Input } from "@mantine/core"
-import { IconPlus, IconX } from "@tabler/icons-react"
+import { IconPlus, IconX, IconArrowNarrowRight } from "@tabler/icons-react"
 import toast from "react-hot-toast"
-
 import { colors } from "../../theme/colors"
 import { convertToDecimal, getFormattedHNL } from "../../utils"
 import extrasApi from "../../api/extrasApi"
+import { showNotification } from "@mantine/notifications"
 
 export const EditAdditionalForm = ({ additional, setAdditional, dishDetails }) => {
   const [newAdditionalTitle, setNewAdditionalTitle] = useState("")
@@ -21,7 +21,12 @@ export const EditAdditionalForm = ({ additional, setAdditional, dishDetails }) =
 
   const handleNewCategory = () => {
     if (newAdditionalTitle === "") {
-      toast.error("Complete todos los campos.")
+      showNotification({
+        title: "Error",
+        message: "Debes completar todos los campos",
+        color: "red",
+        duration: 7000
+      })
     } else {
       const newItemObject = {
         name: newAdditionalTitle,
@@ -55,7 +60,6 @@ export const EditAdditionalForm = ({ additional, setAdditional, dishDetails }) =
     try {
       const response = await extrasApi.deleteExtra(additionalId)
       if (response.status === 204) {
-        toast.success("Adicional eliminado exitosamente!")
         const updatedCategories = [...additional]
         updatedCategories.splice(index, 1)
         setAdditional(updatedCategories)
@@ -63,7 +67,12 @@ export const EditAdditionalForm = ({ additional, setAdditional, dishDetails }) =
         throw new Error("Error ocurrido durante la eliminación del adicional.")
       }
     } catch (error) {
-      toast.error("Se produjo un error al intentar eliminar el adicional. Inténtelo nuevamente.")
+      showNotification({
+        title: "Error",
+        message: "Se produjo un error al intentar eliminar el adicional. Inténtelo nuevamente",
+        color: "red",
+        duration: 7000
+      })
     }
   }
 
@@ -188,23 +197,26 @@ export const EditAdditionalForm = ({ additional, setAdditional, dishDetails }) =
                 <li
                   key={index}
                   className="p-2 my-4 bg-white rounded-lg border border-blue-100 flex flex-row justify-between items-center">
-                  <article>
-                    <h3 className="font-bold text-lg">
-                      {category.name} {category.requiredMinimum ? `(min: ${category.requiredMinimum})` : null}:
-                    </h3>
+                  <article className="w-full">
+                    <div className="flex items-center justify-between mb-1">
+                      <h3 className="font-bold text-md">
+                        {category.name} {category.requiredMinimum ? `(min: ${category.requiredMinimum})` : null}:
+                      </h3>
+                      <span onClick={() => handleDeleteAdditional(index, category)} className="cursor-pointer">
+                        <IconX size={20} color="red" />
+                      </span>
+                    </div>
 
-                    <ul>
+                    <ul className="space-y-2">
                       {category?.additionalsDetails?.map((item, i) => (
-                        <li key={i} className="flex flex-row gap-6">
+                        <li key={i} className="flex flex-row gap-1 items-center">
                           <span>{item.name}</span>
-                          <span className="italic">{getFormattedHNL(item.price)} Lps</span>
+                          <IconArrowNarrowRight />
+                          <span className="italic">{item.price == "0.00" ? "Gratis" : getFormattedHNL(item.price)}</span>
                         </li>
                       ))}
                     </ul>
                   </article>
-                  <span onClick={() => handleDeleteAdditional(index, category)} className="cursor-pointer">
-                    <IconX />
-                  </span>
                 </li>
               ))
             ) : (

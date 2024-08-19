@@ -60,6 +60,7 @@ import { PlanDetails } from "./screens/Plans/PlanDetails"
 import { OrderHistory } from "./screens/Orders/OrderHistory"
 import { NotificationProvider } from "./components/NotificationProvider"
 import EditMenuScreen from "./screens/Menu/EditMenuScreen"
+import EditDishScreen from "./screens/Dishes/EditDishScreen"
 
 function App() {
   const userRole = useSelector((state) => state.user.value.role)
@@ -113,7 +114,7 @@ function App() {
 
             <Route path={NAVIGATION_ROUTES_RES_ADMIN.Menu.submenu.Dishes.path} element={<Dishes />} />
 
-            <Route path={NAVIGATION_ROUTES_RES_ADMIN.Menu.submenu.Dishes.DishDetails.path} element={<DishDetails />} />
+            <Route path={NAVIGATION_ROUTES_RES_ADMIN.Menu.submenu.Dishes.DishDetails.path} element={<EditDishScreen />} />
 
             <Route path={NAVIGATION_ROUTES_RES_ADMIN.Menu.submenu.Dishes.NewDish.path} element={<NewDish />} />
 
