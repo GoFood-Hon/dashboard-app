@@ -59,6 +59,7 @@ import { NewPlan } from "./screens/Plans/NewPlan"
 import { PlanDetails } from "./screens/Plans/PlanDetails"
 import { OrderHistory } from "./screens/Orders/OrderHistory"
 import { NotificationProvider } from "./components/NotificationProvider"
+import EditMenuScreen from "./screens/Menu/EditMenuScreen"
 
 function App() {
   const userRole = useSelector((state) => state.user.value.role)
@@ -106,7 +107,7 @@ function App() {
 
             <Route path={NAVIGATION_ROUTES_RES_ADMIN.Menu.path} element={<Menu />} />
 
-            <Route path={NAVIGATION_ROUTES_RES_ADMIN.Menu.MenuDetails.path} element={<MenuDetails />} />
+            <Route path={NAVIGATION_ROUTES_RES_ADMIN.Menu.MenuDetails.path} element={<EditMenuScreen />} />
 
             <Route path={NAVIGATION_ROUTES_RES_ADMIN.Menu.NewMenu.path} element={<NewMenu />} />
 

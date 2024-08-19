@@ -65,7 +65,7 @@ export default function MenuTable({ refreshPage, items, handleDisableSelected, s
       },
 
       {
-        label: "MENU",
+        label: "Nombre",
         renderCell: (item) => item.name,
         sort: { sortKey: "MENU" }
       },
@@ -76,23 +76,23 @@ export default function MenuTable({ refreshPage, items, handleDisableSelected, s
         sort: { sortKey: "TYPE" }
       }, */
       {
-        label: "FECHA",
+        label: "Fecha",
         renderCell: (item) => formatDateDistanceToNow(item.createdAt),
 
         sort: { sortKey: "DATE" }
       },
       {
-        label: "PLATILLOS",
+        label: "N° de platillos",
         renderCell: (item) => item.dishesCount,
         sort: { sortKey: "DISHES" }
       },
       {
-        label: "ESTADO",
+        label: "Estado",
         renderCell: (item) => (item.isActive ? "Habilitado" : "Deshabilitado"),
         sort: { sortKey: "STATUS" }
       },
       {
-        label: "ACCIONES",
+        label: "Acciones",
         renderCell: (item) => {
           return (
             <span onClick={() => handleClick(item.id)}>
@@ -367,11 +367,11 @@ export default function MenuTable({ refreshPage, items, handleDisableSelected, s
 
   const customTheme = {
     Table: `
-      --data-table-library_grid-template-columns:  44px repeat(5, minmax(0, 1fr));
-
+      --data-table-library_grid-template-columns:  repeat(5, 1fr);
       margin: 16px 0px;
     `
   }
+  
 
   const theme = useTheme([mantineTheme, customTheme])
 
@@ -492,7 +492,7 @@ export default function MenuTable({ refreshPage, items, handleDisableSelected, s
         color={colors.primary_button}
       />
 
-      <Group position="right" mx={10}>
+      <Group position="left" mx={10}>
         <Pagination
           total={pagination.state.getTotalPages(modifiedNodes)}
           page={pagination.state.page + 1}

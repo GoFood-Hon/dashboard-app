@@ -64,7 +64,10 @@ export const createMenu = createAsyncThunk("menus/createMenu", async ({ data, re
     dispatch(fetchMenus())
 
     if (response.error) {
-      toast.error(`Fallo al crear el menu. Por favor intente de nuevo. ${response.message}`, {
+      showNotification({
+        title: "Error",
+        message: response.message,
+        color: "red",
         duration: 7000
       })
     } else {
@@ -72,19 +75,30 @@ export const createMenu = createAsyncThunk("menus/createMenu", async ({ data, re
       const addImageResponse = await uploadMenuImage(dishId, data?.files?.[0])
 
       if (addImageResponse.error) {
-        toast.error(`Fallo al subir la imagen. Por favor intente de nuevo. ${addImageResponse.message}`, {
+        showNotification({
+          title: "Error",
+          message: addImageResponse.message,
+          color: "red",
           duration: 7000
         })
       }
       const addComplementsResponse = await addComplements(dishId, data?.dishes)
 
       if (addComplementsResponse.error) {
-        toast.error(`Fallo al cargar los platillos. Por favor intente de nuevo. ${addImageResponse.message}`, {
+        showNotification({
+          title: "Error",
+          message: addImageResponse.message,
+          color: "red",
           duration: 7000
         })
       }
 
-      toast.success("Menu creado exitosamente", { duration: 7000 })
+      showNotification({
+        title: "Creación exitosa",
+        message: 'El menú fue creado correctamente',
+        color: "green",
+        duration: 7000
+      })
       return response.data
     }
   } catch (error) {
@@ -127,7 +141,10 @@ export const updateMenu = createAsyncThunk("menus/updateMenu", async ({ data, pr
     const response = await menuApi.updateMenu(formData, data.id)
 
     if (response.error) {
-      toast.error(`Fallo al actualizar el menu. Por favor intente de nuevo. ${response.message}`, {
+      showNotification({
+        title: "Error",
+        message: response.message,
+        color: "red",
         duration: 7000
       })
     } else {
@@ -135,7 +152,10 @@ export const updateMenu = createAsyncThunk("menus/updateMenu", async ({ data, pr
         const imageResponse = await uploadMenuImage(data?.id, data?.files?.[0])
 
         if (imageResponse.error) {
-          toast.error(`Fallo al subir la imagen. Por favor intente de nuevo. ${response.message}`, {
+          showNotification({
+            title: "Error",
+            message: response.message,
+            color: "red",
             duration: 7000
           })
         }
@@ -144,13 +164,19 @@ export const updateMenu = createAsyncThunk("menus/updateMenu", async ({ data, pr
       if (data.dishes) {
         const complementsResponse = await updateComplements(data.id, data.dishes)
         if (complementsResponse.error) {
-          toast.error(`Fallo al actualizar los platillos. Por favor intente de nuevo. ${response.message}`, {
+          showNotification({
+            title: "Error",
+            message: response.message,
+            color: "red",
             duration: 7000
           })
         }
       }
 
-      toast.success("Menu actualizado exitosamente", {
+      showNotification({
+        title: "Actualización exitosa",
+        message: "La información del menú se actualizó",
+        color: "green",
         duration: 7000
       })
     }

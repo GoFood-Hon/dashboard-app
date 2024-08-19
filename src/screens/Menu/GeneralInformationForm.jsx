@@ -50,24 +50,10 @@ export default function GeneralInformationForm({ register, errors, setValue, isD
     <Grid>
       <Grid.Col span={{ base: 12, md: 8, lg: 8 }}>
         <div className="w-full h-full items-center justify-center flex bg-white rounded-2xl border border-blue-100 p-4">
-          <div className="flex flex-col w-full">
+          <div className="flex flex-col w-full justify-evenly h-full">
             <InputField label="Nombre (Obligatorio)" name="name" register={register} errors={errors} className="text-black" />
 
             <InputTextAreaField label="Descripción (Obligatorio)" name="description" register={register} errors={errors} />
-
-            <div className="mt-3">
-              <InputSearchCombobox
-                label="Tipo de menu"
-                name={"type"}
-                placeholder="Buscar Menus"
-                emptyMessage="Sin categorías  "
-                items={menuType}
-                register={register}
-                errors={errors}
-                setValue={setValue}
-                color={colors.primary_button}
-              />
-            </div>
           </div>
         </div>
       </Grid.Col>
@@ -99,10 +85,10 @@ export default function GeneralInformationForm({ register, errors, setValue, isD
                 <div className="flex items-center flex-col">
                   <IconPhoto style={{ width: rem(52), height: rem(52), color: "var(--mantine-color-dimmed)" }} stroke={1.5} />
                   <Text size="xl" inline className="text-center">
-                    Seleccione una imagen destacada
+                    Seleccione una imagen
                   </Text>
                   <Text size="sm" c="dimmed" inline mt={7} className="text-center leading-10">
-                    Haga click o arrastre una imagen que sera usada junto con el menu
+                    Haga click o arrastre una imagen que será usada junto con el menú
                   </Text>
                 </div>
               </Group>

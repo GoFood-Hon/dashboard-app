@@ -214,21 +214,12 @@ export default function Dishes() {
           </div>
         ) : dishes && dishes.length > 0 ? (
           <Grid>
-            {dishes?.map((item, key) => (
-              <Grid.Col span={{ base: 12, md: 6, lg: 4 }} key={key}>
-                {/* <ItemCard
-                  item={item}
-                  index={key}
-                  navigation={true}
-                  cardsSelected={cardsSelected}
-                  handleChangeSelected={handleChangeSelected}
-                  handleClick={handleClick}
-                /> */}
+            {dishes.map((item, key) => (
+              <Grid.Col span={{ base: 12, md: 6, lg: 4, xl: 3}} key={key}>
                 <div className="bg-white border border-gray-100 transition transform duration-700 shadow-lg p-4 rounded-lg relative">
                   <img className="w-48 h-48 mx-auto object-contain" src={item.images?.[0]?.location} alt="" />
                   <div className="flex flex-col my-3 space-y-2">
                     <h1 className="text-gray-900 poppins text-lg">{item.name}</h1>
-
                     <h2 className="text-gray-900 poppins text-lg font-bold">{getFormattedHNL(item.price)}</h2>
                     <div className="flex items-center justify-between">
                       <Button

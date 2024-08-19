@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from "react"
 import { useLocation, useNavigate } from "react-router-dom"
-import { Breadcrumbs, Accordion } from "@mantine/core"
+import { Accordion } from "@mantine/core"
 import { useForm } from "react-hook-form"
 import { useDispatch, useSelector } from "react-redux"
 import { yupResolver } from "@hookform/resolvers/yup"
 import toast from "react-hot-toast"
-
-import BreadCrumbNavigation from "../../components/BreadCrumbNavigation"
 import GeneralInformationForm from "./GeneralInformationForm"
 import Button from "../../components/Button"
 import ComplementsForm from "../Dishes/ComplementsForm"

@@ -1,35 +1,39 @@
 import React, { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 import { useDispatch, useSelector } from "react-redux"
-import { useLocation, useNavigate } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import { Accordion } from "@mantine/core"
-import toast from "react-hot-toast"
-
+import BaseLayout from "../../components/BaseLayout"
+import BackButton from "../Dishes/components/BackButton"
 import GeneralInformationForm from "./GeneralInformationForm"
 import ComplementsForm from "../Dishes/ComplementsForm"
 import dishesApi from "../../api/dishesApi"
 import Button from "../../components/Button"
 import { updateMenu } from "../../store/features/menuSlice"
+import menuApi from "../../api/menuApi"
+import { NAVIGATION_ROUTES_RES_ADMIN } from "../../routes"
+import { showNotification } from "@mantine/notifications"
 
-export default function EditMenuScreen({ itemDetails, close }) {
+export default function EditMenuScreen() {
+  const { menuId } = useParams()
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+  const user = useSelector((state) => state.user.value)
+  const [menuDetails, setMenuDetails] = useState({})
+  const restaurant = useSelector((state) => state?.restaurant?.value)
+  const [isDataCleared, setIsDataCleared] = useState(false)
+  const [dishes, setDishes] = useState([])
+
   const {
     register,
     handleSubmit,
     setValue,
-    control,
     reset,
+    control,
     formState: { errors }
   } = useForm({
-    defaultValues: itemDetails
+    defaultValues: menuDetails || {}
   })
-
-  const dispatch = useDispatch()
-  const user = useSelector((state) => state.user.value)
-
-  const restaurant = useSelector((state) => state?.restaurant?.value)
-  const [isDataCleared, setIsDataCleared] = useState(false)
-
-  const [dishes, setDishes] = useState([])
 
   useEffect(() => {
     async function getDishes() {
@@ -41,12 +45,43 @@ export default function EditMenuScreen({ itemDetails, close }) {
 
         return response
       } catch (error) {
-        toast.error(`Hubo error obteniendo los extras, ${error}`)
+        showNotification({
+          title: "Error",
+          message: error,
+          color: "red",
+          duration: 7000
+        })
         throw error
       }
     }
     getDishes()
   }, [restaurant])
+
+  useEffect(() => {
+    const fetchMenu = async () => {
+      try {
+        const response = await menuApi.getMenuDetails({ menuId })
+
+        const menuDetails = response?.data
+        setMenuDetails(menuDetails)
+      } catch (error) {
+        showNotification({
+          title: "Error",
+          message: error,
+          color: "red",
+          duration: 7000
+        })
+        throw error
+      }
+    }
+    fetchMenu()
+  }, [menuId, reset])
+
+  useEffect(() => {
+    if (Object.keys(menuDetails).length > 0) {
+      reset(menuDetails)
+    }
+  }, [menuDetails, reset])
 
   const accordionStructure = [
     {
@@ -69,7 +104,8 @@ export default function EditMenuScreen({ itemDetails, close }) {
         <ComplementsForm
           setValue={setValue}
           isDataCleared={isDataCleared}
-          defaultMessage="Por favor seleccione platillos para este menu"
+          selectedDishes={menuDetails?.Dishes}
+          defaultMessage="Por favor seleccione platillos para este menú"
           itemsAvailableLabel="Platillos disponibles"
           data={dishes}
           name={"dishes"}
@@ -94,52 +130,50 @@ export default function EditMenuScreen({ itemDetails, close }) {
   ))
 
   const onSubmit = (data) => {
-    console.log(data)
     dispatch(updateMenu({ data })).then((response) => {
       reset()
-      close()
+      navigate(NAVIGATION_ROUTES_RES_ADMIN.Menu.path)
     })
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <section>
-        <div className="flex flex-row justify-between items-center pb-6 flex-wrap xs:gap-3">
-          <div className="flex flex-row gap-x-3 items-center">
-            <h1 className="text-white-200 md:text-2xl font-semibold">Editar menú</h1>
+    <BaseLayout>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <section>
+          <div className="flex flex-row justify-between items-center pb-6 flex-wrap xs:gap-3">
+            <BackButton title="Editar menú" />
           </div>
-        </div>
-      </section>
-      <section>
-        <Accordion
-          variant="separated"
-          multiple
-          defaultValue={["Información general", "Platillos"]}
-          classNames={{
-            label: "bg-white fill-white"
-          }}>
-          {items}
-        </Accordion>
-      </section>
-      <section>
-        <div className="w-full flex md:justify-end mt-6 md:gap-3 rounded-md bg-white px-8 py-5 border border-gray-200">
-          <div className="md:w-2/3 lg:1/3 sm:w-full flex flex-row justify-end gap-3 sm:flex-wrap md:flex-nowrap">
-            <Button
-              text={"Descartar"}
-              className={"text-xs border border-red-400 text-red-400 bg-white"}
-              onClick={() => {
-                reset()
-                close()
-                toast.success("Cambios descartados")
-              }}
-            />
-            <Button
-              text={"Actualizar"}
-              className="flex h-10 items-center justify-center px-4 rounded-md shadow-sm transition-all duration-700 focus:outline-none text-xs bg-sky-950 text-slate-50"
-            />
+        </section>
+        <section>
+          <Accordion
+            variant="separated"
+            multiple
+            defaultValue={["Información general", "Platillos"]}
+            classNames={{
+              label: "bg-white fill-white"
+            }}>
+            {items}
+          </Accordion>
+        </section>
+        <section>
+          <div className="w-full flex md:justify-end mt-6 md:gap-3 rounded-md bg-white px-8 py-5 border border-gray-200">
+            <div className="md:w-2/3 lg:1/3 sm:w-full flex flex-row justify-end gap-3 sm:flex-wrap md:flex-nowrap">
+              <Button
+                text={"Descartar"}
+                className={"text-xs border border-red-400 text-red-400 bg-white"}
+                onClick={() => {
+                  reset()
+                  navigate(NAVIGATION_ROUTES_RES_ADMIN.Menu.path)
+                }}
+              />
+              <Button
+                text={"Actualizar"}
+                className="flex h-10 items-center justify-center px-4 rounded-md shadow-sm transition-all duration-700 focus:outline-none text-xs bg-sky-950 text-slate-50"
+              />
+            </div>
           </div>
-        </div>
-      </section>
-    </form>
+        </section>
+      </form>
+    </BaseLayout>
   )
 }

@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react"
 import { Grid, Image, Text } from "@mantine/core"
 import { useSelector } from "react-redux"
-
 import { getFormattedHNL } from "../../utils"
 import { SortableList } from "./components"
 import LoadingCircle from "../../components/LoadingCircle"
@@ -69,7 +68,15 @@ const ComplementCard = ({ item, handleRemoveComplement }) => {
   )
 }
 
-export default function ComplementsForm({ setValue, isDataCleared, defaultMessage, itemsAvailableLabel, data, name }) {
+export default function ComplementsForm({
+  setValue,
+  isDataCleared,
+  defaultMessage,
+  itemsAvailableLabel,
+  data,
+  name,
+  selectedDishes
+}) {
   const status = useSelector(selectComplementsStatus)
   const error = useSelector(selectComplementsError)
 
@@ -77,8 +84,17 @@ export default function ComplementsForm({ setValue, isDataCleared, defaultMessag
   const [extras, setExtras] = useState([])
 
   useEffect(() => {
-    setExtras(data)
-  }, [data])
+    if (selectedDishes && Array.isArray(selectedDishes)) {
+      setAddedComplements(selectedDishes)
+    }
+  }, [selectedDishes, data])
+
+  useEffect(() => {
+    if (Array.isArray(selectedDishes)) {
+      const filteredExtras = data.filter((item) => !selectedDishes.some((selected) => selected.id === item.id))
+      setExtras(filteredExtras)
+    }
+  }, [data, selectedDishes])
 
   const updateComplementsValue = (complements) => {
     const complementIds = complements.map((complement) => complement.id)
@@ -127,22 +143,6 @@ export default function ComplementsForm({ setValue, isDataCleared, defaultMessag
       <Grid.Col span={{ base: 12, md: 5 }}>
         <div className="w-full h-full p-6 bg-white rounded-lg border border-blue-100">
           <span className="text-sm font-semibold ">{itemsAvailableLabel}</span>
-          <div className="my-2">
-            {/*  <Input
-              className="w-full"
-              placeholder="Buscar"
-              value={searchComplement}
-              onChange={(event) => setSearchComplement(event.currentTarget.value)}
-              rightSectionPointerEvents="all"
-              rightSection={
-                <CloseButton
-                  aria-label="Clear input"
-                  onClick={() => setSearchComplement("")}
-                  style={{ display: searchComplement ? undefined : "none" }}
-                />
-              }
-            /> */}
-          </div>
           <div className="w-full">
             {status === "loading" && (
               <div className="h-[calc(100vh-350px)] w-full flex justify-center items-center">
