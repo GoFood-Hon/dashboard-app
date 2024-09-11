@@ -9,9 +9,11 @@ import Button from "../../components/Button"
 import restaurantsApi from "../../api/restaurantApi"
 import { NAVIGATION_ROUTES_SUPER_ADMIN } from "../../routes"
 import { convertToDecimal } from "../../utils"
+import { LoaderComponent } from "../../components/LoaderComponent"
 
 export const EditRestaurant = ({ close, details, restaurantId }) => {
   const navigate = useNavigate()
+  const [isLoading, setIsLoading] = useState(false)
 
   const {
     register,
@@ -25,6 +27,7 @@ export const EditRestaurant = ({ close, details, restaurantId }) => {
   const [isDataCleared, setIsDataCleared] = useState(false)
 
   const onSubmit = async (data) => {
+    setIsLoading(true)
     try {
       const formData = new FormData()
       formData.append("name", data.name)
@@ -44,7 +47,7 @@ export const EditRestaurant = ({ close, details, restaurantId }) => {
       if (response.error) {
         toast.error(`No fue posible actualizar. ${response.message.split(":")[2].trim()}`, {
           duration: 7000,
-          position: 'bottom-right'
+          position: "bottom-right"
         })
       } else {
         const updatedRestaurantId = response?.data?.id
@@ -76,10 +79,12 @@ export const EditRestaurant = ({ close, details, restaurantId }) => {
           navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Restaurants.path)
         }
       }
+      setIsLoading(false)
     } catch (error) {
       toast.error(`Error. Por favor intente de nuevo. ${error}`, {
         duration: 7000
       })
+      setIsLoading(false)
     }
   }
 
@@ -137,10 +142,14 @@ export const EditRestaurant = ({ close, details, restaurantId }) => {
                 navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Restaurants.path)
               }}
             />
-            <Button
-              text={"Actualizar"}
-              className="flex h-10 items-center justify-center px-4 rounded-md shadow-sm transition-all duration-700 focus:outline-none text-xs bg-sky-950 text-slate-50"
-            />
+            {isLoading ? (
+              <LoaderComponent width={24} size={25} />
+            ) : (
+              <Button
+                text={"Actualizar"}
+                className="w-24 flex h-10 items-center justify-center rounded-md shadow-sm transition-all duration-700 focus:outline-none text-xs bg-sky-950 text-slate-50"
+              />
+            )}
           </div>
         </div>
       </section>

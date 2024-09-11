@@ -1,7 +1,6 @@
 import React, { useState } from "react"
-import { Button, Checkbox, Grid, Input } from "@mantine/core"
+import { MantineProvider, createTheme, Button, Checkbox, Grid, Input, ScrollArea } from "@mantine/core"
 import { IconPlus, IconX, IconArrowNarrowRight } from "@tabler/icons-react"
-import toast from "react-hot-toast"
 import { colors } from "../../theme/colors"
 import { convertToDecimal, getFormattedHNL } from "../../utils"
 import extrasApi from "../../api/extrasApi"
@@ -18,6 +17,10 @@ export const EditAdditionalForm = ({ additional, setAdditional, dishDetails }) =
       isFree: false
     }
   ])
+
+  const theme = createTheme({
+    cursorType: "pointer"
+  })
 
   const handleNewCategory = () => {
     if (newAdditionalTitle === "") {
@@ -111,16 +114,18 @@ export const EditAdditionalForm = ({ additional, setAdditional, dishDetails }) =
               onChange={(e) => setNewAdditionalTitle(e.target.value)}
               className="text-black"
             />
-            <Checkbox
-              mt={"md"}
-              labelPosition="left"
-              label={<div className="text-sky-950 text-sm font-bold leading-snug">¿Es requerido?</div>}
-              color={colors.primary_button}
-              checked={isRequired}
-              size="sm"
-              className="mb-4"
-              onChange={handleIsRequired}
-            />
+            <MantineProvider theme={theme}>
+              <Checkbox
+                mt={"md"}
+                labelPosition="left"
+                label={<div className="text-sky-950 text-sm font-bold leading-snug">¿Es requerido?</div>}
+                color={colors.primary_button}
+                checked={isRequired}
+                size="sm"
+                className="mb-4"
+                onChange={handleIsRequired}
+              />
+            </MantineProvider>
             {isRequired ? (
               <>
                 <span className="text-sm font-semibold w-full">Mínimo requerido</span>
@@ -136,33 +141,27 @@ export const EditAdditionalForm = ({ additional, setAdditional, dishDetails }) =
           <div className="p-2 my-4 bg-white rounded-lg border border-blue-100">
             {additionalItem?.map((item, index) => (
               <div key={index}>
-                <div className="flex flex-row w-full gap-4 my-2 items-center justify-center">
-                  <div className="w-2/5">
-                    <span className="text-sm font-semibold w-full">Nombre</span>
-                    <div>
-                      <Input
-                        name="name"
-                        value={item.name}
-                        onChange={(e) => handleInputChange(index, "name", e.target.value)}
-                        className="text-black"
-                      />
-                    </div>
-                  </div>
-                  <div className="w-2/5">
-                    <span className="text-sm font-semibold w-full">Precio</span>
-                    <div>
-                      <Input
-                        name="price"
-                        value={item.price}
-                        onChange={(e) => handleInputChange(index, "price", e.target.value)}
-                        className="text-black"
-                      />
-                    </div>
-                  </div>
+                <div className="flex w-full gap-2 my-2 items-center justify-between">
+                  <Input
+                    name="name"
+                    placeholder="Nombre"
+                    value={item.name}
+                    onChange={(e) => handleInputChange(index, "name", e.target.value)}
+                    className="text-black w-full"
+                  />
+                  <Input
+                    name="price"
+                    placeholder="Precio"
+                    value={item.price}
+                    disabled={item.isFree}
+                    onChange={(e) => handleInputChange(index, "price", e.target.value)}
+                    className="text-black w-full"
+                  />
+
                   <div
-                    className="w-1/5 cursor-pointer text-red-500 text-center text-md font-semibold"
+                    className="cursor-pointer flex items-center text-red-500 transition ease-in-out duration-200 rounded-full hover:bg-red-500 hover:text-white p-1"
                     onClick={() => handleDeleteItem(index)}>
-                    Eliminar
+                    <IconX size={20} />
                   </div>
                 </div>
                 <Checkbox
@@ -173,56 +172,64 @@ export const EditAdditionalForm = ({ additional, setAdditional, dishDetails }) =
                   checked={item.isFree}
                   size="sm"
                   className="mb-4"
-                  onChange={(e) => handleIsFree(index, e.target.checked)}
+                  onChange={(e) => {
+                    handleIsFree(index, e.target.checked)
+                    item.isFree ? handleInputChange(index, "price", "0.00") : handleInputChange(index, "price", "")
+                  }}
                 />
               </div>
             ))}
             <Button className="my-2" color={colors.primary_button} leftSection={<IconPlus size={14} />} onClick={handleAddItem}>
-              Agregar
+              Nuevo
             </Button>
           </div>
-          <br />
-          <Button className="my-2" color={colors.primary_button} leftSection={<IconPlus size={14} />} onClick={handleNewCategory}>
-            Crear adicional
-          </Button>
+          <div className="w-full flex items-center justify-end">
+            <Button className="" color={colors.primary_button} leftSection={<IconPlus size={14} />} onClick={handleNewCategory}>
+              Añadir adicional
+            </Button>
+          </div>
         </div>
       </Grid.Col>
 
       <Grid.Col span={{ base: 12, md: 5 }}>
         <div className="w-full h-full p-6 bg-white rounded-lg border border-blue-100">
           <span className="text-sm font-semibold">Adicionales del platillo:</span>
-          <ul>
-            {additional?.length > 0 ? (
-              additional?.map((category, index) => (
-                <li
-                  key={index}
-                  className="p-2 my-4 bg-white rounded-lg border border-blue-100 flex flex-row justify-between items-center">
-                  <article className="w-full">
-                    <div className="flex items-center justify-between mb-1">
-                      <h3 className="font-bold text-md">
-                        {category.name} {category.requiredMinimum ? `(min: ${category.requiredMinimum})` : null}:
-                      </h3>
-                      <span onClick={() => handleDeleteAdditional(index, category)} className="cursor-pointer">
-                        <IconX size={20} color="red" />
-                      </span>
-                    </div>
+          <ScrollArea w={"100%"} h={360}>
+            <ul>
+              {additional?.length > 0 ? (
+                additional?.map((category, index) => (
+                  <li
+                    key={index}
+                    className="p-2 my-4 bg-white rounded-lg border border-blue-100 flex flex-row justify-between items-center">
+                    <article className="w-full">
+                      <div className="flex items-center justify-between mb-1">
+                        <h3 className="font-bold text-md">
+                          {category.name} {category.requiredMinimum ? `(min: ${category.requiredMinimum})` : null}:
+                        </h3>
+                        <span
+                          onClick={() => handleDeleteAdditional(additional)}
+                          className="cursor-pointer text-red-500 transition ease-in-out duration-200 rounded-full hover:bg-red-500 hover:text-white p-1">
+                          <IconX size={20} />
+                        </span>
+                      </div>
 
-                    <ul className="space-y-2">
-                      {category?.additionalsDetails?.map((item, i) => (
-                        <li key={i} className="flex flex-row gap-1 items-center">
-                          <span>{item.name}</span>
-                          <IconArrowNarrowRight />
-                          <span className="italic">{item.price == "0.00" ? "Gratis" : getFormattedHNL(item.price)}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </article>
-                </li>
-              ))
-            ) : (
-              <li className="mt-4 text-gray-300">Sin adicionales</li>
-            )}
-          </ul>
+                      <ul className="space-y-2">
+                        {category?.additionalsDetails?.map((item, i) => (
+                          <li key={i} className="flex flex-row gap-1 items-center">
+                            <span>{item.name}</span>
+                            <IconArrowNarrowRight />
+                            <span className="italic">{item.price == "0.00" ? "Gratis" : getFormattedHNL(item.price)}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </article>
+                  </li>
+                ))
+              ) : (
+                <li className="mt-4 text-gray-300">Sin adicionales</li>
+              )}
+            </ul>
+          </ScrollArea>
         </div>
       </Grid.Col>
     </Grid>

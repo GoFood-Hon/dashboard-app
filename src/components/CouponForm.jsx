@@ -8,7 +8,7 @@ import { DatePickerInput } from "@mantine/dates"
 import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone"
 import { IconPhoto } from "@tabler/icons-react"
 import { yupResolver } from "@hookform/resolvers/yup"
-
+import { LoaderComponent } from "./LoaderComponent"
 import { couponsValidationFrom } from "../utils/inputRules"
 import InputField from "./Form/InputField"
 import { ErrorMessage } from "./Form/ErrorMessage"
@@ -39,6 +39,7 @@ export const CouponForm = ({ offerData, editing = false }) => {
     initialDate: initialStartDate || new Date(),
     endDate: initialEndDate || new Date()
   })
+  const [isLoading, setIsLoading] = useState(false)
 
   const discountPercentage = []
 
@@ -69,6 +70,7 @@ export const CouponForm = ({ offerData, editing = false }) => {
   }
 
   const onSubmit = async (data) => {
+    setIsLoading(true)
     if (!editing) {
       try {
         const formData = prepareFormData(data)
@@ -92,6 +94,7 @@ export const CouponForm = ({ offerData, editing = false }) => {
         handleError(error)
       }
     }
+    setIsLoading(false)
   }
 
   const prepareFormData = (data) => {
@@ -311,10 +314,14 @@ export const CouponForm = ({ offerData, editing = false }) => {
           className={"text-xs border border-red-400 text-red-400 bg-white"}
           onClick={() => navigate(SETTING_NAVIGATION_ROUTES.General.path)}
         />
-        <Button
-          text={"Guardar"}
-          className="flex h-10 items-center justify-center px-4 rounded-md shadow-sm transition-all duration-700 focus:outline-none text-xs bg-sky-950 text-slate-50"
-        />
+        {isLoading ? (
+          <LoaderComponent width={24} size={25} />
+        ) : (
+          <Button
+            text={"Guardar"}
+            className="w-24 flex h-10 items-center justify-center rounded-md shadow-sm transition-all duration-700 focus:outline-none text-xs bg-sky-950 text-slate-50"
+          />
+        )}
       </div>
     </form>
   )

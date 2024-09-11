@@ -17,7 +17,7 @@ import "@mantine/notifications/styles.css"
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <Provider store={store}>
-      <React.Suspense fallback={LoadingCircle}>
+      <React.Suspense >
         <MantineProvider>
           <Notifications />
           <App />

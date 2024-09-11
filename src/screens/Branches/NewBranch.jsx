@@ -7,7 +7,7 @@ import { yupResolver } from "@hookform/resolvers/yup"
 import { useForm } from "react-hook-form"
 import { useSelector } from "react-redux"
 import toast from "react-hot-toast"
-
+import { LoaderComponent } from "../../components/LoaderComponent"
 import { newBranchValidation } from "../../utils/inputRules"
 import { NAVIGATION_ROUTES_RES_ADMIN } from "../../routes"
 import Button from "../../components/Button"
@@ -23,6 +23,7 @@ export default function NewBranch() {
   const location = useLocation()
   const navigate = useNavigate()
   const restaurant = useSelector((state) => state.restaurants.restaurants)
+  const [isLoading, setIsLoading] = useState(false)
 
   const {
     register,
@@ -81,6 +82,7 @@ export default function NewBranch() {
   ))
 
   const onSubmit = async (data) => {
+    setIsLoading(true)
     const formData = JSON.stringify({
       restaurantId: restaurant.id,
       name: data.name,
@@ -127,11 +129,13 @@ export default function NewBranch() {
           navigate(NAVIGATION_ROUTES_RES_ADMIN.Branches.path)
         }
       }
+      setIsLoading(false)
       return response.data
     } catch (e) {
       toast.error(`Error. Por favor intente de nuevo. ${e}`, {
         duration: 7000
       })
+      setIsLoading(false)
     }
   }
 
@@ -166,10 +170,14 @@ export default function NewBranch() {
                   navigate(NAVIGATION_ROUTES_RES_ADMIN.Menu.submenu.Dishes.path)
                 }}
               />
-              <Button
-                text={"Guardar"}
-                className="flex h-10 items-center justify-center px-4 rounded-md shadow-sm transition-all duration-700 focus:outline-none text-xs bg-sky-950 text-slate-50"
-              />
+              {isLoading ? (
+                <LoaderComponent width={24} size={25} />
+              ) : (
+                <Button
+                  text={"Guardar"}
+                  className="w-24 flex h-10 items-center justify-center rounded-md shadow-sm transition-all duration-700 focus:outline-none text-xs bg-sky-950 text-slate-50"
+                />
+              )}
             </div>
           </div>
         </section>

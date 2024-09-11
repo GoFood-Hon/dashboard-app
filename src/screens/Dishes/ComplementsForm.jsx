@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react"
-import { Grid, Image, Text } from "@mantine/core"
+import { Grid, Image, Text, ScrollArea } from "@mantine/core"
 import { useSelector } from "react-redux"
 import { getFormattedHNL } from "../../utils"
 import { SortableList } from "./components"
 import LoadingCircle from "../../components/LoadingCircle"
 import { selectComplementsError, selectComplementsStatus } from "../../store/features/complementsSlice"
 import { TrashIcon } from "../../assets/icons/TrashIcon"
+import { IconX } from "@tabler/icons-react"
 
 const AvailableComplementsCard = ({ item, onItemClick }) => {
   const { images, name, price } = item
@@ -55,11 +56,13 @@ const ComplementCard = ({ item, handleRemoveComplement }) => {
 
           <span className="text-sky-950 pl-3">{name}</span>
         </div>
-        <div className="flex flex-row w-1/2 justify-end">
+        <div className="flex flex-row w-1/2 justify-end items-center gap-2">
           <span className="text-sky-950 pl-3">{getFormattedHNL(price)}</span>
-          <div className="h-full flex justify-center items-center">
-            <span className="mx-1 cursor-pointer" onClick={() => handleRemoveComplement(item)}>
-              <TrashIcon width={20} height={20} fill={"#F87171"} />
+          <div className=" flex justify-center items-center">
+            <span
+              onClick={() => handleRemoveComplement(item)}
+              className="cursor-pointer text-red-500 transition ease-in-out duration-200 rounded-full hover:bg-red-500 hover:text-white p-1">
+              <IconX size={20} />
             </span>
           </div>
         </div>
@@ -93,6 +96,8 @@ export default function ComplementsForm({
     if (Array.isArray(selectedDishes)) {
       const filteredExtras = data.filter((item) => !selectedDishes.some((selected) => selected.id === item.id))
       setExtras(filteredExtras)
+    } else {
+      setExtras(data)
     }
   }, [data, selectedDishes])
 
@@ -125,16 +130,18 @@ export default function ComplementsForm({
       <Grid.Col span={{ base: 12, md: 7 }}>
         <div className="w-full h-full p-6 bg-white rounded-lg border border-blue-100">
           {addedComplements.length > 0 ? (
-            <SortableList
-              items={addedComplements}
-              onChange={setAddedComplements}
-              renderItem={(item) => (
-                <SortableList.Item id={item.id}>
-                  <SortableList.DragHandle />
-                  <ComplementCard item={item} handleRemoveComplement={() => handleRemoveComplement(item)} />
-                </SortableList.Item>
-              )}
-            />
+            <ScrollArea w={"100%"} h={350}>
+              <SortableList
+                items={addedComplements}
+                onChange={setAddedComplements}
+                renderItem={(item) => (
+                  <SortableList.Item id={item.id}>
+                    <SortableList.DragHandle />
+                    <ComplementCard item={item} handleRemoveComplement={() => handleRemoveComplement(item)} />
+                  </SortableList.Item>
+                )}
+              />
+            </ScrollArea>
           ) : (
             <div className="flex flex-col w-full h-full text-xl justify-center item-center text-center">{defaultMessage}</div>
           )}
@@ -143,28 +150,30 @@ export default function ComplementsForm({
       <Grid.Col span={{ base: 12, md: 5 }}>
         <div className="w-full h-full p-6 bg-white rounded-lg border border-blue-100">
           <span className="text-sm font-semibold ">{itemsAvailableLabel}</span>
-          <div className="w-full">
-            {status === "loading" && (
-              <div className="h-[calc(100vh-350px)] w-full flex justify-center items-center">
-                <LoadingCircle />
-              </div>
-            )}
-            {status === "error" && <div>Error: {error}</div>}
-            {extras.length > 0 ? (
-              extras?.map((item, key) => (
-                <AvailableComplementsCard
-                  item={item}
-                  key={key}
-                  onItemClick={handleComplementClick}
-                  handleRemoveComplement={handleRemoveComplement}
-                />
-              ))
-            ) : (
-              <Text size="sm" c="dimmed" inline mt={20} className="text-center leading-10">
-                Sin disponibilidad...
-              </Text>
-            )}
-          </div>
+          <ScrollArea w={"100%"} h={350}>
+            <div className="w-full">
+              {status === "loading" && (
+                <div className="h-[calc(100vh-350px)] w-full flex justify-center items-center">
+                  <LoadingCircle />
+                </div>
+              )}
+              {status === "error" && <div>Error: {error}</div>}
+              {extras.length > 0 ? (
+                extras?.map((item, key) => (
+                  <AvailableComplementsCard
+                    item={item}
+                    key={key}
+                    onItemClick={handleComplementClick}
+                    handleRemoveComplement={handleRemoveComplement}
+                  />
+                ))
+              ) : (
+                <Text size="sm" c="dimmed" inline mt={50} className="text-center leading-10">
+                  No hay platillos para mostrar
+                </Text>
+              )}
+            </div>
+          </ScrollArea>
         </div>
       </Grid.Col>
     </Grid>

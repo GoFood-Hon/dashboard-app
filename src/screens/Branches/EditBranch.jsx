@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 import { useDispatch, useSelector } from "react-redux"
 import { useLocation, useNavigate } from "react-router-dom"
-import { Accordion } from "@mantine/core"
+import { Accordion, Loader } from "@mantine/core"
 import toast from "react-hot-toast"
 import GeneralInformationForm from "./GeneralInformationForm"
 import LocationForm from "./LocationForm"
@@ -11,6 +11,7 @@ import Button from "../../components/Button"
 import { getDepartmentNameById } from "../../utils"
 import branchesApi from "../../api/branchesApi"
 import { NAVIGATION_ROUTES_RES_ADMIN } from "../../routes"
+import { LoaderComponent } from "../../components/LoaderComponent"
 
 export const EditBranch = ({ itemDetails, close }) => {
   const {
@@ -27,6 +28,7 @@ export const EditBranch = ({ itemDetails, close }) => {
 
   const restaurant = useSelector((state) => state?.restaurant?.value)
   const [isDataCleared, setIsDataCleared] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
 
   const accordionStructure = [
     {
@@ -80,6 +82,7 @@ export const EditBranch = ({ itemDetails, close }) => {
   ))
 
   const onSubmit = async (data) => {
+    setIsLoading(true)
     const formData = JSON.stringify({
       restaurantId: itemDetails.restaurantId,
       name: data.name,
@@ -103,6 +106,7 @@ export const EditBranch = ({ itemDetails, close }) => {
         toast.error(`Fallo al actualizar la sucursal. Por favor intente de nuevo. ${response.message}`, {
           duration: 7000
         })
+        setIsLoading(false)
       } else {
         const branchId = itemDetails.id
 
@@ -136,6 +140,7 @@ export const EditBranch = ({ itemDetails, close }) => {
           close()
           navigate(NAVIGATION_ROUTES_RES_ADMIN.Branches.path)
         }
+        setIsLoading(false)
       }
       return response.data
     } catch (e) {
@@ -171,10 +176,14 @@ export const EditBranch = ({ itemDetails, close }) => {
                 navigate(NAVIGATION_ROUTES_RES_ADMIN.Menu.submenu.Dishes.path)
               }}
             />
-            <Button
-              text={"Actualizar"}
-              className="flex h-10 items-center justify-center px-4 rounded-md shadow-sm transition-all duration-700 focus:outline-none text-xs bg-sky-950 text-slate-50"
-            />
+            {isLoading ? (
+              <LoaderComponent width={24} size={25} />
+            ) : (
+              <Button
+                text={"Actualizar"}
+                className="w-24 flex h-10 items-center justify-center rounded-md shadow-sm transition-all duration-700 focus:outline-none text-xs bg-sky-950 text-slate-50"
+              />
+            )}
           </div>
         </div>
       </section>

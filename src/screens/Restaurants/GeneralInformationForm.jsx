@@ -134,10 +134,10 @@ export const GeneralInformationForm = ({ register, errors, setValue, isDataClear
                 <div className="flex items-center flex-col">
                   <IconPhoto style={{ width: rem(52), height: rem(52), color: "var(--mantine-color-dimmed)" }} stroke={1.5} />
                   <Text size="xl" inline className="text-center">
-                    Seleccione una imagen destacada
+                    Seleccione una imagen
                   </Text>
                   <Text size="sm" c="dimmed" inline mt={7} className="text-center leading-10">
-                    Haga click o arrastre una imagen que sera usada junto con el usuario
+                    Haga clic o arrastre la imagen del usuario
                   </Text>
                 </div>
               </Group>

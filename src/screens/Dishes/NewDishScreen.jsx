@@ -137,7 +137,7 @@ export default function NewDish() {
           <Accordion
             variant="separated"
             multiple
-            defaultValue={["Información general", "Pagos", "Preparación"]}
+            defaultValue={["Información general", "Pagos", "Preparación", 'Adicionales']}
             classNames={{
               label: "bg-white fill-white"
             }}>

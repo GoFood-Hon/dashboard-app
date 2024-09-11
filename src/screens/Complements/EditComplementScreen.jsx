@@ -3,7 +3,7 @@ import { Accordion } from "@mantine/core"
 import { useForm } from "react-hook-form"
 import { useDispatch } from "react-redux"
 import toast from "react-hot-toast"
-
+import { LoaderComponent } from "../../components/LoaderComponent"
 import Button from "../../components/Button"
 import PaymentForm from "../Dishes/PaymentForm"
 import GeneralInformationForm from "./GeneralInformationForm"
@@ -12,6 +12,7 @@ import { updateComplement } from "../../store/features/complementsSlice"
 
 export default function EditComplementScreen({ close, complementDetails }) {
   const dispatch = useDispatch()
+  const [isLoading, setIsLoading] = useState(false)
 
   const {
     register,
@@ -77,11 +78,13 @@ export default function EditComplementScreen({ close, complementDetails }) {
   ))
 
   const onSubmit = (data) => {
+    setIsLoading(true)
     dispatch(updateComplement({ data })).then((response) => {
       if (response.payload) {
         reset()
         close()
       }
+      setIsLoading(false)
     })
   }
 
@@ -114,14 +117,16 @@ export default function EditComplementScreen({ close, complementDetails }) {
               onClick={() => {
                 reset()
                 close()
-                toast.success("Cambios descartados")
               }}
             />
-            <Button
-              text={"Guardar cambios"}
-              onClick={handleSubmit(onSubmit)}
-              className="flex h-10 w-full items-center justify-center px-4 rounded-md shadow-sm transition-all duration-700 focus:outline-none text-xs bg-sky-950 text-slate-50"
-            />
+            {isLoading ? (
+              <LoaderComponent width={24} size={25} />
+            ) : (
+              <Button
+                text={"Actualizar"}
+                className="w-24 flex h-10 items-center justify-center rounded-md shadow-sm transition-all duration-700 focus:outline-none text-xs bg-sky-950 text-slate-50"
+              />
+            )}
           </div>
         </div>
       </section>

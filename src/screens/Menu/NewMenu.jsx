@@ -20,6 +20,7 @@ export default function NewMenu() {
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const restaurant = useSelector((state) => state.restaurants.restaurants)
+  const [loading, setLoading] = useState(true)
 
   const user = useSelector((state) => state.user.value)
 
@@ -46,9 +47,11 @@ export default function NewMenu() {
 
         const activeDishes = response.data.data.filter((dish) => dish.isActive)
         setDishes(activeDishes)
+        setLoading(false)
         return response
       } catch (error) {
         toast.error(`Hubo un error obteniendo los platos, ${error}`)
+        setLoading(false)
         throw error
       }
     }
@@ -74,14 +77,19 @@ export default function NewMenu() {
       title: "Platillos",
       requirement: "Obligatorio",
       form: (
-        <ComplementsForm
-          setValue={setValue}
-          isDataCleared={isDataCleared}
-          defaultMessage="Por favor seleccione platillos para este menu"
-          itemsAvailableLabel="Platillos disponibles"
-          data={dishes}
-          name={"dishes"}
-        />
+        loading ? (
+          <p>Cargando platillos...</p> // Mostrar mensaje mientras los datos cargan
+        ) : (
+          <ComplementsForm
+            setValue={setValue}
+            isDataCleared={isDataCleared}
+            defaultMessage="Por favor seleccione platillos para este menú"
+            itemsAvailableLabel="Platillos disponibles"
+            data={dishes}
+            name={"dishes"}
+            newMenu
+          />
+        )
       )
     }
   ]

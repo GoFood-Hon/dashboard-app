@@ -88,7 +88,7 @@ export default function GeneralInformationForm({ register, errors, setValue, isD
                     Seleccione una imagen
                   </Text>
                   <Text size="sm" c="dimmed" inline mt={7} className="text-center leading-10">
-                    Haga click o arrastre una imagen que será usada junto con el menú
+                    Haga clic o arrastre la imagen del menú
                   </Text>
                 </div>
               </Group>

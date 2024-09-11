@@ -242,10 +242,10 @@ export default function AccountSettings() {
                   <div className="flex items-center flex-col">
                     <IconPhoto style={{ width: rem(52), height: rem(52), color: "var(--mantine-color-dimmed)" }} stroke={1.5} />
                     <Text size="xl" inline className="text-center">
-                      Seleccione una imagen de perfil
+                      Seleccione una imagen
                     </Text>
                     <Text size="sm" c="dimmed" inline mt={7} className="text-center leading-10">
-                      Haga click o arrastre una imagen que sera usada en su perfil
+                      Haga clic o arrastre la imagen del perfil
                     </Text>
                   </div>
                 </Group>

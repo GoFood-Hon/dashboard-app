@@ -165,11 +165,7 @@ function AuthLayout({ children }) {
     // },
   ]
 
-  return loading ? (
-    <div className="flex flex-col items-center justify-center h-screen w-screen">
-      <LoadingCircle />
-    </div>
-  ) : (
+  return (
     <>
       <Header />
       {!shouldRenderSideBar && <SideBar />}

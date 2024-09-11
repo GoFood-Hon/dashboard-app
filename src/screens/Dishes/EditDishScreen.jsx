@@ -5,7 +5,6 @@ import { useForm } from "react-hook-form"
 import GeneralInformationForm from "./GeneralInformationForm"
 import PaymentForm from "./PaymentForm"
 import { useDispatch } from "react-redux"
-import toast from "react-hot-toast"
 import PreparationForm from "./PreparationForm"
 import { updateDish } from "../../store/features/dishesSlice"
 import { EditAdditionalForm } from "./EditAdditionalForm"
@@ -15,6 +14,7 @@ import { useNavigate, useParams } from "react-router-dom"
 import BaseLayout from "../../components/BaseLayout"
 import BackButton from "./components/BackButton"
 import { NAVIGATION_ROUTES_RES_ADMIN } from "../../routes"
+import { LoaderComponent } from "../../components/LoaderComponent"
 
 export default function EditDishScreen() {
   const dispatch = useDispatch()
@@ -23,6 +23,7 @@ export default function EditDishScreen() {
   const [isDataCleared, setIsDataCleared] = useState(false)
   const [dishDetails, setDishDetails] = useState({})
   const [additional, setAdditional] = useState([])
+  const [isLoading, setIsLoading] = useState(false)
 
   const containerRef = useRef(null)
   const {
@@ -105,7 +106,7 @@ export default function EditDishScreen() {
   ))
 
   const onSubmit = async (data) => {
-    console.log(data)
+    setIsLoading(true)
     const dishId = data.id
     const dishData = {
       ...data,
@@ -117,6 +118,7 @@ export default function EditDishScreen() {
       if (!response.payload.status) {
         navigate(NAVIGATION_ROUTES_RES_ADMIN.Menu.submenu.Dishes.path)
       }
+      setIsLoading(false)
     })
     close()
   }
@@ -133,7 +135,7 @@ export default function EditDishScreen() {
           <Accordion
             variant="separated"
             multiple
-            defaultValue={["Información general", "Pagos", "Preparación"]}
+            defaultValue={["Información general", "Pagos", "Preparación", "Adicionales"]}
             classNames={{
               label: "bg-white fill-white"
             }}>
@@ -150,10 +152,14 @@ export default function EditDishScreen() {
                   navigate(NAVIGATION_ROUTES_RES_ADMIN.Menu.submenu.Dishes.path)
                 }}
               />
-              <Button
-                text={"Actualizar"}
-                className="flex h-10 items-center justify-center rounded-md bg-sky-950 px-4 text-xs text-slate-50 shadow-sm transition-all duration-700 focus:outline-none"
-              />
+              {isLoading ? (
+                <LoaderComponent width={24} size={25} />
+              ) : (
+                <Button
+                  text={"Actualizar"}
+                  className="w-24 flex h-10 items-center justify-center rounded-md bg-sky-950 text-xs text-slate-50 shadow-sm transition-all duration-700 focus:outline-none"
+                />
+              )}
             </div>
           </div>
         </section>

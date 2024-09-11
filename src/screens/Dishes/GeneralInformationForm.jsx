@@ -4,9 +4,8 @@ import { IconPhoto } from "@tabler/icons-react"
 import React, { useEffect, useState } from "react"
 import InputTextAreaField from "../../components/Form/InputTextAreaField"
 import InputField from "../../components/Form/InputField"
-import toast from "react-hot-toast"
 import { bytesToMB } from "../../utils"
-import InputSearchCombobox from "../../components/Form/InputSearchCombobox"
+
 import InputCheckbox from "../../components/Form/InputCheckbox"
 import { useDispatch, useSelector } from "react-redux"
 import {
@@ -14,7 +13,6 @@ import {
   selectAllDishesCategories,
   selectAllDishesCategoriesStatus
 } from "../../store/features/categorySlice"
-import { colors } from "../../theme/colors"
 
 export default function GeneralInformationForm({ register, errors, setValue, isDataCleared, preloadImage }) {
   const dispatch = useDispatch()
@@ -86,9 +84,7 @@ export default function GeneralInformationForm({ register, errors, setValue, isD
               placeholder="Ej. Rico pollo con papas, salsas..."
             />
 
-            <div className="mt-4">
-              <InputCheckbox label="Incluye bebida?" name="includesDrink" register={register} />
-            </div>
+            <InputCheckbox name="includesDrink" register={register} />
           </div>
         </div>
       </Grid.Col>
@@ -120,10 +116,10 @@ export default function GeneralInformationForm({ register, errors, setValue, isD
                 <div className="flex flex-col items-center">
                   <IconPhoto style={{ width: rem(52), height: rem(52), color: "var(--mantine-color-dimmed)" }} stroke={1.5} />
                   <Text size="xl" inline className="text-center">
-                    Seleccione una imagen destacada
+                    Seleccione una imagen
                   </Text>
                   <Text size="sm" c="dimmed" inline mt={7} className="text-center leading-10">
-                    Haga click o arrastre una imagen que sera usada junto con el platillo
+                    Haga clic o arrastre la imagen del platillo
                   </Text>
                 </div>
               </Group>

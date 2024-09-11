@@ -1,12 +1,18 @@
 import React from "react"
+import { Checkbox } from "@mantine/core"
+import { colors } from "../../theme/colors"
 
 export default function InputCheckbox({ label, name, register }) {
   return (
-    <React.Fragment>
-      <div className="flex flex-row justify-start">
-        <label className="text-slate-400 mr-3">{label}</label>
-        <input className="accent-sky-950" type="checkbox" {...register(name)} />
-      </div>
-    </React.Fragment>
+    <div className="flex items-center">
+      <Checkbox
+        {...register(name)} // Usamos register directamente aquí
+        classNames={{ input: "accent-sky-950 cursor-pointer " }}
+        mt={"md"}
+        labelPosition="left"
+        label={<div className="text-sky-950 text-sm font-bold leading-snug">¿Incluye bebida?</div>}
+        color={colors.primary_button}
+      />
+    </div>
   )
 }
