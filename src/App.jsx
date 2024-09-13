@@ -253,7 +253,7 @@ function App() {
             }>
             {renderRoutesForRole(userRole)}
           </Route>
-          <Route path={"/unauthorized"} element={<Navigate to="/orders" />} />
+          <Route path={"/unauthorized"} element={<Navigate to="/" />} />
           <Route path={AUTH_NAVIGATION_ROUTES.Logout.path} element={<Logout />} />
           {/* <Route path={"/notificaciones"} element={<NotificationScreen />} /> */}
         </Route>

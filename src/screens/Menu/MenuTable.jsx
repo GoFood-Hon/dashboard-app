@@ -20,6 +20,7 @@ export default function MenuTable({ refreshPage, items, handleDisableSelected, s
   const [search, setSearch] = useState("")
   const [currentPage, setCurrentPage] = useState(1)
   const navigate = useNavigate()
+  console.log(items)
 
   useEffect(() => {
     setData(items)
@@ -65,7 +66,7 @@ export default function MenuTable({ refreshPage, items, handleDisableSelected, s
     menuScreen: [
       { label: "Nombre", accessor: "name" },
       { label: "Fecha", accessor: "createdAt" },
-      { label: "N° de platillos", accessor: "dishesCount" },
+      { label: "N° de platillos", accessor: "dishesCount", center: true },
       { label: "Estado", accessor: "isActive", render: (isActive) => (isActive ? "Habilitado" : "Deshabilitado") },
       {
         label: "Acciones",

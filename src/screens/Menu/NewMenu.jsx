@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import { useLocation, useNavigate } from "react-router-dom"
 import { Accordion } from "@mantine/core"
 import { useForm } from "react-hook-form"
@@ -14,15 +14,14 @@ import { createMenu } from "../../store/features/menuSlice"
 import BackButton from "../Dishes/components/BackButton"
 import { NAVIGATION_ROUTES_RES_ADMIN } from "../../routes"
 import BaseLayout from "../../components/BaseLayout"
+import { LoaderComponent } from "../../components/LoaderComponent"
 
 export default function NewMenu() {
-  const location = useLocation()
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const restaurant = useSelector((state) => state.restaurants.restaurants)
-  const [loading, setLoading] = useState(true)
-
   const user = useSelector((state) => state.user.value)
+  const [isLoading, setIsLoading] = useState(false)
 
   const {
     register,
@@ -47,11 +46,9 @@ export default function NewMenu() {
 
         const activeDishes = response.data.data.filter((dish) => dish.isActive)
         setDishes(activeDishes)
-        setLoading(false)
         return response
       } catch (error) {
         toast.error(`Hubo un error obteniendo los platos, ${error}`)
-        setLoading(false)
         throw error
       }
     }
@@ -77,19 +74,14 @@ export default function NewMenu() {
       title: "Platillos",
       requirement: "Obligatorio",
       form: (
-        loading ? (
-          <p>Cargando platillos...</p> // Mostrar mensaje mientras los datos cargan
-        ) : (
-          <ComplementsForm
-            setValue={setValue}
-            isDataCleared={isDataCleared}
-            defaultMessage="Por favor seleccione platillos para este menú"
-            itemsAvailableLabel="Platillos disponibles"
-            data={dishes}
-            name={"dishes"}
-            newMenu
-          />
-        )
+        <ComplementsForm
+          setValue={setValue}
+          isDataCleared={isDataCleared}
+          defaultMessage="Por favor seleccione platillos para este menu"
+          itemsAvailableLabel="Platillos disponibles"
+          data={dishes}
+          name={"dishes"}
+        />
       )
     }
   ]
@@ -110,6 +102,7 @@ export default function NewMenu() {
   ))
 
   const onSubmit = (data) => {
+    setIsLoading(true)
     const restaurantId = user.restaurantId
     dispatch(createMenu({ data, restaurantId })).then((response) => {
       if (response.payload) {
@@ -118,6 +111,7 @@ export default function NewMenu() {
         navigate(NAVIGATION_ROUTES_RES_ADMIN.Menu.path)
         setIsDataCleared(true)
       }
+      setIsLoading(false)
     })
   }
 
@@ -151,10 +145,14 @@ export default function NewMenu() {
                   navigate(NAVIGATION_ROUTES_RES_ADMIN.Menu.path)
                 }}
               />
-              <Button
-                text={"Guardar"}
-                className="flex h-10 items-center justify-center px-4 rounded-md shadow-sm transition-all duration-700 focus:outline-none text-xs bg-sky-950 text-slate-50"
-              />
+              {isLoading ? (
+                <LoaderComponent width={24} size={25} />
+              ) : (
+                <Button
+                  text={"Guardar"}
+                  className="w-24 flex h-10 items-center justify-center rounded-md shadow-sm transition-all duration-700 focus:outline-none text-xs bg-sky-950 text-slate-50"
+                />
+              )}
             </div>
           </div>
         </section>

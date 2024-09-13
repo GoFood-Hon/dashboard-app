@@ -1,9 +1,6 @@
 import React, { useMemo, useState } from "react"
-
 import { DndContext, KeyboardSensor, PointerSensor, useSensor, useSensors } from "@dnd-kit/core"
-
 import { SortableContext, arrayMove, sortableKeyboardCoordinates } from "@dnd-kit/sortable"
-
 import { DragHandle, SortableItem, SortableOverlay } from "."
 
 export function SortableList({ items, onChange, renderItem }) {

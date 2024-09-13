@@ -24,11 +24,12 @@ const userApi = {
     return axiosClient.get(url)
   },
 
-  getUsersByBranch: ({ limit, page, order, id, startDate, endDate, status, price, dateSort }) => {
+  getUsersByBranch: ({ limit, page, order, orderBy, id, startDate, endDate, status, price, dateSort }) => {
     const params = {
       limit,
       page,
       order,
+      orderBy,
       startDate,
       endDate,
       status,

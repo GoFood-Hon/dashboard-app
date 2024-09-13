@@ -1,23 +1,20 @@
 import React, { useRef, useState } from "react"
 import { useLocation, useNavigate } from "react-router-dom"
-import { Breadcrumbs, Accordion } from "@mantine/core"
+import { Accordion } from "@mantine/core"
 import { useForm } from "react-hook-form"
 import { useDispatch, useSelector } from "react-redux"
 import { yupResolver } from "@hookform/resolvers/yup"
-import toast from "react-hot-toast"
-
 import BaseLayout from "../../components/BaseLayout"
 import Button from "../../components/Button"
 import GeneralInformationForm from "./GeneralInformationForm"
 import PaymentForm from "./PaymentForm"
-import BreadCrumbNavigation from "../../components/BreadCrumbNavigation"
 import { createDish } from "../../store/features/dishesSlice"
 import { newItemValidationSchema } from "../../utils/inputRules"
 import PreparationForm from "./PreparationForm"
 import { NAVIGATION_ROUTES_RES_ADMIN } from "../../routes"
 import BackButton from "./components/BackButton"
 import { AdditionalForm } from "./AdditionalForm"
-import { convertToDecimal } from "../../utils"
+import { LoaderComponent } from "../../components/LoaderComponent"
 
 export default function NewDish() {
   const location = useLocation()
@@ -26,6 +23,7 @@ export default function NewDish() {
   const user = useSelector((state) => state.user.value)
   const [isDataCleared, setIsDataCleared] = useState(false)
   const [additional, setAdditional] = useState([])
+  const [isLoading, setIsLoading] = useState(false)
 
   const containerRef = useRef(null)
 
@@ -114,6 +112,7 @@ export default function NewDish() {
   ))
 
   const onSubmit = (data) => {
+    setIsLoading(true)
     const restaurantId = user.restaurantId
 
     dispatch(createDish({ data, restaurantId, additionals: additional })).then((response) => {
@@ -122,6 +121,7 @@ export default function NewDish() {
         setIsDataCleared(true)
         navigate(NAVIGATION_ROUTES_RES_ADMIN.Menu.submenu.Dishes.path)
       }
+      setIsLoading(false)
     })
   }
 
@@ -137,7 +137,7 @@ export default function NewDish() {
           <Accordion
             variant="separated"
             multiple
-            defaultValue={["Información general", "Pagos", "Preparación", 'Adicionales']}
+            defaultValue={["Información general", "Pagos", "Preparación", "Adicionales"]}
             classNames={{
               label: "bg-white fill-white"
             }}>
@@ -156,10 +156,14 @@ export default function NewDish() {
                   navigate(NAVIGATION_ROUTES_RES_ADMIN.Menu.submenu.Dishes.path)
                 }}
               />
-              <Button
-                text={"Guardar"}
-                className="flex h-10 items-center justify-center rounded-md bg-sky-950 px-4 text-xs text-slate-50 shadow-sm transition-all duration-700 focus:outline-none"
-              />
+              {isLoading ? (
+                <LoaderComponent width={24} size={25} />
+              ) : (
+                <Button
+                  text={"Guardar"}
+                  className="w-24 flex h-10 items-center justify-center rounded-md bg-sky-950 text-xs text-slate-50 shadow-sm transition-all duration-700 focus:outline-none"
+                />
+              )}
             </div>
           </div>
         </section>

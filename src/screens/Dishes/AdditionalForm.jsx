@@ -4,6 +4,7 @@ import { IconPlus, IconX } from "@tabler/icons-react"
 import toast from "react-hot-toast"
 import { colors } from "../../theme/colors"
 import { convertToDecimal } from "../../utils"
+import { IconArrowNarrowRight } from "@tabler/icons-react"
 
 export const AdditionalForm = ({ additional, setAdditional }) => {
   const [newAdditionalTitle, setNewAdditionalTitle] = useState("")
@@ -180,25 +181,28 @@ export const AdditionalForm = ({ additional, setAdditional }) => {
                   <li
                     key={index}
                     className="p-2 my-4 bg-white rounded-lg border border-blue-100 flex flex-row justify-between items-center">
-                    <article>
-                      <h3 className="font-bold text-lg">
-                        {category.name} {category.requiredMinimum ? `(min: ${category.requiredMinimum})` : null}:
-                      </h3>
+                    <article className="w-full">
+                      <div className="flex items-center justify-between mb-1">
+                        <h3 className="font-bold text-md">
+                          {category.name} {category.requiredMinimum ? `(min: ${category.requiredMinimum})` : null}:
+                        </h3>
+                        <span
+                          onClick={() => handleDeleteAdditional(additional)}
+                          className="cursor-pointer text-red-500 transition ease-in-out duration-200 rounded-full hover:bg-red-500 hover:text-white p-1">
+                          <IconX size={20} />
+                        </span>
+                      </div>
 
-                      <ul>
+                      <ul className="space-y-2">
                         {category?.additionalsDetails?.map((item, i) => (
-                          <li key={i} className="flex flex-row gap-6">
+                          <li key={i} className="flex flex-row gap-1 items-center">
                             <span>{item.name}</span>
-                            <span className="italic">{item.price} Lps</span>
+                            <IconArrowNarrowRight />
+                            <span className="italic">{item.price == "0.00" ? "Gratis" : getFormattedHNL(item.price)}</span>
                           </li>
                         ))}
                       </ul>
                     </article>
-                    <span
-                      onClick={() => handleDeleteAdditional(additional)}
-                      className="cursor-pointer text-red-500 transition ease-in-out duration-200 rounded-full hover:bg-red-500 hover:text-white p-1">
-                      <IconX size={20} />
-                    </span>
                   </li>
                 ))
               ) : (

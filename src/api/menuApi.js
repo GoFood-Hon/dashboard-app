@@ -5,16 +5,16 @@ const menuApi = {
 
   createMenu: (formData) => axiosClient.post("api/v1/restaurant/categories/create", formData),
 
-  addImage: (dishId, params) =>
-    axiosClient.post(`api/v1/restaurant/categories/${dishId}/images`, params, {
+  addImage: (menuId, params) =>
+    axiosClient.post(`api/v1/restaurant/categories/${menuId}/image`, params, {
       contentType: `multipart/form-data; boundary=${params._boundary}`
     }),
 
-  addDishesToMenu: (dishId, params) => axiosClient.put(`api/v1/dish/${dishId}/category`, params),
+  addDishesToMenu: (menuId, params) => axiosClient.put(`api/v1/restaurant/categories/${menuId}/dishes`, params),
 
   updateMenu: (params, menuId) => axiosClient.patch(`api/v1/restaurant/categories/${menuId}`, params),
 
-  updateDishesToMenu: (dishId, params) => axiosClient.patch(`api/v1/dish/${dishId}/category`, params),
+  //updateDishesToMenu: (dishId, params) => axiosClient.patch(`api/v1/dish/${dishId}/category`, params),
 
   getMenuDetails: ({ menuId }) => axiosClient.get(`api/v1/restaurant/categories/${menuId}/dishes`)
 }

@@ -109,7 +109,9 @@ export default function Menu() {
           <div className="w-full p-4 h-full bg-white rounded-2xl border border-blue-100">
             <MenuTable
               refreshPage={refreshPage}
-              items={menus}
+              items={menus.map((menu) => {
+                return { ...menu, dishesCount: menu?.Dishes?.length }
+              })}
               handleDisableSelected={handleDisableSelected}
               screenType="menuScreen"
             />

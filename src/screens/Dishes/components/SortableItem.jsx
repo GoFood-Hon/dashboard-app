@@ -42,7 +42,7 @@ export function DragHandle() {
 
   return (
     <button
-      className="flex w-12 p-15 items-center justify-center flex-0 flex-no-grow flex-no-shrink cursor-pointer rounded-5 border-none outline-none appearance-none bg-transparent tap-highlight-transparent transition duration-300 hover:bg-opacity-5 focus-visible:shadow-outline-blue"
+      className="flex w-12 p-15 items-center justify-center flex-0 flex-no-grow flex-no-shrink cursor-grab rounded-5 border-none outline-none appearance-none bg-transparent tap-highlight-transparent transition duration-300 hover:bg-opacity-5 focus-visible:shadow-outline-blue"
       {...attributes}
       {...listeners}
       ref={ref}>

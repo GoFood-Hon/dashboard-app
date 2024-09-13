@@ -226,7 +226,7 @@ export const EditAdditionalForm = ({ additional, setAdditional, dishDetails }) =
                   </li>
                 ))
               ) : (
-                <li className="mt-4 text-gray-300">Sin adicionales</li>
+                <li className="mt-4 text-gray-300">Los adicionales se mostrarán aquí</li>
               )}
             </ul>
           </ScrollArea>
