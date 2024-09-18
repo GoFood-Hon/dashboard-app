@@ -98,7 +98,7 @@ export const NewAdminUser = () => {
     <BaseLayout>
       <form onSubmit={handleSubmit(onSubmit)}>
         <section>
-          <div className="xs:gap-3 flex flex-row flex-wrap items-center justify-between pb-6">
+          <div className="xs:gap-3 flex flex-row flex-wrap items-center justify-between pb-4">
             <BackButton title="Nuevo administrador" />
           </div>
         </section>

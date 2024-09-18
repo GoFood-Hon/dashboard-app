@@ -8,7 +8,7 @@ import Button from "../../components/Button"
 import toast from "react-hot-toast"
 import { showNotification } from "@mantine/notifications"
 
-export default function TimeForm({ setValue }) {
+export default function TimeForm({ setValue, data }) {
   const daysOfWeek = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"]
 
   const [alwaysAvailable, setAlwaysAvailable] = useState(false)
@@ -149,8 +149,3 @@ export default function TimeForm({ setValue }) {
     </div>
   )
 }
-
-/*
-<div className=" bg-rose-100 rounded-lg border border-red-400 flex w-full items-center p-3">
-<Icon icon="moon" size={17} />
-</div> */

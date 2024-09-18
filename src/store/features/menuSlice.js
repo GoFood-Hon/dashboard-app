@@ -145,6 +145,7 @@ export const updateMenu = createAsyncThunk("menus/updateMenu", async ({ data, pr
     const formData = updateMenuFormData(data, propertyToUpdate)
 
     const response = await menuApi.updateMenu(formData, data.id)
+    console.log(response)
 
     if (response.error) {
       showNotification({
@@ -187,7 +188,7 @@ export const updateMenu = createAsyncThunk("menus/updateMenu", async ({ data, pr
 
       showNotification({
         title: "Actualización exitosa",
-        message: "La información del menú se actualizó",
+        message: `Se actualizó el menú ${response?.data?.name}`,
         color: "green",
         duration: 7000
       })

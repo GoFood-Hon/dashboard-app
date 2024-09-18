@@ -1,6 +1,19 @@
 import React, { useState, useEffect } from "react"
-import { Table, Checkbox, ScrollArea, Group, TextInput, Avatar, ActionIcon, Pagination } from "@mantine/core"
-import { IconSearch, IconReload, IconTrash, IconEye } from "@tabler/icons-react"
+import {
+  Table,
+  Checkbox,
+  ScrollArea,
+  Group,
+  TextInput,
+  Avatar,
+  ActionIcon,
+  Pagination,
+  Switch,
+  createTheme,
+  MantineProvider,
+  rem
+} from "@mantine/core"
+import { IconSearch, IconReload, IconTrash, IconEye, IconCheck, IconX } from "@tabler/icons-react"
 import { ITEMS_PER_PAGE } from "../../utils/paginationConfig"
 import { colors } from "../../theme/colors"
 import { useNavigate } from "react-router-dom"
@@ -14,13 +27,12 @@ dayjs.extend(relativeTime)
 dayjs.locale("es")
 dayjs.extend(relativeTime)
 
-export default function MenuTable({ refreshPage, items, handleDisableSelected, screenType }) {
+export default function MenuTable({ refreshPage, items, handleDisableSelected, screenType, totalItems }) {
   const [data, setData] = useState(items)
   const [itemsSelected, setItemsSelected] = useState([])
   const [search, setSearch] = useState("")
   const [currentPage, setCurrentPage] = useState(1)
   const navigate = useNavigate()
-  console.log(items)
 
   useEffect(() => {
     setData(items)
@@ -60,20 +72,59 @@ export default function MenuTable({ refreshPage, items, handleDisableSelected, s
     return searchField?.toLowerCase().includes(search.toLowerCase())
   })
 
+  const theme = createTheme({
+    cursorType: "pointer"
+  })
+
   const paginatedData = filteredData.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE)
 
   const columns = {
     menuScreen: [
-      { label: "Nombre", accessor: "name" },
+      {
+        label: "Nombre",
+        accessor: "name",
+        render: (name, item) => (
+          <div className="flex items-center gap-2">
+            <Avatar size={30} src={item?.images?.[0]?.location} radius={26} />
+            {name}
+          </div>
+        )
+      },
       { label: "Fecha", accessor: "createdAt" },
       { label: "N° de platillos", accessor: "dishesCount", center: true },
-      { label: "Estado", accessor: "isActive", render: (isActive) => (isActive ? "Habilitado" : "Deshabilitado") },
+      {
+        label: "Estado",
+        accessor: "isActive",
+        render: (isActive) => (
+          <MantineProvider theme={theme}>
+            <Switch
+              checked={isActive}
+              //onChange={() => (isActive ? handleDisableSelected(item.id) : handleEnableSelected(item.id))}
+              color={colors.primary_button}
+              size="md"
+              thumbIcon={
+                isActive ? (
+                  <IconCheck style={{ width: rem(12), height: rem(12) }} stroke={3} color={colors.primary_button} />
+                ) : (
+                  <IconX style={{ width: rem(12), height: rem(12) }} stroke={3} color={colors.primary_button} />
+                )
+              }
+            />
+          </MantineProvider>
+        )
+      },
       {
         label: "Acciones",
         accessor: "id",
         center: true,
         render: (id) => (
-          <ActionIcon className="transition ease-in-out duration-200" variant="subtle" size="lg" onClick={() => handleClick(id)} color={colors.primary_button} radius="xl">
+          <ActionIcon
+            className="transition ease-in-out duration-200"
+            variant="subtle"
+            size="lg"
+            onClick={() => handleClick(id)}
+            color={colors.primary_button}
+            radius="xl">
             <IconEye />
           </ActionIcon>
         )
@@ -94,13 +145,39 @@ export default function MenuTable({ refreshPage, items, handleDisableSelected, s
       { label: "Correo", accessor: "email" },
       { label: "Teléfono", accessor: "phoneNumber" },
       { label: "Fecha", accessor: "createdAt" },
-      { label: "Estado", accessor: "active", render: (active) => (active ? "Habilitado" : "Deshabilitado") },
+      {
+        label: "Estado",
+        accessor: "active",
+        render: (active) => (
+          <MantineProvider theme={theme}>
+            <Switch
+              checked={active}
+              //onChange={() => (isActive ? handleDisableSelected(item.id) : handleEnableSelected(item.id))}
+              color={colors.primary_button}
+              size="sm"
+              thumbIcon={
+                active ? (
+                  <IconCheck style={{ width: rem(12), height: rem(12) }} stroke={3} color={colors.primary_button} />
+                ) : (
+                  <IconX style={{ width: rem(12), height: rem(12) }} stroke={3} color={colors.primary_button} />
+                )
+              }
+            />
+          </MantineProvider>
+        )
+      },
       {
         label: "Acciones",
         accessor: "id",
         center: true,
         render: (id) => (
-          <ActionIcon className="transition ease-in-out duration-200" variant="subtle" size="lg" onClick={() => handleClick(id)} color={colors.primary_button} radius="xl">
+          <ActionIcon
+            className="transition ease-in-out duration-200"
+            variant="subtle"
+            size="lg"
+            onClick={() => handleClick(id)}
+            color={colors.primary_button}
+            radius="xl">
             <IconEye />
           </ActionIcon>
         )
@@ -121,13 +198,39 @@ export default function MenuTable({ refreshPage, items, handleDisableSelected, s
       { label: "Correo", accessor: "email" },
       { label: "Teléfono", accessor: "phoneNumber" },
       { label: "Fecha", accessor: "createdAt" },
-      { label: "Estado", accessor: "active", render: (active) => (active ? "Habilitado" : "Deshabilitado") },
+      {
+        label: "Estado",
+        accessor: "active",
+        render: (active) => (
+          <MantineProvider theme={theme}>
+            <Switch
+              checked={active}
+              //onChange={() => (isActive ? handleDisableSelected(item.id) : handleEnableSelected(item.id))}
+              color={colors.primary_button}
+              size="sm"
+              thumbIcon={
+                active ? (
+                  <IconCheck style={{ width: rem(12), height: rem(12) }} stroke={3} color={colors.primary_button} />
+                ) : (
+                  <IconX style={{ width: rem(12), height: rem(12) }} stroke={3} color={colors.primary_button} />
+                )
+              }
+            />
+          </MantineProvider>
+        )
+      },
       {
         label: "Acciones",
         accessor: "id",
         center: true,
         render: (id) => (
-          <ActionIcon className="transition ease-in-out duration-200" variant="subtle" size="lg" onClick={() => handleClick(id)} color={colors.primary_button} radius="xl">
+          <ActionIcon
+            className="transition ease-in-out duration-200"
+            variant="subtle"
+            size="lg"
+            onClick={() => handleClick(id)}
+            color={colors.primary_button}
+            radius="xl">
             <IconEye />
           </ActionIcon>
         )
@@ -145,7 +248,13 @@ export default function MenuTable({ refreshPage, items, handleDisableSelected, s
         accessor: "id",
         center: true,
         render: (id) => (
-          <ActionIcon className="transition ease-in-out duration-200" variant="subtle" size="lg" onClick={() => handleClick(id)} color={colors.primary_button} radius="xl">
+          <ActionIcon
+            className="transition ease-in-out duration-200"
+            variant="subtle"
+            size="lg"
+            onClick={() => handleClick(id)}
+            color={colors.primary_button}
+            radius="xl">
             <IconEye />
           </ActionIcon>
         )
@@ -161,7 +270,13 @@ export default function MenuTable({ refreshPage, items, handleDisableSelected, s
         accessor: "id",
         center: true,
         render: (id) => (
-          <ActionIcon className="transition ease-in-out duration-200" variant="subtle" size="lg" onClick={() => handleClick(id)} color={colors.primary_button} radius="xl">
+          <ActionIcon
+            className="transition ease-in-out duration-200"
+            variant="subtle"
+            size="lg"
+            onClick={() => handleClick(id)}
+            color={colors.primary_button}
+            radius="xl">
             <IconEye />
           </ActionIcon>
         )
@@ -179,7 +294,13 @@ export default function MenuTable({ refreshPage, items, handleDisableSelected, s
         accessor: "id",
         center: true,
         render: (id) => (
-          <ActionIcon className="transition ease-in-out duration-200" variant="subtle" size="lg" onClick={() => handleClick(id)} color={colors.primary_button} radius="xl">
+          <ActionIcon
+            className="transition ease-in-out duration-200"
+            variant="subtle"
+            size="lg"
+            onClick={() => handleClick(id)}
+            color={colors.primary_button}
+            radius="xl">
             <IconEye />
           </ActionIcon>
         )
@@ -202,7 +323,14 @@ export default function MenuTable({ refreshPage, items, handleDisableSelected, s
           />
         </Group>
         <div className="flex items-center gap-1 mr-5">
-          <ActionIcon onClick={refreshPage} className="transition ease-in-out duration-200" variant="subtle" p={6} color={colors.primary_button} radius="xl" size="lg">
+          <ActionIcon
+            onClick={refreshPage}
+            className="transition ease-in-out duration-200"
+            variant="subtle"
+            p={6}
+            color={colors.primary_button}
+            radius="xl"
+            size="lg">
             <IconReload />
           </ActionIcon>
           {handleDisableSelected && (
@@ -270,7 +398,7 @@ export default function MenuTable({ refreshPage, items, handleDisableSelected, s
       <div className="flex w-full justify-end">
         <Group mx={20} mt={10}>
           <Pagination
-            total={Math.ceil(filteredData.length / ITEMS_PER_PAGE)}
+            total={Math.ceil(totalItems / ITEMS_PER_PAGE)}
             page={currentPage}
             onChange={(page) => setCurrentPage(page)}
             color={colors.primary_button}

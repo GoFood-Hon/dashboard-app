@@ -48,7 +48,17 @@ const userApi = {
 
   updateUserRestaurant: (params, userId) => axiosClient.put(`api/v1/users/update-user/${userId}`, params),
 
-  getAdminUsers: () => axiosClient.get("api/v1/users/admin-restaurant/get-all"),
+  getAdminUsers: ({ limit = undefined, page = undefined, order = undefined } = {}) => {
+    const params = {
+      limit,
+      page,
+      order
+    }
+    const validParams = Object.fromEntries(Object.entries(params).filter(([_, value]) => value !== undefined && value))
+    const queryString = new URLSearchParams(validParams).toString()
+    const url = `api/v1/users/admin-restaurant/get-all${queryString ? `?${queryString}` : ""}`
+    return axiosClient.get(url)
+  },
 
   updateAdminUser: (id, params) => axiosClient.put(`api/v1/users/admin-restaurant/${id}`, params),
 

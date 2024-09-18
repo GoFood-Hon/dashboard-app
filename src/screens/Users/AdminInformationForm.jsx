@@ -103,7 +103,7 @@ export const AdminInformationForm = ({ register, errors, setValue }) => {
           </Grid.Col>
           <Grid.Col span={{ base: 12 }}>
             <InputSearchCombobox
-              label="Asignar a un restaurante"
+              label="Asignar restaurante"
               name={"restaurantId"}
               placeholder="Buscar restaurante"
               emptyMessage="Sin restaurantes"

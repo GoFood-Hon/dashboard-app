@@ -7,7 +7,7 @@ import InputField from "../../components/Form/InputField"
 import { colors } from "../../theme/colors"
 import { bytesToMB } from "../../utils"
 
-export const GeneralInformationForm = ({ register, errors, setValue, isDataCleared }) => {
+export const GeneralInformationForm = ({ register, errors, setValue, isDataCleared, image }) => {
   const [isFreeDelivery, setIsFreeDelivery] = useState(true)
   const [images, setImages] = useState([])
   const [fileInformation, setFileInformation] = useState(null)
@@ -130,13 +130,14 @@ export const GeneralInformationForm = ({ register, errors, setValue, isDataClear
             </div>
           ) : (
             <Dropzone onDrop={handleDrop} accept={IMAGE_MIME_TYPE}>
-              <Group justify="center" gap="xl" mih={220} style={{ pointerEvents: "none" }}>
-                <div className="flex items-center flex-col">
-                  <IconPhoto style={{ width: rem(52), height: rem(52), color: "var(--mantine-color-dimmed)" }} stroke={1.5} />
-                  <Text size="xl" inline className="text-center">
+              <Group justify="center" gap="xl" mih={220} style={{ pointerEvents: "none", cursor: 'pointer' }}>
+                <div className="flex items-center flex-col cursor-pointer">
+                  <img className="rounded-xl cursor-pointer" src={image} alt="" />
+                  <IconPhoto className={`${image ? 'hidden' : ''}`} style={{ width: rem(52), height: rem(52), color: "var(--mantine-color-dimmed)" }} stroke={1.5} />
+                  <Text className={`${image ? 'hidden' : ''} text-center`} size="xl" inline>
                     Seleccione una imagen
                   </Text>
-                  <Text size="sm" c="dimmed" inline mt={7} className="text-center leading-10">
+                  <Text className={`${image ? 'hidden' : ''} text-center leading-10`} size="sm" c="dimmed" inline mt={7} >
                     Haga clic o arrastre la imagen del usuario
                   </Text>
                 </div>

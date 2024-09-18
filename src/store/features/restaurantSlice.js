@@ -2,6 +2,7 @@ import restaurantsApi from "../../api/restaurantApi"
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 import { ITEMS_PER_PAGE } from "../../utils/paginationConfig"
 import toast from "react-hot-toast"
+import { showNotification } from "@mantine/notifications"
 
 const initialState = {
   restaurants: [],
@@ -54,7 +55,10 @@ export const fetchRestaurantData = createAsyncThunk("restaurants/fetchRestaurant
     const response = await restaurantsApi.getRestaurant(restaurantId)
 
     if (response.error) {
-      toast.error(`Fallo obtener la información del restaurante ${response.message}`, {
+      showNotification({
+        title: "Error",
+        message: response.error,
+        color: "red",
         duration: 7000
       })
       return {}
@@ -65,7 +69,10 @@ export const fetchRestaurantData = createAsyncThunk("restaurants/fetchRestaurant
       return response.data
     }
   } catch (error) {
-    toast.error(`Fallo al obtener la información del restaurante. Intente de nuevo.`, {
+    showNotification({
+      title: "Error",
+      message: error,
+      color: "red",
       duration: 7000
     })
     dispatch(setLoading(false))
@@ -105,12 +112,23 @@ export const updateRestaurant = createAsyncThunk(
 
       const response = await restaurantsApi.updateRestaurant(formData, data?.id)
 
+      console.log(response)
+
       if (response.error) {
-        toast.error(`Fallo al actualizar el restaurante. Por favor intente de nuevo. ${response.message}`, {
+        showNotification({
+          title: "Error",
+          message: response.error,
+          color: "red",
           duration: 7000
         })
       } else {
         toast.success("Restaurante actualizado exitosamente", {
+          duration: 7000
+        })
+        showNotification({
+          title: "Actualización exitosa",
+          message: 'Se actualizaron los datos de',
+          color: "red",
           duration: 7000
         })
       }
@@ -119,7 +137,11 @@ export const updateRestaurant = createAsyncThunk(
     } catch (error) {
       dispatch(setLoading(false))
       dispatch(setError("Error updating restaurant"))
-      toast.error("Fallo al actualizar el restaurante. Por favor intente de nuevo.", {
+
+      showNotification({
+        title: "Error",
+        message: error,
+        color: "red",
         duration: 7000
       })
 

@@ -31,10 +31,10 @@ export const EditGeneralInformationForm = ({ register, errors, setValue, feature
   }, [])
 
   const RenderInputs = () => {
-    const inputs = data.PlanFeatures.filter((feature) => dishesAdded.includes(feature.id))
+    const inputs = data?.PlanFeatures?.filter((feature) => dishesAdded?.includes(feature.id))
     return (
       <>
-        {inputs.map(
+        {inputs?.map(
           (input) =>
             input.type === "amount" && (
               <InputField
@@ -66,11 +66,11 @@ export const EditGeneralInformationForm = ({ register, errors, setValue, feature
     setDishesAdded(value)
   }
 
-  const defaultSelectedFeatures = data.PlanFeatures.map((feature) => feature.id)
+  const defaultSelectedFeatures = data?.PlanFeatures?.map((feature) => feature.id)
 
   useEffect(() => {
     setDishesAdded(defaultSelectedFeatures)
-  }, [data.PlanFeatures])
+  }, [data?.PlanFeatures])
 
   return (
     <Grid>

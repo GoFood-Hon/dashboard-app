@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react"
 import BaseLayout from "../../components/BaseLayout"
-import { Avatar, Breadcrumbs, CloseIcon, Group, Image, Modal, Text, rem } from "@mantine/core"
+import { Avatar, Breadcrumbs, CloseIcon, Group, Image, Modal, Text, rem, Grid } from "@mantine/core"
 import BreadCrumbNavigation from "../../components/BreadCrumbNavigation"
 import SettingsCard from "../../components/SettingsCard"
 import authApi from "../../api/authApi"
@@ -17,11 +17,12 @@ import toast from "react-hot-toast"
 import { SETTING_NAVIGATION_ROUTES } from "../../routes"
 import { APP_ROLES } from "../../utils/constants"
 import BackButton from "../Dishes/components/BackButton"
+import { LoaderComponent } from "../../components/LoaderComponent"
 
 export default function AccountSettings() {
   const navigate = useNavigate()
   const user = useSelector((state) => state.user.value)
-
+  const [isLoading, setIsLoading] = useState(false)
   const [imageModalOpened, { open: openImageModal, close: closeImageModal }] = useDisclosure(false)
   const [formModalOpened, { open: openFormModal, close: closeFormModal }] = useDisclosure(false)
   const dispatch = useDispatch()
@@ -98,6 +99,7 @@ export default function AccountSettings() {
   }
 
   const onSubmit = async (data) => {
+    setIsLoading(true)
     try {
       const formData = new FormData()
 
@@ -117,12 +119,13 @@ export default function AccountSettings() {
           duration: 7000
         })
       }
-      window.location.reload()
+      setIsLoading(false)
       return response.data
     } catch (error) {
       toast.error("Fallo al actualizar usuario. Por favor intente de nuevo.", {
         duration: 7000
       })
+      setIsLoading(false)
     }
   }
 
@@ -138,7 +141,7 @@ export default function AccountSettings() {
             </div>
           </section>
           <SettingsCard title="Información general" iconName="user">
-            <div className="flex flex-row gap-2">
+            {/* <div className="flex flex-row gap-2">
               <div className="cursor-pointer my-4">
                 {previews.length !== 0 ? (
                   previews
@@ -171,19 +174,99 @@ export default function AccountSettings() {
                 errors={errors}
                 countryPrefix="+504"
               />
-            </div>
-
-            <div className="w-full flex flex-row gap-2">
-              <Button
-                text={"Descartar"}
-                className={"text-xs border border-red-400 text-red-400 bg-white"}
-                onClick={() => navigate(SETTING_NAVIGATION_ROUTES.General.path)}
-              />
-              <Button
-                text={"Guardar"}
-                className="flex h-10 items-center justify-center px-4 rounded-md shadow-sm transition-all duration-700 focus:outline-none text-xs bg-sky-950 text-slate-50"
-              />
-            </div>
+            </div> */}
+            <Grid>
+              <Grid.Col span={{ base: 12, md: 8, lg: 8 }}>
+                <Grid>
+                  <Grid.Col span={{ base: 12, md: 6 }}>
+                    <InputField label="Nombre" name="firstName" register={register} errors={errors} className="text-black" />
+                  </Grid.Col>
+                  <Grid.Col span={{ base: 12, md: 6 }}>
+                    <InputField label="Email" name="email" register={register} errors={errors} className="text-black" />
+                  </Grid.Col>
+                  <Grid.Col span={{ base: 12, md: 12 }}>
+                    <InputField
+                      label="Numero de teléfono"
+                      name="phoneNumber"
+                      register={register}
+                      errors={errors}
+                      className="text-black"
+                      countryPrefix="+504"
+                    />
+                  </Grid.Col>
+                  <Grid.Col span={{ base: 12, md: 6 }}>
+                    <InputField
+                      label="Ingrese la contraseña"
+                      name="password"
+                      register={register}
+                      errors={errors}
+                      className="text-black"
+                      type="password"
+                    />
+                  </Grid.Col>
+                  <Grid.Col span={{ base: 12, md: 6 }}>
+                    <InputField
+                      label="Vuelva a ingresar la contraseña"
+                      name="passwordConfirm"
+                      register={register}
+                      errors={errors}
+                      className="text-black"
+                      type="password"
+                    />
+                  </Grid.Col>
+                </Grid>
+              </Grid.Col>
+              <Grid.Col span={{ base: 12, md: 4, lg: 4 }}>
+                <div className="flex flex-col justify-center items-center w-full h-full bg-white rounded-2xl border border-blue-100 p-4">
+                  {previews.length > 0 ? (
+                    <div className="w-full">
+                      <Text size="lg" inline className="text-left mb-5">
+                        Imagen seleccionada:
+                      </Text>
+                      <div className="flex flex-row justify-center items-center rounded-2xl w-full border border-slate-200 my-3">
+                        <div className="flex flex-row w-full items-center gap-2 flex-wrap p-2">
+                          {previews}
+                          <div className="flex flex-col">
+                            <Text className="font-semibold italic">{fileInformation?.name}</Text>
+                            <Text className="font-semibold" size="sm" c="dimmed" inline>
+                              {bytesToMB(fileInformation?.size)} MB
+                            </Text>
+                          </div>
+                        </div>
+                        <button onClick={deleteImage} className="pr-3">
+                          <CloseIcon size={24} />
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <Dropzone onDrop={handleDrop} accept={IMAGE_MIME_TYPE}>
+                      <Group justify="center" gap="xl" mih={220} style={{ pointerEvents: "none", cursor: "pointer" }}>
+                        <div className="flex items-center flex-col cursor-pointer">
+                          <img className="rounded-xl cursor-pointer" src={userData?.images?.[0]?.location} alt="" />
+                          <IconPhoto
+                            className={`${userData?.images?.[0]?.location ? "hidden" : ""}`}
+                            style={{ width: rem(52), height: rem(52), color: "var(--mantine-color-dimmed)" }}
+                            stroke={1.5}
+                          />
+                          <Text className={`${userData?.images?.[0]?.location ? "hidden" : ""} text-center`} size="xl" inline>
+                            Seleccione una imagen
+                          </Text>
+                          <Text
+                            className={`${userData?.images?.[0]?.location ? "hidden" : ""} text-center leading-10`}
+                            size="sm"
+                            c="dimmed"
+                            inline
+                            mt={7}>
+                            Haga clic o arrastre la imagen del usuario
+                          </Text>
+                        </div>
+                      </Group>
+                    </Dropzone>
+                  )}
+                  {errors.files && <p className="text-red-500 text-center w-full">Imagen es requerida.</p>}
+                </div>
+              </Grid.Col>
+            </Grid>
           </SettingsCard>
         </div>
         <Modal
@@ -255,6 +338,28 @@ export default function AccountSettings() {
           </div>
         </Modal>
       </form>
+
+      <section>
+        <div className="w-full flex md:justify-end md:gap-3 rounded-md bg-white px-8 py-5 border border-gray-200">
+          <div className="md:w-2/3 lg:1/3 sm:w-full flex flex-row justify-end gap-3 sm:flex-wrap md:flex-nowrap">
+            <Button
+              text={"Descartar"}
+              className={"text-xs border border-red-400 text-red-400 bg-white"}
+              onClick={() => {
+                navigate(-1)
+              }}
+            />
+            {isLoading ? (
+              <LoaderComponent width={24} size={25} />
+            ) : (
+              <Button
+                text={"Actualizar"}
+                className="w-24 flex h-10 items-center justify-center rounded-md shadow-sm transition-all duration-700 focus:outline-none text-xs bg-sky-950 text-slate-50"
+              />
+            )}
+          </div>
+        </div>
+      </section>
     </BaseLayout>
   )
 }

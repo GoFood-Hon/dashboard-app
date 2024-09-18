@@ -1,7 +1,23 @@
 import axiosClient from "./axiosClient"
 
 const menuApi = {
-  getMenuByRestaurant: ({ restaurantId }) => axiosClient.get(`api/v1/restaurant/${restaurantId}/categories`),
+  // getMenuByRestaurant: ({ restaurantId }) => axiosClient.get(`api/v1/restaurant/${restaurantId}/categories`),
+
+  getMenuByRestaurant: ({ restaurantId, limit = undefined, page = undefined, order = undefined } = {}) => {
+    const params = {
+      limit,
+      page,
+      order
+    }
+  
+    const validParams = Object.fromEntries(
+      Object.entries(params).filter(([_, value]) => value !== undefined && value)
+    )
+    const queryString = new URLSearchParams(validParams).toString()
+    const url = `api/v1/restaurant/${restaurantId}/categories${queryString ? `?${queryString}` : ""}`
+  
+    return axiosClient.get(url)
+  },  
 
   createMenu: (formData) => axiosClient.post("api/v1/restaurant/categories/create", formData),
 

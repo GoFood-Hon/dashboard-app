@@ -5,7 +5,6 @@ import React, { useEffect, useState } from "react"
 import InputTextAreaField from "../../components/Form/InputTextAreaField"
 import InputField from "../../components/Form/InputField"
 import { bytesToMB } from "../../utils"
-
 import InputCheckbox from "../../components/Form/InputCheckbox"
 import { useDispatch, useSelector } from "react-redux"
 import {
@@ -14,7 +13,7 @@ import {
   selectAllDishesCategoriesStatus
 } from "../../store/features/categorySlice"
 
-export default function GeneralInformationForm({ register, errors, setValue, isDataCleared, preloadImage }) {
+export default function GeneralInformationForm({ register, errors, setValue, isDataCleared, image }) {
   const dispatch = useDispatch()
   const user = useSelector((state) => state.user.value)
 
@@ -114,12 +113,17 @@ export default function GeneralInformationForm({ register, errors, setValue, isD
             <Dropzone onDrop={handleDrop} accept={IMAGE_MIME_TYPE}>
               <Group justify="center" gap="xl" mih={220} style={{ pointerEvents: "none" }}>
                 <div className="flex flex-col items-center">
-                  <IconPhoto style={{ width: rem(52), height: rem(52), color: "var(--mantine-color-dimmed)" }} stroke={1.5} />
-                  <Text size="xl" inline className="text-center">
+                  <img className="rounded-xl cursor-pointer max-w-52" src={image} alt="" />
+                  <IconPhoto
+                    className={`${image ? "hidden" : ""}`}
+                    style={{ width: rem(52), height: rem(52), color: "var(--mantine-color-dimmed)" }}
+                    stroke={1.5}
+                  />
+                  <Text className={`${image ? "hidden" : ""} text-center`} size="xl" inline>
                     Seleccione una imagen
                   </Text>
-                  <Text size="sm" c="dimmed" inline mt={7} className="text-center leading-10">
-                    Haga clic o arrastre la imagen del platillo
+                  <Text className={`${image ? "hidden" : ""} text-center leading-10`} size="sm" c="dimmed" inline mt={7}>
+                    Haga clic o arrastre la imagen del usuario
                   </Text>
                 </div>
               </Group>

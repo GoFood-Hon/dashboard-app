@@ -32,10 +32,13 @@ export default function EditMenuScreen() {
     setValue,
     reset,
     control,
+    watch,
     formState: { errors }
   } = useForm({
     defaultValues: menuDetails || {}
   })
+
+  const imageLocation = watch("images[0].location")
 
   useEffect(() => {
     async function getDishes() {
@@ -95,6 +98,7 @@ export default function EditMenuScreen() {
           errors={errors}
           setValue={setValue}
           control={control}
+          image={imageLocation}
           isDataCleared={isDataCleared}
         />
       )

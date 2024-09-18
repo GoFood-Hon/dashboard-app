@@ -47,11 +47,11 @@ export const NAVIGATION_ROUTES_SUPER_ADMIN = {
     icon: "users",
     path: "/miCuenta"
   },
-  Password: {
-    label: "Contraseña",
-    icon: "eye",
-    path: "/contraseña"
-  }
+  // Password: {
+  //   label: "Contraseña",
+  //   icon: "eye",
+  //   path: "/contraseña"
+  // }
 }
 
 export const NAVIGATION_ROUTES_RES_ADMIN = {

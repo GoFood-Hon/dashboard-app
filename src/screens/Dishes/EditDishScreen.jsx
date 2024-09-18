@@ -32,10 +32,13 @@ export default function EditDishScreen() {
     setValue,
     control,
     reset,
+    watch,
     formState: { errors }
   } = useForm({
     defaultValues: dishDetails || {}
   })
+
+  const imageLocation = watch("images[0].location")
 
   useEffect(() => {
     const fetchDish = async () => {
@@ -70,6 +73,7 @@ export default function EditDishScreen() {
           errors={errors}
           setValue={setValue}
           control={control}
+          image={imageLocation}
           isDataCleared={isDataCleared}
         />
       )

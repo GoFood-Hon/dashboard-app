@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 import { useDispatch, useSelector } from "react-redux"
-import { useLocation, useNavigate } from "react-router-dom"
+import { useLocation, useNavigate, useParams } from "react-router-dom"
 import { Accordion, Loader } from "@mantine/core"
 import toast from "react-hot-toast"
 import GeneralInformationForm from "./GeneralInformationForm"
@@ -12,23 +12,96 @@ import { getDepartmentNameById } from "../../utils"
 import branchesApi from "../../api/branchesApi"
 import { NAVIGATION_ROUTES_RES_ADMIN } from "../../routes"
 import { LoaderComponent } from "../../components/LoaderComponent"
+import BaseLayout from "../../components/BaseLayout"
+import BackButton from "../Dishes/components/BackButton"
 
 export const EditBranch = ({ itemDetails, close }) => {
+  const { branchId } = useParams()
+  const user = useSelector((state) => state.user.value.role)
+
+  const [markerPosition, setMarkerPosition] = useState(null)
+  const [errorLocalizacion, setErrorLocalizacion] = useState(false)
+  const [lng, setLng] = useState(0)
+  const [lat, setLat] = useState(0)
+
+  const handleMapClick = (event) => {
+    const { lngLat } = event
+    setLng(lngLat.lng)
+    setLat(lngLat.lat)
+    setMarkerPosition({ longitude: lngLat.lng, latitude: lngLat.lat })
+    setValue("geolocation", [lngLat.lng, lngLat.lat])
+    setErrorLocalizacion(false)
+  }
+
+  const handleMapInput = () => {
+    setErrorLocalizacion(false)
+    setMarkerPosition({ longitude: lng, latitude: lat })
+    setValue("geolocation", [lng, lat])
+  }
+
+  const location = useLocation()
+  const dispatch = useDispatch()
+
+  const [details, setDetails] = useState({})
+  const [marker, setMarker] = useState({
+    longitude: -88.025,
+    latitude: 15.50417
+  })
+  const [viewState, setViewState] = React.useState({
+    longitude: -88.025,
+    latitude: 15.50417,
+    zoom: 12.2
+  })
+
   const {
     register,
     handleSubmit,
     setValue,
     control,
     reset,
+    watch,
     formState: { errors }
   } = useForm({
     defaultValues: itemDetails
   })
   const navigate = useNavigate()
+  const imageLocation = watch('images[0].location')
 
   const restaurant = useSelector((state) => state?.restaurant?.value)
   const [isDataCleared, setIsDataCleared] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await branchesApi.getBranch(branchId)
+
+        setDetails(response?.data)
+
+        setViewState({
+          longitude: details?.geolocation?.coordinates?.[0],
+          latitude: details?.geolocation?.coordinates?.[1],
+          zoom: 15
+        })
+
+        setMarker({
+          longitude: details?.geolocation?.coordinates?.[0],
+          latitude: details?.geolocation?.coordinates?.[1]
+        })
+      } catch (error) {
+        throw error
+      }
+    }
+
+    fetchData()
+  }, [])
+
+  useEffect(() => {
+    if (Object.keys(details).length > 0) {
+      reset(details)
+    }
+    window.scrollTo(0, 0)
+  }, [details, reset])
 
   const accordionStructure = [
     {
@@ -40,8 +113,9 @@ export const EditBranch = ({ itemDetails, close }) => {
           errors={errors}
           setValue={setValue}
           control={control}
+          image={imageLocation}
           isDataCleared={isDataCleared}
-          itemDetails={itemDetails}
+          itemDetails={details}
         />
       )
     },
@@ -55,14 +129,14 @@ export const EditBranch = ({ itemDetails, close }) => {
           setValue={setValue}
           control={control}
           isDataCleared={isDataCleared}
-          itemDetails={itemDetails}
+          itemDetails={details}
         />
       )
     },
     {
       title: "Horario",
       requirement: "Obligatorio",
-      form: <TimeForm setValue={setValue} />
+      form: <TimeForm setValue={setValue} data={details} />
     }
   ]
 
@@ -151,42 +225,49 @@ export const EditBranch = ({ itemDetails, close }) => {
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <BaseLayout>
       <section>
-        <Accordion
-          variant="separated"
-          multiple
-          defaultValue={["Información general", "Ubicación", "Horario"]}
-          classNames={{
-            label: "bg-white fill-white"
-          }}>
-          {items}
-        </Accordion>
-      </section>
-      <section>
-        <div className="w-full flex md:justify-end mt-6 md:gap-3 rounded-md bg-white px-8 py-5 border border-gray-200">
-          <div className="md:w-2/3 lg:1/3 sm:w-full flex flex-row justify-end gap-3 sm:flex-wrap md:flex-nowrap">
-            <Button
-              text={"Descartar"}
-              className={"text-xs border border-red-400 text-red-400 bg-white"}
-              onClick={() => {
-                reset()
-                localStorage.removeItem("draft")
-                toast.success("")
-                navigate(NAVIGATION_ROUTES_RES_ADMIN.Menu.submenu.Dishes.path)
-              }}
-            />
-            {isLoading ? (
-              <LoaderComponent width={24} size={25} />
-            ) : (
-              <Button
-                text={"Actualizar"}
-                className="w-24 flex h-10 items-center justify-center rounded-md shadow-sm transition-all duration-700 focus:outline-none text-xs bg-sky-950 text-slate-50"
-              />
-            )}
-          </div>
+        <div className="flex flex-row justify-between items-center pb-6">
+          <BackButton title={details?.name} />
         </div>
       </section>
-    </form>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <section>
+          <Accordion
+            variant="separated"
+            multiple
+            defaultValue={["Información general", "Ubicación", "Horario"]}
+            classNames={{
+              label: "bg-white fill-white"
+            }}>
+            {items}
+          </Accordion>
+        </section>
+        <section>
+          <div className="w-full flex md:justify-end mt-6 md:gap-3 rounded-md bg-white px-8 py-5 border border-gray-200">
+            <div className="md:w-2/3 lg:1/3 sm:w-full flex flex-row justify-end gap-3 sm:flex-wrap md:flex-nowrap">
+              <Button
+                text={"Descartar"}
+                className={"text-xs border border-red-400 text-red-400 bg-white"}
+                onClick={() => {
+                  reset()
+                  localStorage.removeItem("draft")
+                  toast.success("")
+                  navigate(NAVIGATION_ROUTES_RES_ADMIN.Menu.submenu.Dishes.path)
+                }}
+              />
+              {isLoading ? (
+                <LoaderComponent width={24} size={25} />
+              ) : (
+                <Button
+                  text={"Actualizar"}
+                  className="w-24 flex h-10 items-center justify-center rounded-md shadow-sm transition-all duration-700 focus:outline-none text-xs bg-sky-950 text-slate-50"
+                />
+              )}
+            </div>
+          </div>
+        </section>
+      </form>
+    </BaseLayout>
   )
 }

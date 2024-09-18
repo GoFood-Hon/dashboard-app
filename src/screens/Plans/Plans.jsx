@@ -84,7 +84,7 @@ export const Plans = () => {
             <MenuTable refreshPage={refreshPage} items={plans} screenType="planScreen" />
           </div>
         ) : (
-          <div className="text-center mt-4 text-gray-500">Sin Plans disponibles!</div>
+          <div className="text-center mt-4 text-gray-500">No hay planes para mostrar</div>
         )}
       </section>
     </BaseLayout>

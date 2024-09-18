@@ -1,25 +1,42 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { Accordion } from "@mantine/core"
 import { useForm } from "react-hook-form"
 import toast from "react-hot-toast"
-
 import Button from "../../components/Button"
 import plansApi from "../../api/plansApi"
 import { convertToDecimal } from "../../utils"
 import { EditGeneralInformationForm } from "./EditGeneralInformationForm"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import { NAVIGATION_ROUTES_SUPER_ADMIN, SETTING_NAVIGATION_ROUTES } from "../../routes"
+import BaseLayout from "../../components/BaseLayout"
+import BackButton from "../Dishes/components/BackButton"
 
-export const EditPlan = ({ closeFormModal, data }) => {
+export const EditPlan = () => {
+  const { planId } = useParams()
   const navigate = useNavigate()
+  const [planDetails, setPlanDetails] = useState({})
+
+  useEffect(() => {
+    ;(async () => {
+      try {
+        const response = await plansApi.getPlan(planId)
+        setPlanDetails(response.data.plan)
+      } catch (error) {
+        toast.error(`Fallo al obtener el plan. Por favor intente de nuevo. ${error}`, {
+          duration: 7000
+        })
+      }
+    })()
+  }, [])
 
   const {
     register,
     handleSubmit,
     setValue,
+    reset,
     control,
     formState: { errors }
-  } = useForm({ defaultValues: data })
+  } = useForm({ defaultValues: planDetails || {} })
 
   const [featuresList, setFeaturesList] = useState([])
 
@@ -29,7 +46,7 @@ export const EditPlan = ({ closeFormModal, data }) => {
       requirement: "Obligatorio",
       form: (
         <EditGeneralInformationForm
-          data={data}
+          data={planDetails}
           register={register}
           errors={errors}
           setValue={setValue}
@@ -40,6 +57,13 @@ export const EditPlan = ({ closeFormModal, data }) => {
       )
     }
   ]
+
+  useEffect(() => {
+    if (Object.keys(planDetails).length > 0) {
+      reset(planDetails)
+    }
+    window.scrollTo(0, 0)
+  }, [planDetails, reset])
 
   const items = accordionStructure.map((item, key) => (
     <Accordion.Item key={key} value={item.title}>
@@ -107,33 +131,36 @@ export const EditPlan = ({ closeFormModal, data }) => {
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <BaseLayout>
       <section>
-        <Accordion
-          variant="separated"
-          multiple
-          defaultValue={["Información general"]}
-          classNames={{
-            label: "bg-white fill-white"
-          }}>
-          {items}
-        </Accordion>
-      </section>
-      <section>
-        <div className="w-full flex md:justify-end mt-6 md:gap-3 rounded-md bg-white px-8 py-5 border border-gray-200">
-          <div className="md:w-2/3 lg:1/3 sm:w-full flex flex-row justify-end gap-3 sm:flex-wrap md:flex-nowrap">
-            <Button
-              text={"Descartar"}
-              className={"text-xs border border-red-400 text-red-400 bg-white"}
-              onClick={closeFormModal}
-            />
-            <Button
-              text={"Guardar Plan"}
-              className="flex h-10 w-full items-center justify-center px-4 rounded-md shadow-sm transition-all duration-700 focus:outline-none text-xs bg-sky-950 text-slate-50"
-            />
-          </div>
+        <div className="flex flex-row justify-between items-center pb-6">
+          <BackButton title={planDetails?.name} />
         </div>
       </section>
-    </form>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <section>
+          <Accordion
+            variant="separated"
+            multiple
+            defaultValue={["Información general"]}
+            classNames={{
+              label: "bg-white fill-white"
+            }}>
+            {items}
+          </Accordion>
+        </section>
+        <section>
+          <div className="w-full flex md:justify-end mt-6 md:gap-3 rounded-md bg-white px-8 py-5 border border-gray-200">
+            <div className="md:w-2/3 lg:1/3 sm:w-full flex flex-row justify-end gap-3 sm:flex-wrap md:flex-nowrap">
+              <Button text={"Descartar"} className={"text-xs border border-red-400 text-red-400 bg-white"} />
+              <Button
+                text={"Actualizar"}
+                className="w-24 flex h-10 items-center justify-center rounded-md shadow-sm transition-all duration-700 focus:outline-none text-xs bg-sky-950 text-slate-50"
+              />
+            </div>
+          </div>
+        </section>
+      </form>
+    </BaseLayout>
   )
 }

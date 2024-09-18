@@ -1,19 +1,31 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { Accordion } from "@mantine/core"
 import { useForm } from "react-hook-form"
-import toast from "react-hot-toast"
-import { useLocation, useNavigate } from "react-router-dom"
-
+import { useNavigate, useParams } from "react-router-dom"
 import { GeneralInformationForm } from "./GeneralInformationForm"
 import Button from "../../components/Button"
 import restaurantsApi from "../../api/restaurantApi"
 import { NAVIGATION_ROUTES_SUPER_ADMIN } from "../../routes"
 import { convertToDecimal } from "../../utils"
 import { LoaderComponent } from "../../components/LoaderComponent"
+import BaseLayout from "../../components/BaseLayout"
+import BackButton from "../Dishes/components/BackButton"
+import { showNotification } from "@mantine/notifications"
 
-export const EditRestaurant = ({ close, details, restaurantId }) => {
+export const EditRestaurant = () => {
+  const { restaurantId } = useParams()
   const navigate = useNavigate()
   const [isLoading, setIsLoading] = useState(false)
+  const [restaurantDetails, setRestaurantDetails] = useState({})
+
+  useEffect(() => {
+    ;(async () => {
+      const response = await restaurantsApi.getRestaurant(restaurantId)
+
+      const details = response?.data
+      setRestaurantDetails(details)
+    })()
+  }, [])
 
   const {
     register,
@@ -21,9 +33,11 @@ export const EditRestaurant = ({ close, details, restaurantId }) => {
     setValue,
     control,
     reset,
+    watch,
     formState: { errors }
-  } = useForm({ defaultValues: details })
+  } = useForm({ defaultValues: restaurantDetails || {} })
 
+  const imageLocation = watch("images[0].location")
   const [isDataCleared, setIsDataCleared] = useState(false)
 
   const onSubmit = async (data) => {
@@ -45,9 +59,11 @@ export const EditRestaurant = ({ close, details, restaurantId }) => {
       const response = await restaurantsApi.updateRestaurant(formData, restaurantId)
 
       if (response.error) {
-        toast.error(`No fue posible actualizar. ${response.message.split(":")[2].trim()}`, {
-          duration: 7000,
-          position: "bottom-right"
+        showNotification({
+          title: "Error",
+          message: response.error,
+          color: "red",
+          duration: 7000
         })
       } else {
         const updatedRestaurantId = response?.data?.id
@@ -63,30 +79,41 @@ export const EditRestaurant = ({ close, details, restaurantId }) => {
           const addImageResponse = await uploadImage(updatedRestaurantId, data.files[0])
 
           if (addImageResponse.error) {
-            toast.error(`Fallo al subir la imagen. Por favor intente de nuevo. ${addImageResponse.message}`, {
+            showNotification({
+              title: "Error",
+              message: addImageResponse.error,
+              color: "red",
               duration: 7000
             })
-          } else {
-            toast.success("Restaurante actualizado exitosamente", {
-              duration: 7000
-            })
-            navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Restaurants.path)
           }
         } else {
-          toast.success("Restaurante actualizado exitosamente", {
+          showNotification({
+            title: "Actualización exitosa",
+            message: `Se actualizó la información de ${response.data.name}`,
+            color: "green",
             duration: 7000
           })
-          navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Restaurants.path)
         }
+        navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Restaurants.path)
       }
       setIsLoading(false)
     } catch (error) {
-      toast.error(`Error. Por favor intente de nuevo. ${error}`, {
+      showNotification({
+        title: "Error",
+        message: error,
+        color: "red",
         duration: 7000
       })
       setIsLoading(false)
     }
   }
+
+  useEffect(() => {
+    if (Object.keys(restaurantDetails).length > 0) {
+      reset(restaurantDetails)
+    }
+    window.scrollTo(0, 0)
+  }, [restaurantDetails, reset])
 
   const accordionStructure = [
     {
@@ -98,6 +125,7 @@ export const EditRestaurant = ({ close, details, restaurantId }) => {
           errors={errors}
           setValue={setValue}
           control={control}
+          image={imageLocation}
           isDataCleared={isDataCleared}
         />
       )
@@ -120,39 +148,46 @@ export const EditRestaurant = ({ close, details, restaurantId }) => {
   ))
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <BaseLayout>
       <section>
-        <Accordion
-          variant="separated"
-          multiple
-          defaultValue={["Información general"]}
-          classNames={{
-            label: "bg-white fill-white"
-          }}>
-          {items}
-        </Accordion>
-      </section>
-      <section>
-        <div className="w-full flex md:justify-end mt-6 md:gap-3 rounded-md bg-white px-8 py-5 border border-gray-200">
-          <div className="md:w-2/3 lg:1/3 sm:w-full flex flex-row justify-end gap-3 sm:flex-wrap md:flex-nowrap">
-            <Button
-              text={"Descartar"}
-              className={"text-xs border border-red-400 text-red-400 bg-white"}
-              onClick={() => {
-                navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Restaurants.path)
-              }}
-            />
-            {isLoading ? (
-              <LoaderComponent width={24} size={25} />
-            ) : (
-              <Button
-                text={"Actualizar"}
-                className="w-24 flex h-10 items-center justify-center rounded-md shadow-sm transition-all duration-700 focus:outline-none text-xs bg-sky-950 text-slate-50"
-              />
-            )}
-          </div>
+        <div className="flex flex-row justify-between items-center pb-6">
+          <BackButton title={restaurantDetails?.name} />
         </div>
       </section>
-    </form>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <section>
+          <Accordion
+            variant="separated"
+            multiple
+            defaultValue={["Información general"]}
+            classNames={{
+              label: "bg-white fill-white"
+            }}>
+            {items}
+          </Accordion>
+        </section>
+        <section>
+          <div className="w-full flex md:justify-end mt-6 md:gap-3 rounded-md bg-white px-8 py-5 border border-gray-200">
+            <div className="md:w-2/3 lg:1/3 sm:w-full flex flex-row justify-end gap-3 sm:flex-wrap md:flex-nowrap">
+              <Button
+                text={"Descartar"}
+                className={"text-xs border border-red-400 text-red-400 bg-white"}
+                onClick={() => {
+                  navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Restaurants.path)
+                }}
+              />
+              {isLoading ? (
+                <LoaderComponent width={24} size={25} />
+              ) : (
+                <Button
+                  text={"Actualizar"}
+                  className="w-24 flex h-10 items-center justify-center rounded-md shadow-sm transition-all duration-700 focus:outline-none text-xs bg-sky-950 text-slate-50"
+                />
+              )}
+            </div>
+          </div>
+        </section>
+      </form>
+    </BaseLayout>
   )
 }

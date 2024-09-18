@@ -83,7 +83,7 @@ export const SelectPlan = ({ restaurantId }) => {
                     </ul>
                   </div>
                   <Button
-                    text={"Elegir Plan"}
+                    text={"Seleccionar"}
                     className={"text-white text-md px-3 py-2 bg-primary_button"}
                     onClick={() => onSubmit(plan.id)}
                   />

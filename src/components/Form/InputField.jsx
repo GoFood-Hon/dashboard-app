@@ -34,7 +34,7 @@ export default function InputField({
             errors[name] ? "border border-red-500" : "mb-2"
           }  mt-2 p-2 appearance-none block w-full border placeholder-gray-300 rounded focus:outline-none dark:bg-slate-900 dark:border-gray-600 dark:placeholder-gray-500`}
           type={type === "password" ? (showPassword ? "text" : "password") : type}
-          value={defaultValue}
+          value={defaultValue?.startsWith("+504") ? defaultValue.replace("+504", "") : defaultValue}
           placeholder={placeholder}
           {...register(name, rules)}
         />

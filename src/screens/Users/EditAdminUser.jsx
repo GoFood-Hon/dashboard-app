@@ -1,19 +1,41 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { Accordion } from "@mantine/core"
 import { useForm } from "react-hook-form"
 import toast from "react-hot-toast"
-import { useLocation, useNavigate } from "react-router-dom"
+import { useLocation, useNavigate, useParams } from "react-router-dom"
 import { AdminGeneralInformationForm } from "./AdminGeneralInformationForm"
 import Button from "../../components/Button"
 import { NAVIGATION_ROUTES_SUPER_ADMIN } from "../../routes"
 import userApi from "../../api/userApi"
+import authApi from "../../api/authApi"
+import BaseLayout from "../../components/BaseLayout"
+import { LoaderComponent } from "../../components/LoaderComponent"
+import BackButton from "../Dishes/components/BackButton"
 
-export const EditAdminUser = ({ close, details, adminId }) => {
+export const EditAdminUser = () => {
+  const { adminId } = useParams()
   const navigate = useNavigate()
+  const [details, setDetails] = useState({})
+  const [loading, setLoading] = useState(false)
 
   const formatPhoneNumber = (phoneNumber) => {
-    return phoneNumber.replace("+504", "")
+    return phoneNumber?.replace("+504", "")
   }
+
+  useEffect(() => {
+    ;(async () => {
+      const response = await authApi.getUserDetails(adminId)
+
+      if (response?.data) {
+        const details = response.data
+
+        if (details.phoneNumber?.startsWith("+504")) {
+          details.phoneNumber = details.phoneNumber.replace("+504", "")
+        }
+        setDetails(details)
+      }
+    })()
+  }, [])
 
   const formattedPhoneNumber = formatPhoneNumber(details?.phoneNumber)
 
@@ -23,10 +45,21 @@ export const EditAdminUser = ({ close, details, adminId }) => {
     setValue,
     control,
     reset,
+    watch,
     formState: { errors }
   } = useForm({ defaultValues: { ...details, phoneNumber: formattedPhoneNumber } })
 
+  const imageLocation = watch("images[0].location")
+
+  useEffect(() => {
+    if (Object.keys(details).length > 0) {
+      reset(details)
+    }
+    window.scrollTo(0, 0)
+  }, [details, reset])
+
   const onSubmit = async (data) => {
+    setLoading(true)
     const formData = new FormData()
     formData.append("name", data.name)
     formData.append("email", data.email)
@@ -46,12 +79,21 @@ export const EditAdminUser = ({ close, details, adminId }) => {
       })
       navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Users.path)
     }
+    setLoading(false)
   }
   const accordionStructure = [
     {
       title: "Información general",
       requirement: "Obligatorio",
-      form: <AdminGeneralInformationForm register={register} errors={errors} setValue={setValue} control={control} />
+      form: (
+        <AdminGeneralInformationForm
+          register={register}
+          errors={errors}
+          setValue={setValue}
+          control={control}
+          image={imageLocation}
+        />
+      )
     }
   ]
 
@@ -71,35 +113,46 @@ export const EditAdminUser = ({ close, details, adminId }) => {
   ))
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <BaseLayout>
       <section>
-        <Accordion
-          variant="separated"
-          multiple
-          defaultValue={["Información general"]}
-          classNames={{
-            label: "bg-white fill-white"
-          }}>
-          {items}
-        </Accordion>
-      </section>
-      <section>
-        <div className="w-full flex md:justify-end mt-6 md:gap-3 rounded-md bg-white px-8 py-5 border border-gray-200">
-          <div className="md:w-2/3 lg:1/3 sm:w-full flex flex-row justify-end gap-3 sm:flex-wrap md:flex-nowrap">
-            <Button
-              text={"Descartar"}
-              className={"text-xs border border-red-400 text-red-400 bg-white"}
-              onClick={() => {
-                navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Restaurants.path)
-              }}
-            />
-            <Button
-              text={"Guardar administrador"}
-              className="flex h-10 w-full items-center justify-center px-4 rounded-md shadow-sm transition-all duration-700 focus:outline-none text-xs bg-sky-950 text-slate-50"
-            />
-          </div>
+        <div className="flex flex-row justify-between items-center pb-4">
+          <BackButton title={details.name} />
         </div>
       </section>
-    </form>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <section>
+          <Accordion
+            variant="separated"
+            multiple
+            defaultValue={["Información general"]}
+            classNames={{
+              label: "bg-white fill-white"
+            }}>
+            {items}
+          </Accordion>
+        </section>
+        <section>
+          <div className="w-full flex md:justify-end mt-6 md:gap-3 rounded-md bg-white px-8 py-5 border border-gray-200">
+            <div className="md:w-2/3 lg:1/3 sm:w-full flex flex-row justify-end gap-3 sm:flex-wrap md:flex-nowrap">
+              <Button
+                text={"Descartar"}
+                className={"text-xs border border-red-400 text-red-400 bg-white"}
+                onClick={() => {
+                  navigate(-1)
+                }}
+              />
+              {loading ? (
+                <LoaderComponent width={24} size={25} />
+              ) : (
+                <Button
+                  text={"Actualizar"}
+                  className="w-24 flex h-10 items-center justify-center rounded-md shadow-sm transition-all duration-700 focus:outline-none text-xs bg-sky-950 text-slate-50"
+                />
+              )}
+            </div>
+          </div>
+        </section>
+      </form>
+    </BaseLayout>
   )
 }

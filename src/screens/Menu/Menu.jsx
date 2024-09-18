@@ -16,11 +16,12 @@ export default function Menu() {
   const navigate = useNavigate()
   const location = useLocation()
   const dispatch = useDispatch()
-
   const menus = useSelector(selectAllMenus)
   const status = useSelector(selectMenusStatus)
   const error = useSelector(selectMenusError)
   const page = useSelector((state) => state.menus.currentPage)
+  const limit = useSelector((state) => state.restaurants.itemsPerPage)
+  const totalItems = useSelector((state) => state.restaurants.totalItems)
   const user = useSelector((state) => state.user.value)
   const restaurant = useSelector((state) => state?.restaurant?.value)
 
@@ -40,17 +41,13 @@ export default function Menu() {
 
   useEffect(() => {
     if (user?.restaurantId) {
-      dispatch(fetchMenus({ restaurantId: user.restaurantId }))
+      dispatch(fetchMenus({ restaurantId: user.restaurantId, limit, page, order: "DESC" }))
     }
     setCardsSelected([])
   }, [page, dispatch, user])
 
   const refreshPage = () => {
-    dispatch(
-      fetchMenus({
-        restaurantId: user.restaurantId
-      })
-    )
+    dispatch(fetchMenus({ restaurantId: user.restaurantId, limit, page, order: "DESC" }))
     setCardsSelected([])
   }
 

@@ -85,7 +85,7 @@ export const GeneralInformationForm = ({ register, errors, setValue, featuresLis
                 <label className="text-sky-950 text-sm font-bold leading-snug">Tipo de pago</label>
                 <div className="mt-1">
                   <Select
-                    data={["MENSUAL", "ANUAL"]}
+                    data={["Mensual", "Anual"]}
                     allowDeselect={false}
                     size="md"
                     value={paymentType}

@@ -8,7 +8,7 @@ export const DEFAULT_INITIAL_DATE = new Date()
 export const DEFAULT_END_DATE = new Date()
 
 export const DEFAULT_CURRENCY = "HNL"
-export const DEFAULT_PAYMENT_TYPE = "MENSUAL"
+export const DEFAULT_PAYMENT_TYPE = "Mensual"
 
 export const orderDeliveryTypes = {
   delivery: "delivery",

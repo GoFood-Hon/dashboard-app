@@ -61,6 +61,10 @@ import { OrderHistory } from "./screens/Orders/OrderHistory"
 import { NotificationProvider } from "./components/NotificationProvider"
 import EditMenuScreen from "./screens/Menu/EditMenuScreen"
 import EditDishScreen from "./screens/Dishes/EditDishScreen"
+import { EditRestaurant } from "./screens/Restaurants/EditRestaurant"
+import { EditBranch } from "./screens/Branches/EditBranch"
+import { EditAdminUser } from "./screens/Users/EditAdminUser"
+import { EditPlan } from "./screens/Plans/EditPlan"
 
 function App() {
   const userRole = useSelector((state) => state.user.value.role)
@@ -76,23 +80,23 @@ function App() {
 
             <Route path={NAVIGATION_ROUTES_SUPER_ADMIN.Restaurants.NewRestaurant.path} element={<NewRestaurant />} />
 
-            <Route path={NAVIGATION_ROUTES_SUPER_ADMIN.Restaurants.RestaurantDetails.path} element={<RestaurantDetailScreen />} />
+            <Route path={NAVIGATION_ROUTES_SUPER_ADMIN.Restaurants.RestaurantDetails.path} element={<EditRestaurant />} />
 
             <Route path={NAVIGATION_ROUTES_SUPER_ADMIN.Users.path} element={<AdminUserScreen />} />
 
             <Route path={NAVIGATION_ROUTES_SUPER_ADMIN.Users.NewUser.path} element={<NewAdminUser />} />
 
-            <Route path={NAVIGATION_ROUTES_SUPER_ADMIN.Users.UserDetails.path} element={<AdminUserDetails />} />
+            <Route path={NAVIGATION_ROUTES_SUPER_ADMIN.Users.UserDetails.path} element={<EditAdminUser />} />
 
             <Route path={NAVIGATION_ROUTES_SUPER_ADMIN.Plans.path} element={<Plans />} />
 
             <Route path={NAVIGATION_ROUTES_SUPER_ADMIN.Plans.NewPlan.path} element={<NewPlan />} />
 
-            <Route path={NAVIGATION_ROUTES_SUPER_ADMIN.Plans.PlanDetails.path} element={<PlanDetails />} />
+            <Route path={NAVIGATION_ROUTES_SUPER_ADMIN.Plans.PlanDetails.path} element={<EditPlan />} />
 
             <Route path={NAVIGATION_ROUTES_SUPER_ADMIN.Account.path} element={<AccountSettings />} />
 
-            <Route path={NAVIGATION_ROUTES_SUPER_ADMIN.Password.path} element={<PasswordSettings />} />
+            {/* <Route path={NAVIGATION_ROUTES_SUPER_ADMIN.Password.path} element={<PasswordSettings />} /> */}
           </>
         )
       case APP_ROLES.restaurantAdmin:
@@ -133,7 +137,7 @@ function App() {
 
             <Route path={NAVIGATION_ROUTES_RES_ADMIN.Branches.NewBranch.path} element={<NewBranch />} />
 
-            <Route path={NAVIGATION_ROUTES_RES_ADMIN.Branches.BranchDetail.path} element={<BranchesDetails />} />
+            <Route path={NAVIGATION_ROUTES_RES_ADMIN.Branches.BranchDetail.path} element={<EditBranch />} />
 
             <Route path={NAVIGATION_ROUTES_RES_ADMIN.Users.path} element={<Users />} />
 
@@ -253,7 +257,7 @@ function App() {
             }>
             {renderRoutesForRole(userRole)}
           </Route>
-          <Route path={"/unauthorized"} element={<Navigate to="/" />} />
+          {/* <Route path={"/unauthorized"} element={<Navigate to="/" />} /> */}
           <Route path={AUTH_NAVIGATION_ROUTES.Logout.path} element={<Logout />} />
           {/* <Route path={"/notificaciones"} element={<NotificationScreen />} /> */}
         </Route>
