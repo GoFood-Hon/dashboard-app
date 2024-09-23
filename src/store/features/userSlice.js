@@ -1,32 +1,73 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit"
+import userApi from "../../api/userApi"
+import toast from "react-hot-toast"
+
+// Thunk para obtener los usuarios administradores
+export const fetchAdminUsers = createAsyncThunk("user/fetchAdminUsers", async ({ limit, page }, { rejectWithValue }) => {
+  try {
+    const response = await userApi.getAdminUsers({
+      limit,
+      page,
+      order: "DESC"
+    })
+
+    if (response.error) {
+      toast.error("Error obteniendo la información de los usuarios")
+      return rejectWithValue(response.error)
+    }
+
+    return response.data // Devuelve los usuarios si la solicitud es exitosa
+  } catch (error) {
+    toast.error("Fallo obtener los datos del usuario")
+    return rejectWithValue(error.message)
+  }
+})
 
 const initialState = {
   value: {},
   currentPage: 1,
-};
+  totalAdminUsers: 0,
+  adminUsers: [],
+  loading: false,
+  error: null
+}
 
 export const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
     setUser: (state, action) => {
-      state.value = action.payload;
+      state.value = action.payload
     },
-    incrementTotalItems: (state, action) => {
-      state.currentPage += action.payload; // Suma el valor recibido al totalItems
+    setCurrentPage: (state, action) => {
+      state.currentPage = action.payload
     },
-    decrementTotalItems: (state, action) => {
-      state.currentPage -= action.payload; // Resta el valor recibido al totalItems
-    },
-    setTotalItems: (state, action) => {
-      state.currentPage = action.payload; // Establece un valor específico para totalItems
-    },
+    setTotalAdminUsers: (state, action) => {
+      state.totalAdminUsers = action.payload
+    }
   },
-});
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchAdminUsers.pending, (state) => {
+        state.loading = true
+        state.error = null
+      })
+      .addCase(fetchAdminUsers.fulfilled, (state, action) => {
+        state.adminUsers = action.payload // Actualiza los usuarios
+        state.totalAdminUsers = action.payload.results
+        state.loading = false
+      })
+      .addCase(fetchAdminUsers.rejected, (state, action) => {
+        state.loading = false
+        state.error = action.payload // Maneja el error
+      })
+  }
+})
 
-export const { setUser, incrementTotalItems, decrementTotalItems, setTotalItems } = userSlice.actions;
+// Exportar las acciones
+export const { setUser, setCurrentPage, setTotalAdminUsers } = userSlice.actions
 
-export default userSlice.reducer;
+export default userSlice.reducer
 
 // import { createSlice, createAsyncThunk } from "@reduxjs/toolkit"
 // import userApi from "../../api/userApi"

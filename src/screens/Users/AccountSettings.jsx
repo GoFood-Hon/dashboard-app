@@ -41,6 +41,8 @@ export default function AccountSettings() {
       try {
         const response = await authApi.getUser()
 
+        console.log(response)
+
         if (response.error) {
           toast.error("Error en la respuesta de la información del usuario")
           return {}

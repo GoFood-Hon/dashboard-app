@@ -27,16 +27,16 @@ dayjs.extend(relativeTime)
 dayjs.locale("es")
 dayjs.extend(relativeTime)
 
-export default function MenuTable({ refreshPage, items, handleDisableSelected, screenType, totalItems }) {
+export default function MenuTable({ refreshPage, items, handleDisableSelected, screenType, totalItems, currentPage, setPage }) {
   const [data, setData] = useState(items)
   const [itemsSelected, setItemsSelected] = useState([])
   const [search, setSearch] = useState("")
-  const [currentPage, setCurrentPage] = useState(1)
   const navigate = useNavigate()
+  const totalControlBtn = Math.ceil(totalItems / ITEMS_PER_PAGE)
 
   useEffect(() => {
     setData(items)
-  }, [items])
+  }, [items, currentPage])
 
   const handleSelectChange = (id) => {
     setItemsSelected((prevState) => {
@@ -63,7 +63,7 @@ export default function MenuTable({ refreshPage, items, handleDisableSelected, s
   }
 
   const toggleAll = () => {
-    setItemsSelected((current) => (current.length === paginatedData.length ? [] : paginatedData.map((item) => item.id)))
+    setItemsSelected((current) => (current.length === items.length ? [] : items.map((item) => item.id)))
   }
 
   const filteredData = data.filter((item) => {
@@ -75,8 +75,6 @@ export default function MenuTable({ refreshPage, items, handleDisableSelected, s
   const theme = createTheme({
     cursorType: "pointer"
   })
-
-  const paginatedData = filteredData.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE)
 
   const columns = {
     menuScreen: [
@@ -355,8 +353,8 @@ export default function MenuTable({ refreshPage, items, handleDisableSelected, s
               <Table.Th style={{ width: 40 }}>
                 <Checkbox
                   onChange={toggleAll}
-                  checked={itemsSelected.length === paginatedData.length}
-                  indeterminate={itemsSelected.length > 0 && itemsSelected.length !== paginatedData.length}
+                  checked={itemsSelected.length === items.length}
+                  indeterminate={itemsSelected.length > 0 && itemsSelected.length !== items.length}
                   color={colors.primary_button}
                 />
               </Table.Th>
@@ -368,7 +366,7 @@ export default function MenuTable({ refreshPage, items, handleDisableSelected, s
             </Table.Tr>
           </Table.Thead>
           <Table.Tbody>
-            {paginatedData.map((item) => {
+            {items.map((item) => {
               const selected = itemsSelected.includes(item.id)
               return (
                 <Table.Tr key={item.id}>
@@ -398,10 +396,11 @@ export default function MenuTable({ refreshPage, items, handleDisableSelected, s
       <div className="flex w-full justify-end">
         <Group mx={20} mt={10}>
           <Pagination
-            total={Math.ceil(totalItems / ITEMS_PER_PAGE)}
+            total={totalControlBtn}
             page={currentPage}
-            onChange={(page) => setCurrentPage(page)}
+            onChange={(page) => setPage(page)}
             color={colors.primary_button}
+            defaultValue={currentPage}
           />
         </Group>
       </div>

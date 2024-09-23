@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from "react"
 import { useLocation, useNavigate } from "react-router-dom"
-import { Affix, Breadcrumbs, Grid, Pagination } from "@mantine/core"
+import { Affix, Grid, Pagination } from "@mantine/core"
 import { useDispatch, useSelector } from "react-redux"
-import BreadCrumbNavigation from "../../components/BreadCrumbNavigation"
 import Button from "../../components/Button"
 import BaseLayout from "../../components/BaseLayout"
 import ItemCard from "../../components/ItemCard"
 import { fetchRestaurants, setPage, updateRestaurant } from "../../store/features/restaurantSlice"
-import { Icon } from "../../components/Icon"
 import { colors } from "../../theme/colors"
 import { NAVIGATION_ROUTES_SUPER_ADMIN } from "../../routes"
 import BackButton from "../Dishes/components/BackButton"
@@ -136,7 +134,7 @@ export default function RestaurantsScreen() {
             ))}
           </Grid>
         ) : (
-          <div className="text-center mt-4 text-gray-500">Sin restaurantes disponibles!</div>
+          <div className="text-center mt-4 text-gray-500">No hay restaurantes para mostrar</div>
         )}
       </section>
       <section className="flex flex-row justify-between pb-32">
@@ -145,6 +143,7 @@ export default function RestaurantsScreen() {
           total={totalControlBtn}
           page={page}
           limit={limit}
+          defaultValue={page}
           onChange={onChangePagination}
           color={colors.primary_button}
         />

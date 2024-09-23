@@ -7,7 +7,8 @@ import { NAVIGATION_ROUTES_SUPER_ADMIN } from "../../routes"
 import MenuTable from "../Menu/MenuTable"
 import toast from "react-hot-toast"
 import userApi from "../../api/userApi"
-import { useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
+import { setTotalAdminUsers, setCurrentPage, fetchAdminUsers } from "../../store/features/userSlice"
 
 export const AdminUserScreen = () => {
   const navigate = useNavigate()
@@ -17,9 +18,16 @@ export const AdminUserScreen = () => {
   const [loading, setLoading] = useState(false)
   const limit = useSelector((state) => state.restaurants.itemsPerPage)
   const page = useSelector((state) => state.user.currentPage)
-
+  const dispatch = useDispatch()
   const [adminUsers, setAdminUsers] = useState([])
-  const [totalItems, setTotalItems] = useState(0)
+  const adminUsersTwo = useSelector((state) => state.user.adminUsers)
+  const totalAdminUsers = useSelector((state) => state.user.totalAdminUsers)
+
+  useEffect(() => {
+    dispatch(fetchAdminUsers({ limit, page }));
+    console.log(adminUsersTwo)
+    console.log(totalAdminUsers)
+  }, [dispatch, limit, page]);
 
   useEffect(() => {
     fetchData()
@@ -33,16 +41,17 @@ export const AdminUserScreen = () => {
         page,
         order: "DESC"
       })
+      dispatch(setTotalAdminUsers(response.results))
 
       if (response.error) {
-        toast.error("Error obteniendo la información de los usuarios")
+        //toast.error("Error obteniendo la información de los usuarios")
       } else if (response.status === "success") {
         setAdminUsers(response.data)
         setTotalItems(response.results)
       }
       setLoading(false)
     } catch (e) {
-      toast.error("Fallo obtener los datos del usuario", e)
+      //toast.error("Fallo obtener los datos del usuario", e)
       setLoading(false)
     }
   }
@@ -74,17 +83,16 @@ export const AdminUserScreen = () => {
         </div>
       </section>
       <section>
-        {loading ? (
-          <Skeleton height={420} mt={6} width="100%" radius="lg" />
-        ) : adminUsers && adminUsers.length > 0 ? (
+        {adminUsers && adminUsers.length > 0 ? (
           <div className="w-full p-4 h-full bg-white rounded-2xl border border-blue-100">
             <MenuTable
               refreshPage={refreshPage}
-              items={adminUsers}
+              items={adminUsersTwo}
               handleDisableSelected={handleDisableSelected}
               screenType="adminUserScreen"
-              totalItems={totalItems}
+              totalItems={totalAdminUsers}
               currentPage={page}
+              setPage={(newPage) => dispatch(setCurrentPage(newPage))}
             />
           </div>
         ) : (

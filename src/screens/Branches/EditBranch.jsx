@@ -136,7 +136,7 @@ export const EditBranch = ({ itemDetails, close }) => {
     {
       title: "Horario",
       requirement: "Obligatorio",
-      form: <TimeForm setValue={setValue} data={details} />
+      form: <TimeForm setValue={details.ScheduleModels}  />
     }
   ]
 
@@ -252,8 +252,7 @@ export const EditBranch = ({ itemDetails, close }) => {
                 onClick={() => {
                   reset()
                   localStorage.removeItem("draft")
-                  toast.success("")
-                  navigate(NAVIGATION_ROUTES_RES_ADMIN.Menu.submenu.Dishes.path)
+                  navigate(NAVIGATION_ROUTES_RES_ADMIN.Branches.path)
                 }}
               />
               {isLoading ? (

@@ -86,7 +86,7 @@ function App() {
 
             <Route path={NAVIGATION_ROUTES_SUPER_ADMIN.Users.NewUser.path} element={<NewAdminUser />} />
 
-            <Route path={NAVIGATION_ROUTES_SUPER_ADMIN.Users.UserDetails.path} element={<EditAdminUser />} />
+            <Route path={NAVIGATION_ROUTES_SUPER_ADMIN.Users.UserDetails.path} element={<AdminUserDetails />} />
 
             <Route path={NAVIGATION_ROUTES_SUPER_ADMIN.Plans.path} element={<Plans />} />
 

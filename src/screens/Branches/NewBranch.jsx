@@ -167,7 +167,7 @@ export default function NewBranch() {
                 onClick={() => {
                   reset()
                   localStorage.removeItem("draft")
-                  navigate(NAVIGATION_ROUTES_RES_ADMIN.Menu.submenu.Dishes.path)
+                  navigate(NAVIGATION_ROUTES_RES_ADMIN.Branches.path)
                 }}
               />
               {isLoading ? (

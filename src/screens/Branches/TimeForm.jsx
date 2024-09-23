@@ -8,8 +8,9 @@ import Button from "../../components/Button"
 import toast from "react-hot-toast"
 import { showNotification } from "@mantine/notifications"
 
-export default function TimeForm({ setValue, data }) {
+export default function TimeForm({ setValue }) {
   const daysOfWeek = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"]
+  console.log(setValue)
 
   const [alwaysAvailable, setAlwaysAvailable] = useState(false)
   const [switchStatus, setSwitchStatus] = useState(daysOfWeek.reduce((acc, day) => ({ ...acc, [day]: false }), {}))
