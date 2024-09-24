@@ -16,7 +16,7 @@ export const fetchAdminUsers = createAsyncThunk("user/fetchAdminUsers", async ({
       return rejectWithValue(response.error)
     }
 
-    return response.data // Devuelve los usuarios si la solicitud es exitosa
+    return response // Devuelve toda la respuesta si la solicitud es exitosa
   } catch (error) {
     toast.error("Fallo obtener los datos del usuario")
     return rejectWithValue(error.message)
@@ -27,6 +27,7 @@ const initialState = {
   value: {},
   currentPage: 1,
   totalAdminUsers: 0,
+  totalPagesCount: 0,
   adminUsers: [],
   loading: false,
   error: null
@@ -53,8 +54,19 @@ export const userSlice = createSlice({
         state.error = null
       })
       .addCase(fetchAdminUsers.fulfilled, (state, action) => {
-        state.adminUsers = action.payload // Actualiza los usuarios
-        state.totalAdminUsers = action.payload.results
+        const results = action.payload.results
+        const limit = action.meta.arg.limit // Tomamos el límite pasado en el thunk
+
+        // Solo actualizamos si el total de resultados cambió
+        if (state.totalAdminUsers !== results) {
+          state.totalAdminUsers = results
+
+          // Calculamos el número total de páginas y redondeamos hacia arriba
+          const totalPages = Math.ceil(results / limit)
+          state.totalPagesCount = totalPages
+        }
+
+        state.adminUsers = action.payload.data // Actualiza los usuarios
         state.loading = false
       })
       .addCase(fetchAdminUsers.rejected, (state, action) => {
@@ -68,224 +80,3 @@ export const userSlice = createSlice({
 export const { setUser, setCurrentPage, setTotalAdminUsers } = userSlice.actions
 
 export default userSlice.reducer
-
-// import { createSlice, createAsyncThunk } from "@reduxjs/toolkit"
-// import userApi from "../../api/userApi"
-
-// // Async Thunks
-// export const createUser = createAsyncThunk("user/createUser", async (params, { rejectWithValue }) => {
-//   try {
-//     const response = await userApi.createUser(params)
-//     return response.data
-//   } catch (error) {
-//     return rejectWithValue(error.response.data)
-//   }
-// })
-
-// export const getUsersByRestaurant = createAsyncThunk("user/getUsersByRestaurant", async (params, { rejectWithValue }) => {
-//   try {
-//     const response = await userApi.getUsersByRestaurant(params)
-//     return response.data
-//   } catch (error) {
-//     return rejectWithValue(error.response.data)
-//   }
-// })
-
-// export const getUsersByBranch = createAsyncThunk("user/getUsersByBranch", async (params, { rejectWithValue }) => {
-//   try {
-//     const response = await userApi.getUsersByBranch(params)
-//     return response.data
-//   } catch (error) {
-//     return rejectWithValue(error.response.data)
-//   }
-// })
-
-// export const updateUserRestaurant = createAsyncThunk(
-//   "user/updateUserRestaurant",
-//   async ({ userId, params }, { rejectWithValue }) => {
-//     try {
-//       const response = await userApi.updateUserRestaurant(params, userId)
-//       return response.data
-//     } catch (error) {
-//       return rejectWithValue(error.response.data)
-//     }
-//   }
-// )
-
-// export const getAdminUsers = createAsyncThunk("user/getAdminUsers", async (params, { rejectWithValue }) => {
-//   try {
-//     const response = await userApi.getAdminUsers(params)
-//     return response.data
-//   } catch (error) {
-//     return rejectWithValue(error.response.data)
-//   }
-// })
-
-// export const updateAdminUser = createAsyncThunk("user/updateAdminUser", async ({ id, params }, { rejectWithValue }) => {
-//   try {
-//     const response = await userApi.updateAdminUser(id, params)
-//     return response.data
-//   } catch (error) {
-//     return rejectWithValue(error.response.data)
-//   }
-// })
-
-// export const deleteAdminUser = createAsyncThunk("user/deleteAdminUser", async (id, { rejectWithValue }) => {
-//   try {
-//     const response = await userApi.deleteAdminUser(id)
-//     return response.data
-//   } catch (error) {
-//     return rejectWithValue(error.response.data)
-//   }
-// })
-
-// export const addImage = createAsyncThunk("user/addImage", async ({ id, params }, { rejectWithValue }) => {
-//   try {
-//     const response = await userApi.addImage(id, params)
-//     return response.data
-//   } catch (error) {
-//     return rejectWithValue(error.response.data)
-//   }
-// })
-
-// // Initial state
-// const initialState = {
-//   users: [],
-//   adminUsers: [],
-//   status: "idle",
-//   value: {},
-//   error: null
-// }
-
-// // Slice
-// const userSlice = createSlice({
-//   name: "user",
-//   initialState,
-//   reducers: {},
-//   extraReducers: (builder) => {
-//     // createUser
-//     builder
-//       .addCase(createUser.pending, (state) => {
-//         state.status = "loading"
-//       })
-//       .addCase(createUser.fulfilled, (state, action) => {
-//         state.status = "succeeded"
-//         state.users.push(action.payload)
-//       })
-//       .addCase(createUser.rejected, (state, action) => {
-//         state.status = "failed"
-//         state.error = action.payload
-//       })
-
-//     // getUsersByRestaurant
-//     builder
-//       .addCase(getUsersByRestaurant.pending, (state) => {
-//         state.status = "loading"
-//       })
-//       .addCase(getUsersByRestaurant.fulfilled, (state, action) => {
-//         state.status = "succeeded"
-//         state.users = action.payload
-//       })
-//       .addCase(getUsersByRestaurant.rejected, (state, action) => {
-//         state.status = "failed"
-//         state.error = action.payload
-//       })
-
-//     // getUsersByBranch
-//     builder
-//       .addCase(getUsersByBranch.pending, (state) => {
-//         state.status = "loading"
-//       })
-//       .addCase(getUsersByBranch.fulfilled, (state, action) => {
-//         state.status = "succeeded"
-//         state.users = action.payload
-//       })
-//       .addCase(getUsersByBranch.rejected, (state, action) => {
-//         state.status = "failed"
-//         state.error = action.payload
-//       })
-
-//     // updateUserRestaurant
-//     builder
-//       .addCase(updateUserRestaurant.pending, (state) => {
-//         state.status = "loading"
-//       })
-//       .addCase(updateUserRestaurant.fulfilled, (state, action) => {
-//         state.status = "succeeded"
-//         const index = state.users.findIndex((user) => user.id === action.payload.id)
-//         if (index !== -1) {
-//           state.users[index] = action.payload
-//         }
-//       })
-//       .addCase(updateUserRestaurant.rejected, (state, action) => {
-//         state.status = "failed"
-//         state.error = action.payload
-//       })
-
-//     // getAdminUsers
-//     builder
-//       .addCase(getAdminUsers.pending, (state) => {
-//         state.status = "loading"
-//       })
-//       .addCase(getAdminUsers.fulfilled, (state, action) => {
-//         state.status = "succeeded"
-//         state.adminUsers = action.payload
-//       })
-//       .addCase(getAdminUsers.rejected, (state, action) => {
-//         state.status = "failed"
-//         state.error = action.payload
-//       })
-
-//     // updateAdminUser
-//     builder
-//       .addCase(updateAdminUser.pending, (state) => {
-//         state.status = "loading"
-//       })
-//       .addCase(updateAdminUser.fulfilled, (state, action) => {
-//         state.status = "succeeded"
-//         const index = state.adminUsers.findIndex((admin) => admin.id === action.payload.id)
-//         if (index !== -1) {
-//           state.adminUsers[index] = action.payload
-//         }
-//       })
-//       .addCase(updateAdminUser.rejected, (state, action) => {
-//         state.status = "failed"
-//         state.error = action.payload
-//       })
-
-//     // deleteAdminUser
-//     builder
-//       .addCase(deleteAdminUser.pending, (state) => {
-//         state.status = "loading"
-//       })
-//       .addCase(deleteAdminUser.fulfilled, (state, action) => {
-//         state.status = "succeeded"
-//         state.adminUsers = state.adminUsers.filter((admin) => admin.id !== action.meta.arg)
-//       })
-//       .addCase(deleteAdminUser.rejected, (state, action) => {
-//         state.status = "failed"
-//         state.error = action.payload
-//       })
-
-//     // addImage
-//     builder
-//       .addCase(addImage.pending, (state) => {
-//         state.status = "loading"
-//       })
-//       .addCase(addImage.fulfilled, (state, action) => {
-//         state.status = "succeeded"
-//         const index = state.users.findIndex((user) => user.id === action.payload.id)
-//         if (index !== -1) {
-//           state.users[index].image = action.payload.image
-//         }
-//       })
-//       .addCase(addImage.rejected, (state, action) => {
-//         state.status = "failed"
-//         state.error = action.payload
-//       })
-//   }
-// })
-
-// export const { setUser } = userSlice.actions
-
-// export default userSlice.reducer

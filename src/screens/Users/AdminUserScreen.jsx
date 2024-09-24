@@ -22,11 +22,10 @@ export const AdminUserScreen = () => {
   const [adminUsers, setAdminUsers] = useState([])
   const adminUsersTwo = useSelector((state) => state.user.adminUsers)
   const totalAdminUsers = useSelector((state) => state.user.totalAdminUsers)
+  const totalPagesCount = useSelector((state) => state.user.totalPagesCount)
 
   useEffect(() => {
-    dispatch(fetchAdminUsers({ limit, page }));
-    console.log(adminUsersTwo)
-    console.log(totalAdminUsers)
+    dispatch(fetchAdminUsers({ limit, page, order: "DESC" }));
   }, [dispatch, limit, page]);
 
   useEffect(() => {
@@ -90,7 +89,7 @@ export const AdminUserScreen = () => {
               items={adminUsersTwo}
               handleDisableSelected={handleDisableSelected}
               screenType="adminUserScreen"
-              totalItems={totalAdminUsers}
+              totalItems={totalPagesCount}
               currentPage={page}
               setPage={(newPage) => dispatch(setCurrentPage(newPage))}
             />

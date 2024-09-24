@@ -48,11 +48,13 @@ const userApi = {
 
   updateUserRestaurant: (params, userId) => axiosClient.put(`api/v1/users/update-user/${userId}`, params),
 
-  getAdminUsers: ({ limit = undefined, page = undefined, order = undefined } = {}) => {
+  getAdminUsers: ({ limit, page, order, search_field, search } = {}) => {
     const params = {
       limit,
       page,
-      order
+      order,
+      search_field,
+      search
     }
     const validParams = Object.fromEntries(Object.entries(params).filter(([_, value]) => value !== undefined && value))
     const queryString = new URLSearchParams(validParams).toString()

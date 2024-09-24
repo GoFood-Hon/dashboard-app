@@ -1,69 +1,30 @@
 import React, { useEffect, useState } from "react"
-import { Breadcrumbs } from "@mantine/core"
-import { useLocation, useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import BaseLayout from "../../components/BaseLayout"
-import BreadCrumbNavigation from "../../components/BreadCrumbNavigation"
 import Button from "../../components/Button"
-import plansApi from "../../api/plansApi"
-import toast from "react-hot-toast"
 import MenuTable from "../Menu/MenuTable"
 import { NAVIGATION_ROUTES_SUPER_ADMIN } from "../../routes"
 import LoadingCircle from "../../components/LoadingCircle"
+import { useDispatch, useSelector } from "react-redux"
+import { fetchAllPlans } from "../../store/features/plansSlice"
 
 export const Plans = () => {
   const navigate = useNavigate()
+  const dispatch = useDispatch()
 
-  const location = useLocation()
-
-  const [plans, setPlans] = useState([])
-  const [cardsSelected, setCardsSelected] = useState([])
-  const [isLoading, setIsLoading] = useState(false)
+  const { plans, isLoading } = useSelector((state) => state.plans)
 
   const handleNewPlan = () => {
     navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Plans.NewPlan.path)
   }
 
-  //* Fetch plans data *//
+  // Fetch plans data using Redux
   useEffect(() => {
-    ;(async () => {
-      try {
-        const response = await plansApi.getAllPlans()
+    dispatch(fetchAllPlans())
+  }, [dispatch])
 
-        if (response.error) {
-          toast.error(`Fallo al obtener la lista de planes. Por favor intente de nuevo. ${response.message}`, {
-            duration: 7000
-          })
-        } else {
-          setPlans(response.data)
-        }
-      } catch (error) {
-        toast.error(`Error. Por favor intente de nuevo. ${error}`, {
-          duration: 7000
-        })
-      }
-    })()
-  }, [])
-
-  const refreshPage = async () => {
-    try {
-      setIsLoading(true)
-      const response = await plansApi.getAllPlans()
-
-      if (response.error) {
-        toast.error(`Fallo al obtener la lista de planes. Por favor intente de nuevo. ${response.message}`, {
-          duration: 7000
-        })
-      } else {
-        setPlans(response.data)
-      }
-    } catch (error) {
-      toast.error(`Error. Por favor intente de nuevo. ${error}`, {
-        duration: 7000
-      })
-    } finally {
-      setIsLoading(false)
-      setCardsSelected([])
-    }
+  const refreshPage = () => {
+    dispatch(fetchAllPlans())
   }
 
   return (

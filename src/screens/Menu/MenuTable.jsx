@@ -66,12 +66,6 @@ export default function MenuTable({ refreshPage, items, handleDisableSelected, s
     setItemsSelected((current) => (current.length === items.length ? [] : items.map((item) => item.id)))
   }
 
-  const filteredData = data.filter((item) => {
-    const searchField =
-      screenType === "ordersScreen" ? item.Order?.User?.name : screenType === "orderHistoryScreen" ? item?.orderId : item.name
-    return searchField?.toLowerCase().includes(search.toLowerCase())
-  })
-
   const theme = createTheme({
     cursorType: "pointer"
   })
@@ -396,7 +390,7 @@ export default function MenuTable({ refreshPage, items, handleDisableSelected, s
       <div className="flex w-full justify-end">
         <Group mx={20} mt={10}>
           <Pagination
-            total={totalControlBtn}
+            total={totalItems}
             page={currentPage}
             onChange={(page) => setPage(page)}
             color={colors.primary_button}
