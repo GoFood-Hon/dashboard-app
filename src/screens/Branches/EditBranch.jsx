@@ -158,23 +158,22 @@ export const EditBranch = ({ itemDetails, close }) => {
   const onSubmit = async (data) => {
     setIsLoading(true)
     const formData = JSON.stringify({
-      restaurantId: itemDetails.restaurantId,
       name: data.name,
       email: data.email,
       phoneNumber: data.phoneNumber,
       address: data.address,
       city: data.city,
       state: getDepartmentNameById(parseInt(data.state)),
-      geolocation: data.geolocation,
+      geolocation: data.geolocation.coordinates,
       delivery: data.delivery ?? false,
       pickup: data.pickup ?? false,
       onSite: data.onSite ?? false,
       alwaysOpen: data.alwaysOpen ?? false,
-      schedule: !data.alwaysOpen ? data.schedule : null
+      schedules: !data.alwaysOpen ? data.schedule : null
     })
 
     try {
-      const response = await branchesApi.updateBranches(formData, itemDetails.id)
+      const response = await branchesApi.updateBranches(formData, branchId)
 
       if (response.error) {
         toast.error(`Fallo al actualizar la sucursal. Por favor intente de nuevo. ${response.message}`, {
@@ -182,8 +181,6 @@ export const EditBranch = ({ itemDetails, close }) => {
         })
         setIsLoading(false)
       } else {
-        const branchId = itemDetails.id
-
         if (data?.files) {
           const uploadBranchImage = async (branchId, file) => {
             const formDataImage = new FormData()

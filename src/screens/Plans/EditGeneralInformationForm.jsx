@@ -6,9 +6,16 @@ import plansApi from "../../api/plansApi"
 import { DEFAULT_CURRENCY, DEFAULT_PAYMENT_TYPE } from "../../utils/constants"
 
 export const EditGeneralInformationForm = ({ register, errors, setValue, featuresList, setFeaturesList, data }) => {
-  const [paymentType, setPaymentType] = useState(data?.paymentType ?? DEFAULT_PAYMENT_TYPE)
+  const [paymentType, setPaymentType] = useState(DEFAULT_PAYMENT_TYPE)
   const [currency, setCurrency] = useState(DEFAULT_CURRENCY)
   const [dishesAdded, setDishesAdded] = useState([])
+
+  // Actualiza el paymentType cuando cambien los datos
+  useEffect(() => {
+    if (data?.paymentType) {
+      setPaymentType(data.paymentType)
+    }
+  }, [data?.paymentType])
 
   useEffect(() => {
     ;(async () => {
@@ -90,13 +97,7 @@ export const EditGeneralInformationForm = ({ register, errors, setValue, feature
               <Grid.Col span={{ base: 12, md: 6 }}>
                 <label className="text-sky-950 text-sm font-bold leading-snug">Tipo de pago</label>
                 <div className="mt-1">
-                  <Select
-                    data={["MENSUAL", "ANUAL"]}
-                    allowDeselect={false}
-                    size="md"
-                    value={paymentType}
-                    onChange={onChangePaymentType}
-                  />
+                  <Select data={["MENSUAL", "ANUAL"]} size="md" value={paymentType} onChange={onChangePaymentType} />
                 </div>
               </Grid.Col>
               <Grid.Col span={{ base: 12, md: 6 }}>

@@ -199,7 +199,7 @@ export default function Branches() {
                     <a href="#">
                       <h5 className="mb-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white">{item.name}</h5>
                     </a>
-                    <p class="mb-3 text-sm text-gray-700 dark:text-gray-400">{item.city + ", " + item.state}</p>
+                    <p className="mb-3 text-sm text-gray-700 dark:text-gray-400">{item.city + ", " + item.state}</p>
                     <div className="flex items-center justify-between">
                       <Button
                         text={"Editar"}

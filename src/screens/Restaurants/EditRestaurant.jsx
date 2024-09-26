@@ -21,6 +21,7 @@ export const EditRestaurant = () => {
   useEffect(() => {
     ;(async () => {
       const response = await restaurantsApi.getRestaurant(restaurantId)
+      console.log(response)
 
       const details = response?.data
       setRestaurantDetails(details)

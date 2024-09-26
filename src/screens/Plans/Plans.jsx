@@ -21,6 +21,7 @@ export const Plans = () => {
   // Fetch plans data using Redux
   useEffect(() => {
     dispatch(fetchAllPlans())
+    console.log(plans)
   }, [dispatch])
 
   const refreshPage = () => {

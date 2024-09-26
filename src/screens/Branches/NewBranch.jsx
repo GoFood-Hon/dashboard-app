@@ -84,7 +84,6 @@ export default function NewBranch() {
   const onSubmit = async (data) => {
     setIsLoading(true)
     const formData = JSON.stringify({
-      restaurantId: restaurant.id,
       name: data.name,
       email: data.email,
       phoneNumber: data.phoneNumber,
@@ -96,47 +95,49 @@ export default function NewBranch() {
       pickup: data.pickup ?? false,
       onSite: data.onSite ?? false,
       alwaysOpen: data.alwaysOpen ?? false,
-      schedule: !data.alwaysOpen ? data.schedule : null
+      schedules: !data.alwaysOpen ? data.schedule : null
     })
 
-    try {
-      const response = await branchesApi.createBranch(formData)
+    console.log(formData)
 
-      if (response.error) {
-        toast.error(`Fallo al crear la sucursal. Por favor intente de nuevo. ${response.message}`, {
-          duration: 7000
-        })
-      } else {
-        const branchId = response.data.id
+    // try {
+    //   const response = await branchesApi.createBranch(formData)
 
-        const uploadBranchImage = async (branchId, file) => {
-          const formDataImage = new FormData()
-          formDataImage.append("files", file)
+    //   if (response.error) {
+    //     toast.error(`Fallo al crear la sucursal. Por favor intente de nuevo. ${response.message}`, {
+    //       duration: 7000
+    //     })
+    //   } else {
+    //     const branchId = response.data.id
 
-          return await branchesApi.addImage(branchId, formDataImage)
-        }
+    //     const uploadBranchImage = async (branchId, file) => {
+    //       const formDataImage = new FormData()
+    //       formDataImage.append("files", file)
 
-        const addImageResponse = await uploadBranchImage(branchId, data?.files?.[0])
+    //       return await branchesApi.addImage(branchId, formDataImage)
+    //     }
 
-        if (addImageResponse.error) {
-          toast.error(`Fallo al subir la imagen. Por favor intente de nuevo. ${addImageResponse.message}`, {
-            duration: 7000
-          })
-        } else {
-          toast.success("Sucursal creada exitosamente", {
-            duration: 7000
-          })
-          navigate(NAVIGATION_ROUTES_RES_ADMIN.Branches.path)
-        }
-      }
-      setIsLoading(false)
-      return response.data
-    } catch (e) {
-      toast.error(`Error. Por favor intente de nuevo. ${e}`, {
-        duration: 7000
-      })
-      setIsLoading(false)
-    }
+    //     const addImageResponse = await uploadBranchImage(branchId, data?.files?.[0])
+
+    //     if (addImageResponse.error) {
+    //       toast.error(`Fallo al subir la imagen. Por favor intente de nuevo. ${addImageResponse.message}`, {
+    //         duration: 7000
+    //       })
+    //     } else {
+    //       toast.success("Sucursal creada exitosamente", {
+    //         duration: 7000
+    //       })
+    //       navigate(NAVIGATION_ROUTES_RES_ADMIN.Branches.path)
+    //     }
+    //   }
+    //   setIsLoading(false)
+    //   return response.data
+    // } catch (e) {
+    //   toast.error(`Error. Por favor intente de nuevo. ${e}`, {
+    //     duration: 7000
+    //   })
+    //   setIsLoading(false)
+    // }
   }
 
   return (

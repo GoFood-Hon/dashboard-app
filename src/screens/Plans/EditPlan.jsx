@@ -20,6 +20,7 @@ export const EditPlan = () => {
     ;(async () => {
       try {
         const response = await plansApi.getPlan(planId)
+        console.log(response)
         setPlanDetails(response.data.plan)
       } catch (error) {
         toast.error(`Fallo al obtener el plan. Por favor intente de nuevo. ${error}`, {
@@ -121,8 +122,10 @@ export const EditPlan = () => {
         })
       }
 
-      const response = plansApi.updatePlan(planId, transformedData)
-      handleResponse(response)
+      console.log(transformedData)
+
+      // const response = plansApi.updatePlan(planId, transformedData)
+      // handleResponse(response)
 
       return response.data
     } catch (error) {
