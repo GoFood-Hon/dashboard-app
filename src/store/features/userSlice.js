@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit"
 import userApi from "../../api/userApi"
-import toast from "react-hot-toast"
+import { showNotification } from "@mantine/notifications"
 
 // Thunk para obtener los usuarios administradores
 export const fetchAdminUsers = createAsyncThunk("user/fetchAdminUsers", async ({ limit, page }, { rejectWithValue }) => {
@@ -12,27 +12,39 @@ export const fetchAdminUsers = createAsyncThunk("user/fetchAdminUsers", async ({
     })
 
     if (response.error) {
-      toast.error("Error obteniendo la información de los usuarios")
+      showNotification({
+        title: "Error",
+        message: response.message,
+        color: "red",
+        duration: 7000
+      })
       return rejectWithValue(response.error)
     }
 
-    return response // Devuelve toda la respuesta si la solicitud es exitosa
+    return { data: response.data, results: response.results, page } // Regresamos la data, total de resultados y la página
   } catch (error) {
-    toast.error("Fallo obtener los datos del usuario")
+    showNotification({
+      title: "Error",
+      message: error,
+      color: "red",
+      duration: 7000
+    })
     return rejectWithValue(error.message)
   }
 })
 
+// Estado inicial
 const initialState = {
   value: {},
   currentPage: 1,
   totalAdminUsers: 0,
   totalPagesCount: 0,
-  adminUsers: [],
-  loading: false,
+  adminUsersByPage: {}, // Almacena usuarios por página
+  loadingUsers: false,
   error: null
 }
 
+// Slice de usuarios
 export const userSlice = createSlice({
   name: "user",
   initialState,
@@ -45,38 +57,62 @@ export const userSlice = createSlice({
     },
     setTotalAdminUsers: (state, action) => {
       state.totalAdminUsers = action.payload
+    },
+    // Nueva acción para agregar un usuario
+    addNewUser: (state, action) => {
+      const newUser = action.payload
+
+      // Inserta el nuevo usuario al principio de la página 1
+      if (state.adminUsersByPage[1]) {
+        state.adminUsersByPage[1].unshift(newUser)
+      } else {
+        state.adminUsersByPage[1] = [newUser]
+      }
+
+      // Verifica si hay más de 10 usuarios en la página 1
+      if (state.adminUsersByPage[1].length > 10) {
+        // Desplaza el último usuario de la página 1 a la página 2
+        const movedUser = state.adminUsersByPage[1].pop()
+
+        // Inserta el usuario movido en la página 2 (crea la página si no existe)
+        if (state.adminUsersByPage[2]) {
+          state.adminUsersByPage[2].unshift(movedUser)
+        } else {
+          state.adminUsersByPage[2] = [movedUser]
+        }
+      }
+
+      // Incrementa el total de usuarios y recalcula el total de páginas
+      state.totalAdminUsers += 1
+      state.totalPagesCount = Math.ceil(state.totalAdminUsers / 10)
     }
   },
   extraReducers: (builder) => {
     builder
       .addCase(fetchAdminUsers.pending, (state) => {
-        state.loading = true
+        state.loadingUsers = true
         state.error = null
       })
       .addCase(fetchAdminUsers.fulfilled, (state, action) => {
-        const results = action.payload.results
-        const limit = action.meta.arg.limit // Tomamos el límite pasado en el thunk
+        const { data, results, page } = action.payload
 
-        // Solo actualizamos si el total de resultados cambió
-        if (state.totalAdminUsers !== results) {
-          state.totalAdminUsers = results
+        // Almacenamos los usuarios en el objeto por página
+        state.adminUsersByPage[page] = data // Almacenamos los usuarios de la página correspondiente
 
-          // Calculamos el número total de páginas y redondeamos hacia arriba
-          const totalPages = Math.ceil(results / limit)
-          state.totalPagesCount = totalPages
-        }
-
-        state.adminUsers = action.payload.data // Actualiza los usuarios
-        state.loading = false
+        state.loadingUsers = false
+        state.currentPage = page // Actualizamos la página actual
+        state.totalAdminUsers = results // Actualiza el total de usuarios basado en results
+        state.totalPagesCount = Math.ceil(results / action.meta.arg.limit) // Actualiza el total de páginas
       })
       .addCase(fetchAdminUsers.rejected, (state, action) => {
-        state.loading = false
+        state.loadingUsers = false
         state.error = action.payload // Maneja el error
       })
   }
 })
 
 // Exportar las acciones
-export const { setUser, setCurrentPage, setTotalAdminUsers } = userSlice.actions
+export const { setUser, setCurrentPage, setTotalAdminUsers, addNewUser } = userSlice.actions
 
+// Exportar el reductor
 export default userSlice.reducer

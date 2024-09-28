@@ -7,6 +7,7 @@ import { NAVIGATION_ROUTES_SUPER_ADMIN } from "../../routes"
 import LoadingCircle from "../../components/LoadingCircle"
 import { useDispatch, useSelector } from "react-redux"
 import { fetchAllPlans } from "../../store/features/plansSlice"
+import { TableSkeleton } from "../../components/Skeletons/TableSkeleton"
 
 export const Plans = () => {
   const navigate = useNavigate()
@@ -21,7 +22,6 @@ export const Plans = () => {
   // Fetch plans data using Redux
   useEffect(() => {
     dispatch(fetchAllPlans())
-    console.log(plans)
   }, [dispatch])
 
   const refreshPage = () => {
@@ -38,9 +38,7 @@ export const Plans = () => {
       </section>
       <section>
         {isLoading ? (
-          <div className="flex justify-center items-center">
-            <LoadingCircle />
-          </div>
+          <TableSkeleton />
         ) : plans && plans.length > 0 ? (
           <div className="w-full p-4 h-full bg-white rounded-2xl border border-blue-100">
             <MenuTable refreshPage={refreshPage} items={plans} screenType="planScreen" />

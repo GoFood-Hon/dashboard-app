@@ -15,7 +15,8 @@ const initialState = {
     status: null,
     startPrice: null,
     dateSort: null
-  }
+  },
+  isLoading: false // Nuevo estado de carga
 }
 
 /*
@@ -145,7 +146,6 @@ export const updateMenu = createAsyncThunk("menus/updateMenu", async ({ data, pr
     const formData = updateMenuFormData(data, propertyToUpdate)
 
     const response = await menuApi.updateMenu(formData, data.id)
-    console.log(response)
 
     if (response.error) {
       showNotification({
@@ -228,34 +228,37 @@ export const menusSlice = createSlice({
       state.error = action.payload
     },
     setLoading: (state, action) => {
-      state.loading = "loading"
+      state.isLoading = action.payload // Actualiza el estado de carga
     }
   },
 
   extraReducers: (builder) => {
     builder
       .addCase(fetchMenus.pending, (state) => {
+        state.isLoading = true // Cambia el estado a "cargando"
         state.status = "loading"
       })
       .addCase(fetchMenus.fulfilled, (state, action) => {
+        state.isLoading = false // Cambia el estado a "no cargando"
         state.status = "succeeded"
         state.menus = action.payload
       })
       .addCase(fetchMenus.rejected, (state, action) => {
+        state.isLoading = false // Cambia el estado a "no cargando"
         state.status = "failed"
         state.error = action.error.message
       })
   }
 })
 
-export const { setMenus, setError, setPage, setFilters } = menusSlice.actions
-
-export const setLoading = (state) => state.menus.loading
+export const { setMenus, setError, setPage, setFilters, setLoading } = menusSlice.actions
 
 export const selectAllMenus = (state) => state.menus.menus
 
 export const selectMenusStatus = (state) => state.menus.status
 
 export const selectMenusError = (state) => state.menus.error
+
+export const selectIsLoading = (state) => state.menus.isLoading // Selector para el estado de carga
 
 export default menusSlice.reducer

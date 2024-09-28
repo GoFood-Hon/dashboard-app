@@ -28,15 +28,9 @@ dayjs.locale("es")
 dayjs.extend(relativeTime)
 
 export default function MenuTable({ refreshPage, items, handleDisableSelected, screenType, totalItems, currentPage, setPage }) {
-  const [data, setData] = useState(items)
   const [itemsSelected, setItemsSelected] = useState([])
   const [search, setSearch] = useState("")
   const navigate = useNavigate()
-  const totalControlBtn = Math.ceil(totalItems / ITEMS_PER_PAGE)
-
-  useEffect(() => {
-    setData(items)
-  }, [items, currentPage])
 
   const handleSelectChange = (id) => {
     setItemsSelected((prevState) => {
@@ -314,30 +308,6 @@ export default function MenuTable({ refreshPage, items, handleDisableSelected, s
             onChange={(event) => setSearch(event.target.value)}
           />
         </Group>
-        <div className="flex items-center gap-1 mr-5">
-          <ActionIcon
-            onClick={refreshPage}
-            className="transition ease-in-out duration-200"
-            variant="subtle"
-            p={6}
-            color={colors.primary_button}
-            radius="xl"
-            size="lg">
-            <IconReload />
-          </ActionIcon>
-          {handleDisableSelected && (
-            <ActionIcon
-              onClick={() => handleDisableSelected(itemsSelected)}
-              className="transition ease-in-out duration-200"
-              variant="subtle"
-              p={6}
-              color={colors.primary_button}
-              radius="xl"
-              size="lg">
-              <IconTrash />
-            </ActionIcon>
-          )}
-        </div>
       </div>
 
       <ScrollArea>

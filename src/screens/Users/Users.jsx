@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from "react"
 import BaseLayout from "../../components/BaseLayout"
 import Button from "../../components/Button"
-import { Breadcrumbs, Text } from "@mantine/core"
-import BreadCrumbNavigation from "../../components/BreadCrumbNavigation"
+import { Text } from "@mantine/core"
 import MenuTable from "../Menu/MenuTable"
 import { useLocation, useNavigate } from "react-router-dom"
 import { NAVIGATION_ROUTES_RES_ADMIN } from "../../routes"
-import toast from "react-hot-toast"
 import userApi from "../../api/userApi"
 import { useSelector } from "react-redux"
+import { showNotification } from "@mantine/notifications"
 
 export default function Users() {
   const navigate = useNavigate()
@@ -21,12 +20,22 @@ export default function Users() {
     try {
       const response = await userApi.getUsersByRestaurant(user.restaurantId)
       if (response.error) {
-        toast.error("Error obteniendo la información de los usuarios")
+        showNotification({
+          title: "Error",
+          message: response.message,
+          color: "red",
+          duration: 7000
+        })
       } else {
         setUser(response.data)
       }
     } catch (error) {
-      toast.error("Fallo obtener los datos del usuario")
+      showNotification({
+        title: "Error",
+        message: error,
+        color: "red",
+        duration: 7000
+      })
     }
   }
 
@@ -37,9 +46,6 @@ export default function Users() {
   const refreshPage = () => {
     fetchUsers()
   }
-
-  // TODO
-  const handleDisableSelected = () => {}
 
   const handleNavigateNewUser = () => {
     navigate(NAVIGATION_ROUTES_RES_ADMIN.Users.NewUser.path)

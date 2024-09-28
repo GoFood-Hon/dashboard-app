@@ -18,6 +18,7 @@ import BackButton from "../Dishes/components/BackButton"
 import branchesApi from "../../api/branchesApi"
 
 import { getDepartmentNameById } from "../../utils"
+import { showNotification } from "@mantine/notifications"
 
 export default function NewBranch() {
   const location = useLocation()
@@ -82,8 +83,8 @@ export default function NewBranch() {
   ))
 
   const onSubmit = async (data) => {
-    setIsLoading(true)
-    const formData = JSON.stringify({
+    //setIsLoading(true)
+    const formData = {
       name: data.name,
       email: data.email,
       phoneNumber: data.phoneNumber,
@@ -96,7 +97,7 @@ export default function NewBranch() {
       onSite: data.onSite ?? false,
       alwaysOpen: data.alwaysOpen ?? false,
       schedules: !data.alwaysOpen ? data.schedule : null
-    })
+    }
 
     console.log(formData)
 
@@ -104,7 +105,10 @@ export default function NewBranch() {
     //   const response = await branchesApi.createBranch(formData)
 
     //   if (response.error) {
-    //     toast.error(`Fallo al crear la sucursal. Por favor intente de nuevo. ${response.message}`, {
+    //     showNotification({
+    //       title: "Error",
+    //       message: response.message,
+    //       color: "red",
     //       duration: 7000
     //     })
     //   } else {
@@ -120,11 +124,17 @@ export default function NewBranch() {
     //     const addImageResponse = await uploadBranchImage(branchId, data?.files?.[0])
 
     //     if (addImageResponse.error) {
-    //       toast.error(`Fallo al subir la imagen. Por favor intente de nuevo. ${addImageResponse.message}`, {
+    //       showNotification({
+    //         title: "Error",
+    //         message: addImageResponse.message,
+    //         color: "red",
     //         duration: 7000
     //       })
     //     } else {
-    //       toast.success("Sucursal creada exitosamente", {
+    //       showNotification({
+    //         title: "Creación exitosa",
+    //         message: "La sucursal fue creada correctamente",
+    //         color: "green",
     //         duration: 7000
     //       })
     //       navigate(NAVIGATION_ROUTES_RES_ADMIN.Branches.path)
@@ -133,7 +143,10 @@ export default function NewBranch() {
     //   setIsLoading(false)
     //   return response.data
     // } catch (e) {
-    //   toast.error(`Error. Por favor intente de nuevo. ${e}`, {
+    //   showNotification({
+    //     title: "Error",
+    //     message: e,
+    //     color: "red",
     //     duration: 7000
     //   })
     //   setIsLoading(false)

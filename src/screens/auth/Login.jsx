@@ -39,6 +39,7 @@ export default function Login() {
         setIsLoading(false)
         localStorage.setItem("token", res.token)
         localStorage.setItem("refreshToken", res.refreshToken)
+        localStorage.setItem("setUserRole", res.data.user.role)
         dispatch(setUser(res.data.user))
         navigate("/")
       }

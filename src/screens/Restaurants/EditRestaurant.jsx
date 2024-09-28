@@ -21,9 +21,10 @@ export const EditRestaurant = () => {
   useEffect(() => {
     ;(async () => {
       const response = await restaurantsApi.getRestaurant(restaurantId)
-      console.log(response)
-
       const details = response?.data
+      if (details?.phoneNumber?.startsWith("+504")) {
+        details.phoneNumber = details.phoneNumber.replace("+504", "")
+      }
       setRestaurantDetails(details)
     })()
   }, [])
@@ -47,7 +48,7 @@ export const EditRestaurant = () => {
       const formData = new FormData()
       formData.append("name", data.name)
       formData.append("email", data.email)
-      formData.append("phoneNumber", data.phoneNumber)
+      formData.append("phoneNumber", `+504${data.phoneNumber}`)
       formData.append("socialReason", data.socialReason)
       formData.append("rtn", data.rtn)
       formData.append("billingAddress", data.billingAddress)
@@ -62,7 +63,7 @@ export const EditRestaurant = () => {
       if (response.error) {
         showNotification({
           title: "Error",
-          message: response.error,
+          message: response.message,
           color: "red",
           duration: 7000
         })
@@ -82,7 +83,7 @@ export const EditRestaurant = () => {
           if (addImageResponse.error) {
             showNotification({
               title: "Error",
-              message: addImageResponse.error,
+              message: addImageResponse.message,
               color: "red",
               duration: 7000
             })

@@ -52,6 +52,7 @@ export default function SideBar() {
 
   const logout = () => {
     localStorage.removeItem("token")
+    localStorage.removeItem("setUserRole")
     navigate(AUTH_NAVIGATION_ROUTES.Login.path)
   }
 

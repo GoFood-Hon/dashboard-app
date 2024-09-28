@@ -1,68 +1,77 @@
 import { ActionIcon, Flex, Grid, Switch, Text, Tooltip, rem } from "@mantine/core"
 import { TimeInput } from "@mantine/dates"
 import { IconClock } from "@tabler/icons-react"
-import React, { useEffect, useRef, useState } from "react"
+import React, { useEffect, useState } from "react"
 import { colors } from "../../theme/colors"
 import { Icon } from "../../components/Icon"
-import Button from "../../components/Button"
-import toast from "react-hot-toast"
 import { showNotification } from "@mantine/notifications"
+import dayjs from "dayjs"
+import utc from "dayjs/plugin/utc"
+import timezone from "dayjs/plugin/timezone"
+
+dayjs.extend(utc)
+dayjs.extend(timezone)
 
 export default function TimeForm({ setValue }) {
   const daysOfWeek = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"]
-  console.log(setValue)
+  const daysOfWeekEn = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
 
   const [alwaysAvailable, setAlwaysAvailable] = useState(false)
   const [switchStatus, setSwitchStatus] = useState(daysOfWeek.reduce((acc, day) => ({ ...acc, [day]: false }), {}))
-  const [schedule, setSchedule] = useState([])
-
-  const timeRefs = useRef(daysOfWeek.map(() => ({ from: React.createRef(), until: React.createRef() }))).current
+  const [schedule, setSchedule] = useState(
+    daysOfWeekEn.map(() => ({
+      from: null,
+      until: null
+    }))
+  )
 
   const getTimePickerControl = (dayIndex, type) => (
-    <ActionIcon variant="subtle" color="gray" onClick={() => timeRefs[dayIndex][type].current.showPicker()}>
+    <ActionIcon variant="subtle" color="gray" onClick={() => document.getElementById(`${type}-${dayIndex}`).focus()}>
       <IconClock style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
     </ActionIcon>
   )
-
-  useEffect(() => {}, [switchStatus])
 
   const handleIsAlwaysAvailable = (event) => {
     setAlwaysAvailable(event.currentTarget.checked)
     setValue("alwaysOpen", event.currentTarget.checked)
   }
 
-  const generateSchedule = () => {
-    return daysOfWeek.map((day) => {
-      if (switchStatus[day]) {
-        const fromRef = timeRefs[daysOfWeek.indexOf(day)].from.current
-        const untilRef = timeRefs[daysOfWeek.indexOf(day)].until.current
-
-        const openingTime = fromRef ? fromRef.value : null
-        const closingTime = untilRef ? untilRef.value : null
-
-        return {
-          day,
-          openingTime,
-          closingTime
-        }
-      } else {
-        return {
-          day,
-          openingTime: null,
-          closingTime: null
-        }
-      }
-    })
+  const handleTimeChange = (dayIndex, type, value) => {
+    const updatedSchedule = [...schedule]
+    updatedSchedule[dayIndex][type] = value
+    setSchedule(updatedSchedule)
   }
+
+  const generateSchedule = () => {
+    return daysOfWeekEn
+      .map((day, index) => {
+        if (switchStatus[daysOfWeek[index]] && schedule[index]?.from && schedule[index]?.until) {
+          const today = dayjs().format("YYYY-MM-DD")
+
+          const openTime = dayjs(`${today} ${schedule[index].from}`).isValid()
+            ? dayjs(`${today} ${schedule[index].from}`).format("HH:mm:ss")
+            : "00:00:00"
+
+          const closeTime = dayjs(`${today} ${schedule[index].until}`).isValid()
+            ? dayjs(`${today} ${schedule[index].until}`).format("HH:mm:ss")
+            : "00:00:00"
+
+          return { day, openTime, closeTime }
+        }
+        return null
+      })
+      .filter(Boolean)
+  }
+
   const setBranchSchedule = () => {
     setValue("schedule", generateSchedule())
-    showNotification({
-      title: "Cambios guardados",
-      message: "Se guardaron los horarios definidos",
-      color: "green",
-      radius: "md"
-    })
   }
+
+  // Ejecutar setBranchSchedule cuando se cambian los horarios o los switch
+  useEffect(() => {
+    setBranchSchedule()
+  }, [schedule, switchStatus])
+
   return (
     <div className="w-full h-full bg-white rounded-2xl border border-blue-100 p-4">
       <section>
@@ -75,7 +84,7 @@ export default function TimeForm({ setValue }) {
           </Grid.Col>
           <Grid.Col span="auto">
             <Flex justify="flex-end">
-              <Tooltip label="Si se deshabilita el horario sera 24/7" refProp="rootRef">
+              <Tooltip label="Si se deshabilita el horario será 24/7">
                 <Switch checked={alwaysAvailable} color="teal" size="sm" onChange={handleIsAlwaysAvailable} />
               </Tooltip>
             </Flex>
@@ -103,7 +112,9 @@ export default function TimeForm({ setValue }) {
                 <>
                   <Grid.Col key={`${day}-from`} span={{ base: 3 }}>
                     <TimeInput
-                      ref={timeRefs[index].from}
+                      id={`from-${index}`}
+                      value={schedule[index].from}
+                      onChange={(e) => handleTimeChange(index, "from", e.target.value)}
                       color={colors.primary_button}
                       rightSection={getTimePickerControl(index, "from")}
                       leftSection={
@@ -115,7 +126,9 @@ export default function TimeForm({ setValue }) {
                   </Grid.Col>
                   <Grid.Col key={`${day}-until`} span={{ base: 3 }}>
                     <TimeInput
-                      ref={timeRefs[index].until}
+                      id={`until-${index}`}
+                      value={schedule[index].until}
+                      onChange={(e) => handleTimeChange(index, "until", e.target.value)}
                       color={colors.primary_button}
                       rightSection={getTimePickerControl(index, "until")}
                       leftSection={
@@ -130,21 +143,12 @@ export default function TimeForm({ setValue }) {
                 <Grid.Col span={{ base: 6 }}>
                   <div className="bg-rose-100 rounded-lg border border-red-400 flex w-full items-center p-3">
                     <Icon icon="moon" size={17} />
-                    <span className="text-red-400 text-xs font-bold ">Cerrado</span>
+                    <span className="text-red-400 text-xs font-bold">Cerrado</span>
                   </div>
                 </Grid.Col>
               )}
             </React.Fragment>
           ))}
-          <div className="m-4 w-full flex justify-end">
-            <div
-              className="cursor-pointer space-x-3 flex h-10 w-auto items-center justify-center px-4 rounded-md shadow-sm transition-all duration-700 focus:outline-none text-xs bg-sky-950 text-slate-50"
-              onClick={() => setBranchSchedule()}>
-              <React.Fragment>
-                <p className="w-full whitespace-nowrap px-4">Establecer horario</p>
-              </React.Fragment>
-            </div>
-          </div>
         </Grid>
       </section>
     </div>

@@ -112,23 +112,18 @@ export const updateRestaurant = createAsyncThunk(
 
       const response = await restaurantsApi.updateRestaurant(formData, data?.id)
 
-      console.log(response)
-
       if (response.error) {
         showNotification({
           title: "Error",
-          message: response.error,
+          message: response.message,
           color: "red",
           duration: 7000
         })
       } else {
-        toast.success("Restaurante actualizado exitosamente", {
-          duration: 7000
-        })
         showNotification({
           title: "Actualización exitosa",
-          message: 'Se actualizaron los datos de',
-          color: "red",
+          message: `Se actualizaron los datos de ${response.data.name}`,
+          color: "green",
           duration: 7000
         })
       }

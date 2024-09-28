@@ -2,8 +2,7 @@ import React, { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 import { useDispatch, useSelector } from "react-redux"
 import { useLocation, useNavigate, useParams } from "react-router-dom"
-import { Accordion, Loader } from "@mantine/core"
-import toast from "react-hot-toast"
+import { Accordion } from "@mantine/core"
 import GeneralInformationForm from "./GeneralInformationForm"
 import LocationForm from "./LocationForm"
 import TimeForm from "./TimeForm"
@@ -14,8 +13,9 @@ import { NAVIGATION_ROUTES_RES_ADMIN } from "../../routes"
 import { LoaderComponent } from "../../components/LoaderComponent"
 import BaseLayout from "../../components/BaseLayout"
 import BackButton from "../Dishes/components/BackButton"
+import { showNotification } from "@mantine/notifications"
 
-export const EditBranch = ({ itemDetails, close }) => {
+export const EditBranch = () => {
   const { branchId } = useParams()
   const user = useSelector((state) => state.user.value.role)
 
@@ -62,10 +62,10 @@ export const EditBranch = ({ itemDetails, close }) => {
     watch,
     formState: { errors }
   } = useForm({
-    defaultValues: itemDetails
+    defaultValues: details || {}
   })
   const navigate = useNavigate()
-  const imageLocation = watch('images[0].location')
+  const imageLocation = watch("images[0].location")
 
   const restaurant = useSelector((state) => state?.restaurant?.value)
   const [isDataCleared, setIsDataCleared] = useState(false)
@@ -136,7 +136,7 @@ export const EditBranch = ({ itemDetails, close }) => {
     {
       title: "Horario",
       requirement: "Obligatorio",
-      form: <TimeForm setValue={details.ScheduleModels}  />
+      form: <TimeForm setValue={details.ScheduleModels} />
     }
   ]
 
@@ -176,7 +176,10 @@ export const EditBranch = ({ itemDetails, close }) => {
       const response = await branchesApi.updateBranches(formData, branchId)
 
       if (response.error) {
-        toast.error(`Fallo al actualizar la sucursal. Por favor intente de nuevo. ${response.message}`, {
+        showNotification({
+          title: "Error",
+          message: response.message,
+          color: "red",
           duration: 7000
         })
         setIsLoading(false)
@@ -192,30 +195,31 @@ export const EditBranch = ({ itemDetails, close }) => {
           const addImageResponse = await uploadBranchImage(branchId, data?.files?.[0])
 
           if (addImageResponse.error) {
-            toast.error(`Fallo al subir la imagen. Por favor intente de nuevo. ${addImageResponse.message}`, {
+            showNotification({
+              title: "Error",
+              message: addImageResponse.message,
+              color: "red",
               duration: 7000
             })
-          } else {
-            toast.success("Sucursal actualizada exitosamente", {
-              duration: 7000
-            })
-            reset()
-            close()
-            navigate(NAVIGATION_ROUTES_RES_ADMIN.Branches.path)
           }
         } else {
-          toast.success("Sucursal actualizada exitosamente", {
+          showNotification({
+            title: "Actualización exitosa",
+            message: `Se actualizó la sucursal ${response?.data?.name}`,
+            color: "green",
             duration: 7000
           })
           reset()
-          close()
           navigate(NAVIGATION_ROUTES_RES_ADMIN.Branches.path)
         }
         setIsLoading(false)
       }
       return response.data
     } catch (e) {
-      toast.error(`Error. Por favor intente de nuevo. ${e}`, {
+      showNotification({
+        title: "Error",
+        message: e,
+        color: "red",
         duration: 7000
       })
     }

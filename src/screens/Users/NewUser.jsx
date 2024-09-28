@@ -1,11 +1,8 @@
 import React, { useState } from "react"
-import { Accordion, Breadcrumbs } from "@mantine/core"
-import { useLocation, useNavigate } from "react-router-dom"
+import { Accordion } from "@mantine/core"
+import { useNavigate } from "react-router-dom"
 import { useForm } from "react-hook-form"
-import toast from "react-hot-toast"
-
 import BaseLayout from "../../components/BaseLayout"
-import BreadCrumbNavigation from "../../components/BreadCrumbNavigation"
 import GeneralInformationForm from "./GeneralInformationForm"
 import SucursalSettings from "./SucursalSettings"
 import Button from "../../components/Button"
@@ -13,10 +10,12 @@ import { NAVIGATION_ROUTES_RES_ADMIN } from "../../routes"
 import userApi from "../../api/userApi"
 import BackButton from "../Dishes/components/BackButton"
 import { USER_ROLES } from "../../utils/constants"
+import { showNotification } from "@mantine/notifications"
+import { LoaderComponent } from "../../components/LoaderComponent"
 
 export default function NewUser() {
-  const location = useLocation()
   const navigate = useNavigate()
+  const [isLoading, setIsLoading] = useState(false)
 
   const {
     register,
@@ -30,6 +29,7 @@ export default function NewUser() {
   const [isDataCleared, setIsDataCleared] = useState(false)
 
   const onSubmit = async (data) => {
+    setIsLoading(true)
     try {
       const formData = new FormData()
       formData.append("name", data.name)
@@ -50,11 +50,17 @@ export default function NewUser() {
       const response = await userApi.createUser(formData)
 
       if (response?.error) {
-        toast.error(`Fallo al crear un nuevo usuario. Por favor intente de nuevo. ${response.message}`, {
+        showNotification({
+          title: "Error",
+          message: response.message,
+          color: "red",
           duration: 7000
         })
       } else {
-        toast.success(`Usuario creado exitosamente`, {
+        showNotification({
+          title: "Creación exitosa",
+          message: `Se creó el usuario de ${response.data.name}`,
+          color: "green",
           duration: 7000
         })
         reset()
@@ -62,11 +68,15 @@ export default function NewUser() {
         navigate(NAVIGATION_ROUTES_RES_ADMIN.Users.path)
       }
     } catch (error) {
-      toast.error(`Fallo al crear un nuevo usuario. Por favor intente de nuevo.`, {
+      showNotification({
+        title: "Error",
+        message: error,
+        color: "red",
         duration: 7000
       })
       throw error
     }
+    setIsLoading(false)
   }
 
   const accordionStructure = [
@@ -142,10 +152,14 @@ export default function NewUser() {
                   navigate(NAVIGATION_ROUTES_RES_ADMIN.Users.path)
                 }}
               />
-              <Button
-                text={"Guardar"}
-                className="flex h-10 items-center justify-center px-4 rounded-md shadow-sm transition-all duration-700 focus:outline-none text-xs bg-sky-950 text-slate-50"
-              />
+              {isLoading ? (
+                <LoaderComponent width={24} size={25} />
+              ) : (
+                <Button
+                  text={"Guardar"}
+                  className="w-24 flex h-10 items-center justify-center rounded-md shadow-sm transition-all duration-700 focus:outline-none text-xs bg-sky-950 text-slate-50"
+                />
+              )}
             </div>
           </div>
         </section>
