@@ -99,58 +99,56 @@ export default function NewBranch() {
       schedules: !data.alwaysOpen ? data.schedule : null
     }
 
-    console.log(formData)
+    try {
+      const response = await branchesApi.createBranch(formData)
 
-    // try {
-    //   const response = await branchesApi.createBranch(formData)
+      if (response.error) {
+        showNotification({
+          title: "Error",
+          message: response.message,
+          color: "red",
+          duration: 7000
+        })
+      } else {
+        const branchId = response.data.id
 
-    //   if (response.error) {
-    //     showNotification({
-    //       title: "Error",
-    //       message: response.message,
-    //       color: "red",
-    //       duration: 7000
-    //     })
-    //   } else {
-    //     const branchId = response.data.id
+        const uploadBranchImage = async (branchId, file) => {
+          const formDataImage = new FormData()
+          formDataImage.append("files", file)
 
-    //     const uploadBranchImage = async (branchId, file) => {
-    //       const formDataImage = new FormData()
-    //       formDataImage.append("files", file)
+          return await branchesApi.addImage(branchId, formDataImage)
+        }
 
-    //       return await branchesApi.addImage(branchId, formDataImage)
-    //     }
+        const addImageResponse = await uploadBranchImage(branchId, data?.files?.[0])
 
-    //     const addImageResponse = await uploadBranchImage(branchId, data?.files?.[0])
-
-    //     if (addImageResponse.error) {
-    //       showNotification({
-    //         title: "Error",
-    //         message: addImageResponse.message,
-    //         color: "red",
-    //         duration: 7000
-    //       })
-    //     } else {
-    //       showNotification({
-    //         title: "Creación exitosa",
-    //         message: "La sucursal fue creada correctamente",
-    //         color: "green",
-    //         duration: 7000
-    //       })
-    //       navigate(NAVIGATION_ROUTES_RES_ADMIN.Branches.path)
-    //     }
-    //   }
-    //   setIsLoading(false)
-    //   return response.data
-    // } catch (e) {
-    //   showNotification({
-    //     title: "Error",
-    //     message: e,
-    //     color: "red",
-    //     duration: 7000
-    //   })
-    //   setIsLoading(false)
-    // }
+        if (addImageResponse.error) {
+          showNotification({
+            title: "Error",
+            message: addImageResponse.message,
+            color: "red",
+            duration: 7000
+          })
+        } else {
+          showNotification({
+            title: "Creación exitosa",
+            message: "La sucursal fue creada correctamente",
+            color: "green",
+            duration: 7000
+          })
+          navigate(NAVIGATION_ROUTES_RES_ADMIN.Branches.path)
+        }
+      }
+      setIsLoading(false)
+      return response.data
+    } catch (e) {
+      showNotification({
+        title: "Error",
+        message: e,
+        color: "red",
+        duration: 7000
+      })
+      setIsLoading(false)
+    }
   }
 
   return (
