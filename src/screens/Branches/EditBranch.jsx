@@ -136,7 +136,7 @@ export const EditBranch = () => {
     {
       title: "Horario",
       requirement: "Obligatorio",
-      form: <TimeForm setValue={details.ScheduleModels} />
+      form: <TimeForm setValue={setValue} scheduleModels={details.ScheduleModels} />
     }
   ]
 

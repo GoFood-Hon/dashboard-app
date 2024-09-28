@@ -4,7 +4,6 @@ import { IconClock } from "@tabler/icons-react"
 import React, { useEffect, useState } from "react"
 import { colors } from "../../theme/colors"
 import { Icon } from "../../components/Icon"
-import { showNotification } from "@mantine/notifications"
 import dayjs from "dayjs"
 import utc from "dayjs/plugin/utc"
 import timezone from "dayjs/plugin/timezone"
@@ -12,7 +11,7 @@ import timezone from "dayjs/plugin/timezone"
 dayjs.extend(utc)
 dayjs.extend(timezone)
 
-export default function TimeForm({ setValue }) {
+export default function TimeForm({ setValue, scheduleModels }) {
   const daysOfWeek = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"]
   const daysOfWeekEn = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
 

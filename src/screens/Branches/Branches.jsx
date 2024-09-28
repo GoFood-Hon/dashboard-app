@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from "react"
 import BaseLayout from "../../components/BaseLayout"
 import Button from "../../components/Button"
-import { Affix, Grid, Pagination, Switch, rem, createTheme, MantineProvider } from "@mantine/core"
-import BreadCrumbNavigation from "../../components/BreadCrumbNavigation"
+import { Grid, Pagination, Switch, rem, createTheme, MantineProvider } from "@mantine/core"
 import { useLocation, useNavigate } from "react-router-dom"
 import { useDispatch, useSelector } from "react-redux"
-import { Icon } from "../../components/Icon"
 import {
   fetchBranches,
   selectAllBranches,
@@ -16,7 +14,6 @@ import {
   updateBranches
 } from "../../store/features/branchesSlice"
 import LoadingCircle from "../../components/LoadingCircle"
-import ItemCard from "../../components/ItemCard"
 import { colors } from "../../theme/colors"
 import { NAVIGATION_ROUTES_RES_ADMIN } from "../../routes"
 import { IconCheck, IconX } from "@tabler/icons-react"
