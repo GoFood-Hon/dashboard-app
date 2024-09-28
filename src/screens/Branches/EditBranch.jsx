@@ -202,17 +202,16 @@ export const EditBranch = () => {
               duration: 7000
             })
           }
-        } else {
-          showNotification({
-            title: "Actualización exitosa",
-            message: `Se actualizó la sucursal ${response?.data?.name}`,
-            color: "green",
-            duration: 7000
-          })
-          reset()
-          navigate(NAVIGATION_ROUTES_RES_ADMIN.Branches.path)
         }
         setIsLoading(false)
+        showNotification({
+          title: "Actualización exitosa",
+          message: `Se actualizó la sucursal ${response?.data?.name}`,
+          color: "green",
+          duration: 7000
+        })
+        reset()
+        navigate(NAVIGATION_ROUTES_RES_ADMIN.Branches.path)
       }
       return response.data
     } catch (e) {

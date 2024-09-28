@@ -83,7 +83,7 @@ export default function NewBranch() {
   ))
 
   const onSubmit = async (data) => {
-    //setIsLoading(true)
+    setIsLoading(true)
     const formData = {
       name: data.name,
       email: data.email,
