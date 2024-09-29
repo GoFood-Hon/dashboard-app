@@ -15,7 +15,6 @@ import plansApi from "../../api/plansApi"
 import { convertToDecimal } from "../../utils"
 
 export const NewPlan = () => {
-  const location = useLocation()
   const navigate = useNavigate()
 
   const {
@@ -80,6 +79,7 @@ export const NewPlan = () => {
     }
   }
   const onSubmit = async (data) => {
+    console.log(data)
     try {
       const features = featuresList
         .map((feature) => {
@@ -94,17 +94,19 @@ export const NewPlan = () => {
         })
         .filter((feature) => feature !== null)
 
-      const requestBody = JSON.stringify({
+      const requestBody = {
         name: data.name,
         price: convertToDecimal(data.price),
         tax: convertToDecimal(data.tax),
         paymentType: data.paymentType ?? DEFAULT_PAYMENT_TYPE,
         currency: data.currency ?? DEFAULT_CURRENCY,
         features
-      })
+      }
 
-      const response = await plansApi.createPlan(requestBody)
-      handleResponse(response)
+      console.log(requestBody)
+
+      // const response = await plansApi.createPlan(requestBody)
+      // handleResponse(response)
     } catch (error) {
       handleError(error)
     }

@@ -4,11 +4,14 @@ import toast from "react-hot-toast"
 import InputField from "../../components/Form/InputField"
 import plansApi from "../../api/plansApi"
 import { DEFAULT_CURRENCY, DEFAULT_PAYMENT_TYPE } from "../../utils/constants"
+import { useParams } from "react-router-dom"
 
 export const EditGeneralInformationForm = ({ register, errors, setValue, featuresList, setFeaturesList, data }) => {
+  const { planId } = useParams()
   const [paymentType, setPaymentType] = useState(DEFAULT_PAYMENT_TYPE)
   const [currency, setCurrency] = useState(DEFAULT_CURRENCY)
   const [dishesAdded, setDishesAdded] = useState([])
+  const [planData, setPlanData] = useState([])
 
   // Actualiza el paymentType cuando cambien los datos
   useEffect(() => {
@@ -21,7 +24,8 @@ export const EditGeneralInformationForm = ({ register, errors, setValue, feature
     ;(async () => {
       try {
         const response = await plansApi.getFeatures()
-
+        const planResponse = await plansApi.getPlan(planId)
+        setPlanData(planResponse.data.plan)
         setFeaturesList(response.data)
 
         if (response.status !== "success") {
@@ -38,7 +42,7 @@ export const EditGeneralInformationForm = ({ register, errors, setValue, feature
   }, [])
 
   const RenderInputs = () => {
-    const inputs = data?.PlanFeatures?.filter((feature) => dishesAdded?.includes(feature.id))
+    const inputs = planData?.PlanFeatures?.filter((feature) => dishesAdded?.includes(feature.id))
     return (
       <>
         {inputs?.map(
@@ -49,6 +53,7 @@ export const EditGeneralInformationForm = ({ register, errors, setValue, feature
                 label={input.name}
                 name={input.featureCode}
                 register={register}
+                defaultValue={input.PlanPlanFeatures.quantity.toString()}
                 errors={errors}
                 className="text-black"
               />
@@ -69,6 +74,7 @@ export const EditGeneralInformationForm = ({ register, errors, setValue, feature
   }
 
   const onChangeDishesAdded = (value) => {
+    console.log(value)
     setValue("featureIds", value)
     setDishesAdded(value)
   }

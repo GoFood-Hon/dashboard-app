@@ -32,6 +32,7 @@ export const GeneralInformationForm = ({ register, errors, setValue, featuresLis
 
   const RenderInputs = () => {
     const inputs = featuresList.filter((feature) => dishesAdded.includes(feature.id))
+    console.log(inputs)
     return (
       <>
         {inputs.map(

@@ -101,6 +101,7 @@ export const EditPlan = () => {
   }
 
   const onSubmit = async (data) => {
+    console.log(data)
     try {
       const planId = data.id
 
@@ -127,7 +128,7 @@ export const EditPlan = () => {
       // const response = plansApi.updatePlan(planId, transformedData)
       // handleResponse(response)
 
-      return response.data
+      // return response.data 
     } catch (error) {
       handleError(error)
     }
