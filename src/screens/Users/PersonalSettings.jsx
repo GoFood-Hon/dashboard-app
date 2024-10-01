@@ -1,12 +1,9 @@
 import React from "react"
-import BaseLayout from "../../components/BaseLayout"
-import { Breadcrumbs } from "@mantine/core"
-import BreadCrumbNavigation from "../../components/BreadCrumbNavigation"
 import SettingsCard from "../../components/SettingsCard"
 
 export default function PersonalSettings() {
   return (
-    <BaseLayout>
+    <>
       <div className="pl-[200px]">
         <section>
           <div className="flex flex-row justify-between items-center pb-6">
@@ -17,6 +14,6 @@ export default function PersonalSettings() {
         </section>
         <SettingsCard title="Personal" iconName="users"></SettingsCard>
       </div>
-    </BaseLayout>
+    </>
   )
 }

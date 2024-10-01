@@ -89,9 +89,9 @@ export default function GeneralInformationForm({ register, errors, setValue, isD
   return (
     <Grid>
       <Grid.Col span={{ base: 12, md: 8, lg: 8 }}>
-        <div className="w-full h-full items-center justify-center flex bg-white rounded-2xl border border-blue-100 p-4">
+        <div className="w-full h-full items-center justify-center flex  rounded-2xl p-4">
           <div className="flex flex-col w-full">
-            <InputField label="Nombre (Obligatorio)" name="name" register={register} errors={errors} className="text-black" />
+            <InputField label="Nombre (Obligatorio)" name="name" register={register} errors={errors}  />
             <div className="flex flex-row w-full justify-end flex-wrap">
               <div className="w-1/2 pr-2">
                 <InputField
@@ -149,7 +149,7 @@ export default function GeneralInformationForm({ register, errors, setValue, isD
         </div>
       </Grid.Col>
       <Grid.Col span={{ base: 12, md: 4, lg: 4 }}>
-        <div className="flex flex-col justify-center items-center w-full h-full bg-white rounded-2xl border border-blue-100 p-4">
+        <div className="flex flex-col justify-center items-center w-full h-full rounded-2xl p-4">
           {previews.length > 0 ? (
             <div className="w-full">
               <Text size="lg" inline className="text-left mb-5">

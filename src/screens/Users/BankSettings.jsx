@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from "react"
-import BaseLayout from "../../components/BaseLayout"
-import { Breadcrumbs, Grid, Select, Tabs, rem } from "@mantine/core"
-import BreadCrumbNavigation from "../../components/BreadCrumbNavigation"
+import { Grid, Select, Tabs, rem } from "@mantine/core"
 import SettingsCard from "../../components/SettingsCard"
 import InputField from "../../components/Form/InputField"
 import { Controller, useForm } from "react-hook-form"
@@ -70,8 +68,8 @@ export default function BankSettings() {
   }, [])
 
   return (
-    <BaseLayout>
-      <div className="pl-[130px]">
+    <>
+      <div>
         <section>
           <div className="flex flex-row justify-between items-center pb-3">
             <div className="flex flex-row gap-x-3 items-center">
@@ -128,6 +126,6 @@ export default function BankSettings() {
           </Tabs>
         </section>
       </div>
-    </BaseLayout>
+    </>
   )
 }

@@ -1,11 +1,8 @@
 import React, { useEffect, useState } from "react"
-import { useLocation, useParams } from "react-router-dom"
-import { Breadcrumbs, Card, Grid, Image, Modal } from "@mantine/core"
+import { useParams } from "react-router-dom"
+import { Card, Grid, Image, Modal } from "@mantine/core"
 import { useDisclosure } from "@mantine/hooks"
-
-import BaseLayout from "../../components/BaseLayout"
 import BackButton from "../Dishes/components/BackButton"
-import BreadCrumbNavigation from "../../components/BreadCrumbNavigation"
 import authApi from "../../api/authApi"
 import { formatDateDistanceToNow } from "../../utils"
 import { EditAdminUser } from "./EditAdminUser"
@@ -16,11 +13,7 @@ import { SelectPlan } from "./SelectPlan"
 export const AdminUserDetails = () => {
   const { adminId } = useParams()
   const user = useSelector((state) => state.user.value)
-
-  const location = useLocation()
-
   const [userDetails, setUserDetails] = useState({})
-
   const [formModalOpened, { open: openFormModal, close: closeFormModal }] = useDisclosure(false)
 
   useEffect(() => {
@@ -33,7 +26,7 @@ export const AdminUserDetails = () => {
   }, [])
 
   return (
-    <BaseLayout>
+    <>
       <section>
         <div className="flex flex-row justify-between items-center pb-6">
           <BackButton title={userDetails?.name} />
@@ -110,6 +103,6 @@ export const AdminUserDetails = () => {
         }}>
         <EditAdminUser close={closeFormModal} details={userDetails} adminId={adminId} />
       </Modal>
-    </BaseLayout>
+    </>
   )
 }

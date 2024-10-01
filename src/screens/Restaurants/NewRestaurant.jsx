@@ -1,13 +1,11 @@
 import React, { useState } from "react"
-import { Accordion, Breadcrumbs } from "@mantine/core"
-import { useLocation, useNavigate } from "react-router-dom"
+import { Accordion } from "@mantine/core"
+import { useNavigate } from "react-router-dom"
 import { useForm } from "react-hook-form"
 import { yupResolver } from "@hookform/resolvers/yup"
 import toast from "react-hot-toast"
 import { GeneralInformationForm } from "./GeneralInformationForm"
-import BreadCrumbNavigation from "../../components/BreadCrumbNavigation"
 import BackButton from "../Dishes/components/BackButton"
-import BaseLayout from "../../components/BaseLayout"
 import Button from "../../components/Button"
 import { NAVIGATION_ROUTES_SUPER_ADMIN } from "../../routes"
 import { restaurantValidation } from "../../utils/inputRules"
@@ -15,7 +13,6 @@ import restaurantsApi from "../../api/restaurantApi"
 import { convertToDecimal } from "../../utils"
 
 export const NewRestaurant = () => {
-  const location = useLocation()
   const navigate = useNavigate()
 
   const {
@@ -120,7 +117,7 @@ export const NewRestaurant = () => {
   ))
 
   return (
-    <BaseLayout>
+    <>
       <form onSubmit={handleSubmit(onSubmit)}>
         <section>
           <div className="flex flex-row justify-between items-center pb-6 flex-wrap xs:gap-3">
@@ -156,6 +153,6 @@ export const NewRestaurant = () => {
           </div>
         </section>
       </form>
-    </BaseLayout>
+    </>
   )
 }

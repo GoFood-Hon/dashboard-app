@@ -1,7 +1,5 @@
 import React from "react"
-import BaseLayout from "../../components/BaseLayout"
-import { Breadcrumbs, Grid } from "@mantine/core"
-import BreadCrumbNavigation from "../../components/BreadCrumbNavigation"
+import { Grid } from "@mantine/core"
 import SettingsCard from "../../components/SettingsCard"
 import InputField from "../../components/Form/InputField"
 import { useForm } from "react-hook-form"
@@ -54,7 +52,7 @@ export default function PasswordSettings() {
   }
 
   return (
-    <BaseLayout>
+    <>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className={`${user.role === APP_ROLES.restaurantAdmin && "pl-[130px]"}`}>
           <section>
@@ -108,6 +106,6 @@ export default function PasswordSettings() {
           </SettingsCard>
         </div>
       </form>
-    </BaseLayout>
+    </>
   )
 }

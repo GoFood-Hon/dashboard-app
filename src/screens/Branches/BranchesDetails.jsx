@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react"
-import BaseLayout from "../../components/BaseLayout"
 import { useLocation, useParams } from "react-router-dom"
-import { Breadcrumbs, Card, Grid, Image, Modal, Table } from "@mantine/core"
+import { Image, Modal, Table } from "@mantine/core"
 import { IconCamera, IconEdit } from "@tabler/icons-react"
 import { useDisclosure } from "@mantine/hooks"
 import { Map, Marker, GeolocateControl } from "react-map-gl"
@@ -94,7 +93,7 @@ export default function BranchesDetails() {
   ))
 
   return (
-    <BaseLayout>
+    <>
       <section>
         <div className="flex flex-row justify-between items-center pb-6">
           <BackButton title={details?.name} />
@@ -128,9 +127,9 @@ export default function BranchesDetails() {
               ) : null}
             </div>
             <section>
-              <div className="p-5 bg-white flex md:items-center lg:items-start flex-col">
+              <div className="p-5 flex md:items-center lg:items-start flex-col">
                 <div className="text-sky-950 text-xl font-bold pb-5 leading-snug">Información general</div>
-                <div className="w-[125px] h-px bg-blue-100 sm:w-full" />
+                <div className="w-[125px] h-px sm:w-full" />
                 <div className="flex justify-between w-full px-2 py-4">
                   <div>
                     <div className="text-sky-950 text-sm font-medium leading-snug my-2">Dirección</div>
@@ -235,6 +234,6 @@ export default function BranchesDetails() {
           <EditBranch close={closeFormModal} itemDetails={details} />
         </Modal>
       </section>
-    </BaseLayout>
+    </>
   )
 }

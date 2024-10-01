@@ -8,7 +8,6 @@ import { convertToDecimal } from "../../utils"
 import { EditGeneralInformationForm } from "./EditGeneralInformationForm"
 import { useNavigate, useParams } from "react-router-dom"
 import { NAVIGATION_ROUTES_SUPER_ADMIN, SETTING_NAVIGATION_ROUTES } from "../../routes"
-import BaseLayout from "../../components/BaseLayout"
 import BackButton from "../Dishes/components/BackButton"
 
 export const EditPlan = () => {
@@ -20,7 +19,6 @@ export const EditPlan = () => {
     ;(async () => {
       try {
         const response = await plansApi.getPlan(planId)
-        console.log(response)
         setPlanDetails(response.data.plan)
       } catch (error) {
         toast.error(`Fallo al obtener el plan. Por favor intente de nuevo. ${error}`, {
@@ -125,17 +123,17 @@ export const EditPlan = () => {
 
       console.log(transformedData)
 
-      // const response = plansApi.updatePlan(planId, transformedData)
-      // handleResponse(response)
+      const response = plansApi.updatePlan(planId, transformedData)
+      handleResponse(response)
 
-      // return response.data 
+      return response.data 
     } catch (error) {
       handleError(error)
     }
   }
 
   return (
-    <BaseLayout>
+    <>
       <section>
         <div className="flex flex-row justify-between items-center pb-6">
           <BackButton title={planDetails?.name} />
@@ -165,6 +163,6 @@ export const EditPlan = () => {
           </div>
         </section>
       </form>
-    </BaseLayout>
+    </>
   )
 }

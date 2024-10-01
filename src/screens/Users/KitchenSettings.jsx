@@ -1,10 +1,6 @@
 import React from "react"
-import BaseLayout from "../../components/BaseLayout"
-import { Breadcrumbs, Grid } from "@mantine/core"
-import BreadCrumbNavigation from "../../components/BreadCrumbNavigation"
 import { useForm } from "react-hook-form"
 import SettingsCard from "../../components/SettingsCard"
-import InputField from "../../components/Form/InputField"
 
 export default function KitchenSettings() {
   const {
@@ -17,7 +13,7 @@ export default function KitchenSettings() {
   const onSubmit = async (data) => {}
 
   return (
-    <BaseLayout>
+    <>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="pl-[200px]">
           <section>
@@ -30,6 +26,6 @@ export default function KitchenSettings() {
           <SettingsCard title="Información general" iconName="chefHat"></SettingsCard>
         </div>
       </form>
-    </BaseLayout>
+    </>
   )
 }

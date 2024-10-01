@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react"
-import BaseLayout from "../../components/BaseLayout"
 import Button from "../../components/Button"
 import { Text } from "@mantine/core"
 import MenuTable from "../Menu/MenuTable"
@@ -51,7 +50,7 @@ export default function Users() {
     navigate(NAVIGATION_ROUTES_RES_ADMIN.Users.NewUser.path)
   }
   return (
-    <BaseLayout>
+    <>
       <section>
         <div className="flex flex-row justify-between items-center pb-6">
           <h1 className="text-white-200 text-2xl font-semibold">Usuarios</h1>
@@ -63,7 +62,7 @@ export default function Users() {
         </div>
       </section>
       <section>
-        <div className="w-full p-4 h-full bg-white rounded-2xl border border-blue-100">
+        <div className="w-full p-4 h-full rounded-md">
           {users.length > 0 ? (
             <MenuTable refreshPage={refreshPage} items={users} screenType="usersScreen" />
           ) : (
@@ -75,6 +74,6 @@ export default function Users() {
           )}
         </div>
       </section>
-    </BaseLayout>
+    </>
   )
 }

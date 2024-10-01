@@ -3,9 +3,10 @@ import { IconChevronLeft, IconChevronRight } from "@tabler/icons-react"
 import { Link } from "react-router-dom"
 import { useState } from "react"
 import classes from "./NavLinksGroup.module.css"
+import { useLocation } from "react-router-dom"
 
 export function NavLinksGroup({ icon: Icon, label, link, initiallyOpened, links }) {
-  const pathname = "Hola"
+  const { pathname } = useLocation()
   const { dir } = useDirection()
 
   const hasLinks = Array.isArray(links)
@@ -13,16 +14,23 @@ export function NavLinksGroup({ icon: Icon, label, link, initiallyOpened, links 
   const ChevronIcon = dir === "ltr" ? IconChevronRight : IconChevronLeft
   const items = (hasLinks ? links : []).map((link) => {
     return (
-      <Link href={link.link} key={link.label} className={`${classes.link} ${link.link === pathname && classes.activeLink}`}>
+      <Link to={link.link} key={link.label} className={`${classes.link} ${link.link === pathname && classes.activeLink}`}>
         {link.label}
       </Link>
     )
   })
 
+  const handleClick = () => {
+    if (hasLinks) {
+      setOpened((prev) => !prev)
+    }
+  }
+
   return (
     <>
       {link ? (
-        <Link href={link} className={`${classes.control} ${link === pathname && classes.activeControl}`}>
+        // Si el item tiene un link (y no rutas anidadas), renderiza el Link.
+        <Link to={link} className={`${classes.control} ${link === pathname && classes.activeControl}`}>
           <Group gap={0} justify="space-between">
             <Box style={{ display: "flex", alignItems: "center" }}>
               <ThemeIcon variant="light" color="rgb(253,190,65)" size={30}>
@@ -33,14 +41,8 @@ export function NavLinksGroup({ icon: Icon, label, link, initiallyOpened, links 
           </Group>
         </Link>
       ) : (
-        <UnstyledButton
-          onClick={() => {
-            if (hasLinks) {
-              setOpened((o) => !o)
-              return
-            }
-          }}
-          className={classes.control}>
+        // Si el item tiene rutas anidadas, maneja el clic para expandir/colapsar.
+        <div onClick={handleClick} className={classes.control}>
           <Group gap={0} justify="space-between">
             <Box style={{ display: "flex", alignItems: "center" }}>
               <ThemeIcon variant="light" color="rgb(253,190,65)" size={30}>
@@ -54,14 +56,12 @@ export function NavLinksGroup({ icon: Icon, label, link, initiallyOpened, links 
                 size="1rem"
                 stroke={1.5}
                 style={{
-                  transform: opened
-                    ? `rotate(${dir === "rtl" ? -90 : 90}deg)`
-                    : "none",
+                  transform: opened ? `rotate(${dir === "rtl" ? -90 : 90}deg)` : "none"
                 }}
               />
             )}
           </Group>
-        </UnstyledButton>
+        </div>
       )}
       {hasLinks ? <Collapse in={opened}>{items}</Collapse> : null}
     </>

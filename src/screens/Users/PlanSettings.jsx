@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from "react"
-import BaseLayout from "../../components/BaseLayout"
-import { Breadcrumbs, Tabs } from "@mantine/core"
-import BreadCrumbNavigation from "../../components/BreadCrumbNavigation"
+import { Tabs } from "@mantine/core"
 import SettingsCard from "../../components/SettingsCard"
 import { useSelector } from "react-redux"
 import { useForm } from "react-hook-form"
@@ -73,8 +71,8 @@ export default function PlanSettings() {
   }, [])
 
   return (
-    <BaseLayout>
-      <div className="pl-[130px]">
+    <>
+      <div>
         <section>
           <div className="flex flex-row justify-between items-center pb-3">
             <div className="flex flex-row gap-x-3 items-center">
@@ -82,7 +80,7 @@ export default function PlanSettings() {
             </div>
           </div>
         </section>
-        <Tabs defaultValue="payments" color="#0e2946">
+        <Tabs defaultValue="payments" color="#fff">
           <Tabs.List>
             <Tabs.Tab value="payments">Plan activo</Tabs.Tab>
             <Tabs.Tab value="paymentMethod">Método de pago</Tabs.Tab>
@@ -122,7 +120,7 @@ export default function PlanSettings() {
                 <div className="w-full flex flex-row gap-2">
                   <Button
                     text={"Descartar"}
-                    className={"text-xs border border-red-400 text-red-400 bg-white"}
+                    className={"text-xs border border-red-400 text-red-400 "}
                     onClick={() => navigate(SETTING_NAVIGATION_ROUTES.General.path)}
                   />
                   <Button
@@ -135,7 +133,7 @@ export default function PlanSettings() {
           </Tabs.Panel>
         </Tabs>
       </div>
-    </BaseLayout>
+    </>
   )
 }
 
@@ -143,12 +141,12 @@ const PlanDetailsCard = ({ plan }) => {
   const { name, price, tax, currency, paymentType, PlanFeatures } = plan
 
   return (
-    <div className="border rounded-lg border-blue-100 p-4 bg-white m-4">
+    <div className="border rounded-lg  p-4  m-4">
       <h1 className="text-lg font-semibold mb-2">{name}</h1>
       <p>
         <span className="font-semibold">Price:</span> {currency} {price} per {paymentType.toLowerCase()} (including {tax}% tax)
       </p>
-      <h2 className="text-md font-semibold mt-4 mb-2">Features Included:</h2>
+      <h2 className="text-md font-semibold mt-4 mb-2">Características:</h2>
       <ul className="list-disc pl-6">
         {PlanFeatures.map((feature) => (
           <li key={feature.id}>
@@ -166,7 +164,7 @@ const CreditCardInfo = ({ data }) => {
   const expMonth = validThru?.substring(0, 2)
   const expYear = validThru?.substring(2)
   return (
-    <div className="bg-sky-50 w-2/4 shadow-xl border-blue-100 border-2 rounded-lg p-4 m-10">
+    <div className=" w-2/4 shadow-xl border-2 rounded-lg p-4 m-10">
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-lg font-semibold text-gray-800">Tarjeta actual</h2>
         <span className="text-gray-600">

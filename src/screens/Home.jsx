@@ -12,7 +12,7 @@ import { TopProductsSales } from "./Dashboards/TopProductsSales"
 
 function Home() {
   return (
-    <BaseLayout>
+    <>
       <h1 className="text-white-200 text-2xl font-semibold pb-6">Dashboard</h1>
       <DashboardScreen />
       <Grid className="mt-6">
@@ -35,7 +35,7 @@ function Home() {
           <TopProductsSales />
         </Grid.Col>
       </Grid>
-    </BaseLayout>
+    </>
   )
 }
 

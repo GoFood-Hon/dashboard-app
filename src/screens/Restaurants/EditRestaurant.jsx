@@ -8,9 +8,9 @@ import restaurantsApi from "../../api/restaurantApi"
 import { NAVIGATION_ROUTES_SUPER_ADMIN } from "../../routes"
 import { convertToDecimal } from "../../utils"
 import { LoaderComponent } from "../../components/LoaderComponent"
-import BaseLayout from "../../components/BaseLayout"
 import BackButton from "../Dishes/components/BackButton"
 import { showNotification } from "@mantine/notifications"
+import { SelectPlan } from "../Users/SelectPlan"
 
 export const EditRestaurant = () => {
   const { restaurantId } = useParams()
@@ -21,6 +21,7 @@ export const EditRestaurant = () => {
   useEffect(() => {
     ;(async () => {
       const response = await restaurantsApi.getRestaurant(restaurantId)
+      console.log(response)
       const details = response?.data
       if (details?.phoneNumber?.startsWith("+504")) {
         details.phoneNumber = details.phoneNumber.replace("+504", "")
@@ -150,7 +151,7 @@ export const EditRestaurant = () => {
   ))
 
   return (
-    <BaseLayout>
+    <>
       <section>
         <div className="flex flex-row justify-between items-center pb-6">
           <BackButton title={restaurantDetails?.name} />
@@ -168,8 +169,11 @@ export const EditRestaurant = () => {
             {items}
           </Accordion>
         </section>
+        <section className="my-2">
+          <SelectPlan restaurantId={restaurantId} />
+        </section>
         <section>
-          <div className="w-full flex md:justify-end mt-6 md:gap-3 rounded-md bg-white px-8 py-5 border border-gray-200">
+          <div className="w-full flex md:justify-end mt-3 md:gap-3 rounded-md bg-white px-8 py-5 border border-gray-200">
             <div className="md:w-2/3 lg:1/3 sm:w-full flex flex-row justify-end gap-3 sm:flex-wrap md:flex-nowrap">
               <Button
                 text={"Descartar"}
@@ -190,6 +194,6 @@ export const EditRestaurant = () => {
           </div>
         </section>
       </form>
-    </BaseLayout>
+    </>
   )
 }

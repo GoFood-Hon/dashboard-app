@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react"
 import { Chart } from "react-google-charts"
 import reportsApi from "../../api/reportsApi"
 import toast from "react-hot-toast"
+import { Divider, Paper } from "@mantine/core"
 
 export const options = {
   allowHtml: true,
@@ -48,11 +49,15 @@ export const DishesTable = () => {
   }, [])
 
   return (
-    <div className="min-h-[600px] w-full h-[600px] bg-white rounded-2xl shadow border border-blue-100 flex flex-col p-2 mr-6">
-      <div className="flex flex-row justify-between items-center p-6">
+    <Paper
+      withBorder
+      p="md"
+      radius="md"
+      className="min-h-[600px] w-full h-[600px] bg-white rounded-2xl shadow border border-blue-100 flex flex-col p-2 mr-6">
+      <div className="flex flex-row justify-between items-center p-2">
         <h2 className="text-white-200 text-xl font-semibold">Lista de pedidos</h2>
       </div>
-      <span className="border border-blue-100" />
+      <Divider my="md" />
 
       <div className="pb-6 flex justify-center items-center h-full">
         {data ? (
@@ -63,6 +68,6 @@ export const DishesTable = () => {
           </div>
         )}
       </div>
-    </div>
+    </Paper>
   )
 }

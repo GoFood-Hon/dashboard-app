@@ -10,7 +10,9 @@ import {
   MantineProvider,
   createTheme,
   Switch,
-  rem
+  rem,
+  Container,
+  Text
 } from "@mantine/core"
 import Button from "../../components/Button"
 import { useNavigate, useLocation } from "react-router-dom"
@@ -166,7 +168,7 @@ export default function Dishes() {
   }
 
   return (
-    <BaseLayout>
+    <>
       <section>
         <div className="flex flex-row justify-between items-center pb-6">
           <BackButton title="Platillos" />
@@ -216,11 +218,11 @@ export default function Dishes() {
           <Grid>
             {dishes.map((item, key) => (
               <Grid.Col span={{ base: 12, md: 6, lg: 4, xl: 3}} key={key}>
-                <div className="bg-white border border-gray-100 transition transform duration-700 shadow-lg p-4 rounded-lg relative">
+                <Container className="transition transform duration-700 shadow-lg p-4 rounded-lg relative">
                   <img className="w-48 h-48 mx-auto object-contain" src={item.images?.[0]?.location} alt="" />
-                  <div className="flex flex-col my-3 space-y-2">
-                    <h1 className="text-gray-900 poppins text-lg">{item.name}</h1>
-                    <h2 className="text-gray-900 poppins text-lg font-bold">{getFormattedHNL(item.price)}</h2>
+                  <Container className="flex flex-col my-3 space-y-2">
+                    <Text className="text-gray-900 poppins text-lg">{item.name}</Text>
+                    <Text className="text-gray-900 poppins text-lg font-bold">{getFormattedHNL(item.price)}</Text>
                     <div className="flex items-center justify-between">
                       <Button
                         text={"Editar"}
@@ -243,8 +245,8 @@ export default function Dishes() {
                         />
                       </MantineProvider>
                     </div>
-                  </div>
-                </div>
+                  </Container>
+                </Container>
               </Grid.Col>
             ))}
           </Grid>
@@ -291,6 +293,6 @@ export default function Dishes() {
           </Affix>
         )}
       </section>
-    </BaseLayout>
+    </>
   )
 }

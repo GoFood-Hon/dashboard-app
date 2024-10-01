@@ -64,7 +64,7 @@ export default function GeneralInformationForm({ register, errors, setValue, isD
   return (
     <Grid>
       <Grid.Col span={{ base: 12, md: 8, lg: 8 }}>
-        <div className="flex h-full w-full items-center justify-center rounded-2xl border border-blue-100 bg-white p-4">
+        <div className="flex h-full w-full items-center justify-center rounded-2xl p-4">
           <div className="flex w-full flex-col">
             <InputField
               label="Nombre (Obligatorio)"
@@ -88,13 +88,13 @@ export default function GeneralInformationForm({ register, errors, setValue, isD
         </div>
       </Grid.Col>
       <Grid.Col span={{ base: 12, md: 4, lg: 4 }}>
-        <div className="flex h-full w-full flex-col items-center justify-center rounded-2xl border border-blue-100 bg-white p-4">
+        <div className="flex h-full w-full flex-col items-center justify-center rounded-2xl  p-4">
           {previews.length > 0 ? (
             <div className="w-full">
               <Text size="lg" inline className="mb-5 text-left">
                 Imagen seleccionada:
               </Text>
-              <div className="my-3 flex w-full flex-row items-center justify-center rounded-2xl border border-slate-200">
+              <div className="my-3 flex w-full flex-row items-center justify-center rounded-2xl">
                 <div className="flex w-full flex-row flex-wrap items-center gap-2 p-2">
                   {previews}
                   <div className="flex flex-col">

@@ -2,8 +2,8 @@ import { Skeleton } from "@mantine/core"
 
 export const TableSkeleton = () => {
   return (
-    <div className="w-full p-4 h-full bg-white rounded-2xl border border-blue-100">
-      <div className="flex flex-col bg-white rounded-25 shadow-5xl px-2 pt-2">
+    <div className="w-full p-4 h-full rounded-2xl ">
+      <div className="flex flex-col rounded-25 shadow-5xl px-2 pt-2">
         <div className="overflow-x-auto">
           <div className="inline-block min-w-full">
             <div className="overflow-hidden">

@@ -1,7 +1,5 @@
-import React, { useEffect, useState } from "react"
-import BaseLayout from "../../components/BaseLayout"
-import { Avatar, Breadcrumbs, CloseIcon, Group, Image, Modal, Text, rem, Grid } from "@mantine/core"
-import BreadCrumbNavigation from "../../components/BreadCrumbNavigation"
+import React, { useState } from "react"
+import { CloseIcon, Group, Image, Modal, Text, rem, Grid } from "@mantine/core"
 import SettingsCard from "../../components/SettingsCard"
 import authApi from "../../api/authApi"
 import InputField from "../../components/Form/InputField"
@@ -14,7 +12,6 @@ import { IconPhoto } from "@tabler/icons-react"
 import { useDispatch, useSelector } from "react-redux"
 import { bytesToMB } from "../../utils"
 import toast from "react-hot-toast"
-import { SETTING_NAVIGATION_ROUTES } from "../../routes"
 import { APP_ROLES } from "../../utils/constants"
 import BackButton from "../Dishes/components/BackButton"
 import { LoaderComponent } from "../../components/LoaderComponent"
@@ -132,9 +129,9 @@ export default function AccountSettings() {
   }
 
   return (
-    <BaseLayout>
+    <>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <div className={`${user.role === APP_ROLES.restaurantAdmin && "pl-[130px]"}`}>
+        <div className={`${user.role === APP_ROLES.restaurantAdmin && ""}`}>
           <section>
             <div className="flex flex-row justify-between items-center pb-3">
               <div className="flex flex-row gap-x-3 items-center">
@@ -143,40 +140,6 @@ export default function AccountSettings() {
             </div>
           </section>
           <SettingsCard title="Información general" iconName="user">
-            {/* <div className="flex flex-row gap-2">
-              <div className="cursor-pointer my-4">
-                {previews.length !== 0 ? (
-                  previews
-                ) : (
-                  <Avatar size="lg" src={userData?.images?.[0]?.location} onClick={openImageModal} />
-                )}
-              </div>
-              {user.role !== APP_ROLES.branchAdmin && user.role !== APP_ROLES.cashierUser ? (
-                <a
-                  className="text-blue-600 text-base font-normal leading-normal cursor-pointer self-center"
-                  onClick={() => {
-                    openFormModal()
-                  }}>
-                  Editar
-                </a>
-              ) : null}
-            </div>
-
-            <div className="flex flex-col w-full py-2">
-              <InputField label="Nombre" name="firstName" register={register} errors={errors} />
-            </div>
-            <div className="flex flex-col w-full py-2">
-              <InputField label="Correo" name="email" register={register} errors={errors} />
-            </div>
-            <div className="flex flex-col w-full py-2">
-              <InputField
-                label="Número de teléfono"
-                name="phoneNumber"
-                register={register}
-                errors={errors}
-                countryPrefix="+504"
-              />
-            </div> */}
             <Grid>
               <Grid.Col span={{ base: 12, md: 8, lg: 8 }}>
                 <Grid>
@@ -219,13 +182,13 @@ export default function AccountSettings() {
                 </Grid>
               </Grid.Col>
               <Grid.Col span={{ base: 12, md: 4, lg: 4 }}>
-                <div className="flex flex-col justify-center items-center w-full h-full bg-white rounded-2xl border border-blue-100 p-4">
+                <div className="flex flex-col justify-center items-center w-full h-full rounded-2xl p-4">
                   {previews.length > 0 ? (
                     <div className="w-full">
                       <Text size="lg" inline className="text-left mb-5">
                         Imagen seleccionada:
                       </Text>
-                      <div className="flex flex-row justify-center items-center rounded-2xl w-full border border-slate-200 my-3">
+                      <div className="flex flex-row justify-center items-center rounded-2xl w-full my-3">
                         <div className="flex flex-row w-full items-center gap-2 flex-wrap p-2">
                           {previews}
                           <div className="flex flex-col">
@@ -300,7 +263,7 @@ export default function AccountSettings() {
             backgroundOpacity: 0.55,
             blur: 3
           }}>
-          <div className="flex flex-col justify-center items-center w-full h-full bg-white rounded-2xl border border-blue-100 p-4">
+          <div className="flex flex-col justify-center items-center w-full h-full rounded-2xl p-4">
             {previews.length > 0 ? (
               <div className="w-full">
                 <Text size="lg" inline className="text-left mb-5">
@@ -362,6 +325,6 @@ export default function AccountSettings() {
           </div>
         </div>
       </section>
-    </BaseLayout>
+    </>
   )
 }

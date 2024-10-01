@@ -1,11 +1,8 @@
 import React, { useEffect, useState } from "react"
-import { useLocation, useParams } from "react-router-dom"
-import { Breadcrumbs, Card, Grid, Image, Modal } from "@mantine/core"
+import { useParams } from "react-router-dom"
+import { Card, Grid, Image, Modal } from "@mantine/core"
 import { useDisclosure } from "@mantine/hooks"
-
-import BaseLayout from "../../components/BaseLayout"
 import BackButton from "../Dishes/components/BackButton"
-import BreadCrumbNavigation from "../../components/BreadCrumbNavigation"
 import restaurantsApi from "../../api/restaurantApi"
 import { EditRestaurant } from "./EditRestaurant"
 import { useSelector } from "react-redux"
@@ -14,10 +11,7 @@ import { APP_ROLES } from "../../utils/constants"
 export const RestaurantDetailScreen = () => {
   const user = useSelector((state) => state.user.value)
   const { restaurantId } = useParams()
-  const location = useLocation()
-
   const [restaurantsDetails, setRestaurantDetails] = useState({})
-
   const [imageModalOpened, { open: openImageModal, close: closeImageModal }] = useDisclosure(false)
   const [formModalOpened, { open: openFormModal, close: closeFormModal }] = useDisclosure(false)
   const [complementDetails, setComplementDetails] = useState({})
@@ -32,7 +26,7 @@ export const RestaurantDetailScreen = () => {
   }, [])
 
   return (
-    <BaseLayout>
+    <>
       <section>
         <div className="flex flex-row justify-between items-center pb-6">
           <BackButton title={restaurantsDetails?.name} />
@@ -104,6 +98,6 @@ export const RestaurantDetailScreen = () => {
         }}>
         <EditRestaurant close={closeFormModal} details={restaurantsDetails} restaurantId={restaurantId} />
       </Modal>
-    </BaseLayout>
+    </>
   )
 }

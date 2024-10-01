@@ -13,7 +13,10 @@ export const SelectPlan = ({ restaurantId }) => {
       const response = await plansApi.getAllPlans()
 
       if (response.error) {
-        toast.error(`Fallo al obtener la lista de planes. Por favor intente de nuevo. ${response.message}`, {
+        showNotification({
+          title: "Error",
+          message: response.message,
+          color: "red",
           duration: 7000
         })
       } else {
@@ -55,9 +58,6 @@ export const SelectPlan = ({ restaurantId }) => {
                 <div className="border-2 border-blue-100 rounded-md p-4 h-full w-full flex flex-col justify-between">
                   <div className="flex w-full flex-col">
                     <h1 className="h-full w-full pt-4 text-2xl font-semibold">{plan?.name}</h1>
-                    <div className="flex w-full flex-row justify-between items-center">
-                      <p className="text-zinc-500 text-sm font-medium  pt-4">{plan?.details || "Sin descripción disponible"}</p>
-                    </div>
                   </div>
                   <div className="py-8">
                     <span className="text-sky-950 text-base font-bold leading-normal">Tipo de plan</span>

@@ -225,7 +225,7 @@ export const EditBranch = () => {
   }
 
   return (
-    <BaseLayout>
+    <>
       <section>
         <div className="flex flex-row justify-between items-center pb-6">
           <BackButton title={details?.name} />
@@ -267,6 +267,6 @@ export const EditBranch = () => {
           </div>
         </section>
       </form>
-    </BaseLayout>
+    </>
   )
 }

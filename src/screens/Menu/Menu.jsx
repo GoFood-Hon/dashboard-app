@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { Breadcrumbs } from "@mantine/core"
+import { Breadcrumbs, Container } from "@mantine/core"
 import { useDispatch, useSelector } from "react-redux"
 import { useLocation, useNavigate } from "react-router-dom"
 
@@ -76,7 +76,7 @@ export default function Menu() {
   }
 
   return (
-    <BaseLayout>
+    <>
       <section>
         <div className="flex flex-row justify-between items-center pb-6">
           <BackButton title="Menús" />
@@ -98,7 +98,7 @@ export default function Menu() {
         {isLoading ? (
           <TableSkeleton />
         ) : menus && menus.length > 0 ? (
-          <div className="w-full p-4 h-full bg-white rounded-2xl border border-blue-100">
+          <Container fluid className="w-full p-4 h-full rounded-2xl border">
             <MenuTable
               refreshPage={refreshPage}
               items={menus.map((menu) => {
@@ -107,11 +107,11 @@ export default function Menu() {
               handleDisableSelected={handleDisableSelected}
               screenType="menuScreen"
             />
-          </div>
+          </Container>
         ) : (
           <div className="text-center mt-4 text-gray-500">No tienes menús creados</div>
         )}
       </section>
-    </BaseLayout>
+    </>
   )
 }
