@@ -125,7 +125,7 @@ importers:
         version: 18.2.15
       '@vitejs/plugin-react':
         specifier: ^4.1.1
-        version: 4.1.1(vite@4.5.0(sugarss@4.0.1(postcss@8.4.31)))
+        version: 4.1.1(vite@4.4.12(sugarss@4.0.1(postcss@8.4.31)))
       autoprefixer:
         specifier: ^10.4.16
         version: 10.4.16(postcss@8.4.31)
@@ -172,8 +172,8 @@ importers:
         specifier: ^3.3.5
         version: 3.3.5
       vite:
-        specifier: ^4.5.0
-        version: 4.5.0(sugarss@4.0.1(postcss@8.4.31))
+        specifier: ^4.4.12
+        version: 4.4.12(sugarss@4.0.1(postcss@8.4.31))
 
 packages:
 
@@ -3118,8 +3118,8 @@ packages:
   victory-vendor@36.9.2:
     resolution: {integrity: sha512-PnpQQMuxlwYdocC8fIJqVXvkeViHYzotI+NJrCuav0ZYFoq912ZHBk3mCeuj+5/VpodOjPe1z0Fk2ihgzlXqjQ==}
 
-  vite@4.5.0:
-    resolution: {integrity: sha512-ulr8rNLA6rkyFAlVWw2q5YJ91v098AFQ2R0PRFwPzREXOUJQPtFUG0t+/ZikhaOCDqFoDhN6/v8Sq0o4araFAw==}
+  vite@4.4.12:
+    resolution: {integrity: sha512-KtPlUbWfxzGVul8Nut8Gw2Qe8sBzWY+8QVc5SL8iRFnpnrcoCaNlzO40c1R6hPmcdTwIPEDkq0Y9+27a5tVbdQ==}
     engines: {node: ^14.18.0 || >=16.0.0}
     hasBin: true
     peerDependencies:
@@ -3843,14 +3843,14 @@ snapshots:
 
   '@ungap/structured-clone@1.2.0': {}
 
-  '@vitejs/plugin-react@4.1.1(vite@4.5.0(sugarss@4.0.1(postcss@8.4.31)))':
+  '@vitejs/plugin-react@4.1.1(vite@4.4.12(sugarss@4.0.1(postcss@8.4.31)))':
     dependencies:
       '@babel/core': 7.25.2
       '@babel/plugin-transform-react-jsx-self': 7.24.7(@babel/core@7.25.2)
       '@babel/plugin-transform-react-jsx-source': 7.24.7(@babel/core@7.25.2)
       '@types/babel__core': 7.20.5
       react-refresh: 0.14.2
-      vite: 4.5.0(sugarss@4.0.1(postcss@8.4.31))
+      vite: 4.4.12(sugarss@4.0.1(postcss@8.4.31))
     transitivePeerDependencies:
       - supports-color
 
@@ -6413,7 +6413,7 @@ snapshots:
       d3-time: 3.1.0
       d3-timer: 3.0.1
 
-  vite@4.5.0(sugarss@4.0.1(postcss@8.4.31)):
+  vite@4.4.12(sugarss@4.0.1(postcss@8.4.31)):
     dependencies:
       esbuild: 0.18.20
       postcss: 8.4.31
