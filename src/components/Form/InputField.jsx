@@ -10,7 +10,8 @@ export default function InputField({
   errors,
   placeholder,
   type = "text",
-  defaultValue,
+  value, // Cambia defaultValue a value
+  onChange, // Asegura que tengas un onChange handler si es controlado
   countryPrefix
 }) {
   const [showPassword, setShowPassword] = useState(false)
@@ -34,7 +35,8 @@ export default function InputField({
             errors[name] ? "border border-red-500" : "mb-2"
           }  mt-2 p-2 appearance-none block w-full border placeholder-gray-300 rounded focus:outline-none dark:bg-slate-900 dark:border-gray-600 dark:placeholder-gray-500`}
           type={type === "password" ? (showPassword ? "text" : "password") : type}
-          value={defaultValue?.startsWith("+504") ? defaultValue.replace("+504", "") : defaultValue}
+          value={value} // Usa value en lugar de defaultValue
+          onChange={onChange} // Asegúrate de que este evento esté manejado correctamente
           placeholder={placeholder}
           {...register(name, rules)}
         />

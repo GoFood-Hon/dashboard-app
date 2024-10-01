@@ -1,7 +1,5 @@
 import React, { useState } from "react"
-import BaseLayout from "../../components/BaseLayout"
-import { Breadcrumbs, Select, Tabs } from "@mantine/core"
-import BreadCrumbNavigation from "../../components/BreadCrumbNavigation"
+import { Select, Tabs } from "@mantine/core"
 import SettingsCard from "../../components/SettingsCard"
 import { CouponForm } from "../../components/CouponForm"
 import { PromotionForm } from "../../components/PromotionForm"
@@ -11,8 +9,8 @@ export default function CouponsSettings() {
   const [promotionType, setPromotionType] = useState("Promoción")
 
   return (
-    <BaseLayout>
-      <div className="pl-[130px]">
+    <>
+      <div>
         <section>
           <div className="flex flex-row justify-between items-center pb-3">
             <div className="flex flex-row gap-x-3 items-center">
@@ -20,14 +18,14 @@ export default function CouponsSettings() {
             </div>
           </div>
         </section>
-        <Tabs defaultValue="newPromotion" color="#0e2946">
+        <Tabs defaultValue="newPromotion" color="#fff">
           <Tabs.List>
             <Tabs.Tab value="newPromotion">Nueva promoción</Tabs.Tab>
             <Tabs.Tab value="couponHistory">Historial de cupones</Tabs.Tab>
             <Tabs.Tab value="promosHistory">Historial de promociones</Tabs.Tab>
           </Tabs.List>
           <Tabs.Panel value="newPromotion">
-            <SettingsCard title={`Nueva promoción de ${promotionType}`} iconName="label">
+            <SettingsCard title='Datos de Promoción' iconName="label">
               <div className="w-full mt-4">
                 <span className="text-sky-950 text-sm font-bold leading-snug">Tipo de promoción</span>
                 <div className="mt-1">
@@ -56,6 +54,6 @@ export default function CouponsSettings() {
           </Tabs.Panel>
         </Tabs>
       </div>
-    </BaseLayout>
+    </>
   )
 }

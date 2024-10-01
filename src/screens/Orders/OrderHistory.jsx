@@ -1,11 +1,6 @@
 import React, { useEffect, useState } from "react"
-import { Breadcrumbs } from "@mantine/core"
-import { useLocation } from "react-router-dom"
 import toast from "react-hot-toast"
-
 import BaseLayout from "../../components/BaseLayout"
-import BreadCrumbNavigation from "../../components/BreadCrumbNavigation"
-
 import MenuTable from "../Menu/MenuTable"
 import orderApi from "../../api/orderApi"
 import BackButton from "../Dishes/components/BackButton"
@@ -13,7 +8,6 @@ import { useSelector } from "react-redux"
 import LoadingCircle from "../../components/LoadingCircle"
 
 export const OrderHistory = () => {
-  const location = useLocation()
   const user = useSelector((state) => state.user.value)
 
   const [orders, setOrders] = useState([])

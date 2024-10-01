@@ -1,12 +1,9 @@
-import React, { useEffect, useState } from "react"
-import BaseLayout from "../../components/BaseLayout"
-import { Accordion, Breadcrumbs } from "@mantine/core"
-import BreadCrumbNavigation from "../../components/BreadCrumbNavigation"
+import React, { useState } from "react"
+import { Accordion } from "@mantine/core"
 import { useLocation, useNavigate } from "react-router-dom"
 import { yupResolver } from "@hookform/resolvers/yup"
 import { useForm } from "react-hook-form"
 import { useSelector } from "react-redux"
-import toast from "react-hot-toast"
 import { LoaderComponent } from "../../components/LoaderComponent"
 import { newBranchValidation } from "../../utils/inputRules"
 import { NAVIGATION_ROUTES_RES_ADMIN } from "../../routes"
@@ -152,7 +149,7 @@ export default function NewBranch() {
   }
 
   return (
-    <BaseLayout>
+    <>
       <form onSubmit={handleSubmit(onSubmit)}>
         <section>
           <div className="flex flex-row justify-between items-center pb-6 flex-wrap xs:gap-3">
@@ -194,6 +191,6 @@ export default function NewBranch() {
           </div>
         </section>
       </form>
-    </BaseLayout>
+    </>
   )
 }

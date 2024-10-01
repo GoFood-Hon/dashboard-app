@@ -11,7 +11,6 @@ import { EditAdditionalForm } from "./EditAdditionalForm"
 import { convertToDecimal } from "../../utils"
 import dishesApi from "../../api/dishesApi"
 import { useNavigate, useParams } from "react-router-dom"
-import BaseLayout from "../../components/BaseLayout"
 import BackButton from "./components/BackButton"
 import { NAVIGATION_ROUTES_RES_ADMIN } from "../../routes"
 import { LoaderComponent } from "../../components/LoaderComponent"
@@ -97,8 +96,8 @@ export default function EditDishScreen() {
   const items = accordionStructure.map((item, key) => (
     <Accordion.Item key={key} value={item.title}>
       <Accordion.Control>
-        <div className="w-full rounded-lg flex-row flex items-center bg-white">
-          <div className="text-slate-50 text-base font-bold bg-sky-950 rounded-full p-2 w-8 h-8 flex items-center justify-center">
+        <div className="w-full rounded-lg flex-row flex items-center ">
+          <div className="text-base font-bold bg-sky-950 rounded-full p-2 w-8 h-8 flex items-center justify-center">
             {key + 1}
           </div>
           <span className="text-sky-950 text-base font-bold  leading-normal ml-4">{item.title}</span>
@@ -128,7 +127,7 @@ export default function EditDishScreen() {
   }
 
   return (
-    <BaseLayout>
+    <>
       <form onSubmit={handleSubmit(onSubmit)}>
         <section>
           <div className="xs:gap-3 flex flex-row flex-wrap items-center justify-between pb-6">
@@ -147,11 +146,11 @@ export default function EditDishScreen() {
           </Accordion>
         </section>
         <section ref={containerRef}>
-          <div className="mt-6 flex w-full rounded-md border border-gray-200 bg-white px-8 py-5 md:justify-end md:gap-3">
+          <div className="mt-6 flex w-full rounded-md px-8 py-5 md:justify-end md:gap-3">
             <div className="lg:1/3 flex flex-row justify-end gap-3 sm:w-full sm:flex-wrap md:w-2/3 md:flex-nowrap">
               <Button
                 text={"Descartar"}
-                className={"border border-red-400 bg-white text-xs text-red-400"}
+                className={"border border-red-400 text-xs text-red-400"}
                 onClick={() => {
                   navigate(NAVIGATION_ROUTES_RES_ADMIN.Menu.submenu.Dishes.path)
                 }}
@@ -161,13 +160,13 @@ export default function EditDishScreen() {
               ) : (
                 <Button
                   text={"Actualizar"}
-                  className="w-24 flex h-10 items-center justify-center rounded-md bg-sky-950 text-xs text-slate-50 shadow-sm transition-all duration-700 focus:outline-none"
+                  className="w-24 flex h-10 items-center justify-center rounded-md text-xs shadow-sm transition-all duration-700 focus:outline-none"
                 />
               )}
             </div>
           </div>
         </section>
       </form>
-    </BaseLayout>
+    </>
   )
 }

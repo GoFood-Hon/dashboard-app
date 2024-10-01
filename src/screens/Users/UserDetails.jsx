@@ -1,9 +1,7 @@
 import { useDisclosure } from "@mantine/hooks"
 import React, { useEffect, useState } from "react"
-import { Navigate, useLocation, useNavigate, useParams } from "react-router-dom"
-import BaseLayout from "../../components/BaseLayout"
-import { Breadcrumbs, Card, Grid, Image, Modal } from "@mantine/core"
-import BreadCrumbNavigation from "../../components/BreadCrumbNavigation"
+import { useLocation, useNavigate, useParams } from "react-router-dom"
+import { Image, Modal } from "@mantine/core"
 import { IconCamera, IconEdit } from "@tabler/icons-react"
 import BackButton from "../Dishes/components/BackButton"
 import { useSelector } from "react-redux"
@@ -60,7 +58,7 @@ export default function UserDetails() {
   }
 
   return (
-    <BaseLayout>
+    <>
       <section>
         <div className="flex flex-row justify-between items-center pb-6">
           <BackButton title={userDetails?.name} />
@@ -160,6 +158,6 @@ export default function UserDetails() {
           </Modal>
         </section>
       </div>
-    </BaseLayout>
+    </>
   )
 }

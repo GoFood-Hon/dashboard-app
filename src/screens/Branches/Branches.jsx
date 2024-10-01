@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react"
-import BaseLayout from "../../components/BaseLayout"
 import Button from "../../components/Button"
 import { Grid, Pagination, Switch, rem, createTheme, MantineProvider } from "@mantine/core"
 import { useLocation, useNavigate } from "react-router-dom"
@@ -142,7 +141,7 @@ export default function Branches() {
     navigate(`${NAVIGATION_ROUTES_RES_ADMIN.Branches.path}/${id}`)
   }
   return (
-    <BaseLayout>
+    <>
       <section>
         <div className="flex flex-row justify-between items-center">
           <h1 className="text-white-200 text-2xl font-semibold">Sucursales</h1>
@@ -267,6 +266,6 @@ export default function Branches() {
           </Affix>
         )}
       </section> */}
-    </BaseLayout>
+    </>
   )
 }

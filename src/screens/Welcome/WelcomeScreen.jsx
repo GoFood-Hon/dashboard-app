@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react"
-import BaseLayout from "../../components/BaseLayout"
 import { useSelector } from "react-redux"
 import { Grid } from "@mantine/core"
 import Cards from "../../components/Cards"
@@ -30,7 +29,7 @@ export const WelcomeScreen = () => {
   }, [user])
 
   return (
-    <BaseLayout>
+    <>
       <section className="mx-auto w-[30rem] mt-10">
         <h1 className="font-extrabold text-left text-6xl text-blue-950 leading-relaxed">
           Hola, <p className="text-green-500">{user.name}👋</p>
@@ -45,6 +44,6 @@ export const WelcomeScreen = () => {
           ))}
         </Grid>
       </section>
-    </BaseLayout>
+    </>
   )
 }

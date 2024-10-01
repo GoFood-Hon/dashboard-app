@@ -5,7 +5,6 @@ import { useForm } from "react-hook-form"
 import toast from "react-hot-toast"
 import { yupResolver } from "@hookform/resolvers/yup"
 import { AdminInformationForm } from "./AdminInformationForm"
-import BaseLayout from "../../components/BaseLayout"
 import BackButton from "../Dishes/components/BackButton"
 import Button from "../../components/Button"
 import { NAVIGATION_ROUTES_SUPER_ADMIN } from "../../routes"
@@ -107,7 +106,7 @@ export const NewAdminUser = () => {
   }
 
   return (
-    <BaseLayout>
+    <>
       <form onSubmit={handleSubmit(onSubmit)}>
         <section>
           <div className="xs:gap-3 flex flex-row flex-wrap items-center justify-between pb-4">
@@ -147,6 +146,6 @@ export const NewAdminUser = () => {
           </div>
         </section>
       </form>
-    </BaseLayout>
+    </>
   )
 }

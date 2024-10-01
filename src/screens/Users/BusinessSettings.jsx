@@ -1,7 +1,5 @@
 import React, { useState } from "react"
-import BaseLayout from "../../components/BaseLayout"
-import { Avatar, Breadcrumbs, Checkbox, Grid, Group, Image, Text, rem } from "@mantine/core"
-import BreadCrumbNavigation from "../../components/BreadCrumbNavigation"
+import { Checkbox, Grid, Group, Image, Text, rem } from "@mantine/core"
 import SettingsCard from "../../components/SettingsCard"
 import { useForm } from "react-hook-form"
 import { IconPhoto } from "@tabler/icons-react"
@@ -9,7 +7,6 @@ import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone"
 import { bytesToMB, convertToDecimal } from "../../utils"
 import toast from "react-hot-toast"
 import InputField from "../../components/Form/InputField"
-import InputCombobox from "../../components/Form/InputCombobox"
 import Button from "../../components/Button"
 import { SETTING_NAVIGATION_ROUTES } from "../../routes"
 import { useNavigate } from "react-router-dom"
@@ -18,7 +15,6 @@ import restaurantsApi from "../../api/restaurantApi"
 import PreviewImageCard from "../../components/PreviewImageCard"
 import { colors } from "../../theme/colors"
 import { updateRestaurantData } from "../../store/features/restaurantSlice"
-import { InputComboboxSelected } from "../../components/Form/InputComboboxSelected"
 
 export default function BusinessSettings() {
   const navigate = useNavigate()
@@ -110,9 +106,9 @@ export default function BusinessSettings() {
   }
 
   return (
-    <BaseLayout>
+    <>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="pl-[130px]">
+        <div>
           <section>
             <div className="flex flex-row items-center justify-between pb-3">
               <div className="flex flex-row items-center gap-x-3">
@@ -209,7 +205,7 @@ export default function BusinessSettings() {
             </Grid>
           </SettingsCard>
           <SettingsCard title="Guardar cambios" iconName="building">
-            <div className="flex w-full flex-row gap-2 pt-4">
+            <div className="flex w-full flex-row justify-end gap-2 pt-4">
               <Button
                 text={"Descartar"}
                 className={"border border-red-400 bg-white text-xs text-red-400"}
@@ -223,6 +219,6 @@ export default function BusinessSettings() {
           </SettingsCard>
         </div>
       </form>
-    </BaseLayout>
+    </>
   )
 }

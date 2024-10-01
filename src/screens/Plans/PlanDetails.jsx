@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
-import { Breadcrumbs, Card, Grid, Modal } from "@mantine/core"
+import { Card, Grid, Modal } from "@mantine/core"
 import { useDisclosure } from "@mantine/hooks"
-import BaseLayout from "../../components/BaseLayout"
 import BackButton from "../Dishes/components/BackButton"
-import BreadCrumbNavigation from "../../components/BreadCrumbNavigation"
 import plansApi from "../../api/plansApi"
 import { formatDateDistanceToNow, getFormattedHNL } from "../../utils"
 
@@ -34,7 +32,7 @@ export const PlanDetails = () => {
   }, [])
 
   return (
-    <BaseLayout>
+    <>
       <section>
         <div className="flex flex-row justify-between items-center pb-6">
           <BackButton title={planDetails?.name} />
@@ -106,6 +104,6 @@ export const PlanDetails = () => {
         }}>
         <EditPlan closeFormModal={closeFormModal} data={planDetails} />
       </Modal>
-    </BaseLayout>
+    </>
   )
 }

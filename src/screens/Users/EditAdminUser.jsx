@@ -2,16 +2,14 @@ import React, { useEffect, useState } from "react"
 import { Accordion } from "@mantine/core"
 import { useForm } from "react-hook-form"
 import toast from "react-hot-toast"
-import { useLocation, useNavigate, useParams } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import { AdminGeneralInformationForm } from "./AdminGeneralInformationForm"
 import Button from "../../components/Button"
 import { NAVIGATION_ROUTES_SUPER_ADMIN } from "../../routes"
 import userApi from "../../api/userApi"
 import authApi from "../../api/authApi"
-import BaseLayout from "../../components/BaseLayout"
 import { LoaderComponent } from "../../components/LoaderComponent"
 import BackButton from "../Dishes/components/BackButton"
-import { SelectPlan } from "./SelectPlan"
 
 export const EditAdminUser = () => {
   const { adminId } = useParams()
@@ -114,7 +112,7 @@ export const EditAdminUser = () => {
   ))
 
   return (
-    <BaseLayout>
+    <>
       <section>
         <div className="flex flex-row justify-between items-center pb-4">
           <BackButton title={details.name} />
@@ -132,7 +130,6 @@ export const EditAdminUser = () => {
             {items}
           </Accordion>
         </section>
-        <SelectPlan restaurantId={details?.restaurantId} />
         <section>
           <div className="w-full flex md:justify-end mt-6 md:gap-3 rounded-md bg-white px-8 py-5 border border-gray-200">
             <div className="md:w-2/3 lg:1/3 sm:w-full flex flex-row justify-end gap-3 sm:flex-wrap md:flex-nowrap">
@@ -155,6 +152,6 @@ export const EditAdminUser = () => {
           </div>
         </section>
       </form>
-    </BaseLayout>
+    </>
   )
 }

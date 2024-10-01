@@ -1,7 +1,5 @@
 import React, { useState } from "react"
-import BaseLayout from "../../components/BaseLayout"
-import { Breadcrumbs, CloseIcon, Group, Text, rem } from "@mantine/core"
-import BreadCrumbNavigation from "../../components/BreadCrumbNavigation"
+import { CloseIcon, Group, Text, rem } from "@mantine/core"
 import SettingsCard from "../../components/SettingsCard"
 import { useForm } from "react-hook-form"
 import { IconPhoto } from "@tabler/icons-react"
@@ -82,7 +80,7 @@ export default function AdministrativeSettings() {
   }
 
   return (
-    <BaseLayout>
+    <>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="pl-[130px]">
           <section>
@@ -136,16 +134,8 @@ export default function AdministrativeSettings() {
               className="flex h-10 items-center justify-center rounded-md bg-sky-950 px-4 text-xs text-slate-50 shadow-sm transition-all duration-700 focus:outline-none ml-auto"
             />
           </SettingsCard>
-
-          {/*  <SettingsCard title="Texto del slider" iconName="vrDesign">
-            <Grid my={20}>
-              <Grid.Col span={{ sm: 12 }}>
-                <InputField label="Descripción" name="description" register={register} errors={errors} />
-              </Grid.Col>
-            </Grid>
-          </SettingsCard> */}
         </div>
       </form>
-    </BaseLayout>
+    </>
   )
 }

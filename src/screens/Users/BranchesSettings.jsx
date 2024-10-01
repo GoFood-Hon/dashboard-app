@@ -1,7 +1,4 @@
 import React from "react"
-import BaseLayout from "../../components/BaseLayout"
-import { Breadcrumbs } from "@mantine/core"
-import BreadCrumbNavigation from "../../components/BreadCrumbNavigation"
 import { useForm } from "react-hook-form"
 import SettingsCard from "../../components/SettingsCard"
 
@@ -16,7 +13,7 @@ export default function BranchesSettings() {
   const onSubmit = async (data) => {}
 
   return (
-    <BaseLayout>
+    <>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="pl-[200px]">
           <section>
@@ -29,6 +26,6 @@ export default function BranchesSettings() {
           <SettingsCard title="Información general" iconName="warehouse"></SettingsCard>
         </div>
       </form>
-    </BaseLayout>
+    </>
   )
 }

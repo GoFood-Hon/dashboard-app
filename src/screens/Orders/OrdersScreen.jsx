@@ -1,11 +1,6 @@
 import React, { useEffect, useState } from "react"
-import { Breadcrumbs } from "@mantine/core"
 import { useLocation } from "react-router-dom"
 import toast from "react-hot-toast"
-
-import BaseLayout from "../../components/BaseLayout"
-import BreadCrumbNavigation from "../../components/BreadCrumbNavigation"
-
 import MenuTable from "../Menu/MenuTable"
 import orderApi from "../../api/orderApi"
 import BackButton from "../Dishes/components/BackButton"
@@ -45,7 +40,7 @@ export default function OrdersScreen() {
   }
 
   return (
-    <BaseLayout>
+    <>
       <section>
         <div className="flex flex-row justify-between items-center pb-6">
           <div className="flex flex-row gap-x-3 items-center">
@@ -66,6 +61,6 @@ export default function OrdersScreen() {
           <div className="text-center mt-4 text-gray-500">Aún no tienes ningún pedido</div>
         )}
       </section>
-    </BaseLayout>
+    </>
   )
 }

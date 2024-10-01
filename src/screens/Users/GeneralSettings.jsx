@@ -1,8 +1,5 @@
 import React, { useEffect, useState } from "react"
-import BaseLayout from "../../components/BaseLayout"
-import { Avatar, Breadcrumbs, Image } from "@mantine/core"
-import BreadCrumbNavigation from "../../components/BreadCrumbNavigation"
-
+import { Avatar, Image } from "@mantine/core"
 import { SETTING_NAVIGATION_ROUTES } from "../../routes"
 import restaurantsApi from "../../api/restaurantApi"
 import { useSelector } from "react-redux"
@@ -56,8 +53,8 @@ export default function GeneralSettings() {
   }, [])
 
   return (
-    <BaseLayout>
-      <div className="pl-[130px]">
+    <>
+      <div className="">
         <section>
           <div className="flex flex-row justify-between items-center pb-3">
             <div className="flex flex-row gap-x-3 items-center">
@@ -140,6 +137,6 @@ export default function GeneralSettings() {
           </div>
         </SettingsCard>
       </div>
-    </BaseLayout>
+    </>
   )
 }

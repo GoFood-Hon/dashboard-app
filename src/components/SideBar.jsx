@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react"
-import { Link, useLocation, useNavigate } from "react-router-dom"
+import { useLocation, useNavigate } from "react-router-dom"
 import { Icon } from "./Icon"
-import toast from "react-hot-toast"
 import {
   AUTH_NAVIGATION_ROUTES,
   NAVIGATION_ROUTES_RES_ADMIN,
@@ -10,7 +9,6 @@ import {
   NAVIGATION_ROUTES_KITCHEN
 } from "../routes"
 import NavigationItem from "./NavigationItem"
-import { AlarmIcon } from "../assets/icons/AlarmIcon"
 import { useSelector } from "react-redux"
 import { APP_ROLES } from "../utils/constants"
 

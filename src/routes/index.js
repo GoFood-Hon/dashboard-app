@@ -1,3 +1,16 @@
+import { IconFileInvoice } from "@tabler/icons-react"
+import { IconAdjustments } from "@tabler/icons-react"
+import { IconShoppingCart } from "@tabler/icons-react"
+import {
+  IconBox,
+  IconHome,
+  IconToolsKitchen,
+  IconBuildingStore,
+  IconUsers,
+  IconSettings,
+  IconCreditCard
+} from "@tabler/icons-react"
+
 export const NAVIGATION_ROUTES_SUPER_ADMIN = {
   Dashboard: {
     label: "Inicio",
@@ -46,13 +59,16 @@ export const NAVIGATION_ROUTES_SUPER_ADMIN = {
     label: "Cuenta",
     icon: "users",
     path: "/miCuenta"
-  },
-  // Password: {
-  //   label: "Contraseña",
-  //   icon: "eye",
-  //   path: "/contraseña"
-  // }
+  }
 }
+
+export const NAVIGATION_ROUTES_SUPER_ADMIN_TWO = [
+  { label: "Inicio", icon: IconHome, link: "/" },
+  { label: "Restaurantes", icon: IconBox, link: "/restaurantes" },
+  { label: "Administradores", icon: IconUsers, link: "/administradores" },
+  { label: "Planes", icon: IconCreditCard, link: "/planes" },
+  { label: "Cuenta", icon: IconUsers, link: "/miCuenta" }
+]
 
 export const NAVIGATION_ROUTES_RES_ADMIN = {
   Dashboard: {
@@ -145,6 +161,66 @@ export const NAVIGATION_ROUTES_RES_ADMIN = {
   }
 }
 
+export const NAVIGATION_ROUTES_RES_ADMIN_TWO = [
+  { label: "Inicio", icon: IconHome, link: "/" },
+  { label: "Pedidos", icon: IconBox, link: "/pedidos" },
+  {
+    label: "Menú",
+    icon: IconToolsKitchen,
+    initiallyOpened: false,
+    links: [
+      {
+        label: "Lista de menús",
+        link: "/menu"
+      },
+      {
+        label: "Platillos",
+        link: "/menu/platillos"
+      }
+    ]
+  },
+  { label: "Sucursales", icon: IconBuildingStore, link: "/sucursales" },
+  { label: "Usuarios", icon: IconUsers, link: "/usuarios" },
+  {
+    label: "Configuraciones",
+    icon: IconSettings,
+    initiallyOpened: false,
+    links: [
+      {
+        label: "Datos del restaurante",
+        link: "/configuraciones/general"
+      },
+      {
+        label: "Cuenta",
+        link: "/configuraciones/cuenta"
+      }
+    ]
+  },
+  {
+    label: "General",
+    icon: IconAdjustments,
+    initiallyOpened: false,
+    links: [
+      {
+        label: "Negocios",
+        link: "/configuraciones/negocios"
+      },
+      {
+        label: "Promociones",
+        link: "/configuraciones/promociones"
+      },
+      {
+        label: "Bancos",
+        link: "/configuraciones/bancos"
+      },
+      {
+        label: "Datos del plan",
+        link: "/configuraciones/plan"
+      }
+    ]
+  }
+]
+
 export const NAVIGATION_ROUTES_BRANCH_ADMIN = {
   Home: {
     label: "Inicio",
@@ -205,6 +281,31 @@ export const NAVIGATION_ROUTES_BRANCH_ADMIN = {
   }
 }
 
+export const NAVIGATION_ROUTES_BRANCH_ADMIN_TWO = [
+  { label: "Inicio", icon: IconHome, link: "/" },
+  { label: "Pedidos", icon: IconBox, link: "/pedidos" },
+  {
+    label: "Menú",
+    icon: IconToolsKitchen,
+    initiallyOpened: false,
+    links: [
+      {
+        label: "Lista de menús",
+        link: "/menu"
+      },
+      {
+        label: "Platillos",
+        link: "/menu/platillos"
+      }
+    ]
+  },
+  {
+    label: "Cuenta",
+    icon: IconSettings,
+    link: "/miCuenta"
+  }
+]
+
 export const NAVIGATION_ROUTES_KITCHEN = {
   Home: {
     label: "Inicio",
@@ -240,6 +341,13 @@ export const NAVIGATION_ROUTES_KITCHEN = {
     path: "/contraseña"
   }
 }
+
+export const NAVIGATION_ROUTES_KITCHEN_TWO = [
+  { label: "Inicio", icon: IconHome, link: '/' },
+  { label: "Pedidos", icon: IconShoppingCart, link: '/pedidos' },
+  { label: "Historial", icon: IconFileInvoice, link: "/historialDelPedido" },
+  { label: "Cuenta", path: "/miCuenta", icon: IconSettings }
+]
 
 export const SETTING_NAVIGATION_ROUTES = {
   General: {

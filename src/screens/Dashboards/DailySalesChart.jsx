@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react"
 import Chart from "react-google-charts"
 import toast from "react-hot-toast"
 import reportsApi from "../../api/reportsApi"
+import { Divider, Paper } from "@mantine/core"
 
 export const data = [
   ["Horas del dia", "Series 1", "Series 2"],
@@ -37,11 +38,11 @@ export const DailySalesChart = () => {
   }, [])
 
   return (
-    <div className="min-h-[600px] h-[600px] w-full bg-white rounded-2xl shadow border border-blue-100 flex flex-col p-2 mr-6">
-      <div className="flex flex-row justify-between items-center p-6">
+    <Paper withBorder p="md" radius="md" className="min-h-[600px] h-[600px] w-full rounded-2xl shadow border flex flex-col p-2 mr-6">
+      <div className="flex flex-row justify-between items-center p-2">
         <h2 className="text-white-200 text-xl font-semibold">Gráfico de ventas diarias</h2>
       </div>
-      <span className="border border-blue-100" />
+      <Divider my="md" />
       <div className="pb-6 flex justify-center items-center h-full">
         {data.length > 0 ? (
           <Chart chartType="AreaChart" width="100%" height="400px" data={data} options={options} />
@@ -51,6 +52,6 @@ export const DailySalesChart = () => {
           </div>
         )}
       </div>
-    </div>
+    </Paper>
   )
 }

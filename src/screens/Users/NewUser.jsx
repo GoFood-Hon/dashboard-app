@@ -2,7 +2,6 @@ import React, { useState } from "react"
 import { Accordion } from "@mantine/core"
 import { useNavigate } from "react-router-dom"
 import { useForm } from "react-hook-form"
-import BaseLayout from "../../components/BaseLayout"
 import GeneralInformationForm from "./GeneralInformationForm"
 import SucursalSettings from "./SucursalSettings"
 import Button from "../../components/Button"
@@ -124,7 +123,7 @@ export default function NewUser() {
   ))
 
   return (
-    <BaseLayout>
+    <>
       <form onSubmit={handleSubmit(onSubmit)}>
         <section>
           <div className="flex flex-row justify-between items-center pb-6 flex-wrap xs:gap-3">
@@ -164,6 +163,6 @@ export default function NewUser() {
           </div>
         </section>
       </form>
-    </BaseLayout>
+    </>
   )
 }

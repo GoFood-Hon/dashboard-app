@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react"
-import { useLocation, useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import { Affix, Grid, Pagination } from "@mantine/core"
 import { useDispatch, useSelector } from "react-redux"
 import Button from "../../components/Button"
-import BaseLayout from "../../components/BaseLayout"
 import ItemCard from "../../components/ItemCard"
 import { fetchRestaurants, setPage, updateRestaurant } from "../../store/features/restaurantSlice"
 import { colors } from "../../theme/colors"
@@ -11,7 +10,6 @@ import { NAVIGATION_ROUTES_SUPER_ADMIN } from "../../routes"
 import BackButton from "../Dishes/components/BackButton"
 
 export default function RestaurantsScreen() {
-  const location = useLocation()
   const navigate = useNavigate()
   const dispatch = useDispatch()
 
@@ -97,7 +95,7 @@ export default function RestaurantsScreen() {
   }
 
   return (
-    <BaseLayout>
+    <>
       <section>
         <div className="flex flex-row justify-between items-center py-3 w-full">
           <BackButton title="Restaurantes" />
@@ -176,6 +174,6 @@ export default function RestaurantsScreen() {
           </Affix>
         )}
       </section>
-    </BaseLayout>
+    </>
   )
 }

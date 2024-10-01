@@ -43,6 +43,7 @@ export const EditGeneralInformationForm = ({ register, errors, setValue, feature
 
   const RenderInputs = () => {
     const inputs = planData?.PlanFeatures?.filter((feature) => dishesAdded?.includes(feature.id))
+    console.log(inputs)
     return (
       <>
         {inputs?.map(
@@ -53,7 +54,7 @@ export const EditGeneralInformationForm = ({ register, errors, setValue, feature
                 label={input.name}
                 name={input.featureCode}
                 register={register}
-                defaultValue={input.PlanPlanFeatures.quantity.toString()}
+                value={input.PlanPlanFeatures.quantity.toString()}
                 errors={errors}
                 className="text-black"
               />

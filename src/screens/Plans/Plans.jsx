@@ -1,10 +1,8 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect } from "react"
 import { useNavigate } from "react-router-dom"
-import BaseLayout from "../../components/BaseLayout"
 import Button from "../../components/Button"
 import MenuTable from "../Menu/MenuTable"
 import { NAVIGATION_ROUTES_SUPER_ADMIN } from "../../routes"
-import LoadingCircle from "../../components/LoadingCircle"
 import { useDispatch, useSelector } from "react-redux"
 import { fetchAllPlans } from "../../store/features/plansSlice"
 import { TableSkeleton } from "../../components/Skeletons/TableSkeleton"
@@ -29,7 +27,7 @@ export const Plans = () => {
   }
 
   return (
-    <BaseLayout>
+    <>
       <section>
         <div className="flex flex-row justify-between items-center pb-6">
           <h1 className="text-white-200 text-2xl font-semibold">Planes</h1>
@@ -47,6 +45,6 @@ export const Plans = () => {
           <div className="text-center mt-4 text-gray-500">No hay planes para mostrar</div>
         )}
       </section>
-    </BaseLayout>
+    </>
   )
 }

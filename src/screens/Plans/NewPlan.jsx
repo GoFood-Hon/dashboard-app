@@ -1,14 +1,11 @@
 import React, { useState } from "react"
-import { useLocation, useNavigate } from "react-router-dom"
-import { Breadcrumbs, Accordion } from "@mantine/core"
+import { useNavigate } from "react-router-dom"
+import { Accordion } from "@mantine/core"
 import { useForm } from "react-hook-form"
 import toast from "react-hot-toast"
 import { GeneralInformationForm } from "./GeneralInformationForm"
-import BaseLayout from "../../components/BaseLayout"
 import BackButton from "../Dishes/components/BackButton"
-import BreadCrumbNavigation from "../../components/BreadCrumbNavigation"
 import Button from "../../components/Button"
-
 import { NAVIGATION_ROUTES_SUPER_ADMIN } from "../../routes"
 import { DEFAULT_CURRENCY, DEFAULT_PAYMENT_TYPE } from "../../utils/constants"
 import plansApi from "../../api/plansApi"
@@ -103,17 +100,15 @@ export const NewPlan = () => {
         features
       }
 
-      console.log(requestBody)
-
-      // const response = await plansApi.createPlan(requestBody)
-      // handleResponse(response)
+      const response = await plansApi.createPlan(requestBody)
+      handleResponse(response)
     } catch (error) {
       handleError(error)
     }
   }
 
   return (
-    <BaseLayout>
+    <>
       <form onSubmit={handleSubmit(onSubmit)}>
         <section>
           <div className="flex flex-row justify-between items-center pb-6 flex-wrap xs:gap-3">
@@ -150,6 +145,6 @@ export const NewPlan = () => {
           </div>
         </section>
       </form>
-    </BaseLayout>
+    </>
   )
 }
