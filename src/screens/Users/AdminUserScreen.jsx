@@ -17,7 +17,7 @@ export const AdminUserScreen = () => {
     navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Users.NewUser.path)
   }
 
-  const limit = useSelector((state) => state.restaurants.itemsPerPage)
+  const limit = useSelector((state) => state.user.itemsPerPage)
   const page = useSelector((state) => state.user.currentPage)
   const adminUsersByPage = useSelector((state) => state.user.adminUsersByPage)
   const totalPageCount = useSelector((state) => state.user.totalPagesCount)
@@ -57,7 +57,7 @@ export const AdminUserScreen = () => {
         {loadingUsers ? (
           <TableSkeleton />
         ) : adminUsers && adminUsers.length > 0 ? (
-          <div className="w-full p-4 h-full bg-white rounded-2xl border border-blue-100">
+          <div className="w-full p-4 h-full rounded-2xl">
             <MenuTable
               items={adminUsers}
               handleDisableSelected={handleDisableSelected}

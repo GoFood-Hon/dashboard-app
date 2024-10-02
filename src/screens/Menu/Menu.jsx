@@ -1,17 +1,15 @@
 import React, { useEffect, useState } from "react"
-import { Breadcrumbs, Container } from "@mantine/core"
+import { Container, Button } from "@mantine/core"
 import { useDispatch, useSelector } from "react-redux"
 import { useLocation, useNavigate } from "react-router-dom"
-
-import BaseLayout from "../../components/BaseLayout"
-import Button from "../../components/Button"
 import { NAVIGATION_ROUTES_RES_ADMIN } from "../../routes"
-import BreadCrumbNavigation from "../../components/BreadCrumbNavigation"
 import MenuTable from "./MenuTable"
 import { fetchMenus, selectAllMenus, updateMenu, selectMenusStatus, selectMenusError } from "../../store/features/menuSlice"
 import { APP_ROLES } from "../../utils/constants"
 import BackButton from "../Dishes/components/BackButton"
 import { TableSkeleton } from "../../components/Skeletons/TableSkeleton"
+import { IconArrowNarrowLeft } from "@tabler/icons-react"
+import { colors } from "../../theme/colors"
 
 export default function Menu() {
   const navigate = useNavigate()
@@ -81,16 +79,17 @@ export default function Menu() {
         <div className="flex flex-row justify-between items-center pb-6">
           <BackButton title="Menús" />
           <div className="flex flex-row gap-x-3 items-center justify-between">
-            <Button
-              text="Nuevo"
-              className={`text-white text-md px-3 py-2 bg-primary_button ${user.role !== APP_ROLES.branchAdmin && user.role !== APP_ROLES.cashierUser ? "" : "hidden"}`}
-              onClick={handleNewMenu}
-            />
-            <Button
-              text={"Ver platillos"}
-              className={`text-white text-md px-3 py-2 bg-primary_button mb-0 ${user.role !== APP_ROLES.branchAdmin || user.role !== APP_ROLES.cashierUser ? "" : "hidden"}`}
-              onClick={handleDishes}
-            />
+            {user.role !== APP_ROLES.branchAdmin && user.role !== APP_ROLES.cashierUser ? (
+              <Button
+                text="Nuevo"
+                color={colors.primary_button}
+                style={{visibility: `${user.role !== APP_ROLES.branchAdmin && user.role !== APP_ROLES.cashierUser ? '' : 'hidden'}`}}
+                onClick={handleNewMenu}>
+                Nuevo
+              </Button>
+            ) : (
+              ""
+            )}
           </div>
         </div>
       </section>
@@ -98,7 +97,7 @@ export default function Menu() {
         {isLoading ? (
           <TableSkeleton />
         ) : menus && menus.length > 0 ? (
-          <Container fluid className="w-full p-4 h-full rounded-2xl border">
+          <Container fluid className="w-full p-4 h-full rounded-2xl">
             <MenuTable
               refreshPage={refreshPage}
               items={menus.map((menu) => {

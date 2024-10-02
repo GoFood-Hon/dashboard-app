@@ -228,7 +228,7 @@ export const EditBranch = () => {
     <>
       <section>
         <div className="flex flex-row justify-between items-center pb-6">
-          <BackButton title={details?.name} />
+          <BackButton title={details?.name} show />
         </div>
       </section>
       <form onSubmit={handleSubmit(onSubmit)}>

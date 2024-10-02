@@ -96,7 +96,7 @@ export default function EditDishScreen() {
   const items = accordionStructure.map((item, key) => (
     <Accordion.Item key={key} value={item.title}>
       <Accordion.Control>
-        <div className="w-full rounded-lg flex-row flex items-center ">
+        <div className="w-full rounded-lg flex-row flex items-center text-white">
           <div className="text-base font-bold bg-sky-950 rounded-full p-2 w-8 h-8 flex items-center justify-center">
             {key + 1}
           </div>
@@ -131,7 +131,7 @@ export default function EditDishScreen() {
       <form onSubmit={handleSubmit(onSubmit)}>
         <section>
           <div className="xs:gap-3 flex flex-row flex-wrap items-center justify-between pb-6">
-            <BackButton title="Editar platillo" />
+            <BackButton title="Editar platillo" show />
           </div>
         </section>
         <section>

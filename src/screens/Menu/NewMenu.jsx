@@ -1,12 +1,11 @@
 import React, { useEffect, useRef, useState } from "react"
-import { useLocation, useNavigate } from "react-router-dom"
-import { Accordion } from "@mantine/core"
+import { useNavigate } from "react-router-dom"
+import { Accordion, Button } from "@mantine/core"
 import { useForm } from "react-hook-form"
 import { useDispatch, useSelector } from "react-redux"
 import { yupResolver } from "@hookform/resolvers/yup"
 import toast from "react-hot-toast"
 import GeneralInformationForm from "./GeneralInformationForm"
-import Button from "../../components/Button"
 import ComplementsForm from "../Dishes/ComplementsForm"
 import dishesApi from "../../api/dishesApi"
 import { newMenuValidation } from "../../utils/inputRules"
@@ -15,6 +14,7 @@ import BackButton from "../Dishes/components/BackButton"
 import { NAVIGATION_ROUTES_RES_ADMIN } from "../../routes"
 import BaseLayout from "../../components/BaseLayout"
 import { LoaderComponent } from "../../components/LoaderComponent"
+import { colors } from "../../theme/colors"
 
 export default function NewMenu() {
   const navigate = useNavigate()
@@ -120,7 +120,7 @@ export default function NewMenu() {
       <form onSubmit={handleSubmit(onSubmit)}>
         <section>
           <div className="flex flex-row justify-between items-center pb-6 flex-wrap xs:gap-3">
-            <BackButton title="Nuevo menú" />
+            <BackButton title="Nuevo menú" show />
           </div>
         </section>
         <section>
@@ -138,21 +138,17 @@ export default function NewMenu() {
           <div className="w-full flex md:justify-end mt-6 md:gap-3 rounded-md bg-white px-8 py-5 border border-gray-200">
             <div className="md:w-2/3 lg:1/3 sm:w-full flex flex-row justify-end gap-3 sm:flex-wrap md:flex-nowrap">
               <Button
-                text={"Descartar"}
-                className={"text-xs border border-red-400 text-red-400 bg-white"}
+                color="#EE364C"
+                variant="outline"
                 onClick={() => {
                   reset()
                   navigate(NAVIGATION_ROUTES_RES_ADMIN.Menu.path)
-                }}
-              />
-              {isLoading ? (
-                <LoaderComponent width={24} size={25} />
-              ) : (
-                <Button
-                  text={"Guardar"}
-                  className="w-24 flex h-10 items-center justify-center rounded-md shadow-sm transition-all duration-700 focus:outline-none text-xs bg-sky-950 text-slate-50"
-                />
-              )}
+                }}>
+                Descartar
+              </Button>
+              <Button color={colors.primary_button} type="submit" loading={isLoading}>
+                Guardar
+              </Button>
             </div>
           </div>
         </section>

@@ -11,21 +11,23 @@ import { LoaderComponent } from "../../components/LoaderComponent"
 import BackButton from "../Dishes/components/BackButton"
 import { showNotification } from "@mantine/notifications"
 import { SelectPlan } from "../Users/SelectPlan"
+import { useSelector } from "react-redux"
 
 export const EditRestaurant = () => {
   const { restaurantId } = useParams()
   const navigate = useNavigate()
   const [isLoading, setIsLoading] = useState(false)
   const [restaurantDetails, setRestaurantDetails] = useState({})
+  const user = useSelector((state) => state.user.value)
 
   useEffect(() => {
     ;(async () => {
       const response = await restaurantsApi.getRestaurant(restaurantId)
-      console.log(response)
       const details = response?.data
       if (details?.phoneNumber?.startsWith("+504")) {
         details.phoneNumber = details.phoneNumber.replace("+504", "")
       }
+      console.log(response)
       setRestaurantDetails(details)
     })()
   }, [])
@@ -42,6 +44,29 @@ export const EditRestaurant = () => {
 
   const imageLocation = watch("images[0].location")
   const [isDataCleared, setIsDataCleared] = useState(false)
+
+  // const PlanDetailsCard = ({ plan }) => {
+  //   const { name, price, tax, currency, paymentType, PlanFeatures } = plan
+  
+  //   return (
+  //     <div className="border rounded-lg  p-4  m-4">
+  //       <h1 className="text-lg font-semibold mb-2">{name}</h1>
+  //       <p>
+  //         <span className="font-semibold">Precio:</span> {currency} {price}{" "}
+  //         {paymentType.toLowerCase() === "mensual" ? "mensuales" : "anuales"} (Tasa de interés: {tax}%)
+  //       </p>
+  //       <h2 className="text-md font-semibold mt-4 mb-2">Características:</h2>
+  //       <ul className="list-disc pl-6">
+  //         {PlanFeatures.map((feature) => (
+  //           <li key={feature.id}>
+  //             {feature.name}: {feature.PlanPlanFeatures.quan}{" "}
+  //             {feature.type === "amount" ? "" : feature.PlanPlanFeatures.avai ? "Incluídas" : "No incluídas"}
+  //           </li>
+  //         ))}
+  //       </ul>
+  //     </div>
+  //   )
+  // }
 
   const onSubmit = async (data) => {
     setIsLoading(true)
@@ -154,7 +179,7 @@ export const EditRestaurant = () => {
     <>
       <section>
         <div className="flex flex-row justify-between items-center pb-6">
-          <BackButton title={restaurantDetails?.name} />
+          <BackButton title={restaurantDetails?.name} show />
         </div>
       </section>
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -170,6 +195,7 @@ export const EditRestaurant = () => {
           </Accordion>
         </section>
         <section className="my-2">
+          {/* <PlanDetailsCard plan={restaurantDetails?.data?.Subscription?.Plan} /> */}
           <SelectPlan restaurantId={restaurantId} />
         </section>
         <section>

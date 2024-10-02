@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom"
 import { SETTING_NAVIGATION_ROUTES } from "../../routes"
 import plansApi from "../../api/plansApi"
 import toast from "react-hot-toast"
+import { colors } from "../../theme/colors"
 
 export default function PlanSettings() {
   const user = useSelector((state) => state.user.value)
@@ -80,7 +81,7 @@ export default function PlanSettings() {
             </div>
           </div>
         </section>
-        <Tabs defaultValue="payments" color="#fff">
+        <Tabs defaultValue="payments" color={colors.yellow_logo}>
           <Tabs.List>
             <Tabs.Tab value="payments">Plan activo</Tabs.Tab>
             <Tabs.Tab value="paymentMethod">Método de pago</Tabs.Tab>
@@ -144,14 +145,15 @@ const PlanDetailsCard = ({ plan }) => {
     <div className="border rounded-lg  p-4  m-4">
       <h1 className="text-lg font-semibold mb-2">{name}</h1>
       <p>
-        <span className="font-semibold">Price:</span> {currency} {price} per {paymentType.toLowerCase()} (including {tax}% tax)
+        <span className="font-semibold">Precio:</span> {currency} {price}{" "}
+        {paymentType.toLowerCase() === "mensual" ? "mensuales" : "anuales"} (Tasa de interés: {tax}%)
       </p>
       <h2 className="text-md font-semibold mt-4 mb-2">Características:</h2>
       <ul className="list-disc pl-6">
         {PlanFeatures.map((feature) => (
           <li key={feature.id}>
             {feature.name}: {feature.PlanPlanFeatures.quan}{" "}
-            {feature.type === "amount" ? "" : feature.PlanPlanFeatures.avai ? "Included" : "Not Included"}
+            {feature.type === "amount" ? "" : feature.PlanPlanFeatures.avai ? "Incluídas" : "No incluídas"}
           </li>
         ))}
       </ul>

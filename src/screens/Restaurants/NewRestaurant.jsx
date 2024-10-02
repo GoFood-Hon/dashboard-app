@@ -121,7 +121,7 @@ export const NewRestaurant = () => {
       <form onSubmit={handleSubmit(onSubmit)}>
         <section>
           <div className="flex flex-row justify-between items-center pb-6 flex-wrap xs:gap-3">
-            <BackButton title="Nuevo restaurante" />
+            <BackButton title="Nuevo restaurante" show />
           </div>
         </section>
         <section>

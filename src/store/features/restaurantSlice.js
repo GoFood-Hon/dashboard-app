@@ -1,13 +1,13 @@
 import restaurantsApi from "../../api/restaurantApi"
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
-import { ITEMS_PER_PAGE } from "../../utils/paginationConfig"
+import { ITEMS_PER_PAGE_CARDS } from "../../utils/paginationConfig"
 import toast from "react-hot-toast"
 import { showNotification } from "@mantine/notifications"
 
 const initialState = {
   restaurants: [],
   currentPage: 1,
-  itemsPerPage: ITEMS_PER_PAGE,
+  itemsPerPage: ITEMS_PER_PAGE_CARDS,
   totalItems: 0,
   loading: false,
   imageUrl: "",

@@ -60,7 +60,7 @@ export const DishesTable = () => {
       <Divider my="md" />
 
       <div className="pb-6 flex justify-center items-center h-full">
-        {data ? (
+        {!data ? (
           <Chart chartType="Table" width="100%" height="400px" data={data} options={options} formatters={formatters} />
         ) : (
           <div className="text-center flex flex-col justify-center h-full">

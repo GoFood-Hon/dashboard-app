@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit"
 import userApi from "../../api/userApi"
 import { showNotification } from "@mantine/notifications"
+import { ITEMS_PER_PAGE } from "../../utils/paginationConfig"
 
 // Thunk para obtener los usuarios administradores
 export const fetchAdminUsers = createAsyncThunk("user/fetchAdminUsers", async ({ limit, page }, { rejectWithValue }) => {
@@ -38,6 +39,7 @@ const initialState = {
   value: {},
   currentPage: 1,
   totalAdminUsers: 0,
+  itemsPerPage: ITEMS_PER_PAGE,
   totalPagesCount: 0,
   adminUsersByPage: {}, // Almacena usuarios por página
   loadingUsers: false,

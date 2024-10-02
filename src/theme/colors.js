@@ -8,7 +8,6 @@ export const palette = {
   raven: "#6D7177",
   tangaroa: "#0F2846",
   dodger_blue: "#0474FB",
-
   charcoal: "#4A4A4A",
   black_russian: "#10172a",
   midnight: "#1E293B",
@@ -32,6 +31,7 @@ export const colors = {
    */
   red_logo: palette.amaranth,
   yellow_logo: palette.supernova,
+  yellow_main_logo: '#FDBD3D',
 
   light_bg_primary: palette.alice_blue,
   dark_bg_primary: palette.black_russian,

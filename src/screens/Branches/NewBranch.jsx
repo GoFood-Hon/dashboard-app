@@ -153,7 +153,7 @@ export default function NewBranch() {
       <form onSubmit={handleSubmit(onSubmit)}>
         <section>
           <div className="flex flex-row justify-between items-center pb-6 flex-wrap xs:gap-3">
-            <BackButton title="Nueva sucursal" />
+            <BackButton title="Nueva sucursal" show />
           </div>
         </section>
         <section>

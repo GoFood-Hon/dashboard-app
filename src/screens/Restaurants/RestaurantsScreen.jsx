@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
-import { Affix, Grid, Pagination } from "@mantine/core"
+import { Affix, Badge, Card, Grid, Group, Image, Pagination, Text, Button } from "@mantine/core"
 import { useDispatch, useSelector } from "react-redux"
-import Button from "../../components/Button"
 import ItemCard from "../../components/ItemCard"
 import { fetchRestaurants, setPage, updateRestaurant } from "../../store/features/restaurantSlice"
 import { colors } from "../../theme/colors"
@@ -102,15 +101,17 @@ export default function RestaurantsScreen() {
           <div className="flex flex-row justify-between">
             <div className="flex flex-row w-full justify-end items-center">
               <div className="flex flex-row mr-4">
-                <span className="text-sky-950 text-base font-bold leading-normal">{page === 1 ? 1 : (page - 1) * limit + 1}</span>
-                <span className="text-zinc-500 text-base font-bold leading-normal">-</span>
-                <span className="text-sky-950 text-base font-bold leading-normal">
+                <span className="text-base font-bold leading-normal">{page === 1 ? 1 : (page - 1) * limit + 1}</span>
+                <span className="text-base font-bold leading-normal">-</span>
+                <span className="text-base font-bold leading-normal">
                   {page === 1 ? limit : Math.min(page * limit, totalItems)}
                 </span>
-                <span className="text-zinc-500 text-base font-medium leading-normal px-1"> de </span>
-                <span className="text-sky-950 text-base font-bold leading-normal">{totalItems} restaurantes</span>
+                <span className="text-base font-medium leading-normal px-1"> de </span>
+                <span className="text-base font-bold leading-normal">{totalItems} restaurantes</span>
               </div>
-              <Button text={"Nuevo"} className={"text-white text-md px-3 py-2 bg-primary_button mb-0"} onClick={handleNewItem} />
+              <Button color={colors.yellow_logo} onClick={handleNewItem}>
+                Nuevo
+              </Button>
             </div>
           </div>
         </div>
@@ -120,14 +121,34 @@ export default function RestaurantsScreen() {
           <Grid>
             {restaurant?.map((item, key) => (
               <Grid.Col span={{ base: 12, md: 4 }} key={key}>
-                <ItemCard
+                {/* <ItemCard
                   item={item}
                   index={key}
                   navigation={true}
                   cardsSelected={cardsSelected}
                   handleChangeSelected={handleChangeSelected}
                   handleClick={handleClick}
-                />
+                /> */}
+                <Card shadow="sm" padding="lg" radius="md" withBorder>
+                  <Card.Section >
+                    <Image src={item.images[0].location} h={200} fit="cover" alt="Norway" />
+                  </Card.Section>
+
+                  <Group justify="space-between" mt="md" mb="xs">
+                    <Text size="lg" fw={700}>
+                      {item.name}
+                    </Text>
+                  </Group>
+
+                  <Text size="sm" c="dimmed" h={50}>
+                    {item.billingAddress}
+                  </Text>
+
+                  <Button color={colors.yellow_logo} fullWidth mt="md" radius="md"  onClick={() => handleClick(item.id)}>
+
+                    Ver detalles
+                  </Button>
+                </Card>
               </Grid.Col>
             ))}
           </Grid>

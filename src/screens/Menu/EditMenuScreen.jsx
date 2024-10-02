@@ -150,7 +150,7 @@ export default function EditMenuScreen() {
       <form onSubmit={handleSubmit(onSubmit)}>
         <section>
           <div className="flex flex-row justify-between items-center pb-6 flex-wrap xs:gap-3">
-            <BackButton title="Editar menú" />
+            <BackButton title="Editar menú" show />
           </div>
         </section>
         <section>

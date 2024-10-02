@@ -121,8 +121,6 @@ export const EditPlan = () => {
         })
       }
 
-      console.log(transformedData)
-
       const response = plansApi.updatePlan(planId, transformedData)
       handleResponse(response)
 

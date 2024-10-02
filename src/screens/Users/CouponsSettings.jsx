@@ -18,7 +18,7 @@ export default function CouponsSettings() {
             </div>
           </div>
         </section>
-        <Tabs defaultValue="newPromotion" color="#fff">
+        <Tabs defaultValue="newPromotion" color="#FDBD3D">
           <Tabs.List>
             <Tabs.Tab value="newPromotion">Nueva promoción</Tabs.Tab>
             <Tabs.Tab value="couponHistory">Historial de cupones</Tabs.Tab>

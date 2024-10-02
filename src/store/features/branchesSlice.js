@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
-import { ITEMS_PER_PAGE } from "../../utils/paginationConfig"
+import { ITEMS_PER_PAGE_CARDS } from "../../utils/paginationConfig"
 import branchesApi from "../../api/branchesApi"
 import toast from "react-hot-toast"
 import { convertToDecimal } from "../../utils"
@@ -9,7 +9,7 @@ const initialState = {
   branches: [],
   currentBranch: null,
   currentPage: 1,
-  itemsPerPage: ITEMS_PER_PAGE,
+  itemsPerPage: ITEMS_PER_PAGE_CARDS,
   totalItems: 0,
   imageUrl: "",
   filters: {

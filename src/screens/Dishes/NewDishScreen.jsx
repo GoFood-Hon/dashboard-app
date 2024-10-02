@@ -130,7 +130,7 @@ export default function NewDish() {
       <form onSubmit={handleSubmit(onSubmit)}>
         <section>
           <div className="xs:gap-3 flex flex-row flex-wrap items-center justify-between pb-6">
-            <BackButton title="Nuevo platillo" />
+            <BackButton title="Nuevo platillo" show />
           </div>
         </section>
         <section>

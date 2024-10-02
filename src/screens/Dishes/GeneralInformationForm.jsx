@@ -88,7 +88,7 @@ export default function GeneralInformationForm({ register, errors, setValue, isD
         </div>
       </Grid.Col>
       <Grid.Col span={{ base: 12, md: 4, lg: 4 }}>
-        <div className="flex h-full w-full flex-col items-center justify-center rounded-2xl  p-4">
+        <div className="flex h-full w-full flex-col items-center justify-center rounded-2xl border p-4">
           {previews.length > 0 ? (
             <div className="w-full">
               <Text size="lg" inline className="mb-5 text-left">

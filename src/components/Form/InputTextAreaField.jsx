@@ -8,7 +8,7 @@ export default function InputTextAreaField({ label, name, register, rules, error
       <textarea
         className={`${
           errors[name] ? "border border-red-500" : null
-        }  p-2 appearance-none block w-full `}
+        }  p-2 appearance-none block w-full border outline-none`}
         placeholder={placeholder}
         {...register(name, rules)}
       />

@@ -35,6 +35,9 @@ const plansApi = {
   getCard: () => axiosClient.get("api/v1/plan/credit-card/get-card"),
 
   // Create subscription for restaurant (Superadmin)
-  assignPlan: (params) => axiosClient.post(`api/v1/plan/subscription/create`, params)
+  assignPlan: (params) => axiosClient.post(`api/v1/plan/subscription/create`, params),
+
+  //Cancel active subscription for restaurant (Admin restaurant)
+  cancelPlan: (params) => axiosClient.post('/api/v1/plan/subscription/cancel', params)
 }
 export default plansApi

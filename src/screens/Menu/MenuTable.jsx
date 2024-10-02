@@ -86,13 +86,13 @@ export default function MenuTable({ refreshPage, items, handleDisableSelected, s
             <Switch
               checked={isActive}
               //onChange={() => (isActive ? handleDisableSelected(item.id) : handleEnableSelected(item.id))}
-              color={colors.primary_button}
+              color={colors.yellow_logo}
               size="md"
               thumbIcon={
                 isActive ? (
-                  <IconCheck style={{ width: rem(12), height: rem(12) }} stroke={3} color={colors.primary_button} />
+                  <IconCheck style={{ width: rem(12), height: rem(12) }} stroke={3} color={colors.yellow_logo} />
                 ) : (
-                  <IconX style={{ width: rem(12), height: rem(12) }} stroke={3} color={colors.primary_button} />
+                  <IconX style={{ width: rem(12), height: rem(12) }} stroke={3} color={colors.yellow_logo} />
                 )
               }
             />
@@ -109,7 +109,7 @@ export default function MenuTable({ refreshPage, items, handleDisableSelected, s
             variant="subtle"
             size="lg"
             onClick={() => handleClick(id)}
-            color={colors.primary_button}
+            color={colors.yellow_logo}
             radius="xl">
             <IconEye />
           </ActionIcon>
@@ -139,13 +139,13 @@ export default function MenuTable({ refreshPage, items, handleDisableSelected, s
             <Switch
               checked={active}
               //onChange={() => (isActive ? handleDisableSelected(item.id) : handleEnableSelected(item.id))}
-              color={colors.primary_button}
+              color={colors.yellow_logo}
               size="sm"
               thumbIcon={
                 active ? (
-                  <IconCheck style={{ width: rem(12), height: rem(12) }} stroke={3} color={colors.primary_button} />
+                  <IconCheck style={{ width: rem(12), height: rem(12) }} stroke={3} color={colors.yellow_logo} />
                 ) : (
-                  <IconX style={{ width: rem(12), height: rem(12) }} stroke={3} color={colors.primary_button} />
+                  <IconX style={{ width: rem(12), height: rem(12) }} stroke={3} color={colors.yellow_logo} />
                 )
               }
             />
@@ -162,7 +162,7 @@ export default function MenuTable({ refreshPage, items, handleDisableSelected, s
             variant="subtle"
             size="lg"
             onClick={() => handleClick(id)}
-            color={colors.primary_button}
+            color={colors.yellow_logo}
             radius="xl">
             <IconEye />
           </ActionIcon>
@@ -192,13 +192,13 @@ export default function MenuTable({ refreshPage, items, handleDisableSelected, s
             <Switch
               checked={active}
               //onChange={() => (isActive ? handleDisableSelected(item.id) : handleEnableSelected(item.id))}
-              color={colors.primary_button}
+              color={colors.yellow_logo}
               size="sm"
               thumbIcon={
                 active ? (
-                  <IconCheck style={{ width: rem(12), height: rem(12) }} stroke={3} color={colors.primary_button} />
+                  <IconCheck style={{ width: rem(12), height: rem(12) }} stroke={3} color={colors.yellow_logo} />
                 ) : (
-                  <IconX style={{ width: rem(12), height: rem(12) }} stroke={3} color={colors.primary_button} />
+                  <IconX style={{ width: rem(12), height: rem(12) }} stroke={3} color={colors.yellow_logo} />
                 )
               }
             />
@@ -215,7 +215,7 @@ export default function MenuTable({ refreshPage, items, handleDisableSelected, s
             variant="subtle"
             size="lg"
             onClick={() => handleClick(id)}
-            color={colors.primary_button}
+            color={colors.yellow_logo}
             radius="xl">
             <IconEye />
           </ActionIcon>
@@ -239,7 +239,7 @@ export default function MenuTable({ refreshPage, items, handleDisableSelected, s
             variant="subtle"
             size="lg"
             onClick={() => handleClick(id)}
-            color={colors.primary_button}
+            color={colors.yellow_logo}
             radius="xl">
             <IconEye />
           </ActionIcon>
@@ -261,7 +261,7 @@ export default function MenuTable({ refreshPage, items, handleDisableSelected, s
             variant="subtle"
             size="lg"
             onClick={() => handleClick(id)}
-            color={colors.primary_button}
+            color={colors.yellow_logo}
             radius="xl">
             <IconEye />
           </ActionIcon>
@@ -285,7 +285,7 @@ export default function MenuTable({ refreshPage, items, handleDisableSelected, s
             variant="subtle"
             size="lg"
             onClick={() => handleClick(id)}
-            color={colors.primary_button}
+            color={colors.yellow_logo}
             radius="xl">
             <IconEye />
           </ActionIcon>
@@ -363,7 +363,7 @@ export default function MenuTable({ refreshPage, items, handleDisableSelected, s
             total={totalItems}
             page={currentPage}
             onChange={(page) => setPage(page)}
-            color={colors.primary_button}
+            color={colors.yellow_logo}
             defaultValue={currentPage}
           />
         </Group>

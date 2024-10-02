@@ -38,7 +38,7 @@ export const Plans = () => {
         {isLoading ? (
           <TableSkeleton />
         ) : plans && plans.length > 0 ? (
-          <div className="w-full p-4 h-full bg-white rounded-2xl border border-blue-100">
+          <div className="w-full p-4 h-full rounded-2xl ">
             <MenuTable refreshPage={refreshPage} items={plans} screenType="planScreen" />
           </div>
         ) : (

@@ -1,6 +1,19 @@
 import React, { useEffect, useState } from "react"
-import Button from "../../components/Button"
-import { Grid, Pagination, Switch, rem, createTheme, MantineProvider } from "@mantine/core"
+// import Button from "../../components/Button"
+import {
+  Grid,
+  Pagination,
+  Switch,
+  rem,
+  createTheme,
+  MantineProvider,
+  Card,
+  Group,
+  Text,
+  Badge,
+  Image,
+  Button
+} from "@mantine/core"
 import { useLocation, useNavigate } from "react-router-dom"
 import { useDispatch, useSelector } from "react-redux"
 import {
@@ -51,7 +64,6 @@ export default function Branches() {
         filters
       })
     )
-
     setCardsSelected([])
   }, [page, dispatch, restaurant])
 
@@ -147,15 +159,17 @@ export default function Branches() {
           <h1 className="text-white-200 text-2xl font-semibold">Sucursales</h1>
           <div className="flex flex-row w-full justify-end items-center">
             <div className="flex flex-row mr-4">
-              <span className="text-sky-950 text-base font-bold leading-normal">{page === 1 ? 1 : (page - 1) * limit + 1}</span>
-              <span className="text-zinc-500 text-base font-bold leading-normal">-</span>
-              <span className="text-sky-950 text-base font-bold leading-normal">
+              <span className=" text-base font-bold leading-normal">{page === 1 ? 1 : (page - 1) * limit + 1}</span>
+              <span className="text-base font-bold leading-normal">-</span>
+              <span className="text-base font-bold leading-normal">
                 {page === 1 ? limit : Math.min(page * limit, totalItems)}
               </span>
-              <span className="text-zinc-500 text-base font-medium leading-normal px-1"> de </span>
-              <span className="text-sky-950 text-base font-bold leading-normal">{totalItems} sucursales</span>
+              <span className="text-base font-medium leading-normal px-1"> de </span>
+              <span className="text-base font-bold leading-normal">{totalItems} sucursales</span>
             </div>
-            <Button text={"Nueva"} className={"text-white text-md px-3 py-2 bg-primary_button mb-0"} onClick={handleNewItem} />
+            <Button color={colors.primary_button} onClick={handleNewItem}>
+              Nueva
+            </Button>
           </div>
         </div>
       </section>
@@ -184,42 +198,62 @@ export default function Branches() {
             <LoadingCircle />
           </div>
         ) : branches && branches.length > 0 ? (
-          <Grid>
+          <Grid flex>
             {branches?.map((item, key) => (
-              <Grid.Col span={{ base: 12, md: 6, lg: 4 }} key={key}>
-                <div className="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-                  <a href="#">
-                    <img className="rounded-t-lg h-44 w-full object-cover" src={item.images?.[0]?.location} alt="" />
-                  </a>
-                  <div className="p-5">
-                    <a href="#">
-                      <h5 className="mb-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white">{item.name}</h5>
-                    </a>
-                    <p className="mb-3 text-sm text-gray-700 dark:text-gray-400">{item.city + ", " + item.state}</p>
-                    <div className="flex items-center justify-between">
-                      <Button
-                        text={"Editar"}
-                        className={"text-white text-md px-3 py-2 bg-primary_button mb-0"}
-                        onClick={() => handleClick(item.id)}
-                      />
-                      <MantineProvider theme={theme}>
-                        <Switch
-                          checked={item.isActive}
-                          onChange={() => (item.isActive ? handleDisableSelected(item.id) : handleEnableSelected(item.id))}
-                          color="teal"
-                          size="md"
-                          thumbIcon={
-                            item.isActive ? (
-                              <IconCheck style={{ width: rem(12), height: rem(12) }} stroke={3} color="teal" />
-                            ) : (
-                              <IconX style={{ width: rem(12), height: rem(12) }} stroke={3} color="red" />
-                            )
-                          }
-                        />
-                      </MantineProvider>
-                    </div>
-                  </div>
-                </div>
+              // <Grid.Col span={{ base: 12, md: 6, lg: 4 }} key={key}>
+              //   <div className="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+              //     <a href="#">
+              //       <img className="rounded-t-lg h-44 w-full object-cover" src={item.images?.[0]?.location} alt="" />
+              //     </a>
+              //     <div className="p-5">
+              //       <a href="#">
+              //         <h5 className="mb-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white">{item.name}</h5>
+              //       </a>
+              //       <p className="mb-3 text-sm text-gray-700 dark:text-gray-400">{item.city + ", " + item.state}</p>
+              //       <div className="flex items-center justify-between">
+              //         <Button
+              //           text={"Editar"}
+              //           className={"text-white text-md px-3 py-2 bg-primary_button mb-0"}
+              //           onClick={() => handleClick(item.id)}
+              //         />
+              //         <MantineProvider theme={theme}>
+              //           <Switch
+              //             checked={item.isActive}
+              //             onChange={() => (item.isActive ? handleDisableSelected(item.id) : handleEnableSelected(item.id))}
+              //             color="teal"
+              //             size="md"
+              //             thumbIcon={
+              //               item.isActive ? (
+              //                 <IconCheck style={{ width: rem(12), height: rem(12) }} stroke={3} color="teal" />
+              //               ) : (
+              //                 <IconX style={{ width: rem(12), height: rem(12) }} stroke={3} color="red" />
+              //               )
+              //             }
+              //           />
+              //         </MantineProvider>
+              //       </div>
+              //     </div>
+              //   </div>
+              // </Grid.Col>
+              <Grid.Col span={4}>
+                <Card shadow="sm" padding="lg" radius="md" withBorder>
+                  <Card.Section>
+                    <Image src={item.images?.[0]?.location} h={200} alt={item.name} />
+                  </Card.Section>
+
+                  <Group justify="space-between" mt="md" mb="xs">
+                    <Text size="lg" fw={700}>
+                      {item.name}
+                    </Text>
+                  </Group>
+
+                  <Text size="sm" c="dimmed" h={50}>
+                    {item.address}
+                  </Text>
+                  <Button color={colors.yellow_logo} fullWidth mt="md" radius="md" onClick={() => handleClick(item.id)}>
+                    Ver detalles
+                  </Button>
+                </Card>
               </Grid.Col>
             ))}
           </Grid>
