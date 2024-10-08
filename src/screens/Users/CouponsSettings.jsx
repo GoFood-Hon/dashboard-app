@@ -4,6 +4,7 @@ import SettingsCard from "../../components/SettingsCard"
 import { CouponForm } from "../../components/CouponForm"
 import { PromotionForm } from "../../components/PromotionForm"
 import { HistorySection } from "../../components/HistorySection"
+import { colors } from "../../theme/colors"
 
 export default function CouponsSettings() {
   const [promotionType, setPromotionType] = useState("Promoción")
@@ -18,16 +19,16 @@ export default function CouponsSettings() {
             </div>
           </div>
         </section>
-        <Tabs defaultValue="newPromotion" color="#FDBD3D">
+        <Tabs defaultValue="newPromotion" color={colors.main_app_color}>
           <Tabs.List>
             <Tabs.Tab value="newPromotion">Nueva promoción</Tabs.Tab>
             <Tabs.Tab value="couponHistory">Historial de cupones</Tabs.Tab>
             <Tabs.Tab value="promosHistory">Historial de promociones</Tabs.Tab>
           </Tabs.List>
           <Tabs.Panel value="newPromotion">
-            <SettingsCard title='Datos de Promoción' iconName="label">
+            <SettingsCard title="Datos de promoción" iconName="label">
               <div className="w-full mt-4">
-                <span className="text-sky-950 text-sm font-bold leading-snug">Tipo de promoción</span>
+                <span className="text-sm font-bold leading-snug">Tipo de promoción</span>
                 <div className="mt-1">
                   <Select
                     data={["Cupón", "Promoción"]}

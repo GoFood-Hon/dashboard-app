@@ -7,8 +7,11 @@ import { fetchRestaurantData, selectImage } from "../../store/features/restauran
 import { useDispatch, useSelector } from "react-redux"
 import { APP_ROLES } from "../../utils/constants"
 import { useEffect } from "react"
+import { colors } from "../../theme/colors"
+import { useNavigate } from "react-router-dom"
 
 export function AdminHeader({ burger }) {
+  const navigate = useNavigate()
   const imgUrl = useSelector(selectImage)
   const dispatch = useDispatch()
   const user = useSelector((state) => state.user.value)
@@ -33,10 +36,12 @@ export function AdminHeader({ burger }) {
       {burger && burger}
       <Flex gap={10}>
         <Image
+          style={{ cursor: "pointer" }}
           src="https://tkdmymipjaevgekdbsgz.supabase.co/storage/v1/object/public/user_profiles/goFood.png?t=2024-07-30T01%3A25%3A16.174Z"
-          w={90}
+          w={110}
           fit="contain"
           fallbackSrc="https://placehold.co/600x400?text=Imagen+no+disponible"
+          onClick={() => navigate("/")}
         />
         {user.role !== APP_ROLES.superAdmin ? (
           <Image
@@ -56,7 +61,7 @@ export function AdminHeader({ burger }) {
             toggleColorScheme()
           }}
           variant="subtle"
-          color="rgb(253,190,65)">
+          color={colors.main_app_color}>
           {colorScheme === "dark" ? <IconSun size="1.25rem" /> : <IconMoon size="1.25rem" />}
         </ActionIcon>
         <UserButton image={user?.images?.[0]?.location} name={user.name} email={user.email} />

@@ -81,7 +81,7 @@ export default function PlanSettings() {
             </div>
           </div>
         </section>
-        <Tabs defaultValue="payments" color={colors.yellow_logo}>
+        <Tabs defaultValue="payments" color={colors.main_app_color}>
           <Tabs.List>
             <Tabs.Tab value="payments">Plan activo</Tabs.Tab>
             <Tabs.Tab value="paymentMethod">Método de pago</Tabs.Tab>

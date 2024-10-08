@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { useForm } from "react-hook-form"
 import toast from "react-hot-toast"
 import { useNavigate } from "react-router-dom"
-import { CloseIcon, Grid, Group, MultiSelect, Select, Text, rem } from "@mantine/core"
+import { CloseIcon, Grid, Group, MultiSelect, Paper, Select, Text, rem } from "@mantine/core"
 import { DatePickerInput } from "@mantine/dates"
 import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone"
 import { IconPhoto } from "@tabler/icons-react"
@@ -197,14 +197,14 @@ export const PromotionForm = ({ offerData }) => {
           <InputField label="Titulo" name="title" register={register} errors={errors} />
         </Grid.Col>
         <Grid.Col span={{ base: 12 }}>
-          <label className="text-sky-950 text-sm font-bold leading-snug">Seleccione una imagen</label>
-          <div className="flex flex-col justify-center items-center w-full h-full bg-white rounded-2xl border border-blue-100 p-4 mb-8">
+          <label className="text-sm font-bold leading-snug">Seleccione una imagen</label>
+          <Paper withBorder radius='md' p='md'>
             {previews.length > 0 ? (
               <div className="w-full">
                 <Text size="lg" inline className="text-left mb-5">
                   Imagen seleccionada:
                 </Text>
-                <div className="flex flex-row justify-center items-center rounded-2xl w-full border border-slate-200 my-3">
+                <div className="flex flex-row justify-center items-center rounded-2xl w-full my-3">
                   <div className="flex flex-row w-full items-center gap-2 flex-wrap p-2">
                     {previews}
                     <div className="flex flex-col">
@@ -235,10 +235,10 @@ export const PromotionForm = ({ offerData }) => {
               </Dropzone>
             )}
             {errors.files && <p className="text-red-500 text-center w-full">* Imagen es requerida.</p>}
-          </div>
+          </Paper>
         </Grid.Col>
         <Grid.Col mt={20} span={{ sm: 12 }}>
-          <span className="text-sky-950 text-sm font-bold leading-snug">Disponibilidad de la promoción</span>
+          <span className="text-sm font-bold leading-snug">Disponibilidad de la promoción</span>
           <Select
             data={["En todos los platillos", "Seleccionar platillos"]}
             allowDeselect={false}
@@ -249,7 +249,7 @@ export const PromotionForm = ({ offerData }) => {
         </Grid.Col>
         {availabilityDiscount === "Seleccionar platillos" ? (
           <Grid.Col span={{ sm: 12 }}>
-            <span className="text-sky-950 text-sm font-bold leading-snug">Platillos disponibles</span>
+            <span className="text-sm font-bold leading-snug">Platillos disponibles</span>
             <div className="mt-1">
               <MultiSelect
                 placeholder="Seleccione los platillos"
@@ -262,7 +262,7 @@ export const PromotionForm = ({ offerData }) => {
           </Grid.Col>
         ) : null}
         <Grid.Col span={{ sm: 12, md: 6 }}>
-          <span className="text-sky-950 text-sm font-bold leading-snug">Tipo de descuento</span>
+          <span className="text-sm font-bold leading-snug">Tipo de descuento</span>
           <div className="mt-1">
             <Select
               data={["Fijo", "Porcentual"]}
@@ -280,7 +280,7 @@ export const PromotionForm = ({ offerData }) => {
             </div>
           ) : discountType === "Porcentual" ? (
             <>
-              <span className="text-sky-950 text-sm font-bold leading-snug">Tipo de descuento</span>
+              <span className="text-sm font-bold leading-snug">Tipo de descuento</span>
               <div className="mt-1">
                 <Select data={discountPercentage} allowDeselect={false} size="md" value={discount} onChange={setDiscount} />
               </div>

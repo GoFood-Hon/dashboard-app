@@ -64,10 +64,24 @@ export const NAVIGATION_ROUTES_SUPER_ADMIN = {
 
 export const NAVIGATION_ROUTES_SUPER_ADMIN_TWO = [
   { label: "Inicio", icon: IconHome, link: "/" },
-  { label: "Restaurantes", icon: IconBox, link: "/restaurantes" },
+  {
+    label: "Restaurantes",
+    icon: IconBox,
+    initiallyOpened: false,
+    links: [
+      {
+        label: "Lista de restaurantes",
+        link: "/restaurantes"
+      },
+      {
+        label: "Tags y tipos de cocina",
+        link: "/restaurantes"
+      }
+    ]
+  },
   { label: "Administradores", icon: IconUsers, link: "/administradores" },
   { label: "Planes", icon: IconCreditCard, link: "/planes" },
-  { label: "Cuenta", icon: IconUsers, link: "/miCuenta" }
+  { label: "Cuenta", icon: IconSettings, link: "/miCuenta" }
 ]
 
 export const NAVIGATION_ROUTES_RES_ADMIN = {
@@ -343,8 +357,8 @@ export const NAVIGATION_ROUTES_KITCHEN = {
 }
 
 export const NAVIGATION_ROUTES_KITCHEN_TWO = [
-  { label: "Inicio", icon: IconHome, link: '/' },
-  { label: "Pedidos", icon: IconShoppingCart, link: '/pedidos' },
+  { label: "Inicio", icon: IconHome, link: "/" },
+  { label: "Pedidos", icon: IconShoppingCart, link: "/pedidos" },
   { label: "Historial", icon: IconFileInvoice, link: "/historialDelPedido" },
   { label: "Cuenta", path: "/miCuenta", icon: IconSettings }
 ]

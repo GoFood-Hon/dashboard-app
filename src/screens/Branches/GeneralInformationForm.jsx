@@ -15,7 +15,6 @@ export default function GeneralInformationForm({ register, errors, setValue, isD
   const dispatch = useDispatch()
   const user = useSelector((state) => state.user.value)
   const status = useSelector(selectAllDishesCategoriesStatus)
-  console.log(itemDetails)
 
   const [images, setImages] = useState([])
   const [fileInformation, setFileInformation] = useState(null)
@@ -116,9 +115,9 @@ export default function GeneralInformationForm({ register, errors, setValue, isD
             <Checkbox
               mt={"md"}
               labelPosition="left"
-              label={<div className="text-sky-950 text-sm font-bold leading-snug">¿Cuenta con delivery?</div>}
+              label={<div className="text-sm font-bold leading-snug">¿Cuenta con delivery?</div>}
               name="delivery"
-              color={colors.primary_button}
+              color={colors.main_app_color}
               checked={isDelivery}
               size="sm"
               onChange={handleHasDelivery}
@@ -126,8 +125,8 @@ export default function GeneralInformationForm({ register, errors, setValue, isD
             <Checkbox
               mt={"md"}
               labelPosition="left"
-              label={<div className="text-sky-950 text-sm font-bold leading-snug">¿Cuenta con retiro en restaurante?</div>}
-              color={colors.primary_button}
+              label={<div className="text-sm font-bold leading-snug">¿Cuenta con retiro en restaurante?</div>}
+              color={colors.main_app_color}
               checked={isPickUp}
               size="sm"
               onChange={handleHasPickUp}
@@ -136,11 +135,11 @@ export default function GeneralInformationForm({ register, errors, setValue, isD
               mt={"md"}
               labelPosition="left"
               label={
-                <div className="text-sky-950 text-sm font-bold leading-snug">
+                <div className="text-sm font-bold leading-snug">
                   ¿Cuenta con disponibilidad para comer en el restaurante?
                 </div>
               }
-              color={colors.primary_button}
+              color={colors.main_app_color}
               checked={isOnSite}
               size="sm"
               onChange={handleHasOnSite}

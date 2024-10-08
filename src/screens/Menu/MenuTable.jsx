@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import { useState } from "react"
 import {
   Table,
   Checkbox,
@@ -11,26 +11,80 @@ import {
   Switch,
   createTheme,
   MantineProvider,
-  rem
+  rem,
+  Loader,
+  Paper,
+  Flex,
+  Text,
+  Container
 } from "@mantine/core"
-import { IconSearch, IconReload, IconTrash, IconEye, IconCheck, IconX } from "@tabler/icons-react"
-import { ITEMS_PER_PAGE } from "../../utils/paginationConfig"
+import { IconEye, IconCheck, IconX } from "@tabler/icons-react"
 import { colors } from "../../theme/colors"
 import { useNavigate } from "react-router-dom"
 import { NAVIGATION_ROUTES_KITCHEN, NAVIGATION_ROUTES_RES_ADMIN, NAVIGATION_ROUTES_SUPER_ADMIN } from "../../routes"
 import dayjs from "dayjs"
 import relativeTime from "dayjs/plugin/relativeTime"
 import "dayjs/locale/es"
+import { useDebouncedCallback } from "@mantine/hooks"
+import { useDispatch, useSelector } from "react-redux"
+import { TableSkeleton } from "../../components/Skeletons/TableSkeleton"
+import { fetchAdminUsers } from "../../store/features/userSlice"
 dayjs.extend(relativeTime)
 dayjs.locale("es")
 dayjs.extend(relativeTime)
 dayjs.locale("es")
 dayjs.extend(relativeTime)
 
-export default function MenuTable({ refreshPage, items, handleDisableSelected, screenType, totalItems, currentPage, setPage }) {
+export default function MenuTable({
+  refreshPage,
+  items,
+  handleDisableSelected,
+  screenType,
+  totalItems,
+  currentPage,
+  setPage,
+  loadingData
+}) {
   const [itemsSelected, setItemsSelected] = useState([])
   const [search, setSearch] = useState("")
   const navigate = useNavigate()
+  const [loading, setLoading] = useState(false)
+  const [searchResults, setSearchResults] = useState([])
+  const dispatch = useDispatch()
+  const userData = useSelector((state) => state.user) // Ajusta según tu estado
+
+  const getSearchResults = async (query, searchField) => {
+    try {
+      const limit = 10
+      const page = 1
+      const search_field = searchField
+      const search = query
+
+      dispatch(fetchAdminUsers({ limit, page, order: "DESC", search_field, search }))
+
+      // Verifica el estado después de la acción
+      if (userData.error) {
+        console.error(userData.error)
+        return []
+      } else {
+        setLoading(false)
+        return userData.data
+      }
+    } catch (error) {
+      console.error(error)
+      return []
+    }
+  }
+
+  const handleSearch = useDebouncedCallback(async (query) => {
+    setSearchResults(await getSearchResults(query, "name"))
+  }, 500)
+
+  const handleChange = (event) => {
+    setLoading(true)
+    setSearch(event.currentTarget.value)
+    handleSearch(event.currentTarget.value)
+  }
 
   const handleSelectChange = (id) => {
     setItemsSelected((prevState) => {
@@ -86,13 +140,13 @@ export default function MenuTable({ refreshPage, items, handleDisableSelected, s
             <Switch
               checked={isActive}
               //onChange={() => (isActive ? handleDisableSelected(item.id) : handleEnableSelected(item.id))}
-              color={colors.yellow_logo}
+              color={colors.main_app_color}
               size="md"
               thumbIcon={
                 isActive ? (
-                  <IconCheck style={{ width: rem(12), height: rem(12) }} stroke={3} color={colors.yellow_logo} />
+                  <IconCheck style={{ width: rem(12), height: rem(12) }} stroke={3} color={colors.main_app_color} />
                 ) : (
-                  <IconX style={{ width: rem(12), height: rem(12) }} stroke={3} color={colors.yellow_logo} />
+                  <IconX style={{ width: rem(12), height: rem(12) }} stroke={3} color={colors.main_app_color} />
                 )
               }
             />
@@ -109,7 +163,7 @@ export default function MenuTable({ refreshPage, items, handleDisableSelected, s
             variant="subtle"
             size="lg"
             onClick={() => handleClick(id)}
-            color={colors.yellow_logo}
+            color={colors.main_app_color}
             radius="xl">
             <IconEye />
           </ActionIcon>
@@ -139,13 +193,13 @@ export default function MenuTable({ refreshPage, items, handleDisableSelected, s
             <Switch
               checked={active}
               //onChange={() => (isActive ? handleDisableSelected(item.id) : handleEnableSelected(item.id))}
-              color={colors.yellow_logo}
+              color={colors.main_app_color}
               size="sm"
               thumbIcon={
                 active ? (
-                  <IconCheck style={{ width: rem(12), height: rem(12) }} stroke={3} color={colors.yellow_logo} />
+                  <IconCheck style={{ width: rem(12), height: rem(12) }} stroke={3} color={colors.main_app_color} />
                 ) : (
-                  <IconX style={{ width: rem(12), height: rem(12) }} stroke={3} color={colors.yellow_logo} />
+                  <IconX style={{ width: rem(12), height: rem(12) }} stroke={3} color={colors.main_app_color} />
                 )
               }
             />
@@ -162,7 +216,7 @@ export default function MenuTable({ refreshPage, items, handleDisableSelected, s
             variant="subtle"
             size="lg"
             onClick={() => handleClick(id)}
-            color={colors.yellow_logo}
+            color={colors.main_app_color}
             radius="xl">
             <IconEye />
           </ActionIcon>
@@ -192,13 +246,13 @@ export default function MenuTable({ refreshPage, items, handleDisableSelected, s
             <Switch
               checked={active}
               //onChange={() => (isActive ? handleDisableSelected(item.id) : handleEnableSelected(item.id))}
-              color={colors.yellow_logo}
+              color={colors.main_app_color}
               size="sm"
               thumbIcon={
                 active ? (
-                  <IconCheck style={{ width: rem(12), height: rem(12) }} stroke={3} color={colors.yellow_logo} />
+                  <IconCheck style={{ width: rem(12), height: rem(12) }} stroke={3} color={colors.main_app_color} />
                 ) : (
-                  <IconX style={{ width: rem(12), height: rem(12) }} stroke={3} color={colors.yellow_logo} />
+                  <IconX style={{ width: rem(12), height: rem(12) }} stroke={3} color={colors.main_app_color} />
                 )
               }
             />
@@ -215,7 +269,7 @@ export default function MenuTable({ refreshPage, items, handleDisableSelected, s
             variant="subtle"
             size="lg"
             onClick={() => handleClick(id)}
-            color={colors.yellow_logo}
+            color={colors.main_app_color}
             radius="xl">
             <IconEye />
           </ActionIcon>
@@ -239,7 +293,7 @@ export default function MenuTable({ refreshPage, items, handleDisableSelected, s
             variant="subtle"
             size="lg"
             onClick={() => handleClick(id)}
-            color={colors.yellow_logo}
+            color={colors.main_app_color}
             radius="xl">
             <IconEye />
           </ActionIcon>
@@ -261,7 +315,7 @@ export default function MenuTable({ refreshPage, items, handleDisableSelected, s
             variant="subtle"
             size="lg"
             onClick={() => handleClick(id)}
-            color={colors.yellow_logo}
+            color={colors.main_app_color}
             radius="xl">
             <IconEye />
           </ActionIcon>
@@ -285,7 +339,7 @@ export default function MenuTable({ refreshPage, items, handleDisableSelected, s
             variant="subtle"
             size="lg"
             onClick={() => handleClick(id)}
-            color={colors.yellow_logo}
+            color={colors.main_app_color}
             radius="xl">
             <IconEye />
           </ActionIcon>
@@ -298,73 +352,84 @@ export default function MenuTable({ refreshPage, items, handleDisableSelected, s
 
   return (
     <>
-      <div className="flex w-full justify-between items-center mb-4">
+      <div className={`flex w-full justify-between items-center mb-4 `}>
         <Group mx={10}>
           <TextInput
-            placeholder="Buscar aquí"
+            placeholder="Buscar"
             value={search}
             w={500}
-            icon={<IconSearch />}
-            onChange={(event) => setSearch(event.target.value)}
+            onChange={handleChange}
+            rightSection={loading && <Loader color={colors.main_app_color} size={20} />}
           />
         </Group>
       </div>
 
-      <ScrollArea>
-        <Table miw={800} verticalSpacing="sm">
-          <Table.Thead>
-            <Table.Tr>
-              <Table.Th style={{ width: 40 }}>
-                <Checkbox
-                  onChange={toggleAll}
-                  checked={itemsSelected.length === items.length}
-                  indeterminate={itemsSelected.length > 0 && itemsSelected.length !== items.length}
-                  color={colors.primary_button}
-                />
-              </Table.Th>
-              {currentColumns.map((column) => (
-                <Table.Th style={{ textAlign: column.center ? "center" : "left" }} key={column.label}>
-                  {column.label}
+      {loadingData ? (
+        <TableSkeleton />
+      ) : items && items.length > 0 ? (
+        <ScrollArea>
+          <Table miw={800} verticalSpacing="sm">
+            <Table.Thead>
+              <Table.Tr>
+                <Table.Th style={{ width: 40 }}>
+                  <Checkbox
+                    onChange={toggleAll}
+                    checked={itemsSelected.length === items.length}
+                    indeterminate={itemsSelected.length > 0 && itemsSelected.length !== items.length}
+                    color={colors.main_app_color}
+                  />
                 </Table.Th>
-              ))}
-            </Table.Tr>
-          </Table.Thead>
-          <Table.Tbody>
-            {items.map((item) => {
-              const selected = itemsSelected.includes(item.id)
-              return (
-                <Table.Tr key={item.id}>
-                  <Table.Td>
-                    <Checkbox color={colors.primary_button} checked={selected} onChange={() => toggleRow(item.id)} />
-                  </Table.Td>
-                  {currentColumns.map((column) => (
-                    <Table.Td
-                      style={{
-                        textAlign: column.center ? "center" : "left"
-                      }}
-                      key={column.accessor}>
-                      {column.accessor === "createdAt" || column.accessor === "updatedAt"
-                        ? dayjs(item[column.accessor]).fromNow()
-                        : column.render
-                          ? column.render(item[column.accessor], item)
-                          : item[column.accessor]}
+                {currentColumns.map((column) => (
+                  <Table.Th style={{ textAlign: column.center ? "center" : "left" }} key={column.label}>
+                    {column.label}
+                  </Table.Th>
+                ))}
+              </Table.Tr>
+            </Table.Thead>
+            <Table.Tbody>
+              {items.map((item) => {
+                const selected = itemsSelected.includes(item.id)
+                return (
+                  <Table.Tr key={item.id}>
+                    <Table.Td>
+                      <Checkbox color={colors.main_app_color} checked={selected} onChange={() => toggleRow(item.id)} />
                     </Table.Td>
-                  ))}
-                </Table.Tr>
-              )
-            })}
-          </Table.Tbody>
-        </Table>
-      </ScrollArea>
+                    {currentColumns.map((column) => (
+                      <Table.Td
+                        style={{
+                          textAlign: column.center ? "center" : "left"
+                        }}
+                        key={column.accessor}>
+                        {column.accessor === "createdAt" || column.accessor === "updatedAt"
+                          ? dayjs(item[column.accessor]).fromNow()
+                          : column.render
+                            ? column.render(item[column.accessor], item)
+                            : item[column.accessor]}
+                      </Table.Td>
+                    ))}
+                  </Table.Tr>
+                )
+              })}
+            </Table.Tbody>
+          </Table>
+        </ScrollArea>
+      ) : (
+        <Container h={450}>
+          <Flex justify="center" h={450} align="center">
+            <Text>No hay datos para mostrar</Text>
+          </Flex>
+        </Container>
+      )}
 
       <div className="flex w-full justify-end">
-        <Group mx={20} mt={10}>
+        <Group mt={10}>
           <Pagination
             total={totalItems}
             page={currentPage}
             onChange={(page) => setPage(page)}
-            color={colors.yellow_logo}
+            color={colors.main_app_color}
             defaultValue={currentPage}
+            size="md"
           />
         </Group>
       </div>

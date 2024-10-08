@@ -1,21 +1,22 @@
 import React, { useEffect, useState } from "react"
-import Button from "../../components/Button"
-import { Text } from "@mantine/core"
+import { Paper, Button } from "@mantine/core"
 import MenuTable from "../Menu/MenuTable"
-import { useLocation, useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import { NAVIGATION_ROUTES_RES_ADMIN } from "../../routes"
 import userApi from "../../api/userApi"
 import { useSelector } from "react-redux"
 import { showNotification } from "@mantine/notifications"
+import { colors } from "../../theme/colors"
 
 export default function Users() {
   const navigate = useNavigate()
-  const location = useLocation()
   const user = useSelector((state) => state.user.value)
+  const [isLoading, setIsLoading] = useState(false)
 
   const [users, setUser] = useState([])
 
   const fetchUsers = async () => {
+    setIsLoading(true)
     try {
       const response = await userApi.getUsersByRestaurant(user.restaurantId)
       if (response.error) {
@@ -36,6 +37,7 @@ export default function Users() {
         duration: 7000
       })
     }
+    setIsLoading(false)
   }
 
   useEffect(() => {
@@ -54,25 +56,15 @@ export default function Users() {
       <section>
         <div className="flex flex-row justify-between items-center pb-6">
           <h1 className="text-white-200 text-2xl font-semibold">Usuarios</h1>
-          <Button
-            text={"Nuevo"}
-            className={"text-white text-md px-3 py-2 bg-primary_button mb-0"}
-            onClick={handleNavigateNewUser}
-          />
+          <Button color={colors.main_app_color} onClick={handleNavigateNewUser}>
+            Nuevo
+          </Button>
         </div>
       </section>
       <section>
-        <div className="w-full p-4 h-full rounded-md">
-          {users.length > 0 ? (
-            <MenuTable refreshPage={refreshPage} items={users} screenType="usersScreen" />
-          ) : (
-            <div className="w-full h-screen flex justify-center items-center">
-              <Text className="font-semibold" size="sm" c="dimmed" inline>
-                Sin usuarios disponibles
-              </Text>
-            </div>
-          )}
-        </div>
+        <Paper withBorder p="md" radius="md">
+          <MenuTable refreshPage={refreshPage} items={users} screenType="usersScreen" loadingData={isLoading} />
+        </Paper>
       </section>
     </>
   )

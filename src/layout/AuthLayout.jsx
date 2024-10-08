@@ -22,7 +22,7 @@ function AuthLayout() {
   const [opened, { toggle }] = useDisclosure()
   const { colorScheme } = useMantineColorScheme()
   const theme = useMantineTheme()
-  const bg = colorScheme === "dark" ? theme.colors.dark[7] : theme.colors.gray[0]
+  const bg = colorScheme === "dark" ? theme.colors.dark[7] : theme.colors.gray[1]
 
   const [loading, setLoading] = useState(true)
 

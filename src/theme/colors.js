@@ -1,7 +1,6 @@
 export const palette = {
   amaranth: "#E53A54",
   supernova: "#FEBD3E",
-
   white: "#FFFFFF",
   alice_blue: "#FAFCFF",
   pattens_blue: "#CDE3FE",
@@ -31,7 +30,6 @@ export const colors = {
    */
   red_logo: palette.amaranth,
   yellow_logo: palette.supernova,
-  yellow_main_logo: '#FDBD3D',
 
   light_bg_primary: palette.alice_blue,
   dark_bg_primary: palette.black_russian,
@@ -48,6 +46,7 @@ export const colors = {
   dark_secondary_text: palette.light_slate_gray,
 
   light_link_text: palette.dodger_blue,
+  main_app_color: '#EE364C',
 
   /**
    * Dashboard colors

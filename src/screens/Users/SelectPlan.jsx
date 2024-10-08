@@ -1,11 +1,14 @@
-import { Card, Grid } from "@mantine/core"
 import React, { useEffect, useState } from "react"
-import Button from "../../components/Button"
-import { formatDateDistanceToNow, getFormattedHNL } from "../../utils"
+import { getFormattedHNL } from "../../utils"
 import plansApi from "../../api/plansApi"
-import toast from "react-hot-toast"
+import { SimpleGrid, Card, Text, Paper, Flex, ThemeIcon, rem, Divider, Stack, List, Button } from "@mantine/core"
+import classes from "./ArticlesCardsGrid.module.css"
+import { IconCreditCard } from "@tabler/icons-react"
+import { IconCircleCheckFilled } from "@tabler/icons-react"
+import { colors } from "../../theme/colors"
+import { showNotification } from "@mantine/notifications"
 
-export const SelectPlan = ({ restaurantId }) => {
+export function SelectPlan({ onSelected }) {
   const [plans, setPlans] = useState([])
 
   useEffect(() => {
@@ -26,78 +29,67 @@ export const SelectPlan = ({ restaurantId }) => {
   }, [])
 
   const onSubmit = async (planId) => {
-    try {
-      const response = await plansApi.assignPlan({
-        restaurantId,
-        planId
-      })
-
-      if (response.error) {
-        toast.error(`Fallo al asignar el plan. Por favor intente de nuevo. ${response.message}`, {
-          duration: 7000
-        })
-      } else {
-        toast.success("Plan asignado exitosamente", {
-          duration: 7000
-        })
-      }
-    } catch (error) {
-      toast.error(`Error. Por favor intente de nuevo. ${error}`, {
-        duration: 7000
-      })
-    }
+    onSelected(planId)
   }
 
-  return (
-    <section className="w-full border border-blue-100 rounded-lg">
-      <Card padding="lg" radius="md">
-        <section className="px-20">
-          <Grid>
-            {plans.map((plan, index) => (
-              <Grid.Col span={{ base: 6 }} key={index}>
-                <div className="border-2 border-blue-100 rounded-md p-4 h-full w-full flex flex-col justify-between">
-                  <div className="flex w-full flex-col">
-                    <h1 className="h-full w-full pt-4 text-2xl font-semibold">{plan?.name}</h1>
-                  </div>
-                  <div className="py-8">
-                    <span className="text-sky-950 text-base font-bold leading-normal">Tipo de plan</span>
-                    <p className="text-zinc-500 text-sm font-medium py-2">{plan?.paymentType}</p>
-                    <span className="text-sky-950 text-base font-bold leading-normal">Precio </span>
-                    <p className="text-zinc-500 text-sm font-medium py-2">{getFormattedHNL(plan?.price)}</p>
-                    <span className="text-sky-950 text-base font-bold leading-normal">Impuestos </span>
-                    <p className="text-zinc-500 text-sm font-medium py-2">{getFormattedHNL(plan?.tax)}</p>
-                    <span className="text-sky-950 text-base font-bold leading-normal">Ultima actualización </span>
-                    <p className="text-zinc-500 text-sm font-medium py-2">{formatDateDistanceToNow(plan?.updatedAt)}</p>
-                    <span className="text-sky-950 text-base font-bold leading-normal">Características</span>
-                    <ul className="list-disc pl-4 pt-2">
-                      {plan?.PlanFeatures?.map((feature) => (
-                        <li key={feature.id} className="text-zinc-500 text-sm py-1">
-                          <span className="font-bold">{feature.name}:</span>
-                          {feature.type === "amount" && feature.PlanPlanFeatures?.quantity ? (
-                            <span className="ml-2">{feature.PlanPlanFeatures.quantity}</span>
-                          ) : (
-                            <span className="ml-2">{feature.PlanPlanFeatures?.available ? "Habilitado" : "Deshabilitado"}</span>
-                          )}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                  <Button
-                    text={"Seleccionar"}
-                    className={"text-white text-md px-3 py-2 bg-primary_button"}
-                    onClick={() => onSubmit(plan.id)}
-                  />
-                </div>
-              </Grid.Col>
-            ))}
-            {plans.length === 0 && (
-              <div className="flex w-full flex-col">
-                <h1 className="h-full w-full p-12 text-2xl font-semibold text-sky-950">No hay planes disponibles</h1>
-              </div>
-            )}
-          </Grid>
-        </section>
-      </Card>
-    </section>
-  )
+  const cards = plans.map((plan) => (
+    <Card withBorder key={plan.id} p="md" radius="md" h={400} className={classes.card}>
+      <Stack>
+        <Flex align="center" gap="sm">
+          <ThemeIcon size="lg" radius="md" variant="gradient" gradient={{ deg: 0, from: "#EE364C", to: "#EDB23B" }}>
+            <IconCreditCard style={{ width: rem(28), height: rem(28) }} stroke={1.5} />
+          </ThemeIcon>
+          <Text c="dimmed" size="sm" tt="uppercase" fw={700}>
+            {plan.name}
+          </Text>
+        </Flex>
+        <Divider />
+        <Text c="dimmed" size="sm" fw={700}>
+          Tipo de pago: {plan.paymentType}
+        </Text>
+        <Text c="dimmed" size="sm" fw={700}>
+          Valor: {getFormattedHNL(plan?.price)}
+        </Text>
+        <Text c="dimmed" size="sm" fw={700}>
+          Impuestos: {getFormattedHNL(plan?.tax)}
+        </Text>
+        <Text c="dimmed" size="sm" fw={700}>
+          Características:
+        </Text>
+        <List
+          c="dimmed"
+          fw={700}
+          spacing="xs"
+          size="sm"
+          center
+          icon={
+            <ThemeIcon color="green" variant="transparent" radius="xl">
+              <IconCircleCheckFilled />
+            </ThemeIcon>
+          }>
+          {plan?.PlanFeatures?.map((feature) => (
+            <Flex align="center" gap="xs">
+              <List.Item>{feature.name}:</List.Item>
+              {feature.type === "amount" && feature.PlanPlanFeatures?.quantity ? (
+                <Text size="sm">{feature.PlanPlanFeatures.quantity}</Text>
+              ) : (
+                <Text size="sm">{feature.PlanPlanFeatures?.available ? "Habilitado" : "Deshabilitado"}</Text>
+              )}
+              {/* <span className="font-bold">{feature.name}:</span>
+              {feature.type === "amount" && feature.PlanPlanFeatures?.quantity ? (
+                <span className="ml-2">{feature.PlanPlanFeatures.quantity}</span>
+              ) : (
+                <span className="ml-2">{feature.PlanPlanFeatures?.available ? "Habilitado" : "Deshabilitado"}</span>
+              )} */}
+            </Flex>
+          ))}
+        </List>
+        <Button onClick={() => onSubmit({ id: plan.id, name: plan.name })} color={colors.main_app_color}>
+          Seleccionar
+        </Button>
+      </Stack>
+    </Card>
+  ))
+
+  return <SimpleGrid cols={{ xs: 2, md: 3, sm: 2 }}>{cards}</SimpleGrid>
 }

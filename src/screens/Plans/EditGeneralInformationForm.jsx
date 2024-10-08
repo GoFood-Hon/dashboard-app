@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { Grid, MultiSelect, Select } from "@mantine/core"
+import { Grid, MultiSelect, Paper, Select } from "@mantine/core"
 import toast from "react-hot-toast"
 import InputField from "../../components/Form/InputField"
 import plansApi from "../../api/plansApi"
@@ -89,7 +89,7 @@ export const EditGeneralInformationForm = ({ register, errors, setValue, feature
   return (
     <Grid>
       <Grid.Col span={{ base: 12 }}>
-        <div className="w-full h-full items-center justify-center flex bg-white rounded-2xl border border-blue-100 p-4">
+        <Paper withBorder radius='md' className="w-full h-full items-center justify-center flex  rounded-2xl p-4">
           <div className="flex flex-col w-full">
             <Grid>
               <Grid.Col span={{ base: 12, md: 12 }}>
@@ -102,19 +102,19 @@ export const EditGeneralInformationForm = ({ register, errors, setValue, feature
                 <InputField label="Impuestos" name="tax" register={register} errors={errors} className="text-black" />
               </Grid.Col>
               <Grid.Col span={{ base: 12, md: 6 }}>
-                <label className="text-sky-950 text-sm font-bold leading-snug">Tipo de pago</label>
+                <label className="text-sm font-bold leading-snug">Tipo de pago</label>
                 <div className="mt-1">
                   <Select data={["MENSUAL", "ANUAL"]} size="md" value={paymentType} onChange={onChangePaymentType} />
                 </div>
               </Grid.Col>
               <Grid.Col span={{ base: 12, md: 6 }}>
-                <span className="text-sky-950 text-sm font-bold leading-snug">Moneda</span>
+                <span className="text-sm font-bold leading-snug">Moneda</span>
                 <div className="mt-1">
                   <Select data={["HNL"]} allowDeselect={false} size="md" value={currency} onChange={onChangeCurrency} />
                 </div>
               </Grid.Col>
               <Grid.Col span={{ sm: 12 }}>
-                <span className="text-sky-950 text-sm font-bold leading-snug">Características disponibles</span>
+                <span className="text-sm font-bold leading-snug">Características disponibles</span>
                 <div className="mt-1">
                   <MultiSelect
                     placeholder="Seleccione las características"
@@ -130,7 +130,7 @@ export const EditGeneralInformationForm = ({ register, errors, setValue, feature
               </Grid.Col>
             </Grid>
           </div>
-        </div>
+        </Paper>
       </Grid.Col>
     </Grid>
   )

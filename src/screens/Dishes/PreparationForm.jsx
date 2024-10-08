@@ -1,10 +1,11 @@
 import React from "react"
 import { InputComboboxSelected } from "../../components/Form/InputComboboxSelected"
 import { preparationTime } from "../../utils/constants"
+import { Paper } from "@mantine/core"
 
 export default function PreparationForm({ setValue, register }) {
   return (
-    <div className="bg-white rounded-2xl border border-blue-100 p-6">
+    <Paper withBorder className="rounded-2xl p-6">
       <InputComboboxSelected
         items={preparationTime}
         setValue={setValue}
@@ -12,6 +13,6 @@ export default function PreparationForm({ setValue, register }) {
         label={"Preparación"}
         name={"preparationTime"}
       />
-    </div>
+    </Paper>
   )
 }

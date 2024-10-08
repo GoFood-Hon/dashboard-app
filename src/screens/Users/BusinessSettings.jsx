@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { Checkbox, Grid, Group, Image, Text, rem } from "@mantine/core"
+import { Checkbox, Flex, Grid, Group, Image, Paper, Text, rem, Button } from "@mantine/core"
 import SettingsCard from "../../components/SettingsCard"
 import { useForm } from "react-hook-form"
 import { IconPhoto } from "@tabler/icons-react"
@@ -7,8 +7,7 @@ import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone"
 import { bytesToMB, convertToDecimal } from "../../utils"
 import toast from "react-hot-toast"
 import InputField from "../../components/Form/InputField"
-import Button from "../../components/Button"
-import { SETTING_NAVIGATION_ROUTES } from "../../routes"
+import { NAVIGATION_ROUTES_SUPER_ADMIN, SETTING_NAVIGATION_ROUTES } from "../../routes"
 import { useNavigate } from "react-router-dom"
 import { useDispatch, useSelector } from "react-redux"
 import restaurantsApi from "../../api/restaurantApi"
@@ -24,6 +23,7 @@ export default function BusinessSettings() {
   const [fileInformation, setFileInformation] = useState(null)
   const [isFreeShipping, setIsFreeShipping] = useState(false)
   const [restaurantImg, setRestaurantImg] = useState([{}])
+  const [isLoading, setIsLoading] = useState(false)
 
   const {
     register,
@@ -108,7 +108,7 @@ export default function BusinessSettings() {
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <div>
+        <div className="space-y-3">
           <section>
             <div className="flex flex-row items-center justify-between pb-3">
               <div className="flex flex-row items-center gap-x-3">
@@ -119,18 +119,22 @@ export default function BusinessSettings() {
           <SettingsCard title="Logo" iconName="building">
             <div className="flex flex-row justify-between h-full">
               {user && previews.length === 0 ? (
-                <div className="m-4 flex h-full flex-col items-center justify-center rounded-2xl border border-blue-100 bg-white p-4">
+                <div className="m-4 flex h-full flex-col items-center justify-center rounded-2xl p-4">
                   <Image
                     src={restaurantImg?.[0]?.location}
                     h={50}
                     w={90}
                     fit="contain"
                     fallbackSrc="https://placehold.co/600x400?text=Imagen+no+disponible"
+                    radius='md'
                   />
                 </div>
               ) : null}
 
-              <div className="m-4 flex h-full w-full flex-col items-center justify-center rounded-2xl border border-blue-100 bg-white p-4">
+              <Paper
+                withBorder
+                radius="md"
+                className="m-4 flex h-full w-full flex-col items-center justify-center rounded-2xl p-4">
                 {previews.length > 0 ? (
                   <PreviewImageCard
                     imgName={fileInformation.name}
@@ -157,7 +161,7 @@ export default function BusinessSettings() {
                   </Dropzone>
                 )}
                 {errors.files && <p className="w-full text-center text-red-500">* Imagen es requerida.</p>}
-              </div>
+              </Paper>
             </div>
           </SettingsCard>
           <SettingsCard title="General" iconName="building">
@@ -190,8 +194,8 @@ export default function BusinessSettings() {
               <Grid.Col span={{ sm: 12 }}>
                 <Checkbox
                   labelPosition="left"
-                  label={<div className="text-sky-950 text-sm font-bold leading-snug">Envío gratuito</div>}
-                  color={colors.primary_button}
+                  label={<div className="text-sm font-bold leading-snug">Envío gratuito</div>}
+                  color={colors.main_app_color}
                   checked={isFreeShipping}
                   size="sm"
                   onChange={() => setIsFreeShipping(!isFreeShipping)}
@@ -204,19 +208,23 @@ export default function BusinessSettings() {
               ) : null}
             </Grid>
           </SettingsCard>
-          <SettingsCard title="Guardar cambios" iconName="building">
-            <div className="flex w-full flex-row justify-end gap-2 pt-4">
-              <Button
-                text={"Descartar"}
-                className={"border border-red-400 bg-white text-xs text-red-400"}
-                onClick={() => navigate(SETTING_NAVIGATION_ROUTES.General.path)}
-              />
-              <Button
-                text={"Guardar"}
-                className="flex h-10 items-center justify-center rounded-md bg-sky-950 px-4 text-xs text-slate-50 shadow-sm transition-all duration-700 focus:outline-none"
-              />
-            </div>
-          </SettingsCard>
+          <section>
+            <Paper withBorder radius="md" className="w-full flex md:justify-end mt-6 md:gap-3 rounded-md px-8 py-5">
+              <Flex justify="end" gap="xs">
+                <Button
+                  color={colors.main_app_color}
+                  variant="outline"
+                  onClick={() => {
+                    navigate(NAVIGATION_ROUTES_SUPER_ADMIN.General.path)
+                  }}>
+                  Descartar
+                </Button>
+                <Button loading={isLoading} color={colors.main_app_color} type="submit">
+                  Actualizar
+                </Button>
+              </Flex>
+            </Paper>
+          </section>
         </div>
       </form>
     </>

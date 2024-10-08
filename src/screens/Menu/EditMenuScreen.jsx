@@ -2,18 +2,16 @@ import React, { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 import { useDispatch, useSelector } from "react-redux"
 import { useNavigate, useParams } from "react-router-dom"
-import { Accordion } from "@mantine/core"
-import BaseLayout from "../../components/BaseLayout"
+import { Accordion, Paper, Button, Flex } from "@mantine/core"
 import BackButton from "../Dishes/components/BackButton"
 import GeneralInformationForm from "./GeneralInformationForm"
 import ComplementsForm from "../Dishes/ComplementsForm"
 import dishesApi from "../../api/dishesApi"
-import Button from "../../components/Button"
 import { updateMenu } from "../../store/features/menuSlice"
 import menuApi from "../../api/menuApi"
 import { NAVIGATION_ROUTES_RES_ADMIN } from "../../routes"
 import { showNotification } from "@mantine/notifications"
-import { LoaderComponent } from "../../components/LoaderComponent"
+import { colors } from "../../theme/colors"
 
 export default function EditMenuScreen() {
   const { menuId } = useParams()
@@ -66,7 +64,6 @@ export default function EditMenuScreen() {
     const fetchMenu = async () => {
       try {
         const response = await menuApi.getMenuDetails({ menuId })
-
         const menuDetails = response?.data
         setMenuDetails(menuDetails)
       } catch (error) {
@@ -123,12 +120,13 @@ export default function EditMenuScreen() {
   const items = accordionStructure.map((item, key) => (
     <Accordion.Item key={key} value={item.title}>
       <Accordion.Control>
-        <div className="w-full rounded-lg flex-row flex items-center bg-white">
-          <div className="text-slate-50 text-base font-bold bg-sky-950 rounded-full p-2 w-8 h-8 flex items-center justify-center">
+        <div className="w-full rounded-lg flex-row flex items-center ">
+          <div
+            className={`text-slate-50 text-base font-bold bg-[${colors.main_app_color}] rounded-full p-2 w-8 h-8 flex items-center justify-center`}>
             {key + 1}
           </div>
-          <span className="text-sky-950 text-base font-bold  leading-normal ml-4">{item.title}</span>
-          <span className="text-sky-950 text-base font-normal ml-1">({item?.requirement})</span>
+          <span className="text-base font-bold  leading-normal ml-4">{item.title}</span>
+          <span className="text-base font-normal ml-1">({item?.requirement})</span>
         </div>
       </Accordion.Control>
       <Accordion.Panel>{item.form}</Accordion.Panel>
@@ -146,7 +144,7 @@ export default function EditMenuScreen() {
   }
 
   return (
-    <BaseLayout>
+    <>
       <form onSubmit={handleSubmit(onSubmit)}>
         <section>
           <div className="flex flex-row justify-between items-center pb-6 flex-wrap xs:gap-3">
@@ -154,39 +152,29 @@ export default function EditMenuScreen() {
           </div>
         </section>
         <section>
-          <Accordion
-            variant="separated"
-            multiple
-            defaultValue={["Información general", "Platillos"]}
-            classNames={{
-              label: "bg-white fill-white"
-            }}>
+          <Accordion variant="separated" multiple defaultValue={["Información general", "Platillos"]}>
             {items}
           </Accordion>
         </section>
         <section>
-          <div className="w-full flex md:justify-end mt-6 md:gap-3 rounded-md bg-white px-8 py-5 border border-gray-200">
-            <div className="md:w-2/3 lg:1/3 sm:w-full flex flex-row justify-end gap-3 sm:flex-wrap md:flex-nowrap">
+          <Paper withBorder radius="md" className="w-full flex md:justify-end mt-3 md:gap-3 rounded-md px-8 py-5">
+            <Flex justify="end" gap="xs">
               <Button
-                text={"Descartar"}
-                className={"text-xs border border-red-400 text-red-400 bg-white"}
+                color={colors.main_app_color}
+                variant="outline"
                 onClick={() => {
                   reset()
                   navigate(NAVIGATION_ROUTES_RES_ADMIN.Menu.path)
-                }}
-              />
-              {isLoading ? (
-                <LoaderComponent width={24} size={25} />
-              ) : (
-                <Button
-                  text={"Actualizar"}
-                  className="w-24 text-center flex h-10 items-center justify-center rounded-md shadow-sm transition-all duration-700 focus:outline-none text-xs bg-sky-950 text-slate-50"
-                />
-              )}
-            </div>
-          </div>
+                }}>
+                Descartar
+              </Button>
+              <Button loading={isLoading} color={colors.main_app_color} type="submit">
+                Actualizar
+              </Button>
+            </Flex>
+          </Paper>
         </section>
       </form>
-    </BaseLayout>
+    </>
   )
 }

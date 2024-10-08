@@ -192,8 +192,8 @@ export const CouponForm = ({ offerData, editing = false }) => {
           <InputField label="Titulo" name="title" register={register} errors={errors} />
         </Grid.Col>
         <Grid.Col span={{ base: 12 }}>
-          <label className="text-sky-950 text-sm font-bold leading-snug">Seleccione una imagen</label>
-          <div className="flex flex-col justify-center items-center w-full h-full bg-white rounded-2xl border border-blue-100 p-4 mb-8">
+          <label className="text-sm font-bold leading-snug">Seleccione una imagen</label>
+          <div className="flex flex-col justify-center items-center w-full h-full  rounded-2xl p-4 mb-8">
             {previews.length > 0 ? (
               <div className="w-full">
                 <Text size="lg" inline className="text-left mb-5">
@@ -236,7 +236,7 @@ export const CouponForm = ({ offerData, editing = false }) => {
           <InputField label="Código de cupón" name="code" register={register} errors={errors} />
         </Grid.Col>
         <Grid.Col span={{ sm: 12, md: 6 }}>
-          <span className="text-sky-950 text-sm font-bold leading-snug">Tipo de descuento</span>
+          <span className="text-sm font-bold leading-snug">Tipo de descuento</span>
           <div className="mt-1">
             <Select
               data={["Fijo", "Porcentual"]}
@@ -255,7 +255,7 @@ export const CouponForm = ({ offerData, editing = false }) => {
             </div>
           ) : discountType === "Porcentual" ? (
             <>
-              <span className="text-sky-950 text-sm font-bold leading-snug">Tipo de descuento</span>
+              <span className="text-sm font-bold leading-snug">Tipo de descuento</span>
               <div className="mt-1">
                 <Select data={discountPercentage} allowDeselect={false} size="md" value={discount} onChange={setDiscount} />
               </div>
@@ -263,7 +263,7 @@ export const CouponForm = ({ offerData, editing = false }) => {
           ) : null}
         </Grid.Col>
         <Grid.Col span={{ sm: 12 }}>
-          <span className="text-sky-950 text-sm font-bold leading-snug">Tipo de cupón</span>
+          <span className="text-sm font-bold leading-snug">Tipo de cupón</span>
           <div className="mt-1">
             <Select
               data={["Por fecha", "Por cantidad de usos"]}

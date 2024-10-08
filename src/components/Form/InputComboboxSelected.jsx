@@ -14,14 +14,14 @@ export const InputComboboxSelected = ({ items, label, name, register, setValue }
 
   return (
     <div className="flex flex-col item-center w-full h-full flex-wrap">
-      <label className="text-slate-400 mr-3">{label}</label>
+      <label className="mr-3">{label}</label>
       <div className="flex flex-row items-center gap-2">
         <input
-          className="mt-1 text-slate-400 p-2 appearance-none block w-20 border placeholder-gray-300 rounded focus:outline-none "
+          className="mt-1 p-2 appearance-none block w-20 border rounded focus:outline-none "
           {...register(name)}
           disabled
         />
-        <label className="text-slate-400">minutos</label>
+        <label >minutos</label>
       </div>
 
       <Combobox
@@ -34,7 +34,7 @@ export const InputComboboxSelected = ({ items, label, name, register, setValue }
           combobox.closeDropdown()
         }}>
         <Combobox.Target>
-          <Button w={"200px"} className="w-10 my-2" color={colors.primary_button} onClick={() => combobox.toggleDropdown()}>
+          <Button w={"200px"} className="w-10 my-2" color={colors.main_app_color} onClick={() => combobox.toggleDropdown()}>
             Seleccionar tiempo
           </Button>
         </Combobox.Target>

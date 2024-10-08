@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { Grid, Image, Text, ScrollArea } from "@mantine/core"
+import { Grid, Image, Text, ScrollArea, Paper } from "@mantine/core"
 import { useSelector } from "react-redux"
 import { getFormattedHNL } from "../../utils"
 import { SortableList } from "./components"
@@ -15,8 +15,8 @@ const AvailableComplementsCard = ({ item, onItemClick }) => {
   }
 
   return (
-    <div onClick={handleItemClick} className="cursor-pointer">
-      <div className="w-full p-5 my-3 bg-white rounded-lg border border-blue-100 flex-row justify-between items-center flex text-sm">
+    <Paper withBorder radius='md' onClick={handleItemClick}>
+      <div className="w-full p-3 my-3 rounded-lg flex-row justify-between items-center flex text-sm">
         <div className="flex flex-row items-center w-1/2">
           <Image
             h={"40"}
@@ -27,13 +27,13 @@ const AvailableComplementsCard = ({ item, onItemClick }) => {
             radius={"sm"}
             fallbackSrc="https://placehold.co/600x400?text=Imagen+no+disponible"
           />
-          <span className="text-sky-950 pl-3">{name}</span>
+          <span className="pl-3">{name}</span>
         </div>
         <div className="flex flex-row w-1/2 justify-end">
-          <span className="text-sky-950 pl-3">{getFormattedHNL(price)}</span>
+          <span className="pl-3">{getFormattedHNL(price)}</span>
         </div>
       </div>
-    </div>
+    </Paper>
   )
 }
 
@@ -54,10 +54,10 @@ const ComplementCard = ({ item, handleRemoveComplement }) => {
             fallbackSrc="https://placehold.co/60x40?text=Imagen+no+disponible"
           />
 
-          <span className="text-sky-950 pl-3">{name}</span>
+          <span className="pl-3">{name}</span>
         </div>
         <div className="flex flex-row w-1/2 justify-end items-center gap-2">
-          <span className="text-sky-950 pl-3">{getFormattedHNL(price)}</span>
+          <span className="pl-3">{getFormattedHNL(price)}</span>
           <div className=" flex justify-center items-center">
             <span
               onClick={() => handleRemoveComplement(item)}
@@ -128,7 +128,7 @@ export default function ComplementsForm({
   return (
     <Grid>
       <Grid.Col span={{ base: 12, md: 7 }}>
-        <div className="w-full h-full p-6 bg-white rounded-lg border border-blue-100">
+        <Paper withBorder p="md" radius="md" className="w-full h-full">
           {addedComplements.length > 0 ? (
             <ScrollArea w={"100%"} h={350}>
               <SortableList
@@ -145,13 +145,13 @@ export default function ComplementsForm({
           ) : (
             <div className="flex flex-col w-full h-full text-xl justify-center item-center text-center">{defaultMessage}</div>
           )}
-        </div>
+        </Paper>
       </Grid.Col>
       <Grid.Col span={{ base: 12, md: 5 }}>
-        <div className="w-full h-full p-6 bg-white rounded-lg border border-blue-100">
+        <Paper withBorder radius="md" p="md" className="w-full h-full">
           <span className="text-sm font-semibold ">{itemsAvailableLabel}</span>
           <ScrollArea w={"100%"} h={350}>
-            <div className="w-full">
+            <div className="w-full mt-2 space-y-2">
               {status === "loading" && (
                 <div className="h-[calc(100vh-350px)] w-full flex justify-center items-center">
                   <LoadingCircle />
@@ -174,7 +174,7 @@ export default function ComplementsForm({
               )}
             </div>
           </ScrollArea>
-        </div>
+        </Paper>
       </Grid.Col>
     </Grid>
   )

@@ -56,9 +56,13 @@ const userApi = {
       search_field,
       search
     }
-    const validParams = Object.fromEntries(Object.entries(params).filter(([_, value]) => value !== undefined && value))
+
+    // Filtrar valores no definidos o vacíos (más robusto)
+    const validParams = Object.fromEntries(Object.entries(params).filter(([_, value]) => value !== undefined && value !== ""))
+
     const queryString = new URLSearchParams(validParams).toString()
     const url = `api/v1/users/admin-restaurant/get-all${queryString ? `?${queryString}` : ""}`
+
     return axiosClient.get(url)
   },
 

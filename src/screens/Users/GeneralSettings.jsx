@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { Avatar, Image } from "@mantine/core"
+import { Avatar, Divider, Image } from "@mantine/core"
 import { SETTING_NAVIGATION_ROUTES } from "../../routes"
 import restaurantsApi from "../../api/restaurantApi"
 import { useSelector } from "react-redux"
@@ -66,10 +66,10 @@ export default function GeneralSettings() {
         <SettingsCard title="Negocio" iconName="building" linkPage={SETTING_NAVIGATION_ROUTES.Business_btn.path}>
           <div className="flex flex-row items-center  justify-between">
             <div className="flex flex-row items-center py-4">
-              <Image src={restaurants?.images?.[0]?.location} h={50} w={150} fit="contain" />
+              <Image src={restaurants?.images?.[0]?.location} h={50} w={150} fit="contain" radius='md' />
               <div className="flex flex-col pl-3">
-                <div className="text-sky-950 text-md font-bold leading-snug">{restaurants.name}</div>
-                <div className="text-sky-950 text-xs font-normal leading-tight">{restaurants.socialReason}</div>
+                <div className="text-md font-bold leading-snug">{restaurants.name}</div>
+                <div className="text-xs font-normal leading-tight">{restaurants.socialReason}</div>
               </div>
             </div>
             <div className={"px-2 py-1 rounded-2xl justify-center items-center"} style={{ whiteSpace: "nowrap" }}>
@@ -77,36 +77,36 @@ export default function GeneralSettings() {
             </div>
           </div>
 
-          <div className="border-b border-b-light_selected_element" />
+          <Divider size='md' />
 
           <div className="flex flex-row justify-between items-center py-4 flex-wrap">
             <div className="flex flex-col">
-              <span className="text-sky-950 font-semibold">Correo</span>
+              <span className="font-semibold">Correo</span>
               <span>{restaurants.email}</span>
             </div>
             <div className="flex flex-col">
-              <span className="text-sky-950 font-semibold">Teléfono</span>
+              <span className="font-semibold">Teléfono</span>
               <span>{restaurants.phoneNumber}</span>
             </div>
             <div className="flex flex-col">
-              <span className="text-sky-950 font-semibold">Dirección principal</span>
+              <span className="font-semibold">Dirección principal</span>
               <span>{restaurants.billingAddress}</span>
             </div>
           </div>
 
-          <div className="border-b border-b-light_selected_element flex flex-row items-center w-full" />
+          <Divider size='md' />
 
           <div className="flex flex-row justify-between items-center py-4 flex-wrap">
             <div className="flex flex-col">
-              <span className="text-sky-950 font-semibold">Razón social</span>
+              <span className="font-semibold">Razón social</span>
               <span>{restaurants.socialReason}</span>
             </div>
             <div className="flex flex-col">
-              <span className="text-sky-950 font-semibold">CAI</span>
+              <span className="font-semibold">CAI</span>
               <span>{restaurants.cai}</span>
             </div>
             <div className="flex flex-col">
-              <span className="text-sky-950 font-semibold">RTN</span>
+              <span className="font-semibold">RTN</span>
               <span>{restaurants.rtn}</span>
             </div>
           </div>

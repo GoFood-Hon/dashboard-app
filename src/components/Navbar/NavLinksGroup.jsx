@@ -4,6 +4,7 @@ import { Link } from "react-router-dom"
 import { useState } from "react"
 import classes from "./NavLinksGroup.module.css"
 import { useLocation } from "react-router-dom"
+import { colors } from "../../theme/colors"
 
 export function NavLinksGroup({ icon: Icon, label, link, initiallyOpened, links }) {
   const { pathname } = useLocation()
@@ -33,7 +34,10 @@ export function NavLinksGroup({ icon: Icon, label, link, initiallyOpened, links 
         <Link to={link} className={`${classes.control} ${link === pathname && classes.activeControl}`}>
           <Group gap={0} justify="space-between">
             <Box style={{ display: "flex", alignItems: "center" }}>
-              <ThemeIcon variant="light" color="rgb(253,190,65)" size={30}>
+              <ThemeIcon
+                variant="filled"
+                color={colors.main_app_color}
+                size={30}>
                 <Icon size="1.1rem" />
               </ThemeIcon>
               <Box ml="md">{label}</Box>
@@ -45,7 +49,10 @@ export function NavLinksGroup({ icon: Icon, label, link, initiallyOpened, links 
         <div onClick={handleClick} className={classes.control}>
           <Group gap={0} justify="space-between">
             <Box style={{ display: "flex", alignItems: "center" }}>
-              <ThemeIcon variant="light" color="rgb(253,190,65)" size={30}>
+              <ThemeIcon
+                variant="filled"
+                color={colors.main_app_color}
+                size={30}>
                 <Icon size="1.1rem" />
               </ThemeIcon>
               <Box ml="md">{label}</Box>

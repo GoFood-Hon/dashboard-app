@@ -2,9 +2,11 @@ import React from "react"
 import { Icon } from "./Icon"
 
 export default function Footer() {
+  const date = new Date()
+
   return (
     <div className="w-full flex flex-col items-center gap-4 py-6 bg-white border-2 border-slate-200 text-light-secondary-text text-xs dark:bg-slate-800 dark:border-slate-700 md:px-20 lg:flex-row lg:justify-between">
-      <div className="lg:w-[275px] text-zinc-500 font-normal">® Todos los derechos reservados 2024. Go food</div>
+      <div className="lg:w-[275px] text-zinc-500 font-normal">®Todos los derechos reservados {date.getFullYear()}. Gofood</div>
       <div className="justify-start items-center gap-5 flex">
         <div className="text-zinc-500 font-normal ">Políticas de privacidad</div>
         <div className="text-zinc-500 font-normal">Términos y Condiciones</div>

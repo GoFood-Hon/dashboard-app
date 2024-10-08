@@ -1,4 +1,4 @@
-import { CloseIcon, Grid, Group, Image, SimpleGrid, Text, rem, InputBase, Combobox, useCombobox } from "@mantine/core"
+import { CloseIcon, Grid, Group, Image, SimpleGrid, Text, rem, InputBase, Combobox, useCombobox, Paper } from "@mantine/core"
 import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone"
 import { IconPhoto } from "@tabler/icons-react"
 import React, { useEffect, useState } from "react"
@@ -88,7 +88,7 @@ export default function GeneralInformationForm({ register, errors, setValue, isD
         </div>
       </Grid.Col>
       <Grid.Col span={{ base: 12, md: 4, lg: 4 }}>
-        <div className="flex h-full w-full flex-col items-center justify-center rounded-2xl border p-4">
+        <Paper withBorder radius='md' p='md'>
           {previews.length > 0 ? (
             <div className="w-full">
               <Text size="lg" inline className="mb-5 text-left">
@@ -113,7 +113,7 @@ export default function GeneralInformationForm({ register, errors, setValue, isD
             <Dropzone onDrop={handleDrop} accept={IMAGE_MIME_TYPE}>
               <Group justify="center" gap="xl" mih={220} style={{ pointerEvents: "none" }}>
                 <div className="flex flex-col items-center">
-                  <img className="rounded-xl cursor-pointer max-w-52" src={image} alt="" />
+                  <Image  src={image} alt="" maw={200} />
                   <IconPhoto
                     className={`${image ? "hidden" : ""}`}
                     style={{ width: rem(52), height: rem(52), color: "var(--mantine-color-dimmed)" }}
@@ -130,7 +130,7 @@ export default function GeneralInformationForm({ register, errors, setValue, isD
             </Dropzone>
           )}
           {errors.files && <p className="w-full text-center text-red-500">* Imagen es requerida.</p>}
-        </div>
+        </Paper>
       </Grid.Col>
     </Grid>
   )

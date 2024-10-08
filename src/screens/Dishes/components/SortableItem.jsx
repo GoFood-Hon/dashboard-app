@@ -2,6 +2,8 @@
 import React, { createContext, useContext, useMemo } from "react"
 import { useSortable } from "@dnd-kit/sortable"
 import { CSS } from "@dnd-kit/utilities"
+import { Paper } from "@mantine/core"
+import { IconGripVertical } from "@tabler/icons-react"
 
 const SortableItemContext = createContext({
   attributes: {},
@@ -27,12 +29,14 @@ export function SortableItem({ children, id }) {
 
   return (
     <SortableItemContext.Provider value={context}>
-      <li
-        className="flex justify-between flex-grow items-center p-4 bg-white shadow-list border border-gray-200 rounded-md list-none text-gray-700"
-        ref={setNodeRef}
-        style={style}>
-        {children}
-      </li>
+      <Paper withBorder radius="md">
+        <li
+          className="flex justify-between flex-grow items-center p-4  shadow-list  rounded-md list-none"
+          ref={setNodeRef}
+          style={style}>
+          {children}
+        </li>
+      </Paper>
     </SortableItemContext.Provider>
   )
 }
@@ -46,12 +50,7 @@ export function DragHandle() {
       {...attributes}
       {...listeners}
       ref={ref}>
-      <svg
-        viewBox="0 0 20 20"
-        width="12"
-        className="flex-0 flex-no-grow flex-no-shrink m-auto h-full overflow-visible fill-grey-500">
-        <path d="M7 2a2 2 0 1 0 .001 4.001A2 2 0 0 0 7 2zm0 6a2 2 0 1 0 .001 4.001A2 2 0 0 0 7 8zm0 6a2 2 0 1 0 .001 4.001A2 2 0 0 0 7 14zm6-8a2 2 0 1 0-.001-4.001A2 2 0 0 0 13 6zm0 2a2 2 0 1 0 .001 4.001A2 2 0 0 0 13 8zm0 6a2 2 0 1 0 .001 4.001A2 2 0 0 0 13 14z"></path>
-      </svg>
+      <IconGripVertical size="1.1rem" />
     </button>
   )
 }

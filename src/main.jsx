@@ -15,7 +15,7 @@ import "mapbox-gl/dist/mapbox-gl.css"
 import "@mantine/notifications/styles.css"
 
 const theme = createTheme({
-  fontFamily: 'Space Grotesk, sans-serif',
+  fontFamily: 'Poppins, sans-serif',
 })
 
 ReactDOM.createRoot(document.getElementById("root")).render(

@@ -3,16 +3,15 @@ import React, { useEffect, useState } from "react"
 import {
   Grid,
   Pagination,
-  Switch,
-  rem,
   createTheme,
-  MantineProvider,
   Card,
   Group,
   Text,
-  Badge,
   Image,
-  Button
+  Button,
+  MantineProvider,
+  Switch,
+  rem
 } from "@mantine/core"
 import { useLocation, useNavigate } from "react-router-dom"
 import { useDispatch, useSelector } from "react-redux"
@@ -28,7 +27,7 @@ import {
 import LoadingCircle from "../../components/LoadingCircle"
 import { colors } from "../../theme/colors"
 import { NAVIGATION_ROUTES_RES_ADMIN } from "../../routes"
-import { IconCheck, IconX } from "@tabler/icons-react"
+import { IconX, IconCheck } from "@tabler/icons-react"
 
 export default function Branches() {
   const navigate = useNavigate()
@@ -65,6 +64,7 @@ export default function Branches() {
       })
     )
     setCardsSelected([])
+    console.log(branches)
   }, [page, dispatch, restaurant])
 
   const handleNewItem = () => {
@@ -167,7 +167,7 @@ export default function Branches() {
               <span className="text-base font-medium leading-normal px-1"> de </span>
               <span className="text-base font-bold leading-normal">{totalItems} sucursales</span>
             </div>
-            <Button color={colors.primary_button} onClick={handleNewItem}>
+            <Button color={colors.main_app_color} onClick={handleNewItem}>
               Nueva
             </Button>
           </div>
@@ -235,7 +235,7 @@ export default function Branches() {
               //     </div>
               //   </div>
               // </Grid.Col>
-              <Grid.Col span={4}>
+              <Grid.Col span={4} key={key}>
                 <Card shadow="sm" padding="lg" radius="md" withBorder>
                   <Card.Section>
                     <Image src={item.images?.[0]?.location} h={200} alt={item.name} />
@@ -245,12 +245,28 @@ export default function Branches() {
                     <Text size="lg" fw={700}>
                       {item.name}
                     </Text>
+                    <MantineProvider theme={theme}>
+                      <Switch
+                        checked={item.isActive}
+                        onChange={() => (item.isActive ? handleDisableSelected(item.id) : handleEnableSelected(item.id))}
+                        color={colors.main_app_color}
+                        size="md"
+                        thumbIcon={
+                          item.isActive ? (
+                            <IconCheck style={{ width: rem(12), height: rem(12) }} stroke={3} color={colors.main_app_color} />
+                          ) : (
+                            <IconX style={{ width: rem(12), height: rem(12) }} stroke={3} color={colors.main_app_color} />
+                          )
+                        }
+                      />
+                    </MantineProvider>
                   </Group>
 
                   <Text size="sm" c="dimmed" h={50}>
-                    {item.address}
+                    {item.city + ", " + item.state}
                   </Text>
-                  <Button color={colors.yellow_logo} fullWidth mt="md" radius="md" onClick={() => handleClick(item.id)}>
+
+                  <Button color={colors.main_app_color} fullWidth mt="md" radius="md" onClick={() => handleClick(item.id)}>
                     Ver detalles
                   </Button>
                 </Card>
@@ -269,7 +285,7 @@ export default function Branches() {
           page={page}
           limit={limit}
           onChange={onChangePagination}
-          color={colors.primary_button}
+          color={colors.main_app_color}
         />
       </section>
       {/* <section>

@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from "react"
-import { CloseIcon, Grid, Group, Text, rem } from "@mantine/core"
+import { CloseIcon, Grid, Group, Paper, Text, rem, Image, Container, Flex } from "@mantine/core"
 import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone"
 import { IconPhoto } from "@tabler/icons-react"
-import toast from "react-hot-toast"
-
 import InputField from "../../components/Form/InputField"
 import InputTextAreaField from "../../components/Form/InputTextAreaField"
 import InputSearchCombobox from "../../components/Form/InputSearchCombobox"
@@ -49,22 +47,21 @@ export default function GeneralInformationForm({ register, errors, setValue, isD
   return (
     <Grid>
       <Grid.Col span={{ base: 12, md: 8, lg: 8 }}>
-        <div className="w-full h-full items-center justify-center flex bg-white rounded-2xl border border-blue-100 p-4">
+        <Paper withBorder className="w-full h-full items-center justify-center flex rounded-2xl p-4">
           <div className="flex flex-col w-full justify-evenly h-full">
             <InputField label="Nombre (Obligatorio)" name="name" register={register} errors={errors} className="text-black" />
-
             <InputTextAreaField label="Descripción (Obligatorio)" name="description" register={register} errors={errors} />
           </div>
-        </div>
+        </Paper>
       </Grid.Col>
       <Grid.Col span={{ base: 12, md: 4, lg: 4 }}>
-        <div className="flex flex-col justify-center items-center w-full h-full bg-white rounded-2xl border border-blue-100 p-4">
+        <Paper withBorder radius="md" className="flex flex-col justify-center items-center w-full h-full  rounded-2xl p-4">
           {previews.length > 0 ? (
             <div className="w-full">
               <Text size="lg" inline className="text-left mb-5">
                 Imagen seleccionada:
               </Text>
-              <div className="flex flex-row justify-center items-center rounded-2xl w-full border border-slate-200 my-3">
+              <div className="flex flex-row justify-center items-center rounded-2xl w-full my-3">
                 <div className="flex flex-row w-full items-center gap-2 flex-wrap p-2">
                   {previews}
                   <div className="flex flex-col">
@@ -82,25 +79,27 @@ export default function GeneralInformationForm({ register, errors, setValue, isD
           ) : (
             <Dropzone onDrop={handleDrop} accept={IMAGE_MIME_TYPE}>
               <Group justify="center" gap="xl" mih={220} style={{ pointerEvents: "none" }}>
-                <div className="flex items-center flex-col">
-                  <img className="rounded-xl cursor-pointer max-w-52" src={image} alt="" />
-                  <IconPhoto
-                    className={`${image ? "hidden" : ""}`}
-                    style={{ width: rem(52), height: rem(52), color: "var(--mantine-color-dimmed)" }}
-                    stroke={1.5}
-                  />
-                  <Text className={`${image ? "hidden" : ""} text-center`} size="xl" inline>
-                    Seleccione una imagen
-                  </Text>
-                  <Text className={`${image ? "hidden" : ""} text-center leading-10`} size="sm" c="dimmed" inline mt={7}>
-                    Haga clic o arrastre la imagen del usuario
-                  </Text>
-                </div>
+                <Container maw={280}>
+                  <Flex direction='column' align='center'>
+                    <Image src={image} alt="" style={{ cursor: "pointer" }} radius='md' />
+                    <IconPhoto
+                      className={`${image ? "hidden" : ""}`}
+                      style={{ width: rem(52), height: rem(52), color: "var(--mantine-color-dimmed)" }}
+                      stroke={1.5}
+                    />
+                    <Text className={`${image ? "hidden" : ""} text-center`} size="xl" inline>
+                      Seleccione una imagen
+                    </Text>
+                    <Text className={`${image ? "hidden" : ""} text-center leading-10`} size="sm" c="dimmed" inline mt={7}>
+                      Haga clic o arrastre la imagen del menú
+                    </Text>
+                  </Flex>
+                </Container>
               </Group>
             </Dropzone>
           )}
           {errors.files && <p className="text-red-500 text-center w-full">* Imagen es requerida.</p>}
-        </div>
+        </Paper>
       </Grid.Col>
     </Grid>
   )

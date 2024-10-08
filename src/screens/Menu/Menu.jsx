@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { Container, Button } from "@mantine/core"
+import { Button, Paper } from "@mantine/core"
 import { useDispatch, useSelector } from "react-redux"
 import { useLocation, useNavigate } from "react-router-dom"
 import { NAVIGATION_ROUTES_RES_ADMIN } from "../../routes"
@@ -8,7 +8,6 @@ import { fetchMenus, selectAllMenus, updateMenu, selectMenusStatus, selectMenusE
 import { APP_ROLES } from "../../utils/constants"
 import BackButton from "../Dishes/components/BackButton"
 import { TableSkeleton } from "../../components/Skeletons/TableSkeleton"
-import { IconArrowNarrowLeft } from "@tabler/icons-react"
 import { colors } from "../../theme/colors"
 
 export default function Menu() {
@@ -75,15 +74,17 @@ export default function Menu() {
 
   return (
     <>
-      <section>
-        <div className="flex flex-row justify-between items-center pb-6">
+      <section className="mb-3">
+        <div className="flex flex-row justify-between items-center">
           <BackButton title="Menús" />
           <div className="flex flex-row gap-x-3 items-center justify-between">
             {user.role !== APP_ROLES.branchAdmin && user.role !== APP_ROLES.cashierUser ? (
               <Button
                 text="Nuevo"
-                color={colors.primary_button}
-                style={{visibility: `${user.role !== APP_ROLES.branchAdmin && user.role !== APP_ROLES.cashierUser ? '' : 'hidden'}`}}
+                color={colors.main_app_color}
+                style={{
+                  visibility: `${user.role !== APP_ROLES.branchAdmin && user.role !== APP_ROLES.cashierUser ? "" : "hidden"}`
+                }}
                 onClick={handleNewMenu}>
                 Nuevo
               </Button>
@@ -94,22 +95,17 @@ export default function Menu() {
         </div>
       </section>
       <section>
-        {isLoading ? (
-          <TableSkeleton />
-        ) : menus && menus.length > 0 ? (
-          <Container fluid className="w-full p-4 h-full rounded-2xl">
-            <MenuTable
-              refreshPage={refreshPage}
-              items={menus.map((menu) => {
-                return { ...menu, dishesCount: menu?.Dishes?.length }
-              })}
-              handleDisableSelected={handleDisableSelected}
-              screenType="menuScreen"
-            />
-          </Container>
-        ) : (
-          <div className="text-center mt-4 text-gray-500">No tienes menús creados</div>
-        )}
+        <Paper withBorder p="md" radius="md">
+          <MenuTable
+            refreshPage={refreshPage}
+            items={menus.map((menu) => {
+              return { ...menu, dishesCount: menu?.Dishes?.length }
+            })}
+            handleDisableSelected={handleDisableSelected}
+            screenType="menuScreen"
+            loadingData={isLoading}
+          />
+        </Paper>
       </section>
     </>
   )

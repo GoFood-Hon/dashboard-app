@@ -1,12 +1,12 @@
-import { ActionIcon, Flex, Grid, Switch, Text, Tooltip, rem } from "@mantine/core"
+import { ActionIcon, Flex, Grid, Paper, Switch, Text, ThemeIcon, Tooltip, rem } from "@mantine/core"
 import { TimeInput } from "@mantine/dates"
 import { IconClock } from "@tabler/icons-react"
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useState, useRef } from "react"
 import { colors } from "../../theme/colors"
-import { Icon } from "../../components/Icon"
 import dayjs from "dayjs"
 import utc from "dayjs/plugin/utc"
 import timezone from "dayjs/plugin/timezone"
+import { IconMoon } from "@tabler/icons-react"
 
 dayjs.extend(utc)
 dayjs.extend(timezone)
@@ -14,7 +14,7 @@ dayjs.extend(timezone)
 export default function TimeForm({ setValue, scheduleModels }) {
   const daysOfWeek = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"]
   const daysOfWeekEn = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
-
+  const ref = useRef(null)
   const [alwaysAvailable, setAlwaysAvailable] = useState(false)
   const [switchStatus, setSwitchStatus] = useState(daysOfWeek.reduce((acc, day) => ({ ...acc, [day]: false }), {}))
   const [schedule, setSchedule] = useState(
@@ -25,7 +25,7 @@ export default function TimeForm({ setValue, scheduleModels }) {
   )
 
   const getTimePickerControl = (dayIndex, type) => (
-    <ActionIcon variant="subtle" color="gray" onClick={() => document.getElementById(`${type}-${dayIndex}`).focus()}>
+    <ActionIcon variant="subtle" color="gray" onClick={() => ref?.current?.showPicker()}>
       <IconClock style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
     </ActionIcon>
   )
@@ -72,11 +72,11 @@ export default function TimeForm({ setValue, scheduleModels }) {
   }, [schedule, switchStatus])
 
   return (
-    <div className="w-full h-full bg-white rounded-2xl border border-blue-100 p-4">
+    <div className="w-full h-full rounded-2xl p-4">
       <section>
         <Grid justify="space-between" align="center" grow>
           <Grid.Col span={{ base: 6 }}>
-            <label className="text-sky-950 text-sm font-bold leading-snug mb-2">Habilitar</label>
+            <label className="text-sm font-bold leading-snug mb-2">Habilitar</label>
             <Text className="font-semibold" size="sm" c="dimmed" inline>
               Habilita o deshabilita el horario de la sucursal. El deshabilitar el horario de la sucursal la convierte 24/7
             </Text>
@@ -84,7 +84,7 @@ export default function TimeForm({ setValue, scheduleModels }) {
           <Grid.Col span="auto">
             <Flex justify="flex-end">
               <Tooltip label="Si se deshabilita el horario será 24/7">
-                <Switch checked={alwaysAvailable} color="teal" size="sm" onChange={handleIsAlwaysAvailable} />
+                <Switch checked={alwaysAvailable} color={colors.main_app_color} size="sm" onChange={handleIsAlwaysAvailable} />
               </Tooltip>
             </Flex>
           </Grid.Col>
@@ -94,7 +94,7 @@ export default function TimeForm({ setValue, scheduleModels }) {
                 <div className="flex flex-row items-center h-full w-full">
                   <Switch
                     disabled={alwaysAvailable}
-                    color="teal"
+                    color={colors.main_app_color}
                     size="sm"
                     checked={switchStatus[day]}
                     onChange={() => {
@@ -104,7 +104,7 @@ export default function TimeForm({ setValue, scheduleModels }) {
                       }))
                     }}
                   />
-                  <label className="text-sky-950 text-sm font-bold leading-snug ml-2">{day}</label>
+                  <label className="text-sm font-bold leading-snug ml-2">{day}</label>
                 </div>
               </Grid.Col>
               {switchStatus[day] ? (
@@ -121,6 +121,7 @@ export default function TimeForm({ setValue, scheduleModels }) {
                           De:
                         </Text>
                       }
+                      
                     />
                   </Grid.Col>
                   <Grid.Col key={`${day}-until`} span={{ base: 3 }}>
@@ -140,10 +141,14 @@ export default function TimeForm({ setValue, scheduleModels }) {
                 </>
               ) : (
                 <Grid.Col span={{ base: 6 }}>
-                  <div className="bg-rose-100 rounded-lg border border-red-400 flex w-full items-center p-3">
-                    <Icon icon="moon" size={17} />
-                    <span className="text-red-400 text-xs font-bold">Cerrado</span>
-                  </div>
+                  <Paper withBorder color={colors.main_app_color} py={3} px={6}>
+                    <Flex gap={3} align="center">
+                      <ThemeIcon variant="transparent" color={colors.main_app_color}>
+                        <IconMoon size='1.2rem' />
+                      </ThemeIcon>
+                      <Text size="sm" color={colors.main_app_color}>Cerrado</Text>
+                    </Flex>
+                  </Paper>
                 </Grid.Col>
               )}
             </React.Fragment>

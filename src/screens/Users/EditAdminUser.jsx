@@ -100,7 +100,7 @@ export const EditAdminUser = () => {
     <Accordion.Item key={key} value={item.title}>
       <Accordion.Control>
         <div className="w-full rounded-lg flex-row flex items-center bg-white">
-          <div className="text-slate-50 text-base font-bold bg-sky-950 rounded-full p-2 w-8 h-8 flex items-center justify-center">
+          <div className="text-slate-50 text-base font-bold bg-[#EE364C] rounded-full p-2 w-8 h-8 flex items-center justify-center">
             {key + 1}
           </div>
           <span className="text-sky-950 text-base font-bold  leading-normal ml-4">{item.title}</span>
@@ -115,7 +115,7 @@ export const EditAdminUser = () => {
     <>
       <section>
         <div className="flex flex-row justify-between items-center pb-4">
-          <BackButton title={details.name} />
+          <BackButton title={details.name} show />
         </div>
       </section>
       <form onSubmit={handleSubmit(onSubmit)}>

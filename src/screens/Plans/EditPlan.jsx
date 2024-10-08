@@ -1,19 +1,20 @@
 import React, { useEffect, useState } from "react"
-import { Accordion } from "@mantine/core"
+import { Accordion, Flex, Paper, Button } from "@mantine/core"
 import { useForm } from "react-hook-form"
 import toast from "react-hot-toast"
-import Button from "../../components/Button"
 import plansApi from "../../api/plansApi"
 import { convertToDecimal } from "../../utils"
 import { EditGeneralInformationForm } from "./EditGeneralInformationForm"
 import { useNavigate, useParams } from "react-router-dom"
 import { NAVIGATION_ROUTES_SUPER_ADMIN, SETTING_NAVIGATION_ROUTES } from "../../routes"
 import BackButton from "../Dishes/components/BackButton"
+import { colors } from "../../theme/colors"
 
 export const EditPlan = () => {
   const { planId } = useParams()
   const navigate = useNavigate()
   const [planDetails, setPlanDetails] = useState({})
+  const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
     ;(async () => {
@@ -67,12 +68,13 @@ export const EditPlan = () => {
   const items = accordionStructure.map((item, key) => (
     <Accordion.Item key={key} value={item.title}>
       <Accordion.Control>
-        <div className="w-full rounded-lg flex-row flex items-center bg-white">
-          <div className="text-slate-50 text-base font-bold bg-sky-950 rounded-full p-2 w-8 h-8 flex items-center justify-center">
+        <div className="w-full rounded-lg flex-row flex items-center">
+          <div
+            className={`text-slate-50 text-base font-bold bg-[${colors.main_app_color}] rounded-full p-2 w-8 h-8 flex items-center justify-center`}>
             {key + 1}
           </div>
-          <span className="text-sky-950 text-base font-bold  leading-normal ml-4">{item.title}</span>
-          <span className="text-sky-950 text-base font-normal ml-1">({item?.requirement})</span>
+          <span className="text-base font-bold  leading-normal ml-4">{item.title}</span>
+          <span className="text-base font-normal ml-1">({item?.requirement})</span>
         </div>
       </Accordion.Control>
       <Accordion.Panel>{item.form}</Accordion.Panel>
@@ -99,7 +101,7 @@ export const EditPlan = () => {
   }
 
   const onSubmit = async (data) => {
-    console.log(data)
+    setIsLoading(true)
     try {
       const planId = data.id
 
@@ -124,41 +126,42 @@ export const EditPlan = () => {
       const response = plansApi.updatePlan(planId, transformedData)
       handleResponse(response)
 
-      return response.data 
+      return response.data
     } catch (error) {
       handleError(error)
     }
+    setIsLoading(false)
   }
 
   return (
     <>
       <section>
         <div className="flex flex-row justify-between items-center pb-6">
-          <BackButton title={planDetails?.name} />
+          <BackButton title={planDetails?.name} show />
         </div>
       </section>
       <form onSubmit={handleSubmit(onSubmit)}>
         <section>
-          <Accordion
-            variant="separated"
-            multiple
-            defaultValue={["Información general"]}
-            classNames={{
-              label: "bg-white fill-white"
-            }}>
+          <Accordion variant="separated" multiple defaultValue={["Información general"]}>
             {items}
           </Accordion>
         </section>
         <section>
-          <div className="w-full flex md:justify-end mt-6 md:gap-3 rounded-md bg-white px-8 py-5 border border-gray-200">
-            <div className="md:w-2/3 lg:1/3 sm:w-full flex flex-row justify-end gap-3 sm:flex-wrap md:flex-nowrap">
-              <Button text={"Descartar"} className={"text-xs border border-red-400 text-red-400 bg-white"} />
+          <Paper withBorder radius="md" className="w-full flex md:justify-end mt-6 md:gap-3 rounded-md px-8 py-5">
+            <Flex justify="end" gap="xs">
               <Button
-                text={"Actualizar"}
-                className="w-24 flex h-10 items-center justify-center rounded-md shadow-sm transition-all duration-700 focus:outline-none text-xs bg-sky-950 text-slate-50"
-              />
-            </div>
-          </div>
+                color={colors.main_app_color}
+                variant="outline"
+                onClick={() => {
+                  navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Plans.path)
+                }}>
+                Descartar
+              </Button>
+              <Button loading={isLoading} color={colors.main_app_color} type="submit">
+                Actualizar
+              </Button>
+            </Flex>
+          </Paper>
         </section>
       </form>
     </>

@@ -97,11 +97,11 @@ export default function EditDishScreen() {
     <Accordion.Item key={key} value={item.title}>
       <Accordion.Control>
         <div className="w-full rounded-lg flex-row flex items-center text-white">
-          <div className="text-base font-bold bg-sky-950 rounded-full p-2 w-8 h-8 flex items-center justify-center">
+          <div className="text-base font-bold bg-[#EE364C] rounded-full p-2 w-8 h-8 flex items-center justify-center">
             {key + 1}
           </div>
-          <span className="text-sky-950 text-base font-bold  leading-normal ml-4">{item.title}</span>
-          <span className="text-sky-950 text-base font-normal ml-1">({item?.requirement})</span>
+          <span className="text-base font-bold  leading-normal ml-4">{item.title}</span>
+          <span className="text-base font-normal ml-1">({item?.requirement})</span>
         </div>
       </Accordion.Control>
       <Accordion.Panel>{item.form}</Accordion.Panel>
@@ -138,10 +138,7 @@ export default function EditDishScreen() {
           <Accordion
             variant="separated"
             multiple
-            defaultValue={["Información general", "Pagos", "Preparación", "Adicionales"]}
-            classNames={{
-              label: "bg-white fill-white"
-            }}>
+            defaultValue={["Información general", "Pagos", "Preparación", "Adicionales"]}>
             {items}
           </Accordion>
         </section>

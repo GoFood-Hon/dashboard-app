@@ -105,6 +105,7 @@ const updateFormData = (data, propertyToUpdate) => {
 export const updateRestaurant = createAsyncThunk(
   "restaurant/updateRestaurant",
   async ({ data, propertyToUpdate = "all" }, { dispatch }) => {
+    console.log(data)
     try {
       dispatch(setLoading(true))
 

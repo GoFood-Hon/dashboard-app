@@ -6,6 +6,7 @@ import { Controller, useForm } from "react-hook-form"
 import restaurantsApi from "../../api/restaurantApi"
 import toast from "react-hot-toast"
 import { useSelector } from "react-redux"
+import { colors } from "../../theme/colors"
 
 export default function BankSettings() {
   const user = useSelector((state) => state.user.value)
@@ -78,7 +79,7 @@ export default function BankSettings() {
           </div>
         </section>
         <section>
-          <Tabs defaultValue="banks" color="#0e2946">
+          <Tabs defaultValue="banks" color={colors.main_app_color}>
             <Tabs.List>
               <Tabs.Tab value="banks">Bancos</Tabs.Tab>
               <Tabs.Tab value="api">API</Tabs.Tab>

@@ -1,12 +1,27 @@
 import React, { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
-import { Affix, Badge, Card, Grid, Group, Image, Pagination, Text, Button } from "@mantine/core"
+import {
+  Affix,
+  Card,
+  Grid,
+  Group,
+  Image,
+  Pagination,
+  Text,
+  Button,
+  MantineProvider,
+  Switch,
+  createTheme,
+  rem
+} from "@mantine/core"
 import { useDispatch, useSelector } from "react-redux"
 import ItemCard from "../../components/ItemCard"
 import { fetchRestaurants, setPage, updateRestaurant } from "../../store/features/restaurantSlice"
 import { colors } from "../../theme/colors"
 import { NAVIGATION_ROUTES_SUPER_ADMIN } from "../../routes"
 import BackButton from "../Dishes/components/BackButton"
+import { IconCheck } from "@tabler/icons-react"
+import { IconX } from "@tabler/icons-react"
 
 export default function RestaurantsScreen() {
   const navigate = useNavigate()
@@ -17,6 +32,9 @@ export default function RestaurantsScreen() {
   const page = useSelector((state) => state.restaurants.currentPage)
   const restaurant = useSelector((state) => state?.restaurants?.value?.data)
 
+  const theme = createTheme({
+    cursorType: "pointer"
+  })
   const totalControlBtn = Math.ceil(totalItems / limit)
 
   const [cardsSelected, setCardsSelected] = useState([])
@@ -29,6 +47,7 @@ export default function RestaurantsScreen() {
         order: "DESC"
       })
     )
+    console.log(restaurant)
     setCardsSelected([])
   }, [dispatch, page])
 
@@ -65,23 +84,23 @@ export default function RestaurantsScreen() {
     }
   }
 
-  const handleEnableSelected = async () => {
-    await Promise.all(
-      cardsSelected.map(async (id) => {
-        await dispatch(updateRestaurant({ data: { id, isActive: true }, propertyToUpdate: "isActive" }))
-      })
-    )
-
+  const handleEnableSelected = async (id) => {
+    // await Promise.all(
+    //   cardsSelected.map(async (id) => {
+    //     await dispatch(updateRestaurant({ data: { id, isActive: true }, propertyToUpdate: "isActive" }))
+    //   })
+    // )
+    dispatch(updateRestaurant({ data: { id, isActive: true }, propertyToUpdate: "isActive" }))
     refreshPage()
   }
 
-  const handleDisableSelected = async () => {
-    await Promise.all(
-      cardsSelected.map(async (id) => {
-        await dispatch(updateRestaurant({ data: { id, isActive: false }, propertyToUpdate: "isActive" }))
-      })
-    )
-
+  const handleDisableSelected = async (id) => {
+    // await Promise.all(
+    //   cardsSelected.map(async (id) => {
+    //     await dispatch(updateRestaurant({ data: { id, isActive: false }, propertyToUpdate: "isActive" }))
+    //   })
+    // )
+    dispatch(updateRestaurant({ data: { id, isActive: false }, propertyToUpdate: "isActive" }))
     refreshPage()
   }
 
@@ -96,56 +115,67 @@ export default function RestaurantsScreen() {
   return (
     <>
       <section>
-        <div className="flex flex-row justify-between items-center py-3 w-full">
+        <div className="flex flex-row justify-between items-center pb-4 w-full">
           <BackButton title="Restaurantes" />
           <div className="flex flex-row justify-between">
             <div className="flex flex-row w-full justify-end items-center">
               <div className="flex flex-row mr-4">
-                <span className="text-base font-bold leading-normal">{page === 1 ? 1 : (page - 1) * limit + 1}</span>
-                <span className="text-base font-bold leading-normal">-</span>
+                <span className={`text-base font-bold leading-normal`}>{page === 1 ? 1 : (page - 1) * limit + 1}</span>
+                <span className="text-base font-bold leading-normal space-x-2">-</span>
                 <span className="text-base font-bold leading-normal">
                   {page === 1 ? limit : Math.min(page * limit, totalItems)}
                 </span>
                 <span className="text-base font-medium leading-normal px-1"> de </span>
                 <span className="text-base font-bold leading-normal">{totalItems} restaurantes</span>
               </div>
-              <Button color={colors.yellow_logo} onClick={handleNewItem}>
+              <Button color={colors.main_app_color} onClick={handleNewItem}>
                 Nuevo
               </Button>
             </div>
           </div>
         </div>
       </section>
-      <section className="my-6 w-full">
-        {restaurant && restaurant?.length > 0 ? (
+      <section className="w-full">
+        {restaurant && restaurant.length > 0 ? (
           <Grid>
-            {restaurant?.map((item, key) => (
+            {restaurant.map((item, key) => (
               <Grid.Col span={{ base: 12, md: 4 }} key={key}>
-                {/* <ItemCard
-                  item={item}
-                  index={key}
-                  navigation={true}
-                  cardsSelected={cardsSelected}
-                  handleChangeSelected={handleChangeSelected}
-                  handleClick={handleClick}
-                /> */}
                 <Card shadow="sm" padding="lg" radius="md" withBorder>
-                  <Card.Section >
-                    <Image src={item.images[0].location} h={200} fit="cover" alt="Norway" />
+                  <Card.Section>
+                    {/* Validación para asegurarse de que `item.images` exista y tenga al menos un elemento */}
+                    {item?.images && item.images.length > 0 ? (
+                      <Image src={item.images[0]?.location} h={200} fit="cover" alt={item?.name || "Imagen"} />
+                    ) : (
+                      <Image src="default-image-url.jpg" h={200} fit="cover" alt="Imagen no disponible" />
+                    )}
                   </Card.Section>
 
                   <Group justify="space-between" mt="md" mb="xs">
                     <Text size="lg" fw={700}>
-                      {item.name}
+                      {item?.name}
                     </Text>
+                    <MantineProvider theme={theme}>
+                      <Switch
+                        checked={item?.isActive}
+                        onChange={() => (item?.isActive ? handleDisableSelected(item?.id) : handleEnableSelected(item?.id))}
+                        color={colors.main_app_color}
+                        size="md"
+                        thumbIcon={
+                          item?.isActive ? (
+                            <IconCheck style={{ width: rem(12), height: rem(12) }} stroke={3} color={colors.main_app_color} />
+                          ) : (
+                            <IconX style={{ width: rem(12), height: rem(12) }} stroke={3} color={colors.main_app_color} />
+                          )
+                        }
+                      />
+                    </MantineProvider>
                   </Group>
 
                   <Text size="sm" c="dimmed" h={50}>
-                    {item.billingAddress}
+                    {item?.socialReason}
                   </Text>
 
-                  <Button color={colors.yellow_logo} fullWidth mt="md" radius="md"  onClick={() => handleClick(item.id)}>
-
+                  <Button color={colors.main_app_color} fullWidth mt="md" radius="md" onClick={() => handleClick(item?.id)}>
                     Ver detalles
                   </Button>
                 </Card>
@@ -156,7 +186,8 @@ export default function RestaurantsScreen() {
           <div className="text-center mt-4 text-gray-500">No hay restaurantes para mostrar</div>
         )}
       </section>
-      <section className="flex flex-row justify-between pb-32">
+
+      <section className="flex flex-row justify-between pt-8">
         <div />
         <Pagination
           total={totalControlBtn}
@@ -164,7 +195,8 @@ export default function RestaurantsScreen() {
           limit={limit}
           defaultValue={page}
           onChange={onChangePagination}
-          color={colors.primary_button}
+          color={colors.main_app_color}
+          size="md"
         />
       </section>
       <section>

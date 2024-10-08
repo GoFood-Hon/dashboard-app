@@ -1,12 +1,10 @@
 import React, { useState } from "react"
-import { CloseIcon, Group, Image, Modal, Text, rem, Grid } from "@mantine/core"
+import { CloseIcon, Group, Text, rem, Grid, Paper, Flex, Button } from "@mantine/core"
 import SettingsCard from "../../components/SettingsCard"
 import authApi from "../../api/authApi"
 import InputField from "../../components/Form/InputField"
 import { useForm } from "react-hook-form"
-import Button from "../../components/Button"
 import { useNavigate } from "react-router-dom"
-import { useDisclosure } from "@mantine/hooks"
 import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone"
 import { IconPhoto } from "@tabler/icons-react"
 import { useDispatch, useSelector } from "react-redux"
@@ -14,14 +12,12 @@ import { bytesToMB } from "../../utils"
 import toast from "react-hot-toast"
 import { APP_ROLES } from "../../utils/constants"
 import BackButton from "../Dishes/components/BackButton"
-import { LoaderComponent } from "../../components/LoaderComponent"
+import { colors } from "../../theme/colors"
 
 export default function AccountSettings() {
   const navigate = useNavigate()
   const user = useSelector((state) => state.user.value)
   const [isLoading, setIsLoading] = useState(false)
-  const [imageModalOpened, { open: openImageModal, close: closeImageModal }] = useDisclosure(false)
-  const [formModalOpened, { open: openFormModal, close: closeFormModal }] = useDisclosure(false)
   const dispatch = useDispatch()
 
   const [userData, setUserData] = useState({})
@@ -37,8 +33,6 @@ export default function AccountSettings() {
     defaultValues: async () => {
       try {
         const response = await authApi.getUser()
-
-        console.log(response)
 
         if (response.error) {
           toast.error("Error en la respuesta de la información del usuario")
@@ -182,149 +176,63 @@ export default function AccountSettings() {
                 </Grid>
               </Grid.Col>
               <Grid.Col span={{ base: 12, md: 4, lg: 4 }}>
-                <div className="flex flex-col justify-center items-center w-full h-full rounded-2xl p-4">
+                <Paper withBorder radius="md" h="100%" p="md">
                   {previews.length > 0 ? (
-                    <div className="w-full">
-                      <Text size="lg" inline className="text-left mb-5">
+                    <Flex direction="column" h="100%" justify="center">
+                      <Text size="lg" mb="xs">
                         Imagen seleccionada:
                       </Text>
-                      <div className="flex flex-row justify-center items-center rounded-2xl w-full my-3">
-                        <div className="flex flex-row w-full items-center gap-2 flex-wrap p-2">
-                          {previews}
-                          <div className="flex flex-col">
-                            <Text className="font-semibold italic">{fileInformation?.name}</Text>
-                            <Text className="font-semibold" size="sm" c="dimmed" inline>
-                              {bytesToMB(fileInformation?.size)} MB
-                            </Text>
+                      <Paper withBorder radius="md" p="xs">
+                        <Flex>
+                          <div className="flex flex-row w-full items-center gap-2 flex-wrap p-2">
+                            {previews}
+                            <div className="flex flex-col">
+                              <Text className="font-semibold italic">{fileInformation?.name}</Text>
+                              <Text className="font-semibold" size="sm" c="dimmed" inline>
+                                {bytesToMB(fileInformation?.size)} MB
+                              </Text>
+                            </div>
                           </div>
-                        </div>
-                        <button onClick={deleteImage} className="pr-3">
-                          <CloseIcon size={24} />
-                        </button>
-                      </div>
-                    </div>
+                          <button onClick={deleteImage} className="pr-3">
+                            <CloseIcon size={24} />
+                          </button>
+                        </Flex>
+                      </Paper>
+                    </Flex>
                   ) : (
                     <Dropzone onDrop={handleDrop} accept={IMAGE_MIME_TYPE}>
-                      <Group justify="center" gap="xl" mih={220} style={{ pointerEvents: "none", cursor: "pointer" }}>
-                        <div className="flex items-center flex-col cursor-pointer">
-                          <img className="rounded-xl cursor-pointer" src={userData?.images?.[0]?.location} alt="" />
+                      <Group justify="center" gap="xl" mih={220} style={{ pointerEvents: "none" }}>
+                        <div className="flex items-center flex-col">
                           <IconPhoto
-                            className={`${userData?.images?.[0]?.location ? "hidden" : ""}`}
                             style={{ width: rem(52), height: rem(52), color: "var(--mantine-color-dimmed)" }}
                             stroke={1.5}
                           />
-                          <Text className={`${userData?.images?.[0]?.location ? "hidden" : ""} text-center`} size="xl" inline>
+                          <Text size="xl" inline className="text-center">
                             Seleccione una imagen
                           </Text>
-                          <Text
-                            className={`${userData?.images?.[0]?.location ? "hidden" : ""} text-center leading-10`}
-                            size="sm"
-                            c="dimmed"
-                            inline
-                            mt={7}>
-                            Haga clic o arrastre la imagen del usuario
+                          <Text size="sm" c="dimmed" inline mt={7} className="text-center leading-10">
+                            Haga clic o arrastre la imagen del perfil
                           </Text>
                         </div>
                       </Group>
                     </Dropzone>
                   )}
-                  {errors.files && <p className="text-red-500 text-center w-full">Imagen es requerida.</p>}
-                </div>
+                  {errors.files && <p className="text-red-500 text-center w-full">* Imagen es requerida.</p>}
+                </Paper>
               </Grid.Col>
             </Grid>
           </SettingsCard>
         </div>
-        <Modal
-          opened={imageModalOpened}
-          onClose={closeImageModal}
-          centered
-          size={"md"}
-          radius={"lg"}
-          overlayProps={{
-            backgroundOpacity: 0.55,
-            blur: 3
-          }}>
-          <Image
-            h={"auto"}
-            w="full"
-            fit="contain"
-            src={userData?.images?.[0]?.location}
-            radius={"xl"}
-            fallbackSrc="https://placehold.co/600x400?text=Imagen+no+disponible"
-          />
-        </Modal>
-        <Modal
-          opened={formModalOpened}
-          onClose={closeFormModal}
-          centered
-          size={"2xl"}
-          radius={"lg"}
-          overlayProps={{
-            backgroundOpacity: 0.55,
-            blur: 3
-          }}>
-          <div className="flex flex-col justify-center items-center w-full h-full rounded-2xl p-4">
-            {previews.length > 0 ? (
-              <div className="w-full">
-                <Text size="lg" inline className="text-left mb-5">
-                  Imagen seleccionada:
-                </Text>
-                <div className="flex flex-row justify-center items-center rounded-2xl w-full border border-slate-200 my-3">
-                  <div className="flex flex-row w-full items-center gap-2 flex-wrap p-2">
-                    {previews}
-                    <div className="flex flex-col">
-                      <Text className="font-semibold italic">{fileInformation?.name}</Text>
-                      <Text className="font-semibold" size="sm" c="dimmed" inline>
-                        {bytesToMB(fileInformation?.size)} MB
-                      </Text>
-                    </div>
-                  </div>
-                  <button onClick={deleteImage} className="pr-3">
-                    <CloseIcon size={24} />
-                  </button>
-                </div>
-              </div>
-            ) : (
-              <Dropzone onDrop={handleDrop} accept={IMAGE_MIME_TYPE}>
-                <Group justify="center" gap="xl" mih={220} style={{ pointerEvents: "none" }}>
-                  <div className="flex items-center flex-col">
-                    <IconPhoto style={{ width: rem(52), height: rem(52), color: "var(--mantine-color-dimmed)" }} stroke={1.5} />
-                    <Text size="xl" inline className="text-center">
-                      Seleccione una imagen
-                    </Text>
-                    <Text size="sm" c="dimmed" inline mt={7} className="text-center leading-10">
-                      Haga clic o arrastre la imagen del perfil
-                    </Text>
-                  </div>
-                </Group>
-              </Dropzone>
-            )}
-            {errors.files && <p className="text-red-500 text-center w-full">* Imagen es requerida.</p>}
-          </div>
-        </Modal>
+        <section>
+          <Paper withBorder radius="md" className="w-full flex md:justify-end mt-6 md:gap-3 rounded-md px-8 py-5">
+            <Flex justify="end" gap="xs">
+              <Button loading={isLoading} color={colors.main_app_color} type="submit">
+                Actualizar
+              </Button>
+            </Flex>
+          </Paper>
+        </section>
       </form>
-
-      <section>
-        <div className="w-full flex md:justify-end md:gap-3 rounded-md bg-white px-8 py-5 border border-gray-200">
-          <div className="md:w-2/3 lg:1/3 sm:w-full flex flex-row justify-end gap-3 sm:flex-wrap md:flex-nowrap">
-            <Button
-              text={"Descartar"}
-              className={"text-xs border border-red-400 text-red-400 bg-white"}
-              onClick={() => {
-                navigate(-1)
-              }}
-            />
-            {isLoading ? (
-              <LoaderComponent width={24} size={25} />
-            ) : (
-              <Button
-                text={"Actualizar"}
-                className="w-24 flex h-10 items-center justify-center rounded-md shadow-sm transition-all duration-700 focus:outline-none text-xs bg-sky-950 text-slate-50"
-              />
-            )}
-          </div>
-        </div>
-      </section>
     </>
   )
 }

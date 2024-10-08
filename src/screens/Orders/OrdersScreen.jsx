@@ -5,6 +5,7 @@ import MenuTable from "../Menu/MenuTable"
 import orderApi from "../../api/orderApi"
 import BackButton from "../Dishes/components/BackButton"
 import LoadingCircle from "../../components/LoadingCircle"
+import { showNotification } from "@mantine/notifications"
 
 export default function OrdersScreen() {
   const location = useLocation()
@@ -16,14 +17,21 @@ export default function OrdersScreen() {
       setIsLoading(true)
 
       const response = await orderApi.getAllOrders()
+      console.log(response)
       setOrders(response?.data)
       if (response.error) {
-        toast.error(`Fallo al obtener los últimos pedidos. ${response.message}`, {
+        showNotification({
+          title: "Error",
+          message: response.message,
+          color: "red",
           duration: 7000
         })
       }
     } catch (e) {
-      toast.error(`Fallo al obtener la información de las ordenes. Por favor intente de nuevo. ${e.message}`, {
+      showNotification({
+        title: "Error",
+        message: e.message,
+        color: "red",
         duration: 7000
       })
     } finally {

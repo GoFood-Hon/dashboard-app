@@ -1,17 +1,19 @@
 import React, { useEffect, useState } from "react"
-import { Accordion } from "@mantine/core"
+import { Accordion, Flex, Paper, Button } from "@mantine/core"
 import { useForm } from "react-hook-form"
 import { useNavigate, useParams } from "react-router-dom"
 import { GeneralInformationForm } from "./GeneralInformationForm"
-import Button from "../../components/Button"
 import restaurantsApi from "../../api/restaurantApi"
 import { NAVIGATION_ROUTES_SUPER_ADMIN } from "../../routes"
 import { convertToDecimal } from "../../utils"
-import { LoaderComponent } from "../../components/LoaderComponent"
 import BackButton from "../Dishes/components/BackButton"
 import { showNotification } from "@mantine/notifications"
-import { SelectPlan } from "../Users/SelectPlan"
 import { useSelector } from "react-redux"
+import { colors } from "../../theme/colors"
+import classes from "../../screens/Users/ArticlesCardsGrid.module.css"
+import plansApi from "../../api/plansApi"
+import BookingInformation from "./BookingInformation"
+import { PlanForm } from "../Users/PlanForm"
 
 export const EditRestaurant = () => {
   const { restaurantId } = useParams()
@@ -19,6 +21,8 @@ export const EditRestaurant = () => {
   const [isLoading, setIsLoading] = useState(false)
   const [restaurantDetails, setRestaurantDetails] = useState({})
   const user = useSelector((state) => state.user.value)
+  const [planCancelled, setPlanCancelled] = useState(false)
+  const [newPlan, setNewPlan] = useState({})
 
   useEffect(() => {
     ;(async () => {
@@ -27,10 +31,17 @@ export const EditRestaurant = () => {
       if (details?.phoneNumber?.startsWith("+504")) {
         details.phoneNumber = details.phoneNumber.replace("+504", "")
       }
-      console.log(response)
       setRestaurantDetails(details)
     })()
   }, [])
+
+  const handlePlanCancel = (cancelled) => {
+    setPlanCancelled(cancelled)
+  }
+
+  const handleSelectNewPlan = (planId) => {
+    setNewPlan(planId)
+  }
 
   const {
     register,
@@ -45,32 +56,11 @@ export const EditRestaurant = () => {
   const imageLocation = watch("images[0].location")
   const [isDataCleared, setIsDataCleared] = useState(false)
 
-  // const PlanDetailsCard = ({ plan }) => {
-  //   const { name, price, tax, currency, paymentType, PlanFeatures } = plan
-  
-  //   return (
-  //     <div className="border rounded-lg  p-4  m-4">
-  //       <h1 className="text-lg font-semibold mb-2">{name}</h1>
-  //       <p>
-  //         <span className="font-semibold">Precio:</span> {currency} {price}{" "}
-  //         {paymentType.toLowerCase() === "mensual" ? "mensuales" : "anuales"} (Tasa de interés: {tax}%)
-  //       </p>
-  //       <h2 className="text-md font-semibold mt-4 mb-2">Características:</h2>
-  //       <ul className="list-disc pl-6">
-  //         {PlanFeatures.map((feature) => (
-  //           <li key={feature.id}>
-  //             {feature.name}: {feature.PlanPlanFeatures.quan}{" "}
-  //             {feature.type === "amount" ? "" : feature.PlanPlanFeatures.avai ? "Incluídas" : "No incluídas"}
-  //           </li>
-  //         ))}
-  //       </ul>
-  //     </div>
-  //   )
-  // }
-
   const onSubmit = async (data) => {
     setIsLoading(true)
+
     try {
+      // Crear la data del formulario
       const formData = new FormData()
       formData.append("name", data.name)
       formData.append("email", data.email)
@@ -84,6 +74,8 @@ export const EditRestaurant = () => {
       if (!data.shippingFree) {
         formData.append("shippingPrice", convertToDecimal(data.shippingPrice))
       }
+
+      // Actualizar el restaurante
       const response = await restaurantsApi.updateRestaurant(formData, restaurantId)
 
       if (response.error) {
@@ -96,6 +88,7 @@ export const EditRestaurant = () => {
       } else {
         const updatedRestaurantId = response?.data?.id
 
+        // Subir imagen si se ha proporcionado
         const uploadImage = async (restaurantId, file) => {
           const formDataImage = new FormData()
           formDataImage.append("files", file)
@@ -114,21 +107,101 @@ export const EditRestaurant = () => {
               duration: 7000
             })
           }
-        } else {
-          showNotification({
-            title: "Actualización exitosa",
-            message: `Se actualizó la información de ${response.data.name}`,
-            color: "green",
-            duration: 7000
-          })
         }
-        navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Restaurants.path)
+
+        if (planCancelled && Object.keys(newPlan).length > 0) {
+          // Cancelar el plan existente (si es necesario)
+          try {
+            const cancelPlanResponse = await plansApi.cancelPlan({ restaurantId })
+
+            if (cancelPlanResponse.error) {
+              showNotification({
+                title: "Error",
+                message: cancelPlanResponse.message,
+                color: "red",
+                duration: 5000
+              })
+            } else {
+              // Asignar el nuevo plan solo si la cancelación fue exitosa
+              try {
+                const assignPlanResponse = await plansApi.assignPlan({
+                  restaurantId,
+                  planId: newPlan?.id // Asumiendo que `planId` está en los datos de `data`
+                })
+
+                if (assignPlanResponse.error) {
+                  showNotification({
+                    title: "Error",
+                    message: assignPlanResponse.message,
+                    color: "red",
+                    duration: 5000
+                  })
+                } else {
+                  showNotification({
+                    title: "Actualización exitosa",
+                    message: `Se actualizó la información de ${response.data.name}`,
+                    color: "green",
+                    duration: 7000
+                  })
+                  navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Restaurants.path)
+                }
+              } catch (error) {
+                showNotification({
+                  title: "Error",
+                  message: `Error al actualizar: ${error}`,
+                  color: "red",
+                  duration: 5000
+                })
+              }
+            }
+          } catch (error) {
+            showNotification({
+              title: "Error",
+              message: error?.message,
+              color: "red",
+              duration: 7000
+            })
+          }
+        } else if (!planCancelled && Object.keys(newPlan).length > 0) {
+          // Asignar el nuevo plan solo si la cancelación fue exitosa
+          try {
+            const assignPlanResponse = await plansApi.assignPlan({
+              restaurantId,
+              planId: newPlan?.id // Asumiendo que `planId` está en los datos de `data`
+            })
+
+            if (assignPlanResponse.error) {
+              showNotification({
+                title: "Error",
+                message: assignPlanResponse.message,
+                color: "red",
+                duration: 5000
+              })
+            } else {
+              showNotification({
+                title: "Actualización exitosa",
+                message: `Se actualizó la información de ${response.data.name}`,
+                color: "green",
+                duration: 7000
+              })
+              navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Restaurants.path)
+            }
+          } catch (error) {
+            showNotification({
+              title: "Error",
+              message: `Error al actualizar: ${error}`,
+              color: "red",
+              duration: 5000
+            })
+          }
+        }
       }
+
       setIsLoading(false)
     } catch (error) {
       showNotification({
         title: "Error",
-        message: error,
+        message: error?.message,
         color: "red",
         duration: 7000
       })
@@ -157,18 +230,49 @@ export const EditRestaurant = () => {
           isDataCleared={isDataCleared}
         />
       )
+    },
+    {
+      title: "Datos de reservación",
+      requirement: "Opcional",
+      form: (
+        <BookingInformation
+          register={register}
+          errors={errors}
+          setValue={setValue}
+          control={control}
+          isDataCleared={isDataCleared}
+        />
+      )
+    },
+    {
+      title: "Selección del plan",
+      requirement: "Opcional",
+      form: (
+        <PlanForm
+          planCancelled={planCancelled}
+          newPlan={newPlan}
+          setNewPlan={setNewPlan}
+          classes={classes}
+          colors={colors}
+          restaurantDetails={restaurantDetails}
+          handlePlanCancel={handlePlanCancel}
+          handleSelectNewPlan={handleSelectNewPlan}
+          restaurantId={restaurantId}
+        />
+      )
     }
   ]
 
   const items = accordionStructure.map((item, key) => (
     <Accordion.Item key={key} value={item.title}>
       <Accordion.Control>
-        <div className="w-full rounded-lg flex-row flex items-center bg-white">
-          <div className="text-slate-50 text-base font-bold bg-sky-950 rounded-full p-2 w-8 h-8 flex items-center justify-center">
+        <div className="w-full rounded-lg flex-row flex items-center">
+          <div
+            className={`text-slate-50 text-base font-bold bg-[#EE364C] rounded-full p-2 w-8 h-8 flex items-center justify-center`}>
             {key + 1}
           </div>
-          <span className="text-sky-950 text-base font-bold  leading-normal ml-4">{item.title}</span>
-          <span className="text-sky-950 text-base font-normal ml-1">({item?.requirement})</span>
+          <span className="text-base font-bold  leading-normal ml-4">{item.title}</span>
+          <span className="text-base font-normal ml-1">({item?.requirement})</span>
         </div>
       </Accordion.Control>
       <Accordion.Panel>{item.form}</Accordion.Panel>
@@ -178,7 +282,7 @@ export const EditRestaurant = () => {
   return (
     <>
       <section>
-        <div className="flex flex-row justify-between items-center pb-6">
+        <div className="flex flex-row justify-between items-center pb-4">
           <BackButton title={restaurantDetails?.name} show />
         </div>
       </section>
@@ -187,37 +291,26 @@ export const EditRestaurant = () => {
           <Accordion
             variant="separated"
             multiple
-            defaultValue={["Información general"]}
-            classNames={{
-              label: "bg-white fill-white"
-            }}>
+            defaultValue={["Información general", "Datos de reservación", "Selección del plan"]}>
             {items}
           </Accordion>
         </section>
-        <section className="my-2">
-          {/* <PlanDetailsCard plan={restaurantDetails?.data?.Subscription?.Plan} /> */}
-          <SelectPlan restaurantId={restaurantId} />
-        </section>
-        <section>
-          <div className="w-full flex md:justify-end mt-3 md:gap-3 rounded-md bg-white px-8 py-5 border border-gray-200">
-            <div className="md:w-2/3 lg:1/3 sm:w-full flex flex-row justify-end gap-3 sm:flex-wrap md:flex-nowrap">
+        <section className="mt-2">
+          <Paper withBorder radius="md" className="w-full flex md:justify-end md:gap-3 rounded-md px-8 py-5">
+            <Flex justify="end" gap="xs">
               <Button
-                text={"Descartar"}
-                className={"text-xs border border-red-400 text-red-400 bg-white"}
+                color={colors.main_app_color}
+                variant="outline"
                 onClick={() => {
                   navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Restaurants.path)
-                }}
-              />
-              {isLoading ? (
-                <LoaderComponent width={24} size={25} />
-              ) : (
-                <Button
-                  text={"Actualizar"}
-                  className="w-24 flex h-10 items-center justify-center rounded-md shadow-sm transition-all duration-700 focus:outline-none text-xs bg-sky-950 text-slate-50"
-                />
-              )}
-            </div>
-          </div>
+                }}>
+                Descartar
+              </Button>
+              <Button loading={isLoading} color={colors.main_app_color} type="submit">
+                Actualizar
+              </Button>
+            </Flex>
+          </Paper>
         </section>
       </form>
     </>

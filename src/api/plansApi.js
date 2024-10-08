@@ -38,6 +38,10 @@ const plansApi = {
   assignPlan: (params) => axiosClient.post(`api/v1/plan/subscription/create`, params),
 
   //Cancel active subscription for restaurant (Admin restaurant)
-  cancelPlan: (params) => axiosClient.post('/api/v1/plan/subscription/cancel', params)
+  // cancelPlan: (restaurantId) => axiosClient.delete(`/api/v1/plan/subscription/cancel/${restaurantId}`)
+  // cancelPlan: (params) => axiosClient.delete(`/api/v1/plan/subscription/cancel`, params)
+  cancelPlan: (params) => axiosClient.delete('/api/v1/plan/subscription/cancel', {
+    data: params
+  })  
 }
 export default plansApi

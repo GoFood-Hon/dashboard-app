@@ -1,3 +1,8 @@
+:root {
+  --main-background-admin-color: #ee364b2b;
+  --main-admin-color: #ee364c;
+}
+
 .control {
   cursor: pointer;
   font-weight: 500;
@@ -6,14 +11,15 @@
   padding: var(--mantine-spacing-xs) var(--mantine-spacing-md);
   color: var(--mantine-color-text);
   font-size: var(--mantine-font-size-sm);
-
-  @mixin hover {
-    background-color: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-7));
-    color: light-dark(var(--mantine-color-black), var(--mantine-color-dark-0));
-  }
 }
 
+.control:hover {
+  background-color: var(--main-background-admin-color);
+  transition: transform 200ms ease;
+  color: var(--main-admin-color);
+}
 .activeControl {
+  color: var(--main-admin-color);
   font-weight: 700;
 }
 
@@ -26,17 +32,17 @@
   margin-left: var(--mantine-spacing-xl);
   font-size: var(--mantine-font-size-sm);
   color: light-dark(var(--mantine-color-gray-7), var(--mantine-color-dark-0));
-  border-left: 1px solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
-
-  @mixin hover {
-    background-color: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-7));
-    color: light-dark(var(--mantine-color-black), var(--mantine-color-dark-0));
-  }
+  border-left: 2px solid;
+  border-color: var(--main-background-admin-color);
+}
+.link:hover {
+  background-color: var(--main-background-admin-color);
+  color: var(--main-admin-color);
 }
 
 .activeLink {
   background-color: lightdark(var(--mantine-colors-gray-1), var(--mantine-colors-gray-9));
-  color: lightdark(var(--mantine-colors-white), var(--mantine-colors-black));
+  color: var(--main-admin-color);
 }
 
 .chevron {

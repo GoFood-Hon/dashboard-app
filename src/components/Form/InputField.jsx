@@ -1,6 +1,7 @@
 import React, { useState } from "react"
 import { ErrorMessage } from "./ErrorMessage"
 import { Icon } from "../Icon"
+import { Input } from "@mantine/core"
 
 export default function InputField({
   label,
@@ -22,13 +23,20 @@ export default function InputField({
 
   return (
     <React.Fragment>
-      <label className="text-sky-950 text-sm font-bold leading-snug">{label}</label>
+      <label className=" text-sm font-bold leading-snug">{label}</label>
 
+      {/* <Input.Wrapper withAsterisk style={{ outline: "none" }} size="" label={label} error={errors[name]}>
+        <Input
+          style={{ outline: "none" }}
+          type={type === "password" ? (showPassword ? "text" : "password") : type}
+          value={value}
+          onChange={onChange}
+          placeholder={placeholder}
+        />
+      </Input.Wrapper> */}
       <div className="flex items-center justify-center relative">
         {countryPrefix && (
-          <div className="text-sky-900 font-bold text-sm mr-2 py-3 text-center border rounded-md h-full min-w-[4rem]">
-            {countryPrefix}
-          </div>
+          <div className="font-bold text-sm mr-2 py-3 text-center border rounded-md h-full min-w-[4rem]">{countryPrefix}</div>
         )}
         <input
           className={`${

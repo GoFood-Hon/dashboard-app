@@ -41,7 +41,7 @@ export const NewAdminUser = () => {
     <Accordion.Item key={key} value={item.title}>
       <Accordion.Control>
         <div className="flex w-full flex-row items-center rounded-lg bg-white">
-          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-sky-950 p-2 text-base font-bold text-slate-50">
+          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#EE364C] p-2 text-base font-bold text-slate-50">
             {key + 1}
           </div>
           <span className="ml-4 text-base font-bold  leading-normal text-sky-950">{item.title}</span>
@@ -110,7 +110,7 @@ export const NewAdminUser = () => {
       <form onSubmit={handleSubmit(onSubmit)}>
         <section>
           <div className="xs:gap-3 flex flex-row flex-wrap items-center justify-between pb-4">
-            <BackButton title="Nuevo administrador" />
+            <BackButton title="Nuevo administrador" show />
           </div>
         </section>
         <section>

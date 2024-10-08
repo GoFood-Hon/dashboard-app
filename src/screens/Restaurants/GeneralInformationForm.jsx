@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react"
-import { Checkbox, CloseIcon, Grid, Group, Text, rem } from "@mantine/core"
+import { Checkbox, CloseIcon, Container, Flex, Grid, Group, Paper, Text, rem, Image } from "@mantine/core"
 import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone"
 import { IconPhoto } from "@tabler/icons-react"
-import toast from "react-hot-toast"
 import InputField from "../../components/Form/InputField"
 import { colors } from "../../theme/colors"
 import { bytesToMB } from "../../utils"
@@ -55,97 +54,107 @@ export const GeneralInformationForm = ({ register, errors, setValue, isDataClear
   return (
     <Grid>
       <Grid.Col span={{ base: 12, md: 8, lg: 8 }}>
-        <Grid>
-          <Grid.Col span={{ base: 12, md: 6 }}>
-            <InputField label="Nombre del restaurante" name="name" register={register} errors={errors} className="text-black" />
-          </Grid.Col>
-          <Grid.Col span={{ base: 12, md: 6 }}>
-            <InputField label="Correo electrónico" name="email" register={register} errors={errors} className="text-black" />
-          </Grid.Col>
-          <Grid.Col span={{ base: 12, md: 6 }}>
-            <InputField
-              label="Teléfono (Obligatorio)"
-              name="phoneNumber"
-              countryPrefix="+504"
-              register={register}
-              errors={errors}
-              className="text-black"
-            />
-          </Grid.Col>
-          <Grid.Col span={{ base: 12, md: 6 }}>
-            <InputField label="Razón social" name="socialReason" register={register} errors={errors} />
-          </Grid.Col>
-          <Grid.Col span={{ base: 12, md: 6 }}>
-            <InputField label="RTN" name="rtn" register={register} errors={errors} />
-          </Grid.Col>
-          <Grid.Col span={{ base: 12, md: 6 }}>
-            <InputField label="CAI" name="cai" register={register} errors={errors} />
-          </Grid.Col>
-          <Grid.Col span={{ base: 6 }}>
-            <InputField label="Dirección de facturación" name="billingAddress" register={register} errors={errors} />
-          </Grid.Col>
-          <Grid.Col span={{ base: 6 }}>
-            <InputField label="Rango de distancia de entrega" name="maxDistanceShipping" register={register} errors={errors} />
-          </Grid.Col>
-          <Grid.Col span={{ base: 12, md: 6 }}>
-            <Checkbox
-              mt={"md"}
-              labelPosition="left"
-              label={<div className="text-sky-950 text-sm font-bold leading-snug">¿Cuenta con delivery gratis?</div>}
-              color={colors.primary_button}
-              checked={isFreeDelivery}
-              size="sm"
-              onChange={handleHasFreeDelivery}
-            />
-          </Grid.Col>
-
-          {isFreeDelivery ? null : (
-            <Grid.Col span={{ base: 6 }}>
-              <InputField label="Precio del envío" name="shippingPrice" register={register} errors={errors} />
+        <Paper withBorder radius="md" p="xs">
+          <Grid>
+            <Grid.Col span={{ base: 12, md: 6 }}>
+              <InputField label="Nombre del restaurante" name="name" register={register} errors={errors} className="text-black" />
             </Grid.Col>
-          )}
-        </Grid>
+            <Grid.Col span={{ base: 12, md: 6 }}>
+              <InputField label="Correo electrónico" name="email" register={register} errors={errors} className="text-black" />
+            </Grid.Col>
+            <Grid.Col span={{ base: 12, md: 6 }}>
+              <InputField
+                label="Teléfono (Obligatorio)"
+                name="phoneNumber"
+                countryPrefix="+504"
+                register={register}
+                errors={errors}
+                className="text-black"
+              />
+            </Grid.Col>
+            <Grid.Col span={{ base: 12, md: 6 }}>
+              <InputField label="Razón social" name="socialReason" register={register} errors={errors} />
+            </Grid.Col>
+            <Grid.Col span={{ base: 12, md: 6 }}>
+              <InputField label="RTN" name="rtn" register={register} errors={errors} />
+            </Grid.Col>
+            <Grid.Col span={{ base: 12, md: 6 }}>
+              <InputField label="CAI" name="cai" register={register} errors={errors} />
+            </Grid.Col>
+            <Grid.Col span={{ base: 6 }}>
+              <InputField label="Dirección de facturación" name="billingAddress" register={register} errors={errors} />
+            </Grid.Col>
+            <Grid.Col span={{ base: 6 }}>
+              <InputField label="Rango de distancia de entrega" name="maxDistanceShipping" register={register} errors={errors} />
+            </Grid.Col>
+            <Grid.Col span={{ base: 12, md: 6 }}>
+              <Checkbox
+                mt={"md"}
+                labelPosition="left"
+                label={<div className="text-sm font-bold leading-snug">¿Cuenta con delivery gratis?</div>}
+                color={colors.main_app_color}
+                checked={isFreeDelivery}
+                size="sm"
+                onChange={handleHasFreeDelivery}
+              />
+            </Grid.Col>
+
+            {isFreeDelivery ? null : (
+              <Grid.Col span={{ base: 6 }}>
+                <InputField label="Precio del envío" name="shippingPrice" register={register} errors={errors} />
+              </Grid.Col>
+            )}
+          </Grid>
+        </Paper>
       </Grid.Col>
       <Grid.Col span={{ base: 12, md: 4, lg: 4 }}>
-        <div className="flex flex-col justify-center items-center w-full h-full bg-white rounded-2xl border border-blue-100 p-4">
-          {previews.length > 0 ? (
-            <div className="w-full">
-              <Text size="lg" inline className="text-left mb-5">
-                Imagen seleccionada:
-              </Text>
-              <div className="flex flex-row justify-center items-center rounded-2xl w-full border border-slate-200 my-3">
-                <div className="flex flex-row w-full items-center gap-2 flex-wrap p-2">
-                  {previews}
-                  <div className="flex flex-col">
-                    <Text className="font-semibold italic">{fileInformation?.name}</Text>
-                    <Text className="font-semibold" size="sm" c="dimmed" inline>
-                      {bytesToMB(fileInformation?.size)} MB
-                    </Text>
+        <Paper withBorder radius="md" h="100%">
+          <Flex align="center" h="100%" justify="center">
+            {previews.length > 0 ? (
+              <div className="w-full">
+                <Text size="lg" inline className="text-left mb-5">
+                  Imagen seleccionada:
+                </Text>
+                <div className="flex flex-row justify-center items-center rounded-2xl w-full border border-slate-200 my-3">
+                  <div className="flex flex-row w-full items-center gap-2 flex-wrap p-2">
+                    {previews}
+                    <div className="flex flex-col">
+                      <Text className="font-semibold italic">{fileInformation?.name}</Text>
+                      <Text className="font-semibold" size="sm" c="dimmed" inline>
+                        {bytesToMB(fileInformation?.size)} MB
+                      </Text>
+                    </div>
                   </div>
+                  <button onClick={deleteImage} className="pr-3">
+                    <CloseIcon size={24} />
+                  </button>
                 </div>
-                <button onClick={deleteImage} className="pr-3">
-                  <CloseIcon size={24} />
-                </button>
               </div>
-            </div>
-          ) : (
-            <Dropzone onDrop={handleDrop} accept={IMAGE_MIME_TYPE}>
-              <Group justify="center" gap="xl" mih={220} style={{ pointerEvents: "none", cursor: 'pointer' }}>
-                <div className="flex items-center flex-col cursor-pointer">
-                  <img className="rounded-xl cursor-pointer" src={image} alt="" />
-                  <IconPhoto className={`${image ? 'hidden' : ''}`} style={{ width: rem(52), height: rem(52), color: "var(--mantine-color-dimmed)" }} stroke={1.5} />
-                  <Text className={`${image ? 'hidden' : ''} text-center`} size="xl" inline>
-                    Seleccione una imagen
-                  </Text>
-                  <Text className={`${image ? 'hidden' : ''} text-center leading-10`} size="sm" c="dimmed" inline mt={7} >
-                    Haga clic o arrastre la imagen del usuario
-                  </Text>
-                </div>
-              </Group>
-            </Dropzone>
-          )}
+            ) : (
+              <Dropzone onDrop={handleDrop} accept={IMAGE_MIME_TYPE}>
+                <Group justify="center" gap="xl" align="center" style={{ pointerEvents: "none" }}>
+                  <Container maw={400}>
+                    <Flex direction="column" align="center">
+                      <Image src={image} radius="md" alt="" style={{ cursor: "pointer" }} />
+                      <IconPhoto
+                        className={`${image ? "hidden" : ""}`}
+                        style={{ width: rem(52), height: rem(52), color: "var(--mantine-color-dimmed)" }}
+                        stroke={1.5}
+                      />
+                      <Text className={`${image ? "hidden" : ""} text-center`} size="xl" inline>
+                        Seleccione una imagen
+                      </Text>
+                      <Text className={`${image ? "hidden" : ""} text-center leading-10`} size="sm" c="dimmed" inline mt={7}>
+                        Haga clic o arrastre la imagen del restaurante
+                      </Text>
+                    </Flex>
+                  </Container>
+                </Group>
+              </Dropzone>
+            )}
+          </Flex>
           {errors.files && <p className="text-red-500 text-center w-full">* Imagen es requerida.</p>}
-        </div>
+        </Paper>
       </Grid.Col>
     </Grid>
   )

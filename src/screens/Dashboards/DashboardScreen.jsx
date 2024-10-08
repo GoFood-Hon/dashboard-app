@@ -96,7 +96,7 @@ export const DashboardScreen = () => {
           </Text>
         </Group>
 
-        <Text fz="xs" c="dimmed" mt={7}>
+        <Text fz="sm" c="dimmed" mt={7}>
           {stat.text}
         </Text>
       </Paper>
@@ -106,54 +106,5 @@ export const DashboardScreen = () => {
     <div>
       <SimpleGrid cols={{ base: 1, xs: 2, md: 4 }}>{stats}</SimpleGrid>
     </div>
-  )
-
-  return (
-    <Grid grow>
-      <Grid.Col span={{ base: 12, md: 6, lg: 3 }}>
-        <div className="w-full bg-white rounded-2xl shadow border border-blue-100 flex flex-col p-6 ">
-          <div className="p-2 mb-4 bg-light_selected_element rounded-full w-fit">
-            <Icon icon={"money"} size={17} />
-          </div>
-          <span className="text-lg font-bold mb-1">{getFormattedHNL(dailySales)}</span>
-          <div className="flex flex-row text-xs justify-between">
-            <span className="text-secondary_text">Ventas diarias totales</span>
-          </div>
-        </div>
-      </Grid.Col>
-      <Grid.Col span={{ base: 12, md: 6, lg: 3 }}>
-        <div className="w-full bg-white rounded-2xl shadow border border-blue-100 flex flex-col p-6">
-          <div className="p-2 mb-4 bg-light_selected_element rounded-full w-fit">
-            <Icon icon={"bag"} size={17} />
-          </div>
-          <span className="text-lg font-bold mb-1">{dailyOrders}</span>
-          <div className="flex flex-row text-xs justify-between">
-            <span className="text-secondary_text">Total pedidos diarios</span>
-          </div>
-        </div>
-      </Grid.Col>
-      <Grid.Col span={{ base: 12, md: 6, lg: 3 }}>
-        <div className="w-full bg-white rounded-2xl shadow border border-blue-100 flex flex-col p-6">
-          <div className="p-2 mb-4 bg-light_selected_element rounded-full w-fit">
-            <Icon icon={"money"} size={17} />
-          </div>
-          <span className="text-lg font-bold mb-1">{getFormattedHNL(dailyTicket)}</span>
-          <div className="flex flex-row text-xs justify-between">
-            <span className="text-secondary_text">Tickets según venta diaria.</span>
-          </div>
-        </div>
-      </Grid.Col>
-      <Grid.Col span={{ base: 12, md: 6, lg: 3 }}>
-        <div className="w-full bg-white rounded-2xl shadow border border-blue-100 flex flex-col p-6">
-          <div className="p-2 mb-4 bg-light_selected_element rounded-full w-fit">
-            <Icon icon={"users"} size={17} />
-          </div>
-          <span className="text-lg font-bold mb-1">{totalClients}</span>
-          <div className="flex flex-row text-xs justify-between">
-            <span className="text-secondary_text">Total nuevos usuarios.</span>
-          </div>
-        </div>
-      </Grid.Col>
-    </Grid>
   )
 }

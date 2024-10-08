@@ -1,9 +1,9 @@
 import React, { useState } from "react"
-import { MantineProvider, createTheme, Button, Checkbox, Grid, Input, ScrollArea } from "@mantine/core"
+import { MantineProvider, createTheme, Button, Checkbox, Grid, Input, ScrollArea, Paper } from "@mantine/core"
 import { IconPlus, IconX } from "@tabler/icons-react"
 import toast from "react-hot-toast"
 import { colors } from "../../theme/colors"
-import { convertToDecimal } from "../../utils"
+import { convertToDecimal, getFormattedHNL } from "../../utils"
 import { IconArrowNarrowRight } from "@tabler/icons-react"
 
 export const AdditionalForm = ({ additional, setAdditional }) => {
@@ -84,21 +84,20 @@ export const AdditionalForm = ({ additional, setAdditional }) => {
   return (
     <Grid>
       <Grid.Col span={{ base: 12, md: 7 }}>
-        <div className="w-full h-full p-6 bg-white rounded-lg border border-blue-100">
+        <Paper withBorder radius='md' className="w-full h-full p-6 rounded-lg">
           <span className="text-sm font-semibold w-full">Titulo</span>
           <div>
             <Input
               name="title"
               value={newAdditionalTitle}
               onChange={(e) => setNewAdditionalTitle(e.target.value)}
-              className="text-black"
             />
             <MantineProvider theme={theme}>
               <Checkbox
                 mt={"md"}
                 labelPosition="left"
-                label={<div className="text-sky-950 text-sm font-bold leading-snug">¿Es requerido?</div>}
-                color={colors.primary_button}
+                label={<div className="text-sm font-bold leading-snug">¿Es requerido?</div>}
+                color={colors.main_app_color}
                 checked={isRequired}
                 size="sm"
                 className="mb-4"
@@ -117,7 +116,7 @@ export const AdditionalForm = ({ additional, setAdditional }) => {
               </>
             ) : null}
           </div>
-          <div className="p-2 my-4 bg-white rounded-lg border border-blue-100">
+          <Paper withBorder className="p-2 my-4 rounded-lg">
             {additionalItem?.map((item, index) => (
               <div key={index}>
                 <div className="flex w-full gap-2 my-2 items-center justify-between">
@@ -146,8 +145,8 @@ export const AdditionalForm = ({ additional, setAdditional }) => {
                 <Checkbox
                   mt={"md"}
                   labelPosition="left"
-                  label={<div className="text-sky-950 text-sm font-bold leading-snug ">¿Es gratuito?</div>}
-                  color={colors.primary_button}
+                  label={<div className="text-sm font-bold leading-snug ">¿Es gratuito?</div>}
+                  color={colors.main_app_color}
                   checked={item.isFree}
                   size="sm"
                   className="mb-4"
@@ -158,28 +157,28 @@ export const AdditionalForm = ({ additional, setAdditional }) => {
                 />
               </div>
             ))}
-            <Button className="my-2" color={colors.primary_button} leftSection={<IconPlus size={14} />} onClick={handleAddItem}>
+            <Button className="my-2" color={colors.main_app_color} leftSection={<IconPlus size={14} />} onClick={handleAddItem}>
               Nuevo
             </Button>
-          </div>
+          </Paper>
           <br />
           <div className="w-full flex items-center justify-end">
-            <Button className="" color={colors.primary_button} leftSection={<IconPlus size={14} />} onClick={handleNewCategory}>
+            <Button className="" color={colors.main_app_color} leftSection={<IconPlus size={14} />} onClick={handleNewCategory}>
               Añadir adicional
             </Button>
           </div>
-        </div>
+        </Paper>
       </Grid.Col>
 
       <Grid.Col span={{ base: 12, md: 5 }}>
-        <div className="w-full h-full p-6 bg-white rounded-lg border border-blue-100">
+        <Paper withBorder radius='md' className="w-full h-full p-6 rounded-lg">
           <span className="text-sm font-semibold">Adicionales del platillo:</span>
           <ScrollArea w={"100%"} h={360}>
             <ul>
               {additional.length > 0 ? (
                 additional?.map((category, index) => (
-                  <li
-                    key={index}
+                  <Paper
+                    key={index} withBorder radius='md'
                     className="p-2 my-4 bg-white rounded-lg border border-blue-100 flex flex-row justify-between items-center">
                     <article className="w-full">
                       <div className="flex items-center justify-between mb-1">
@@ -203,14 +202,14 @@ export const AdditionalForm = ({ additional, setAdditional }) => {
                         ))}
                       </ul>
                     </article>
-                  </li>
+                  </Paper>
                 ))
               ) : (
                 <li className="mt-4 text-gray-300">Los adicionales se mostrarán aquí</li>
               )}
             </ul>
           </ScrollArea>
-        </div>
+        </Paper>
       </Grid.Col>
     </Grid>
   )

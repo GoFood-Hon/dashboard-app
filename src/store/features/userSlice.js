@@ -4,35 +4,40 @@ import { showNotification } from "@mantine/notifications"
 import { ITEMS_PER_PAGE } from "../../utils/paginationConfig"
 
 // Thunk para obtener los usuarios administradores
-export const fetchAdminUsers = createAsyncThunk("user/fetchAdminUsers", async ({ limit, page }, { rejectWithValue }) => {
-  try {
-    const response = await userApi.getAdminUsers({
-      limit,
-      page,
-      order: "DESC"
-    })
+export const fetchAdminUsers = createAsyncThunk(
+  "user/fetchAdminUsers",
+  async ({ limit, page, search_field, search }, { rejectWithValue }) => {
+    try {
+      const response = await userApi.getAdminUsers({
+        limit,
+        page,
+        order: "DESC",
+        search_field,
+        search
+      })
 
-    if (response.error) {
+      if (response.error) {
+        showNotification({
+          title: "Error",
+          message: response.message,
+          color: "red",
+          duration: 7000
+        })
+        return rejectWithValue(response.error)
+      }
+
+      return { data: response.data, results: response.results, page }
+    } catch (error) {
       showNotification({
         title: "Error",
-        message: response.message,
+        message: error.message || error,
         color: "red",
         duration: 7000
       })
-      return rejectWithValue(response.error)
+      return rejectWithValue(error.message)
     }
-
-    return { data: response.data, results: response.results, page } // Regresamos la data, total de resultados y la página
-  } catch (error) {
-    showNotification({
-      title: "Error",
-      message: error,
-      color: "red",
-      duration: 7000
-    })
-    return rejectWithValue(error.message)
   }
-})
+)
 
 // Estado inicial
 const initialState = {

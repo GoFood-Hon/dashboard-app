@@ -10,8 +10,8 @@ export default function InputCheckbox({ label, name, register }) {
         classNames={{ input: "accent-sky-950 cursor-pointer " }}
         mt={"md"}
         labelPosition="left"
-        label={<div className="text-sky-950 text-sm font-bold leading-snug">¿Incluye bebida?</div>}
-        color={colors.primary_button}
+        label={<div className="text-sm font-bold leading-snug">¿Incluye bebida?</div>}
+        color={colors.main_app_color}
       />
     </div>
   )

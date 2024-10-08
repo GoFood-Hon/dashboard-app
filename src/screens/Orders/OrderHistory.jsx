@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react"
-import toast from "react-hot-toast"
 import BaseLayout from "../../components/BaseLayout"
 import MenuTable from "../Menu/MenuTable"
 import orderApi from "../../api/orderApi"
 import BackButton from "../Dishes/components/BackButton"
 import { useSelector } from "react-redux"
 import LoadingCircle from "../../components/LoadingCircle"
+import { showNotification } from "@mantine/notifications"
 
 export const OrderHistory = () => {
   const user = useSelector((state) => state.user.value)
@@ -18,14 +18,20 @@ export const OrderHistory = () => {
       setIsLoading(true)
       const response = await orderApi.getKitchenOrders()
       if (response.error) {
-        toast.error(`Fallo al obtener el historial pedidos. ${response.message}`, {
+        showNotification({
+          title: "Error",
+          message: response.message,
+          color: "red",
           duration: 7000
         })
       } else {
         setOrders(response?.data)
       }
     } catch (e) {
-      toast.error(`Fallo al obtener el historial de las ordenes. Por favor intente de nuevo. ${e.message}`, {
+      showNotification({
+        title: "Error",
+        message: e.message,
+        color: "red",
         duration: 7000
       })
     } finally {

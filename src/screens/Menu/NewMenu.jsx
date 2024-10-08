@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react"
 import { useNavigate } from "react-router-dom"
-import { Accordion, Button } from "@mantine/core"
+import { Accordion, Button, Flex, Paper } from "@mantine/core"
 import { useForm } from "react-hook-form"
 import { useDispatch, useSelector } from "react-redux"
 import { yupResolver } from "@hookform/resolvers/yup"
@@ -12,8 +12,6 @@ import { newMenuValidation } from "../../utils/inputRules"
 import { createMenu } from "../../store/features/menuSlice"
 import BackButton from "../Dishes/components/BackButton"
 import { NAVIGATION_ROUTES_RES_ADMIN } from "../../routes"
-import BaseLayout from "../../components/BaseLayout"
-import { LoaderComponent } from "../../components/LoaderComponent"
 import { colors } from "../../theme/colors"
 
 export default function NewMenu() {
@@ -77,7 +75,7 @@ export default function NewMenu() {
         <ComplementsForm
           setValue={setValue}
           isDataCleared={isDataCleared}
-          defaultMessage="Por favor seleccione platillos para este menu"
+          defaultMessage="Por favor seleccione platillos para este menú"
           itemsAvailableLabel="Platillos disponibles"
           data={dishes}
           name={"dishes"}
@@ -89,12 +87,13 @@ export default function NewMenu() {
   const items = accordionStructure.map((item, key) => (
     <Accordion.Item key={key} value={item.title}>
       <Accordion.Control>
-        <div className="w-full rounded-lg flex-row flex items-center bg-white">
-          <div className="text-slate-50 text-base font-bold bg-sky-950 rounded-full p-2 w-8 h-8 flex items-center justify-center">
+        <div className="w-full rounded-lg flex-row flex items-center">
+          <div
+            className={`text-slate-50 text-base font-bold bg-[${colors.main_app_color}] rounded-full p-2 w-8 h-8 flex items-center justify-center`}>
             {key + 1}
           </div>
-          <span className="text-sky-950 text-base font-bold  leading-normal ml-4">{item.title}</span>
-          <span className="text-sky-950 text-base font-normal ml-1">({item?.requirement})</span>
+          <span className="text-base font-bold  leading-normal ml-4">{item.title}</span>
+          <span className="text-base font-normal ml-1">({item?.requirement})</span>
         </div>
       </Accordion.Control>
       <Accordion.Panel>{item.form}</Accordion.Panel>
@@ -116,29 +115,23 @@ export default function NewMenu() {
   }
 
   return (
-    <BaseLayout>
+    <>
       <form onSubmit={handleSubmit(onSubmit)}>
         <section>
-          <div className="flex flex-row justify-between items-center pb-6 flex-wrap xs:gap-3">
+          <div className="flex flex-row justify-between items-center pb-4 flex-wrap xs:gap-3">
             <BackButton title="Nuevo menú" show />
           </div>
         </section>
         <section>
-          <Accordion
-            variant="separated"
-            multiple
-            defaultValue={["Información general", "Platillos"]}
-            classNames={{
-              label: "bg-white fill-white"
-            }}>
+          <Accordion variant="separated" multiple defaultValue={["Información general", "Platillos"]}>
             {items}
           </Accordion>
         </section>
         <section>
-          <div className="w-full flex md:justify-end mt-6 md:gap-3 rounded-md bg-white px-8 py-5 border border-gray-200">
-            <div className="md:w-2/3 lg:1/3 sm:w-full flex flex-row justify-end gap-3 sm:flex-wrap md:flex-nowrap">
+          <Paper withBorder radius="md" className="w-full flex md:justify-end mt-3 md:gap-3 rounded-md px-8 py-5">
+            <Flex justify="end" gap="xs">
               <Button
-                color="#EE364C"
+                color={colors.main_app_color}
                 variant="outline"
                 onClick={() => {
                   reset()
@@ -146,13 +139,17 @@ export default function NewMenu() {
                 }}>
                 Descartar
               </Button>
-              <Button color={colors.primary_button} type="submit" loading={isLoading}>
+              <Button
+                loading={isLoading}
+                color={colors.main_app_color}
+                type="submit"
+                className="w-24 text-center flex h-10 items-center justify-center rounded-md shadow-sm transition-all duration-700 focus:outline-none text-xs bg-sky-950 text-slate-50">
                 Guardar
               </Button>
-            </div>
-          </div>
+            </Flex>
+          </Paper>
         </section>
       </form>
-    </BaseLayout>
+    </>
   )
 }

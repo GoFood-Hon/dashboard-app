@@ -127,7 +127,7 @@ export default function NewUser() {
       <form onSubmit={handleSubmit(onSubmit)}>
         <section>
           <div className="flex flex-row justify-between items-center pb-6 flex-wrap xs:gap-3">
-            <BackButton title="Nuevo usuario" />
+            <BackButton title="Nuevo usuario" show />
           </div>
         </section>
         <section>
