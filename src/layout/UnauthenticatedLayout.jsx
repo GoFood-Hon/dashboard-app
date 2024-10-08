@@ -8,20 +8,6 @@ import forkImage from "../assets/images/fork.png"
 import background from "../assets/images/background-gofood.webp"
 import authUtils from "../utils/authUtils"
 import LoadingCircle from "../components/LoadingCircle"
-import classes from "../components/Auth/AuthenticationImage.module.css"
-import {
-  Paper,
-  Title,
-  TextInput,
-  PasswordInput,
-  Checkbox,
-  Button,
-  Anchor,
-  Text,
-  Image,
-  BackgroundImage,
-  Box
-} from "@mantine/core"
 
 export default function UnauthenticatedLayout() {
   const location = useLocation()
@@ -61,7 +47,7 @@ export default function UnauthenticatedLayout() {
       <div className="w-full xs:h-fit xs:rounded-2xl xs:drop-shadow-none xs:shadow-none sm:w-5/6 md:w-3/6 lg:w-5/6 lg:max-w-[1100px] xl:w-5/6 2xl:w-5/6 lg:justify-between bg-light_bg_child rounded-2xl dark:bg-slate-800 dark:border-slate-700 md:drop-shadow-xl md:shadow-slate-100 overflow-hidden md:shadow-xl md:border dark:shadow-slate-800 flex flex-row mb-2">
         <div className="lg:w-full lg:min-w-[500px] lg:max-w-[620px] lg:h-[660px] relative -left-2 hidden md:hidden lg:flex">
           <img
-            src={background}
+            src={bgImage}
             className="lg:w-full h-[600px] left-0 -top-2 absolute bg-opacity-20 rounded-2xl object-cover"
             style={{ clipPath: "inset(8px)" }}
             alt="hamburger"

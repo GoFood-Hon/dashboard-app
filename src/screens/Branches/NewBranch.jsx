@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { Accordion } from "@mantine/core"
+import { Accordion, Flex, Paper, Button } from "@mantine/core"
 import { useLocation, useNavigate } from "react-router-dom"
 import { yupResolver } from "@hookform/resolvers/yup"
 import { useForm } from "react-hook-form"
@@ -7,7 +7,6 @@ import { useSelector } from "react-redux"
 import { LoaderComponent } from "../../components/LoaderComponent"
 import { newBranchValidation } from "../../utils/inputRules"
 import { NAVIGATION_ROUTES_RES_ADMIN } from "../../routes"
-import Button from "../../components/Button"
 import GeneralInformationForm from "./GeneralInformationForm"
 import LocationForm from "./LocationForm"
 import TimeForm from "./TimeForm"
@@ -16,6 +15,7 @@ import branchesApi from "../../api/branchesApi"
 
 import { getDepartmentNameById } from "../../utils"
 import { showNotification } from "@mantine/notifications"
+import { colors } from "../../theme/colors"
 
 export default function NewBranch() {
   const location = useLocation()
@@ -165,28 +165,24 @@ export default function NewBranch() {
             {items}
           </Accordion>
         </section>
-        <section>
-          <div className="w-full flex md:justify-end mt-6 md:gap-3 rounded-md bg-white px-8 py-5 border border-gray-200">
-            <div className="md:w-2/3 lg:1/3 sm:w-full flex flex-row justify-end gap-3 sm:flex-wrap md:flex-nowrap">
+        <section className="mt-2">
+          <Paper withBorder radius="md" className="w-full flex md:justify-end md:gap-3 rounded-md px-8 py-5">
+            <Flex justify="end" gap="xs">
               <Button
-                text={"Descartar"}
-                className={"text-xs border border-red-400 text-red-400 bg-white"}
+                color={colors.main_app_color}
+                variant="outline"
                 onClick={() => {
                   reset()
                   localStorage.removeItem("draft")
                   navigate(NAVIGATION_ROUTES_RES_ADMIN.Branches.path)
-                }}
-              />
-              {isLoading ? (
-                <LoaderComponent width={24} size={25} />
-              ) : (
-                <Button
-                  text={"Guardar"}
-                  className="w-24 flex h-10 items-center justify-center rounded-md shadow-sm transition-all duration-700 focus:outline-none text-xs bg-sky-950 text-slate-50"
-                />
-              )}
-            </div>
-          </div>
+                }}>
+                Descartar
+              </Button>
+              <Button loading={isLoading} color={colors.main_app_color} type="submit">
+                Guardar
+              </Button>
+            </Flex>
+          </Paper>
         </section>
       </form>
     </>

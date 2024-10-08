@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { Checkbox, CloseIcon, Grid, Group, Text, rem } from "@mantine/core"
+import { Checkbox, CloseIcon, Grid, Group, Paper, Text, rem } from "@mantine/core"
 import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone"
 import { IconPhoto } from "@tabler/icons-react"
 import toast from "react-hot-toast"
@@ -148,7 +148,7 @@ export default function GeneralInformationForm({ register, errors, setValue, isD
         </div>
       </Grid.Col>
       <Grid.Col span={{ base: 12, md: 4, lg: 4 }}>
-        <div className="flex flex-col justify-center items-center w-full h-full rounded-2xl p-4">
+        <Paper withBorder radius='md' className="flex flex-col justify-center items-center w-full h-full rounded-2xl p-4">
           {previews.length > 0 ? (
             <div className="w-full">
               <Text size="lg" inline className="text-left mb-5">
@@ -190,7 +190,7 @@ export default function GeneralInformationForm({ register, errors, setValue, isD
             </Dropzone>
           )}
           {errors.files && <p className="text-red-500 text-center w-full">* Imagen es requerida.</p>}
-        </div>
+        </Paper>
       </Grid.Col>
     </Grid>
   )

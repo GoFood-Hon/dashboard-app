@@ -87,7 +87,7 @@ export default function Login() {
               value={"Iniciar sesión"}
               type="submit"
               className={
-                "bg-primary_button text-white flex h-10 w-full items-center justify-center space-x-3 rounded-md text-sm shadow-sm transition-all duration-700 focus:outline-none my-3 dark:bg-slate-900 cursor-pointer"
+                "bg-main_app_color text-white flex h-10 w-full items-center justify-center space-x-3 rounded-md text-sm shadow-sm transition-all duration-700 focus:outline-none my-3 dark:bg-slate-900 cursor-pointer"
               }
             />
           )}

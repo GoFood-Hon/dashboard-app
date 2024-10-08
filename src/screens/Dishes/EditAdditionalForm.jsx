@@ -57,26 +57,12 @@ export const EditAdditionalForm = ({ additional, setAdditional, dishDetails }) =
     }
   }
 
-  const handleDeleteAdditional = async (index, category) => {
-    const additionalId = category?.id
-
-    try {
-      const response = await extrasApi.deleteExtra(additionalId)
-      if (response.status === 204) {
-        const updatedCategories = [...additional]
-        updatedCategories.splice(index, 1)
-        setAdditional(updatedCategories)
-      } else {
-        throw new Error("Error ocurrido durante la eliminación del adicional.")
-      }
-    } catch (error) {
-      showNotification({
-        title: "Error",
-        message: "Se produjo un error al intentar eliminar el adicional. Inténtelo nuevamente",
-        color: "red",
-        duration: 7000
-      })
-    }
+  const handleDeleteAdditional = (indexToDelete) => {
+    setAdditional((prevAdditionals) => {
+      const updatedAdditionals = [...prevAdditionals]
+      updatedAdditionals.splice(indexToDelete, 1)
+      return updatedAdditionals
+    })
   }
 
   const handleAddItem = () => {
@@ -105,7 +91,7 @@ export const EditAdditionalForm = ({ additional, setAdditional, dishDetails }) =
   return (
     <Grid>
       <Grid.Col span={{ base: 12, md: 7 }}>
-        <Paper withBorder radius='md' className="w-full h-full p-6  rounded-lg">
+        <Paper withBorder radius="md" className="w-full h-full p-6  rounded-lg">
           <span className="text-sm font-semibold w-full">Titulo</span>
           <div>
             <Input
@@ -138,7 +124,7 @@ export const EditAdditionalForm = ({ additional, setAdditional, dishDetails }) =
               </>
             ) : null}
           </div>
-          <Paper withBorder radius='md' className="p-2 my-4 rounded-lg">
+          <Paper withBorder radius="md" className="p-2 my-4 rounded-lg">
             {additionalItem?.map((item, index) => (
               <div key={index}>
                 <div className="flex w-full gap-2 my-2 items-center justify-between">
@@ -192,14 +178,16 @@ export const EditAdditionalForm = ({ additional, setAdditional, dishDetails }) =
       </Grid.Col>
 
       <Grid.Col span={{ base: 12, md: 5 }}>
-        <Paper withBorder radius='md' className="w-full h-full p-6 rounded-lg ">
+        <Paper withBorder radius="md" className="w-full h-full p-6 rounded-lg ">
           <span className="text-sm font-semibold">Adicionales del platillo:</span>
           <ScrollArea w={"100%"} h={360}>
             <ul>
               {additional?.length > 0 ? (
                 additional?.map((category, index) => (
                   <Paper
-                    key={index} withBorder radius='md'
+                    key={index}
+                    withBorder
+                    radius="md"
                     className="p-2 my-4 rounded-lg flex flex-row justify-between items-center">
                     <article className="w-full">
                       <div className="flex items-center justify-between mb-1">
@@ -207,7 +195,7 @@ export const EditAdditionalForm = ({ additional, setAdditional, dishDetails }) =
                           {category.name} {category.requiredMinimum ? `(min: ${category.requiredMinimum})` : null}:
                         </h3>
                         <span
-                          onClick={() => handleDeleteAdditional(additional)}
+                          onClick={() => handleDeleteAdditional(index)}
                           className="cursor-pointer text-red-500 transition ease-in-out duration-200 rounded-full hover:bg-red-500 hover:text-white p-1">
                           <IconX size={20} />
                         </span>

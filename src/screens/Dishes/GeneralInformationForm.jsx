@@ -64,7 +64,7 @@ export default function GeneralInformationForm({ register, errors, setValue, isD
   return (
     <Grid>
       <Grid.Col span={{ base: 12, md: 8, lg: 8 }}>
-        <div className="flex h-full w-full items-center justify-center rounded-2xl p-4">
+        <Paper withBorder radius='md' className="flex h-full w-full items-center justify-center rounded-2xl p-4">
           <div className="flex w-full flex-col">
             <InputField
               label="Nombre (Obligatorio)"
@@ -85,7 +85,7 @@ export default function GeneralInformationForm({ register, errors, setValue, isD
 
             <InputCheckbox name="includesDrink" register={register} />
           </div>
-        </div>
+        </Paper>
       </Grid.Col>
       <Grid.Col span={{ base: 12, md: 4, lg: 4 }}>
         <Paper withBorder radius='md' p='md'>

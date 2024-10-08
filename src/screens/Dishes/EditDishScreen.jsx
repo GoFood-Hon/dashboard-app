@@ -1,5 +1,4 @@
-import Button from "../../components/Button"
-import { Accordion } from "@mantine/core"
+import { Accordion, Flex, Paper, Button } from "@mantine/core"
 import React, { useEffect, useRef, useState } from "react"
 import { useForm } from "react-hook-form"
 import GeneralInformationForm from "./GeneralInformationForm"
@@ -13,7 +12,7 @@ import dishesApi from "../../api/dishesApi"
 import { useNavigate, useParams } from "react-router-dom"
 import BackButton from "./components/BackButton"
 import { NAVIGATION_ROUTES_RES_ADMIN } from "../../routes"
-import { LoaderComponent } from "../../components/LoaderComponent"
+import { colors } from "../../theme/colors"
 
 export default function EditDishScreen() {
   const dispatch = useDispatch()
@@ -96,8 +95,8 @@ export default function EditDishScreen() {
   const items = accordionStructure.map((item, key) => (
     <Accordion.Item key={key} value={item.title}>
       <Accordion.Control>
-        <div className="w-full rounded-lg flex-row flex items-center text-white">
-          <div className="text-base font-bold bg-[#EE364C] rounded-full p-2 w-8 h-8 flex items-center justify-center">
+        <div className="w-full rounded-lg flex-row flex items-center">
+          <div className="text-base font-bold bg-[#EE364C] rounded-full p-2 w-8 h-8 flex items-center justify-center text-slate-50">
             {key + 1}
           </div>
           <span className="text-base font-bold  leading-normal ml-4">{item.title}</span>
@@ -118,6 +117,7 @@ export default function EditDishScreen() {
     }
 
     dispatch(updateDish({ dishData, dishId })).then((response) => {
+      console.log(response)
       if (!response.payload.status) {
         navigate(NAVIGATION_ROUTES_RES_ADMIN.Menu.submenu.Dishes.path)
       }
@@ -135,33 +135,26 @@ export default function EditDishScreen() {
           </div>
         </section>
         <section>
-          <Accordion
-            variant="separated"
-            multiple
-            defaultValue={["Información general", "Pagos", "Preparación", "Adicionales"]}>
+          <Accordion variant="separated" multiple defaultValue={["Información general", "Pagos", "Preparación", "Adicionales"]}>
             {items}
           </Accordion>
         </section>
-        <section ref={containerRef}>
-          <div className="mt-6 flex w-full rounded-md px-8 py-5 md:justify-end md:gap-3">
-            <div className="lg:1/3 flex flex-row justify-end gap-3 sm:w-full sm:flex-wrap md:w-2/3 md:flex-nowrap">
+        <section className="mt-2">
+          <Paper withBorder radius="md" className="w-full flex md:justify-end md:gap-3 rounded-md px-8 py-5">
+            <Flex justify="end" gap="xs">
               <Button
-                text={"Descartar"}
-                className={"border border-red-400 text-xs text-red-400"}
+                color={colors.main_app_color}
+                variant="outline"
                 onClick={() => {
                   navigate(NAVIGATION_ROUTES_RES_ADMIN.Menu.submenu.Dishes.path)
-                }}
-              />
-              {isLoading ? (
-                <LoaderComponent width={24} size={25} />
-              ) : (
-                <Button
-                  text={"Actualizar"}
-                  className="w-24 flex h-10 items-center justify-center rounded-md text-xs shadow-sm transition-all duration-700 focus:outline-none"
-                />
-              )}
-            </div>
-          </div>
+                }}>
+                Descartar
+              </Button>
+              <Button loading={isLoading} color={colors.main_app_color} type="submit">
+                Actualizar
+              </Button>
+            </Flex>
+          </Paper>
         </section>
       </form>
     </>
