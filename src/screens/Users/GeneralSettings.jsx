@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { Avatar, Divider, Image } from "@mantine/core"
+import { Avatar, Box, Divider, Flex, Image, Paper, Text } from "@mantine/core"
 import { SETTING_NAVIGATION_ROUTES } from "../../routes"
 import restaurantsApi from "../../api/restaurantApi"
 import { useSelector } from "react-redux"
@@ -9,7 +9,6 @@ import authApi from "../../api/authApi"
 
 export default function GeneralSettings() {
   const user = useSelector((state) => state.user.value)
-
   const [restaurants, setRestaurants] = useState({})
   const [userData, setUserData] = useState({})
 
@@ -54,89 +53,97 @@ export default function GeneralSettings() {
 
   return (
     <>
-      <div className="">
-        <section>
-          <div className="flex flex-row justify-between items-center pb-3">
-            <div className="flex flex-row gap-x-3 items-center">
-              <h1 className="text-white-200 text-2xl font-semibold">General</h1>
-            </div>
+      <section>
+        <div className="flex flex-row justify-between items-center pb-3">
+          <div className="flex flex-row gap-x-3 items-center">
+            <h1 className="text-white-200 text-2xl font-semibold">General</h1>
           </div>
-        </section>
+        </div>
+      </section>
 
-        <SettingsCard title="Negocio" iconName="building" linkPage={SETTING_NAVIGATION_ROUTES.Business_btn.path}>
-          <div className="flex flex-row items-center  justify-between">
-            <div className="flex flex-row items-center py-4">
-              <Image src={restaurants?.images?.[0]?.location} h={50} w={150} fit="contain" radius='md' />
-              <div className="flex flex-col pl-3">
-                <div className="text-md font-bold leading-snug">{restaurants.name}</div>
-                <div className="text-xs font-normal leading-tight">{restaurants.socialReason}</div>
-              </div>
-            </div>
-            <div className={"px-2 py-1 rounded-2xl justify-center items-center"} style={{ whiteSpace: "nowrap" }}>
-              <div className="text-md">{restaurants?.isActive ? "Habilitado" : "Deshabilitado"}</div>
-            </div>
-          </div>
+      <SettingsCard title="Negocio" iconName="building" linkPage={SETTING_NAVIGATION_ROUTES.Business_btn.path}>
+        <Paper py="md">
+          <Flex align="center" justify="space-between">
+            <Flex align="center" gap="xs">
+              <Image src={restaurants?.images?.[0]?.location} h={50} w={150} fit="contain" radius="md" />
+              <Box>
+                <Text fw={700}>{restaurants.name}</Text>
+                <Text c="dimmed" size="sm">
+                  {restaurants.socialReason}
+                </Text>
+              </Box>
+            </Flex>
+            <Box>
+              <Text c="dimmed">{restaurants?.isActive ? "Habilitado" : "Deshabilitado"}</Text>
+            </Box>
+          </Flex>
+        </Paper>
 
-          <Divider size='md' />
+        <Divider />
 
-          <div className="flex flex-row justify-between items-center py-4 flex-wrap">
-            <div className="flex flex-col">
-              <span className="font-semibold">Correo</span>
-              <span>{restaurants.email}</span>
-            </div>
-            <div className="flex flex-col">
-              <span className="font-semibold">Teléfono</span>
-              <span>{restaurants.phoneNumber}</span>
-            </div>
-            <div className="flex flex-col">
-              <span className="font-semibold">Dirección principal</span>
-              <span>{restaurants.billingAddress}</span>
-            </div>
-          </div>
+        <Paper py="md">
+          <Flex align="center" justify="space-between">
+            <Box>
+              <Text fw={700}>Correo</Text>
+              <Text c="dimmed">{restaurants.email}</Text>
+            </Box>
+            <Box>
+              <Text fw={700} ta='right'>Teléfono</Text>
+              <Text c="dimmed">{restaurants.phoneNumber}</Text>
+            </Box>
+          </Flex>
+          <Box mt="md">
+            <Text fw={700}>Dirección principal</Text>
+            <Text c="dimmed">{restaurants.billingAddress}</Text>
+          </Box>
+        </Paper>
 
-          <Divider size='md' />
+        <Divider />
 
-          <div className="flex flex-row justify-between items-center py-4 flex-wrap">
-            <div className="flex flex-col">
-              <span className="font-semibold">Razón social</span>
-              <span>{restaurants.socialReason}</span>
-            </div>
-            <div className="flex flex-col">
-              <span className="font-semibold">CAI</span>
-              <span>{restaurants.cai}</span>
-            </div>
-            <div className="flex flex-col">
-              <span className="font-semibold">RTN</span>
-              <span>{restaurants.rtn}</span>
-            </div>
-          </div>
-        </SettingsCard>
+        <Paper className="flex flex-row justify-between items-center py-4 flex-wrap">
+          <Flex align="center" justify="space-between">
+            <Box>
+              <Text fw={700}>Razón social</Text>
+              <Text c="dimmed">{restaurants.socialReason}</Text>
+            </Box>
+            <Box>
+              <Text fw={700} ta='center'>CAI</Text>
+              <Text c="dimmed">{restaurants.cai}</Text>
+            </Box>
+            <Box>
+              <Text fw={700} ta='right'>RTN</Text>
+              <Text c="dimmed">{restaurants.rtn}</Text>
+            </Box>
+          </Flex>
+        </Paper>
+      </SettingsCard>
 
-        <SettingsCard title="Cuenta" iconName="user" linkPage={SETTING_NAVIGATION_ROUTES.Cuenta.path}>
-          <div className="flex flex-row item-center justify-start py-4">
-            <div className="flex flex-row items-center">
-              <Avatar size="md" src={userData?.images?.[0]?.location} />
-            </div>
-            <div className="flex flex-col pl-2">
-              <span className="text-sky-950 font-semibold">{userData.name}</span>
-              <span>{userData.role}</span>
-            </div>
-          </div>
+      <SettingsCard title="Cuenta" iconName="user" linkPage={SETTING_NAVIGATION_ROUTES.Cuenta.path}>
+        <Paper py="md">
+          <Flex align="center" gap="xs">
+            <Avatar size="md" src={userData?.images?.[0]?.location} />
+            <Box>
+              <Text fw={700}>{userData.name}</Text>
+              <Text c="dimmed">{userData.role}</Text>
+            </Box>
+          </Flex>
+        </Paper>
 
-          <div className="border-b border-b-light_selected_element" />
+        <Divider />
 
-          <div className="flex flex-row justify-between items-center py-4">
-            <div className="flex flex-col">
-              <span className="text-sky-950 font-semibold">Correo</span>
-              <span>{userData.email}</span>
-            </div>
-            <div className="flex flex-col">
-              <span className="text-sky-950 font-semibold">Teléfono</span>
-              <span>{userData.phoneNumber}</span>
-            </div>
-          </div>
-        </SettingsCard>
-      </div>
+        <Paper py="md">
+          <Flex align="center" justify="space-between">
+            <Box>
+              <Text fw={700}>Correo</Text>
+              <Text c="dimmed">{userData.email}</Text>
+            </Box>
+            <Box>
+              <Text fw={700} ta='right'>Teléfono</Text>
+              <Text c="dimmed">{userData.phoneNumber}</Text>
+            </Box>
+          </Flex>
+        </Paper>
+      </SettingsCard>
     </>
   )
 }

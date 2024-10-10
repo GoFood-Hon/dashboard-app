@@ -1,4 +1,4 @@
-import { Grid, Image, Modal } from "@mantine/core"
+import { Badge, Grid, Image, Modal } from "@mantine/core"
 import React from "react"
 import { formatDateDistanceToNow, formatDateToString } from "../utils"
 import { Icon } from "./Icon"
@@ -7,6 +7,7 @@ import { EditOfferForm } from "./EditOfferForm"
 import couponApi from "../api/couponApi"
 import toast from "react-hot-toast"
 import promotionApi from "../api/promotionApi"
+import { colors } from "../theme/colors"
 
 export const HistoryTable = ({ item, section }) => {
   const [imageModalOpened, { open: openImageModal, close: closeImageModal }] = useDisclosure(false)
@@ -53,9 +54,9 @@ export const HistoryTable = ({ item, section }) => {
             />
           </div>
 
-          <span className="font-bold text-xl text-blue-950">{item?.title}</span>
-          <span className="font-bold text-xs text-gray-500 my-2 italic">ID: {item?.id}</span>
-          <div className="flex flex-row gap-3 text-gray-500">
+          <span className="font-bold text-xl">{item?.title}</span>
+          <span className="font-bold text-xs my-2 italic">ID: {item?.id}</span>
+          <div className="flex flex-row gap-3">
             {item.couponType === "fecha" || (item.startDate && item.endDate) ? (
               <>
                 <div className="flex flex-row items-center">
@@ -79,20 +80,15 @@ export const HistoryTable = ({ item, section }) => {
         </div>
       </Grid.Col>
       <Grid.Col span={{ sm: 12, md: 2 }}>
-        <div className="flex flex-row items-center text-gray-600">
+        <div className="flex flex-row items-center">
           <Icon icon="timer" size={17} />
           <span className="pl-2">{formatDateDistanceToNow(item?.updatedAt)}</span>
         </div>
       </Grid.Col>
       <Grid.Col span={{ sm: 12, md: 3 }}>
-        <button
-          className={`flex gap-2 px-2 py-2 rounded-full flex-row items-end justify-center text-md font-semibold ${
-            item.isActive ? "text-green-600 bg-green-100" : "bg-red-100 text-red-600"
-          }`}
-          onClick={toggleAvailability}>
-          <span>Cupón</span>
-          <span>{item.isActive ? "Activo" : "Inactivo"}</span>
-        </button>
+        <Badge color={item.isActive ? "green" : "red"} onClick={toggleAvailability}>
+          <span>Cupón {item.isActive ? "Activo" : "Inactivo"}</span>
+        </Badge>
       </Grid.Col>
       <Grid.Col span={{ sm: 12, md: 2 }}>
         <div className="flex gap-2 items-center justify-center font-bold cursor-pointer">

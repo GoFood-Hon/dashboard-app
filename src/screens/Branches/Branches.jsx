@@ -11,7 +11,12 @@ import {
   Button,
   MantineProvider,
   Switch,
-  rem
+  rem,
+  Box,
+  Tooltip,
+  Input,
+  CloseButton,
+  Loader
 } from "@mantine/core"
 import { useLocation, useNavigate } from "react-router-dom"
 import { useDispatch, useSelector } from "react-redux"
@@ -28,6 +33,7 @@ import LoadingCircle from "../../components/LoadingCircle"
 import { colors } from "../../theme/colors"
 import { NAVIGATION_ROUTES_RES_ADMIN } from "../../routes"
 import { IconX, IconCheck } from "@tabler/icons-react"
+import { Icon } from "../../components/Icon"
 
 export default function Branches() {
   const navigate = useNavigate()
@@ -64,7 +70,6 @@ export default function Branches() {
       })
     )
     setCardsSelected([])
-    console.log(branches)
   }, [page, dispatch, restaurant])
 
   const handleNewItem = () => {
@@ -173,78 +178,31 @@ export default function Branches() {
           </div>
         </div>
       </section>
-      <section>
-        <div className="flex flex-row justify-between">
-          {/*  <Input
-            className="w-80"
-            placeholder="Buscar sucursal"
-            value={searchDish}
-            onChange={(event) => setSearchDish(event.currentTarget.value)}
-            rightSectionPointerEvents="all"
-            leftSection={<Icon icon="search" size={16} color="#6d7177" />}
-            rightSection={
-              <CloseButton
-                aria-label="Clear input"
-                onClick={() => setSearchDish("")}
-                style={{ display: searchDish ? undefined : "none" }}
-              />
-            }
-          /> */}
-        </div>
-      </section>
       <section className="my-6 w-full">
         {status === "loading" ? (
-          <div className="h-[calc(100vh-350px)] w-full flex justify-center items-center">
-            <LoadingCircle />
+          <div className="h-[calc(100vh-220px)] w-full flex justify-center items-center">
+            <Loader color={colors.main_app_color} />
           </div>
         ) : branches && branches.length > 0 ? (
           <Grid flex>
             {branches?.map((item, key) => (
-              // <Grid.Col span={{ base: 12, md: 6, lg: 4 }} key={key}>
-              //   <div className="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-              //     <a href="#">
-              //       <img className="rounded-t-lg h-44 w-full object-cover" src={item.images?.[0]?.location} alt="" />
-              //     </a>
-              //     <div className="p-5">
-              //       <a href="#">
-              //         <h5 className="mb-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white">{item.name}</h5>
-              //       </a>
-              //       <p className="mb-3 text-sm text-gray-700 dark:text-gray-400">{item.city + ", " + item.state}</p>
-              //       <div className="flex items-center justify-between">
-              //         <Button
-              //           text={"Editar"}
-              //           className={"text-white text-md px-3 py-2 bg-primary_button mb-0"}
-              //           onClick={() => handleClick(item.id)}
-              //         />
-              //         <MantineProvider theme={theme}>
-              //           <Switch
-              //             checked={item.isActive}
-              //             onChange={() => (item.isActive ? handleDisableSelected(item.id) : handleEnableSelected(item.id))}
-              //             color="teal"
-              //             size="md"
-              //             thumbIcon={
-              //               item.isActive ? (
-              //                 <IconCheck style={{ width: rem(12), height: rem(12) }} stroke={3} color="teal" />
-              //               ) : (
-              //                 <IconX style={{ width: rem(12), height: rem(12) }} stroke={3} color="red" />
-              //               )
-              //             }
-              //           />
-              //         </MantineProvider>
-              //       </div>
-              //     </div>
-              //   </div>
-              // </Grid.Col>
-              <Grid.Col span={4} key={key}>
+              <Grid.Col span={{ base: 12, md: 6, lg: 4, xl: 3 }} key={key}>
                 <Card shadow="sm" padding="lg" radius="md" withBorder>
                   <Card.Section>
                     <Image src={item.images?.[0]?.location} h={200} alt={item.name} />
                   </Card.Section>
 
                   <Group justify="space-between" mt="md" mb="xs">
-                    <Text size="lg" fw={700}>
-                      {item.name}
-                    </Text>
+                    <Box w={160}>
+                      <Tooltip
+                        position="bottom-start"
+                        label={item.name}
+                        transitionProps={{ transition: "fade-down", duration: 300 }}>
+                        <Text truncate="end" size="lg" fw={700}>
+                          {item.name}
+                        </Text>
+                      </Tooltip>
+                    </Box>
                     <MantineProvider theme={theme}>
                       <Switch
                         checked={item.isActive}

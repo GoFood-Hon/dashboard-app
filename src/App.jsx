@@ -65,6 +65,7 @@ import { EditRestaurant } from "./screens/Restaurants/EditRestaurant"
 import { EditBranch } from "./screens/Branches/EditBranch"
 import { EditAdminUser } from "./screens/Users/EditAdminUser"
 import { EditPlan } from "./screens/Plans/EditPlan"
+import { KitchenTypesAndTags } from "./screens/Tags&KitchenTypes/kitchenTypesAndTags"
 
 function App() {
   const userRole = useSelector((state) => state.user.value.role)
@@ -95,6 +96,8 @@ function App() {
             <Route path={NAVIGATION_ROUTES_SUPER_ADMIN.Plans.PlanDetails.path} element={<EditPlan />} />
 
             <Route path={NAVIGATION_ROUTES_SUPER_ADMIN.Account.path} element={<AccountSettings />} />
+
+            <Route path={NAVIGATION_ROUTES_SUPER_ADMIN.KitchenTypesAndTags.path} element={<KitchenTypesAndTags />} />
 
             {/* <Route path={NAVIGATION_ROUTES_SUPER_ADMIN.Password.path} element={<PasswordSettings />} /> */}
           </>

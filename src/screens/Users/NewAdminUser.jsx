@@ -1,12 +1,11 @@
 import React, { useState } from "react"
 import { useNavigate } from "react-router-dom"
-import { Accordion } from "@mantine/core"
+import { Accordion, Flex, Paper, Button } from "@mantine/core"
 import { useForm } from "react-hook-form"
 import toast from "react-hot-toast"
 import { yupResolver } from "@hookform/resolvers/yup"
 import { AdminInformationForm } from "./AdminInformationForm"
 import BackButton from "../Dishes/components/BackButton"
-import Button from "../../components/Button"
 import { NAVIGATION_ROUTES_SUPER_ADMIN } from "../../routes"
 import authApi from "../../api/authApi"
 import { newAdminValidationSchema } from "../../utils/inputRules"
@@ -15,6 +14,7 @@ import { LoaderComponent } from "../../components/LoaderComponent"
 import { useDispatch } from "react-redux"
 import { addNewUser } from "../../store/features/userSlice"
 import { showNotification } from "@mantine/notifications"
+import { colors } from "../../theme/colors"
 
 export const NewAdminUser = () => {
   const navigate = useNavigate()
@@ -40,12 +40,12 @@ export const NewAdminUser = () => {
   const items = accordionStructure.map((item, key) => (
     <Accordion.Item key={key} value={item.title}>
       <Accordion.Control>
-        <div className="flex w-full flex-row items-center rounded-lg bg-white">
+        <div className="flex w-full flex-row items-center rounded-lg">
           <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#EE364C] p-2 text-base font-bold text-slate-50">
             {key + 1}
           </div>
-          <span className="ml-4 text-base font-bold  leading-normal text-sky-950">{item.title}</span>
-          <span className="ml-1 text-base font-normal text-sky-950">({item?.requirement})</span>
+          <span className="ml-4 text-base font-bold  leading-normal">{item.title}</span>
+          <span className="ml-1 text-base font-normal">({item?.requirement})</span>
         </div>
       </Accordion.Control>
       <Accordion.Panel>{item.form}</Accordion.Panel>
@@ -114,36 +114,30 @@ export const NewAdminUser = () => {
           </div>
         </section>
         <section>
-          <Accordion
-            variant="separated"
-            multiple
-            defaultValue={["Información general"]}
-            classNames={{
-              label: "bg-white fill-white"
-            }}>
+          <Accordion variant="separated" multiple defaultValue={["Información general"]}>
             {items}
           </Accordion>
         </section>
         <section>
-          <div className="mt-6 flex w-full rounded-md border border-gray-200 bg-white px-8 py-5 md:justify-end md:gap-3">
-            <div className="lg:1/3 flex flex-row justify-end gap-3 sm:w-full sm:flex-wrap md:w-2/3 md:flex-nowrap">
+          <Paper withBorder radius="md" className="w-full flex md:justify-end mt-3 md:gap-3 rounded-md px-8 py-5">
+            <Flex justify="end" gap="xs">
               <Button
-                text={"Descartar"}
-                className={"border border-red-400 bg-white text-xs text-red-400"}
+                color={colors.main_app_color}
+                variant="outline"
                 onClick={() => {
                   navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Restaurants.path)
-                }}
-              />
-              {isLoading ? (
-                <LoaderComponent width={24} size={25} />
-              ) : (
-                <Button
-                  text={"Guardar"}
-                  className="w-24 flex h-10 items-center justify-center rounded-md bg-sky-950 text-xs text-slate-50 shadow-sm transition-all duration-700 focus:outline-none"
-                />
-              )}
-            </div>
-          </div>
+                }}>
+                Descartar
+              </Button>
+              <Button
+                loading={isLoading}
+                color={colors.main_app_color}
+                type="submit"
+                className="w-24 text-center flex h-10 items-center justify-center rounded-md shadow-sm transition-all duration-700 focus:outline-none text-xs bg-sky-950 text-slate-50">
+                Guardar
+              </Button>
+            </Flex>
+          </Paper>
         </section>
       </form>
     </>

@@ -12,16 +12,20 @@ import {
   MantineProvider,
   Switch,
   createTheme,
-  rem
+  rem,
+  Box,
+  Tooltip,
+  Loader
 } from "@mantine/core"
 import { useDispatch, useSelector } from "react-redux"
 import ItemCard from "../../components/ItemCard"
-import { fetchRestaurants, setPage, updateRestaurant } from "../../store/features/restaurantSlice"
+import { fetchRestaurants, selectRestaurantsStatus, setPage, updateRestaurant } from "../../store/features/restaurantSlice"
 import { colors } from "../../theme/colors"
 import { NAVIGATION_ROUTES_SUPER_ADMIN } from "../../routes"
 import BackButton from "../Dishes/components/BackButton"
 import { IconCheck } from "@tabler/icons-react"
 import { IconX } from "@tabler/icons-react"
+import LoadingCircle from "../../components/LoadingCircle"
 
 export default function RestaurantsScreen() {
   const navigate = useNavigate()
@@ -29,6 +33,7 @@ export default function RestaurantsScreen() {
 
   const limit = useSelector((state) => state.restaurants.itemsPerPage)
   const totalItems = useSelector((state) => state.restaurants.totalItems)
+  const status = useSelector(selectRestaurantsStatus)
   const page = useSelector((state) => state.restaurants.currentPage)
   const restaurant = useSelector((state) => state?.restaurants?.value?.data)
 
@@ -90,7 +95,7 @@ export default function RestaurantsScreen() {
     //     await dispatch(updateRestaurant({ data: { id, isActive: true }, propertyToUpdate: "isActive" }))
     //   })
     // )
-    dispatch(updateRestaurant({ data: { id, isActive: true }, propertyToUpdate: "isActive" }))
+    await dispatch(updateRestaurant({ data: { id, isActive: true }, propertyToUpdate: "isActive" }))
     refreshPage()
   }
 
@@ -100,7 +105,7 @@ export default function RestaurantsScreen() {
     //     await dispatch(updateRestaurant({ data: { id, isActive: false }, propertyToUpdate: "isActive" }))
     //   })
     // )
-    dispatch(updateRestaurant({ data: { id, isActive: false }, propertyToUpdate: "isActive" }))
+    await dispatch(updateRestaurant({ data: { id, isActive: false }, propertyToUpdate: "isActive" }))
     refreshPage()
   }
 
@@ -136,10 +141,14 @@ export default function RestaurantsScreen() {
         </div>
       </section>
       <section className="w-full">
-        {restaurant && restaurant.length > 0 ? (
+        {status === "loading" ? (
+          <div className="h-[calc(100vh-220px)] w-full flex justify-center items-center">
+            <Loader color={colors.main_app_color} />
+          </div>
+        ) : restaurant && restaurant.length > 0 ? (
           <Grid>
             {restaurant.map((item, key) => (
-              <Grid.Col span={{ base: 12, md: 4 }} key={key}>
+              <Grid.Col span={{ base: 12, md: 6, lg: 4, xl: 3 }} key={key}>
                 <Card shadow="sm" padding="lg" radius="md" withBorder>
                   <Card.Section>
                     {/* Validación para asegurarse de que `item.images` exista y tenga al menos un elemento */}
@@ -151,9 +160,16 @@ export default function RestaurantsScreen() {
                   </Card.Section>
 
                   <Group justify="space-between" mt="md" mb="xs">
-                    <Text size="lg" fw={700}>
-                      {item?.name}
-                    </Text>
+                    <Box w={160}>
+                      <Tooltip
+                        label={item?.name}
+                        position="bottom-start"
+                        transitionProps={{ transition: "fade-down", duration: 300 }}>
+                        <Text truncate="end" size="lg" fw={700}>
+                          {item?.name}
+                        </Text>
+                      </Tooltip>
+                    </Box>
                     <MantineProvider theme={theme}>
                       <Switch
                         checked={item?.isActive}

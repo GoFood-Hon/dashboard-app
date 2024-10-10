@@ -3,13 +3,11 @@ import { useDispatch, useSelector } from "react-redux"
 import { useForm } from "react-hook-form"
 import toast from "react-hot-toast"
 import { useNavigate } from "react-router-dom"
-import { CloseIcon, Grid, Group, MultiSelect, Paper, Select, Text, rem } from "@mantine/core"
+import { CloseIcon, Flex, Grid, Group, MultiSelect, Paper, Select, Text, rem, Button } from "@mantine/core"
 import { DatePickerInput } from "@mantine/dates"
 import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone"
 import { IconPhoto } from "@tabler/icons-react"
 import { yupResolver } from "@hookform/resolvers/yup"
-
-import Button from "./Button"
 import InputField from "./Form/InputField"
 import { ErrorMessage } from "./Form/ErrorMessage"
 import { promotionValidationFrom } from "../utils/inputRules"
@@ -18,7 +16,7 @@ import promotionApi from "../api/promotionApi"
 import { bytesToMB, capitalizeFirstLetter, convertToDecimal } from "../utils"
 import { SETTING_NAVIGATION_ROUTES } from "../routes"
 import { CouponTypes, DEFAULT_CATEGORY, DEFAULT_COUPON_TYPE, DEFAULT_DISCOUNT_PERCENTAGE } from "../utils/constants"
-import { LoaderComponent } from "./LoaderComponent"
+import { colors } from "../theme/colors"
 
 export const PromotionForm = ({ offerData }) => {
   const user = useSelector((state) => state.user.value)
@@ -198,7 +196,7 @@ export const PromotionForm = ({ offerData }) => {
         </Grid.Col>
         <Grid.Col span={{ base: 12 }}>
           <label className="text-sm font-bold leading-snug">Seleccione una imagen</label>
-          <Paper withBorder radius='md' p='md'>
+          <Paper withBorder radius="md" p="md">
             {previews.length > 0 ? (
               <div className="w-full">
                 <Text size="lg" inline className="text-left mb-5">
@@ -315,21 +313,21 @@ export const PromotionForm = ({ offerData }) => {
           <ErrorMessage message={errors?.minPurchase?.message} />
         </Grid.Col>
       </Grid>
-      <div className="w-full flex flex-row gap-2 pt-4">
-        <Button
-          text={"Descartar"}
-          className={"text-xs border border-red-400 text-red-400 bg-white"}
-          onClick={() => navigate(SETTING_NAVIGATION_ROUTES.General.path)}
-        />
-        {isLoading ? (
-          <LoaderComponent width={24} size={25} />
-        ) : (
-          <Button
-            text={"Guardar"}
-            className="w-24 flex h-10 items-center justify-center rounded-md shadow-sm transition-all duration-700 focus:outline-none text-xs bg-sky-950 text-slate-50"
-          />
-        )}
-      </div>
+      <section className="mt-2">
+        <Paper radius="md">
+          <Flex justify="end" gap="xs">
+            <Button
+              color={colors.main_app_color}
+              variant="outline"
+              onClick={() => navigate(SETTING_NAVIGATION_ROUTES.General.path)}>
+              Descartar
+            </Button>
+            <Button loading={isLoading} color={colors.main_app_color} type="submit">
+              Guardar
+            </Button>
+          </Flex>
+        </Paper>
+      </section>
     </form>
   )
 }

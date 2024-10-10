@@ -14,7 +14,15 @@ import {
   Container,
   Text,
   Button,
-  Paper
+  Paper,
+  Card,
+  Group,
+  Box,
+  Image,
+  Tooltip,
+  Flex,
+  Title,
+  Loader
 } from "@mantine/core"
 import { useNavigate, useLocation } from "react-router-dom"
 import { colors } from "../../theme/colors"
@@ -71,7 +79,6 @@ export default function Dishes() {
         filters
       })
     )
-
     setCardsSelected([])
   }, [page, dispatch, restaurant])
 
@@ -169,28 +176,26 @@ export default function Dishes() {
 
   return (
     <>
-      <section>
-        <div className="flex flex-row justify-between items-center pb-6">
+      <Group grow className="mb-3">
+        <Flex align="center" justify="space-between">
           <BackButton title="Platillos" />
-          <div className="flex flex-row w-full justify-end items-center">
-            <div className="flex flex-row mr-4">
-              <span className="text-base font-bold leading-normal">{page === 1 ? 1 : (page - 1) * limit + 1}</span>
-              <span className="text-base font-bold leading-normal">-</span>
-              <span className="text-base font-bold leading-normal">
-                {page === 1 ? limit : Math.min(page * limit, totalItems)}
-              </span>
-              <span className="text-base font-medium leading-normal px-1"> de </span>
-              <span className="text-base font-bold leading-normal">{totalItems} platillos</span>
-            </div>
+          <Flex align="center" gap="xs">
+            <Flex align="center" gap={5}>
+              <Text fw={700}>
+                {page === 1 ? 1 : (page - 1) * limit + 1}-{page === 1 ? limit : Math.min(page * limit, totalItems)}
+              </Text>
+              <Text>de</Text>
+              <Text fw={700}>{totalItems} platillos</Text>
+            </Flex>
             <Button
               color={colors.main_app_color}
               className={`text-white text-md px-3 py-2 bg-primary_button mb-0 ${user.role !== APP_ROLES.branchAdmin && user.role !== APP_ROLES.cashierUser ? "" : "hidden"}`}
               onClick={handleNewItem}>
               Nuevo
             </Button>
-          </div>
-        </div>
-      </section>
+          </Flex>
+        </Flex>
+      </Group>
       <section>
         <div className="flex flex-row justify-between">
           {/*  <Input
@@ -212,42 +217,59 @@ export default function Dishes() {
       </section>
       <section className="w-full">
         {status === "loading" ? (
-          <div className="h-[calc(100vh-350px)] w-full flex justify-center items-center">
-            <LoadingCircle />
+          <div className="h-[calc(100vh-220px)] w-full flex justify-center items-center">
+            <Loader color={colors.main_app_color} />
           </div>
         ) : dishes && dishes.length > 0 ? (
           <Grid>
             {dishes.map((item, key) => (
               <Grid.Col span={{ base: 12, md: 6, lg: 4, xl: 3 }} key={key}>
-                <Paper withBorder radius='md' className="transition transform duration-700 shadow-lg p-4 rounded-lg relative">
-                  <img className="w-48 h-48 mx-auto object-contain" src={item.images?.[0]?.location} alt="" />
-                  <Container className="flex flex-col my-3 space-y-2">
-                    <Text className="text-gray-900 poppins text-lg">{item.name}</Text>
-                    <Text className="text-gray-900 poppins text-lg font-bold">{getFormattedHNL(item.price)}</Text>
-                    <div className="flex items-center justify-between">
-                      <Button
+                <Card shadow="sm" padding="lg" radius="md" withBorder>
+                  <Card.Section>
+                    {/* Validación para asegurarse de que `item.images` exista y tenga al menos un elemento */}
+                    {item?.images && item.images.length > 0 ? (
+                      <Image src={item.images[0]?.location} h={200} fit="contain" alt={item?.name || "Imagen"} />
+                    ) : (
+                      <Image src="default-image-url.jpg" h={200} fit="cover" alt="Imagen no disponible" />
+                    )}
+                  </Card.Section>
+
+                  <Group justify="space-between" mt="md" mb="xs">
+                    <Box w={160}>
+                      <Tooltip
+                        label={item?.name}
+                        position="bottom-start"
+                        transitionProps={{ transition: "fade-down", duration: 300 }}>
+                        <Text truncate="end" size="lg" fw={700}>
+                          {item?.name}
+                        </Text>
+                      </Tooltip>
+                    </Box>
+                    <MantineProvider theme={theme}>
+                      <Switch
+                        checked={item?.isActive}
+                        onChange={() => (item?.isActive ? handleDisableSelected(item?.id) : handleEnableSelected(item?.id))}
                         color={colors.main_app_color}
-                        className={"text-white text-md px-3 py-2 bg-primary_button mb-0"}
-                        onClick={() => handleClick(item.id)}
-                      >Editar</Button>
-                      <MantineProvider theme={theme}>
-                        <Switch
-                          checked={item.isActive}
-                          onChange={() => (item.isActive ? handleDisableSelected(item.id) : handleEnableSelected(item.id))}
-                          color={colors.main_app_color}
-                          size="md"
-                          thumbIcon={
-                            item.isActive ? (
-                              <IconCheck style={{ width: rem(12), height: rem(12) }} stroke={3} color={colors.main_app_color} />
-                            ) : (
-                              <IconX style={{ width: rem(12), height: rem(12) }} stroke={3} color={colors.main_app_color} />
-                            )
-                          }
-                        />
-                      </MantineProvider>
-                    </div>
-                  </Container>
-                </Paper>
+                        size="md"
+                        thumbIcon={
+                          item?.isActive ? (
+                            <IconCheck style={{ width: rem(12), height: rem(12) }} stroke={3} color={colors.main_app_color} />
+                          ) : (
+                            <IconX style={{ width: rem(12), height: rem(12) }} stroke={3} color={colors.main_app_color} />
+                          )
+                        }
+                      />
+                    </MantineProvider>
+                  </Group>
+
+                  <Text size="sm" c="dimmed" h={50}>
+                    {getFormattedHNL(item?.price)}
+                  </Text>
+
+                  <Button color={colors.main_app_color} fullWidth mt="md" radius="md" onClick={() => handleClick(item?.id)}>
+                    Ver detalles
+                  </Button>
+                </Card>
               </Grid.Col>
             ))}
           </Grid>

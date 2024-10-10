@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 import dishesApi from "../../api/dishesApi"
 import toast from "react-hot-toast"
-import { ITEMS_PER_PAGE } from "../../utils/paginationConfig"
+import { ITEMS_PER_PAGE_CARDS } from "../../utils/paginationConfig"
 import { convertToDecimal } from "../../utils"
 import extrasApi from "../../api/extrasApi"
 import { showNotification } from "@mantine/notifications"
@@ -9,7 +9,7 @@ import { showNotification } from "@mantine/notifications"
 const initialState = {
   dishes: [],
   currentPage: 1,
-  itemsPerPage: ITEMS_PER_PAGE,
+  itemsPerPage: ITEMS_PER_PAGE_CARDS,
   totalItems: 0,
   filters: {
     startDate: null,
@@ -186,8 +186,7 @@ export const updateDish = createAsyncThunk(
       // } else {
       //   payloadData = dishData // En caso de actualizar otros campos
       // }
-      console.log(dishData)
-      const response = await dishesApi.updateDish(dishId, dishData)
+      const response = await dishesApi.updateDishesStatus(dishId, dishData)
       if (response.error) {
         showNotification({
           title: "Error",

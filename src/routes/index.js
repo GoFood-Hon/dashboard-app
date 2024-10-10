@@ -59,6 +59,9 @@ export const NAVIGATION_ROUTES_SUPER_ADMIN = {
     label: "Cuenta",
     icon: "users",
     path: "/miCuenta"
+  },
+  KitchenTypesAndTags: {
+    path: '/tipos-cocina-tags'
   }
 }
 
@@ -75,7 +78,7 @@ export const NAVIGATION_ROUTES_SUPER_ADMIN_TWO = [
       },
       {
         label: "Tags y tipos de cocina",
-        link: "/restaurantes"
+        link: "/tipos-cocina-tags"
       }
     ]
   },

@@ -7,7 +7,7 @@ import toast from "react-hot-toast"
 import userApi from "../../api/userApi"
 import { useDispatch, useSelector } from "react-redux"
 import { setCurrentPage, fetchAdminUsers } from "../../store/features/userSlice"
-import { Paper, Button } from "@mantine/core"
+import { Paper, Button, Box, Text, Title, Container, Group, Space, Flex } from "@mantine/core"
 import { colors } from "../../theme/colors"
 
 export const AdminUserScreen = () => {
@@ -21,6 +21,7 @@ export const AdminUserScreen = () => {
   const limit = useSelector((state) => state.user.itemsPerPage)
   const page = useSelector((state) => state.user.currentPage)
   const adminUsersByPage = useSelector((state) => state.user.adminUsersByPage)
+  const totalAdminUsers = useSelector((state) => state.user.totalAdminUsers)
   const totalPageCount = useSelector((state) => state.user.totalPagesCount)
   const adminUsers = adminUsersByPage[page] || []
   const loadingUsers = useSelector((state) => state.user.loadingUsers)
@@ -48,14 +49,25 @@ export const AdminUserScreen = () => {
 
   return (
     <>
-      <section className="mb-3">
-        <div className="flex flex-row justify-between items-center">
-          <h1 className="text-white-200 text-2xl font-semibold">Administradores</h1>
-          <Button color={colors.main_app_color} onClick={handleNewItem}>
-            Nuevo
-          </Button>
-        </div>
-      </section>
+      <Group grow className="mb-3">
+        <Flex align="center" justify="space-between">
+          <Title order={2} fw={700}>
+            Administradores
+          </Title>
+          <Flex align="center" gap="xs">
+            <Flex align="center" gap={5}>
+              <Text fw={700}>
+                {page === 1 ? 1 : (page - 1) * limit + 1}-{page === 1 ? limit : Math.min(page * limit, totalAdminUsers)}
+              </Text>
+              <Text>de</Text>
+              <Text fw={700}>{totalAdminUsers} administradores</Text>
+            </Flex>
+            <Button color={colors.main_app_color} onClick={handleNewItem}>
+              Nuevo
+            </Button>
+          </Flex>
+        </Flex>
+      </Group>
       <section>
         <Paper withBorder p="md" radius="md">
           <MenuTable

@@ -120,13 +120,6 @@ export const updateRestaurant = createAsyncThunk(
           color: "red",
           duration: 7000
         })
-      } else {
-        showNotification({
-          title: "Actualización exitosa",
-          message: `Se actualizaron los datos de ${response.data.name}`,
-          color: "green",
-          duration: 7000
-        })
       }
       dispatch(setLoading(false))
       return response.data
@@ -257,6 +250,8 @@ export const { setRestaurants, setRestaurantData, setPage, setFilters, setLoadin
 export const selectAllRestaurants = (state) => state.restaurants.restaurants
 
 export const selectLoading = (state) => state.restaurants.loading
+
+export const selectRestaurantsStatus = (state) => state.restaurants.status
 
 export const selectImage = (state) => state.restaurants.imageUrl
 

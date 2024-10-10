@@ -20,6 +20,9 @@ export default function Users() {
     try {
       const response = await userApi.getUsersByRestaurant(user.restaurantId)
       if (response.error) {
+        if (response.message === "jwt expired") {
+          return navigate("/iniciarSesión")
+        }
         showNotification({
           title: "Error",
           message: response.message,

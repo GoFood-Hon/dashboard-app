@@ -31,6 +31,8 @@ const dishesApi = {
 
   updateDishWithExtra: (dishId, formData) => axiosClient.put(`api/v1/dish/update/with-extras/${dishId}`, formData),
 
+  updateDishesStatus: (dishId, formData) => axiosClient.patch(`api/v1/dish/${dishId}`, formData),
+
   addImage: (dishId, params) =>
     axiosClient.post(`api/v1/dish/${dishId}/images`, params, {
       contentType: `multipart/form-data; boundary=${params._boundary}`

@@ -61,7 +61,7 @@ function AuthLayout() {
           <Navbar data={roleRoutesMap[user.role]} hidden={!opened} />
         </AppShell.Navbar>
         <AppShell.Header>
-          <AdminHeader burger={<Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" mr="xl" />} />
+          <AdminHeader burger={<Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />} />
         </AppShell.Header>
         <AppShell.Main bg={bg}>
           <Outlet />

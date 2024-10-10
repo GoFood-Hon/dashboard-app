@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { MantineProvider, createTheme, Button, Checkbox, Grid, Input, ScrollArea, Paper } from "@mantine/core"
+import { MantineProvider, createTheme, Button, Checkbox, Grid, Input, ScrollArea, Paper, Text } from "@mantine/core"
 import { IconPlus, IconX } from "@tabler/icons-react"
 import toast from "react-hot-toast"
 import { colors } from "../../theme/colors"
@@ -205,7 +205,7 @@ export const AdditionalForm = ({ additional, setAdditional }) => {
                   </Paper>
                 ))
               ) : (
-                <li className="mt-4 text-gray-300">Los adicionales se mostrarán aquí</li>
+                <Text c='dimmed'>Los adicionales se mostrarán aquí</Text>
               )}
             </ul>
           </ScrollArea>
