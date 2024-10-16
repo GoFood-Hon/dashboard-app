@@ -59,7 +59,7 @@ export const AdditionalForm = ({ additional, setAdditional }) => {
   }
 
   const handleAddItem = () => {
-    setAdditionalItem([...additionalItem, { name: "", price: "", isFree: "" }])
+    setAdditionalItem([...additionalItem, { name: "", price: "", isFree: false }])
   }
   const handleDeleteItem = (index) => {
     setAdditionalItem(additionalItem.filter((_, i) => i !== index))
@@ -149,7 +149,7 @@ export const AdditionalForm = ({ additional, setAdditional }) => {
                   className="mb-4"
                   onChange={(e) => {
                     handleIsFree(index, e.target.checked)
-                    item.isFree ? handleInputChange(index, "price", "0.00") : handleInputChange(index, "price", "")
+                    e.target.checked ? handleInputChange(index, "price", "0.00") : handleInputChange(index, "price", "")
                   }}
                 />
               </div>
