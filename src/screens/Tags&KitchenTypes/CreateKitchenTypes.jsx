@@ -1,35 +1,46 @@
-import { Badge, Button, CloseButton, Flex, Grid, Group, Input, Paper, Text, Space } from "@mantine/core"
+import {
+  Button,
+  CloseButton,
+  Flex,
+  Grid,
+  Group,
+  Input,
+  Paper,
+  Text,
+  Space,
+  Modal,
+  SimpleGrid,
+  UnstyledButton
+} from "@mantine/core"
 import React, { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { colors } from "../../theme/colors"
-import { createKitchenType, fetchAllKitchenTypes, deleteKitchenType } from "../../store/features/kitchenAndTagsSlice" // Importa deleteKitchenType
-import { IconX } from "@tabler/icons-react"
+import { createKitchenType, fetchAllKitchenTypes, deleteKitchenType } from "../../store/features/kitchenAndTagsSlice"
+import { useDisclosure } from "@mantine/hooks"
+import classes from "./ActionsGrid.module.css"
+import { IconToolsKitchen2 } from "@tabler/icons-react"
 
 export const CreateKitchenTypes = () => {
   const dispatch = useDispatch()
   const [value, setValue] = useState("")
-
-  // Obtener tipos de cocina desde el estado
+  const [opened, { close, open }] = useDisclosure(false)
   const kitchenTypes = useSelector((state) => state.kitchenAndTags.kitchenTypes)
-  const loading = useSelector((state) => state.kitchenAndTags.loading)
+  const [kitchenId, setKitchenId] = useState(0)
 
-  // Ejecutar el fetch para obtener todos los tipos de cocina cuando se monta el componente
   useEffect(() => {
     dispatch(fetchAllKitchenTypes())
   }, [dispatch])
 
-  // Manejar la creación del nuevo tipo de cocina
   const handleCreateKitchenType = () => {
     if (value.trim() !== "") {
       dispatch(createKitchenType({ name: value })).then(() => {
-        setValue("") // Limpiar el input después de crear el tipo de cocina
+        setValue("")
       })
     }
   }
 
-  // Manejar la eliminación del tipo de cocina
   const handleDeleteKitchenType = (id) => {
-    dispatch(deleteKitchenType(id)) // Llamar al thunk para eliminar
+    dispatch(deleteKitchenType(id))
   }
 
   return (
@@ -49,13 +60,9 @@ export const CreateKitchenTypes = () => {
                   style={{ display: value ? undefined : "none" }}
                 />
               }
-              style={{ flex: 1 }} // Para que el Input ocupe el espacio restante
+              style={{ flex: 1 }}
             />
-            <Button
-              color={colors.main_app_color}
-              onClick={handleCreateKitchenType}
-              style={{ marginLeft: "8px" }} // Espacio entre el input y el botón
-            >
+            <Button color={colors.main_app_color} onClick={handleCreateKitchenType} style={{ marginLeft: "8px" }}>
               Crear
             </Button>
           </Flex>
@@ -64,41 +71,57 @@ export const CreateKitchenTypes = () => {
 
       <Space h={20} />
 
-      <Paper withBorder radius="md" p="xs">
-        <Group grow>
-          <Flex
-            direction="row"
-            wrap="wrap" // Permitir que los elementos se envuelvan
-            gap="sm" // Espacio entre los badges (ajústalo como necesites)
-            justify={kitchenTypes && kitchenTypes.length > 0 ? "flex-start" : "center"} // Alinear a la izquierda si hay tipos de cocina, centrar si no
-            align="center" // Centrar verticalmente
-          >
-            {kitchenTypes && kitchenTypes.length > 0 ? (
-              kitchenTypes.map((type) => (
-                <Badge
-                  key={type?.id}
-                  color={colors.main_app_color}
-                  size="lg"
-                  variant="default"
-                  rightSection={
-                    <IconX
-                      className="cursor-pointer"
-                      color={colors.main_app_color}
-                      size="1.1rem"
-                      onClick={() => handleDeleteKitchenType(type.id)} // Llamar al manejador de eliminación
-                    />
-                  }>
-                  {type?.name}
-                </Badge>
-              ))
-            ) : (
-              <Text color="dimmed" align="center">
-                Los tipos de cocina creados se mostrarán aquí
-              </Text>
-            )}
-          </Flex>
+      {kitchenTypes && kitchenTypes.length > 0 ? (
+        <SimpleGrid cols={{ base: 2, sm: 3, md: 4, lg: 5 }}>
+          {kitchenTypes.map((type) => (
+            <Paper radius="md" withBorder key={type.id} className={classes.item} style={{ position: "relative" }}>
+              <CloseButton
+                onClick={() => {
+                  setKitchenId(type.id)
+                  open()
+                }}
+                style={{ position: "absolute", top: "5px", right: "5px" }}
+              />
+              <Flex direction="column" align="center">
+                <IconToolsKitchen2 size="2rem" />
+                <Text size="sm" tt="capitalize" mt={7}>
+                  {type.name}
+                </Text>
+              </Flex>
+            </Paper>
+          ))}
+        </SimpleGrid>
+      ) : (
+        <Text c="dimmed" ta="center" size="sm">
+          Los tipos de cocina creados se mostrarán aquí
+        </Text>
+      )}
+
+      <Modal
+        opened={opened}
+        onClose={close}
+        size="auto"
+        overlayProps={{
+          backgroundOpacity: 0.55,
+          blur: 3
+        }}
+        title="¿Estás seguro que deseas eliminar?">
+        <Text>El tipo de cocina se quitará de todos los restaurantes a los que esté asociado</Text>
+
+        <Group mt="sm" justify="end">
+          <Button color={colors.main_app_color} variant="outline" onClick={close}>
+            No
+          </Button>
+          <Button
+            color={colors.main_app_color}
+            onClick={() => {
+              handleDeleteKitchenType(kitchenId)
+              close()
+            }}>
+            Sí, deseo hacerlo
+          </Button>
         </Group>
-      </Paper>
+      </Modal>
     </Paper>
   )
 }

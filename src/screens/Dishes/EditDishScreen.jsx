@@ -13,6 +13,7 @@ import { useNavigate, useParams } from "react-router-dom"
 import BackButton from "./components/BackButton"
 import { NAVIGATION_ROUTES_RES_ADMIN } from "../../routes"
 import { colors } from "../../theme/colors"
+import { AdditionalForm } from "./AdditionalForm"
 
 export default function EditDishScreen() {
   const dispatch = useDispatch()
@@ -79,7 +80,7 @@ export default function EditDishScreen() {
     {
       title: "Adicionales",
       requirement: "Opcional",
-      form: <EditAdditionalForm additional={additional} setAdditional={setAdditional} dishDetails={dishDetails} />
+      form: <AdditionalForm additional={additional} setAdditional={setAdditional} />
     },
     {
       title: "Pagos",
@@ -110,21 +111,22 @@ export default function EditDishScreen() {
   const onSubmit = async (data) => {
     setIsLoading(true)
     const dishId = data.id
+    const { additionals: _, ...restOfData } = data
     const dishData = {
-      ...data,
+      ...restOfData,
       price: convertToDecimal(data?.price),
       additionals: additional
     }
 
     dispatch(updateDish({ dishData, dishId })).then((response) => {
-      console.log(response)
       if (!response.payload.status) {
         navigate(NAVIGATION_ROUTES_RES_ADMIN.Menu.submenu.Dishes.path)
       }
       setIsLoading(false)
     })
     close()
-  }
+}
+
 
   return (
     <>

@@ -89,6 +89,9 @@ importers:
       react-hot-toast:
         specifier: ^2.4.1
         version: 2.4.1(csstype@3.1.3)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      react-imask:
+        specifier: ^7.6.1
+        version: 7.6.1(react@18.2.0)
       react-map-gl:
         specifier: ^7.1.7
         version: 7.1.7(mapbox-gl@2.15.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -122,7 +125,7 @@ importers:
         version: 18.2.15
       '@vitejs/plugin-react':
         specifier: ^4.1.1
-        version: 4.1.1(vite@4.4.12(sugarss@4.0.1(postcss@8.4.31)))
+        version: 4.1.1(vite@4.5.5(sugarss@4.0.1(postcss@8.4.31)))
       autoprefixer:
         specifier: ^10.4.16
         version: 10.4.16(postcss@8.4.31)
@@ -169,8 +172,8 @@ importers:
         specifier: ^3.3.5
         version: 3.3.5
       vite:
-        specifier: ^4.4.12
-        version: 4.4.12(sugarss@4.0.1(postcss@8.4.31))
+        specifier: ^4.5.5
+        version: 4.5.5(sugarss@4.0.1(postcss@8.4.31))
 
 packages:
 
@@ -256,6 +259,10 @@ packages:
     engines: {node: '>=6.9.0'}
     peerDependencies:
       '@babel/core': ^7.0.0-0
+
+  '@babel/runtime-corejs3@7.25.7':
+    resolution: {integrity: sha512-gMmIEhg35sXk9Te5qbGp3W9YKrvLt3HV658/d3odWrHSqT0JeG5OzsJWFHRLiOohRyjRsJc/x03DhJm3i8VJxg==}
+    engines: {node: '>=6.9.0'}
 
   '@babel/runtime@7.25.6':
     resolution: {integrity: sha512-VBj9MYyDb9tuLq7yzqjgzt6Q+IBQLrGZfdjOekyEirZPHxXWoTSGUTMrpsfi58Up73d13NfYLv8HT9vmznjzhQ==}
@@ -1068,6 +1075,9 @@ packages:
   convert-source-map@2.0.0:
     resolution: {integrity: sha512-Kvp459HrV2FEJ1CAsi1Ku+MY3kasH19TFykTz2xWmMeq6bk2NU3XXvfJ+Q61m0xktWwt+1HSYf3JZsTms3aRJg==}
 
+  core-js-pure@3.38.1:
+    resolution: {integrity: sha512-BY8Etc1FZqdw1glX0XNOq2FDwfrg/VGqoZOZCdaL+UmdaqDwQwYXkMJT4t6In+zfEfOJDcM9T0KdbBeJg8KKCQ==}
+
   core-util-is@1.0.3:
     resolution: {integrity: sha512-ZQBvi1DcpJ4GDqanjucZ2Hj3wEO5pZDS89BWbkcrvdxksJorwUDDZamX9ldFkp9aw2lmBDLgkObEA4DWNJ9FYQ==}
 
@@ -1729,6 +1739,10 @@ packages:
   ignore@5.3.2:
     resolution: {integrity: sha512-hsBTNUqQTDwkWtcdYI2i06Y/nUBEsNEDJKjWdigLvegy8kDuJAS8uRlpkkcQpyEXL0Z/pjDy5HBmMjRCJ2gq+g==}
     engines: {node: '>= 4'}
+
+  imask@7.6.1:
+    resolution: {integrity: sha512-sJlIFM7eathUEMChTh9Mrfw/IgiWgJqBKq2VNbyXvBZ7ev/IlO6/KQTKlV/Fm+viQMLrFLG/zCuudrLIwgK2dg==}
+    engines: {npm: '>=4.0.0'}
 
   immediate@3.0.6:
     resolution: {integrity: sha512-XXOFtyqDjNDAQxVfYxuF7g9Il/IbWmmlQg2MYKOH8ExIT1qg6xc4zyS3HaEEATgs1btfzxq15ciUiY7gjSXRGQ==}
@@ -2461,6 +2475,12 @@ packages:
       react: '>=16'
       react-dom: '>=16'
 
+  react-imask@7.6.1:
+    resolution: {integrity: sha512-vLNfzcCz62Yzx/GRGh5tiCph9Gbh2cZu+Tz8OiO5it2eNuuhpA0DWhhSlOtVtSJ80+Bx+vFK5De8eQ9AmbkXzA==}
+    engines: {npm: '>=4.0.0'}
+    peerDependencies:
+      react: '>=0.14.0'
+
   react-is@16.13.1:
     resolution: {integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==}
 
@@ -3106,8 +3126,8 @@ packages:
   victory-vendor@36.9.2:
     resolution: {integrity: sha512-PnpQQMuxlwYdocC8fIJqVXvkeViHYzotI+NJrCuav0ZYFoq912ZHBk3mCeuj+5/VpodOjPe1z0Fk2ihgzlXqjQ==}
 
-  vite@4.4.12:
-    resolution: {integrity: sha512-KtPlUbWfxzGVul8Nut8Gw2Qe8sBzWY+8QVc5SL8iRFnpnrcoCaNlzO40c1R6hPmcdTwIPEDkq0Y9+27a5tVbdQ==}
+  vite@4.5.5:
+    resolution: {integrity: sha512-ifW3Lb2sMdX+WU91s3R0FyQlAyLxOzCSCP37ujw0+r5POeHPwe6udWVIElKQq8gk3t7b8rkmvqC6IHBpCff4GQ==}
     engines: {node: ^14.18.0 || >=16.0.0}
     hasBin: true
     peerDependencies:
@@ -3337,6 +3357,11 @@ snapshots:
     dependencies:
       '@babel/core': 7.25.2
       '@babel/helper-plugin-utils': 7.24.8
+
+  '@babel/runtime-corejs3@7.25.7':
+    dependencies:
+      core-js-pure: 3.38.1
+      regenerator-runtime: 0.14.1
 
   '@babel/runtime@7.25.6':
     dependencies:
@@ -3823,14 +3848,14 @@ snapshots:
 
   '@ungap/structured-clone@1.2.0': {}
 
-  '@vitejs/plugin-react@4.1.1(vite@4.4.12(sugarss@4.0.1(postcss@8.4.31)))':
+  '@vitejs/plugin-react@4.1.1(vite@4.5.5(sugarss@4.0.1(postcss@8.4.31)))':
     dependencies:
       '@babel/core': 7.25.2
       '@babel/plugin-transform-react-jsx-self': 7.24.7(@babel/core@7.25.2)
       '@babel/plugin-transform-react-jsx-source': 7.24.7(@babel/core@7.25.2)
       '@types/babel__core': 7.20.5
       react-refresh: 0.14.2
-      vite: 4.4.12(sugarss@4.0.1(postcss@8.4.31))
+      vite: 4.5.5(sugarss@4.0.1(postcss@8.4.31))
     transitivePeerDependencies:
       - supports-color
 
@@ -4214,6 +4239,8 @@ snapshots:
   convert-source-map@1.9.0: {}
 
   convert-source-map@2.0.0: {}
+
+  core-js-pure@3.38.1: {}
 
   core-util-is@1.0.3: {}
 
@@ -4977,6 +5004,10 @@ snapshots:
 
   ignore@5.3.2: {}
 
+  imask@7.6.1:
+    dependencies:
+      '@babel/runtime-corejs3': 7.25.7
+
   immediate@3.0.6: {}
 
   immer@9.0.21: {}
@@ -5656,6 +5687,12 @@ snapshots:
       react-dom: 18.2.0(react@18.2.0)
     transitivePeerDependencies:
       - csstype
+
+  react-imask@7.6.1(react@18.2.0):
+    dependencies:
+      imask: 7.6.1
+      prop-types: 15.8.1
+      react: 18.2.0
 
   react-is@16.13.1: {}
 
@@ -6393,7 +6430,7 @@ snapshots:
       d3-time: 3.1.0
       d3-timer: 3.0.1
 
-  vite@4.4.12(sugarss@4.0.1(postcss@8.4.31)):
+  vite@4.5.5(sugarss@4.0.1(postcss@8.4.31)):
     dependencies:
       esbuild: 0.18.20
       postcss: 8.4.31

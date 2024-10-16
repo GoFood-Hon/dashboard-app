@@ -1,18 +1,17 @@
 import React from "react"
+import { Textarea } from "@mantine/core"
 import { ErrorMessage } from "./ErrorMessage"
 
 export default function InputTextAreaField({ label, name, register, rules, errors, placeholder }) {
   return (
     <React.Fragment>
-      <label className="text-sm font-bold leading-snug">{label}</label>
-      <textarea
-        className={`${
-          errors[name] ? "border border-red-500" : null
-        }  p-2 appearance-none block w-full border outline-none`}
+      <Textarea
+        label={label}
         placeholder={placeholder}
+        error={errors?.[name]?.message}
         {...register(name, rules)}
+        minRows={3}
       />
-      <ErrorMessage message={errors?.[name]?.message} />
     </React.Fragment>
   )
 }

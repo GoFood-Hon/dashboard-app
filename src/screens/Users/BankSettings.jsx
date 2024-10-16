@@ -88,7 +88,7 @@ export default function BankSettings() {
               <SettingsCard title="Banco" iconName="bank">
                 <Grid my={20}>
                   <Grid.Col span={{ sm: 12 }}>
-                    <span className="text-sky-950 text-sm font-bold leading-snug">Banco</span>
+                    <span className="text-sm font-bold leading-snug">Banco</span>
                     <Controller
                       control={control}
                       name="bank"
@@ -110,7 +110,7 @@ export default function BankSettings() {
                   </Grid.Col>
                 </Grid>
               </SettingsCard>
-              <SettingsCard title="Plan" iconName="creditCard"></SettingsCard>
+              
             </Tabs.Panel>
             <Tabs.Panel value="api">
               <SettingsCard title="Accesos de la API" iconName="creditCard">

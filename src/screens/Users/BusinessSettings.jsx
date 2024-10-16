@@ -14,6 +14,7 @@ import restaurantsApi from "../../api/restaurantApi"
 import PreviewImageCard from "../../components/PreviewImageCard"
 import { colors } from "../../theme/colors"
 import { updateRestaurantData } from "../../store/features/restaurantSlice"
+import InputTextAreaField from "../../components/Form/InputTextAreaField"
 
 export default function BusinessSettings() {
   const navigate = useNavigate()
@@ -189,7 +190,7 @@ export default function BusinessSettings() {
                 <InputField label="RTN" name="rtn" register={register} errors={errors} />
               </Grid.Col>
               <Grid.Col span={{ sm: 12 }}>
-                <InputField label="Dirección facturación" name="billingAddress" register={register} errors={errors} />
+                <InputTextAreaField label="Dirección de facturación" name="billingAddress" register={register} errors={errors} />
               </Grid.Col>
               <Grid.Col span={{ sm: 12 }}>
                 <Checkbox

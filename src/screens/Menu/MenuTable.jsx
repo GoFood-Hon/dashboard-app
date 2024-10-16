@@ -16,7 +16,8 @@ import {
   Paper,
   Flex,
   Text,
-  Container
+  Container,
+  Grid
 } from "@mantine/core"
 import { IconEye, IconCheck, IconX } from "@tabler/icons-react"
 import { colors } from "../../theme/colors"
@@ -29,6 +30,7 @@ import { useDebouncedCallback } from "@mantine/hooks"
 import { useDispatch, useSelector } from "react-redux"
 import { TableSkeleton } from "../../components/Skeletons/TableSkeleton"
 import { fetchAdminUsers } from "../../store/features/userSlice"
+import { getFormattedHNL } from "../../utils"
 dayjs.extend(relativeTime)
 dayjs.locale("es")
 dayjs.extend(relativeTime)
@@ -302,9 +304,45 @@ export default function MenuTable({
     ],
     planScreen: [
       { label: "Nombre", accessor: "name" },
-      { label: "Tipo de pago", accessor: "paymentType" },
-      { label: "Precio", accessor: "price" },
+      {
+        label: "Tipo de pago",
+        accessor: "paymentType"
+      },
+      {
+        label: "Precio",
+        render: (price) => {
+          return getFormattedHNL(price)
+        },
+        accessor: "price"
+      },
+      {
+        label: "Suscripciones",
+        render: (hasSubscriptions) => (hasSubscriptions ? "Si" : "No"),
+        accessor: "hasSubscriptions",
+        center: true
+      },
       { label: "Última actualización", accessor: "updatedAt" },
+      {
+        label: "Estado",
+        accessor: "isActive",
+        render: (active) => (
+          <MantineProvider theme={theme}>
+            <Switch
+              checked={active}
+              //onChange={() => (isActive ? handleDisableSelected(item.id) : handleEnableSelected(item.id))}
+              color={colors.main_app_color}
+              size="sm"
+              thumbIcon={
+                active ? (
+                  <IconCheck style={{ width: rem(12), height: rem(12) }} stroke={3} color={colors.main_app_color} />
+                ) : (
+                  <IconX style={{ width: rem(12), height: rem(12) }} stroke={3} color={colors.main_app_color} />
+                )
+              }
+            />
+          </MantineProvider>
+        )
+      },
       {
         label: "Acciones",
         accessor: "id",
@@ -352,17 +390,17 @@ export default function MenuTable({
 
   return (
     <>
-      <div className={`flex w-full justify-between items-center mb-4 `}>
-        <Group mx={10}>
+      <Grid className={`flex w-full justify-between items-center mb-4 `}>
+        <Grid.Col span={{ base: 12 }}>
           <TextInput
+            radius="md"
             placeholder="Buscar"
             value={search}
-            w={500}
             onChange={handleChange}
             rightSection={loading && <Loader color={colors.main_app_color} size={20} />}
           />
-        </Group>
-      </div>
+        </Grid.Col>
+      </Grid>
 
       {loadingData ? (
         <TableSkeleton />

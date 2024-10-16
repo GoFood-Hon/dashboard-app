@@ -24,6 +24,7 @@ export const NewRestaurant = () => {
   const [newPlan, setNewPlan] = useState({})
   const [restaurantDetails, setRestaurantDetails] = useState({})
   const [restaurantId, setRestaurantId] = useState("")
+  const [kitchenId, setKitchenId] = useState(null)
 
   const handlePlanCancel = (cancelled) => {
     setPlanCancelled(cancelled)
@@ -39,160 +40,162 @@ export const NewRestaurant = () => {
     setValue,
     control,
     reset,
+    watch,
     formState: { errors }
   } = useForm({ resolver: yupResolver(restaurantValidation) })
 
   const [isDataCleared, setIsDataCleared] = useState(false)
 
   const onSubmit = async (data) => {
-    setIsLoading(true)
-    try {
-      const formData = new FormData()
+    console.log(data)
+    // setIsLoading(true)
+    // try {
+    //   const formData = new FormData()
 
-      formData.append("name", data.name)
-      formData.append("email", data.email)
-      formData.append("phoneNumber", `+504${data.phoneNumber}`)
-      formData.append("socialReason", data.socialReason)
-      formData.append("rtn", data.rtn)
-      formData.append("billingAddress", data.billingAddress)
-      formData.append("cai", data.cai)
-      formData.append("maxDistanceShipping", data.maxDistanceShipping)
+    //   formData.append("name", data.name)
+    //   formData.append("email", data.email)
+    //   formData.append("phoneNumber", `+504${data.phoneNumber}`)
+    //   formData.append("socialReason", data.socialReason)
+    //   formData.append("rtn", data.rtn)
+    //   formData.append("billingAddress", data.billingAddress)
+    //   formData.append("cai", data.cai)
+    //   formData.append("maxDistanceShipping", data.maxDistanceShipping)
 
-      if (data.shippingFree) {
-        formData.append("shippingFree", true)
-        formData.append("shippingPrice", "0.00")
-      } else {
-        formData.append("shippingFree", false)
-        formData.append("shippingPrice", convertToDecimal(data.shippingPrice))
-      }
+    //   if (data.shippingFree) {
+    //     formData.append("shippingFree", true)
+    //     formData.append("shippingPrice", "0.00")
+    //   } else {
+    //     formData.append("shippingFree", false)
+    //     formData.append("shippingPrice", convertToDecimal(data.shippingPrice))
+    //   }
 
-      const response = await restaurantsApi.createRestaurant(formData)
+    //   const response = await restaurantsApi.createRestaurant(formData)
 
-      if (response.error) {
-        showNotification({
-          title: "Error",
-          message: response.message,
-          color: "red",
-          duration: 7000
-        })
-      } else {
-        setRestaurantId(response.data.id)
+    //   if (response.error) {
+    //     showNotification({
+    //       title: "Error",
+    //       message: response.message,
+    //       color: "red",
+    //       duration: 7000
+    //     })
+    //   } else {
+    //     setRestaurantId(response.data.id)
 
-        const uploadImage = async (restaurantId, file) => {
-          const formDataImage = new FormData()
-          formDataImage.append("files", file)
+    //     const uploadImage = async (restaurantId, file) => {
+    //       const formDataImage = new FormData()
+    //       formDataImage.append("files", file)
 
-          return await restaurantsApi.addImage(restaurantId, formDataImage)
-        }
+    //       return await restaurantsApi.addImage(restaurantId, formDataImage)
+    //     }
 
-        if (data?.files?.[0]) {
-          const addImageResponse = await uploadImage(restaurantId, data?.files?.[0])
-          if (addImageResponse.error) {
-            showNotification({
-              title: "Error",
-              message: addImageResponse.message,
-              color: "red",
-              duration: 7000
-            })
-          }
+    //     if (data?.files?.[0]) {
+    //       const addImageResponse = await uploadImage(restaurantId, data?.files?.[0])
+    //       if (addImageResponse.error) {
+    //         showNotification({
+    //           title: "Error",
+    //           message: addImageResponse.message,
+    //           color: "red",
+    //           duration: 7000
+    //         })
+    //       }
 
-          if (planCancelled && Object.keys(newPlan).length > 0) {
-            // Cancelar el plan existente (si es necesario)
-            try {
-              const cancelPlanResponse = await plansApi.cancelPlan({ restaurantId })
+    //       if (planCancelled && Object.keys(newPlan).length > 0) {
+    //         // Cancelar el plan existente (si es necesario)
+    //         try {
+    //           const cancelPlanResponse = await plansApi.cancelPlan({ restaurantId })
 
-              if (cancelPlanResponse.error) {
-                showNotification({
-                  title: "Error",
-                  message: cancelPlanResponse.message,
-                  color: "red",
-                  duration: 5000
-                })
-              } else {
-                // Asignar el nuevo plan solo si la cancelación fue exitosa
-                try {
-                  const assignPlanResponse = await plansApi.assignPlan({
-                    restaurantId,
-                    planId: newPlan?.id // Asumiendo que `planId` está en los datos de `data`
-                  })
+    //           if (cancelPlanResponse.error) {
+    //             showNotification({
+    //               title: "Error",
+    //               message: cancelPlanResponse.message,
+    //               color: "red",
+    //               duration: 5000
+    //             })
+    //           } else {
+    //             // Asignar el nuevo plan solo si la cancelación fue exitosa
+    //             try {
+    //               const assignPlanResponse = await plansApi.assignPlan({
+    //                 restaurantId,
+    //                 planId: newPlan?.id // Asumiendo que `planId` está en los datos de `data`
+    //               })
 
-                  if (assignPlanResponse.error) {
-                    showNotification({
-                      title: "Error",
-                      message: assignPlanResponse.message,
-                      color: "red",
-                      duration: 5000
-                    })
-                  } else {
-                    showNotification({
-                      title: "Actualización exitosa",
-                      message: `Se actualizó la información de ${response.data.name}`,
-                      color: "green",
-                      duration: 7000
-                    })
-                    navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Restaurants.path)
-                  }
-                } catch (error) {
-                  showNotification({
-                    title: "Error",
-                    message: `Error al actualizar: ${error}`,
-                    color: "red",
-                    duration: 5000
-                  })
-                }
-              }
-            } catch (error) {
-              showNotification({
-                title: "Error",
-                message: error?.message,
-                color: "red",
-                duration: 7000
-              })
-            }
-          } else if (!planCancelled && Object.keys(newPlan).length > 0) {
-            // Asignar el nuevo plan solo si la cancelación fue exitosa
-            try {
-              const assignPlanResponse = await plansApi.assignPlan({
-                restaurantId,
-                planId: newPlan?.id // Asumiendo que `planId` está en los datos de `data`
-              })
+    //               if (assignPlanResponse.error) {
+    //                 showNotification({
+    //                   title: "Error",
+    //                   message: assignPlanResponse.message,
+    //                   color: "red",
+    //                   duration: 5000
+    //                 })
+    //               } else {
+    //                 showNotification({
+    //                   title: "Actualización exitosa",
+    //                   message: `Se actualizó la información de ${response.data.name}`,
+    //                   color: "green",
+    //                   duration: 7000
+    //                 })
+    //                 navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Restaurants.path)
+    //               }
+    //             } catch (error) {
+    //               showNotification({
+    //                 title: "Error",
+    //                 message: `Error al actualizar: ${error}`,
+    //                 color: "red",
+    //                 duration: 5000
+    //               })
+    //             }
+    //           }
+    //         } catch (error) {
+    //           showNotification({
+    //             title: "Error",
+    //             message: error?.message,
+    //             color: "red",
+    //             duration: 7000
+    //           })
+    //         }
+    //       } else if (!planCancelled && Object.keys(newPlan).length > 0) {
+    //         // Asignar el nuevo plan solo si la cancelación fue exitosa
+    //         try {
+    //           const assignPlanResponse = await plansApi.assignPlan({
+    //             restaurantId,
+    //             planId: newPlan?.id // Asumiendo que `planId` está en los datos de `data`
+    //           })
 
-              if (assignPlanResponse.error) {
-                showNotification({
-                  title: "Error",
-                  message: assignPlanResponse.message,
-                  color: "red",
-                  duration: 5000
-                })
-              } else {
-                showNotification({
-                  title: "Actualización exitosa",
-                  message: `Se actualizó la información de ${response.data.name}`,
-                  color: "green",
-                  duration: 7000
-                })
-                navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Restaurants.path)
-              }
-            } catch (error) {
-              showNotification({
-                title: "Error",
-                message: `Error al actualizar: ${error}`,
-                color: "red",
-                duration: 5000
-              })
-            }
-          }
-        }
-      }
-    } catch (e) {
-      showNotification({
-        title: "Error",
-        message: e.message,
-        color: "red",
-        duration: 7000
-      })
-    }
-    setIsLoading(false)
+    //           if (assignPlanResponse.error) {
+    //             showNotification({
+    //               title: "Error",
+    //               message: assignPlanResponse.message,
+    //               color: "red",
+    //               duration: 5000
+    //             })
+    //           } else {
+    //             showNotification({
+    //               title: "Actualización exitosa",
+    //               message: `Se actualizó la información de ${response.data.name}`,
+    //               color: "green",
+    //               duration: 7000
+    //             })
+    //             navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Restaurants.path)
+    //           }
+    //         } catch (error) {
+    //           showNotification({
+    //             title: "Error",
+    //             message: `Error al actualizar: ${error}`,
+    //             color: "red",
+    //             duration: 5000
+    //           })
+    //         }
+    //       }
+    //     }
+    //   }
+    // } catch (e) {
+    //   showNotification({
+    //     title: "Error",
+    //     message: e.message,
+    //     color: "red",
+    //     duration: 7000
+    //   })
+    // }
+    // setIsLoading(false)
   }
 
   const accordionStructure = [
@@ -206,6 +209,7 @@ export const NewRestaurant = () => {
           setValue={setValue}
           control={control}
           isDataCleared={isDataCleared}
+          watch={watch}
         />
       )
     },
@@ -222,24 +226,23 @@ export const NewRestaurant = () => {
         />
       )
     },
-    ,
-    {
-      title: "Selección del plan",
-      requirement: "Opcional",
-      form: (
-        <PlanForm
-          planCancelled={planCancelled}
-          newPlan={newPlan}
-          setNewPlan={setNewPlan}
-          classes={classes}
-          colors={colors}
-          restaurantDetails={restaurantDetails}
-          handlePlanCancel={handlePlanCancel}
-          handleSelectNewPlan={handleSelectNewPlan}
-          restaurantId={restaurantId}
-        />
-      )
-    }
+    // {
+    //   title: "Selección del plan",
+    //   requirement: "Opcional",
+    //   form: (
+    //     <PlanForm
+    //       planCancelled={planCancelled}
+    //       newPlan={newPlan}
+    //       setNewPlan={setNewPlan}
+    //       classes={classes}
+    //       colors={colors}
+    //       restaurantDetails={restaurantDetails}
+    //       handlePlanCancel={handlePlanCancel}
+    //       handleSelectNewPlan={handleSelectNewPlan}
+    //       restaurantId={restaurantId}
+    //     />
+    //   )
+    // }
   ]
 
   const items = accordionStructure.map((item, key) => (

@@ -1,14 +1,9 @@
-import { Button, Card, Flex, Group, Modal, Paper, Text, ThemeIcon, rem } from "@mantine/core"
+import { Button, Flex, Group, Modal, Paper, Text, ThemeIcon, rem } from "@mantine/core"
 import { IconCreditCard } from "@tabler/icons-react"
 import classes from "./CardGradient.module.css"
 import { colors } from "../../theme/colors"
 import { getFormattedHNL } from "../../utils"
 import { useDisclosure } from "@mantine/hooks"
-import plansApi from "../../api/plansApi"
-import toast from "react-hot-toast"
-import { showNotification } from "@mantine/notifications"
-import { useNavigate } from "react-router-dom"
-import { NAVIGATION_ROUTES_SUPER_ADMIN } from "../../routes"
 
 export function PlanInfoCard({ data, onCancelPlan }) {
   const [opened, { close, open }] = useDisclosure(false)
@@ -32,9 +27,6 @@ export function PlanInfoCard({ data, onCancelPlan }) {
         cancelarlo en cualquier momento y ver en la lista los planes disponibles con el detalle de precios y características.
       </Text>
       <Flex mt="lg" justify="end">
-        {/* <Button onClick={() => navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Plans.path + "/" + data?.id)} color={colors.main_app_color}>
-          Ver plan
-        </Button> */}
         <Button variant="outline" onClick={open} color={colors.main_app_color}>
           Cancelar plan
         </Button>

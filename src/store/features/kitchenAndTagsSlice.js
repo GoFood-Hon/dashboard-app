@@ -18,7 +18,7 @@ export const fetchAllKitchenTypes = createAsyncThunk("kitchenAndTags/fetchAllKit
 export const createKitchenType = createAsyncThunk("kitchenAndTags/createKitchenType", async (params, { rejectWithValue }) => {
   try {
     const response = await kitchenAndTagsApi.createKitchenType(params)
-    showNotification({ title: "Éxito", message: "Tipo de cocina creado", color: "green" })
+    showNotification({ title: "Creación exitosa", message: "El tipo de cocina fue creado correctamente", color: "green" })
     return response.data
   } catch (error) {
     return rejectWithValue(error.response?.data || "Error creating kitchen type")
@@ -42,8 +42,9 @@ export const updateKitchenType = createAsyncThunk(
 // Eliminar un tipo de cocina
 export const deleteKitchenType = createAsyncThunk("kitchenAndTags/deleteKitchenType", async (id, { rejectWithValue }) => {
   try {
-    await kitchenAndTagsApi.deleteKitchenType(id) // Llamar al API para eliminar
-    return id // Retornar el id del tipo de cocina eliminado
+    await kitchenAndTagsApi.deleteKitchenType(id)
+    showNotification({ title: "Eliminación exitosa", message: "El tipo de cocina fue eliminado correctamente", color: "green" })
+    return id
   } catch (error) {
     showNotification({ title: "Error", message: "Error eliminando el tipo de cocina", color: "red" })
     return rejectWithValue(error.response?.data || "Error deleting kitchen type")
@@ -98,6 +99,7 @@ export const updateDishesTag = createAsyncThunk("kitchenAndTags/updateDishesTag"
 export const deleteDishesTag = createAsyncThunk("kitchenAndTags/deleteDishesTag", async (id, { rejectWithValue }) => {
   try {
     await kitchenAndTagsApi.deleteDishesTag(id)
+    showNotification({ title: "Eliminación exitosa", message: "El tag fue eliminado correctamente", color: "green" })
     return id
   } catch (error) {
     showNotification({ title: "Error", message: "Error eliminando el tag", color: "red" })

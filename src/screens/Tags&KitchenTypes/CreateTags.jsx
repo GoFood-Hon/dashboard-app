@@ -1,33 +1,30 @@
-import { Badge, Button, CloseButton, Flex, Grid, Group, Input, Paper, Text, Space } from "@mantine/core"
+import { Button, CloseButton, Flex, Grid, Group, Input, Paper, Text, Space, Modal, Pill } from "@mantine/core"
 import React, { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { colors } from "../../theme/colors"
-import { createDishesTag, fetchAllDishesTags, deleteDishesTag } from "../../store/features/kitchenAndTagsSlice" // Importa deleteDishesTag
-import { IconX } from "@tabler/icons-react"
+import { createDishesTag, fetchAllDishesTags, deleteDishesTag } from "../../store/features/kitchenAndTagsSlice"
+import { useDisclosure } from "@mantine/hooks"
+import classes from "./ActionsGrid.module.css"
 
 export const CreateTags = () => {
   const dispatch = useDispatch()
   const [value, setValue] = useState("")
-
-  // Obtener tags desde el estado
   const tags = useSelector((state) => state.kitchenAndTags.dishTags)
-  const loading = useSelector((state) => state.kitchenAndTags.loading)
+  const [opened, { close, open }] = useDisclosure(false)
+  const [tagId, setTagId] = useState(0)
 
-  // Ejecutar el fetch para obtener todos los tags cuando se monta el componente
   useEffect(() => {
     dispatch(fetchAllDishesTags())
   }, [dispatch])
 
-  // Manejar la creación del nuevo tag
   const handleCreateTag = () => {
     if (value.trim() !== "") {
       dispatch(createDishesTag({ name: value })).then(() => {
-        setValue("") // Limpiar el input después de crear el tag
+        setValue("")
       })
     }
   }
 
-  // Manejar la eliminación del tag
   const handleDeleteTag = (id) => {
     dispatch(deleteDishesTag(id))
   }
@@ -49,13 +46,9 @@ export const CreateTags = () => {
                   style={{ display: value ? undefined : "none" }}
                 />
               }
-              style={{ flex: 1 }} // Para que el Input ocupe el espacio restante
+              style={{ flex: 1 }}
             />
-            <Button
-              color={colors.main_app_color}
-              onClick={handleCreateTag}
-              style={{ marginLeft: "8px" }} // Espacio entre el input y el botón
-            >
+            <Button color={colors.main_app_color} onClick={handleCreateTag} style={{ marginLeft: "8px" }}>
               Crear
             </Button>
           </Flex>
@@ -64,41 +57,55 @@ export const CreateTags = () => {
 
       <Space h={20} />
 
-      <Paper withBorder radius="md" p="xs">
-        <Group grow>
-          <Flex
-            direction="row"
-            wrap="wrap" // Permitir que los elementos se envuelvan
-            gap="sm" // Espacio entre los badges (ajústalo como necesites)
-            justify={tags && tags.length > 0 ? "flex-start" : "center"} // Alinear a la izquierda si hay tags, centrar si no
-            align="center" // Centrar verticalmente
-          >
-            {tags && tags.length > 0 ? (
-              tags.map((tag) => (
-                <Badge
-                  key={tag?.id}
-                  color={colors.main_app_color}
-                  size="lg"
-                  variant="default"
-                  rightSection={
-                    <IconX
-                      className="cursor-pointer"
-                      color={colors.main_app_color}
-                      size="1.1rem"
-                      onClick={() => handleDeleteTag(tag.id)}
-                    />
-                  }>
-                  {tag?.name}
-                </Badge>
-              ))
-            ) : (
-              <Text color="dimmed" align="center">
-                Los tags creados se mostrarán aquí
-              </Text>
-            )}
-          </Flex>
+      <Group grow>
+        <Flex direction="row" wrap="wrap" gap="sm" justify={tags && tags.length > 0 ? "flex-start" : "center"} align="center">
+          {tags && tags.length > 0 ? (
+            tags.map((tag) => (
+              <Pill
+                className={classes.tag}
+                size="md"
+                onRemove={() => {
+                  setTagId(tag.id)
+                  open()
+                }}
+                key={tag.id}
+                withRemoveButton>
+                {tag?.name}
+              </Pill>
+            ))
+          ) : (
+            <Text color="dimmed" size="sm" align="center">
+              Los tags creados se mostrarán aquí
+            </Text>
+          )}
+        </Flex>
+      </Group>
+
+      <Modal
+        opened={opened}
+        onClose={close}
+        size="auto"
+        overlayProps={{
+          backgroundOpacity: 0.55,
+          blur: 3
+        }}
+        title="¿Estás seguro que deseas eliminar?">
+        <Text>El tag se quitará de todos los platillos a los que esté asociado</Text>
+
+        <Group mt="sm" justify="end">
+          <Button color={colors.main_app_color} variant="outline" onClick={close}>
+            No
+          </Button>
+          <Button
+            color={colors.main_app_color}
+            onClick={() => {
+              handleDeleteTag(tagId)
+              close()
+            }}>
+            Sí, deseo hacerlo
+          </Button>
         </Group>
-      </Paper>
+      </Modal>
     </Paper>
   )
 }

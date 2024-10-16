@@ -1,22 +1,36 @@
 import React, { useEffect, useState } from "react"
-import { Checkbox, CloseIcon, Container, Flex, Grid, Group, Paper, Text, rem, Image } from "@mantine/core"
+import { Checkbox, CloseIcon, Container, Flex, Grid, Group, Paper, Text, rem, Image, Select } from "@mantine/core"
 import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone"
 import { IconPhoto } from "@tabler/icons-react"
 import InputField from "../../components/Form/InputField"
 import { colors } from "../../theme/colors"
 import { bytesToMB } from "../../utils"
+import { useDispatch, useSelector } from "react-redux"
+import { fetchAllKitchenTypes } from "../../store/features/kitchenAndTagsSlice"
+import { Controller } from "react-hook-form"
 
-export const GeneralInformationForm = ({ register, errors, setValue, isDataCleared, image }) => {
-  const [isFreeDelivery, setIsFreeDelivery] = useState(true)
+export const GeneralInformationForm = ({ register, control, errors, setValue, isDataCleared, image, watch }) => {
+  const dispatch = useDispatch()
+  const kitchenTypes = useSelector((state) => state.kitchenAndTags.kitchenTypes)
   const [images, setImages] = useState([])
   const [fileInformation, setFileInformation] = useState(null)
 
+  const isFreeDelivery = watch("shippingFree", true)
+
+  useEffect(() => {
+    dispatch(fetchAllKitchenTypes())
+  }, [dispatch])
+
+  useEffect(() => {
+    if (isFreeDelivery) {
+      setValue("shippingPrice", null)
+    } else {
+      setValue("shippingPrice", "")
+    }
+  }, [isFreeDelivery, setValue])
+
   const handleHasFreeDelivery = () => {
-    setIsFreeDelivery((prevState) => {
-      const newValue = !prevState
-      setValue("shippingFree", newValue)
-      return newValue
-    })
+    setValue("shippingFree", !isFreeDelivery)
   }
 
   const handleDrop = (acceptedFiles) => {
@@ -86,6 +100,27 @@ export const GeneralInformationForm = ({ register, errors, setValue, isDataClear
             </Grid.Col>
             <Grid.Col span={{ base: 6 }}>
               <InputField label="Rango de distancia de entrega" name="maxDistanceShipping" register={register} errors={errors} />
+            </Grid.Col>
+            <Grid.Col span={{ base: 12 }}>
+              <Controller
+                name="cuisineTypeId"
+                control={control}
+                render={({ field, fieldState }) => (
+                  <Select
+                    label="Tipos de cocina"
+                    placeholder="Seleccione..."
+                    data={kitchenTypes.map((item) => ({
+                      value: item.id,
+                      label: item.name
+                    }))}
+                    maxDropdownHeight={200}
+                    value={field.value}
+                    onChange={field.onChange}
+                    error={fieldState.error ? fieldState.error.message : null}
+                    searchable
+                  />
+                )}
+              />
             </Grid.Col>
             <Grid.Col span={{ base: 12, md: 6 }}>
               <Checkbox

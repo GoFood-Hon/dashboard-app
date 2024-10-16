@@ -7,7 +7,7 @@ import toast from "react-hot-toast"
 import userApi from "../../api/userApi"
 import { useDispatch, useSelector } from "react-redux"
 import { setCurrentPage, fetchAdminUsers } from "../../store/features/userSlice"
-import { Paper, Button, Box, Text, Title, Container, Group, Space, Flex } from "@mantine/core"
+import { Paper, Button, Text, Title, Group, Flex } from "@mantine/core"
 import { colors } from "../../theme/colors"
 
 export const AdminUserScreen = () => {
@@ -57,10 +57,12 @@ export const AdminUserScreen = () => {
           <Flex align="center" gap="xs">
             <Flex align="center" gap={5}>
               <Text fw={700}>
-                {page === 1 ? 1 : (page - 1) * limit + 1}-{page === 1 ? limit : Math.min(page * limit, totalAdminUsers)}
+                <Flex gap={5}>
+                  {page === 1 ? 1 : (page - 1) * limit + 1}-{page === 1 ? limit : Math.min(page * limit, totalAdminUsers)}{" "}
+                  <Text>de</Text>
+                  {totalAdminUsers} administradores
+                </Flex>
               </Text>
-              <Text>de</Text>
-              <Text fw={700}>{totalAdminUsers} administradores</Text>
             </Flex>
             <Button color={colors.main_app_color} onClick={handleNewItem}>
               Nuevo

@@ -1,4 +1,4 @@
-import { CloseIcon, Grid, Group, Image, SimpleGrid, Text, rem, InputBase, Combobox, useCombobox, Paper } from "@mantine/core"
+import { CloseIcon, Grid, Group, Image, SimpleGrid, Text, rem, InputBase, Combobox, useCombobox, Paper, Stack } from "@mantine/core"
 import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone"
 import { IconPhoto } from "@tabler/icons-react"
 import React, { useEffect, useState } from "react"
@@ -65,7 +65,7 @@ export default function GeneralInformationForm({ register, errors, setValue, isD
     <Grid>
       <Grid.Col span={{ base: 12, md: 8, lg: 8 }}>
         <Paper withBorder radius='md' className="flex h-full w-full items-center justify-center rounded-2xl p-4">
-          <div className="flex w-full flex-col">
+          <Stack>
             <InputField
               label="Nombre (Obligatorio)"
               name="name"
@@ -83,8 +83,8 @@ export default function GeneralInformationForm({ register, errors, setValue, isD
               placeholder="Ej. Rico pollo con papas, salsas..."
             />
 
-            <InputCheckbox name="includesDrink" register={register} />
-          </div>
+            <InputCheckbox label='¿Incluye bebida?' name="includesDrink" register={register} />
+          </Stack>
         </Paper>
       </Grid.Col>
       <Grid.Col span={{ base: 12, md: 4, lg: 4 }}>

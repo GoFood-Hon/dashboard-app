@@ -16,7 +16,9 @@ import {
   Tooltip,
   Input,
   CloseButton,
-  Loader
+  Loader,
+  TextInput,
+  Flex
 } from "@mantine/core"
 import { useLocation, useNavigate } from "react-router-dom"
 import { useDispatch, useSelector } from "react-redux"
@@ -34,6 +36,7 @@ import { colors } from "../../theme/colors"
 import { NAVIGATION_ROUTES_RES_ADMIN } from "../../routes"
 import { IconX, IconCheck } from "@tabler/icons-react"
 import { Icon } from "../../components/Icon"
+import BackButton from "../Dishes/components/BackButton"
 
 export default function Branches() {
   const navigate = useNavigate()
@@ -159,26 +162,35 @@ export default function Branches() {
   }
   return (
     <>
-      <section>
-        <div className="flex flex-row justify-between items-center">
-          <h1 className="text-white-200 text-2xl font-semibold">Sucursales</h1>
-          <div className="flex flex-row w-full justify-end items-center">
-            <div className="flex flex-row mr-4">
-              <span className=" text-base font-bold leading-normal">{page === 1 ? 1 : (page - 1) * limit + 1}</span>
-              <span className="text-base font-bold leading-normal">-</span>
-              <span className="text-base font-bold leading-normal">
-                {page === 1 ? limit : Math.min(page * limit, totalItems)}
-              </span>
-              <span className="text-base font-medium leading-normal px-1"> de </span>
-              <span className="text-base font-bold leading-normal">{totalItems} sucursales</span>
-            </div>
+      <Group grow mb='sm'>
+        <Flex align="center" justify="space-between">
+          <BackButton title="Sucursales" />
+          <Flex align="center" gap="xs">
+            <Flex align="center" gap={5}>
+              <Text fw={700}>
+                {page === 1 ? 1 : (page - 1) * limit + 1}-{page === 1 ? limit : Math.min(page * limit, totalItems)}
+              </Text>
+              <Text>de</Text>
+              <Text fw={700}>{totalItems} sucursales</Text>
+            </Flex>
             <Button color={colors.main_app_color} onClick={handleNewItem}>
-              Nueva
+              Nuevo
             </Button>
-          </div>
-        </div>
-      </section>
-      <section className="my-6 w-full">
+          </Flex>
+        </Flex>
+      </Group>
+      <Grid mb={5}>
+        <Grid.Col span={{ base: 12 }}>
+          <TextInput
+            radius="md"
+            placeholder="Buscar"
+            value={""}
+            onChange={""}
+            rightSection={status === "loading" && <Loader color={colors.main_app_color} size={20} />}
+          />
+        </Grid.Col>
+      </Grid>
+      <section className="w-full">
         {status === "loading" ? (
           <div className="h-[calc(100vh-220px)] w-full flex justify-center items-center">
             <Loader color={colors.main_app_color} />

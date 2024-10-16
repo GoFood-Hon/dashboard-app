@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { Paper, Button } from "@mantine/core"
+import { Paper, Button, Group, Flex } from "@mantine/core"
 import MenuTable from "../Menu/MenuTable"
 import { useNavigate } from "react-router-dom"
 import { NAVIGATION_ROUTES_RES_ADMIN } from "../../routes"
@@ -7,6 +7,7 @@ import userApi from "../../api/userApi"
 import { useSelector } from "react-redux"
 import { showNotification } from "@mantine/notifications"
 import { colors } from "../../theme/colors"
+import BackButton from "../../screens/Dishes/components/BackButton"
 
 export default function Users() {
   const navigate = useNavigate()
@@ -56,14 +57,23 @@ export default function Users() {
   }
   return (
     <>
-      <section>
-        <div className="flex flex-row justify-between items-center pb-6">
-          <h1 className="text-white-200 text-2xl font-semibold">Usuarios</h1>
-          <Button color={colors.main_app_color} onClick={handleNavigateNewUser}>
-            Nuevo
-          </Button>
-        </div>
-      </section>
+      <Group grow className="mb-3">
+        <Flex align="center" justify="space-between">
+          <BackButton title="Usuarios" />
+          <Flex align="center" gap="xs">
+            {/* <Flex align="center" gap={5}>
+              <Text fw={700}>
+                {page === 1 ? 1 : (page - 1) * limit + 1}-{page === 1 ? limit : Math.min(page * limit, totalItems)}
+              </Text>
+              <Text>de</Text>
+              <Text fw={700}>{totalItems} usuarios</Text>
+            </Flex> */}
+            <Button color={colors.main_app_color} onClick={handleNavigateNewUser}>
+              Nuevo
+            </Button>
+          </Flex>
+        </Flex>
+      </Group>
       <section>
         <Paper withBorder p="md" radius="md">
           <MenuTable refreshPage={refreshPage} items={users} screenType="usersScreen" loadingData={isLoading} />

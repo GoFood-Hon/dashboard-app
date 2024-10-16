@@ -3,7 +3,6 @@ import { MantineProvider, createTheme, Button, Checkbox, Grid, Input, ScrollArea
 import { IconPlus, IconX, IconArrowNarrowRight } from "@tabler/icons-react"
 import { colors } from "../../theme/colors"
 import { convertToDecimal, getFormattedHNL } from "../../utils"
-import extrasApi from "../../api/extrasApi"
 import { showNotification } from "@mantine/notifications"
 
 export const EditAdditionalForm = ({ additional, setAdditional, dishDetails }) => {
@@ -34,7 +33,7 @@ export const EditAdditionalForm = ({ additional, setAdditional, dishDetails }) =
       const newItemObject = {
         name: newAdditionalTitle,
         required: isRequired,
-        dishId: dishDetails.id,
+        dishId: dishDetails?.id || null,
         requiredMinimum: isRequired ? minRequired : null,
         additionalsDetails: additionalItem?.map((item) => ({
           name: item.name,
@@ -104,7 +103,7 @@ export const EditAdditionalForm = ({ additional, setAdditional, dishDetails }) =
               <Checkbox
                 mt={"md"}
                 labelPosition="left"
-                label={<div className="text-sm font-bold leading-snug">¿Es requerido?</div>}
+                label="¿Es requerido?"
                 color={colors.main_app_color}
                 checked={isRequired}
                 size="sm"
@@ -133,7 +132,6 @@ export const EditAdditionalForm = ({ additional, setAdditional, dishDetails }) =
                     placeholder="Nombre"
                     value={item.name}
                     onChange={(e) => handleInputChange(index, "name", e.target.value)}
-                    className="text-black w-full"
                   />
                   <Input
                     name="price"
@@ -141,7 +139,6 @@ export const EditAdditionalForm = ({ additional, setAdditional, dishDetails }) =
                     value={item.price}
                     disabled={item.isFree}
                     onChange={(e) => handleInputChange(index, "price", e.target.value)}
-                    className="text-black w-full"
                   />
 
                   <div
@@ -153,7 +150,7 @@ export const EditAdditionalForm = ({ additional, setAdditional, dishDetails }) =
                 <Checkbox
                   mt={"md"}
                   labelPosition="left"
-                  label={<div className="text-sm font-bold leading-snug">¿Es gratuito?</div>}
+                  label="¿Es gratuito?"
                   color={colors.main_app_color}
                   checked={item.isFree}
                   size="sm"
@@ -165,12 +162,12 @@ export const EditAdditionalForm = ({ additional, setAdditional, dishDetails }) =
                 />
               </div>
             ))}
-            <Button className="my-2" color={colors.main_app_color} leftSection={<IconPlus size={14} />} onClick={handleAddItem}>
+            <Button className="my-2" color={colors.main_app_color} onClick={handleAddItem}>
               Nuevo
             </Button>
           </Paper>
           <div className="w-full flex items-center justify-end">
-            <Button className="" color={colors.main_app_color} leftSection={<IconPlus size={14} />} onClick={handleNewCategory}>
+            <Button className="" color={colors.main_app_color} onClick={handleNewCategory}>
               Añadir adicional
             </Button>
           </div>

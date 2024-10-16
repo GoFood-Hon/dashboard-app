@@ -178,15 +178,8 @@ export const updateDish = createAsyncThunk(
   "dishes/updateDish",
   async ({ dishData, propertyToUpdate = "all", dishId }, { dispatch }) => {
     try {
-
-      // if (propertyToUpdate === "isActive") {
-      //   const formData = new FormData()
-      //   formData.append("isActive", dishData.isActive)
-      //   payloadData = formData
-      // } else {
-      //   payloadData = dishData // En caso de actualizar otros campos
-      // }
-      const response = await dishesApi.updateDishesStatus(dishId, dishData)
+      console.log(dishData)
+      const response = await dishesApi.updateDishWithExtra(dishId, dishData)
       if (response.error) {
         showNotification({
           title: "Error",
@@ -207,8 +200,6 @@ export const updateDish = createAsyncThunk(
           color: "green",
           duration: 7000
         })
-
-        return response.data
       }
       return response.data
     } catch (error) {

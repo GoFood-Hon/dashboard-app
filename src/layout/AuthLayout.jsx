@@ -10,7 +10,7 @@ import {
   NAVIGATION_ROUTES_RES_ADMIN_TWO,
   NAVIGATION_ROUTES_BRANCH_ADMIN_TWO
 } from "../routes"
-import { AppShell, Burger, Text, useMantineColorScheme, useMantineTheme } from "@mantine/core"
+import { AppShell, Burger, useMantineColorScheme, useMantineTheme } from "@mantine/core"
 import { useDisclosure } from "@mantine/hooks"
 import { AdminHeader } from "../components/Headers/AdminHeader"
 import { Navbar } from "../components/Navbar/Navbar"

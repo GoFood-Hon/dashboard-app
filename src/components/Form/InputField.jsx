@@ -1,7 +1,6 @@
-import React, { useState } from "react"
-import { ErrorMessage } from "./ErrorMessage"
-import { Icon } from "../Icon"
-import { Input } from "@mantine/core"
+import React, { useState } from "react";
+import { Grid, Input } from "@mantine/core";
+import { IconEye, IconEyeOff } from "@tabler/icons-react";
 
 export default function InputField({
   label,
@@ -11,53 +10,46 @@ export default function InputField({
   errors,
   placeholder,
   type = "text",
-  value, // Cambia defaultValue a value
-  onChange, // Asegura que tengas un onChange handler si es controlado
+  value,
+  onChange,
   countryPrefix
 }) {
-  const [showPassword, setShowPassword] = useState(false)
+  const [showPassword, setShowPassword] = useState(false);
 
   const togglePasswordVisibility = () => {
-    setShowPassword(!showPassword)
-  }
+    setShowPassword((prev) => !prev);
+  };
 
   return (
     <React.Fragment>
-      <label className=" text-sm font-bold leading-snug">{label}</label>
-
-      {/* <Input.Wrapper withAsterisk style={{ outline: "none" }} size="" label={label} error={errors[name]}>
-        <Input
-          style={{ outline: "none" }}
-          type={type === "password" ? (showPassword ? "text" : "password") : type}
-          value={value}
-          onChange={onChange}
-          placeholder={placeholder}
-        />
-      </Input.Wrapper> */}
-      <div className="flex items-center justify-center relative">
-        {countryPrefix && (
-          <div className="font-bold text-sm mr-2 py-3 text-center border rounded-md h-full min-w-[4rem]">{countryPrefix}</div>
-        )}
-        <input
-          className={`${
-            errors[name] ? "border border-red-500" : "mb-2"
-          }  mt-2 p-2 appearance-none block w-full border placeholder-gray-300 rounded focus:outline-none dark:bg-slate-900 dark:border-gray-600 dark:placeholder-gray-500`}
-          type={type === "password" ? (showPassword ? "text" : "password") : type}
-          value={value} // Usa value en lugar de defaultValue
-          onChange={onChange} // Asegúrate de que este evento esté manejado correctamente
-          placeholder={placeholder}
-          {...register(name, rules)}
-        />
-        {type === "password" && (
-          <button
-            type="button"
-            className="focus:outline-none pl-1 absolute right-2 top-0 bottom-0"
-            onClick={togglePasswordVisibility}>
-            <Icon icon="eye" size={20} />
-          </button>
-        )}
-      </div>
-      <ErrorMessage message={errors?.[name]?.message} />
+      <Grid grow>
+        <Grid.Col>
+          <Input.Wrapper label={label} error={errors?.[name]?.message}>
+            <Input
+              classNames={{
+                input: errors[name] ? "border-red-500" : ""
+              }}
+              type={type === "password" ? (showPassword ? "text" : "password") : type}
+              value={value}
+              onChange={onChange}
+              placeholder={placeholder}
+              {...register(name, rules)}
+              rightSection={
+                type === "password" && (
+                  <div onClick={togglePasswordVisibility} style={{ cursor: "pointer" }}>
+                    {showPassword ? (
+                      <IconEyeOff size={20} />
+                    ) : (
+                      <IconEye size={20} />
+                    )}
+                  </div>
+                )
+              }
+              style={{ flex: 1 }}
+            />
+          </Input.Wrapper>
+        </Grid.Col>
+      </Grid>
     </React.Fragment>
-  )
+  );
 }

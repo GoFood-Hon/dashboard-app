@@ -65,33 +65,6 @@ export default function NewDish() {
       requirement: "Obligatorio",
       form: <PreparationForm setValue={setValue} errors={errors} register={register} />
     }
-    /*
-     {
-      title: "Extras",
-      requirement: "Opcional",
-      form: (
-        <ComplementsForm
-          setValue={setValue}
-          isDataCleared={isDataCleared}
-          defaultMessage="Por favor seleccione complementos extras para este platillo"
-          itemsAvailableLabel="Extras disponibles"
-          data={extras}
-          name={"extras"}
-        />
-      )
-    }, */
-
-    /*  {
-      title: "Bebidas",
-      requirement: "Opcional",
-      form: <DrinksForms />
-    }, */
-    /*  {
-      title: "Extras",
-      requirement: "Opcional",
-      form: <ExtrasForm />
-    },
-  */
   ]
 
   const items = accordionStructure.map((item, key) => (

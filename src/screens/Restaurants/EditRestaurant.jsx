@@ -71,9 +71,12 @@ export const EditRestaurant = () => {
       formData.append("cai", data.cai)
       formData.append("maxDistanceShipping", data.maxDistanceShipping)
       formData.append("shippingFree", data.shippingFree ?? false)
-      if (!data.shippingFree) {
+      formData.append("cuisineTypeId", data.cuisineTypeId)
+      if (data.shippingFree !== null) {
         formData.append("shippingPrice", convertToDecimal(data.shippingPrice))
       }
+
+      console.log(formData)
 
       // Actualizar el restaurante
       const response = await restaurantsApi.updateRestaurant(formData, restaurantId)
@@ -194,6 +197,14 @@ export const EditRestaurant = () => {
               duration: 5000
             })
           }
+        } else {
+          showNotification({
+            title: "Actualización exitosa",
+            message: `Se actualizó la información de ${response.data.name}`,
+            color: "green",
+            duration: 7000
+          })
+          navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Restaurants.path)
         }
       }
 
@@ -228,6 +239,7 @@ export const EditRestaurant = () => {
           control={control}
           image={imageLocation}
           isDataCleared={isDataCleared}
+          watch={watch}
         />
       )
     },

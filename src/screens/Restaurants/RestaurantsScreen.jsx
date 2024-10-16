@@ -15,7 +15,8 @@ import {
   rem,
   Box,
   Tooltip,
-  Loader
+  Loader,
+  Flex
 } from "@mantine/core"
 import { useDispatch, useSelector } from "react-redux"
 import ItemCard from "../../components/ItemCard"
@@ -52,7 +53,6 @@ export default function RestaurantsScreen() {
         order: "DESC"
       })
     )
-    console.log(restaurant)
     setCardsSelected([])
   }, [dispatch, page])
 
@@ -119,27 +119,23 @@ export default function RestaurantsScreen() {
 
   return (
     <>
-      <section>
-        <div className="flex flex-row justify-between items-center pb-4 w-full">
+      <Group grow className="mb-3">
+        <Flex align="center" justify="space-between">
           <BackButton title="Restaurantes" />
-          <div className="flex flex-row justify-between">
-            <div className="flex flex-row w-full justify-end items-center">
-              <div className="flex flex-row mr-4">
-                <span className={`text-base font-bold leading-normal`}>{page === 1 ? 1 : (page - 1) * limit + 1}</span>
-                <span className="text-base font-bold leading-normal space-x-2">-</span>
-                <span className="text-base font-bold leading-normal">
-                  {page === 1 ? limit : Math.min(page * limit, totalItems)}
-                </span>
-                <span className="text-base font-medium leading-normal px-1"> de </span>
-                <span className="text-base font-bold leading-normal">{totalItems} restaurantes</span>
-              </div>
-              <Button color={colors.main_app_color} onClick={handleNewItem}>
-                Nuevo
-              </Button>
-            </div>
-          </div>
-        </div>
-      </section>
+          <Flex align="center" gap="xs">
+            <Flex align="center" gap={5}>
+              <Text fw={700}>
+                {page === 1 ? 1 : (page - 1) * limit + 1}-{page === 1 ? limit : Math.min(page * limit, totalItems)}
+              </Text>
+              <Text>de</Text>
+              <Text fw={700}>{totalItems} restaurantes</Text>
+            </Flex>
+            <Button color={colors.main_app_color} onClick={handleNewItem}>
+              Nuevo
+            </Button>
+          </Flex>
+        </Flex>
+      </Group>
       <section className="w-full">
         {status === "loading" ? (
           <div className="h-[calc(100vh-220px)] w-full flex justify-center items-center">

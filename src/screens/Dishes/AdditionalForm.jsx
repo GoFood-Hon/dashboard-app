@@ -84,19 +84,16 @@ export const AdditionalForm = ({ additional, setAdditional }) => {
   return (
     <Grid>
       <Grid.Col span={{ base: 12, md: 7 }}>
-        <Paper withBorder radius='md' className="w-full h-full p-6 rounded-lg">
-          <span className="text-sm font-semibold w-full">Titulo</span>
+        <Paper withBorder radius="md" className="w-full h-full p-6 rounded-lg">
           <div>
-            <Input
-              name="title"
-              value={newAdditionalTitle}
-              onChange={(e) => setNewAdditionalTitle(e.target.value)}
-            />
+            <Input.Wrapper label="Titulo">
+              <Input name="title" value={newAdditionalTitle} onChange={(e) => setNewAdditionalTitle(e.target.value)} />
+            </Input.Wrapper>
             <MantineProvider theme={theme}>
               <Checkbox
                 mt={"md"}
                 labelPosition="left"
-                label={<div className="text-sm font-bold leading-snug">¿Es requerido?</div>}
+                label="¿Es requerido?"
                 color={colors.main_app_color}
                 checked={isRequired}
                 size="sm"
@@ -145,7 +142,7 @@ export const AdditionalForm = ({ additional, setAdditional }) => {
                 <Checkbox
                   mt={"md"}
                   labelPosition="left"
-                  label={<div className="text-sm font-bold leading-snug ">¿Es gratuito?</div>}
+                  label="¿Es gratuito?"
                   color={colors.main_app_color}
                   checked={item.isFree}
                   size="sm"
@@ -157,13 +154,13 @@ export const AdditionalForm = ({ additional, setAdditional }) => {
                 />
               </div>
             ))}
-            <Button className="my-2" color={colors.main_app_color} leftSection={<IconPlus size={14} />} onClick={handleAddItem}>
+            <Button className="my-2" color={colors.main_app_color} onClick={handleAddItem}>
               Nuevo
             </Button>
           </Paper>
           <br />
           <div className="w-full flex items-center justify-end">
-            <Button className="" color={colors.main_app_color} leftSection={<IconPlus size={14} />} onClick={handleNewCategory}>
+            <Button className="" color={colors.main_app_color} onClick={handleNewCategory}>
               Añadir adicional
             </Button>
           </div>
@@ -171,14 +168,16 @@ export const AdditionalForm = ({ additional, setAdditional }) => {
       </Grid.Col>
 
       <Grid.Col span={{ base: 12, md: 5 }}>
-        <Paper withBorder radius='md' className="w-full h-full p-6 rounded-lg">
+        <Paper withBorder radius="md" className="w-full h-full p-6 rounded-lg">
           <span className="text-sm font-semibold">Adicionales del platillo:</span>
           <ScrollArea w={"100%"} h={360}>
             <ul>
               {additional.length > 0 ? (
                 additional?.map((category, index) => (
                   <Paper
-                    key={index} withBorder radius='md'
+                    key={index}
+                    withBorder
+                    radius="md"
                     className="p-2 my-4 bg-white rounded-lg border border-blue-100 flex flex-row justify-between items-center">
                     <article className="w-full">
                       <div className="flex items-center justify-between mb-1">
@@ -186,7 +185,7 @@ export const AdditionalForm = ({ additional, setAdditional }) => {
                           {category.name} {category.requiredMinimum ? `(min: ${category.requiredMinimum})` : null}:
                         </h3>
                         <span
-                          onClick={() => handleDeleteAdditional(additional)}
+                          onClick={() => handleDeleteAdditional(index)}
                           className="cursor-pointer text-red-500 transition ease-in-out duration-200 rounded-full hover:bg-red-500 hover:text-white p-1">
                           <IconX size={20} />
                         </span>
@@ -205,7 +204,7 @@ export const AdditionalForm = ({ additional, setAdditional }) => {
                   </Paper>
                 ))
               ) : (
-                <Text c='dimmed'>Los adicionales se mostrarán aquí</Text>
+                <Text c="dimmed">Los adicionales se mostrarán aquí</Text>
               )}
             </ul>
           </ScrollArea>

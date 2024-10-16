@@ -26,7 +26,23 @@ const plansApi = {
   updateFeatureToPlan: (params) => axiosClient.patch(`api/v1/plan/plan-feature`, params),
 
   // Get all plans
-  getAllPlans: (params) => axiosClient.get(`api/v1/plan/`, params),
+  getAllPlans: ({ limit, page, order, search_field, search } = {}) => {
+    const params = {
+      limit,
+      page,
+      order,
+      search_field,
+      search
+    }
+
+    // Filtrar valores no definidos o vacíos (más robusto)
+    const validParams = Object.fromEntries(Object.entries(params).filter(([_, value]) => value !== undefined && value !== ""))
+
+    const queryString = new URLSearchParams(validParams).toString()
+    const url = `api/v1/plan${queryString ? `?${queryString}` : ""}`
+
+    return axiosClient.get(url)
+  },
 
   // Add card to restaurant (Admin restaurant)
   addCard: (params) => axiosClient.post(`api/v1/plan/credit-card/add-card`, params),
@@ -38,10 +54,9 @@ const plansApi = {
   assignPlan: (params) => axiosClient.post(`api/v1/plan/subscription/create`, params),
 
   //Cancel active subscription for restaurant (Admin restaurant)
-  // cancelPlan: (restaurantId) => axiosClient.delete(`/api/v1/plan/subscription/cancel/${restaurantId}`)
-  // cancelPlan: (params) => axiosClient.delete(`/api/v1/plan/subscription/cancel`, params)
-  cancelPlan: (params) => axiosClient.delete('/api/v1/plan/subscription/cancel', {
-    data: params
-  })  
+  cancelPlan: (params) =>
+    axiosClient.delete("/api/v1/plan/subscription/cancel", {
+      data: params
+    })
 }
 export default plansApi

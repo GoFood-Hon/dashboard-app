@@ -1,32 +1,26 @@
 import React, { useEffect, useState } from "react"
-import BaseLayout from "../../components/BaseLayout"
 import {
   Affix,
-  Breadcrumbs,
-  CloseButton,
   Grid,
-  Input,
   Pagination,
   MantineProvider,
   createTheme,
   Switch,
   rem,
-  Container,
   Text,
   Button,
-  Paper,
   Card,
   Group,
   Box,
   Image,
   Tooltip,
   Flex,
-  Title,
-  Loader
+  Loader,
+  TextInput
 } from "@mantine/core"
-import { useNavigate, useLocation } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import { colors } from "../../theme/colors"
-import { NAVIGATION_ROUTES_RES_ADMIN, NAVIGATION_ROUTES_BRANCH_ADMIN } from "../../routes"
+import { NAVIGATION_ROUTES_RES_ADMIN } from "../../routes"
 import { useDispatch, useSelector } from "react-redux"
 import { IconX, IconCheck } from "@tabler/icons-react"
 import {
@@ -34,21 +28,15 @@ import {
   selectAllDishes,
   selectDishesError,
   selectDishesStatus,
-  setFilters,
   setPage,
   updateDish
 } from "../../store/features/dishesSlice"
-import LoadingCircle from "../../components/LoadingCircle"
-import ItemCard from "../../components/ItemCard"
-import { Icon } from "../../components/Icon"
-import FilterPopover from "../../components/FilterPopover"
 import BackButton from "./components/BackButton"
 import { APP_ROLES } from "../../utils/constants"
 import { getFormattedHNL } from "../../utils"
 
 export default function Dishes() {
   const navigate = useNavigate()
-  const location = useLocation()
   const dispatch = useDispatch()
   const user = useSelector((state) => state.user.value)
 
@@ -132,28 +120,6 @@ export default function Dishes() {
     refreshPage()
   }
 
-  const onFiltersChange = (data) => {
-    const serializableFilters = {
-      ...data,
-      startDate: data.startDate?.toISOString().split("T")[0],
-      endDate: data.endDate?.toISOString().split("T")[0]
-    }
-
-    dispatch(setFilters(serializableFilters))
-
-    dispatch(
-      fetchDishes({
-        limit,
-        page,
-        order: "DESC",
-        restaurantId: user.restaurantId,
-        filters: data
-      })
-    )
-
-    setCardsSelected([])
-  }
-
   const handleClick = (id) => {
     let route = ""
 
@@ -176,7 +142,7 @@ export default function Dishes() {
 
   return (
     <>
-      <Group grow className="mb-3">
+      <Group grow mb="sm">
         <Flex align="center" justify="space-between">
           <BackButton title="Platillos" />
           <Flex align="center" gap="xs">
@@ -196,25 +162,17 @@ export default function Dishes() {
           </Flex>
         </Flex>
       </Group>
-      <section>
-        <div className="flex flex-row justify-between">
-          {/*  <Input
-            className="w-80"
-            placeholder="Buscar platillo"
-            value={searchDish}
-            onChange={(event) => setSearchDish(event.currentTarget.value)}
-            rightSectionPointerEvents="all"
-            leftSection={<Icon icon="search" size={16} color="#6d7177" />}
-            rightSection={
-              <CloseButton
-                aria-label="Clear input"
-                onClick={() => setSearchDish("")}
-                style={{ display: searchDish ? undefined : "none" }}
-              />
-            }
-          /> */}
-        </div>
-      </section>
+      <Grid mb={5}>
+        <Grid.Col span={{ base: 12 }}>
+          <TextInput
+            radius="md"
+            placeholder="Buscar"
+            value={""}
+            onChange={""}
+            rightSection={status === "loading" && <Loader color={colors.main_app_color} size={20} />}
+          />
+        </Grid.Col>
+      </Grid>
       <section className="w-full">
         {status === "loading" ? (
           <div className="h-[calc(100vh-220px)] w-full flex justify-center items-center">
