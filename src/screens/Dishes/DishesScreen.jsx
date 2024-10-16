@@ -29,7 +29,7 @@ import {
   selectDishesError,
   selectDishesStatus,
   setPage,
-  updateDish
+  updateDishStatus
 } from "../../store/features/dishesSlice"
 import BackButton from "./components/BackButton"
 import { APP_ROLES } from "../../utils/constants"
@@ -111,12 +111,12 @@ export default function Dishes() {
   }
 
   const handleEnableSelected = async (id) => {
-    await dispatch(updateDish({ dishData: { isActive: true }, propertyToUpdate: "isActive", dishId: id }))
+    await dispatch(updateDishStatus({ dishData: { isActive: true }, propertyToUpdate: "isActive", dishId: id }))
     refreshPage()
   }
 
   const handleDisableSelected = async (id) => {
-    await dispatch(updateDish({ dishData: { isActive: false }, propertyToUpdate: "isActive", dishId: id }))
+    await dispatch(updateDishStatus({ dishData: { isActive: false }, propertyToUpdate: "isActive", dishId: id }))
     refreshPage()
   }
 

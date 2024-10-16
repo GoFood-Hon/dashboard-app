@@ -216,6 +216,43 @@ export const updateDish = createAsyncThunk(
   }
 )
 
+export const updateDishStatus = createAsyncThunk(
+  "dishes/updateDishStatus",
+  async ({ dishData, dishId }, { dispatch }) => {
+    try {
+      const response = await dishesApi.updateDishesStatus(dishId, dishData)
+      if (response.error) {
+        showNotification({
+          title: "Error",
+          message: response.message,
+          color: "red",
+          duration: 7000
+        })
+
+        return response.error
+      } else {
+        showNotification({
+          title: "Actualización exitosa",
+          message: response.message,
+          color: "green",
+          duration: 7000
+        })
+      }
+      return response.data
+    } catch (error) {
+      dispatch(setError("Error updating dish"))
+      showNotification({
+        title: "Error",
+        message: error,
+        color: "red",
+        duration: 7000
+      })
+
+      throw error
+    }
+  }
+)
+
 /*
  * DISHES SLICE
  */
