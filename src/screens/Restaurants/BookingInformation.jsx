@@ -1,22 +1,29 @@
-import { Flex, Grid, Group, Input, Paper } from "@mantine/core"
+import { Grid, Input } from "@mantine/core"
+import InputField from "../../components/Form/InputField"
 
-const BookingInformation = () => {
+const BookingInformation = ({ register, errors }) => {
   return (
     <Grid grow>
       <Grid.Col span={{ base: 12, md: 6, lg: 3 }}>
-        <Input.Wrapper label="Precio por silla" fw={700} error="">
-          <Input type="number" />
-        </Input.Wrapper>
+        <InputField label="Precio por silla" type="number" name="pricePerChair" register={register} errors={errors} />
       </Grid.Col>
       <Grid.Col span={{ base: 12, md: 6, lg: 3 }}>
-        <Input.Wrapper label="Cantidad de horas antes de cancelar pedido" fw={700} error="">
-          <Input type="number" />
-        </Input.Wrapper>
+        <InputField
+          label="Horas antes de la reservación para cancelarla"
+          type="number"
+          name="hoursBeforeCancellation"
+          register={register}
+          errors={errors}
+        />
       </Grid.Col>
       <Grid.Col span={{ base: 12, md: 6, lg: 3 }}>
-        <Input.Wrapper label="Cantidad de horas antes de pagar pedido" fw={700} error="">
-          <Input type="number" />
-        </Input.Wrapper>
+        <InputField
+          label="Horas antes de la reservación para pagarla"
+          type="number"
+          name="hoursBeforeBooking"
+          register={register}
+          errors={errors}
+        />
       </Grid.Col>
     </Grid>
   )

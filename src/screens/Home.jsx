@@ -13,7 +13,7 @@ import { TopProductsSales } from "./Dashboards/TopProductsSales"
 function Home() {
   return (
     <>
-      <h1 className="text-white-200 text-2xl font-semibold pb-6">Dashboard</h1>
+      <h1 className="text-white-200 text-2xl font-semibold pb-3">Dashboard</h1>
       <DashboardScreen />
       <Grid className="mt-6">
         <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
@@ -28,12 +28,12 @@ function Home() {
         <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
           <PopularFoodChart />
         </Grid.Col>
-        <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
+        {/* <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
           <DishesTable />
         </Grid.Col>
         <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
           <TopProductsSales />
-        </Grid.Col>
+        </Grid.Col> */}
       </Grid>
     </>
   )

@@ -7,7 +7,6 @@ import { AdminGeneralInformationForm } from "./AdminGeneralInformationForm"
 import { NAVIGATION_ROUTES_RES_ADMIN, NAVIGATION_ROUTES_SUPER_ADMIN } from "../../routes"
 import userApi from "../../api/userApi"
 import authApi from "../../api/authApi"
-import { LoaderComponent } from "../../components/LoaderComponent"
 import BackButton from "../Dishes/components/BackButton"
 import { colors } from "../../theme/colors"
 

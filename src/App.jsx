@@ -66,6 +66,10 @@ import { EditBranch } from "./screens/Branches/EditBranch"
 import { EditAdminUser } from "./screens/Users/EditAdminUser"
 import { EditPlan } from "./screens/Plans/EditPlan"
 import { KitchenTypesAndTags } from "./screens/Tags&KitchenTypes/kitchenTypesAndTags"
+import { EditUserScreen } from "./screens/Users/EditUserScreen"
+import { Reservations } from "./screens/Reservations/Reservations"
+import { ReservationDetails } from "./screens/Reservations/ReservationDetails"
+import { CollectionsList } from "./screens/Collections/CollectionsList"
 
 function App() {
   const userRole = useSelector((state) => state.user.value.role)
@@ -98,6 +102,12 @@ function App() {
             <Route path={NAVIGATION_ROUTES_SUPER_ADMIN.Account.path} element={<AccountSettings />} />
 
             <Route path={NAVIGATION_ROUTES_SUPER_ADMIN.KitchenTypesAndTags.path} element={<KitchenTypesAndTags />} />
+
+            <Route path={NAVIGATION_ROUTES_SUPER_ADMIN.Collections.path} element={<CollectionsList />} />
+
+            <Route path={NAVIGATION_ROUTES_SUPER_ADMIN.Collections.NewCollection.path} element={<CollectionsList />} />
+
+            <Route path={NAVIGATION_ROUTES_SUPER_ADMIN.Collections.EditCollection.path} element={<CollectionsList />} />
 
             {/* <Route path={NAVIGATION_ROUTES_SUPER_ADMIN.Password.path} element={<PasswordSettings />} /> */}
           </>
@@ -138,13 +148,17 @@ function App() {
 
             <Route path={NAVIGATION_ROUTES_RES_ADMIN.Branches.path} element={<Branches />} />
 
+            <Route path={NAVIGATION_ROUTES_RES_ADMIN.Reservations.path} element={<Reservations />} />
+
+            <Route path={NAVIGATION_ROUTES_RES_ADMIN.Reservations.ReservationDetails.path} element={<ReservationDetails />} />
+
             <Route path={NAVIGATION_ROUTES_RES_ADMIN.Branches.NewBranch.path} element={<NewBranch />} />
 
             <Route path={NAVIGATION_ROUTES_RES_ADMIN.Branches.BranchDetail.path} element={<EditBranch />} />
 
             <Route path={NAVIGATION_ROUTES_RES_ADMIN.Users.path} element={<Users />} />
 
-            <Route path={NAVIGATION_ROUTES_RES_ADMIN.Users.UserDetails.path} element={<UserDetails />} />
+            <Route path={NAVIGATION_ROUTES_RES_ADMIN.Users.UserDetails.path} element={<EditUserScreen />} />
 
             <Route path={NAVIGATION_ROUTES_RES_ADMIN.Users.NewUser.path} element={<NewUser />} />
 

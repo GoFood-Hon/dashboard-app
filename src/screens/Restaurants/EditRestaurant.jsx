@@ -72,11 +72,12 @@ export const EditRestaurant = () => {
       formData.append("maxDistanceShipping", data.maxDistanceShipping)
       formData.append("shippingFree", data.shippingFree ?? false)
       formData.append("cuisineTypeId", data.cuisineTypeId)
+      formData.append("pricePerChair", data.pricePerChair)
+      formData.append("hoursBeforeCancellation", data.hoursBeforeCancellation)
+      formData.append("hoursBeforeBooking", data.hoursBeforeBooking)
       if (data.shippingFree !== null) {
         formData.append("shippingPrice", convertToDecimal(data.shippingPrice))
       }
-
-      console.log(formData)
 
       // Actualizar el restaurante
       const response = await restaurantsApi.updateRestaurant(formData, restaurantId)

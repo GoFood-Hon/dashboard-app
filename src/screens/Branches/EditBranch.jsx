@@ -73,7 +73,6 @@ export const EditBranch = () => {
     const fetchData = async () => {
       try {
         const response = await branchesApi.getBranch(branchId)
-
         setDetails(response?.data)
 
         setViewState({
@@ -114,6 +113,7 @@ export const EditBranch = () => {
           image={imageLocation}
           isDataCleared={isDataCleared}
           itemDetails={details}
+          watch={watch}
         />
       )
     },
@@ -134,7 +134,7 @@ export const EditBranch = () => {
     {
       title: "Horario",
       requirement: "Obligatorio",
-      form: <TimeForm setValue={setValue} scheduleModels={details.ScheduleModels} />
+      form: <TimeForm setValue={setValue} scheduleModels={details.ScheduleModels} watch={watch} />
     }
   ]
 
@@ -155,10 +155,12 @@ export const EditBranch = () => {
 
   const onSubmit = async (data) => {
     setIsLoading(true)
-    const formData = JSON.stringify({
+    const formData = {
       name: data.name,
       email: data.email,
+      note: data.note,
       phoneNumber: data.phoneNumber,
+      maxDistanceShipping: data.maxDistanceShipping,
       address: data.address,
       city: data.city,
       state: getDepartmentNameById(parseInt(data.state)),
@@ -166,9 +168,10 @@ export const EditBranch = () => {
       delivery: data.delivery ?? false,
       pickup: data.pickup ?? false,
       onSite: data.onSite ?? false,
+      allowTableBooking: data.allowTableBooking ?? false,
       alwaysOpen: data.alwaysOpen ?? false,
       schedules: !data.alwaysOpen ? data.schedule : null
-    })
+    }
 
     try {
       const response = await branchesApi.updateBranches(formData, branchId)
@@ -249,7 +252,7 @@ export const EditBranch = () => {
                 Descartar
               </Button>
               <Button loading={isLoading} color={colors.main_app_color} type="submit">
-                Guardar
+                Actualizar
               </Button>
             </Flex>
           </Paper>

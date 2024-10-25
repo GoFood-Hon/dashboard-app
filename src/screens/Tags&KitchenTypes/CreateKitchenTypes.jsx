@@ -100,7 +100,10 @@ export const CreateKitchenTypes = () => {
       <Modal
         opened={opened}
         onClose={close}
-        size="auto"
+        withCloseButton={false}
+        closeOnEscape
+        radius='md'
+        size="md"
         overlayProps={{
           backgroundOpacity: 0.55,
           blur: 3
@@ -110,7 +113,7 @@ export const CreateKitchenTypes = () => {
 
         <Group mt="sm" justify="end">
           <Button color={colors.main_app_color} variant="outline" onClick={close}>
-            No
+            Cancelar
           </Button>
           <Button
             color={colors.main_app_color}
@@ -118,7 +121,7 @@ export const CreateKitchenTypes = () => {
               handleDeleteKitchenType(kitchenId)
               close()
             }}>
-            Sí, deseo hacerlo
+            Confirmar
           </Button>
         </Group>
       </Modal>

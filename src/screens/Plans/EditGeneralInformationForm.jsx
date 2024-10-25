@@ -75,7 +75,6 @@ export const EditGeneralInformationForm = ({ register, errors, setValue, feature
   }
 
   const onChangeDishesAdded = (value) => {
-    console.log(value)
     setValue("featureIds", value)
     setDishesAdded(value)
   }

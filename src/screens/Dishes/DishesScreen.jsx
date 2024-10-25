@@ -162,7 +162,7 @@ export default function Dishes() {
           </Flex>
         </Flex>
       </Group>
-      <Grid mb={5}>
+      {/* <Grid mb={5}>
         <Grid.Col span={{ base: 12 }}>
           <TextInput
             radius="md"
@@ -172,7 +172,7 @@ export default function Dishes() {
             rightSection={status === "loading" && <Loader color={colors.main_app_color} size={20} />}
           />
         </Grid.Col>
-      </Grid>
+      </Grid> */}
       <section className="w-full">
         {status === "loading" ? (
           <div className="h-[calc(100vh-220px)] w-full flex justify-center items-center">

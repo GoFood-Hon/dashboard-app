@@ -178,7 +178,6 @@ export const updateDish = createAsyncThunk(
   "dishes/updateDish",
   async ({ dishData, propertyToUpdate = "all", dishId }, { dispatch }) => {
     try {
-      console.log(dishData)
       const response = await dishesApi.updateDishWithExtra(dishId, dishData)
       if (response.error) {
         showNotification({

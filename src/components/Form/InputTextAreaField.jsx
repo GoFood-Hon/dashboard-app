@@ -1,6 +1,5 @@
 import React from "react"
 import { Textarea } from "@mantine/core"
-import { ErrorMessage } from "./ErrorMessage"
 
 export default function InputTextAreaField({ label, name, register, rules, errors, placeholder }) {
   return (
@@ -10,7 +9,8 @@ export default function InputTextAreaField({ label, name, register, rules, error
         placeholder={placeholder}
         error={errors?.[name]?.message}
         {...register(name, rules)}
-        minRows={3}
+        autosize
+        minRows={2}
       />
     </React.Fragment>
   )

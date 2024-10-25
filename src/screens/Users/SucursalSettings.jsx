@@ -1,4 +1,4 @@
-import { Grid, Input } from "@mantine/core"
+import { Container, Grid, Input } from "@mantine/core"
 import React, { useEffect, useState } from "react"
 import { colors } from "../../theme/colors"
 
@@ -36,30 +36,17 @@ export default function SucursalSettings({ setValue, errors, register }) {
   }
 
   return (
-    <div className="w-full h-full flex flex-col bg-white rounded-2xl border border-blue-100 p-4">
-      <Grid>
-        <Grid.Col span={{ sm: 12, md: 6 }}>
-          <div className="flex flex-col gap-2 pt-4 h-full justify-center">
-            <InputSearchCombobox
-              label="Sucursal"
-              name={"branchId"}
-              placeholder="Buscar sucursales"
-              emptyMessage="Sin sucursales"
-              items={branches}
-              register={register}
-              errors={errors}
-              setValue={setValue}
-              color={colors.primary_button}
-            />
-          </div>
-        </Grid.Col>
-
-        <Grid.Col span={{ sm: 12 }}>
-          <div className="text-blue-600 text-base font-normal leading-normal cursor-pointer" onClick={handleNewBranchNavigation}>
-            + Añadir sucursal
-          </div>
-        </Grid.Col>
-      </Grid>
-    </div>
+    <>
+      <InputSearchCombobox
+        label="Seleccione una sucursal"
+        name={"branchId"}
+        emptyMessage="Sin sucursales"
+        items={branches}
+        register={register}
+        errors={errors}
+        setValue={setValue}
+        color={colors.primary_button}
+      />
+    </>
   )
 }

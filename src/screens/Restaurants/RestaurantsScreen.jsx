@@ -16,22 +16,23 @@ import {
   Box,
   Tooltip,
   Loader,
-  Flex
+  Flex,
+  Transition
 } from "@mantine/core"
 import { useDispatch, useSelector } from "react-redux"
-import ItemCard from "../../components/ItemCard"
 import { fetchRestaurants, selectRestaurantsStatus, setPage, updateRestaurant } from "../../store/features/restaurantSlice"
 import { colors } from "../../theme/colors"
 import { NAVIGATION_ROUTES_SUPER_ADMIN } from "../../routes"
 import BackButton from "../Dishes/components/BackButton"
 import { IconCheck } from "@tabler/icons-react"
 import { IconX } from "@tabler/icons-react"
-import LoadingCircle from "../../components/LoadingCircle"
+import { IconArrowUp } from "@tabler/icons-react"
+import { useWindowScroll } from "@mantine/hooks"
 
 export default function RestaurantsScreen() {
   const navigate = useNavigate()
   const dispatch = useDispatch()
-
+  const [scroll, scrollTo] = useWindowScroll()
   const limit = useSelector((state) => state.restaurants.itemsPerPage)
   const totalItems = useSelector((state) => state.restaurants.totalItems)
   const status = useSelector(selectRestaurantsStatus)

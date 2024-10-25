@@ -6,6 +6,7 @@ import InputSearchCombobox from "../../components/Form/InputSearchCombobox"
 import InputField from "../../components/Form/InputField"
 import { hondurasDepartments, mapBoxStyles } from "../../utils/constants"
 import { MAPBOX_KEY } from "../../services/env"
+import InputTextAreaField from "../../components/Form/InputTextAreaField"
 
 export default function LocationForm({ register, errors, setValue, itemDetails }) {
   const [markerPosition, setMarkerPosition] = useState(null)
@@ -31,20 +32,19 @@ export default function LocationForm({ register, errors, setValue, itemDetails }
   return (
     <Grid>
       <Grid.Col span={{ base: 12 }}>
-        <Paper withBorder radius='md' className="w-full h-full items-center justify-center flex  rounded-2xl p-4">
+        <Paper withBorder radius="md" className="w-full h-full items-center justify-center flex  rounded-2xl p-4">
           <div className="flex flex-col w-full">
-            <InputField
+            <InputTextAreaField
               label="Dirección exacta (Obligatorio)"
               name="address"
               register={register}
               errors={errors}
-              placeholder="Ej. 10 Calle, a la par de establecimiento"
               className="text-black"
             />
             <InputSearchCombobox
               label="Departamento (Obligatorio)"
               name={"state"}
-              placeholder="Buscar departamento"
+              searchValue={itemDetails?.state}
               items={hondurasDepartments}
               register={register}
               errors={errors}
@@ -59,14 +59,15 @@ export default function LocationForm({ register, errors, setValue, itemDetails }
                 <div className="h-72 relative">
                   <Map
                     initialViewState={{
-                      longitude: `${import.meta.env.VITE_MAPBOX_LNG_DEFAULT}`,
-                      latitude: `${import.meta.env.VITE_MAPBOX_LAT_DEFAULT}`,
+                      longitude: -87.21699319736565,
+                      latitude: 14.058362051267025,
                       zoom: 10
                     }}
+                    style={{ borderRadius: "6px" }}
                     mapStyle={import.meta.env.VITE_MAPBOX_STYLE_URL}
                     mapboxAccessToken={import.meta.env.VITE_MAPBOX_ACCESS_TOKEN}
                     onClick={handleMapClick}>
-                    {markerPosition && <Marker {...markerPosition} longitude={lng} latitude={lat} color="red"/>}
+                    {markerPosition && <Marker {...markerPosition} longitude={lng} latitude={lat} color="red" />}
                     <GeolocateControl
                       positionOptions={{ enableHighAccuracy: true }}
                       trackUserLocation={true}

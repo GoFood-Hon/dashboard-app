@@ -8,6 +8,10 @@ import { getFormattedHNL } from "../../utils"
 import { Group, Paper, SimpleGrid, Text } from "@mantine/core"
 import { IconUserPlus, IconDiscount2, IconReceipt2, IconCoin, IconArrowUpRight, IconArrowDownRight } from "@tabler/icons-react"
 import classes from "../../assets/css/StatsGrid.module.css"
+import { IconMoneybag } from "@tabler/icons-react"
+import { IconTicket } from "@tabler/icons-react"
+import { IconCube } from "@tabler/icons-react"
+import { IconUsersGroup } from "@tabler/icons-react"
 
 export const DashboardScreen = () => {
   const [dailySales, setDailySales] = useState(0)
@@ -68,14 +72,13 @@ export const DashboardScreen = () => {
   }
 
   const data = [
-    { title: "Ventas", icon: "money", value: getFormattedHNL(dailySales), diff: 34, text: "Ventas diarias totales" },
-    { title: "Pedidos", icon: "bag", value: dailyOrders, diff: -13, text: "Total pedidos diarios" },
-    { title: "Tickets", icon: "money", value: getFormattedHNL(dailyTicket), diff: 18, text: "Tickets según venta diaria" },
-    { title: "Usuarios", icon: "users", value: totalClients, diff: -30, text: "Total nuevos usuarios" }
+    { title: "Ventas", icon: IconCoin, value: getFormattedHNL(dailySales), diff: 34, text: "Ventas diarias totales" },
+    { title: "Pedidos", icon: IconCube, value: dailyOrders, diff: -13, text: "Total pedidos diarios" },
+    { title: "Tickets", icon: IconTicket, value: getFormattedHNL(dailyTicket), diff: 18, text: "Tickets según venta diaria" },
+    { title: "Usuarios", icon: IconUsersGroup, value: totalClients, diff: -30, text: "Total nuevos usuarios" }
   ]
 
   const stats = data.map((stat) => {
-    const Icons = icons[stat.icon]
     const DiffIcon = stat.diff > 0 ? IconArrowUpRight : IconArrowDownRight
 
     return (
@@ -84,8 +87,8 @@ export const DashboardScreen = () => {
           <Text size="xs" c="dimmed" className={classes.title}>
             {stat.title}
           </Text>
-          {/* <Icons className={classes.icon} size="1.4rem" stroke={1.5} /> */}
-          <Icon className={classes.icon} icon={stat.icon} size="1.4rem" />
+          {/* Renderizar el ícono como un componente JSX */}
+          <stat.icon className={classes.icon} size="1.4rem" stroke={1.5} />
         </Group>
 
         <Group align="flex-end" gap="xs" mt={25}>
@@ -102,6 +105,7 @@ export const DashboardScreen = () => {
       </Paper>
     )
   })
+
   return (
     <div>
       <SimpleGrid cols={{ base: 1, xs: 2, md: 4 }}>{stats}</SimpleGrid>

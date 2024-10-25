@@ -1,5 +1,5 @@
-import { ActionIcon, Box, TextInput, Image, Container, Flex } from "@mantine/core"
-import { IconSearch, IconSun, IconMoon } from "@tabler/icons-react"
+import { ActionIcon, Image, Flex } from "@mantine/core"
+import { IconSun, IconMoon } from "@tabler/icons-react"
 import classes from "./AdminHeader.module.css"
 import { useMantineColorScheme } from "@mantine/core"
 import { UserButton } from "../UserButton/UserButton"

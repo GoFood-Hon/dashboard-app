@@ -83,18 +83,21 @@ export const CreateTags = () => {
 
       <Modal
         opened={opened}
+        radius='md'
         onClose={close}
-        size="auto"
+        withCloseButton={false}
+        closeOnEscape
+        size="md"
         overlayProps={{
           backgroundOpacity: 0.55,
           blur: 3
         }}
         title="¿Estás seguro que deseas eliminar?">
-        <Text>El tag se quitará de todos los platillos a los que esté asociado</Text>
+        <Text size="md">El tag se quitará de todos los platillos a los que esté asociado</Text>
 
         <Group mt="sm" justify="end">
           <Button color={colors.main_app_color} variant="outline" onClick={close}>
-            No
+            Cancelar
           </Button>
           <Button
             color={colors.main_app_color}
@@ -102,10 +105,11 @@ export const CreateTags = () => {
               handleDeleteTag(tagId)
               close()
             }}>
-            Sí, deseo hacerlo
+            Confirmar
           </Button>
         </Group>
       </Modal>
+      
     </Paper>
   )
 }

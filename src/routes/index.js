@@ -1,4 +1,5 @@
-import { IconFileInvoice } from "@tabler/icons-react"
+import { IconFileInvoice, IconListDetails } from "@tabler/icons-react"
+import { IconCalendarDue } from "@tabler/icons-react"
 import { IconAdjustments } from "@tabler/icons-react"
 import { IconShoppingCart } from "@tabler/icons-react"
 import {
@@ -61,7 +62,16 @@ export const NAVIGATION_ROUTES_SUPER_ADMIN = {
     path: "/miCuenta"
   },
   KitchenTypesAndTags: {
-    path: '/tipos-cocina-tags'
+    path: "/tipos-cocina-tags"
+  },
+  Collections: {
+    path: "/lista-de-colecciones",
+    NewCollection: {
+      path: "/lista-de-colecciones/nueva-coleccion"
+    },
+    EditCollection: {
+      path: "/lista-de-colecciones/:collectionId"
+    }
   }
 }
 
@@ -82,6 +92,7 @@ export const NAVIGATION_ROUTES_SUPER_ADMIN_TWO = [
       }
     ]
   },
+  { label: "Colecciones", icon: IconListDetails, link: "/lista-de-colecciones" },
   { label: "Administradores", icon: IconUsers, link: "/administradores" },
   { label: "Planes", icon: IconCreditCard, link: "/planes" },
   { label: "Cuenta", icon: IconSettings, link: "/miCuenta" }
@@ -159,6 +170,12 @@ export const NAVIGATION_ROUTES_RES_ADMIN = {
       path: "/sucursales/:branchId"
     }
   },
+  Reservations: {
+    path: "/reservation-list",
+    ReservationDetails: {
+      path: "/reservation-list/:reservationId"
+    }
+  },
   Users: {
     label: "Usuarios",
     path: "/usuarios",
@@ -196,6 +213,7 @@ export const NAVIGATION_ROUTES_RES_ADMIN_TWO = [
       }
     ]
   },
+  { label: "Reservaciones", icon: IconCalendarDue, link: "/reservation-list" },
   { label: "Sucursales", icon: IconBuildingStore, link: "/sucursales" },
   { label: "Usuarios", icon: IconUsers, link: "/usuarios" },
   {

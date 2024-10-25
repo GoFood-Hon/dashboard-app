@@ -17,7 +17,7 @@ export const InputComboboxSelected = ({ items, label, name, register, setValue }
       <label className="mr-3">{label}</label>
       <div className="flex flex-row items-center gap-2">
         <input
-          className="mt-1 p-2 appearance-none block w-20 border rounded focus:outline-none "
+          className="mt-1 p-2 appearance-none block w-20 rounded focus:outline-none "
           {...register(name)}
           disabled
         />

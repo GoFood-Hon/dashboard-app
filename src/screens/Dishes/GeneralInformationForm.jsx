@@ -1,4 +1,19 @@
-import { CloseIcon, Grid, Group, Image, SimpleGrid, Text, rem, InputBase, Combobox, useCombobox, Paper, Stack } from "@mantine/core"
+import {
+  CloseIcon,
+  Grid,
+  Group,
+  Image,
+  SimpleGrid,
+  Text,
+  rem,
+  InputBase,
+  Combobox,
+  useCombobox,
+  Paper,
+  Stack,
+  TagsInput,
+  MultiSelect
+} from "@mantine/core"
 import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone"
 import { IconPhoto } from "@tabler/icons-react"
 import React, { useEffect, useState } from "react"
@@ -12,14 +27,15 @@ import {
   selectAllDishesCategories,
   selectAllDishesCategoriesStatus
 } from "../../store/features/categorySlice"
+import { fetchAllDishesTags } from "../../store/features/kitchenAndTagsSlice"
 
-export default function GeneralInformationForm({ register, errors, setValue, isDataCleared, image }) {
+export default function GeneralInformationForm({ register, errors, setValue, isDataCleared, image, data }) {
   const dispatch = useDispatch()
   const user = useSelector((state) => state.user.value)
-
+  const tags = useSelector((state) => state.kitchenAndTags.dishTags)
   const categories = useSelector(selectAllDishesCategories)
   const status = useSelector(selectAllDishesCategoriesStatus)
-
+  const [selectedTags, setSelectedTags] = useState([])
   const [images, setImages] = useState([])
   const [fileInformation, setFileInformation] = useState(null)
 
@@ -32,6 +48,15 @@ export default function GeneralInformationForm({ register, errors, setValue, isD
     }
   }
 
+  useEffect(() => {
+    dispatch(fetchAllDishesTags())
+  }, [dispatch])
+
+  const handleTagsChange = (selected) => {
+    setSelectedTags(selected)
+    setValue("tags", selected)
+  }
+
   const deleteImage = () => {
     setFileInformation(null)
     setImages([])
@@ -42,6 +67,11 @@ export default function GeneralInformationForm({ register, errors, setValue, isD
       deleteImage()
     }
   }, [isDataCleared])
+
+  useEffect(() => {
+    const initialTags = data?.tags?.map((tag) => tag.id)
+    setSelectedTags(initialTags)
+  }, [data])
 
   useEffect(() => {
     if (status === "succeeded" || status === "idle") {
@@ -64,7 +94,7 @@ export default function GeneralInformationForm({ register, errors, setValue, isD
   return (
     <Grid>
       <Grid.Col span={{ base: 12, md: 8, lg: 8 }}>
-        <Paper withBorder radius='md' className="flex h-full w-full items-center justify-center rounded-2xl p-4">
+        <Paper withBorder radius="md" className="flex h-full w-full items-center justify-center rounded-2xl p-4">
           <Stack>
             <InputField
               label="Nombre (Obligatorio)"
@@ -83,12 +113,27 @@ export default function GeneralInformationForm({ register, errors, setValue, isD
               placeholder="Ej. Rico pollo con papas, salsas..."
             />
 
-            <InputCheckbox label='¿Incluye bebida?' name="includesDrink" register={register} />
+            <MultiSelect
+              label="Lista de tags (Máx. 5)"
+              maxValues={5}
+              data={tags.map((item) => ({
+                value: item.id,
+                label: item.name
+              }))}
+              searchable
+              hidePickedOptions
+              onChange={handleTagsChange}
+              nothingFoundMessage="No se encontraron tags"
+              value={selectedTags}
+              clearable
+            />
+
+            <InputCheckbox label="¿Incluye bebida?" name="includesDrink" register={register} />
           </Stack>
         </Paper>
       </Grid.Col>
       <Grid.Col span={{ base: 12, md: 4, lg: 4 }}>
-        <Paper withBorder radius='md' p='md'>
+        <Paper withBorder radius="md" p="md">
           {previews.length > 0 ? (
             <div className="w-full">
               <Text size="lg" inline className="mb-5 text-left">
@@ -113,7 +158,7 @@ export default function GeneralInformationForm({ register, errors, setValue, isD
             <Dropzone onDrop={handleDrop} accept={IMAGE_MIME_TYPE}>
               <Group justify="center" gap="xl" mih={220} style={{ pointerEvents: "none" }}>
                 <div className="flex flex-col items-center">
-                  <Image  src={image} alt="" maw={200} />
+                  <Image src={image} alt="" maw={300} />
                   <IconPhoto
                     className={`${image ? "hidden" : ""}`}
                     style={{ width: rem(52), height: rem(52), color: "var(--mantine-color-dimmed)" }}

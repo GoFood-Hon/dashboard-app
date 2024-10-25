@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from "react"
-import { CloseIcon, Grid, Group, Text, rem } from "@mantine/core"
+import { CloseIcon, Grid, Group, Paper, Text, rem } from "@mantine/core"
 import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone"
 import { IconPhoto } from "@tabler/icons-react"
-import toast from "react-hot-toast"
-
 import InputField from "../../components/Form/InputField"
 import InputTextAreaField from "../../components/Form/InputTextAreaField"
 import { bytesToMB } from "../../utils"
@@ -54,7 +52,7 @@ export default function GeneralInformationForm({ register, errors, setValue, isD
   return (
     <Grid>
       <Grid.Col span={{ base: 12, md: 8, lg: 8 }}>
-        <div className="w-full h-full items-center justify-center flex bg-white rounded-2xl border border-blue-100 p-4">
+        <Paper withBorder radius='md' className="w-full h-full items-center justify-center flex  rounded-2xl p-4">
           <Grid>
             <Grid.Col span={{ base: 12, md: 6 }}>
               <InputField label="Nombre (Obligatorio)" name="name" register={register} errors={errors} className="text-black" />
@@ -75,7 +73,7 @@ export default function GeneralInformationForm({ register, errors, setValue, isD
               />
             </Grid.Col>
 
-            <Grid.Col span={{ base: 12 }}>
+            <Grid.Col span={{ base: 12, md: 6 }}>
               <InputCombobox
                 items={userTypes}
                 placeholder="Seleccione el tipo de usuario"
@@ -93,7 +91,6 @@ export default function GeneralInformationForm({ register, errors, setValue, isD
                     name="motorcycleId"
                     register={register}
                     errors={errors}
-                    className="text-black"
                   />
                 </Grid.Col>
                 <Grid.Col span={{ base: 12, md: 6 }}>
@@ -102,7 +99,6 @@ export default function GeneralInformationForm({ register, errors, setValue, isD
                     name="nationalIdentityNumber"
                     register={register}
                     errors={errors}
-                    className="text-black"
                   />
                 </Grid.Col>
               </>
@@ -114,7 +110,6 @@ export default function GeneralInformationForm({ register, errors, setValue, isD
                 type="password"
                 register={register}
                 errors={errors}
-                placeholder="Ingrese su contraseña"
               />
             </Grid.Col>
             <Grid.Col span={{ base: 12, md: 6 }}>
@@ -124,23 +119,22 @@ export default function GeneralInformationForm({ register, errors, setValue, isD
                 type="password"
                 register={register}
                 errors={errors}
-                placeholder="Ingrese nuevamente"
               />
             </Grid.Col>
             <Grid.Col span={{ base: 12 }}>
               <InputTextAreaField label="Nota" name="note" register={register} errors={errors} />
             </Grid.Col>
           </Grid>
-        </div>
+        </Paper>
       </Grid.Col>
       <Grid.Col span={{ base: 12, md: 4, lg: 4 }}>
-        <div className="flex flex-col justify-center items-center w-full h-full bg-white rounded-2xl border border-blue-100 p-4">
+        <Paper withBorder radius='md' className="flex flex-col justify-center items-center w-full h-full rounded-2xl  p-4">
           {previews.length > 0 ? (
             <div className="w-full">
               <Text size="lg" inline className="text-left mb-5">
                 Imagen seleccionada:
               </Text>
-              <div className="flex flex-row justify-center items-center rounded-2xl w-full border border-slate-200 my-3">
+              <div className="flex flex-row justify-center items-center rounded-2xl w-full my-3">
                 <div className="flex flex-row w-full items-center gap-2 flex-wrap p-2">
                   {previews}
                   <div className="flex flex-col">
@@ -171,7 +165,7 @@ export default function GeneralInformationForm({ register, errors, setValue, isD
             </Dropzone>
           )}
           {errors.files && <p className="text-red-500 text-center w-full">* Imagen es requerida.</p>}
-        </div>
+        </Paper>
       </Grid.Col>
     </Grid>
   )

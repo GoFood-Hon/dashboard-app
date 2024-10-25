@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { Checkbox, CloseIcon, Grid, Group, Paper, Text, rem } from "@mantine/core"
+import { Checkbox, CloseIcon, Grid, Group, Paper, Stack, Text, rem } from "@mantine/core"
 import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone"
 import { IconPhoto } from "@tabler/icons-react"
 import toast from "react-hot-toast"
@@ -10,6 +10,7 @@ import InputField from "../../components/Form/InputField"
 import { bytesToMB } from "../../utils"
 import { fetchDishesCategories, selectAllDishesCategoriesStatus } from "../../store/features/categorySlice"
 import { colors } from "../../theme/colors"
+import InputCheckbox from "../../components/Form/InputCheckbox"
 
 export default function GeneralInformationForm({ register, errors, setValue, isDataCleared, itemDetails, image }) {
   const dispatch = useDispatch()
@@ -88,67 +89,59 @@ export default function GeneralInformationForm({ register, errors, setValue, isD
   return (
     <Grid>
       <Grid.Col span={{ base: 12, md: 8, lg: 8 }}>
-        <div className="w-full h-full items-center justify-center flex  rounded-2xl p-4">
-          <div className="flex flex-col w-full">
-            <InputField label="Nombre (Obligatorio)" name="name" register={register} errors={errors}  />
-            <div className="flex flex-row w-full justify-end flex-wrap">
-              <div className="w-1/2 pr-2">
-                <InputField
-                  label="Correo (Obligatorio)"
-                  name="email"
-                  register={register}
-                  errors={errors}
-                  className="text-black"
+        <Paper withBorder className="w-full h-full items-center justify-center flex  rounded-2xl" p={"md"}>
+          <Grid>
+            <Grid.Col span={{ base: 12, md: 6 }}>
+              <InputField label="Nombre (Obligatorio)" name="name" register={register} errors={errors} />
+            </Grid.Col>
+            <Grid.Col span={{ base: 12, md: 6 }}>
+              <InputField label="Correo (Obligatorio)" name="email" register={register} errors={errors} className="text-black" />
+            </Grid.Col>
+            <Grid.Col span={{ base: 12, md: 6 }}>
+              <InputField
+                label="Teléfono (Obligatorio)"
+                name="phoneNumber"
+                register={register}
+                errors={errors}
+                className="text-black"
+              />
+            </Grid.Col>
+            <Grid.Col span={{ base: 12, md: 6 }}>
+              <InputField
+                label="Rango de distancia de entrega"
+                name="maxDistanceShipping"
+                register={register}
+                errors={errors}
+                className="text-black"
+              />
+            </Grid.Col>
+            <Grid.Col span={{ base: 12 }}>
+              <InputTextAreaField label="Nota" name="note" register={register} errors={errors} />
+            </Grid.Col>
+            <Grid.Col span={{ base: 12 }}>
+              <Text mb='sm'>Marca las opciones disponibles para esta sucursal:</Text>
+              <Group>
+                <Checkbox
+                  {...register("delivery")}
+                  name="delivery"
+                  label={"Servicio a domicilio"}
+                  color={colors.main_app_color}
                 />
-              </div>
-              <div className="w-1/2 pl-2">
-                <InputField
-                  label="Teléfono (Obligatorio)"
-                  name="phoneNumber"
-                  register={register}
-                  errors={errors}
-                  className="text-black"
+                <Checkbox {...register("pickup")} name="pickup" label={"Recoger en tienda"} color={colors.main_app_color} />
+                <Checkbox {...register("onSite")} name="onSite" label={"Comer en sitio"} color={colors.main_app_color} />
+                <Checkbox
+                  {...register("allowTableBooking")}
+                  name="allowTableBooking"
+                  label={"Permite reservaciones"}
+                  color={colors.main_app_color}
                 />
-              </div>
-            </div>
-            <InputTextAreaField label="Nota" name="note" register={register} errors={errors} />
-            <Checkbox
-              mt={"md"}
-              labelPosition="left"
-              label={<div className="text-sm font-bold leading-snug">¿Cuenta con delivery?</div>}
-              name="delivery"
-              color={colors.main_app_color}
-              checked={isDelivery}
-              size="sm"
-              onChange={handleHasDelivery}
-            />
-            <Checkbox
-              mt={"md"}
-              labelPosition="left"
-              label={<div className="text-sm font-bold leading-snug">¿Cuenta con retiro en restaurante?</div>}
-              color={colors.main_app_color}
-              checked={isPickUp}
-              size="sm"
-              onChange={handleHasPickUp}
-            />
-            <Checkbox
-              mt={"md"}
-              labelPosition="left"
-              label={
-                <div className="text-sm font-bold leading-snug">
-                  ¿Cuenta con disponibilidad para comer en el restaurante?
-                </div>
-              }
-              color={colors.main_app_color}
-              checked={isOnSite}
-              size="sm"
-              onChange={handleHasOnSite}
-            />
-          </div>
-        </div>
+              </Group>
+            </Grid.Col>
+          </Grid>
+        </Paper>
       </Grid.Col>
       <Grid.Col span={{ base: 12, md: 4, lg: 4 }}>
-        <Paper withBorder radius='md' className="flex flex-col justify-center items-center w-full h-full rounded-2xl p-4">
+        <Paper withBorder radius="md" className="flex flex-col justify-center items-center w-full h-full rounded-2xl p-4">
           {previews.length > 0 ? (
             <div className="w-full">
               <Text size="lg" inline className="text-left mb-5">

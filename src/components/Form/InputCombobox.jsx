@@ -38,7 +38,7 @@ export default function InputCombobox({
   return (
     <React.Fragment>
       <div className="flex flex-col py-1">
-        <span className="text-sky-950 text-sm font-bold leading-snug pb-1">{label}</span>
+        <span className="text-sm leading-snug pb-1">{label}</span>
         <Combobox
           disabled={disabled}
           store={combobox}
@@ -50,12 +50,11 @@ export default function InputCombobox({
           <Combobox.Target>
             <InputBase
               component="button"
-              size={"md"}
               type="button"
               pointer
               rightSection={<Combobox.Chevron />}
               onClick={() => combobox.toggleDropdown()}>
-              {selectedOption ? selectedOption.label : <Input.Placeholder>{placeholder}</Input.Placeholder>}
+              {selectedOption ? selectedOption.label : ''}
             </InputBase>
           </Combobox.Target>
           <Combobox.Dropdown>

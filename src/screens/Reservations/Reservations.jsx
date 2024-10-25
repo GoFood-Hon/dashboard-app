@@ -9,15 +9,20 @@ import { useDispatch, useSelector } from "react-redux"
 import { setCurrentPage, fetchAdminUsers } from "../../store/features/userSlice"
 import { Paper, Button, Text, Title, Group, Flex } from "@mantine/core"
 import { colors } from "../../theme/colors"
+import { fetchReservationByRestaurant } from "../../store/features/reservationsSlice"
+import { name } from "dayjs/locale/es"
 
-export const AdminUserScreen = () => {
+export const Reservations = () => {
   const navigate = useNavigate()
   const dispatch = useDispatch()
+  const reservations = useSelector((state) => state.reservations.reservations)
+  const status = useSelector((state) => state.reservations.status)
 
   const handleNewItem = () => {
     navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Users.NewUser.path)
   }
 
+  const user = useSelector((state) => state.user.value)
   const limit = useSelector((state) => state.user.itemsPerPage)
   const page = useSelector((state) => state.user.currentPage)
   const adminUsersByPage = useSelector((state) => state.user.adminUsersByPage)
@@ -27,58 +32,40 @@ export const AdminUserScreen = () => {
   const loadingUsers = useSelector((state) => state.user.loadingUsers)
 
   useEffect(() => {
-    if (!adminUsersByPage[page]) {
-      dispatch(fetchAdminUsers({ limit, page, order: "DESC" }))
-    }
-    console.log(adminUsers)
-  }, [dispatch, limit, page, adminUsersByPage])
-
-  const handleDisableSelected = async (id) => {
-    try {
-      const response = await userApi.deleteAdminUser(id)
-
-      if (response.status === 204) {
-        toast.success("Usuario eliminado!")
-        refreshPage()
-      } else {
-        toast.error("Fallo al eliminar el administrador")
-      }
-    } catch (e) {
-      toast.error("Fallo obtener los datos del usuario", e)
-    }
-  }
+    dispatch(fetchReservationByRestaurant(user?.Restaurant?.id))
+    console.log(reservations)
+  }, [dispatch, user?.Restaurant?.id])
 
   return (
     <>
       <Group grow className="mb-3">
         <Flex align="center" justify="space-between">
           <Title order={2} fw={700}>
-            Administradores
+            Reservaciones
           </Title>
           <Flex align="center" gap="xs">
             <Flex align="center" gap={5}>
               <Text fw={700}>
-                <Flex gap={5}>
+                {/* <Flex gap={5}>
                   {page === 1 ? 1 : (page - 1) * limit + 1}-{page === 1 ? limit : Math.min(page * limit, totalAdminUsers)}{" "}
-                  <Text>de</Text>
-                  {totalAdminUsers} administradores
-                </Flex>
+                  <Text>de</Text>3 reservaciones
+                </Flex> */}
               </Text>
             </Flex>
-            <Button color={colors.main_app_color} onClick={handleNewItem}>
-              Nuevo
-            </Button>
           </Flex>
         </Flex>
       </Group>
       <section>
         <Paper withBorder p="md" radius="md">
           <MenuTable
-            items={adminUsers}
-            handleDisableSelected={handleDisableSelected}
-            screenType="adminUserScreen"
-            totalItems={totalPageCount}
-            currentPage={page}
+            items={reservations.map((reservation) => ({
+              ...reservation,
+              name: reservation?.Sucursal?.name
+            }))}
+            //handleDisableSelected={handleDisableSelected}
+            screenType="reservationsScreen"
+            totalItems={1}
+            currentPage={1}
             loadingData={loadingUsers}
             setPage={(newPage) => dispatch(setCurrentPage(newPage))}
           />

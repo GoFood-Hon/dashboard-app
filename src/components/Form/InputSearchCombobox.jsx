@@ -4,7 +4,7 @@ import { ErrorMessage } from "./ErrorMessage"
 import LoadingCircle from "../LoadingCircle"
 import { colors } from "../../theme/colors"
 
-export default function InputSearchCombobox({ items, label, errors, name, placeholder, emptyMessage, setValue, status }) {
+export default function InputSearchCombobox({ items, label, errors, name, placeholder, emptyMessage, setValue, status, searchValue }) {
   const [search, setSearch] = useState("")
   const [selectedCategory, setSelectedCategory] = useState(null)
 
@@ -43,16 +43,15 @@ export default function InputSearchCombobox({ items, label, errors, name, placeh
   return (
     <React.Fragment>
       <div className="flex flex-col my-2">
-        <span className="text-sm font-bold leading-snug pb-1">{label}</span>
+        <span className="text-sm leading-snug pb-1">{label}</span>
         <Combobox store={combobox} onOptionSubmit={handleComboboxSubmit}>
           <Combobox.Target>
             <InputBase
-              size={"md"}
               rightSection={<Combobox.Chevron />}
               onClick={() => combobox.openDropdown()}
               onFocus={() => combobox.openDropdown()}
               placeholder={placeholder}
-              value={search}
+              value={search ?  search : searchValue}
               onChange={(event) => {
                 combobox.updateSelectedOptionIndex()
                 setSearch(event.currentTarget.value)

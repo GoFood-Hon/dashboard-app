@@ -74,6 +74,7 @@ export default function EditDishScreen() {
           control={control}
           image={imageLocation}
           isDataCleared={isDataCleared}
+          data={dishDetails}
         />
       )
     },
@@ -125,8 +126,7 @@ export default function EditDishScreen() {
       setIsLoading(false)
     })
     close()
-}
-
+  }
 
   return (
     <>

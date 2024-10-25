@@ -35,7 +35,10 @@ export function PlanInfoCard({ data, onCancelPlan }) {
       <Modal
         opened={opened}
         onClose={close}
-        size="auto"
+        withCloseButton={false}
+        radius='md'
+        closeOnEscape
+        size="md"
         overlayProps={{
           backgroundOpacity: 0.55,
           blur: 3
@@ -45,7 +48,7 @@ export function PlanInfoCard({ data, onCancelPlan }) {
 
         <Group mt="sm" justify="end">
           <Button color={colors.main_app_color} variant="outline" onClick={close}>
-            No
+            Cancelar
           </Button>
           <Button
             color={colors.main_app_color}
@@ -53,7 +56,7 @@ export function PlanInfoCard({ data, onCancelPlan }) {
               handleCancelPlan(data?.restaurantId)
               close()
             }}>
-            Sí, deseo hacerlo
+            Confirmar
           </Button>
         </Group>
       </Modal>

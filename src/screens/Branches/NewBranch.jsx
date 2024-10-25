@@ -29,6 +29,7 @@ export default function NewBranch() {
     setValue,
     control,
     reset,
+    watch,
     formState: { errors }
   } = useForm({
     resolver: yupResolver(newBranchValidation)
@@ -60,7 +61,7 @@ export default function NewBranch() {
     {
       title: "Horario",
       requirement: "Obligatorio",
-      form: <TimeForm setValue={setValue} />
+      form: <TimeForm setValue={setValue} watch={watch} />
     }
   ]
 
@@ -85,6 +86,7 @@ export default function NewBranch() {
       name: data.name,
       email: data.email,
       phoneNumber: data.phoneNumber,
+      maxDistanceShipping: data.maxDistanceShipping,
       address: data.address,
       city: data.city,
       state: getDepartmentNameById(parseInt(data.state)),

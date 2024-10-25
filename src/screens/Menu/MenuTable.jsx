@@ -17,7 +17,8 @@ import {
   Flex,
   Text,
   Container,
-  Grid
+  Grid,
+  Badge
 } from "@mantine/core"
 import { IconEye, IconCheck, IconX } from "@tabler/icons-react"
 import { colors } from "../../theme/colors"
@@ -31,6 +32,13 @@ import { useDispatch, useSelector } from "react-redux"
 import { TableSkeleton } from "../../components/Skeletons/TableSkeleton"
 import { fetchAdminUsers } from "../../store/features/userSlice"
 import { getFormattedHNL } from "../../utils"
+import customParseFormat from "dayjs/plugin/customParseFormat"
+import utc from "dayjs/plugin/utc"
+import timezone from "dayjs/plugin/timezone"
+
+dayjs.extend(utc)
+dayjs.extend(timezone)
+dayjs.extend(customParseFormat)
 dayjs.extend(relativeTime)
 dayjs.locale("es")
 dayjs.extend(relativeTime)
@@ -102,7 +110,8 @@ export default function MenuTable({
       ordersScreen: NAVIGATION_ROUTES_RES_ADMIN.Pedidos.path,
       adminUserScreen: NAVIGATION_ROUTES_SUPER_ADMIN.Users.path,
       planScreen: NAVIGATION_ROUTES_SUPER_ADMIN.Plans.path,
-      orderHistoryScreen: NAVIGATION_ROUTES_KITCHEN.Orders.path
+      orderHistoryScreen: NAVIGATION_ROUTES_KITCHEN.Orders.path,
+      reservationsScreen: NAVIGATION_ROUTES_RES_ADMIN.Reservations.path
     }
 
     navigate(`${routes[screenType]}/${id}`)
@@ -383,6 +392,89 @@ export default function MenuTable({
           </ActionIcon>
         )
       }
+    ],
+    reservationsScreen: [
+      { label: "Sucursal", accessor: "name" },
+      { label: "Creación", accessor: "createdAt" },
+      { label: "Sillas reservadas", accessor: "chairs", center: true },
+      { label: "Fecha de reserva", accessor: "reservationDate" },
+      {
+        label: "Pagado",
+        accessor: "isPayed",
+        render: (pay) => (pay ? <IconCheck /> : <IconX />)
+      },
+      {
+        label: "Estado",
+        accessor: "status",
+        center: true,
+        render: (status) => (
+          <Badge
+            size="md"
+            w={100}
+            color={status === "pending" ? colors.yellow_logo : status === "cancelled" ? colors.main_app_color : "green"}>
+            {status === "pending" ? "Pendiente" : status === "cancelled" ? "Cancelado" : "Aprobado"}
+          </Badge>
+        )
+      },
+      {
+        label: "Acciones",
+        accessor: "id",
+        center: true,
+        render: (id) => (
+          <ActionIcon
+            className="transition ease-in-out duration-200"
+            variant="subtle"
+            size="lg"
+            onClick={() => handleClick(id)}
+            color={colors.main_app_color}
+            radius="xl">
+            <IconEye />
+          </ActionIcon>
+        )
+      }
+    ],
+    collectionsScreen: [
+      { label: "Nombre", accessor: "name" },
+      { label: "Contiene", accessor: "content" },
+      { label: "Clientes que utilizan", accessor: "clients", center: true },
+      { label: "Fecha de creación", accessor: "createdAt" },
+      {
+        label: "Estado",
+        accessor: "isActive",
+        render: (active) => (
+          <MantineProvider theme={theme}>
+            <Switch
+              checked={active}
+              //onChange={() => (isActive ? handleDisableSelected(item.id) : handleEnableSelected(item.id))}
+              color={colors.main_app_color}
+              size="sm"
+              thumbIcon={
+                active ? (
+                  <IconCheck style={{ width: rem(12), height: rem(12) }} stroke={3} color={colors.main_app_color} />
+                ) : (
+                  <IconX style={{ width: rem(12), height: rem(12) }} stroke={3} color={colors.main_app_color} />
+                )
+              }
+            />
+          </MantineProvider>
+        )
+      },
+      {
+        label: "Acciones",
+        accessor: "id",
+        center: true,
+        render: (id) => (
+          <ActionIcon
+            className="transition ease-in-out duration-200"
+            variant="subtle"
+            size="lg"
+            onClick={() => handleClick(id)}
+            color={colors.main_app_color}
+            radius="xl">
+            <IconEye />
+          </ActionIcon>
+        )
+      }
     ]
   }
 
@@ -440,9 +532,13 @@ export default function MenuTable({
                         key={column.accessor}>
                         {column.accessor === "createdAt" || column.accessor === "updatedAt"
                           ? dayjs(item[column.accessor]).fromNow()
-                          : column.render
-                            ? column.render(item[column.accessor], item)
-                            : item[column.accessor]}
+                          : column.accessor === "reservationDate"
+                            ? dayjs(item[column.accessor])
+                                .tz("America/Tegucigalpa")
+                                .format("D [de] MMMM [del] YYYY [a las] h:mm A")
+                            : column.render
+                              ? column.render(item[column.accessor], item)
+                              : item[column.accessor]}
                       </Table.Td>
                     ))}
                   </Table.Tr>

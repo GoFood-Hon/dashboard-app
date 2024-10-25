@@ -19,7 +19,7 @@ const branchesApi = {
 
   getBranchesByRestaurant: ({ limit, page, order, startDate, endDate, status, price, dateSort }) => {
     const params = {
-      limit,
+      limit,  
       page,
       order,
       startDate,

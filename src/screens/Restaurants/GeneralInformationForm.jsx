@@ -69,7 +69,7 @@ export const GeneralInformationForm = ({ register, control, errors, setValue, is
     <Grid>
       <Grid.Col span={{ base: 12, md: 8, lg: 8 }}>
         <Paper withBorder radius="md" p="xs">
-          <Grid>
+          <Grid gutter='md'>
             <Grid.Col span={{ base: 12, md: 6 }}>
               <InputField label="Nombre del restaurante" name="name" register={register} errors={errors} className="text-black" />
             </Grid.Col>
@@ -99,16 +99,12 @@ export const GeneralInformationForm = ({ register, control, errors, setValue, is
               <InputField label="Dirección de facturación" name="billingAddress" register={register} errors={errors} />
             </Grid.Col>
             <Grid.Col span={{ base: 6 }}>
-              <InputField label="Rango de distancia de entrega" name="maxDistanceShipping" register={register} errors={errors} />
-            </Grid.Col>
-            <Grid.Col span={{ base: 12 }}>
               <Controller
                 name="cuisineTypeId"
                 control={control}
                 render={({ field, fieldState }) => (
                   <Select
                     label="Tipos de cocina"
-                    placeholder="Seleccione..."
                     data={kitchenTypes.map((item) => ({
                       value: item.id,
                       label: item.name

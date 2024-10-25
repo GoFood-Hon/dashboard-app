@@ -1,6 +1,6 @@
 export const palette = {
   amaranth: "#E53A54",
-  supernova: "#FEBD3E",
+  supernova: "#D19E38",
   white: "#FFFFFF",
   alice_blue: "#FAFCFF",
   pattens_blue: "#CDE3FE",
