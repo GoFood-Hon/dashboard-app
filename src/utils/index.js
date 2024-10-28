@@ -23,6 +23,28 @@ export const formatDay = (day) => {
   return daysInSpanish[day];
 };
 
+export function dateTimeConverter(timestamptz) {
+  const timeZone = 'America/Tegucigalpa' // Zona horaria de Honduras
+  const options = {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+    timeZone,
+  }
+
+  const date = new Date(timestamptz)
+  const formattedDate = date.toLocaleDateString('es', options)
+
+  const hour = date.getHours()
+  const minute = date.getMinutes()
+  const amPm = hour >= 12 ? 'p. m.' : 'a. m.'
+  const hour12 = hour % 12 || 12
+
+  return `${formattedDate} a ${hour12 !== 1 ? 'las' : 'la'} ${hour12}:${
+    minute < 10 ? '0' : ''
+  }${minute} ${amPm}`
+}
+
 export const formatTime = (time) => dayjs(time, "HH:mm:ss").format("hh:mm A");
 
 export function bytesToMB(bytes) {

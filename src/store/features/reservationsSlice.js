@@ -1,6 +1,8 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit"
 import reservationsApi from "../../api/reservationsApi"
 import toast from "react-hot-toast"
+import { showNotification } from "@mantine/notifications"
+import { useSelector } from "react-redux"
 
 // Thunk para obtener las reservas por sucursal
 export const fetchReservationByBranch = createAsyncThunk("reservations/fetchByBranch", async (branchId, { rejectWithValue }) => {
@@ -44,11 +46,23 @@ export const fetchReservationDetails = createAsyncThunk(
 // Thunk para agregar comentarios a una reserva
 export const addCommentsToReservation = createAsyncThunk(
   "reservations/addComment",
-  async ({ reservationId, params }, { rejectWithValue }) => {
+  async ({ reservationId, params }, { rejectWithValue, getState }) => {
     try {
+      const state = getState()
+      const name = state.user.value.name
       const response = await reservationsApi.addCommentsToReservations(reservationId, params)
-      toast.success("Comentario agregado exitosamente.")
-      return response.data
+      showNotification({
+        title: "Creación exitosa",
+        message: "El comentario se agregó correctamente",
+        color: "green",
+        duration: 7000
+      })
+      return {
+        ...response.data,
+        AdminUser: {
+          name
+        }
+      }
     } catch (error) {
       toast.error(`Error al agregar comentario: ${error.message}`)
       return rejectWithValue(error.response.data)
@@ -57,28 +71,44 @@ export const addCommentsToReservation = createAsyncThunk(
 )
 
 // Thunk para cancelar una reserva
-export const cancelReservation = createAsyncThunk("reservations/cancel", async (reservationId, { rejectWithValue }) => {
-  try {
-    const response = await reservationsApi.cancelReservation(reservationId)
-    toast.success("Reserva cancelada correctamente.")
-    return response.data
-  } catch (error) {
-    toast.error(`Error al cancelar la reserva: ${error.message}`)
-    return rejectWithValue(error.response.data)
+export const cancelReservation = createAsyncThunk(
+  "reservations/cancel",
+  async ({ reservationId, params }, { rejectWithValue, getState }) => {
+    try {
+      const response = await reservationsApi.cancelReservation(reservationId, params)
+      showNotification({
+        title: "Cancelación exitosa",
+        message: "La reservación se canceló correctamente",
+        color: "green",
+        duration: 7000
+      })
+      return response.data
+    } catch (error) {
+      toast.error(`Error al cancelar la reserva: ${error.message}`)
+      return rejectWithValue(error.response.data)
+    }
   }
-})
+)
 
 // Thunk para aprobar una reserva
-export const approveReservation = createAsyncThunk("reservations/approve", async (reservationId, { rejectWithValue }) => {
-  try {
-    const response = await reservationsApi.approveReservation(reservationId)
-    toast.success("Reserva aprobada exitosamente.")
-    return response.data
-  } catch (error) {
-    toast.error(`Error al aprobar la reserva: ${error.message}`)
-    return rejectWithValue(error.response.data)
+export const approveReservation = createAsyncThunk(
+  "reservations/approve",
+  async ({ reservationId, revisedBy }, { rejectWithValue }) => {
+    try {
+      const response = await reservationsApi.approveReservation(reservationId, revisedBy)
+      showNotification({
+        title: "Aprobación exitosa",
+        message: "La reservación se aprobó correctamente",
+        color: "green",
+        duration: 7000
+      })
+      return response.data
+    } catch (error) {
+      toast.error(`Error al aprobar la reserva: ${error.message}`)
+      return rejectWithValue(error.response.data)
+    }
   }
-})
+)
 
 const initialState = {
   reservations: [],
@@ -140,8 +170,11 @@ const reservationsSlice = createSlice({
       .addCase(addCommentsToReservation.pending, (state) => {
         state.status = "loading"
       })
-      .addCase(addCommentsToReservation.fulfilled, (state) => {
+      .addCase(addCommentsToReservation.fulfilled, (state, action) => {
         state.status = "succeeded"
+        if (state.reservationDetails) {
+          state.reservationDetails.ReservationComments.unshift(action.payload)
+        }
       })
       .addCase(addCommentsToReservation.rejected, (state, action) => {
         state.status = "failed"
@@ -154,10 +187,17 @@ const reservationsSlice = createSlice({
       })
       .addCase(cancelReservation.fulfilled, (state, action) => {
         state.status = "succeeded"
-        // Actualizar el estado local si es necesario
         state.reservations = state.reservations.map((reservation) =>
           reservation.id === action.payload.id ? action.payload : reservation
         )
+
+        if (state.reservationDetails?.id === action.payload.id) {
+          state.reservationDetails = {
+            ...state.reservationDetails,
+            ...action.payload,
+            total: state.reservationDetails.total
+          }
+        }
       })
       .addCase(cancelReservation.rejected, (state, action) => {
         state.status = "failed"
@@ -173,6 +213,12 @@ const reservationsSlice = createSlice({
         state.reservations = state.reservations.map((reservation) =>
           reservation.id === action.payload.id ? action.payload : reservation
         )
+        if (state.reservationDetails?.id === action.payload.id) {
+          state.reservationDetails = {
+            ...state.reservationDetails,
+            status: action.payload.status
+          }
+        }
       })
       .addCase(approveReservation.rejected, (state, action) => {
         state.status = "failed"

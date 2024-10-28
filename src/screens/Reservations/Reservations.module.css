@@ -1,14 +1,46 @@
-.wrapper {
-  padding: calc(var(--mantine-spacing-xl) * 2) var(--mantine-spacing-xl);
+.card {
+  background-color: light-dark(var(--mantine-color-white), var(--mantine-color-dark-7));
 }
 
-.title {
-  font-family:
-    Greycliff CF,
-    var(--mantine-font-family);
-  font-size: rem(36px);
-  font-weight: 900;
-  line-height: 1.1;
-  margin-bottom: var(--mantine-spacing-md);
-  color: light-dark(var(--mantine-color-black), var(--mantine-color-white));
+.section {
+  border-bottom: rem(1px) solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
+  padding-left: var(--mantine-spacing-md);
+  padding-right: var(--mantine-spacing-md);
+  padding-bottom: var(--mantine-spacing-md);
+}
+
+.like {
+  color: var(--mantine-color-red-6);
+  width: rem(20px);
+  height: rem(20px);
+}
+
+.label {
+  text-transform: uppercase;
+  font-size: var(--mantine-font-size-xs);
+  font-weight: 700;
+}
+
+.comment {
+  padding: var(--mantine-spacing-lg) var(--mantine-spacing-xl);
+}
+
+.body {
+  padding-left: rem(54px);
+  padding-top: var(--mantine-spacing-sm);
+  font-size: var(--mantine-font-size-sm);
+}
+
+.content {
+  & > p:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.button {
+  &:disabled,
+  &[data-disabled] {
+    border-color: light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
+    background-color: transparent;
+  }
 }

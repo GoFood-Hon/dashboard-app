@@ -7,11 +7,15 @@ const reservationsApi = {
 
   getReservationDetails: (reservationId) => axiosClient.get(`api/v1/table-reservation/${reservationId}`),
 
-  addCommentsToReservations: (reservationId, params) => axiosClient.post(`api/v1/table-reservation/${reservationId}/comment`, params),
+  addCommentsToReservations: (reservationId, params) =>
+    axiosClient.post(`api/v1/table-reservation/${reservationId}/comment`, params),
 
-  cancelReservation: (reservationId) => axiosClient.patch(`api/v1/table-reservation/${reservationId}/cancel`),
+  cancelReservation: (reservationId, params) => axiosClient.patch(`api/v1/table-reservation/${reservationId}/cancel`, params),
 
-  approveReservation: (reservationId) => axiosClient.patch(`api/v1/table-reservation/${reservationId}/approve`)
+  approveReservation: (reservationId, revisedBy) =>
+    axiosClient.patch(`api/v1/table-reservation/${reservationId}/approve`, { revisedBy }),
+
+  setReservationToPending: (reservationId) => axiosClient.patch(`api/v1/table-reservation/${reservationId}/approve`)
 }
 
 export default reservationsApi

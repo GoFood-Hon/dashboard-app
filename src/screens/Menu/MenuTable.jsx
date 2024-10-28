@@ -41,9 +41,6 @@ dayjs.extend(timezone)
 dayjs.extend(customParseFormat)
 dayjs.extend(relativeTime)
 dayjs.locale("es")
-dayjs.extend(relativeTime)
-dayjs.locale("es")
-dayjs.extend(relativeTime)
 
 export default function MenuTable({
   refreshPage,
@@ -74,14 +71,12 @@ export default function MenuTable({
 
       // Verifica el estado después de la acción
       if (userData.error) {
-        console.error(userData.error)
         return []
       } else {
         setLoading(false)
         return userData.data
       }
     } catch (error) {
-      console.error(error)
       return []
     }
   }
@@ -401,7 +396,7 @@ export default function MenuTable({
       {
         label: "Pagado",
         accessor: "isPayed",
-        render: (pay) => (pay ? <IconCheck /> : <IconX />)
+        render: (pay) => (pay ? "Si" : "No")
       },
       {
         label: "Estado",
@@ -564,6 +559,7 @@ export default function MenuTable({
             color={colors.main_app_color}
             defaultValue={currentPage}
             size="md"
+            withEdges
           />
         </Group>
       </div>

@@ -171,9 +171,9 @@ export const NAVIGATION_ROUTES_RES_ADMIN = {
     }
   },
   Reservations: {
-    path: "/reservation-list",
+    path: "/lista-de-reservaciones",
     ReservationDetails: {
-      path: "/reservation-list/:reservationId"
+      path: "/lista-de-reservaciones/:reservationId"
     }
   },
   Users: {
@@ -213,7 +213,7 @@ export const NAVIGATION_ROUTES_RES_ADMIN_TWO = [
       }
     ]
   },
-  { label: "Reservaciones", icon: IconCalendarDue, link: "/reservation-list" },
+  { label: "Reservaciones", icon: IconCalendarDue, link: "/lista-de-reservaciones" },
   { label: "Sucursales", icon: IconBuildingStore, link: "/sucursales" },
   { label: "Usuarios", icon: IconUsers, link: "/usuarios" },
   {

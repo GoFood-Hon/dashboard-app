@@ -33,7 +33,6 @@ export const Reservations = () => {
 
   useEffect(() => {
     dispatch(fetchReservationByRestaurant(user?.Restaurant?.id))
-    console.log(reservations)
   }, [dispatch, user?.Restaurant?.id])
 
   return (
