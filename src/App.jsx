@@ -70,6 +70,8 @@ import { EditUserScreen } from "./screens/Users/EditUserScreen"
 import { Reservations } from "./screens/Reservations/Reservations"
 import { ReservationDetails } from "./screens/Reservations/ReservationDetails"
 import { CollectionsList } from "./screens/Collections/CollectionsList"
+import NewCollection from "./screens/Collections/NewCollection"
+import EditCollection from "./screens/Collections/EditCollection"
 
 function App() {
   const userRole = useSelector((state) => state.user.value.role)
@@ -105,9 +107,9 @@ function App() {
 
             <Route path={NAVIGATION_ROUTES_SUPER_ADMIN.Collections.path} element={<CollectionsList />} />
 
-            <Route path={NAVIGATION_ROUTES_SUPER_ADMIN.Collections.NewCollection.path} element={<CollectionsList />} />
+            <Route path={NAVIGATION_ROUTES_SUPER_ADMIN.Collections.NewCollection.path} element={<NewCollection />} />
 
-            <Route path={NAVIGATION_ROUTES_SUPER_ADMIN.Collections.EditCollection.path} element={<CollectionsList />} />
+            <Route path={NAVIGATION_ROUTES_SUPER_ADMIN.Collections.EditCollection.path} element={<EditCollection />} />
 
             {/* <Route path={NAVIGATION_ROUTES_SUPER_ADMIN.Password.path} element={<PasswordSettings />} /> */}
           </>

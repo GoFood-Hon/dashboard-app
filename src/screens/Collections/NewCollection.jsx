@@ -11,7 +11,7 @@ import dishesApi from "../../api/dishesApi"
 import { newMenuValidation } from "../../utils/inputRules"
 import { createMenu } from "../../store/features/menuSlice"
 import BackButton from "../Dishes/components/BackButton"
-import { NAVIGATION_ROUTES_RES_ADMIN } from "../../routes"
+import { NAVIGATION_ROUTES_RES_ADMIN, NAVIGATION_ROUTES_SUPER_ADMIN } from "../../routes"
 import { colors } from "../../theme/colors"
 
 export default function NewCollection() {
@@ -35,24 +35,24 @@ export default function NewCollection() {
   const [isDataCleared, setIsDataCleared] = useState(false)
   const [dishes, setDishes] = useState([])
 
-  useEffect(() => {
-    async function getDishes() {
-      try {
-        const response = await dishesApi.getAllDishesByRestaurant({
-          restaurantId: user.restaurantId
-        })
+  // useEffect(() => {
+  //   async function getDishes() {
+  //     try {
+  //       const response = await dishesApi.getAllDishesByRestaurant({
+  //         restaurantId: user.restaurantId
+  //       })
 
-        const activeDishes = response.data.data.filter((dish) => dish.isActive)
-        setDishes(activeDishes)
-        return response
-      } catch (error) {
-        toast.error(`Hubo un error obteniendo los platos, ${error}`)
-        throw error
-      }
-    }
+  //       const activeDishes = response.data.data.filter((dish) => dish.isActive)
+  //       setDishes(activeDishes)
+  //       return response
+  //     } catch (error) {
+  //       toast.error(`Hubo un error obteniendo los platos, ${error}`)
+  //       throw error
+  //     }
+  //   }
 
-    getDishes()
-  }, [restaurant])
+  //   getDishes()
+  // }, [restaurant])
 
   const accordionStructure = [
     {
@@ -69,14 +69,14 @@ export default function NewCollection() {
       )
     },
     {
-      title: "Platillos",
+      title: "Lista de platillos/menús",
       requirement: "Obligatorio",
       form: (
         <ComplementsForm
           setValue={setValue}
           isDataCleared={isDataCleared}
-          defaultMessage="Por favor seleccione platillos para este menú"
-          itemsAvailableLabel="Platillos disponibles"
+          defaultMessage="Por favor añada elementos a esta colección"
+          itemsAvailableLabel="Platillos/Menús disponibles"
           data={dishes}
           name={"dishes"}
         />
@@ -119,11 +119,11 @@ export default function NewCollection() {
       <form onSubmit={handleSubmit(onSubmit)}>
         <section>
           <div className="flex flex-row justify-between items-center pb-4 flex-wrap xs:gap-3">
-            <BackButton title="Nuevo menú" show />
+            <BackButton title="Nueva colección" show />
           </div>
         </section>
         <section>
-          <Accordion variant="separated" multiple defaultValue={["Información general", "Platillos"]}>
+          <Accordion variant="separated" multiple defaultValue={["Información general", "Lista de platillos/menús"]}>
             {items}
           </Accordion>
         </section>
@@ -135,7 +135,7 @@ export default function NewCollection() {
                 variant="outline"
                 onClick={() => {
                   reset()
-                  navigate(NAVIGATION_ROUTES_RES_ADMIN.Menu.path)
+                  navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Collections.path)
                 }}>
                 Descartar
               </Button>

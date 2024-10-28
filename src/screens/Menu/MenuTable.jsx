@@ -106,7 +106,8 @@ export default function MenuTable({
       adminUserScreen: NAVIGATION_ROUTES_SUPER_ADMIN.Users.path,
       planScreen: NAVIGATION_ROUTES_SUPER_ADMIN.Plans.path,
       orderHistoryScreen: NAVIGATION_ROUTES_KITCHEN.Orders.path,
-      reservationsScreen: NAVIGATION_ROUTES_RES_ADMIN.Reservations.path
+      reservationsScreen: NAVIGATION_ROUTES_RES_ADMIN.Reservations.path,
+      collectionsScreen: NAVIGATION_ROUTES_SUPER_ADMIN.Collections.path
     }
 
     navigate(`${routes[screenType]}/${id}`)
@@ -283,12 +284,25 @@ export default function MenuTable({
       }
     ],
     ordersScreen: [
-      { label: "Usuario", accessor: "Order.User.name" },
-      { label: "Teléfono", accessor: "Order.User.phoneNumber" },
-      { label: "Estado", accessor: "status" },
+      { label: "Usuario", accessor: "user" },
+      { label: "Teléfono", accessor: "phone" },
       { label: "Fecha", accessor: "createdAt" },
-      { label: "Tipo", accessor: "Order.type" },
+      // { label: "Tipo", accessor: "Order.type" },
       { label: "Total", accessor: "total" },
+
+      {
+        label: "Estado",
+        accessor: "status",
+        center: true,
+        render: (status) => (
+          <Badge
+            size="md"
+            w={120}
+            color={status === "pending" ? colors.yellow_logo : status === "cancelled" ? colors.main_app_color : "green"}>
+            {status === "pending" ? "Pendiente" : status === "cancelled" ? "Cancelado" : "Completado"}
+          </Badge>
+        )
+      },
       {
         label: "Acciones",
         accessor: "id",
@@ -298,7 +312,7 @@ export default function MenuTable({
             className="transition ease-in-out duration-200"
             variant="subtle"
             size="lg"
-            onClick={() => handleClick(id)}
+            // onClick={() => handleClick(id)}
             color={colors.main_app_color}
             radius="xl">
             <IconEye />
