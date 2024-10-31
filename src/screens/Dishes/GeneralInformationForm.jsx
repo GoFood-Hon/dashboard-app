@@ -114,8 +114,7 @@ export default function GeneralInformationForm({ register, errors, setValue, isD
             />
 
             <MultiSelect
-              label="Lista de tags (Máx. 5)"
-              maxValues={5}
+              label="Lista de tags (Obligatorio)"
               data={tags.map((item) => ({
                 value: item.id,
                 label: item.name

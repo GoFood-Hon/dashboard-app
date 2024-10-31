@@ -71,10 +71,10 @@ export const GeneralInformationForm = ({ register, control, errors, setValue, is
         <Paper withBorder radius="md" p="xs">
           <Grid gutter='md'>
             <Grid.Col span={{ base: 12, md: 6 }}>
-              <InputField label="Nombre del restaurante (Obligatorio)" name="name" register={register} errors={errors} className="text-black" />
+              <InputField label="Nombre del restaurante" name="name" register={register} errors={errors} className="text-black" />
             </Grid.Col>
             <Grid.Col span={{ base: 12, md: 6 }}>
-              <InputField label="Correo electrónico (Obligatorio)" name="email" register={register} errors={errors} className="text-black" />
+              <InputField label="Correo electrónico" name="email" register={register} errors={errors} className="text-black" />
             </Grid.Col>
             <Grid.Col span={{ base: 12, md: 6 }}>
               <InputField
@@ -87,13 +87,13 @@ export const GeneralInformationForm = ({ register, control, errors, setValue, is
               />
             </Grid.Col>
             <Grid.Col span={{ base: 12, md: 6 }}>
-              <InputField label="Razón social (Obligatorio)" name="socialReason" register={register} errors={errors} />
+              <InputField label="Razón social" name="socialReason" register={register} errors={errors} />
             </Grid.Col>
             <Grid.Col span={{ base: 12, md: 6 }}>
-              <InputField label="RTN (Obligatorio)" name="rtn" register={register} errors={errors} />
+              <InputField label="RTN" name="rtn" register={register} errors={errors} />
             </Grid.Col>
             <Grid.Col span={{ base: 12, md: 6 }}>
-              <InputField label="CAI (Obligatorio)" name="cai" register={register} errors={errors} />
+              <InputField label="CAI" name="cai" register={register} errors={errors} />
             </Grid.Col>
             <Grid.Col span={{ base: 6 }}>
               <InputField label="Dirección de facturación" name="billingAddress" register={register} errors={errors} />
@@ -104,7 +104,7 @@ export const GeneralInformationForm = ({ register, control, errors, setValue, is
                 control={control}
                 render={({ field, fieldState }) => (
                   <Select
-                    label="Tipos de cocina (Obligatorio)"
+                    label="Tipos de cocina"
                     data={kitchenTypes.map((item) => ({
                       value: item.id,
                       label: item.name
@@ -132,7 +132,7 @@ export const GeneralInformationForm = ({ register, control, errors, setValue, is
 
             {isFreeDelivery ? null : (
               <Grid.Col span={{ base: 6 }}>
-                <InputField label="Precio del envío (Obligatorio)" name="shippingPrice" register={register} errors={errors} />
+                <InputField label="Precio del envío" name="shippingPrice" register={register} errors={errors} />
               </Grid.Col>
             )}
           </Grid>
