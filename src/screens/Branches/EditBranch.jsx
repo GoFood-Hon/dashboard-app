@@ -73,6 +73,7 @@ export const EditBranch = () => {
     const fetchData = async () => {
       try {
         const response = await branchesApi.getBranch(branchId)
+        console.log(response)
         setDetails(response?.data)
 
         setViewState({
@@ -159,7 +160,7 @@ export const EditBranch = () => {
       name: data.name,
       email: data.email,
       note: data.note,
-      phoneNumber: data.phoneNumber,
+      phoneNumber: data.phoneNumber.startsWith("+504") ? data.phoneNumber : `+504${data.phoneNumber}`,
       maxDistanceShipping: data.maxDistanceShipping,
       address: data.address,
       city: data.city,

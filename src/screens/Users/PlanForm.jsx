@@ -1,7 +1,7 @@
-import { Button, Flex, Paper, Stack, Text, ThemeIcon, rem } from "@mantine/core";
-import { PlanInfoCard } from "../../components/Plans/PlanInfoCard";
-import { SelectPlan } from "./SelectPlan";
-import { IconAlertCircleFilled, IconCircleCheckFilled } from "@tabler/icons-react";
+import { Button, Flex, Paper, Stack, Text, ThemeIcon, rem } from "@mantine/core"
+import { PlanInfoCard } from "../../components/Plans/PlanInfoCard"
+import { SelectPlan } from "./SelectPlan"
+import { IconAlertCircleFilled, IconCircleCheckFilled } from "@tabler/icons-react"
 
 export const PlanForm = ({
   planCancelled,

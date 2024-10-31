@@ -85,7 +85,7 @@ export default function NewBranch() {
     const formData = {
       name: data.name,
       email: data.email,
-      phoneNumber: data.phoneNumber,
+      phoneNumber: data.phoneNumber.startsWith("+504") ? data.phoneNumber : `+504${data.phoneNumber}`,
       maxDistanceShipping: data.maxDistanceShipping,
       address: data.address,
       city: data.city,
@@ -159,11 +159,7 @@ export default function NewBranch() {
           </div>
         </section>
         <section>
-          <Accordion
-            variant="separated"
-            multiple
-            
-            defaultValue={["Información general", "Ubicación", "Horario"]}>
+          <Accordion variant="separated" multiple defaultValue={["Información general", "Ubicación", "Horario"]}>
             {items}
           </Accordion>
         </section>

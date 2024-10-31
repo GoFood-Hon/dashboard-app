@@ -28,9 +28,6 @@ export const EditRestaurant = () => {
     ;(async () => {
       const response = await restaurantsApi.getRestaurant(restaurantId)
       const details = response?.data
-      if (details?.phoneNumber?.startsWith("+504")) {
-        details.phoneNumber = details.phoneNumber.replace("+504", "")
-      }
       setRestaurantDetails(details)
     })()
   }, [])
@@ -64,17 +61,22 @@ export const EditRestaurant = () => {
       const formData = new FormData()
       formData.append("name", data.name)
       formData.append("email", data.email)
-      formData.append("phoneNumber", `+504${data.phoneNumber}`)
+      formData.append("phoneNumber", data.phoneNumber.startsWith("+504") ? data.phoneNumber : `+504${data.phoneNumber}`)
       formData.append("socialReason", data.socialReason)
       formData.append("rtn", data.rtn)
       formData.append("billingAddress", data.billingAddress)
       formData.append("cai", data.cai)
-      formData.append("maxDistanceShipping", data.maxDistanceShipping)
       formData.append("shippingFree", data.shippingFree ?? false)
       formData.append("cuisineTypeId", data.cuisineTypeId)
-      formData.append("pricePerChair", data.pricePerChair)
-      formData.append("hoursBeforeCancellation", data.hoursBeforeCancellation)
-      formData.append("hoursBeforeBooking", data.hoursBeforeBooking)
+      if (data.pricePerChair) {
+        formData.append("pricePerChair", data.pricePerChair)
+      }
+      if (data.hoursBeforeCancellation) {
+        formData.append("hoursBeforeCancellation", data.hoursBeforeCancellation)
+      }
+      if (data.hoursBeforeBooking) {
+        formData.append("hoursBeforeBooking", data.hoursBeforeBooking)
+      }
       if (data.shippingFree !== null) {
         formData.append("shippingPrice", convertToDecimal(data.shippingPrice))
       }
@@ -305,7 +307,7 @@ export const EditRestaurant = () => {
             variant="separated"
             multiple
             defaultValue={["Información general", "Datos de reservación", "Selección del plan"]}>
-            {items}
+            {restaurantDetails?.Subscription ? items : items.slice(0, 2)}
           </Accordion>
         </section>
         <section className="mt-2">

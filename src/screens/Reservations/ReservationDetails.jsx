@@ -180,7 +180,7 @@ export const ReservationDetails = () => {
                 </Flex>
                 <Flex align="center" gap={5}>
                   <IconCalendarStats size={25} />
-                  <Text size="sm">Se actualizó el {dateTimeConverter(reservationDetails?.updatedAt)}</Text>
+                  <Text size="sm">Actualizado el {dateTimeConverter(reservationDetails?.updatedAt)}</Text>
                 </Flex>
               </Stack>
               <Stack>

@@ -108,7 +108,7 @@ export default function GeneralInformationForm({ register, errors, setValue, isD
             </Grid.Col>
             <Grid.Col span={{ base: 12, md: 6 }}>
               <InputField
-                label="Rango de distancia de entrega"
+                label="Rango de distancia de entrega en KM (Obligatorio)"
                 name="maxDistanceShipping"
                 register={register}
                 errors={errors}
@@ -116,7 +116,7 @@ export default function GeneralInformationForm({ register, errors, setValue, isD
               />
             </Grid.Col>
             <Grid.Col span={{ base: 12 }}>
-              <InputTextAreaField label="Nota" name="note" register={register} errors={errors} />
+              <InputTextAreaField label="Nota (Opcional)" name="note" register={register} errors={errors} />
             </Grid.Col>
             <Grid.Col span={{ base: 12 }}>
               <Text mb='sm'>Marca las opciones disponibles para esta sucursal:</Text>

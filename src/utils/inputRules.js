@@ -121,7 +121,6 @@ export const restaurantValidation = Yup.object().shape({
   rtn: Yup.string().required("*Campo requerido"),
   billingAddress: Yup.string().required("*Campo requerido"),
   cai: Yup.string().required("*Campo requerido"),
-  maxDistanceShipping: Yup.string().required("*Campo requerido"),
   cuisineTypeId: Yup.string().required("*Campo requerido"),
   files: Yup.array().required("Imagen es requerida").min(1, "Debe seleccionar al menos una imagen")
 })

@@ -53,18 +53,23 @@ export const NewRestaurant = () => {
 
       formData.append("name", data.name)
       formData.append("email", data.email)
-      formData.append("phoneNumber", `+504${data.phoneNumber}`)
+      formData.append("phoneNumber", data.phoneNumber.startsWith("+504") ? data.phoneNumber : `+504${data.phoneNumber}`)
       formData.append("socialReason", data.socialReason)
       formData.append("rtn", data.rtn)
       formData.append("billingAddress", data.billingAddress)
       formData.append("cai", data.cai)
-      formData.append("maxDistanceShipping", data.maxDistanceShipping)
-
-      if (data.shippingFree) {
-        formData.append("shippingFree", true)
-        formData.append("shippingPrice", "0.00")
-      } else {
-        formData.append("shippingFree", false)
+      formData.append("shippingFree", data.shippingFree ?? true)
+      formData.append("cuisineTypeId", data.cuisineTypeId)
+      if (data.pricePerChair) {
+        formData.append("pricePerChair", data.pricePerChair)
+      }
+      if (data.hoursBeforeCancellation) {
+        formData.append("hoursBeforeCancellation", data.hoursBeforeCancellation)
+      }
+      if (data.hoursBeforeBooking) {
+        formData.append("hoursBeforeBooking", data.hoursBeforeBooking)
+      }
+      if (data.shippingFree !== null) {
         formData.append("shippingPrice", convertToDecimal(data.shippingPrice))
       }
 
@@ -168,8 +173,8 @@ export const NewRestaurant = () => {
                 })
               } else {
                 showNotification({
-                  title: "Actualización exitosa",
-                  message: `Se actualizó la información de ${response.data.name}`,
+                  title: "Creación exitosa",
+                  message: `Se creó el restaurante ${response.data.name}`,
                   color: "green",
                   duration: 7000
                 })
@@ -183,6 +188,14 @@ export const NewRestaurant = () => {
                 duration: 5000
               })
             }
+          } else {
+            showNotification({
+              title: "Creación exitosa",
+              message: `Se creó el restaurante ${response.data.name}`,
+              color: "green",
+              duration: 7000
+            })
+            navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Restaurants.path)
           }
         }
       }
@@ -224,24 +237,7 @@ export const NewRestaurant = () => {
           isDataCleared={isDataCleared}
         />
       )
-    },
-    // {
-    //   title: "Selección del plan",
-    //   requirement: "Opcional",
-    //   form: (
-    //     <PlanForm
-    //       planCancelled={planCancelled}
-    //       newPlan={newPlan}
-    //       setNewPlan={setNewPlan}
-    //       classes={classes}
-    //       colors={colors}
-    //       restaurantDetails={restaurantDetails}
-    //       handlePlanCancel={handlePlanCancel}
-    //       handleSelectNewPlan={handleSelectNewPlan}
-    //       restaurantId={restaurantId}
-    //     />
-    //   )
-    // }
+    }
   ]
 
   const items = accordionStructure.map((item, key) => (
