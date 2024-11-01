@@ -9,6 +9,7 @@ import branchReducer from "./features/branchesSlice"
 import plansReducer from "./features/plansSlice"
 import kitchenAndTagsReducer from "./features/kitchenAndTagsSlice"
 import reservationsReducer from "./features/reservationsSlice"
+import collectionsReducer from "./features/collectionsSlice"
 
 export const store = configureStore({
   reducer: {
@@ -21,6 +22,7 @@ export const store = configureStore({
     dishesCategories: dishesCategoriesReducer,
     plans: plansReducer,
     kitchenAndTags: kitchenAndTagsReducer,
-    reservations: reservationsReducer
+    reservations: reservationsReducer,
+    collections: collectionsReducer
   }
 })

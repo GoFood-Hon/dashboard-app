@@ -43,7 +43,6 @@ export const EditGeneralInformationForm = ({ register, errors, setValue, feature
 
   const RenderInputs = () => {
     const inputs = planData?.PlanFeatures?.filter((feature) => dishesAdded?.includes(feature.id))
-    console.log(inputs)
     return (
       <>
         {inputs?.map(

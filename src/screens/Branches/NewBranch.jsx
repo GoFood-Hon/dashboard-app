@@ -9,7 +9,7 @@ import { newBranchValidation } from "../../utils/inputRules"
 import { NAVIGATION_ROUTES_RES_ADMIN } from "../../routes"
 import GeneralInformationForm from "./GeneralInformationForm"
 import LocationForm from "./LocationForm"
-import TimeForm from "./TimeForm"
+import { TimeForm } from "./TimeForm"
 import BackButton from "../Dishes/components/BackButton"
 import branchesApi from "../../api/branchesApi"
 
@@ -22,6 +22,9 @@ export default function NewBranch() {
   const navigate = useNavigate()
   const restaurant = useSelector((state) => state.restaurants.restaurants)
   const [isLoading, setIsLoading] = useState(false)
+  const [daysData, setDaysData] = useState([])
+  const [workSchedule, setWorkSchedule] = useState([])
+  const [isAlwaysOpen, setIsAlwaysOpen] = useState(false)
 
   const {
     register,
@@ -36,6 +39,10 @@ export default function NewBranch() {
   })
 
   const [isDataCleared, setIsDataCleared] = useState(false)
+
+  const handleScheduleChange = (newSchedule) => {
+    setWorkSchedule(newSchedule)
+  }
 
   const accordionStructure = [
     {
@@ -61,7 +68,16 @@ export default function NewBranch() {
     {
       title: "Horario",
       requirement: "Obligatorio",
-      form: <TimeForm setValue={setValue} watch={watch} />
+      // form: <TimeForm setValue={setValue} watch={watch} />
+      form: (
+        <TimeForm
+          schedule={workSchedule}
+          setDaysData={setDaysData}
+          onScheduleChange={handleScheduleChange}
+          isAlwaysOpen={isAlwaysOpen}
+          setIsAlwaysOpen={setIsAlwaysOpen}
+        />
+      )
     }
   ]
 
@@ -95,7 +111,7 @@ export default function NewBranch() {
       pickup: data.pickup ?? false,
       onSite: data.onSite ?? false,
       alwaysOpen: data.alwaysOpen ?? false,
-      schedules: !data.alwaysOpen ? data.schedule : null
+      schedules: !data.alwaysOpen ? Object.values(daysData) : null
     }
 
     try {

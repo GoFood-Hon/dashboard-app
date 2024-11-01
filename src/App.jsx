@@ -202,6 +202,10 @@ function App() {
 
             <Route path={NAVIGATION_ROUTES_BRANCH_ADMIN.Dishes.DishDetails.path} element={<DishDetails />} />
 
+            <Route path={NAVIGATION_ROUTES_BRANCH_ADMIN.Reservations.path} element={<Reservations />} />
+
+            <Route path={NAVIGATION_ROUTES_BRANCH_ADMIN.Reservations.ReservationDetails.path} element={<ReservationDetails />} />
+
             <Route path={NAVIGATION_ROUTES_BRANCH_ADMIN.Account.path} element={<AccountSettings />} />
 
             <Route path={NAVIGATION_ROUTES_BRANCH_ADMIN.Password.path} element={<PasswordSettings />} />

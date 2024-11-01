@@ -1,10 +1,7 @@
 import React, { useEffect } from "react"
 import { useNavigate } from "react-router-dom"
-// import Button from "../../components/Button"
 import { NAVIGATION_ROUTES_SUPER_ADMIN } from "../../routes"
 import MenuTable from "../Menu/MenuTable"
-import toast from "react-hot-toast"
-import userApi from "../../api/userApi"
 import { useDispatch, useSelector } from "react-redux"
 import { setCurrentPage, fetchAdminUsers } from "../../store/features/userSlice"
 import { Paper, Button, Text, Title, Group, Flex } from "@mantine/core"
@@ -52,27 +49,6 @@ export const CollectionsList = () => {
       isActive: true
     }
   ]
-
-  // useEffect(() => {
-  //   if (!adminUsersByPage[page]) {
-  //     dispatch(fetchAdminUsers({ limit, page, order: "DESC" }))
-  //   }
-  // }, [dispatch, limit, page, adminUsersByPage])
-
-  // const handleDisableSelected = async (id) => {
-  //   try {
-  //     const response = await userApi.deleteAdminUser(id)
-
-  //     if (response.status === 204) {
-  //       toast.success("Usuario eliminado!")
-  //       refreshPage()
-  //     } else {
-  //       toast.error("Fallo al eliminar el administrador")
-  //     }
-  //   } catch (e) {
-  //     toast.error("Fallo obtener los datos del usuario", e)
-  //   }
-  // }
 
   return (
     <>

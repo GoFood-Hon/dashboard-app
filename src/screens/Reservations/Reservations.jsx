@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { setCurrentPage, fetchAdminUsers } from "../../store/features/userSlice"
 import { Paper, Button, Text, Title, Group, Flex } from "@mantine/core"
 import { colors } from "../../theme/colors"
-import { fetchReservationByRestaurant } from "../../store/features/reservationsSlice"
+import { fetchReservationByBranch, fetchReservationByRestaurant } from "../../store/features/reservationsSlice"
 import { name } from "dayjs/locale/es"
 
 export const Reservations = () => {
@@ -32,8 +32,10 @@ export const Reservations = () => {
   const loadingUsers = useSelector((state) => state.user.loadingUsers)
 
   useEffect(() => {
-    dispatch(fetchReservationByRestaurant(user?.Restaurant?.id))
-  }, [dispatch, user?.Restaurant?.id])
+    user?.role === "admin-restaurant"
+      ? dispatch(fetchReservationByRestaurant(user?.restaurantId))
+      : dispatch(fetchReservationByBranch(user?.sucursalId))
+  }, [dispatch, user?.restaurantId, user?.sucursalId])
 
   return (
     <>

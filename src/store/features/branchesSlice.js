@@ -133,8 +133,6 @@ export const updateBranches = createAsyncThunk(
 
       const response = await branchesApi.updateBranches(formData, data?.id)
 
-      console.log(response)
-
       if (response.error) {
         showNotification({
           title: "Error",

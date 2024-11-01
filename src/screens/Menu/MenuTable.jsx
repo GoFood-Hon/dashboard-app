@@ -288,8 +288,7 @@ export default function MenuTable({
       { label: "Teléfono", accessor: "phone" },
       { label: "Fecha", accessor: "createdAt" },
       // { label: "Tipo", accessor: "Order.type" },
-      { label: "Total", accessor: "total" },
-
+      { label: "Total", accessor: "total", render: (total) => getFormattedHNL(total) },
       {
         label: "Estado",
         accessor: "status",

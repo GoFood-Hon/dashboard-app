@@ -196,3 +196,7 @@ export const preparationTime = [
     label: "+30 minutos"
   }
 ]
+
+export const daysOfWeek = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"]
+
+export const daysOfWeekEn = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]

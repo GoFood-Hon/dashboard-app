@@ -79,8 +79,6 @@ export default function BranchesDetails() {
       }
     }
 
-    console.log(details)
-
     fetchData()
   }, [closeFormModal, formModalOpened])
 

@@ -47,7 +47,6 @@ export default function OrdersScreen() {
       setIsLoading(true)
 
       const response = await orderApi.getAllOrders()
-      console.log(response)
       setOrders(response?.data)
       if (response.error) {
         showNotification({

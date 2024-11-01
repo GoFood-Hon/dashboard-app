@@ -1,11 +1,12 @@
 import React from "react"
 import { Icon } from "./Icon"
 import { Link } from "react-router-dom"
+import { Paper } from "@mantine/core"
 
 export default function Cards({ data }) {
   return data ? (
     <Link to={data.link}>
-      <div className="w-full min-w-[16rem] min-h-[12rem] bg-white rounded-2xl shadow border border-blue-100 flex flex-col p-6">
+      <Paper withBorder radius='md' className="w-full min-w-[16rem] min-h-[12rem] rounded-2xl shadow flex flex-col p-6">
         <div className="p-2 mb-4 bg-yellow-100 rounded-full w-10 h-10 text-center flex flex-col justify-center items-center text-xl">
           {data.icon ? <Icon icon={data.icon} size={17} /> : "🔗"}
         </div>
@@ -19,7 +20,7 @@ export default function Cards({ data }) {
             </div>
           </div>
         </div>
-      </div>
+      </Paper>
     </Link>
   ) : null
 }

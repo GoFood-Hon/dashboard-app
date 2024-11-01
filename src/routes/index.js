@@ -292,6 +292,12 @@ export const NAVIGATION_ROUTES_BRANCH_ADMIN = {
       path: "menu/platillos/:dishId"
     }
   },
+  Reservations: {
+    path: "/lista-de-reservaciones",
+    ReservationDetails: {
+      path: "/lista-de-reservaciones/:reservationId"
+    }
+  },
   Complements: {
     label: "Complementos",
     icon: "menu",
@@ -334,6 +340,7 @@ export const NAVIGATION_ROUTES_BRANCH_ADMIN_TWO = [
       }
     ]
   },
+  { label: "Reservaciones", icon: IconCalendarDue, link: "/lista-de-reservaciones" },
   {
     label: "Cuenta",
     icon: IconSettings,

@@ -59,8 +59,8 @@ export default function LocationForm({ register, errors, setValue, itemDetails }
                 <div className="h-72 relative">
                   <Map
                     initialViewState={{
-                      longitude: -87.21699319736565,
-                      latitude: 14.058362051267025,
+                      longitude: -88.025,
+                      latitude: 15.50417,
                       zoom: 10
                     }}
                     style={{ borderRadius: "6px" }}

@@ -5,7 +5,7 @@ import { useLocation, useNavigate, useParams } from "react-router-dom"
 import { Accordion, Button, Flex, Paper } from "@mantine/core"
 import GeneralInformationForm from "./GeneralInformationForm"
 import LocationForm from "./LocationForm"
-import TimeForm from "./TimeForm"
+import { TimeForm } from "./TimeForm"
 import { getDepartmentNameById } from "../../utils"
 import branchesApi from "../../api/branchesApi"
 import { NAVIGATION_ROUTES_RES_ADMIN } from "../../routes"
@@ -16,11 +16,13 @@ import { colors } from "../../theme/colors"
 export const EditBranch = () => {
   const { branchId } = useParams()
   const user = useSelector((state) => state.user.value.role)
-
+  const [daysData, setDaysData] = useState([])
+  const [workSchedule, setWorkSchedule] = useState([])
   const [markerPosition, setMarkerPosition] = useState(null)
   const [errorLocalizacion, setErrorLocalizacion] = useState(false)
   const [lng, setLng] = useState(0)
   const [lat, setLat] = useState(0)
+  const [isAlwaysOpen, setIsAlwaysOpen] = useState(false)
 
   const handleMapClick = (event) => {
     const { lngLat } = event
@@ -29,6 +31,11 @@ export const EditBranch = () => {
     setMarkerPosition({ longitude: lngLat.lng, latitude: lngLat.lat })
     setValue("geolocation", [lngLat.lng, lngLat.lat])
     setErrorLocalizacion(false)
+  }
+
+  const handleScheduleChange = (newSchedule) => {
+    setWorkSchedule(newSchedule)
+    setTableOfficeModified(true)
   }
 
   const handleMapInput = () => {
@@ -73,7 +80,6 @@ export const EditBranch = () => {
     const fetchData = async () => {
       try {
         const response = await branchesApi.getBranch(branchId)
-        console.log(response)
         setDetails(response?.data)
 
         setViewState({
@@ -135,7 +141,17 @@ export const EditBranch = () => {
     {
       title: "Horario",
       requirement: "Obligatorio",
-      form: <TimeForm setValue={setValue} scheduleModels={details.ScheduleModels} watch={watch} />
+      // form: <TimeForm setValue={setValue} watch={watch} />
+      form: (
+        <TimeForm
+          schedule={workSchedule}
+          setDaysData={setDaysData}
+          onScheduleChange={handleScheduleChange}
+          hoursData={details?.ScheduleModels}
+          isAlwaysOpen={isAlwaysOpen}
+          setIsAlwaysOpen={setIsAlwaysOpen}
+        />
+      )
     }
   ]
 
@@ -157,6 +173,7 @@ export const EditBranch = () => {
   const onSubmit = async (data) => {
     setIsLoading(true)
     const formData = {
+      id: branchId,
       name: data.name,
       email: data.email,
       note: data.note,
@@ -171,7 +188,7 @@ export const EditBranch = () => {
       onSite: data.onSite ?? false,
       allowTableBooking: data.allowTableBooking ?? false,
       alwaysOpen: data.alwaysOpen ?? false,
-      schedules: !data.alwaysOpen ? data.schedule : null
+      schedules: !data.alwaysOpen ? Object.values(daysData) : null
     }
 
     try {

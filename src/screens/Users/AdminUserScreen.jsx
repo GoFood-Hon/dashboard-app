@@ -30,7 +30,6 @@ export const AdminUserScreen = () => {
     if (!adminUsersByPage[page]) {
       dispatch(fetchAdminUsers({ limit, page, order: "DESC" }))
     }
-    console.log(adminUsers)
   }, [dispatch, limit, page, adminUsersByPage])
 
   const handleDisableSelected = async (id) => {
