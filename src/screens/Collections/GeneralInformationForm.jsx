@@ -21,6 +21,11 @@ export default function GeneralInformationForm({ register, errors, setValue, isD
       setValue("files", acceptedFiles)
     }
   }
+
+  const handleCollectionType = (value) => {
+    setValue("type", value)
+  }
+
   const deleteImage = () => {
     setFileInformation(null)
     setImages([])
@@ -55,6 +60,7 @@ export default function GeneralInformationForm({ register, errors, setValue, isD
               label="Contenido de la colección"
               data={["Menús", "Platillos"]}
               maxDropdownHeight={200}
+              onChange={handleCollectionType}
             />
           </div>
         </Paper>

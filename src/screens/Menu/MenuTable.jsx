@@ -450,8 +450,13 @@ export default function MenuTable({ items, screenType, totalItems, currentPage, 
     ],
     collectionsScreen: [
       { label: "Nombre", accessor: "name" },
-      { label: "Contiene", accessor: "content" },
-      { label: "Clientes que utilizan", accessor: "clients", center: true },
+      { label: "Contiene", accessor: "type", render: (type) => (type === "restaurants" ? "Restaurantes" : "Platillos") },
+      {
+        label: "Cantidad",
+        accessor: "dishes",
+        center: true,
+        render: (dishes, item) => (item.type === "restaurants" ? item.restaurants.length : dishes.length)
+      },
       { label: "Fecha de creación", accessor: "createdAt" },
       {
         label: "Estado",

@@ -86,7 +86,7 @@ export default function ComplementsForm({
       const filteredExtras = data.filter((item) => !selectedDishes.some((selected) => selected.id === item.id))
       setExtras(filteredExtras)
     } else {
-      setExtras(dishesList)
+      setExtras(data)
     }
   }, [data, selectedDishes])
 

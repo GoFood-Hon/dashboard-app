@@ -19,6 +19,7 @@ export default function NewCollection() {
   const dispatch = useDispatch()
   const restaurant = useSelector((state) => state.restaurants.restaurants)
   const user = useSelector((state) => state.user.value)
+  const dishesList = useSelector((state) => state.collections.dishesList)
   const [isLoading, setIsLoading] = useState(false)
 
   const {
@@ -62,7 +63,7 @@ export default function NewCollection() {
           isDataCleared={isDataCleared}
           defaultMessage="Por favor añada elementos a esta colección"
           itemsAvailableLabel="Platillos/Menús disponibles"
-          data={dishes}
+          data={dishesList}
           name={"dishes"}
         />
       )
