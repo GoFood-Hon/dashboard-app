@@ -8,9 +8,13 @@ import { showNotification } from "@mantine/notifications"
 
 const initialState = {
   dishes: [],
-  currentPage: 1,
-  itemsPerPage: ITEMS_PER_PAGE_CARDS,
   totalItems: 0,
+  itemsPerPage: ITEMS_PER_PAGE_CARDS,
+  dishesPerPage: [],
+  totalDishes: 0,
+  totalPagesCount: 0,
+  currentPage: 1,
+  loadingDishes: false,
   filters: {
     startDate: null,
     endDate: null,
@@ -24,6 +28,42 @@ const initialState = {
 /*
  * GET DISHES
  */
+
+export const getAllDishes = createAsyncThunk(
+  "dishes/getAllDishes",
+  async ({ limit, restaurantId, page, search_field, search }, { rejectWithValue }) => {
+    try {
+      const response = await dishesApi.getAllDishesByRestaurant({
+        limit,
+        restaurantId,
+        page,
+        order: "DESC",
+        search_field,
+        search
+      })
+
+      if (response.error) {
+        showNotification({
+          title: "Error",
+          message: response.message,
+          color: "red",
+          duration: 7000
+        })
+        return rejectWithValue(response.error)
+      }
+
+      return { data: response.data, results: response.results, page }
+    } catch (error) {
+      showNotification({
+        title: "Error",
+        message: error.message || error,
+        color: "red",
+        duration: 7000
+      })
+      return rejectWithValue(error.message)
+    }
+  }
+)
 
 export const fetchDishes = createAsyncThunk(
   "dishes/fetchDishes",
@@ -217,7 +257,7 @@ export const updateDish = createAsyncThunk(
 
 export const updateDishStatus = createAsyncThunk(
   "dishes/updateDishStatus",
-  async ({ dishData, dishId }, { dispatch }) => {
+  async ({ dishData, dishId }, { dispatch, rejectWithValue }) => {
     try {
       const response = await dishesApi.updateDishesStatus(dishId, dishData)
       if (response.error) {
@@ -228,14 +268,7 @@ export const updateDishStatus = createAsyncThunk(
           duration: 7000
         })
 
-        return response.error
-      } else {
-        showNotification({
-          title: "Actualización exitosa",
-          message: response.message,
-          color: "green",
-          duration: 7000
-        })
+        return rejectWithValue(response.message)
       }
       return response.data
     } catch (error) {
@@ -276,26 +309,67 @@ export const dishesSlice = createSlice({
     },
     setLoading: (state, action) => {
       state.loading = action.payload
+    },
+    setTotalDishes: (state, action) => {
+      state.totalDishes = action.payload
     }
   },
   extraReducers: (builder) => {
     builder
-      .addCase(fetchDishes.pending, (state) => {
-        state.status = "loading"
+      .addCase(getAllDishes.pending, (state) => {
+        state.loadingDishes = true
       })
-      .addCase(fetchDishes.fulfilled, (state, action) => {
-        state.status = "succeeded"
-        state.totalItems = action.payload.results
-        state.value = action.payload
+      .addCase(getAllDishes.fulfilled, (state, action) => {
+        const { data, results, page } = action.payload
+
+        state.dishesPerPage[page] = data.data
+
+        state.loadingDishes = false
+        state.currentPage = page
+        state.totalDishes = results
+        state.totalPagesCount = Math.ceil(results / action.meta.arg.limit)
       })
-      .addCase(fetchDishes.rejected, (state, action) => {
-        state.status = "failed"
+      .addCase(getAllDishes.rejected, (state, action) => {
+        state.loadingDishes = false
+        state.error = action.error
+      })
+      .addCase(updateDishStatus.pending, (state) => {})
+      .addCase(updateDishStatus.fulfilled, (state, action) => {
+        const { id, isActive } = action.payload
+        const currentPageDishes = state.dishesPerPage[state.currentPage]
+        const index = currentPageDishes.findIndex((dish) => dish?.id === id)
+
+        if (index !== -1) {
+          currentPageDishes[index] = { ...currentPageDishes[index], isActive }
+        }
+      })
+      .addCase(updateDishStatus.rejected, (state, action) => {
+        state.error = action.error
+      })
+      .addCase(updateDish.pending, (state) => {})
+      .addCase(updateDish.fulfilled, (state, action) => {
+        const { id, name, price, images } = action.payload
+        const currentPageDishes = state.dishesPerPage[state.currentPage]
+        const index = currentPageDishes.findIndex((dish) => dish?.id === id)
+
+        if (index !== -1) {
+          const imageLocation = images.length > 0 ? images[0].location : null
+
+          currentPageDishes[index] = {
+            ...currentPageDishes[index],
+            name,
+            price,
+            image: imageLocation
+          }
+        }
+      })
+      .addCase(updateDish.rejected, (state, action) => {
         state.error = action.error
       })
   }
 })
 
-export const { setDishes, setError, setPage, setFilters } = dishesSlice.actions
+export const { setDishes, setError, setPage, setFilters, setTotalDishes } = dishesSlice.actions
 
 export const setLoading = (state) => state.dishes.loading
 

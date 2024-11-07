@@ -92,6 +92,10 @@ export const EditBranch = () => {
           longitude: details?.geolocation?.coordinates?.[0],
           latitude: details?.geolocation?.coordinates?.[1]
         })
+
+        console.log(response?.data?.alwaysOpen)
+
+        setIsAlwaysOpen(response?.data?.alwaysOpen)
       } catch (error) {
         throw error
       }
@@ -187,9 +191,11 @@ export const EditBranch = () => {
       pickup: data.pickup ?? false,
       onSite: data.onSite ?? false,
       allowTableBooking: data.allowTableBooking ?? false,
-      alwaysOpen: data.alwaysOpen ?? false,
-      schedules: !data.alwaysOpen ? Object.values(daysData) : null
+      alwaysOpen: isAlwaysOpen,
+      schedules: !isAlwaysOpen ? Object.values(daysData) : null
     }
+
+    console.log(formData)
 
     try {
       const response = await branchesApi.updateBranches(formData, branchId)

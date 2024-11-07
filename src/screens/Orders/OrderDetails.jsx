@@ -1,5 +1,5 @@
 /* eslint-disable indent */
-import { Avatar, Breadcrumbs, Grid, Image, Modal, Select } from "@mantine/core"
+import { Avatar, Breadcrumbs, Grid, Image, Modal, Paper, Select } from "@mantine/core"
 import React, { useEffect, useState } from "react"
 import { useLocation, useNavigate, useParams } from "react-router-dom"
 import toast from "react-hot-toast"
@@ -134,11 +134,11 @@ export const OrderDetails = () => {
   }
 
   return (
-    <BaseLayout>
+    <>
       <section>
         <div className="flex flex-row justify-between items-center pb-6">
           <div className="flex flex-row gap-x-3 items-center">
-            <BackButton title="Pedidos" />
+            <BackButton title="Pedidos" show />
           </div>
         </div>
       </section>
@@ -150,30 +150,30 @@ export const OrderDetails = () => {
 
         <Grid grow gutter="sm">
           <Grid.Col span={{ base: 12, md: 8 }}>
-            <div className="w-full h-full bg-white rounded-md border border-blue-100 p-5">
+            <div className="w-full h-full rounded-md p-5">
               <Grid>
                 <Grid.Col span={{ base: 12, md: "auto" }}>
                   <div className="flex flex-col">
-                    <span className="text-zinc-500 font-medium text-sm leading-normal">Pedido</span>
-                    <span className="text-sky-950 text-sm  font-bold leading-normal">{`#${orderDetails?.id}`}</span>
+                    <span className="font-medium text-sm leading-normal">Pedido</span>
+                    <span className="text-sm  font-bold leading-normal">{`#${orderDetails?.id}`}</span>
                   </div>
                 </Grid.Col>
                 <Grid.Col span={{ base: 12, md: "auto" }}>
                   <div className="flex flex-col">
-                    <span className="text-zinc-500 text-sm  font-medium leading-normal">Estado</span>
-                    <span className="text-sky-950 text-sm  font-bold leading-normal">{orderDetails?.status}</span>
+                    <span className="text-sm  font-medium leading-normal">Estado</span>
+                    <span className="text-sm  font-bold leading-normal">{orderDetails?.status}</span>
                   </div>
                 </Grid.Col>
                 <Grid.Col span={{ base: 12, md: "auto" }}>
                   <div className="flex flex-col">
-                    <span className="text-zinc-500 text-sm  font-medium leading-normal">Tipo</span>
-                    <span className="text-sky-950 text-sm  font-bold leading-normal">{orderDetails?.Order?.type}</span>
+                    <span className="text-sm  font-medium leading-normal">Tipo</span>
+                    <span className="text-sm  font-bold leading-normal">{orderDetails?.Order?.type}</span>
                   </div>
                 </Grid.Col>
                 <Grid.Col span={{ base: 12, md: "auto" }}>
                   <div className="flex flex-col">
-                    <span className="text-zinc-500 text-sm  font-medium leading-normal">Fecha</span>
-                    <span className="text-sky-950 text-sm  font-bold leading-normal">
+                    <span className="text-sm  font-medium leading-normal">Fecha</span>
+                    <span className="text-sm  font-bold leading-normal">
                       {formatDateDistanceToNow(orderDetails?.createdAt)}
                     </span>
                   </div>
@@ -183,8 +183,8 @@ export const OrderDetails = () => {
               <Grid pt="xl">
                 <Grid.Col span={{ base: 12, md: "auto" }}>
                   <div className="flex flex-col">
-                    <span className="text-zinc-500 text-sm  font-medium leading-normal">Total compra</span>
-                    <span className="text-sky-950 text-sm  font-bold leading-normal">{getFormattedHNL(orderDetails?.total)}</span>
+                    <span className="text-sm font-medium leading-normal">Total compra</span>
+                    <span className="text-sm font-bold leading-normal">{getFormattedHNL(orderDetails?.total)}</span>
                   </div>
                 </Grid.Col>
               </Grid>
@@ -214,28 +214,28 @@ export const OrderDetails = () => {
 
                 <Grid.Col span={{ base: 12, md: "auto" }}>
                   <div className="flex flex-col">
-                    <span className="text-sky-950 text-sm py-2 font-normal leading-normal">Subtotal</span>
-                    <span className="text-sky-950 text-sm py-2 font-normal leading-normal">Descuento</span>
-                    <span className="text-sky-950 text-sm py-2 font-normal leading-normal">Precio de envío</span>
-                    <span className="text-sky-950 text-sm py-2 font-normal leading-normal">ISV ( 15% )</span>
-                    <div className="w-full border border-blue-100" />
-                    <span className="text-sky-950 text-sm pt-4 font-normal leading-normal">Total</span>
+                    <span className="text-sm py-2 font-normal leading-normal">Subtotal</span>
+                    <span className="text-sm py-2 font-normal leading-normal">Descuento</span>
+                    <span className="text-sm py-2 font-normal leading-normal">Precio de envío</span>
+                    <span className="text-sm py-2 font-normal leading-normal">ISV ( 15% )</span>
+                    <div className="w-full " />
+                    <span className="text-sm pt-4 font-normal leading-normal">Total</span>
                   </div>
                 </Grid.Col>
                 <Grid.Col span={{ base: 12, md: "auto" }}>
                   <div className="flex flex-col">
-                    <span className="text-sky-950 text-sm py-2 font-normal leading-normal">
+                    <span className="text-sm py-2 font-normal leading-normal">
                       + {getFormattedHNL(orderDetails?.OrderDetails?.[0]?.subtotal)}
                     </span>
-                    <span className="text-sky-950 text-sm py-2 font-normal leading-normal">
+                    <span className="text-sm py-2 font-normal leading-normal">
                       - {getFormattedHNL(orderDetails?.OrderDetails?.[0]?.discount)}
                     </span>
-                    <span className="text-sky-950 text-sm py-2 font-normal leading-normal">+ {orderDetails?.shippingPrice}</span>
-                    <span className="text-sky-950 text-sm py-2 font-normal leading-normal">
+                    <span className="text-sm py-2 font-normal leading-normal">+ {orderDetails?.shippingPrice}</span>
+                    <span className="text-sm py-2 font-normal leading-normal">
                       + {getFormattedHNL(orderDetails?.isv)}
                     </span>
                     <div className="w-full border border-blue-100" />
-                    <span className="text-sky-950 text-sm pt-4 font-normal leading-normal">
+                    <span className="text-sm pt-4 font-normal leading-normal">
                       {getFormattedHNL(orderDetails?.total)}
                     </span>
                   </div>
@@ -296,9 +296,9 @@ export const OrderDetails = () => {
                 {orderDetails?.OrderDetails?.[0]?.orderDetailNote}
               </div>
             </div> */}
-            <div className="w-full bg-white rounded-md  border border-blue-100 p-5">
+            <div className="w-full rounded-md p-5">
               <span>Cliente</span>
-              <div className="w-full border border-blue-100 mt-4" />
+              <div className="w-full mt-4" />
               <div className="my-4 flex flex-row">
                 <Avatar size="lg" />
                 <div className="flex flex-col text-sm justify-center pl-2">
@@ -306,12 +306,12 @@ export const OrderDetails = () => {
                 </div>
               </div>
               <div className="flex flex-col mt-2">
-                <div className="text-blue-600 text-sm font-normal mt-2">{orderDetails?.Order?.User?.phoneNumber}</div>
+                <div className="text-sm font-normal mt-2">{orderDetails?.Order?.User?.phoneNumber}</div>
               </div>
 
               <div className="flex flex-col mt-4">
-                <div className="text-sky-950 text-base font-semibold mb-2">Dirección envío</div>
-                <div className="text-sky-950 text-sm py-2 font-normal leading-normal">
+                <div className="text-base font-semibold mb-2">Dirección envío</div>
+                <div className="text-sm py-2 font-normal leading-normal">
                   {orderDetails?.Order?.User?.UserAddress || "Dirección no disponible "}
                 </div>
               </div>
@@ -322,9 +322,9 @@ export const OrderDetails = () => {
               user.role === APP_ROLES.branchAdmin ||
               user.role === APP_ROLES.cashierUser) &&
             orderDetails?.status === orderStatusValues.ready ? (
-              <div className="w-full bg-white rounded-md border border-blue-100 p-5 mt-4">
+              <div className="w-full rounded-md p-5 mt-4">
                 <span>Seleccionar motorista</span>
-                <div className="w-full border border-blue-100 mt-4" />
+                <div className="w-full mt-4" />
                 <div className="my-4 flex flex-col gap-4">
                   <Select
                     placeholder="Seleccione motorista"
@@ -364,7 +364,7 @@ export const OrderDetails = () => {
             backgroundOpacity: 0.55,
             blur: 3
           }}>
-          <div className="p-4 rounded-xl pt-6 bg-gradient-to-b from-sky-200 via-slate-100 to-neutral-100">
+          <Paper withBorder>
             <div className="flex flex-row items-center">
               <Image
                 h={"120px"}
@@ -374,49 +374,49 @@ export const OrderDetails = () => {
                 radius={"xl"}
                 fallbackSrc="https://placehold.co/600x400?text=Imagen+no+disponible"
               />
-              <div className="text-sky-950 text-2xl font-bold pl-4 leading-loose">
+              <div className="text-2xl font-bold pl-4 leading-loose">
                 {orderDetails?.OrderDetails?.[0]?.Dish?.name}
               </div>
             </div>
             <Grid mt={"xl"}>
               <Grid.Col span={{ base: 12, md: "auto" }}>
                 <div className="flex flex-col">
-                  <span className="text-zinc-500 text-sm  font-medium leading-normal">Cantidad</span>
-                  <span className="text-sky-950  text-xs py-2 font-bold leading-normal">
+                  <span className="text-sm  font-medium leading-normal">Cantidad</span>
+                  <span className="text-xs py-2 font-bold leading-normal">
                     {orderDetails?.OrderDetails?.[0]?.quantity}
                   </span>
                 </div>
               </Grid.Col>
               <Grid.Col span={{ base: 12, md: "auto" }}>
                 <div className="flex flex-col">
-                  <span className="text-zinc-500 text-sm  font-medium leading-normal">Precio Unit.</span>
+                  <span className="text-sm font-medium leading-normal">Precio Unit.</span>
                   {getFormattedHNL(orderDetails?.OrderDetails?.[0]?.price)}
-                  <span className="text-sky-950  text-xs py-2 font-bold leading-normal"></span>
+                  <span className="text-xs py-2 font-bold leading-normal"></span>
                 </div>
               </Grid.Col>
               <Grid.Col span={{ base: 12, md: 2 }}>
                 <div className="flex flex-col">
-                  <span className="text-zinc-500 text-sm  font-medium leading-normal">SubTotal</span>
-                  <span className="text-sky-950  text-xs py-2 font-bold leading-normal">
+                  <span className="text-sm  font-medium leading-normal">SubTotal</span>
+                  <span className="text-xs py-2 font-bold leading-normal">
                     {getFormattedHNL(orderDetails?.OrderDetails?.[0]?.subtotal)}
                   </span>
                 </div>
               </Grid.Col>
               <Grid.Col span={{ base: 12, md: 2 }}>
                 <div className="flex flex-col">
-                  <span className="text-zinc-500 text-sm  font-medium leading-normal">Total</span>
-                  <span className="text-sky-950  text-xs py-2 font-bold leading-normal">
+                  <span className="text-sm  font-medium leading-normal">Total</span>
+                  <span className="text-xs py-2 font-bold leading-normal">
                     {getFormattedHNL(orderDetails?.total)}
                   </span>
                 </div>
               </Grid.Col>
             </Grid>
-            <div className="text-sky-950 text-xl font-bold leading-loose">Complementos</div>
-            <div className="text-sky-950 text-xl font-bold leading-loose py-2">Notas de la orden</div>
-            <div className="text-sky-950 text-base font-normal leading-normal"></div>
-          </div>
+            <div className="text-xl font-bold leading-loose">Complementos</div>
+            <div className="text-xl font-bold leading-loose py-2">Notas de la orden</div>
+            <div className="text-base font-normal leading-normal"></div>
+          </Paper>
         </Modal>
       </section>
-    </BaseLayout>
+    </>
   )
 }

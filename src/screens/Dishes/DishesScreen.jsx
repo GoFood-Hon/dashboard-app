@@ -15,22 +15,14 @@ import {
   Image,
   Tooltip,
   Flex,
-  Loader,
-  TextInput
+  Loader
 } from "@mantine/core"
 import { useNavigate } from "react-router-dom"
 import { colors } from "../../theme/colors"
 import { NAVIGATION_ROUTES_RES_ADMIN } from "../../routes"
 import { useDispatch, useSelector } from "react-redux"
 import { IconX, IconCheck } from "@tabler/icons-react"
-import {
-  fetchDishes,
-  selectAllDishes,
-  selectDishesError,
-  selectDishesStatus,
-  setPage,
-  updateDishStatus
-} from "../../store/features/dishesSlice"
+import { getAllDishes, selectAllDishes, setPage, updateDishStatus } from "../../store/features/dishesSlice"
 import BackButton from "./components/BackButton"
 import { APP_ROLES } from "../../utils/constants"
 import { getFormattedHNL } from "../../utils"
@@ -41,16 +33,14 @@ export default function Dishes() {
   const user = useSelector((state) => state.user.value)
 
   const dishes = useSelector(selectAllDishes)
-  const status = useSelector(selectDishesStatus)
-  const error = useSelector(selectDishesError)
-  const totalItems = useSelector((state) => state.dishes.totalItems)
-  const filters = useSelector((state) => state.dishes.filters)
   const limit = useSelector((state) => state.dishes.itemsPerPage)
   const page = useSelector((state) => state.dishes.currentPage)
-  const restaurant = useSelector((state) => state?.restaurant?.value)
+  const dishesPerPage = useSelector((state) => state.dishes.dishesPerPage)
+  const totalDishes = useSelector((state) => state.dishes.totalDishes)
+  const totalPageCount = useSelector((state) => state.dishes.totalPagesCount)
+  const dishesList = dishesPerPage[page] || []
+  const loadingDishes = useSelector((state) => state.dishes.loadingDishes)
 
-  const totalControlBtn = Math.ceil(totalItems / limit)
-  const [searchDish, setSearchDish] = useState("")
   const [cardsSelected, setCardsSelected] = useState([])
 
   const theme = createTheme({
@@ -58,33 +48,13 @@ export default function Dishes() {
   })
 
   useEffect(() => {
-    dispatch(
-      fetchDishes({
-        limit,
-        page,
-        order: "DESC",
-        restaurantId: user.restaurantId,
-        filters
-      })
-    )
-    setCardsSelected([])
-  }, [page, dispatch, restaurant])
+    if (!dishesPerPage[page]) {
+      dispatch(getAllDishes({ limit, restaurantId: user.restaurantId, page, order: "DESC" }))
+    }
+  }, [dispatch, limit, page, dishesPerPage, loadingDishes, user.restaurantId])
 
   const handleNewItem = () => {
     navigate(NAVIGATION_ROUTES_RES_ADMIN.Menu.submenu.Dishes.NewDish.path)
-    setCardsSelected([])
-  }
-
-  const refreshPage = () => {
-    dispatch(
-      fetchDishes({
-        limit,
-        page,
-        order: "DESC",
-        restaurantId: user.restaurantId,
-        filters
-      })
-    )
     setCardsSelected([])
   }
 
@@ -111,13 +81,11 @@ export default function Dishes() {
   }
 
   const handleEnableSelected = async (id) => {
-    await dispatch(updateDishStatus({ dishData: { isActive: true }, propertyToUpdate: "isActive", dishId: id }))
-    refreshPage()
+    dispatch(updateDishStatus({ dishData: { isActive: true }, propertyToUpdate: "isActive", dishId: id }))
   }
 
   const handleDisableSelected = async (id) => {
-    await dispatch(updateDishStatus({ dishData: { isActive: false }, propertyToUpdate: "isActive", dishId: id }))
-    refreshPage()
+    dispatch(updateDishStatus({ dishData: { isActive: false }, propertyToUpdate: "isActive", dishId: id }))
   }
 
   const handleClick = (id) => {
@@ -148,10 +116,10 @@ export default function Dishes() {
           <Flex align="center" gap="xs">
             <Flex align="center" gap={5}>
               <Text fw={700}>
-                {page === 1 ? 1 : (page - 1) * limit + 1}-{page === 1 ? limit : Math.min(page * limit, totalItems)}
+                {page === 1 ? 1 : (page - 1) * limit + 1}-{page === 1 ? limit : Math.min(page * limit, totalDishes)}
               </Text>
               <Text>de</Text>
-              <Text fw={700}>{totalItems} platillos</Text>
+              <Text fw={700}>{totalDishes} platillos</Text>
             </Flex>
             <Button
               color={colors.main_app_color}
@@ -162,29 +130,17 @@ export default function Dishes() {
           </Flex>
         </Flex>
       </Group>
-      {/* <Grid mb={5}>
-        <Grid.Col span={{ base: 12 }}>
-          <TextInput
-            radius="md"
-            placeholder="Buscar"
-            value={""}
-            onChange={""}
-            rightSection={status === "loading" && <Loader color={colors.main_app_color} size={20} />}
-          />
-        </Grid.Col>
-      </Grid> */}
       <section className="w-full">
-        {status === "loading" ? (
+        {loadingDishes ? (
           <div className="h-[calc(100vh-220px)] w-full flex justify-center items-center">
             <Loader color={colors.main_app_color} />
           </div>
-        ) : dishes && dishes.length > 0 ? (
+        ) : dishesList && dishesList?.length > 0 ? (
           <Grid>
-            {dishes.map((item, key) => (
+            {dishesList?.map((item, key) => (
               <Grid.Col span={{ base: 12, md: 6, lg: 4, xl: 3 }} key={key}>
                 <Card shadow="sm" padding="lg" radius="md" withBorder>
                   <Card.Section>
-                    {/* Validación para asegurarse de que `item.images` exista y tenga al menos un elemento */}
                     {item?.images && item.images.length > 0 ? (
                       <Image src={item.images[0]?.location} h={200} fit="contain" alt={item?.name || "Imagen"} />
                     ) : (
@@ -232,18 +188,19 @@ export default function Dishes() {
             ))}
           </Grid>
         ) : (
-          <div className="text-center mt-4 text-gray-500">Sin platillos disponibles!</div>
+          <div className="text-center mt-4 text-gray-500">Sin platillos disponibles</div>
         )}
-        {status === "error" && <div>Error: {error}</div>}
       </section>
       <section className="flex flex-row justify-between mt-5">
         <div />
         <Pagination
-          total={totalControlBtn}
+          total={totalPageCount}
           page={page}
           limit={limit}
+          withEdges
           onChange={onChangePagination}
           color={colors.main_app_color}
+          value={page}
         />
       </section>
       <section>

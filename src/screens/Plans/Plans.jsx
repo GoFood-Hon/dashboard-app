@@ -17,7 +17,7 @@ export const Plans = () => {
   const totalPagesCount = useSelector((state) => state.plans.totalPagesCount)
   const totalPlans = useSelector((state) => state.plans.totalPlans)
   const plans = plansByPage[page] || []
-  const isLoading = useSelector((state) => state.plans.loadingPlans)
+  const loadingPlans = useSelector((state) => state.plans.loadingPlans)
 
   useEffect(() => {
     if (!plansByPage[page]) {
@@ -28,11 +28,7 @@ export const Plans = () => {
   const handleNewPlan = () => {
     navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Plans.NewPlan.path)
   }
-
-  useEffect(() => {
-    dispatch(fetchAllPlans())
-  }, [])
-
+  
   return (
     <>
       <Group grow className="mb-3">
@@ -61,7 +57,7 @@ export const Plans = () => {
             screenType="planScreen"
             totalItems={totalPagesCount}
             currentPage={page}
-            loadingData={isLoading}
+            loadingData={loadingPlans}
           />
         </Paper>
       </section>

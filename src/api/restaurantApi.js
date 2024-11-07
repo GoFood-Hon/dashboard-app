@@ -1,11 +1,13 @@
 import axiosClient from "./axiosClient"
 
 const restaurantsApi = {
-  getAllRestaurants: ({ limit, page, order } = {}) => {
+  getAllRestaurants: ({ limit, page, order, search_field, search } = {}) => {
     const params = {
       limit,
       page,
-      order
+      order,
+      search_field,
+      search
     }
     const validParams = Object.fromEntries(Object.entries(params).filter(([_, value]) => value !== undefined && value))
 

@@ -4,7 +4,7 @@ import { ErrorMessage } from "./ErrorMessage"
 import LoadingCircle from "../LoadingCircle"
 import { colors } from "../../theme/colors"
 
-export default function InputSearchCombobox({ items, label, errors, name, placeholder, emptyMessage, setValue, status, searchValue }) {
+export default function InputSearchCombobox({ items, label, errors, name, placeholder, emptyMessage, setValue, status, searchValue, defaultValue }) {
   const [search, setSearch] = useState("")
   const [selectedCategory, setSelectedCategory] = useState(null)
 
@@ -20,7 +20,7 @@ export default function InputSearchCombobox({ items, label, errors, name, placeh
     : items
 
   const options = filteredOptions.map((item) => (
-    <Combobox.Option value={item.name} key={item.id} color={colors.primary_button} selected={selectedCategory === item}>
+    <Combobox.Option value={item.name} key={item.id} defaultValue={defaultValue} color={colors.primary_button} selected={selectedCategory === item}>
       {item.name}
     </Combobox.Option>
   ))

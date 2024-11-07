@@ -1,16 +1,58 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit"
 import collectionsApi from "../../api/collectionsApi"
 import { ITEMS_PER_PAGE } from "../../utils/paginationConfig"
+import { showNotification } from "@mantine/notifications"
+import dishesApi from "../../api/dishesApi"
 
-// Async thunks for each endpoint
-export const fetchCollections = createAsyncThunk("collections/fetchCollections", async (params, { rejectWithValue }) => {
-  try {
-    const response = await collectionsApi.getAllCollections(params)
-    return response.data
-  } catch (error) {
-    return rejectWithValue(error.response.data)
+export const fetchCollections = createAsyncThunk(
+  "collections/fetchCollections",
+  async ({ limit, page, search_field, search }, { rejectWithValue }) => {
+    try {
+      const response = await collectionsApi.getAllCollections({
+        limit,
+        page,
+        order: "DESC",
+        search_field,
+        search
+      })
+
+      return { data: response.data, results: response.results, page }
+    } catch (error) {
+      showNotification({
+        title: "Error",
+        message: error,
+        color: "red",
+        duration: 7000
+      })
+      return rejectWithValue(error.message)
+    }
   }
-})
+)
+
+export const fetchDishesForCollections = createAsyncThunk(
+  "collections/fetchDishesForCollections",
+  async ({ limit, page, search_field, search }, { rejectWithValue }) => {
+    try {
+      const response = await dishesApi.getAllDishes({
+        limit,
+        page,
+        order: "DESC",
+        search_field,
+        search
+      })
+
+      return { data: response.data, results: response.results, page }
+    } catch (error) {
+      showNotification({
+        title: "Error",
+        message: error,
+        color: "red",
+        duration: 7000
+      })
+      return rejectWithValue(error.message)
+    }
+  }
+)
 
 export const fetchCollectionDetails = createAsyncThunk(
   "collections/fetchCollectionDetails",
@@ -109,9 +151,16 @@ export const deleteRestaurantFromCollection = createAsyncThunk(
 const collectionsSlice = createSlice({
   name: "collections",
   initialState: {
-    collections: [],
     collectionDetails: null,
+    dishesList: [],
     currentPage: 1,
+    collectionsPerPage: [],
+    totalCollections: 0,
+    totalPagesCount: 0,
+    loadingCollections: false,
+    creatingCollection: false,
+    updatingCollection: false,
+    fetchingDishes: false,
     itemsPerPage: ITEMS_PER_PAGE,
     status: "idle",
     error: null
@@ -119,20 +168,46 @@ const collectionsSlice = createSlice({
   reducers: {
     setCurrentPage: (state, action) => {
       state.currentPage = action.payload
+    },
+    setTotalCollections: (state, action) => {
+      state.totalCollections = action.payload
     }
   },
   extraReducers: (builder) => {
     builder
       // Fetch Collections
       .addCase(fetchCollections.pending, (state) => {
-        state.status = "loading"
+        state.loadingCollections = true
       })
       .addCase(fetchCollections.fulfilled, (state, action) => {
-        state.status = "succeeded"
-        state.collections = action.payload
+        const { data, results, page } = action.payload
+
+        state.collectionsPerPage[page] = data
+
+        state.loadingCollections = false
+        state.currentPage = page
+        state.totalCollections = results
+        state.totalPagesCount = Math.ceil(results / action.meta.arg.limit)
       })
       .addCase(fetchCollections.rejected, (state, action) => {
-        state.status = "failed"
+        state.loadingCollections = false
+        state.error = action.payload
+      })
+      .addCase(fetchDishesForCollections.pending, (state) => {
+        state.fetchingDishes = true
+      })
+      .addCase(fetchDishesForCollections.fulfilled, (state, action) => {
+        const { data, results, page } = action.payload
+
+        state.dishesList = data
+
+        state.fetchingDishes = false
+        // state.currentPage = page
+        // state.totalCollections = results
+        // state.totalPagesCount = Math.ceil(results / action.meta.arg.limit)
+      })
+      .addCase(fetchDishesForCollections.rejected, (state, action) => {
+        state.fetchingDishes = false
         state.error = action.payload
       })
       // Fetch Collection Details
@@ -225,6 +300,6 @@ const collectionsSlice = createSlice({
   }
 })
 
-export const { setCurrentPage } = collectionsSlice.actions
+export const { setCurrentPage, setTotalCollections } = collectionsSlice.actions
 
 export default collectionsSlice.reducer

@@ -4,7 +4,6 @@ import {
   Checkbox,
   ScrollArea,
   Group,
-  TextInput,
   Avatar,
   ActionIcon,
   Pagination,
@@ -12,12 +11,9 @@ import {
   createTheme,
   MantineProvider,
   rem,
-  Loader,
-  Paper,
   Flex,
   Text,
   Container,
-  Grid,
   Badge
 } from "@mantine/core"
 import { IconEye, IconCheck, IconX } from "@tabler/icons-react"
@@ -30,11 +26,12 @@ import "dayjs/locale/es"
 import { useDebouncedCallback } from "@mantine/hooks"
 import { useDispatch, useSelector } from "react-redux"
 import { TableSkeleton } from "../../components/Skeletons/TableSkeleton"
-import { fetchAdminUsers } from "../../store/features/userSlice"
+import { fetchAdminUsers, updateUserStatus } from "../../store/features/userSlice"
 import { getFormattedHNL } from "../../utils"
 import customParseFormat from "dayjs/plugin/customParseFormat"
 import utc from "dayjs/plugin/utc"
 import timezone from "dayjs/plugin/timezone"
+import { updateMenuStatus } from "../../store/features/menuSlice"
 
 dayjs.extend(utc)
 dayjs.extend(timezone)
@@ -42,23 +39,14 @@ dayjs.extend(customParseFormat)
 dayjs.extend(relativeTime)
 dayjs.locale("es")
 
-export default function MenuTable({
-  refreshPage,
-  items,
-  handleDisableSelected,
-  screenType,
-  totalItems,
-  currentPage,
-  setPage,
-  loadingData
-}) {
+export default function MenuTable({ items, screenType, totalItems, currentPage, setPage, loadingData }) {
   const [itemsSelected, setItemsSelected] = useState([])
   const [search, setSearch] = useState("")
   const navigate = useNavigate()
   const [loading, setLoading] = useState(false)
   const [searchResults, setSearchResults] = useState([])
   const dispatch = useDispatch()
-  const userData = useSelector((state) => state.user) // Ajusta según tu estado
+  const userData = useSelector((state) => state.user)
 
   const getSearchResults = async (query, searchField) => {
     try {
@@ -137,16 +125,18 @@ export default function MenuTable({
           </div>
         )
       },
-      { label: "Fecha", accessor: "createdAt" },
+      { label: "Creado", accessor: "createdAt" },
       { label: "N° de platillos", accessor: "dishesCount", center: true },
       {
         label: "Estado",
         accessor: "isActive",
-        render: (isActive) => (
+        render: (isActive, item) => (
           <MantineProvider theme={theme}>
             <Switch
               checked={isActive}
-              //onChange={() => (isActive ? handleDisableSelected(item.id) : handleEnableSelected(item.id))}
+              onChange={() =>
+                dispatch(updateMenuStatus({ data: { id: item.id, isActive: !item.isActive }, propertyToUpdate: "isActive" }))
+              }
               color={colors.main_app_color}
               size="md"
               thumbIcon={
@@ -244,15 +234,15 @@ export default function MenuTable({
       { label: "Rol", accessor: "role" },
       { label: "Correo", accessor: "email" },
       { label: "Teléfono", accessor: "phoneNumber" },
-      { label: "Fecha", accessor: "createdAt" },
+      { label: "Creado", accessor: "createdAt" },
       {
         label: "Estado",
         accessor: "active",
-        render: (active) => (
+        render: (active, item) => (
           <MantineProvider theme={theme}>
             <Switch
               checked={active}
-              //onChange={() => (isActive ? handleDisableSelected(item.id) : handleEnableSelected(item.id))}
+              onChange={() => dispatch(updateUserStatus({ id: item.id, params: { active: !item.active } }))}
               color={colors.main_app_color}
               size="sm"
               thumbIcon={
@@ -287,7 +277,12 @@ export default function MenuTable({
       { label: "Usuario", accessor: "user" },
       { label: "Teléfono", accessor: "phone" },
       { label: "Fecha", accessor: "createdAt" },
-      // { label: "Tipo", accessor: "Order.type" },
+      {
+        label: "Tipo de servicio",
+        accessor: "serviceType",
+        render: (service) =>
+          service === "pickup" ? "Para llevar" : service === "onSite" ? "Comer en restaurante" : "A domicilio"
+      },
       { label: "Total", accessor: "total", render: (total) => getFormattedHNL(total) },
       {
         label: "Estado",
@@ -297,8 +292,20 @@ export default function MenuTable({
           <Badge
             size="md"
             w={120}
-            color={status === "pending" ? colors.yellow_logo : status === "cancelled" ? colors.main_app_color : "green"}>
-            {status === "pending" ? "Pendiente" : status === "cancelled" ? "Cancelado" : "Completado"}
+            color={
+              status === "pending" || status === "on-hold"
+                ? colors.yellow_logo
+                : status === "cancelled"
+                  ? colors.main_app_color
+                  : "green"
+            }>
+            {status === "pending"
+              ? "Pendiente"
+              : status === "cancelled"
+                ? "Cancelado"
+                : status === "on-hold"
+                  ? "En espera"
+                  : "Completado"}
           </Badge>
         )
       },
@@ -311,7 +318,7 @@ export default function MenuTable({
             className="transition ease-in-out duration-200"
             variant="subtle"
             size="lg"
-            // onClick={() => handleClick(id)}
+            onClick={() => handleClick(id)}
             color={colors.main_app_color}
             radius="xl">
             <IconEye />
@@ -342,11 +349,11 @@ export default function MenuTable({
       {
         label: "Estado",
         accessor: "isActive",
-        render: (active) => (
+        render: (active, item) => (
           <MantineProvider theme={theme}>
             <Switch
               checked={active}
-              //onChange={() => (isActive ? handleDisableSelected(item.id) : handleEnableSelected(item.id))}
+              //onChange={() => dispatch(updatePlanStatus({ id: item.id, params: { isActive: !item.isActive } }))}
               color={colors.main_app_color}
               size="sm"
               thumbIcon={
@@ -490,7 +497,7 @@ export default function MenuTable({
 
   return (
     <>
-      <Grid className={`flex w-full justify-between items-center mb-4 `}>
+      {/* <Grid className={`flex w-full justify-between items-center mb-4 `}>
         <Grid.Col span={{ base: 12 }}>
           <TextInput
             radius="md"
@@ -500,7 +507,7 @@ export default function MenuTable({
             rightSection={loading && <Loader color={colors.main_app_color} size={20} />}
           />
         </Grid.Col>
-      </Grid>
+      </Grid> */}
 
       {loadingData ? (
         <TableSkeleton />

@@ -14,15 +14,18 @@ import classes from "../../screens/Users/ArticlesCardsGrid.module.css"
 import plansApi from "../../api/plansApi"
 import BookingInformation from "./BookingInformation"
 import { PlanForm } from "../Users/PlanForm"
+import { useDispatch } from "react-redux"
+import { updateRestaurantData } from "../../store/features/restaurantSlice"
 
 export const EditRestaurant = () => {
   const { restaurantId } = useParams()
+  const dispatch = useDispatch()
   const navigate = useNavigate()
-  const [isLoading, setIsLoading] = useState(false)
   const [restaurantDetails, setRestaurantDetails] = useState({})
   const user = useSelector((state) => state.user.value)
   const [planCancelled, setPlanCancelled] = useState(false)
   const [newPlan, setNewPlan] = useState({})
+  const isLoading = useSelector((state) => state.restaurants.updatingRestaurant)
 
   useEffect(() => {
     ;(async () => {
@@ -54,8 +57,6 @@ export const EditRestaurant = () => {
   const [isDataCleared, setIsDataCleared] = useState(false)
 
   const onSubmit = async (data) => {
-    setIsLoading(true)
-
     try {
       // Crear la data del formulario
       const formData = new FormData()
@@ -81,137 +82,151 @@ export const EditRestaurant = () => {
         formData.append("shippingPrice", convertToDecimal(data.shippingPrice))
       }
 
-      // Actualizar el restaurante
-      const response = await restaurantsApi.updateRestaurant(formData, restaurantId)
-
-      if (response.error) {
-        showNotification({
-          title: "Error",
-          message: response.message,
-          color: "red",
-          duration: 7000
-        })
-      } else {
-        const updatedRestaurantId = response?.data?.id
-
-        // Subir imagen si se ha proporcionado
-        const uploadImage = async (restaurantId, file) => {
-          const formDataImage = new FormData()
-          formDataImage.append("files", file)
-
-          return await restaurantsApi.addImage(restaurantId, formDataImage)
-        }
-
-        if (data?.files?.[0]) {
-          const addImageResponse = await uploadImage(updatedRestaurantId, data.files[0])
-
-          if (addImageResponse.error) {
-            showNotification({
-              title: "Error",
-              message: addImageResponse.message,
-              color: "red",
-              duration: 7000
-            })
-          }
-        }
-
-        if (planCancelled && Object.keys(newPlan).length > 0) {
-          // Cancelar el plan existente (si es necesario)
-          try {
-            const cancelPlanResponse = await plansApi.cancelPlan({ restaurantId })
-
-            if (cancelPlanResponse.error) {
-              showNotification({
-                title: "Error",
-                message: cancelPlanResponse.message,
-                color: "red",
-                duration: 5000
-              })
-            } else {
-              // Asignar el nuevo plan solo si la cancelación fue exitosa
-              try {
-                const assignPlanResponse = await plansApi.assignPlan({
-                  restaurantId,
-                  planId: newPlan?.id // Asumiendo que `planId` está en los datos de `data`
-                })
-
-                if (assignPlanResponse.error) {
-                  showNotification({
-                    title: "Error",
-                    message: assignPlanResponse.message,
-                    color: "red",
-                    duration: 5000
-                  })
-                } else {
-                  showNotification({
-                    title: "Actualización exitosa",
-                    message: `Se actualizó la información de ${response.data.name}`,
-                    color: "green",
-                    duration: 7000
-                  })
-                  navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Restaurants.path)
-                }
-              } catch (error) {
-                showNotification({
-                  title: "Error",
-                  message: `Error al actualizar: ${error}`,
-                  color: "red",
-                  duration: 5000
-                })
-              }
-            }
-          } catch (error) {
-            showNotification({
-              title: "Error",
-              message: error?.message,
-              color: "red",
-              duration: 7000
-            })
-          }
-        } else if (!planCancelled && Object.keys(newPlan).length > 0) {
-          // Asignar el nuevo plan solo si la cancelación fue exitosa
-          try {
-            const assignPlanResponse = await plansApi.assignPlan({
-              restaurantId,
-              planId: newPlan?.id // Asumiendo que `planId` está en los datos de `data`
-            })
-
-            if (assignPlanResponse.error) {
-              showNotification({
-                title: "Error",
-                message: assignPlanResponse.message,
-                color: "red",
-                duration: 5000
-              })
-            } else {
-              showNotification({
-                title: "Actualización exitosa",
-                message: `Se actualizó la información de ${response.data.name}`,
-                color: "green",
-                duration: 7000
-              })
-              navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Restaurants.path)
-            }
-          } catch (error) {
-            showNotification({
-              title: "Error",
-              message: `Error al actualizar: ${error}`,
-              color: "red",
-              duration: 5000
-            })
-          }
-        } else {
-          showNotification({
-            title: "Actualización exitosa",
-            message: `Se actualizó la información de ${response.data.name}`,
-            color: "green",
-            duration: 7000
-          })
-          navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Restaurants.path)
-        }
+      let formDataImage = null
+      if (data?.files?.[0]) {
+        formDataImage = new FormData()
+        formDataImage.append("files", data.files[0])
       }
 
-      setIsLoading(false)
+      // Actualizar el restaurante
+      dispatch(updateRestaurantData({ formData, restaurantId, formDataImage }))
+        .unwrap()
+        .then((result) => {
+          navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Restaurants.path)
+        })
+        .catch((error) => {
+          console.error("Error updating restaurant:", error)
+        })
+      // const response = await restaurantsApi.updateRestaurant(formData, restaurantId)
+
+      // if (response.error) {
+      //   showNotification({
+      //     title: "Error",
+      //     message: response.message,
+      //     color: "red",
+      //     duration: 7000
+      //   })
+      // } else {
+      //   const updatedRestaurantId = response?.data?.id
+
+      //   // Subir imagen si se ha proporcionado
+      //   const uploadImage = async (restaurantId, file) => {
+      //     const formDataImage = new FormData()
+      //     formDataImage.append("files", file)
+
+      //     return await restaurantsApi.addImage(restaurantId, formDataImage)
+      //   }
+
+      //   if (data?.files?.[0]) {
+      //     const addImageResponse = await uploadImage(updatedRestaurantId, data.files[0])
+
+      //     if (addImageResponse.error) {
+      //       showNotification({
+      //         title: "Error",
+      //         message: addImageResponse.message,
+      //         color: "red",
+      //         duration: 7000
+      //       })
+      //     }
+      //   }
+
+      //   if (planCancelled && Object.keys(newPlan).length > 0) {
+      //     // Cancelar el plan existente (si es necesario)
+      //     try {
+      //       const cancelPlanResponse = await plansApi.cancelPlan({ restaurantId })
+
+      //       if (cancelPlanResponse.error) {
+      //         showNotification({
+      //           title: "Error",
+      //           message: cancelPlanResponse.message,
+      //           color: "red",
+      //           duration: 5000
+      //         })
+      //       } else {
+      //         // Asignar el nuevo plan solo si la cancelación fue exitosa
+      //         try {
+      //           const assignPlanResponse = await plansApi.assignPlan({
+      //             restaurantId,
+      //             planId: newPlan?.id // Asumiendo que `planId` está en los datos de `data`
+      //           })
+
+      //           if (assignPlanResponse.error) {
+      //             showNotification({
+      //               title: "Error",
+      //               message: assignPlanResponse.message,
+      //               color: "red",
+      //               duration: 5000
+      //             })
+      //           } else {
+      //             showNotification({
+      //               title: "Actualización exitosa",
+      //               message: `Se actualizó la información de ${response.data.name}`,
+      //               color: "green",
+      //               duration: 7000
+      //             })
+      //             navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Restaurants.path)
+      //           }
+      //         } catch (error) {
+      //           showNotification({
+      //             title: "Error",
+      //             message: `Error al actualizar: ${error}`,
+      //             color: "red",
+      //             duration: 5000
+      //           })
+      //         }
+      //       }
+      //     } catch (error) {
+      //       showNotification({
+      //         title: "Error",
+      //         message: error?.message,
+      //         color: "red",
+      //         duration: 7000
+      //       })
+      //     }
+      //   } else if (!planCancelled && Object.keys(newPlan).length > 0) {
+      //     // Asignar el nuevo plan solo si la cancelación fue exitosa
+      //     try {
+      //       const assignPlanResponse = await plansApi.assignPlan({
+      //         restaurantId,
+      //         planId: newPlan?.id // Asumiendo que `planId` está en los datos de `data`
+      //       })
+
+      //       if (assignPlanResponse.error) {
+      //         showNotification({
+      //           title: "Error",
+      //           message: assignPlanResponse.message,
+      //           color: "red",
+      //           duration: 5000
+      //         })
+      //       } else {
+      //         showNotification({
+      //           title: "Actualización exitosa",
+      //           message: `Se actualizó la información de ${response.data.name}`,
+      //           color: "green",
+      //           duration: 7000
+      //         })
+      //         navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Restaurants.path)
+      //       }
+      //     } catch (error) {
+      //       showNotification({
+      //         title: "Error",
+      //         message: `Error al actualizar: ${error}`,
+      //         color: "red",
+      //         duration: 5000
+      //       })
+      //     }
+      //   } else {
+      //     showNotification({
+      //       title: "Actualización exitosa",
+      //       message: `Se actualizó la información de ${response.data.name}`,
+      //       color: "green",
+      //       duration: 7000
+      //     })
+      //     navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Restaurants.path)
+      //   }
+      // }
+
+      // setIsLoading(false)
     } catch (error) {
       showNotification({
         title: "Error",
@@ -219,7 +234,6 @@ export const EditRestaurant = () => {
         color: "red",
         duration: 7000
       })
-      setIsLoading(false)
     }
   }
 

@@ -2,10 +2,42 @@ import axiosClient from "./axiosClient"
 
 const orderApi = {
   // Restaurant and Branch
-  getAllOrders: () => axiosClient.get("api/v1/order/get-orders"),
+  getAllOrders: ({ limit, page, order, search_field, search } = {}) => {
+    const params = {
+      limit,
+      page,
+      order,
+      search_field,
+      search
+    }
+
+    // Filtrar valores no definidos o vacíos (más robusto)
+    const validParams = Object.fromEntries(Object.entries(params).filter(([_, value]) => value !== undefined && value !== ""))
+
+    const queryString = new URLSearchParams(validParams).toString()
+    const url = `api/v1/order/get-orders${queryString ? `?${queryString}` : ""}`
+
+    return axiosClient.get(url)
+  },
 
   // Get orders, Kitchen
-  getOrders: () => axiosClient.get("api/v1/order/kitchen/get-orders"),
+  getOrdersForKitchen: ({ limit, page, order, search_field, search } = {}) => {
+    const params = {
+      limit,
+      page,
+      order,
+      search_field,
+      search
+    }
+
+    // Filtrar valores no definidos o vacíos (más robusto)
+    const validParams = Object.fromEntries(Object.entries(params).filter(([_, value]) => value !== undefined && value !== ""))
+
+    const queryString = new URLSearchParams(validParams).toString()
+    const url = `api/v1/order/kitchen/get-orders${queryString ? `?${queryString}` : ""}`
+
+    return axiosClient.get(url)
+  },
 
   // Get order details
   getOrderDetails: (id) => axiosClient.get(`api/v1/order/get-order-details/${id}`),

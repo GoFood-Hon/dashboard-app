@@ -1,23 +1,46 @@
 import axiosClient from "./axiosClient"
 
 const dishesApi = {
-  getAllDishes: ({ limit, page, order }) => axiosClient.get(`api/v1/dish?limit=${limit}&page=${page}&order=${order}`),
-
-  getAllDishesByRestaurant: ({ limit, page, order, restaurantId, startDate, endDate, status, price, dateSort }) => {
+  getAllDishes: ({ limit, page, order, search_field, search } = {}) => {
     const params = {
       limit,
       page,
       order,
-      startDate,
-      endDate,
-      status,
-      price,
-      dateSort
+      search_field,
+      search
     }
 
-    const validParams = Object.fromEntries(Object.entries(params).filter(([_, value]) => value !== undefined && value))
+    const validParams = Object.fromEntries(Object.entries(params).filter(([_, value]) => value !== undefined && value !== ""))
 
     const queryString = new URLSearchParams(validParams).toString()
+    const url = `api/v1/dish${queryString ? `?${queryString}` : ""}`
+
+    return axiosClient.get(url)
+  },
+
+  getAdminUsers: ({ limit, page, order, search_field, search } = {}) => {
+    const params = {
+      limit,
+      page,
+      order,
+      search_field,
+      search
+    }
+
+    const validParams = Object.fromEntries(Object.entries(params).filter(([_, value]) => value !== undefined && value !== ""))
+
+    const queryString = new URLSearchParams(validParams).toString()
+    const url = `api/v1/users/admin-restaurant/get-all${queryString ? `?${queryString}` : ""}`
+
+    return axiosClient.get(url)
+  },
+
+  getAllDishesByRestaurant: ({ limit, restaurantId, page, order, search_field, search } = {}) => {
+    const params = { limit, restaurantId, page, order, search_field, search }
+
+    const filteredParams = Object.fromEntries(Object.entries(params).filter(([_, value]) => value !== undefined && value))
+
+    const queryString = new URLSearchParams(filteredParams).toString()
     const url = `api/v1/restaurant/${restaurantId}/dishes${queryString ? `?${queryString}` : ""}`
 
     return axiosClient.get(url)

@@ -1,24 +1,21 @@
 import React, { useEffect, useState } from "react"
 import { Accordion, Button, Flex, Paper } from "@mantine/core"
 import { useForm } from "react-hook-form"
-import toast from "react-hot-toast"
 import { useNavigate, useParams } from "react-router-dom"
 import { AdminGeneralInformationForm } from "./AdminGeneralInformationForm"
-import { NAVIGATION_ROUTES_RES_ADMIN, NAVIGATION_ROUTES_SUPER_ADMIN } from "../../routes"
-import userApi from "../../api/userApi"
+import { NAVIGATION_ROUTES_SUPER_ADMIN } from "../../routes"
 import authApi from "../../api/authApi"
 import BackButton from "../Dishes/components/BackButton"
 import { colors } from "../../theme/colors"
+import { updateUserData } from "../../store/features/userSlice"
+import { useSelector, useDispatch } from "react-redux"
 
 export const EditAdminUser = () => {
   const { adminId } = useParams()
   const navigate = useNavigate()
+  const dispatch = useDispatch()
   const [details, setDetails] = useState({})
-  const [loading, setLoading] = useState(false)
-
-  const formatPhoneNumber = (phoneNumber) => {
-    return phoneNumber?.replace("+504", "")
-  }
+  const loading = useSelector((state) => state.user.updatingUser)
 
   useEffect(() => {
     ;(async () => {
@@ -26,16 +23,10 @@ export const EditAdminUser = () => {
 
       if (response?.data) {
         const details = response.data
-
-        if (details.phoneNumber?.startsWith("+504")) {
-          details.phoneNumber = details.phoneNumber.replace("+504", "")
-        }
         setDetails(details)
       }
     })()
   }, [])
-
-  const formattedPhoneNumber = formatPhoneNumber(details?.phoneNumber)
 
   const {
     register,
@@ -45,7 +36,7 @@ export const EditAdminUser = () => {
     reset,
     watch,
     formState: { errors }
-  } = useForm({ defaultValues: { ...details, phoneNumber: formattedPhoneNumber } })
+  } = useForm({ defaultValues: details })
 
   const imageLocation = watch("images[0].location")
 
@@ -57,27 +48,27 @@ export const EditAdminUser = () => {
   }, [details, reset])
 
   const onSubmit = async (data) => {
-    setLoading(true)
     const formData = new FormData()
     formData.append("name", data.name)
     formData.append("email", data.email)
-    formData.append("phoneNumber", `+504${data.phoneNumber}`)
+    formData.append("phoneNumber", data.phoneNumber.startsWith("+504") ? data.phoneNumber : `+504${data.phoneNumber}`)
 
     formData.append("restaurantId", data.restaurantId)
 
-    const response = await userApi.updateAdminUser(adminId, formData)
-
-    if (response.error) {
-      toast.error(`Fallo al crear el administrador. Por favor intente de nuevo. ${response.message}`, {
-        duration: 7000
-      })
-    } else if (response.status === "success") {
-      toast.success("Administrado creado exitosamente.", {
-        duration: 7000
-      })
-      navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Users.path)
+    let formDataImage = null
+    if (data?.files?.[0]) {
+      formDataImage = new FormData()
+      formDataImage.append("files", data?.files?.[0])
     }
-    setLoading(false)
+
+    dispatch(updateUserData({ id: adminId, params: formData, formDataImage }))
+      .unwrap()
+      .then(() => {
+        navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Users.path)
+      })
+      .catch((error) => {
+        console.error("Error updating user:", error)
+      })
   }
   const accordionStructure = [
     {
@@ -130,7 +121,7 @@ export const EditAdminUser = () => {
                 color={colors.main_app_color}
                 variant="outline"
                 onClick={() => {
-                  navigate(NAVIGATION_ROUTES_RES_ADMIN.Users.path)
+                  navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Users.path)
                 }}>
                 Descartar
               </Button>

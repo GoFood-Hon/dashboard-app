@@ -10,10 +10,14 @@ import { DEFAULT_CURRENCY, DEFAULT_PAYMENT_TYPE } from "../../utils/constants"
 import plansApi from "../../api/plansApi"
 import { convertToDecimal } from "../../utils"
 import { colors } from "../../theme/colors"
+import { useSelector } from "react-redux"
+import { createPlan } from "../../store/features/plansSlice"
+import { useDispatch } from "react-redux"
 
 export const NewPlan = () => {
   const navigate = useNavigate()
-  const [isLoading, setIsLoading] = useState(false)
+  const dispatch = useDispatch()
+  const isLoading = useSelector((state) => state.plans.creatingPlan)
 
   const {
     register,
@@ -78,36 +82,37 @@ export const NewPlan = () => {
     }
   }
   const onSubmit = async (data) => {
-    setIsLoading(true)
-    try {
-      const features = featuresList
-        .map((feature) => {
-          if (data.featureIds.includes(feature.id)) {
-            if (feature.type === "amount") {
-              return { id: feature.id, quantity: parseInt(data[feature.featureCode]) || 0 }
-            } else if (feature.type === "boolean") {
-              return { id: feature.id, available: true }
-            }
+    console.log(data)
+    const features = featuresList
+      .map((feature) => {
+        if (data.featureIds.includes(feature.id)) {
+          if (feature.type === "amount") {
+            return { id: feature.id, quantity: parseInt(data[feature.featureCode]) || 0 }
+          } else if (feature.type === "boolean") {
+            return { id: feature.id, available: true }
           }
-          return null
-        })
-        .filter((feature) => feature !== null)
+        }
+        return null
+      })
+      .filter((feature) => feature !== null)
 
-      const requestBody = {
-        name: data.name,
-        price: convertToDecimal(data.price),
-        tax: convertToDecimal(data.tax),
-        paymentType: data.paymentType ?? DEFAULT_PAYMENT_TYPE,
-        currency: data.currency ?? DEFAULT_CURRENCY,
-        features
-      }
-
-      const response = await plansApi.createPlan(requestBody)
-      handleResponse(response)
-    } catch (error) {
-      handleError(error)
+    const requestBody = {
+      name: data.name,
+      price: convertToDecimal(data.price),
+      tax: convertToDecimal(data.tax),
+      paymentType: data.paymentType,
+      currency: data.currency ?? DEFAULT_CURRENCY,
+      features
     }
-    setIsLoading(false)
+
+    dispatch(createPlan({ params: requestBody }))
+      .unwrap()
+      .then(() => {
+        navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Plans.path)
+      })
+      .catch((error) => {
+        console.error("Error creating plan:", error)
+      })
   }
 
   return (

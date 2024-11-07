@@ -1,16 +1,23 @@
 import axiosClient from "./axiosClient"
 
 const collectionsApi = {
-  getAllCollections: ({ page, limit, order, orderBy, isActive }) =>
-    axiosClient.get("api/v1/set", {
-      params: {
-        page,
-        limit,
-        order,
-        orderBy,
-        isActive
-      }
-    }),
+  getAllCollections: ({ limit, page, order, search_field, search } = {}) => {
+    const params = {
+      limit,
+      page,
+      order,
+      search_field,
+      search
+    }
+
+    // Filtrar valores no definidos o vacíos (más robusto)
+    const validParams = Object.fromEntries(Object.entries(params).filter(([_, value]) => value !== undefined && value !== ""))
+
+    const queryString = new URLSearchParams(validParams).toString()
+    const url = `api/v1/set${queryString ? `?${queryString}` : ""}`
+
+    return axiosClient.get(url)
+  },
 
   getCollectionDetails: (setId) => axiosClient.get(`api/v1/set/${setId}`),
 

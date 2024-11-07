@@ -105,7 +105,6 @@ export const AdminGeneralInformationForm = ({ register, errors, setValue, image 
               <InputSearchCombobox
                 label="Asignar restaurante"
                 name={"restaurantId"}
-                placeholder="Buscar restaurante"
                 emptyMessage="Sin restaurantes"
                 items={restaurant}
                 register={register}

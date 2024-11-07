@@ -120,6 +120,7 @@ export default function GeneralInformationForm({ register, errors, setValue, isD
                 label: item.name
               }))}
               searchable
+              maxValues={10}
               hidePickedOptions
               onChange={handleTagsChange}
               nothingFoundMessage="No se encontraron tags"

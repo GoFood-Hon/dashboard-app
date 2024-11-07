@@ -2,24 +2,20 @@ import React, { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { Accordion, Flex, Paper, Button } from "@mantine/core"
 import { useForm } from "react-hook-form"
-import toast from "react-hot-toast"
 import { yupResolver } from "@hookform/resolvers/yup"
 import { AdminInformationForm } from "./AdminInformationForm"
 import BackButton from "../Dishes/components/BackButton"
 import { NAVIGATION_ROUTES_SUPER_ADMIN } from "../../routes"
-import authApi from "../../api/authApi"
 import { newAdminValidationSchema } from "../../utils/inputRules"
-import userApi from "../../api/userApi"
-import { LoaderComponent } from "../../components/LoaderComponent"
 import { useDispatch } from "react-redux"
-import { addNewUser } from "../../store/features/userSlice"
-import { showNotification } from "@mantine/notifications"
+import { createAdminUser } from "../../store/features/userSlice"
 import { colors } from "../../theme/colors"
+import { useSelector } from "react-redux"
 
 export const NewAdminUser = () => {
   const navigate = useNavigate()
   const dispatch = useDispatch()
-  const [isLoading, setIsLoading] = useState(false)
+  const isLoading = useSelector((state) => state.user.creatingUser)
 
   const {
     register,
@@ -53,56 +49,27 @@ export const NewAdminUser = () => {
   ))
 
   const onSubmit = async (data) => {
-    setIsLoading(true)
     const formData = new FormData()
     formData.append("name", data.name)
     formData.append("email", data.email)
-    formData.append("phoneNumber", `+504${data.phoneNumber}`)
+    formData.append("phoneNumber", data.phoneNumber.startsWith("+504") ? data.phoneNumber : `+504${data.phoneNumber}`)
     formData.append("password", data.password)
     formData.append("restaurantId", data.restaurantId)
 
-    const response = await authApi.createNewAdmin(formData)
-
-    if (response.error) {
-      showNotification({
-        title: "Error",
-        message: response.message,
-        color: "red",
-        duration: 7000
-      })
-    } else if (response.status === "success") {
-      dispatch(addNewUser(response.data.data))
-
-      addImage(response.data.data.id, data)
-      navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Users.path)
-      showNotification({
-        title: "Creación exitosa",
-        message: `Se creó el usuario de ${response.data.name}`,
-        color: "green",
-        duration: 7000
-      })
-    }
-    setIsLoading(false)
-  }
-
-  const addImage = async (id, data) => {
-    try {
-      const formDataImage = new FormData()
+    let formDataImage = null
+    if (data?.files?.[0]) {
+      formDataImage = new FormData()
       formDataImage.append("files", data.files[0])
-      const addImageResponse = await userApi.addImage(id, formDataImage)
-
-      if (addImageResponse.error) {
-        throw new Error(`Fallo al subir la imagen. Por favor intente de nuevo. ${addImageResponse.message}`)
-      }
-    } catch (error) {
-      handleError(error)
     }
-  }
 
-  const handleError = (error) => {
-    toast.error(`Error. Por favor intente de nuevo. ${error}`, {
-      duration: 7000
-    })
+    dispatch(createAdminUser({ params: formData, formDataImage }))
+      .unwrap()
+      .then(() => {
+        navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Users.path)
+      })
+      .catch((error) => {
+        console.error("Error creating user:", error)
+      })
   }
 
   return (

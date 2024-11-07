@@ -2,8 +2,8 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit"
 import userApi from "../../api/userApi"
 import { showNotification } from "@mantine/notifications"
 import { ITEMS_PER_PAGE } from "../../utils/paginationConfig"
+import authApi from "../../api/authApi"
 
-// Thunk para obtener los usuarios administradores
 export const fetchAdminUsers = createAsyncThunk(
   "user/fetchAdminUsers",
   async ({ limit, page, search_field, search }, { rejectWithValue }) => {
@@ -39,6 +39,137 @@ export const fetchAdminUsers = createAsyncThunk(
   }
 )
 
+export const createAdminUser = createAsyncThunk(
+  "user/createAdminUser",
+  async ({ params, formDataImage }, { rejectWithValue }) => {
+    try {
+      const response = await authApi.createNewAdmin(params)
+      const userData = response.data.data
+
+      if (response.error) {
+        showNotification({
+          title: "Error",
+          message: "Fallé en la data: " + response.message,
+          color: "red",
+          duration: 7000
+        })
+
+        return rejectWithValue(response.message)
+      }
+
+      let images = []
+      if (formDataImage) {
+        const imageResponse = await userApi.addImage(userData.id, formDataImage)
+        images = imageResponse.data
+
+        if (imageResponse.error) {
+          showNotification({
+            title: "Error",
+            message: "Fallé en la imagen: " + imageResponse.message,
+            color: "red",
+            duration: 7000
+          })
+
+          return rejectWithValue(imageResponse.message)
+        }
+      }
+
+      showNotification({
+        title: "Creación exitosa",
+        message: `El administrador ${userData.name} fue creado`,
+        color: "green",
+        duration: 5000
+      })
+
+      return { ...userData, images }
+    } catch (error) {
+      showNotification({
+        title: "Error",
+        message: error.message || "Error desconocido",
+        color: "red",
+        duration: 7000
+      })
+
+      return rejectWithValue(error.message)
+    }
+  }
+)
+
+export const updateUserData = createAsyncThunk(
+  "user/updateUserData",
+  async ({ id, params, formDataImage }, { rejectWithValue }) => {
+    try {
+      const response = await userApi.updateAdminUser(id, params)
+      let userData = response.data
+      if (response.error) {
+        showNotification({
+          title: "Error",
+          message: response.message,
+          color: "red",
+          duration: 7000
+        })
+
+        return rejectWithValue(response.message)
+      }
+
+      if (formDataImage) {
+        const imageResponse = await userApi.addImage(id, formDataImage)
+
+        if (imageResponse.error) {
+          showNotification({
+            title: "Error",
+            message: imageResponse.message,
+            color: "red"
+          })
+
+          return rejectWithValue(imageResponse.message)
+        }
+
+        userData = { ...userData, images: imageResponse.data }
+      }
+
+      showNotification({
+        title: "Actualización exitosa",
+        message: `El administrador ${userData.name} fue actualizado`,
+        color: "green"
+      })
+
+      return userData
+    } catch (error) {
+      showNotification({
+        title: "Error",
+        message: error,
+        color: "red",
+        duration: 7000
+      })
+    }
+  }
+)
+
+export const updateUserStatus = createAsyncThunk("user/updateUserStatus", async ({ id, params }, { rejectWithValue }) => {
+  try {
+    const response = await userApi.updateAdminUser(id, params)
+    if (response.error) {
+      showNotification({
+        title: "Error",
+        message: response.message,
+        color: "red",
+        duration: 7000
+      })
+
+      return rejectWithValue(response.message)
+    }
+    return response.data
+  } catch (error) {
+    showNotification({
+      title: "Error",
+      message: error,
+      color: "red",
+      duration: 7000
+    })
+  }
+})
+
 // Estado inicial
 const initialState = {
   value: {},
@@ -46,8 +177,10 @@ const initialState = {
   totalAdminUsers: 0,
   itemsPerPage: ITEMS_PER_PAGE,
   totalPagesCount: 0,
-  adminUsersByPage: {}, // Almacena usuarios por página
+  adminUsersByPage: [],
   loadingUsers: false,
+  updatingUser: false,
+  creatingUser: false,
   error: null
 }
 
@@ -64,34 +197,6 @@ export const userSlice = createSlice({
     },
     setTotalAdminUsers: (state, action) => {
       state.totalAdminUsers = action.payload
-    },
-    // Nueva acción para agregar un usuario
-    addNewUser: (state, action) => {
-      const newUser = action.payload
-
-      // Inserta el nuevo usuario al principio de la página 1
-      if (state.adminUsersByPage[1]) {
-        state.adminUsersByPage[1].unshift(newUser)
-      } else {
-        state.adminUsersByPage[1] = [newUser]
-      }
-
-      // Verifica si hay más de 10 usuarios en la página 1
-      if (state.adminUsersByPage[1].length > 10) {
-        // Desplaza el último usuario de la página 1 a la página 2
-        const movedUser = state.adminUsersByPage[1].pop()
-
-        // Inserta el usuario movido en la página 2 (crea la página si no existe)
-        if (state.adminUsersByPage[2]) {
-          state.adminUsersByPage[2].unshift(movedUser)
-        } else {
-          state.adminUsersByPage[2] = [movedUser]
-        }
-      }
-
-      // Incrementa el total de usuarios y recalcula el total de páginas
-      state.totalAdminUsers += 1
-      state.totalPagesCount = Math.ceil(state.totalAdminUsers / 10)
     }
   },
   extraReducers: (builder) => {
@@ -102,24 +207,96 @@ export const userSlice = createSlice({
       })
       .addCase(fetchAdminUsers.fulfilled, (state, action) => {
         const { data, results, page } = action.payload
-
-        // Almacenamos los usuarios en el objeto por página
-        state.adminUsersByPage[page] = data // Almacenamos los usuarios de la página correspondiente
-
+        state.adminUsersByPage[page] = data
         state.loadingUsers = false
-        state.currentPage = page // Actualizamos la página actual
-        state.totalAdminUsers = results // Actualiza el total de usuarios basado en results
-        state.totalPagesCount = Math.ceil(results / action.meta.arg.limit) // Actualiza el total de páginas
+        state.currentPage = page
+        state.totalAdminUsers = results
+        state.totalPagesCount = Math.ceil(results / action.meta.arg.limit)
       })
       .addCase(fetchAdminUsers.rejected, (state, action) => {
         state.loadingUsers = false
-        state.error = action.payload // Maneja el error
+        state.error = action.payload
+      })
+      .addCase(createAdminUser.pending, (state) => {
+        state.creatingUser = true
+      })
+      .addCase(createAdminUser.fulfilled, (state, action) => {
+        const newUser = action.payload
+
+        if (!state.adminUsersByPage[1]) {
+          state.adminUsersByPage[1] = []
+        }
+        state.adminUsersByPage[1].unshift(newUser)
+
+        for (let i = 1; i <= state.totalPagesCount; i++) {
+          if (state.adminUsersByPage[i]?.length > state.itemsPerPage) {
+            const lastItem = state.adminUsersByPage[i].pop()
+            if (state.adminUsersByPage[i + 1]) {
+              state.adminUsersByPage[i + 1].unshift(lastItem)
+            }
+          } else {
+            break
+          }
+        }
+
+        const consecutivePages = [1]
+        for (let i = 2; i <= state.totalPagesCount; i++) {
+          if (state.adminUsersByPage[i]) {
+            if (consecutivePages.includes(i - 1)) {
+              consecutivePages.push(i)
+            } else {
+              delete state.adminUsersByPage[i]
+            }
+          }
+        }
+
+        state.totalAdminUsers += 1
+        state.totalPagesCount = Math.ceil(state.totalAdminUsers / state.itemsPerPage)
+        state.creatingUser = false
+      })
+      .addCase(createAdminUser.rejected, (state, action) => {
+        state.creatingUser = false
+        state.error = action.payload
+      })
+      .addCase(updateUserStatus.fulfilled, (state, action) => {
+        const { id, active } = action.payload
+        const currentPageUsers = state.adminUsersByPage[state.currentPage]
+        const index = currentPageUsers.findIndex((user) => user?.id === id)
+
+        if (index !== -1) {
+          currentPageUsers[index] = { ...currentPageUsers[index], active }
+        }
+      })
+      .addCase(updateUserStatus.rejected, (state, action) => {
+        state.loadingUsers = false
+        state.error = action.payload
+      })
+      .addCase(updateUserData.pending, (state) => {
+        state.updatingUser = true
+      })
+      .addCase(updateUserData.fulfilled, (state, action) => {
+        const { id, name, email, phoneNumber, images } = action.payload
+        const currentPageUsers = state.adminUsersByPage[state.currentPage]
+        const index = currentPageUsers.findIndex((user) => user?.id == id)
+        state.updatingUser = false
+
+        if (index !== -1) {
+          currentPageUsers[index] = {
+            ...currentPageUsers[index],
+            name,
+            email,
+            phoneNumber,
+            images: images
+          }
+        }
+      })
+      .addCase(updateUserData.rejected, (state, action) => {
+        state.updatingUser = false
+        state.error = action.payload
       })
   }
 })
 
-// Exportar las acciones
-export const { setUser, setCurrentPage, setTotalAdminUsers, addNewUser } = userSlice.actions
+export const { setUser, setCurrentPage, setTotalAdminUsers } = userSlice.actions
 
-// Exportar el reductor
 export default userSlice.reducer

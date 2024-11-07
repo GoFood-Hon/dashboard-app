@@ -12,7 +12,8 @@ export default function InputField({
   type = "text",
   value,
   onChange,
-  countryPrefix
+  countryPrefix,
+  defaultValue
 }) {
   return (
     <React.Fragment>
@@ -25,6 +26,7 @@ export default function InputField({
                   input: errors[name] ? "border-red-500" : ""
                 }}
                 value={value}
+                defaultValue={defaultValue}
                 onChange={onChange}
                 placeholder={placeholder}
                 {...register(name, rules)}
@@ -36,6 +38,7 @@ export default function InputField({
                 }}
                 type={type}
                 value={value}
+                defaultValue={defaultValue}
                 onChange={onChange}
                 placeholder={placeholder}
                 {...register(name, rules)}

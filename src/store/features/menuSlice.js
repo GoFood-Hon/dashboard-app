@@ -6,9 +6,13 @@ import { showNotification } from "@mantine/notifications"
 
 const initialState = {
   menus: [],
-  currentPage: 1,
-  itemsPerPage: ITEMS_PER_PAGE,
   totalItems: 0,
+  itemsPerPage: ITEMS_PER_PAGE,
+  menusPerPage: [],
+  totalMenus: 0,
+  totalPagesCount: 0,
+  currentPage: 1,
+  loadingMenus: false,
   filters: {
     startDate: null,
     endDate: null,
@@ -23,19 +27,40 @@ const initialState = {
  * GET MENUS
  */
 
-export const fetchMenus = createAsyncThunk("menus/fetchMenus", async ({ restaurantId }, { dispatch }) => {
-  try {
-    const response = await menuApi.getMenuByRestaurant({
-      restaurantId
-    })
+export const fetchMenus = createAsyncThunk(
+  "menus/fetchMenus",
+  async ({ restaurantId, limit, page, order, search, search_field }, { rejectWithValue }) => {
+    try {
+      const response = await menuApi.getMenuByRestaurant({
+        restaurantId,
+        limit,
+        page,
+        order,
+        search,
+        search_field
+      })
 
-    dispatch(setMenus(response.data))
-    return response.data
-  } catch (error) {
-    dispatch(setError("Error fetching menus"))
-    throw error
+      if (response.error) {
+        showNotification({
+          title: "Error",
+          message: response.message,
+          color: "red",
+          duration: 7000
+        })
+        return rejectWithValue(response.error)
+      }
+
+      return { data: response.data, results: response.results, page }
+    } catch (error) {
+      showNotification({
+        title: "Error",
+        message: error,
+        color: "red",
+        duration: 7000
+      })
+    }
   }
-})
+)
 
 /*
  * CREATE MENUS
@@ -141,69 +166,103 @@ const updateMenuFormData = (data, propertyToUpdate) => {
   return formData
 }
 
-export const updateMenu = createAsyncThunk("menus/updateMenu", async ({ data, propertyToUpdate = "all" }, { dispatch }) => {
-  try {
-    const formData = updateMenuFormData(data, propertyToUpdate)
+export const updateMenu = createAsyncThunk(
+  "menus/updateMenu",
+  async ({ data, propertyToUpdate = "all" }, { dispatch, rejectWithValue }) => {
+    try {
+      const formData = updateMenuFormData(data, propertyToUpdate)
 
-    const response = await menuApi.updateMenu(formData, data.id)
+      const response = await menuApi.updateMenu(formData, data.id)
 
-    if (response.error) {
+      if (response.error) {
+        showNotification({
+          title: "Error",
+          message: response.message,
+          color: "red",
+          duration: 7000
+        })
+
+        return rejectWithValue(response.error)
+      } else {
+        if (data?.files) {
+          const imageResponse = await uploadMenuImage(data?.id, data?.files?.[0])
+
+          if (imageResponse.error) {
+            showNotification({
+              title: "Error",
+              message: imageResponse.message,
+              color: "red",
+              duration: 7000
+            })
+
+            return rejectWithValue(imageResponse.error)
+          }
+        }
+
+        if (data.dishes) {
+          const complementsResponse = await updateComplements(data.id, data.dishes)
+          if (complementsResponse.error) {
+            showNotification({
+              title: "Error",
+              message: complementsResponse.message,
+              color: "red",
+              duration: 7000
+            })
+
+            return rejectWithValue(complementsResponse.error)
+          }
+        }
+
+        showNotification({
+          title: "Actualización exitosa",
+          message: `Se actualizó el menú ${response?.data?.name}`,
+          color: "green",
+          duration: 7000
+        })
+
+        return response.data
+      }
+    } catch (error) {
+      dispatch(setError("Error updating menu"))
+      toast.error("Fallo al actualizar el menu. Por favor intente de nuevo.", {
+        duration: 7000
+      })
+
+      throw error
+    }
+  }
+)
+
+export const updateMenuStatus = createAsyncThunk(
+  "menus/updateMenuStatus",
+  async ({ data, propertyToUpdate = "all" }, { rejectWithValue }) => {
+    try {
+      const formData = updateMenuFormData(data, propertyToUpdate)
+
+      const response = await menuApi.updateMenu(formData, data.id)
+
+      if (response.error) {
+        showNotification({
+          title: "Error",
+          message: response.message,
+          color: "red",
+          duration: 7000
+        })
+
+        return rejectWithValue(response.error)
+      }
+
+      return response.data
+    } catch (error) {
       showNotification({
         title: "Error",
-        message: response.message,
+        message: error,
         color: "red",
         duration: 7000
       })
-
-      return response.error
-    } else {
-      if (data?.files) {
-        const imageResponse = await uploadMenuImage(data?.id, data?.files?.[0])
-
-        if (imageResponse.error) {
-          showNotification({
-            title: "Error",
-            message: imageResponse.message,
-            color: "red",
-            duration: 7000
-          })
-
-          return imageResponse.error
-        }
-      }
-
-      if (data.dishes) {
-        const complementsResponse = await updateComplements(data.id, data.dishes)
-        if (complementsResponse.error) {
-          showNotification({
-            title: "Error",
-            message: complementsResponse.message,
-            color: "red",
-            duration: 7000
-          })
-
-          return complementsResponse.error
-        }
-      }
-
-      showNotification({
-        title: "Actualización exitosa",
-        message: `Se actualizó el menú ${response?.data?.name}`,
-        color: "green",
-        duration: 7000
-      })
-
-      return response.data
     }
-  } catch (error) {
-    dispatch(setError("Error updating menu"))
-    toast.error("Fallo al actualizar el menu. Por favor intente de nuevo.", {
-      duration: 7000
-    })
-
-    throw error
   }
-})
+)
 
 /*
  * MENU SLICE
@@ -235,18 +294,29 @@ export const menusSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(fetchMenus.pending, (state) => {
-        state.isLoading = true // Cambia el estado a "cargando"
-        state.status = "loading"
+        state.loadingMenus = true
       })
       .addCase(fetchMenus.fulfilled, (state, action) => {
-        state.isLoading = false // Cambia el estado a "no cargando"
-        state.status = "succeeded"
-        state.menus = action.payload
+        const { data, results, page } = action.payload
+        state.menusPerPage[page] = data
+        state.loadingMenus = false
+        state.currentPage = page
+        state.totalMenus = results
+        state.totalPagesCount = Math.ceil(results / action.meta.arg.limit)
       })
       .addCase(fetchMenus.rejected, (state, action) => {
         state.isLoading = false // Cambia el estado a "no cargando"
         state.status = "failed"
         state.error = action.error.message
+      })
+      .addCase(updateMenuStatus.fulfilled, (state, action) => {
+        const { id, isActive } = action.payload
+        const currentPageMenus = state.menusPerPage[state.currentPage]
+        const index = currentPageMenus.findIndex((restaurant) => restaurant?.id === id)
+
+        if (index !== -1) {
+          currentPageMenus[index] = { ...currentPageMenus[index], isActive }
+        }
       })
   }
 })

@@ -4,17 +4,22 @@ import { useForm } from "react-hook-form"
 import toast from "react-hot-toast"
 import plansApi from "../../api/plansApi"
 import { convertToDecimal } from "../../utils"
-import { EditGeneralInformationForm } from "./EditGeneralInformationForm"
 import { useNavigate, useParams } from "react-router-dom"
-import { NAVIGATION_ROUTES_SUPER_ADMIN, SETTING_NAVIGATION_ROUTES } from "../../routes"
+import { NAVIGATION_ROUTES_SUPER_ADMIN } from "../../routes"
 import BackButton from "../Dishes/components/BackButton"
 import { colors } from "../../theme/colors"
+import { EditGeneralInformationForm } from "./EditGeneralInformationForm"
+import { DEFAULT_CURRENCY, DEFAULT_PAYMENT_TYPE } from "../../utils/constants"
+import { updatePlanData } from "../../store/features/plansSlice"
+import { useSelector } from "react-redux"
+import { useDispatch } from "react-redux"
 
 export const EditPlan = () => {
   const { planId } = useParams()
+  const dispatch = useDispatch()
   const navigate = useNavigate()
   const [planDetails, setPlanDetails] = useState({})
-  const [isLoading, setIsLoading] = useState(false)
+  const isLoading = useSelector((state) => state.plans.updatingPlan)
 
   useEffect(() => {
     ;(async () => {
@@ -101,36 +106,37 @@ export const EditPlan = () => {
   }
 
   const onSubmit = async (data) => {
-    setIsLoading(true)
-    try {
-      const planId = data.id
+    const planId = data.id
 
-      const transformedData = {
-        name: data.name,
-        price: convertToDecimal(data.price),
-        tax: convertToDecimal(data.tax),
-        paymentType: data.paymentType,
-        currency: data.currency,
-        features: data.PlanFeatures.map((feature) => {
-          const featureObj = {}
-          featureObj.id = feature.id
-          if (feature.featureCode === "quantity-menu" || feature.featureCode === "quantity-sucursals") {
-            featureObj.quantity = feature.PlanPlanFeatures.quantity
-          } else {
-            featureObj.available = feature.PlanPlanFeatures.available
-          }
-          return featureObj
-        })
-      }
+    const transformedData = {
+      name: data.name,
+      price: convertToDecimal(data.price),
+      tax: convertToDecimal(data.tax),
+      paymentType: data.paymentType,
+      currency: data.currency,
+      features: data.PlanFeatures.filter((feature) => !data.featureIds || data.featureIds.includes(feature.id)).map((feature) => {
+        const featureObj = { id: feature.id }
 
-      const response = plansApi.updatePlan(planId, transformedData)
-      handleResponse(response)
+        if (feature.featureCode === "quantity-menu") {
+          featureObj.quantity = parseInt(data["quantity-menu"])
+        } else if (feature.featureCode === "quantity-sucursals") {
+          featureObj.quantity = parseInt(data["quantity-sucursals"])
+        } else {
+          featureObj.available = feature.PlanPlanFeatures.available
+        }
 
-      return response.data
-    } catch (error) {
-      handleError(error)
+        return featureObj
+      })
     }
-    setIsLoading(false)
+
+    dispatch(updatePlanData({ id: planId, params: transformedData }))
+      .unwrap()
+      .then(() => {
+        navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Plans.path)
+      })
+      .catch((error) => {
+        console.error("Error updating plan:", error)
+      })
   }
 
   return (

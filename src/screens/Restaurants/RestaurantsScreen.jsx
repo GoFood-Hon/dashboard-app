@@ -17,10 +17,17 @@ import {
   Tooltip,
   Loader,
   Flex,
-  Transition
+  Transition,
+  Checkbox
 } from "@mantine/core"
 import { useDispatch, useSelector } from "react-redux"
-import { fetchRestaurants, selectRestaurantsStatus, setPage, updateRestaurant } from "../../store/features/restaurantSlice"
+import {
+  fetchRestaurants,
+  selectRestaurantsStatus,
+  setPage,
+  updateRestaurant,
+  updateRestaurantStatus
+} from "../../store/features/restaurantSlice"
 import { colors } from "../../theme/colors"
 import { NAVIGATION_ROUTES_SUPER_ADMIN } from "../../routes"
 import BackButton from "../Dishes/components/BackButton"
@@ -34,39 +41,24 @@ export default function RestaurantsScreen() {
   const dispatch = useDispatch()
   const [scroll, scrollTo] = useWindowScroll()
   const limit = useSelector((state) => state.restaurants.itemsPerPage)
-  const totalItems = useSelector((state) => state.restaurants.totalItems)
-  const status = useSelector(selectRestaurantsStatus)
   const page = useSelector((state) => state.restaurants.currentPage)
-  const restaurant = useSelector((state) => state?.restaurants?.value?.data)
+  const restaurantsPerPage = useSelector((state) => state.restaurants.restaurantsPerPage)
+  const totalRestaurants = useSelector((state) => state.restaurants.totalRestaurants)
+  const totalPageCount = useSelector((state) => state.restaurants.totalPagesCount)
+  const restaurantsList = restaurantsPerPage[page] || []
+  const loadingRestaurants = useSelector((state) => state.restaurants.loadingRestaurants)
 
   const theme = createTheme({
     cursorType: "pointer"
   })
-  const totalControlBtn = Math.ceil(totalItems / limit)
 
   const [cardsSelected, setCardsSelected] = useState([])
 
   useEffect(() => {
-    dispatch(
-      fetchRestaurants({
-        limit,
-        page,
-        order: "DESC"
-      })
-    )
-    setCardsSelected([])
-  }, [dispatch, page])
-
-  const refreshPage = () => {
-    dispatch(
-      fetchRestaurants({
-        limit,
-        page,
-        order: "DESC"
-      })
-    )
-    setCardsSelected([])
-  }
+    if (!restaurantsPerPage[page]) {
+      dispatch(fetchRestaurants({ limit, page, order: "DESC" }))
+    }
+  }, [dispatch, limit, page, restaurantsPerPage, loadingRestaurants])
 
   const onChangePagination = (newPage) => {
     dispatch(setPage(newPage))
@@ -74,7 +66,7 @@ export default function RestaurantsScreen() {
   }
 
   const handleSelectAll = () => {
-    const allSelected = restaurant.map((item) => item.id)
+    const allSelected = restaurantsList.map((item) => item.id)
     setCardsSelected(allSelected)
   }
 
@@ -91,23 +83,11 @@ export default function RestaurantsScreen() {
   }
 
   const handleEnableSelected = async (id) => {
-    // await Promise.all(
-    //   cardsSelected.map(async (id) => {
-    //     await dispatch(updateRestaurant({ data: { id, isActive: true }, propertyToUpdate: "isActive" }))
-    //   })
-    // )
-    await dispatch(updateRestaurant({ data: { id, isActive: true }, propertyToUpdate: "isActive" }))
-    refreshPage()
+    dispatch(updateRestaurantStatus({ data: { id, isActive: true }, propertyToUpdate: "isActive" }))
   }
 
   const handleDisableSelected = async (id) => {
-    // await Promise.all(
-    //   cardsSelected.map(async (id) => {
-    //     await dispatch(updateRestaurant({ data: { id, isActive: false }, propertyToUpdate: "isActive" }))
-    //   })
-    // )
-    await dispatch(updateRestaurant({ data: { id, isActive: false }, propertyToUpdate: "isActive" }))
-    refreshPage()
+    dispatch(updateRestaurantStatus({ data: { id, isActive: false }, propertyToUpdate: "isActive" }))
   }
 
   const handleClick = (id) => {
@@ -126,10 +106,10 @@ export default function RestaurantsScreen() {
           <Flex align="center" gap="xs">
             <Flex align="center" gap={5}>
               <Text fw={700}>
-                {page === 1 ? 1 : (page - 1) * limit + 1}-{page === 1 ? limit : Math.min(page * limit, totalItems)}
+                {page === 1 ? 1 : (page - 1) * limit + 1}-{page === 1 ? limit : Math.min(page * limit, totalRestaurants)}
               </Text>
               <Text>de</Text>
-              <Text fw={700}>{totalItems} restaurantes</Text>
+              <Text fw={700}>{totalRestaurants} restaurantes</Text>
             </Flex>
             <Button color={colors.main_app_color} onClick={handleNewItem}>
               Nuevo
@@ -138,17 +118,23 @@ export default function RestaurantsScreen() {
         </Flex>
       </Group>
       <section className="w-full">
-        {status === "loading" ? (
+        {loadingRestaurants ? (
           <div className="h-[calc(100vh-220px)] w-full flex justify-center items-center">
             <Loader color={colors.main_app_color} />
           </div>
-        ) : restaurant && restaurant.length > 0 ? (
+        ) : restaurantsList && restaurantsList?.length > 0 ? (
           <Grid>
-            {restaurant.map((item, key) => (
+            {restaurantsList?.map((item, key) => (
               <Grid.Col span={{ base: 12, md: 6, lg: 4, xl: 3 }} key={key}>
                 <Card shadow="sm" padding="lg" radius="md" withBorder>
                   <Card.Section>
-                    {/* Validación para asegurarse de que `item.images` exista y tenga al menos un elemento */}
+                    {/* <Checkbox
+                      color={colors.main_app_color}
+                      size="md"
+                      radius="sm"
+                      style={{ position: "absolute", left: 20, top: 10 }}
+                      onChange={() => setCardsSelected(...cardsSelected, item.id)}
+                    /> */}
                     {item?.images && item.images.length > 0 ? (
                       <Image src={item.images[0]?.location} h={200} fit="cover" alt={item?.name || "Imagen"} />
                     ) : (
@@ -203,40 +189,35 @@ export default function RestaurantsScreen() {
       <section className="flex flex-row justify-between pt-8">
         <div />
         <Pagination
-          total={totalControlBtn}
+          total={totalPageCount}
           page={page}
           limit={limit}
           defaultValue={page}
           onChange={onChangePagination}
           color={colors.main_app_color}
           size="md"
+          withEdges
         />
       </section>
       <section>
         {cardsSelected.length >= 1 && (
           <Affix position={{ bottom: 20, left: "calc(50% - 270px)" }}>
-            <div className="w-full flex flex-row justify-end mt-6 gap-3 rounded-lg bg-white px-8 py-5 border border-gray-100 shadow">
-              <Button
-                text={"Deshabilitar seleccionados"}
-                className={"text-xs border border-red-400 text-red-400 bg-white"}
-                onClick={handleDisableSelected}
-              />
-              <Button
-                text={"Habilitar seleccionados"}
-                className={"text-xs border border-emerald-400 text-emerald-400 bg-white"}
-                onClick={handleEnableSelected}
-              />
-              <Button
-                text={"Deseleccionar todos"}
-                className={"text-xs border border-sky-950 text-sky-950 bg-white"}
-                onClick={handleDeselectAll}
-              />
-              <Button
-                text={"Seleccionar todos"}
-                className={"text-xs border border-sky-950 text-white bg-sky-950"}
-                onClick={handleSelectAll}
-              />
-            </div>
+            <Card radius="md">
+              <Flex gap='sm'>
+                <Button onClick={handleDisableSelected} color={colors.main_app_color}>
+                  Deshabilitar seleccionados
+                </Button>
+                <Button onClick={handleEnableSelected} color={colors.main_app_color}>
+                  Habilitar seleccionados
+                </Button>
+                <Button onClick={handleDeselectAll} color={colors.main_app_color}>
+                  Deseleccionar todos
+                </Button>
+                <Button onClick={handleSelectAll} color={colors.main_app_color}>
+                  Seleccionar todos
+                </Button>
+              </Flex>
+            </Card>
           </Affix>
         )}
       </section>

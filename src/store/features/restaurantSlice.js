@@ -6,8 +6,14 @@ import { showNotification } from "@mantine/notifications"
 
 const initialState = {
   restaurants: [],
-  currentPage: 1,
   itemsPerPage: ITEMS_PER_PAGE_CARDS,
+  restaurantsPerPage: [],
+  totalRestaurants: 0,
+  totalPagesCount: 0,
+  currentPage: 1,
+  loadingRestaurants: false,
+  creatingRestaurant: false,
+  updatingRestaurant: false,
   totalItems: 0,
   loading: false,
   imageUrl: "",
@@ -18,29 +24,74 @@ const initialState = {
     startPrice: null
   }
 }
-/*
- * GET RESTAURANTS
- */
 
 export const fetchRestaurants = createAsyncThunk(
   "restaurants/fetchRestaurants",
-  async ({ limit, page, order, category }, { dispatch }) => {
+  async ({ limit, page, order, search, search_field }, { dispatch }) => {
     try {
       dispatch(setLoading(true))
 
       const response = await restaurantsApi.getAllRestaurants({
         limit,
         page,
-        order
+        order,
+        search,
+        search_field
       })
 
       dispatch(setRestaurants(response.data))
       dispatch(setLoading(false))
-      return response
+      return { data: response.data, results: response.results, page }
     } catch (error) {
       dispatch(setLoading(false))
       dispatch(setError("Error fetching menus"))
       throw error
+    }
+  }
+)
+
+export const createRestaurant = createAsyncThunk(
+  "restaurants/createRestaurant",
+  async ({ params, imageParams }, { rejectWithValue }) => {
+    try {
+      const response = await restaurantsApi.createRestaurant(params)
+      const restaurantData = response.data
+
+      if (response.error) {
+        showNotification({
+          title: "Error",
+          message: response.message,
+          color: "red"
+        })
+
+        return rejectWithValue(response.message)
+      }
+
+      let images = []
+      if (imageParams) {
+        const imageResponse = await restaurantsApi.addImage(restaurantData.id, imageParams)
+        images = imageResponse.data.images
+
+        if (imageResponse.error) {
+          showNotification({
+            title: "Error",
+            message: imageResponse.message,
+            color: "red"
+          })
+
+          return rejectWithValue(imageResponse.message)
+        }
+      }
+
+      showNotification({
+        title: "Creación exitosa",
+        message: `Se creó el restaurante ${restaurantData.name}`,
+        color: "green"
+      })
+
+      return { ...restaurantData, images }
+    } catch (error) {
+      return rejectWithValue(error.response?.data || "Error al crear el restaurante")
     }
   }
 )
@@ -138,57 +189,85 @@ export const updateRestaurant = createAsyncThunk(
   }
 )
 
-/*
- * UPDATE RES INDIVIDUAL
- */
-
-/*
- *  UPDATE IMAGE
- */
-
-const uploadRestaurantImage = async (restaurantId, file) => {
-  const formDataImage = new FormData()
-  formDataImage.append("files", file)
-
-  return await restaurantsApi.addImage(restaurantId, formDataImage)
-}
-
-export const updateRestaurantData = createAsyncThunk(
-  "restaurant/updateRestaurantData",
-  async ({ data, restaurantId, formData }, { dispatch }) => {
+export const updateRestaurantStatus = createAsyncThunk(
+  "restaurant/updateRestaurantStatus",
+  async ({ data, propertyToUpdate = "all" }) => {
     try {
-      dispatch(setLoading(true))
-      const response = await restaurantsApi.updateRestaurant(formData, restaurantId)
+      const formData = updateFormData(data, propertyToUpdate)
+      const response = await restaurantsApi.updateRestaurant(formData, data?.id)
 
       if (response.error) {
-        toast.error(`Fallo al actualizar la información del negocio. Por favor intente de nuevo. ${response.message}`, {
-          duration: 7000
-        })
-      } else {
-        if (data && data.files) {
-          await uploadRestaurantImage(restaurantId, data?.files?.[0])
-        }
-        toast.success("Negocio actualizado exitosamente", {
+        showNotification({
+          title: "Error",
+          message: response.message,
+          color: "red",
           duration: 7000
         })
       }
-
-      dispatch(setRestaurantData(response.data.data))
-      dispatch(setLoading(false))
       return response.data
     } catch (error) {
-      dispatch(setLoading(false))
-      dispatch(setError("Error updating restaurant"))
-      toast.error(`Fallo al actualizar la información del negocio. Por favor intente de nuevo!. ${error}`, {
+      showNotification({
+        title: "Error",
+        message: error,
+        color: "red",
+        duration: 7000
+      })
+
+      throw error
+    }
+  }
+)
+
+export const updateRestaurantData = createAsyncThunk(
+  "restaurant/updateRestaurantData",
+  async ({ formData, restaurantId, formDataImage }, { rejectWithValue }) => {
+    try {
+      const response = await restaurantsApi.updateRestaurant(formData, restaurantId)
+      let restaurantData = response.data
+
+      if (response.error) {
+        showNotification({
+          title: "Error",
+          message: response.message,
+          color: "red"
+        })
+
+        return rejectWithValue(response.message)
+      }
+
+      if (formDataImage) {
+        const imageResponse = await restaurantsApi.addImage(restaurantId, formDataImage)
+
+        if (imageResponse.error) { 
+          showNotification({
+            title: "Error",
+            message: imageResponse.message,
+            color: "red"
+          })
+
+          return rejectWithValue(imageResponse.message)
+        }
+
+        restaurantData = { ...restaurantData, images: imageResponse.data.images }
+      }
+
+      showNotification({
+        title: "Actualización exitosa",
+        message: `El restaurante ${restaurantData.name} fue actualizado`,
+        color: "green"
+      })
+
+      return restaurantData
+    } catch (error) {
+      showNotification({
+        title: "Error",
+        message: error,
+        color: "red",
         duration: 7000
       })
     }
   }
 )
-
-/*
- * RES SLICE
- */
 
 export const restaurantsSlice = createSlice({
   name: "restaurants",
@@ -221,25 +300,97 @@ export const restaurantsSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(fetchRestaurants.pending, (state) => {
-        state.status = "loading"
+        state.loadingRestaurants = true
       })
       .addCase(fetchRestaurants.fulfilled, (state, action) => {
-        state.status = "succeeded"
-        state.totalItems = action.payload.results
-        state.value = action.payload
+        const { data, results, page } = action.payload
+        state.restaurantsPerPage[page] = data
+
+        state.loadingRestaurants = false
+        state.currentPage = page
+        state.totalRestaurants = results
+        state.totalPagesCount = Math.ceil(results / action.meta.arg.limit)
       })
       .addCase(fetchRestaurants.rejected, (state, action) => {
-        state.status = "failed"
+        state.loadingRestaurants = false
         state.error = action.error
       })
-      .addCase(updateRestaurantData.pending, (state) => {
-        state.loading = true
+      .addCase(updateRestaurantStatus.fulfilled, (state, action) => {
+        const { id, isActive } = action.payload
+        const currentPageRestaurants = state.restaurantsPerPage[state.currentPage]
+        const index = currentPageRestaurants.findIndex((restaurant) => restaurant?.id === id)
+
+        if (index !== -1) {
+          currentPageRestaurants[index] = { ...currentPageRestaurants[index], isActive }
+        }
       })
-      .addCase(updateRestaurantData.fulfilled, (state) => {
+      .addCase(updateRestaurantStatus.rejected, (state) => {
         state.loading = false
+      })
+      .addCase(updateRestaurantData.pending, (state) => {
+        state.updatingRestaurant = true
+      })
+      .addCase(updateRestaurantData.fulfilled, (state, action) => {
+        const { id, name, socialReason, images } = action.payload
+        const currentPageRestaurants = state.restaurantsPerPage[state.currentPage]
+        const index = currentPageRestaurants.findIndex((restaurant) => restaurant?.id == id)
+
+        state.updatingRestaurant = false
+        if (index !== -1) {
+          currentPageRestaurants[index] = {
+            ...currentPageRestaurants[index],
+            name,
+            socialReason,
+            images: images
+          }
+        }
       })
       .addCase(updateRestaurantData.rejected, (state) => {
-        state.loading = false
+        state.updatingRestaurant = false
+      })
+      .addCase(createRestaurant.pending, (state) => {
+        state.creatingRestaurant = true
+      })
+      .addCase(createRestaurant.fulfilled, (state, action) => {
+        const newRestaurant = action.payload
+
+        // Insertamos el nuevo restaurante al comienzo  de la primera página
+        if (!state.restaurantsPerPage[1]) {
+          state.restaurantsPerPage[1] = []
+        }
+        state.restaurantsPerPage[1].unshift(newRestaurant)
+
+        // Pasamos el último objeto de cada página a la primera posición de la página siguiente
+        for (let i = 1; i <= state.totalPagesCount; i++) {
+          if (state.restaurantsPerPage[i]?.length > state.itemsPerPage) {
+            const lastItem = state.restaurantsPerPage[i].pop()
+            if (state.restaurantsPerPage[i + 1]) {
+              state.restaurantsPerPage[i + 1].unshift(lastItem)
+            }
+          } else {
+            break
+          }
+        }
+
+        // Eliminamos del estado las páginas no consecutivas
+        const consecutivePages = [1]
+        for (let i = 2; i <= state.totalPagesCount; i++) {
+          if (state.restaurantsPerPage[i]) {
+            if (consecutivePages.includes(i - 1)) {
+              consecutivePages.push(i)
+            } else {
+              delete state.restaurantsPerPage[i]
+            }
+          }
+        }
+
+        // Actualizamos el conteo de restaurantes para que se  ajuste a la cantidad de páginas a mostrar
+        state.totalRestaurants += 1
+        state.totalPagesCount = Math.ceil(state.totalRestaurants / state.itemsPerPage)
+        state.creatingRestaurant = false
+      })
+      .addCase(createRestaurant.rejected, (state) => {
+        state.creatingRestaurant = false
       })
   }
 })

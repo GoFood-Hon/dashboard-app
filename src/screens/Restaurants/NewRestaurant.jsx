@@ -3,7 +3,6 @@ import { Accordion, Flex, Paper, Button } from "@mantine/core"
 import { useNavigate } from "react-router-dom"
 import { useForm } from "react-hook-form"
 import { yupResolver } from "@hookform/resolvers/yup"
-import toast from "react-hot-toast"
 import { GeneralInformationForm } from "./GeneralInformationForm"
 import BackButton from "../Dishes/components/BackButton"
 import { NAVIGATION_ROUTES_SUPER_ADMIN } from "../../routes"
@@ -16,15 +15,19 @@ import { PlanForm } from "../Users/PlanForm"
 import classes from "../../screens/Users/ArticlesCardsGrid.module.css"
 import { showNotification } from "@mantine/notifications"
 import plansApi from "../../api/plansApi"
+import { createRestaurant } from "../../store/features/restaurantSlice"
+import { useDispatch } from "react-redux"
+import { useSelector } from "react-redux"
 
 export const NewRestaurant = () => {
   const navigate = useNavigate()
-  const [isLoading, setIsLoading] = useState(false)
+  const dispatch = useDispatch()
   const [planCancelled, setPlanCancelled] = useState(false)
   const [newPlan, setNewPlan] = useState({})
   const [restaurantDetails, setRestaurantDetails] = useState({})
   const [restaurantId, setRestaurantId] = useState("")
   const [kitchenId, setKitchenId] = useState(null)
+  const isLoading = useSelector((state) => state.restaurants.creatingRestaurant)
 
   const handlePlanCancel = (cancelled) => {
     setPlanCancelled(cancelled)
@@ -47,167 +50,41 @@ export const NewRestaurant = () => {
   const [isDataCleared, setIsDataCleared] = useState(false)
 
   const onSubmit = async (data) => {
-    setIsLoading(true)
-    try {
-      const formData = new FormData()
+    const formData = new FormData()
 
-      formData.append("name", data.name)
-      formData.append("email", data.email)
-      formData.append("phoneNumber", data.phoneNumber.startsWith("+504") ? data.phoneNumber : `+504${data.phoneNumber}`)
-      formData.append("socialReason", data.socialReason)
-      formData.append("rtn", data.rtn)
-      formData.append("billingAddress", data.billingAddress)
-      formData.append("cai", data.cai)
-      formData.append("shippingFree", data.shippingFree ?? true)
-      formData.append("cuisineTypeId", data.cuisineTypeId)
-      if (data.pricePerChair) {
-        formData.append("pricePerChair", data.pricePerChair)
-      }
-      if (data.hoursBeforeCancellation) {
-        formData.append("hoursBeforeCancellation", data.hoursBeforeCancellation)
-      }
-      if (data.hoursBeforeBooking) {
-        formData.append("hoursBeforeBooking", data.hoursBeforeBooking)
-      }
-      if (data.shippingFree !== null) {
-        formData.append("shippingPrice", convertToDecimal(data.shippingPrice))
-      }
-
-      const response = await restaurantsApi.createRestaurant(formData)
-
-      if (response.error) {
-        showNotification({
-          title: "Error",
-          message: response.message,
-          color: "red",
-          duration: 7000
-        })
-      } else {
-        setRestaurantId(response.data.id)
-
-        const uploadImage = async (restaurantId, file) => {
-          const formDataImage = new FormData()
-          formDataImage.append("files", file)
-
-          return await restaurantsApi.addImage(restaurantId, formDataImage)
-        }
-
-        if (data?.files?.[0]) {
-          const addImageResponse = await uploadImage(restaurantId, data?.files?.[0])
-          if (addImageResponse.error) {
-            showNotification({
-              title: "Error",
-              message: addImageResponse.message,
-              color: "red",
-              duration: 7000
-            })
-          }
-
-          if (planCancelled && Object.keys(newPlan).length > 0) {
-            // Cancelar el plan existente (si es necesario)
-            try {
-              const cancelPlanResponse = await plansApi.cancelPlan({ restaurantId })
-
-              if (cancelPlanResponse.error) {
-                showNotification({
-                  title: "Error",
-                  message: cancelPlanResponse.message,
-                  color: "red",
-                  duration: 5000
-                })
-              } else {
-                // Asignar el nuevo plan solo si la cancelación fue exitosa
-                try {
-                  const assignPlanResponse = await plansApi.assignPlan({
-                    restaurantId,
-                    planId: newPlan?.id // Asumiendo que `planId` está en los datos de `data`
-                  })
-
-                  if (assignPlanResponse.error) {
-                    showNotification({
-                      title: "Error",
-                      message: assignPlanResponse.message,
-                      color: "red",
-                      duration: 5000
-                    })
-                  } else {
-                    showNotification({
-                      title: "Actualización exitosa",
-                      message: `Se actualizó la información de ${response.data.name}`,
-                      color: "green",
-                      duration: 7000
-                    })
-                    navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Restaurants.path)
-                  }
-                } catch (error) {
-                  showNotification({
-                    title: "Error",
-                    message: `Error al actualizar: ${error}`,
-                    color: "red",
-                    duration: 5000
-                  })
-                }
-              }
-            } catch (error) {
-              showNotification({
-                title: "Error",
-                message: error?.message,
-                color: "red",
-                duration: 7000
-              })
-            }
-          } else if (!planCancelled && Object.keys(newPlan).length > 0) {
-            // Asignar el nuevo plan solo si la cancelación fue exitosa
-            try {
-              const assignPlanResponse = await plansApi.assignPlan({
-                restaurantId,
-                planId: newPlan?.id // Asumiendo que `planId` está en los datos de `data`
-              })
-
-              if (assignPlanResponse.error) {
-                showNotification({
-                  title: "Error",
-                  message: assignPlanResponse.message,
-                  color: "red",
-                  duration: 5000
-                })
-              } else {
-                showNotification({
-                  title: "Creación exitosa",
-                  message: `Se creó el restaurante ${response.data.name}`,
-                  color: "green",
-                  duration: 7000
-                })
-                navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Restaurants.path)
-              }
-            } catch (error) {
-              showNotification({
-                title: "Error",
-                message: `Error al actualizar: ${error}`,
-                color: "red",
-                duration: 5000
-              })
-            }
-          } else {
-            showNotification({
-              title: "Creación exitosa",
-              message: `Se creó el restaurante ${response.data.name}`,
-              color: "green",
-              duration: 7000
-            })
-            navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Restaurants.path)
-          }
-        }
-      }
-    } catch (e) {
-      showNotification({
-        title: "Error",
-        message: e.message,
-        color: "red",
-        duration: 7000
-      })
+    formData.append("name", data.name)
+    formData.append("email", data.email)
+    formData.append("phoneNumber", data.phoneNumber.startsWith("+504") ? data.phoneNumber : `+504${data.phoneNumber}`)
+    formData.append("socialReason", data.socialReason)
+    formData.append("rtn", data.rtn)
+    formData.append("billingAddress", data.billingAddress)
+    formData.append("cai", data.cai)
+    formData.append("shippingFree", data.shippingFree ?? true)
+    formData.append("cuisineTypeId", data.cuisineTypeId)
+    if (data.pricePerChair) {
+      formData.append("pricePerChair", data.pricePerChair)
     }
-    setIsLoading(false)
+    if (data.hoursBeforeCancellation) {
+      formData.append("hoursBeforeCancellation", data.hoursBeforeCancellation)
+    }
+    if (data.hoursBeforeBooking) {
+      formData.append("hoursBeforeBooking", data.hoursBeforeBooking)
+    }
+    if (data.shippingFree !== null) {
+      formData.append("shippingPrice", convertToDecimal(data.shippingPrice))
+    }
+
+    const formDataImage = new FormData()
+    formDataImage.append("files", data.files[0])
+
+    dispatch(createRestaurant({ params: formData, imageParams: formDataImage }))
+      .unwrap()
+      .then((result) => {
+        navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Restaurants.path)
+      })
+      .catch((error) => {
+        console.error("Error creating restaurant:", error)
+      })
   }
 
   const accordionStructure = [

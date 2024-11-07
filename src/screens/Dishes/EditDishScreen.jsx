@@ -112,11 +112,20 @@ export default function EditDishScreen() {
   const onSubmit = async (data) => {
     setIsLoading(true)
     const dishId = data.id
-    const { additionals: _, ...restOfData } = data
+    const { additionals: _, tags, ...restOfData } = data
+
+    const formatTags = (tags) => {
+      if (tags?.length > 0 && typeof tags[0] === "object") {
+        return tags.map((tag) => tag.id) 
+      }
+      return tags
+    }
+
     const dishData = {
       ...restOfData,
       price: convertToDecimal(data?.price),
-      additionals: additional
+      additionals: additional,
+      tags: formatTags(tags)
     }
 
     dispatch(updateDish({ dishData, dishId })).then((response) => {
@@ -125,6 +134,7 @@ export default function EditDishScreen() {
       }
       setIsLoading(false)
     })
+
     close()
   }
 

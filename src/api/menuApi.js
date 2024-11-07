@@ -3,21 +3,40 @@ import axiosClient from "./axiosClient"
 const menuApi = {
   // getMenuByRestaurant: ({ restaurantId }) => axiosClient.get(`api/v1/restaurant/${restaurantId}/categories`),
 
-  getMenuByRestaurant: ({ restaurantId, limit = undefined, page = undefined, order = undefined } = {}) => {
+  getAllMenus: ({ limit, page, order, search, search_field } = {}) => {
     const params = {
       limit,
       page,
-      order
+      order,
+      search,
+      search_field
     }
-  
-    const validParams = Object.fromEntries(
-      Object.entries(params).filter(([_, value]) => value !== undefined && value)
-    )
+
+    const validParams = Object.fromEntries(Object.entries(params).filter(([_, value]) => value !== undefined))
+
+    const queryString = new URLSearchParams(validParams).toString()
+    const url = `api/v1/restaurant/categories/all${queryString ? `?${queryString}` : ""}`
+
+    return axiosClient.get(url)
+  },
+
+  getMenuByRestaurant: ({ restaurantId, limit, page, order, search, search_field } = {}) => {
+    const params = {
+      restaurantId,
+      limit,
+      page,
+      order,
+      search,
+      search_field
+    }
+
+    const validParams = Object.fromEntries(Object.entries(params).filter(([_, value]) => value !== undefined))
+
     const queryString = new URLSearchParams(validParams).toString()
     const url = `api/v1/restaurant/${restaurantId}/categories${queryString ? `?${queryString}` : ""}`
-  
+
     return axiosClient.get(url)
-  },  
+  },
 
   createMenu: (formData) => axiosClient.post("api/v1/restaurant/categories/create", formData),
 

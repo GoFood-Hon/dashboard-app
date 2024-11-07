@@ -4,15 +4,15 @@ import { Accordion, Button, Flex, Paper } from "@mantine/core"
 import { useForm } from "react-hook-form"
 import { useDispatch, useSelector } from "react-redux"
 import { yupResolver } from "@hookform/resolvers/yup"
-import toast from "react-hot-toast"
 import GeneralInformationForm from "./GeneralInformationForm"
-import ComplementsForm from "../Dishes/ComplementsForm"
+import ComplementsForm from "./ComplementsForm"
 import dishesApi from "../../api/dishesApi"
 import { newMenuValidation } from "../../utils/inputRules"
 import { createMenu } from "../../store/features/menuSlice"
 import BackButton from "../Dishes/components/BackButton"
 import { NAVIGATION_ROUTES_RES_ADMIN, NAVIGATION_ROUTES_SUPER_ADMIN } from "../../routes"
 import { colors } from "../../theme/colors"
+import { fetchDishesForCollections } from "../../store/features/collectionsSlice"
 
 export default function NewCollection() {
   const navigate = useNavigate()
@@ -35,24 +35,9 @@ export default function NewCollection() {
   const [isDataCleared, setIsDataCleared] = useState(false)
   const [dishes, setDishes] = useState([])
 
-  // useEffect(() => {
-  //   async function getDishes() {
-  //     try {
-  //       const response = await dishesApi.getAllDishesByRestaurant({
-  //         restaurantId: user.restaurantId
-  //       })
-
-  //       const activeDishes = response.data.data.filter((dish) => dish.isActive)
-  //       setDishes(activeDishes)
-  //       return response
-  //     } catch (error) {
-  //       toast.error(`Hubo un error obteniendo los platos, ${error}`)
-  //       throw error
-  //     }
-  //   }
-
-  //   getDishes()
-  // }, [restaurant])
+  useEffect(() => {
+    dispatch(fetchDishesForCollections({ limit: 18, page: 1 }))
+  }, [])
 
   const accordionStructure = [
     {
@@ -101,17 +86,18 @@ export default function NewCollection() {
   ))
 
   const onSubmit = (data) => {
-    setIsLoading(true)
-    const restaurantId = user.restaurantId
-    dispatch(createMenu({ data, restaurantId })).then((response) => {
-      if (response.payload) {
-        reset()
-        // localStorage.removeItem("draft")
-        navigate(NAVIGATION_ROUTES_RES_ADMIN.Menu.path)
-        setIsDataCleared(true)
-      }
-      setIsLoading(false)
-    })
+    console.log(data)
+    // setIsLoading(true)
+    // const restaurantId = user.restaurantId
+    // dispatch(createMenu({ data, restaurantId })).then((response) => {
+    //   if (response.payload) {
+    //     reset()
+    //     // localStorage.removeItem("draft")
+    //     navigate(NAVIGATION_ROUTES_RES_ADMIN.Menu.path)
+    //     setIsDataCleared(true)
+    //   }
+    //   setIsLoading(false)
+    // })
   }
 
   return (

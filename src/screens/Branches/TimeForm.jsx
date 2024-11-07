@@ -61,8 +61,6 @@ export const TimeForm = ({ setDaysData, hoursData, isAlwaysOpen, setIsAlwaysOpen
 
   const handleSave = () => {
     const dailyData = schedule.map((day) => ({
-      id: day.id,
-      idSucursal: day.idSucursal,
       day: day.day,
       openTime: day.openTime || "00:00:00",
       closeTime: day.closeTime || "00:00:00",

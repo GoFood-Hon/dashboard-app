@@ -110,8 +110,8 @@ export default function NewBranch() {
       delivery: data.delivery ?? false,
       pickup: data.pickup ?? false,
       onSite: data.onSite ?? false,
-      alwaysOpen: data.alwaysOpen ?? false,
-      schedules: !data.alwaysOpen ? Object.values(daysData) : null
+      alwaysOpen: isAlwaysOpen,
+      schedules: !isAlwaysOpen ? Object.values(daysData) : null
     }
 
     try {

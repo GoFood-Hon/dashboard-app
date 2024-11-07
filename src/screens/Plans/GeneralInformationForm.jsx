@@ -6,7 +6,7 @@ import plansApi from "../../api/plansApi"
 import { DEFAULT_CURRENCY, DEFAULT_PAYMENT_TYPE } from "../../utils/constants"
 
 export const GeneralInformationForm = ({ register, errors, setValue, featuresList, setFeaturesList }) => {
-  const [paymentType, setPaymentType] = useState(DEFAULT_PAYMENT_TYPE)
+  const [paymentType, setPaymentType] = useState()
   const [currency, setCurrency] = useState(DEFAULT_CURRENCY)
   const [dishesAdded, setDishesAdded] = useState([])
 
@@ -37,14 +37,9 @@ export const GeneralInformationForm = ({ register, errors, setValue, featuresLis
         {inputs.map(
           (input) =>
             input.type === "amount" && (
-              <InputField
-                key={input.id}
-                label={input.name}
-                name={input.featureCode}
-                register={register}
-                errors={errors}
-                className="text-black"
-              />
+              <Grid.Col key={input.id} span={{ base: 12, md: 6 }}>
+                <InputField key={input.id} label={input.name} name={input.featureCode} register={register} errors={errors} />
+              </Grid.Col>
             )
         )}
       </>
@@ -58,7 +53,7 @@ export const GeneralInformationForm = ({ register, errors, setValue, featuresLis
 
   const onChangePaymentType = (value) => {
     setPaymentType(value)
-    setValue("paymentType", paymentType)
+    setValue("paymentType", value)
   }
 
   const onChangeDishesAdded = (value) => {
@@ -69,51 +64,39 @@ export const GeneralInformationForm = ({ register, errors, setValue, featuresLis
   return (
     <Grid>
       <Grid.Col span={{ base: 12 }}>
-        <Paper withBorder radius='md' p='md'>
+        <Paper withBorder radius="md" p="md">
           <div className="flex flex-col w-full">
             <Grid>
               <Grid.Col span={{ base: 12, md: 12 }}>
-                <InputField label="Nombre del plan" name="name" register={register} errors={errors} className="text-black" />
+                <InputField label="Nombre del plan" name="name" register={register} errors={errors} />
               </Grid.Col>
               <Grid.Col span={{ base: 12, md: 6 }}>
-                <InputField label="Precio" name="price" register={register} errors={errors} className="text-black" />
+                <InputField label="Precio" name="price" register={register} errors={errors} />
               </Grid.Col>
               <Grid.Col span={{ base: 12, md: 6 }}>
-                <InputField label="Impuestos" name="tax" register={register} errors={errors} className="text-black" />
+                <InputField label="Impuestos" name="tax" register={register} errors={errors} />
               </Grid.Col>
               <Grid.Col span={{ base: 12, md: 6 }}>
-                <label className="text-sm font-bold leading-snug">Tipo de pago</label>
-                <div className="mt-1">
-                  <Select
-                    data={["Mensual", "Anual"]}
-                    allowDeselect={false}
-                    size="md"
-                    value={paymentType}
-                    onChange={onChangePaymentType}
-                  />
-                </div>
+                <Select
+                  label="Tipo de pago"
+                  data={["MENSUAL", "ANUAL"]}
+                  allowDeselect={false}
+                  value={paymentType}
+                  onChange={onChangePaymentType}
+                />
               </Grid.Col>
               <Grid.Col span={{ base: 12, md: 6 }}>
-                <span className="text-sm font-bold leading-snug">Moneda</span>
-                <div className="mt-1">
-                  <Select data={["HNL"]} allowDeselect={false} size="md" value={currency} onChange={onChangeCurrency} />
-                </div>
+                <Select label="Moneda" data={["HNL"]} allowDeselect={false} value={currency} onChange={onChangeCurrency} />
               </Grid.Col>
               <Grid.Col span={{ sm: 12 }}>
-                <span className="text-sm font-bold leading-snug">Características disponibles</span>
-                <div className="mt-1">
-                  <MultiSelect
-                    placeholder="Seleccione las características"
-                    value={dishesAdded}
-                    onChange={onChangeDishesAdded}
-                    size="md"
-                    data={[{ group: "Features", items: featuresList.map((item) => ({ value: item.id, label: item.name })) }]}
-                  />
-                </div>
+                <MultiSelect
+                  label="Características disponibles"
+                  value={dishesAdded}
+                  onChange={onChangeDishesAdded}
+                  data={[{ group: "Features", items: featuresList.map((item) => ({ value: item.id, label: item.name })) }]}
+                />
               </Grid.Col>
-              <Grid.Col span={{ sm: 12 }}>
-                <RenderInputs />
-              </Grid.Col>
+              <RenderInputs />
             </Grid>
           </div>
         </Paper>

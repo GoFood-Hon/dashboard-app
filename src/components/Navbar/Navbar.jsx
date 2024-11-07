@@ -5,14 +5,17 @@ import { useNavigate } from "react-router-dom"
 import { AUTH_NAVIGATION_ROUTES } from "../../routes"
 import { IconLogout } from "@tabler/icons-react"
 import { colors } from "../../theme/colors"
+import { useDispatch } from "react-redux"
 
 export function Navbar({ data }) {
   const navigate = useNavigate()
+  const dispatch  = useDispatch()
   const links = data?.map((item) => <NavLinksGroup key={item.label} {...item} />)
 
   const logout = () => {
     localStorage.removeItem("token")
     localStorage.removeItem("setUserRole")
+    dispatch({ type: "auth/logout" });
     navigate(AUTH_NAVIGATION_ROUTES.Login.path)
   }
 

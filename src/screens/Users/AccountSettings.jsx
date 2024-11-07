@@ -42,12 +42,10 @@ export default function AccountSettings() {
         const userData = response.data.data
         setUserData(userData)
 
-        const phoneNumberWithoutCountryCode = userData?.phoneNumber?.replace("+504", "")
-
         return {
           firstName: userData?.name || "",
           email: userData?.email || "",
-          phoneNumber: phoneNumberWithoutCountryCode || "",
+          phoneNumber: userData?.phoneNumber || "",
 
           image: userData?.images?.[0]?.location
         }
@@ -98,7 +96,7 @@ export default function AccountSettings() {
 
       formData.append("name", data.firstName)
       formData.append("email", data.email)
-      formData.append("phoneNumber", `+504${data.phoneNumber}`)
+      formData.append("phoneNumber", data.phoneNumber.startsWith("+504") ? data.phoneNumber : `+504${data.phoneNumber}`)
 
       const response = await authApi.updateUser(formData)
 
