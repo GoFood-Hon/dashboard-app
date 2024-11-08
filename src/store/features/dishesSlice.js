@@ -322,7 +322,7 @@ export const dishesSlice = createSlice({
       .addCase(getAllDishes.fulfilled, (state, action) => {
         const { data, results, page } = action.payload
 
-        state.dishesPerPage[page] = data.data
+        state.dishesPerPage[page] = data
 
         state.loadingDishes = false
         state.currentPage = page

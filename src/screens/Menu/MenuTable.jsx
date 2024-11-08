@@ -32,6 +32,7 @@ import customParseFormat from "dayjs/plugin/customParseFormat"
 import utc from "dayjs/plugin/utc"
 import timezone from "dayjs/plugin/timezone"
 import { updateMenuStatus } from "../../store/features/menuSlice"
+import { updatePlanStatus } from "../../store/features/plansSlice"
 
 dayjs.extend(utc)
 dayjs.extend(timezone)
@@ -353,7 +354,7 @@ export default function MenuTable({ items, screenType, totalItems, currentPage, 
           <MantineProvider theme={theme}>
             <Switch
               checked={active}
-              //onChange={() => dispatch(updatePlanStatus({ id: item.id, params: { isActive: !item.isActive } }))}
+              onChange={() => dispatch(updatePlanStatus({ id: item.id, params: { isActive: !item.isActive } }))}
               color={colors.main_app_color}
               size="sm"
               thumbIcon={

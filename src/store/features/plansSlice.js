@@ -103,6 +103,32 @@ export const updatePlanData = createAsyncThunk("plans/updatePlanData", async ({ 
   }
 })
 
+export const updatePlanStatus = createAsyncThunk("plans/updatePlanStatus", async ({ id, params }, { rejectWithValue }) => {
+  try {
+    const response = await plansApi.updatePlan(id, params)
+    if (response.error) {
+      showNotification({
+        title: "Error",
+        message: response.message,
+        color: "red",
+        duration: 7000
+      })
+
+      return rejectWithValue(response.message)
+    }
+    return response.data
+  } catch (error) {
+    showNotification({
+      title: "Error",
+      message: error,
+      color: "red",
+      duration: 7000
+    })
+
+    throw error
+  }
+})
+
 const initialState = {
   value: {},
   currentPage: 1,
@@ -180,6 +206,15 @@ const plansSlice = createSlice({
       })
       .addCase(createPlan.rejected, (state) => {
         state.creatingPlan = false
+      })
+      .addCase(updatePlanStatus.fulfilled, (state, action) => {
+        const { id, isActive } = action.payload
+        const currentPagePlans = state.plansByPage[state.currentPage]
+        const index = currentPagePlans.findIndex((plan) => plan?.id === id)
+
+        if (index !== -1) {
+          currentPagePlans[index] = { ...currentPagePlans[index], isActive }
+        }
       })
       .addCase(updatePlanData.pending, (state) => {
         state.updatingPlan = true
