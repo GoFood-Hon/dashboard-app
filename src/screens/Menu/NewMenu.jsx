@@ -42,7 +42,7 @@ export default function NewMenu() {
           restaurantId: user.restaurantId
         })
 
-        const activeDishes = response.data.data.filter((dish) => dish.isActive)
+        const activeDishes = response.data.filter((dish) => dish.isActive)
         setDishes(activeDishes)
         return response
       } catch (error) {

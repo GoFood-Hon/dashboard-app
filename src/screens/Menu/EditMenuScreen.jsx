@@ -44,7 +44,7 @@ export default function EditMenuScreen() {
         const response = await dishesApi.getAllDishesByRestaurant({
           restaurantId: user.restaurantId
         })
-        setDishes(response.data.data)
+        setDishes(response.data)
 
         return response
       } catch (error) {
@@ -58,7 +58,7 @@ export default function EditMenuScreen() {
       }
     }
     getDishes()
-  }, [restaurant])
+  }, [])
 
   useEffect(() => {
     const fetchMenu = async () => {
@@ -134,12 +134,10 @@ export default function EditMenuScreen() {
   ))
 
   const onSubmit = (data) => {
-    setIsLoading(true)
     dispatch(updateMenu({ data })).then((response) => {
       if (!response.payload.status) {
         navigate(NAVIGATION_ROUTES_RES_ADMIN.Menu.path)
       }
-      setIsLoading(false)
     })
   }
 

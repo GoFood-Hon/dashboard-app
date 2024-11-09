@@ -35,24 +35,24 @@ export default function EditCollection() {
   const [isDataCleared, setIsDataCleared] = useState(false)
   const [dishes, setDishes] = useState([])
 
-  // useEffect(() => {
-  //   async function getDishes() {
-  //     try {
-  //       const response = await dishesApi.getAllDishesByRestaurant({
-  //         restaurantId: user.restaurantId
-  //       })
+  useEffect(() => {
+    async function getDishes() {
+      try {
+        const response = await dishesApi.getAllDishesByRestaurant({
+          restaurantId: user.restaurantId
+        })
 
-  //       const activeDishes = response.data.data.filter((dish) => dish.isActive)
-  //       setDishes(activeDishes)
-  //       return response
-  //     } catch (error) {
-  //       toast.error(`Hubo un error obteniendo los platos, ${error}`)
-  //       throw error
-  //     }
-  //   }
+        const activeDishes = response.data.data.filter((dish) => dish.isActive)
+        setDishes(activeDishes)
+        return response
+      } catch (error) {
+        toast.error(`Hubo un error obteniendo los platos, ${error}`)
+        throw error
+      }
+    }
 
-  //   getDishes()
-  // }, [restaurant])
+    getDishes()
+  }, [restaurant])
 
   const accordionStructure = [
     {

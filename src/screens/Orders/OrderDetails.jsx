@@ -274,13 +274,13 @@ export const OrderDetails = () => {
                   onClick={() => confirmOrder()}
                   className={"text-white text-md px-3 py-2 mb-4 bg-primary_button  font-bold"}
                 />
-                <Button
-                  text={"Cancelar pedido"}
-                  onClick={() => cancelOrder()}
-                  className={"text-md px-3 py-2 mb-4 text-white bg-red-500 font-bold"}
-                />
               </>
             ) : null}
+            <Button
+              text={"Cancelar pedido"}
+              onClick={() => cancelOrder()}
+              className={"text-md px-3 py-2 mb-4 text-white bg-red-500 font-bold"}
+            />
             {(orderDetails?.status === orderStatusValues.confirmed) & (user.role === APP_ROLES.kitchenUser) ? (
               <Button
                 type="submit"

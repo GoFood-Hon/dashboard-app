@@ -13,6 +13,8 @@ const initialState = {
   totalPagesCount: 0,
   currentPage: 1,
   loadingMenus: false,
+  creatimgMenus: false,
+  updatingMenus: false,
   filters: {
     startDate: null,
     endDate: null,
@@ -171,8 +173,8 @@ export const updateMenu = createAsyncThunk(
   async ({ data, propertyToUpdate = "all" }, { dispatch, rejectWithValue }) => {
     try {
       const formData = updateMenuFormData(data, propertyToUpdate)
-
       const response = await menuApi.updateMenu(formData, data.id)
+      let images = []
 
       if (response.error) {
         showNotification({
@@ -186,7 +188,7 @@ export const updateMenu = createAsyncThunk(
       } else {
         if (data?.files) {
           const imageResponse = await uploadMenuImage(data?.id, data?.files?.[0])
-
+          images = imageResponse.data
           if (imageResponse.error) {
             showNotification({
               title: "Error",
@@ -220,7 +222,7 @@ export const updateMenu = createAsyncThunk(
           duration: 7000
         })
 
-        return response.data
+        return { ...response.data, images }
       }
     } catch (error) {
       dispatch(setError("Error updating menu"))
@@ -317,6 +319,26 @@ export const menusSlice = createSlice({
         if (index !== -1) {
           currentPageMenus[index] = { ...currentPageMenus[index], isActive }
         }
+      })
+      .addCase(updateMenu.pending, (state) => {
+        state.updatingMenus = true
+      })
+      .addCase(updateMenu.fulfilled, (state, action) => {
+        const { id, name, images } = action.payload
+        const currentPageMenus = state.menusPerPage[state.currentPage]
+        const index = currentPageMenus.findIndex((menu) => menu?.id === id)
+
+        if (index !== -1) {
+          currentPageMenus[index] = {
+            ...currentPageMenus[index],
+            name,
+            images
+          }
+        }
+        state.updatingMenus = false
+      })
+      .addCase(updateMenu.rejected, (state) => {
+        state.updatingMenus = false
       })
   }
 })

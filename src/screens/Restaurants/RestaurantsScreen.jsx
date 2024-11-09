@@ -16,30 +16,20 @@ import {
   Box,
   Tooltip,
   Loader,
-  Flex,
-  Transition,
-  Checkbox
+  Flex
 } from "@mantine/core"
 import { useDispatch, useSelector } from "react-redux"
-import {
-  fetchRestaurants,
-  selectRestaurantsStatus,
-  setPage,
-  updateRestaurant,
-  updateRestaurantStatus
-} from "../../store/features/restaurantSlice"
+import { fetchRestaurants, setPage, updateRestaurantStatus } from "../../store/features/restaurantSlice"
 import { colors } from "../../theme/colors"
 import { NAVIGATION_ROUTES_SUPER_ADMIN } from "../../routes"
 import BackButton from "../Dishes/components/BackButton"
 import { IconCheck } from "@tabler/icons-react"
 import { IconX } from "@tabler/icons-react"
-import { IconArrowUp } from "@tabler/icons-react"
 import { useWindowScroll } from "@mantine/hooks"
 
 export default function RestaurantsScreen() {
   const navigate = useNavigate()
   const dispatch = useDispatch()
-  const [scroll, scrollTo] = useWindowScroll()
   const limit = useSelector((state) => state.restaurants.itemsPerPage)
   const page = useSelector((state) => state.restaurants.currentPage)
   const restaurantsPerPage = useSelector((state) => state.restaurants.restaurantsPerPage)
@@ -72,14 +62,6 @@ export default function RestaurantsScreen() {
 
   const handleDeselectAll = () => {
     setCardsSelected([])
-  }
-
-  const handleChangeSelected = (index) => {
-    if (cardsSelected.includes(index)) {
-      setCardsSelected(cardsSelected.filter((i) => i !== index))
-    } else {
-      setCardsSelected([...cardsSelected, index])
-    }
   }
 
   const handleEnableSelected = async (id) => {
@@ -199,11 +181,11 @@ export default function RestaurantsScreen() {
           withEdges
         />
       </section>
-      <section>
+      {/* <section>
         {cardsSelected.length >= 1 && (
           <Affix position={{ bottom: 20, left: "calc(50% - 270px)" }}>
             <Card radius="md">
-              <Flex gap='sm'>
+              <Flex gap="sm">
                 <Button onClick={handleDisableSelected} color={colors.main_app_color}>
                   Deshabilitar seleccionados
                 </Button>
@@ -220,7 +202,7 @@ export default function RestaurantsScreen() {
             </Card>
           </Affix>
         )}
-      </section>
+      </section> */}
     </>
   )
 }

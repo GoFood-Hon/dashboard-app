@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from "react"
-// import Button from "../../components/Button"
+import React, { useEffect } from "react"
 import {
   Grid,
   Pagination,
@@ -14,164 +13,71 @@ import {
   rem,
   Box,
   Tooltip,
-  Input,
-  CloseButton,
   Loader,
-  TextInput,
   Flex
 } from "@mantine/core"
-import { useLocation, useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import { useDispatch, useSelector } from "react-redux"
-import {
-  fetchBranches,
-  selectAllBranches,
-  selectBranchesError,
-  selectBranchesStatus,
-  setFilters,
-  setPage,
-  updateBranches
-} from "../../store/features/branchesSlice"
-import LoadingCircle from "../../components/LoadingCircle"
+import { fetchBranches, setPage, updateBranchStatus } from "../../store/features/branchesSlice"
 import { colors } from "../../theme/colors"
 import { NAVIGATION_ROUTES_RES_ADMIN } from "../../routes"
 import { IconX, IconCheck } from "@tabler/icons-react"
-import { Icon } from "../../components/Icon"
 import BackButton from "../Dishes/components/BackButton"
 
 export default function Branches() {
   const navigate = useNavigate()
-  const location = useLocation()
   const dispatch = useDispatch()
 
-  const branches = useSelector(selectAllBranches)
-  const status = useSelector(selectBranchesStatus)
-  const error = useSelector(selectBranchesError)
   const limit = useSelector((state) => state.branches.itemsPerPage)
-  const totalItems = useSelector((state) => state.branches.totalItems)
-  const filters = useSelector((state) => state.branches.filters)
   const page = useSelector((state) => state.branches.currentPage)
-  const restaurant = useSelector((state) => state?.restaurant?.value)
-  const user = useSelector((state) => state.user.value)
-  const [checked, setChecked] = useState(false)
+  const branchesPerPage = useSelector((state) => state.branches.branchesPerPage)
+  const totalBranches = useSelector((state) => state.branches.totalBranches)
+  const totalPageCount = useSelector((state) => state.branches.totalPagesCount)
+  const branchesList = branchesPerPage[page] || []
+  const loadingBranches = useSelector((state) => state.branches.loadingBranches)
 
   const theme = createTheme({
     cursorType: "pointer"
   })
 
-  const totalControlBtn = Math.ceil(totalItems / limit)
-  const [searchDish, setSearchDish] = useState("")
-  const [cardsSelected, setCardsSelected] = useState([])
-
   useEffect(() => {
-    dispatch(
-      fetchBranches({
-        limit,
-        page,
-        order: "DESC",
-        restaurantId: user.restaurantId,
-        filters
-      })
-    )
-    setCardsSelected([])
-  }, [page, dispatch, restaurant])
+    if (!branchesPerPage[page]) {
+      dispatch(fetchBranches({ limit, page, order: "DESC" }))
+    }
+  }, [dispatch, limit, page, branchesPerPage])
 
   const handleNewItem = () => {
     navigate(NAVIGATION_ROUTES_RES_ADMIN.Branches.NewBranch.path)
-    setCardsSelected([])
-  }
-
-  const refreshPage = () => {
-    dispatch(
-      fetchBranches({
-        limit,
-        page,
-        order: "DESC",
-        restaurantId: user.restaurantId,
-        filters
-      })
-    )
-    setCardsSelected([])
-  }
-
-  const onFiltersChange = (data) => {
-    const serializableFilters = {
-      ...data,
-      startDate: data.startDate?.toISOString().split("T")[0],
-      endDate: data.endDate?.toISOString().split("T")[0]
-    }
-
-    dispatch(setFilters(serializableFilters))
-
-    dispatch(
-      fetchBranches({
-        limit,
-        page,
-        order: "DESC",
-        restaurantId: user.restaurantId,
-        filters: data
-      })
-    )
-    setCardsSelected([])
-  }
-  const handleChangeSelected = (index) => {
-    if (cardsSelected.includes(index)) {
-      setCardsSelected(cardsSelected.filter((i) => i !== index))
-    } else {
-      setCardsSelected([...cardsSelected, index])
-    }
   }
 
   const onChangePagination = (newPage) => {
     dispatch(setPage(newPage))
-    setCardsSelected([])
   }
 
   const handleEnableSelected = async (id) => {
-    // await Promise.all(
-    //   cardsSelected.map(async (id) => {
-    //     await dispatch(updateBranches({ data: { id, isActive: true }, propertyToUpdate: "isActive" }))
-    //   })
-    // )
-    await dispatch(updateBranches({ data: { id, isActive: true }, propertyToUpdate: "isActive" }))
-
-    refreshPage()
+    dispatch(updateBranchStatus({ data: { id, isActive: true }, propertyToUpdate: "isActive" }))
   }
 
   const handleDisableSelected = async (id) => {
-    // await Promise.all(
-    //   cardsSelected.map(async (id) => {
-    //     await dispatch(updateBranches({ data: { id, isActive: false }, propertyToUpdate: "isActive" }))
-    //   })
-    // )
-
-    await dispatch(updateBranches({ data: { id, isActive: false }, propertyToUpdate: "isActive" }))
-    refreshPage()
-  }
-
-  const handleDeselectAll = () => {
-    setCardsSelected([])
-  }
-
-  const handleSelectAll = () => {
-    const allSelected = branches.map((dish) => dish.id)
-    setCardsSelected(allSelected)
+    dispatch(updateBranchStatus({ data: { id, isActive: false }, propertyToUpdate: "isActive" }))
   }
 
   const handleClick = (id) => {
     navigate(`${NAVIGATION_ROUTES_RES_ADMIN.Branches.path}/${id}`)
   }
+
   return (
     <>
-      <Group grow mb='sm'>
+      <Group grow mb="sm">
         <Flex align="center" justify="space-between">
           <BackButton title="Sucursales" />
           <Flex align="center" gap="xs">
             <Flex align="center" gap={5}>
               <Text fw={700}>
-                {page === 1 ? 1 : (page - 1) * limit + 1}-{page === 1 ? limit : Math.min(page * limit, totalItems)}
+                {page === 1 ? 1 : (page - 1) * limit + 1}-{page === 1 ? limit : Math.min(page * limit, totalBranches)}
               </Text>
               <Text>de</Text>
-              <Text fw={700}>{totalItems} sucursales</Text>
+              <Text fw={700}>{totalBranches} sucursales</Text>
             </Flex>
             <Button color={colors.main_app_color} onClick={handleNewItem}>
               Nuevo
@@ -180,13 +86,13 @@ export default function Branches() {
         </Flex>
       </Group>
       <section className="w-full">
-        {status === "loading" ? (
+        {loadingBranches ? (
           <div className="h-[calc(100vh-220px)] w-full flex justify-center items-center">
             <Loader color={colors.main_app_color} />
           </div>
-        ) : branches && branches.length > 0 ? (
+        ) : branchesList && branchesList.length > 0 ? (
           <Grid flex>
-            {branches?.map((item, key) => (
+            {branchesList?.map((item, key) => (
               <Grid.Col span={{ base: 12, md: 6, lg: 4, xl: 3 }} key={key}>
                 <Card shadow="sm" padding="lg" radius="md" withBorder>
                   <Card.Section>
@@ -235,16 +141,17 @@ export default function Branches() {
         ) : (
           <div className="text-center mt-4 text-gray-500">No hay sucursales para mostrar</div>
         )}
-        {status === "error" && <div>Error: {error}</div>}
       </section>
       <section className="flex flex-row justify-between pb-32">
         <div />
         <Pagination
-          total={totalControlBtn}
+          total={totalPageCount}
           page={page}
           limit={limit}
+          defaultValue={page}
           onChange={onChangePagination}
           color={colors.main_app_color}
+          size='md'
           withEdges
         />
       </section>

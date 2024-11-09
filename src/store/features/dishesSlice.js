@@ -104,7 +104,7 @@ export const fetchDishes = createAsyncThunk(
         dateSort
       })
 
-      dispatch(setDishes(response.data.data))
+      dispatch(setDishes(response.data))
       return response
     } catch (error) {
       dispatch(setError("Error fetching dishes"))
@@ -217,6 +217,7 @@ const handleErrorOnCreateDish = (error, dispatch) => {
 export const updateDish = createAsyncThunk(
   "dishes/updateDish",
   async ({ dishData, propertyToUpdate = "all", dishId }, { dispatch }) => {
+    let images = []
     try {
       const response = await dishesApi.updateDishWithExtra(dishId, dishData)
       if (response.error) {
@@ -230,7 +231,8 @@ export const updateDish = createAsyncThunk(
         return response.error
       } else {
         if (propertyToUpdate !== "isActive" && dishData.files) {
-          await uploadDishImage(dishData?.id, dishData?.files?.[0])
+          const imageResponse = await uploadDishImage(dishData?.id, dishData?.files?.[0])
+          images = imageResponse.data.images
         }
 
         showNotification({
@@ -240,7 +242,7 @@ export const updateDish = createAsyncThunk(
           duration: 7000
         })
       }
-      return response.data
+      return { ...response.data, images }
     } catch (error) {
       dispatch(setError("Error updating dish"))
       showNotification({
@@ -353,13 +355,11 @@ export const dishesSlice = createSlice({
         const index = currentPageDishes.findIndex((dish) => dish?.id === id)
 
         if (index !== -1) {
-          const imageLocation = images.length > 0 ? images[0].location : null
-
           currentPageDishes[index] = {
             ...currentPageDishes[index],
             name,
             price,
-            image: imageLocation
+            images
           }
         }
       })

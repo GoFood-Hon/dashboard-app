@@ -7,107 +7,37 @@ import { showNotification } from "@mantine/notifications"
 
 const initialState = {
   branches: [],
-  currentBranch: null,
-  currentPage: 1,
   itemsPerPage: ITEMS_PER_PAGE_CARDS,
+  branchesPerPage: [],
+  totalBranches: 0,
+  totalPagesCount: 0,
+  currentPage: 1,
+  loadingBranches: false,
+  updatingBranches: false,
+  creatingBranches: false,
+  currentBranch: null,
   totalItems: 0,
   imageUrl: "",
-  filters: {
-    startDate: null,
-    endDate: null,
-    status: null,
-    startPrice: null,
-    dateSort: null
-  }
 }
-
-/*
- * GET RESTAURANT INDIVIDUAL
- */
-
-// TODO:
-/* export const fetchBranchData = createAsyncThunk("branches/fetchBranchData", async ({ branchId }, { dispatch }) => {
-  try {
-    const response = await branchesApi.getBranch(branchId)
-    if (response.error) {
-      toast.error(`Fallo obtener la información de la sucursal ${response.message}`, {
-        duration: 7000
-      })
-      return {}
-    } else {
-      dispatch(setBranchData(response.data))
-      dispatch(setImageUrl(response?.data?.images?.[0]?.location))
-      return response.data
-    }
-  } catch (error) {
-    toast.error(`Fallo al obtener la información de la sucursal. Intente de nuevo.`, {
-      duration: 7000
-    })
-
-    throw error
-  }
-})
- */
-/*
- * GET BRANCHES
- */
 
 export const fetchBranches = createAsyncThunk(
   "branches/fetchBranches",
-  async ({ limit, page, order, restaurantId, filters }, { dispatch }) => {
+  async ({ limit, page, order, restaurantId, search, search_field }, { rejectWithValue }) => {
     try {
-      let formattedStartDate = null
-      let formattedEndDate = null
-      let formattedStatus = null
-      let formattedPrice = null
-      let dateSort = null
-
-      if (filters) {
-        const { startDate, endDate, status, startPrice, dateSort: filterDateSort } = filters
-
-        if (startDate) {
-          formattedStartDate = startDate.toISOString().split("T")[0]
-        }
-
-        if (endDate) {
-          formattedEndDate = endDate.toISOString().split("T")[0]
-        }
-
-        if (status) {
-          formattedStatus = status === "Todos" ? null : status === "Habilitado" ? "true" : "false"
-        }
-
-        if (startPrice) {
-          formattedPrice = `${startPrice || ""}`
-        }
-
-        dateSort = filterDateSort || null
-      }
-
       const response = await branchesApi.getBranchesByRestaurant({
         limit,
         page,
         order,
         restaurantId,
-        startDate: formattedStartDate,
-        endDate: formattedEndDate,
-        status: formattedStatus,
-        price: formattedPrice,
-        dateSort
+        search,
+        search_field
       })
-
-      dispatch(setBranches(response.data))
-      return response
+      return { data: response.data, results: response.results, page }
     } catch (error) {
-      dispatch(setError("Error fetching branches"))
-      throw error
+      return rejectWithValue(error.response?.data || "Error fetching branches")
     }
   }
 )
-
-/*
- * UPDATE BRANCHES
- */
 
 const updateFormData = (data, propertyToUpdate) => {
   const formData = new FormData()
@@ -126,8 +56,6 @@ const updateFormData = (data, propertyToUpdate) => {
 export const updateBranches = createAsyncThunk(
   "complements/updateBranches",
   async ({ data, propertyToUpdate = "all" }, { dispatch }) => {
-    // const xIcon = <IconX style={{ width: rem(20), height: rem(20) }} />
-    // const checkIcon = <IconCheck style={{ width: rem(20), height: rem(20) }} />
     try {
       const formData = updateFormData(data, propertyToUpdate)
 
@@ -160,6 +88,38 @@ export const updateBranches = createAsyncThunk(
   }
 )
 
+export const updateBranchStatus = createAsyncThunk(
+  "complements/updateBranches",
+  async ({ data, propertyToUpdate = "all" }, { rejectWithValue }) => {
+    try {
+      const formData = updateFormData(data, propertyToUpdate)
+
+      const response = await branchesApi.updateBranches(formData, data?.id)
+
+      if (response.error) {
+        showNotification({
+          title: "Error",
+          message: response.message,
+          color: "red",
+          duration: 7000
+        })
+
+        return rejectWithValue(response.message)
+      }
+      return response.data
+    } catch (error) {
+      showNotification({
+        title: "Error",
+        message: error,
+        color: "red",
+        duration: 7000
+      })
+
+      throw error
+    }
+  }
+)
+
 /*
  * BRANCHES SLICE
  */
@@ -168,15 +128,6 @@ export const branchesSlice = createSlice({
   name: "branches",
   initialState,
   reducers: {
-    setImageUrl(state, action) {
-      state.imageUrl = action.payload
-    },
-    setBranchData(state, action) {
-      state.currentBranch = action.payload
-    },
-    setFilters: (state, action) => {
-      state.filters = action.payload
-    },
     setPage: (state, action) => {
       state.currentPage = action.payload
     },
@@ -195,16 +146,29 @@ export const branchesSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(fetchBranches.pending, (state) => {
-        state.status = "loading"
+        state.loadingBranches = true
       })
       .addCase(fetchBranches.fulfilled, (state, action) => {
-        state.status = "succeeded"
-        state.totalItems = action.payload.results
-        state.value = action.payload
+        const { data, results, page } = action.payload
+        state.branchesPerPage[page] = data
+
+        state.loadingBranches = false
+        state.currentPage = page
+        state.totalBranches = results
+        state.totalPagesCount = Math.ceil(results / action.meta.arg.limit)
       })
       .addCase(fetchBranches.rejected, (state, action) => {
-        state.status = "failed"
+        state.loadingBranches = false
         state.error = action.error
+      })
+      .addCase(updateBranchStatus.fulfilled, (state, action) => {
+        const { id, isActive } = action.payload
+        const currentPageBranches = state.branchesPerPage[state.currentPage]
+        const index = currentPageBranches.findIndex((branch) => branch?.id === id)
+
+        if (index !== -1) {
+          currentPageBranches[index] = { ...currentPageBranches[index], isActive }
+        }
       })
   }
 })
