@@ -2,28 +2,55 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit"
 import reservationsApi from "../../api/reservationsApi"
 import toast from "react-hot-toast"
 import { showNotification } from "@mantine/notifications"
-import { useSelector } from "react-redux"
+import { ITEMS_PER_PAGE } from "../../utils/paginationConfig"
 
 // Thunk para obtener las reservas por sucursal
-export const fetchReservationByBranch = createAsyncThunk("reservations/fetchByBranch", async (branchId, { rejectWithValue }) => {
-  try {
-    const response = await reservationsApi.getReservationByBranch(branchId)
-    return response.data
-  } catch (error) {
-    toast.error(`Error al obtener las reservas: ${error.message}`)
-    return rejectWithValue(error.response.data)
+export const fetchReservationByBranch = createAsyncThunk(
+  "reservations/fetchByBranch",
+  async ({ branchId, limit, page, order, search, search_field }, { rejectWithValue }) => {
+    try {
+      const response = await reservationsApi.getReservationByBranch({
+        branchId,
+        limit,
+        page,
+        order,
+        search,
+        search_field
+      })
+      return { data: response.data, results: response.results, page }
+    } catch (error) {
+      showNotification({
+        title: "Error",
+        message: error,
+        color: "red",
+        duration: 7000
+      })
+      return rejectWithValue(error.response.data)
+    }
   }
-})
+)
 
 // Thunk para obtener las reservas por restaurante
 export const fetchReservationByRestaurant = createAsyncThunk(
   "reservations/fetchByRestaurant",
-  async (restaurantId, { rejectWithValue }) => {
+  async ({ restaurantId, limit, page, order, search, search_field }, { rejectWithValue }) => {
     try {
-      const response = await reservationsApi.getReservationByRestaurant(restaurantId)
-      return response.data
+      const response = await reservationsApi.getReservationByRestaurant({
+        restaurantId,
+        limit,
+        page,
+        order,
+        search,
+        search_field
+      })
+      return { data: response.data, results: response.results, page }
     } catch (error) {
-      toast.error(`Error al obtener las reservas: ${error.message}`)
+      showNotification({
+        title: "Error",
+        message: error,
+        color: "red",
+        duration: 7000
+      })
       return rejectWithValue(error.response.data)
     }
   }
@@ -37,7 +64,12 @@ export const fetchReservationDetails = createAsyncThunk(
       const response = await reservationsApi.getReservationDetails(reservationId)
       return response.data
     } catch (error) {
-      toast.error(`Error al obtener los detalles de la reserva: ${error.message}`)
+      showNotification({
+        title: "Error",
+        message: error,
+        color: "red",
+        duration: 7000
+      })
       return rejectWithValue(error.response.data)
     }
   }
@@ -64,7 +96,12 @@ export const addCommentsToReservation = createAsyncThunk(
         }
       }
     } catch (error) {
-      toast.error(`Error al agregar comentario: ${error.message}`)
+      showNotification({
+        title: "Error",
+        message: error,
+        color: "red",
+        duration: 7000
+      })
       return rejectWithValue(error.response.data)
     }
   }
@@ -84,7 +121,12 @@ export const cancelReservation = createAsyncThunk(
       })
       return response.data
     } catch (error) {
-      toast.error(`Error al cancelar la reserva: ${error.message}`)
+      showNotification({
+        title: "Error",
+        message: error,
+        color: "red",
+        duration: 7000
+      })
       return rejectWithValue(error.response.data)
     }
   }
@@ -104,16 +146,26 @@ export const approveReservation = createAsyncThunk(
       })
       return response.data
     } catch (error) {
-      toast.error(`Error al aprobar la reserva: ${error.message}`)
+      showNotification({
+        title: "Error",
+        message: error,
+        color: "red",
+        duration: 7000
+      })
       return rejectWithValue(error.response.data)
     }
   }
 )
 
 const initialState = {
-  reservations: [],
+  itemsPerPage: ITEMS_PER_PAGE,
+  reservationsPerPage: [],
+  totalReservations: 0,
+  totalPagesCount: 0,
+  currentPage: 1,
+  loadingReservations: false,
+  updatingReservation: false,
   reservationDetails: null,
-  status: "idle", // idle | loading | succeeded | failed
   error: null
 }
 
@@ -123,70 +175,83 @@ const reservationsSlice = createSlice({
   reducers: {
     resetReservationDetails: (state) => {
       state.reservationDetails = null
+    },
+    setPage: (state, action) => {
+      state.currentPage = action.payload
     }
   },
   extraReducers: (builder) => {
     builder
       // Obtener reservas por sucursal
       .addCase(fetchReservationByBranch.pending, (state) => {
-        state.status = "loading"
+        state.loadingReservations = true
       })
       .addCase(fetchReservationByBranch.fulfilled, (state, action) => {
-        state.status = "succeeded"
-        state.reservations = action.payload
+        const { data, results, page } = action.payload
+        state.reservationsPerPage[page] = data
+
+        state.loadingReservations = false
+        state.currentPage = page
+        state.totalReservations = results
+        state.totalPagesCount = Math.ceil(results / action.meta.arg.limit)
       })
       .addCase(fetchReservationByBranch.rejected, (state, action) => {
-        state.status = "failed"
+        state.loadingReservations = false
         state.error = action.payload
       })
 
       // Obtener reservas por restaurante
       .addCase(fetchReservationByRestaurant.pending, (state) => {
-        state.status = "loading"
+        state.loadingReservations = true
       })
       .addCase(fetchReservationByRestaurant.fulfilled, (state, action) => {
-        state.status = "succeeded"
-        state.reservations = action.payload
+        const { data, results, page } = action.payload
+        state.reservationsPerPage[page] = data
+
+        state.loadingReservations = false
+        state.currentPage = page
+        state.totalReservations = results
+        state.totalPagesCount = Math.ceil(results / action.meta.arg.limit)
       })
       .addCase(fetchReservationByRestaurant.rejected, (state, action) => {
-        state.status = "failed"
+        state.loadingReservations = false
         state.error = action.payload
       })
 
       // Obtener detalles de una reserva
       .addCase(fetchReservationDetails.pending, (state) => {
-        state.status = "loading"
+        state.loadingReservations = true
       })
       .addCase(fetchReservationDetails.fulfilled, (state, action) => {
-        state.status = "succeeded"
+        state.loadingReservations = false
         state.reservationDetails = action.payload
       })
       .addCase(fetchReservationDetails.rejected, (state, action) => {
-        state.status = "failed"
+        state.loadingReservations = false
         state.error = action.payload
       })
 
       // Agregar comentarios a una reserva
       .addCase(addCommentsToReservation.pending, (state) => {
-        state.status = "loading"
+        state.updatingReservation = true
       })
       .addCase(addCommentsToReservation.fulfilled, (state, action) => {
-        state.status = "succeeded"
+        state.updatingReservation = false
         if (state.reservationDetails) {
           state.reservationDetails.ReservationComments.unshift(action.payload)
         }
       })
       .addCase(addCommentsToReservation.rejected, (state, action) => {
-        state.status = "failed"
+        state.updatingReservation = false
         state.error = action.payload
       })
 
       // Cancelar una reserva
       .addCase(cancelReservation.pending, (state) => {
-        state.status = "loading"
+        state.updatingReservation = true
       })
       .addCase(cancelReservation.fulfilled, (state, action) => {
-        state.status = "succeeded"
+        state.updatingReservation = false
         state.reservations = state.reservations.map((reservation) =>
           reservation.id === action.payload.id ? action.payload : reservation
         )
@@ -200,16 +265,16 @@ const reservationsSlice = createSlice({
         }
       })
       .addCase(cancelReservation.rejected, (state, action) => {
-        state.status = "failed"
+        state.updatingReservation = false
         state.error = action.payload
       })
 
       // Aprobar una reserva
       .addCase(approveReservation.pending, (state) => {
-        state.status = "loading"
+        state.updatingReservation = true
       })
       .addCase(approveReservation.fulfilled, (state, action) => {
-        state.status = "succeeded"
+        state.updatingReservation = false
         state.reservations = state.reservations.map((reservation) =>
           reservation.id === action.payload.id ? action.payload : reservation
         )
@@ -221,12 +286,12 @@ const reservationsSlice = createSlice({
         }
       })
       .addCase(approveReservation.rejected, (state, action) => {
-        state.status = "failed"
+        state.updatingReservation = false
         state.error = action.payload
       })
   }
 })
 
-export const { resetReservationDetails } = reservationsSlice.actions
+export const { resetReservationDetails, setPage } = reservationsSlice.actions
 
 export default reservationsSlice.reducer

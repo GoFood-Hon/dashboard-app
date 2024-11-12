@@ -1,7 +1,6 @@
 import restaurantsApi from "../../api/restaurantApi"
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 import { ITEMS_PER_PAGE_CARDS } from "../../utils/paginationConfig"
-import toast from "react-hot-toast"
 import { showNotification } from "@mantine/notifications"
 
 const initialState = {
@@ -189,34 +188,30 @@ export const updateRestaurant = createAsyncThunk(
   }
 )
 
-export const updateRestaurantStatus = createAsyncThunk(
-  "restaurant/updateRestaurantStatus",
-  async ({ data, propertyToUpdate = "all" }) => {
-    try {
-      const formData = updateFormData(data, propertyToUpdate)
-      const response = await restaurantsApi.updateRestaurant(formData, data?.id)
+export const updateRestaurantStatus = createAsyncThunk("restaurant/updateRestaurantStatus", async ({ params, restaurantId }) => {
+  try {
+    const response = await restaurantsApi.updateRestaurant(params, restaurantId)
 
-      if (response.error) {
-        showNotification({
-          title: "Error",
-          message: response.message,
-          color: "red",
-          duration: 7000
-        })
-      }
-      return response.data
-    } catch (error) {
+    if (response.error) {
       showNotification({
         title: "Error",
-        message: error,
+        message: response.message,
         color: "red",
         duration: 7000
       })
-
-      throw error
     }
+    return response.data
+  } catch (error) {
+    showNotification({
+      title: "Error",
+      message: error,
+      color: "red",
+      duration: 7000
+    })
+
+    throw error
   }
-)
+})
 
 export const updateRestaurantData = createAsyncThunk(
   "restaurant/updateRestaurantData",
@@ -238,7 +233,7 @@ export const updateRestaurantData = createAsyncThunk(
       if (formDataImage) {
         const imageResponse = await restaurantsApi.addImage(restaurantId, formDataImage)
 
-        if (imageResponse.error) { 
+        if (imageResponse.error) {
           showNotification({
             title: "Error",
             message: imageResponse.message,
@@ -331,18 +326,14 @@ export const restaurantsSlice = createSlice({
         state.updatingRestaurant = true
       })
       .addCase(updateRestaurantData.fulfilled, (state, action) => {
-        const { id, name, socialReason, images } = action.payload
+        // const { id, name, socialReason, images } = action.payload
+        const data = action.payload
         const currentPageRestaurants = state.restaurantsPerPage[state.currentPage]
-        const index = currentPageRestaurants.findIndex((restaurant) => restaurant?.id == id)
+        const index = currentPageRestaurants.findIndex((restaurant) => restaurant?.id == data?.id)
 
         state.updatingRestaurant = false
         if (index !== -1) {
-          currentPageRestaurants[index] = {
-            ...currentPageRestaurants[index],
-            name,
-            socialReason,
-            images: images
-          }
+          currentPageRestaurants[index] = data
         }
       })
       .addCase(updateRestaurantData.rejected, (state) => {

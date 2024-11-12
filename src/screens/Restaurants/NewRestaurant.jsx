@@ -7,14 +7,9 @@ import { GeneralInformationForm } from "./GeneralInformationForm"
 import BackButton from "../Dishes/components/BackButton"
 import { NAVIGATION_ROUTES_SUPER_ADMIN } from "../../routes"
 import { restaurantValidation } from "../../utils/inputRules"
-import restaurantsApi from "../../api/restaurantApi"
 import { convertToDecimal } from "../../utils"
 import { colors } from "../../theme/colors"
 import BookingInformation from "./BookingInformation"
-import { PlanForm } from "../Users/PlanForm"
-import classes from "../../screens/Users/ArticlesCardsGrid.module.css"
-import { showNotification } from "@mantine/notifications"
-import plansApi from "../../api/plansApi"
 import { createRestaurant } from "../../store/features/restaurantSlice"
 import { useDispatch } from "react-redux"
 import { useSelector } from "react-redux"
@@ -22,20 +17,7 @@ import { useSelector } from "react-redux"
 export const NewRestaurant = () => {
   const navigate = useNavigate()
   const dispatch = useDispatch()
-  const [planCancelled, setPlanCancelled] = useState(false)
-  const [newPlan, setNewPlan] = useState({})
-  const [restaurantDetails, setRestaurantDetails] = useState({})
-  const [restaurantId, setRestaurantId] = useState("")
-  const [kitchenId, setKitchenId] = useState(null)
   const isLoading = useSelector((state) => state.restaurants.creatingRestaurant)
-
-  const handlePlanCancel = (cancelled) => {
-    setPlanCancelled(cancelled)
-  }
-
-  const handleSelectNewPlan = (planId) => {
-    setNewPlan(planId)
-  }
 
   const {
     register,
@@ -79,7 +61,7 @@ export const NewRestaurant = () => {
 
     dispatch(createRestaurant({ params: formData, imageParams: formDataImage }))
       .unwrap()
-      .then((result) => {
+      .then(() => {
         navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Restaurants.path)
       })
       .catch((error) => {

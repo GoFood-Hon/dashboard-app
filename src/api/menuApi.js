@@ -38,6 +38,17 @@ const menuApi = {
     return axiosClient.get(url)
   },
 
+  getAllDishesByRestaurant: ({ limit, restaurantId, page, order, search_field, search } = {}) => {
+    const params = { limit, restaurantId, page, order, search_field, search }
+
+    const filteredParams = Object.fromEntries(Object.entries(params).filter(([_, value]) => value !== undefined && value))
+
+    const queryString = new URLSearchParams(filteredParams).toString()
+    const url = `api/v1/restaurant/${restaurantId}/dishes${queryString ? `?${queryString}` : ""}`
+
+    return axiosClient.get(url)
+  },
+
   createMenu: (formData) => axiosClient.post("api/v1/restaurant/categories/create", formData),
 
   addImage: (menuId, params) =>

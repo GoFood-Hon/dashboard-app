@@ -223,6 +223,17 @@ export const ReservationDetails = () => {
                     </Text>
                   </Box>
                   <Avatar src={comment?.AdminUser?.photo} alt={comment?.AdminUser?.name} radius="xl" />
+                  {/* <Avatar
+                    src={image}
+                    alt="it's me"
+                    name={name
+                      ?.split(" ")
+                      .filter((_, i, arr) => i === 0 || i === arr.length - 1)
+                      .map((palabra) => palabra.charAt(0))
+                      .join("")
+                      .toUpperCase()}
+                    color={colors.main_app_color}
+                  /> */}
                 </Group>
                 <Text pr={54} pt="sm" size="sm" ta="right">
                   {comment?.comment}

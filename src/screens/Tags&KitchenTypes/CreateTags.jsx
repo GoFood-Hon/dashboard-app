@@ -59,31 +59,33 @@ export const CreateTags = () => {
 
       <Group grow>
         <Flex direction="row" wrap="wrap" gap="sm" justify={tags && tags.length > 0 ? "flex-start" : "center"} align="center">
-          {tags && tags.length > 0 ? (
-            tags.map((tag) => (
-              <Pill
-                className={classes.tag}
-                size="md"
-                onRemove={() => {
-                  setTagId(tag.id)
-                  open()
-                }}
-                key={tag.id}
-                withRemoveButton>
-                {tag?.name}
-              </Pill>
-            ))
-          ) : (
-            <Text color="dimmed" size="sm" align="center">
-              Los tags creados se mostrarán aquí
-            </Text>
-          )}
+          <Pill.Group>
+            {tags && tags.length > 0 ? (
+              tags.map((tag) => (
+                <Pill
+                  className={classes.tag}
+                  size="md"
+                  onRemove={() => {
+                    setTagId(tag.id)
+                    open()
+                  }}
+                  key={tag.id}
+                  withRemoveButton>
+                  {tag?.name}
+                </Pill>
+              ))
+            ) : (
+              <Text color="dimmed" size="sm" align="center">
+                Los tags creados se mostrarán aquí
+              </Text>
+            )}
+          </Pill.Group>
         </Flex>
       </Group>
 
       <Modal
         opened={opened}
-        radius='md'
+        radius="md"
         onClose={close}
         withCloseButton={false}
         closeOnEscape
@@ -109,7 +111,6 @@ export const CreateTags = () => {
           </Button>
         </Group>
       </Modal>
-      
     </Paper>
   )
 }

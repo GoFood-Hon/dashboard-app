@@ -25,7 +25,6 @@ import { NAVIGATION_ROUTES_SUPER_ADMIN } from "../../routes"
 import BackButton from "../Dishes/components/BackButton"
 import { IconCheck } from "@tabler/icons-react"
 import { IconX } from "@tabler/icons-react"
-import { useWindowScroll } from "@mantine/hooks"
 
 export default function RestaurantsScreen() {
   const navigate = useNavigate()
@@ -65,11 +64,11 @@ export default function RestaurantsScreen() {
   }
 
   const handleEnableSelected = async (id) => {
-    dispatch(updateRestaurantStatus({ data: { id, isActive: true }, propertyToUpdate: "isActive" }))
+    dispatch(updateRestaurantStatus({ params: { isActive: true }, restaurantId: id }))
   }
 
   const handleDisableSelected = async (id) => {
-    dispatch(updateRestaurantStatus({ data: { id, isActive: false }, propertyToUpdate: "isActive" }))
+    dispatch(updateRestaurantStatus({ params: { isActive: false }, restaurantId: id }))
   }
 
   const handleClick = (id) => {

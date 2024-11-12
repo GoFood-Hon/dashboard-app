@@ -1,41 +1,28 @@
 import React, { useEffect } from "react"
-import { useNavigate } from "react-router-dom"
-// import Button from "../../components/Button"
-import { NAVIGATION_ROUTES_SUPER_ADMIN } from "../../routes"
 import MenuTable from "../Menu/MenuTable"
-import toast from "react-hot-toast"
-import userApi from "../../api/userApi"
 import { useDispatch, useSelector } from "react-redux"
-import { setCurrentPage, fetchAdminUsers } from "../../store/features/userSlice"
-import { Paper, Button, Text, Title, Group, Flex } from "@mantine/core"
-import { colors } from "../../theme/colors"
-import { fetchReservationByBranch, fetchReservationByRestaurant } from "../../store/features/reservationsSlice"
-import { name } from "dayjs/locale/es"
+import { Paper, Text, Title, Group, Flex } from "@mantine/core"
+import { fetchReservationByBranch, fetchReservationByRestaurant, setPage } from "../../store/features/reservationsSlice"
 
 export const Reservations = () => {
-  const navigate = useNavigate()
   const dispatch = useDispatch()
-  const reservations = useSelector((state) => state.reservations.reservations)
-  const status = useSelector((state) => state.reservations.status)
-
-  const handleNewItem = () => {
-    navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Users.NewUser.path)
-  }
-
   const user = useSelector((state) => state.user.value)
-  const limit = useSelector((state) => state.user.itemsPerPage)
-  const page = useSelector((state) => state.user.currentPage)
-  const adminUsersByPage = useSelector((state) => state.user.adminUsersByPage)
-  const totalAdminUsers = useSelector((state) => state.user.totalAdminUsers)
-  const totalPageCount = useSelector((state) => state.user.totalPagesCount)
-  const adminUsers = adminUsersByPage[page] || []
-  const loadingUsers = useSelector((state) => state.user.loadingUsers)
+
+  const limit = useSelector((state) => state.reservations.itemsPerPage)
+  const page = useSelector((state) => state.reservations.currentPage)
+  const reservationsPerPage = useSelector((state) => state.reservations.reservationsPerPage)
+  const totalReservations = useSelector((state) => state.reservations.totalReservations)
+  const totalPageCount = useSelector((state) => state.reservations.totalPagesCount)
+  const reservationsList = reservationsPerPage[page] || []
+  const loadingReservations = useSelector((state) => state.reservations.loadingReservations)
 
   useEffect(() => {
-    user?.role === "admin-restaurant"
-      ? dispatch(fetchReservationByRestaurant(user?.restaurantId))
-      : dispatch(fetchReservationByBranch(user?.sucursalId))
-  }, [dispatch, user?.restaurantId, user?.sucursalId])
+    if (!reservationsPerPage[page]) {
+      user?.role === "admin-restaurant"
+        ? dispatch(fetchReservationByRestaurant({ restaurantId: user?.restaurantId, limit, page, order: "DESC" }))
+        : dispatch(fetchReservationByBranch({ branchId: user?.sucursalId, limit, page, order: "DESC" }))
+    }
+  }, [dispatch, limit, page, reservationsPerPage])
 
   return (
     <>
@@ -47,10 +34,11 @@ export const Reservations = () => {
           <Flex align="center" gap="xs">
             <Flex align="center" gap={5}>
               <Text fw={700}>
-                {/* <Flex gap={5}>
-                  {page === 1 ? 1 : (page - 1) * limit + 1}-{page === 1 ? limit : Math.min(page * limit, totalAdminUsers)}{" "}
-                  <Text>de</Text>3 reservaciones
-                </Flex> */}
+                <Flex gap={5}>
+                  {page === 1 ? 1 : (page - 1) * limit + 1}-{page === 1 ? limit : Math.min(page * limit, totalReservations)}{" "}
+                  <Text>de</Text>
+                  {totalReservations} reservaciones
+                </Flex>
               </Text>
             </Flex>
           </Flex>
@@ -59,16 +47,16 @@ export const Reservations = () => {
       <section>
         <Paper withBorder p="md" radius="md">
           <MenuTable
-            items={reservations.map((reservation) => ({
+            items={reservationsList.map((reservation) => ({
               ...reservation,
-              name: reservation?.Sucursal?.name
+              name: reservation.Sucursal.name
             }))}
             //handleDisableSelected={handleDisableSelected}
             screenType="reservationsScreen"
-            totalItems={1}
-            currentPage={1}
-            loadingData={loadingUsers}
-            setPage={(newPage) => dispatch(setCurrentPage(newPage))}
+            totalItems={totalPageCount}
+            currentPage={page}
+            loadingData={loadingReservations}
+            setPage={(newPage) => dispatch(setPage(newPage))}
           />
         </Paper>
       </section>

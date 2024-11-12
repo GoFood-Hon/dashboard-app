@@ -49,7 +49,7 @@ export const CreateKitchenTypes = () => {
         <Grid.Col span={12}>
           <Flex align="flex-start" style={{ width: "100%" }}>
             <Input
-              placeholder="Ingresa el tipo de cocina"
+              placeholder="Ingresa el nombre de la especialidad"
               value={value}
               onChange={(event) => setValue(event.currentTarget.value)}
               rightSectionPointerEvents="all"
@@ -68,9 +68,7 @@ export const CreateKitchenTypes = () => {
           </Flex>
         </Grid.Col>
       </Grid>
-
       <Space h={20} />
-
       {kitchenTypes && kitchenTypes.length > 0 ? (
         <SimpleGrid cols={{ base: 2, sm: 3, md: 4, lg: 5 }}>
           {kitchenTypes.map((type) => (
@@ -102,7 +100,7 @@ export const CreateKitchenTypes = () => {
         onClose={close}
         withCloseButton={false}
         closeOnEscape
-        radius='md'
+        radius="md"
         size="md"
         overlayProps={{
           backgroundOpacity: 0.55,

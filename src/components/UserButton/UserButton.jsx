@@ -1,5 +1,4 @@
-import { Avatar, Flex, Text, UnstyledButton } from "@mantine/core"
-import classes from "./UserButton.module.css"
+import { Avatar, Flex, Text } from "@mantine/core"
 import { colors } from "../../theme/colors"
 
 export function UserButton({ image, name, email }) {
@@ -14,13 +13,17 @@ export function UserButton({ image, name, email }) {
           {email}
         </Text>
       </div>
-      <Avatar color={colors.main_app_color} radius="xl">
-        {name
+      <Avatar
+        src={image}
+        alt="it's me"
+        name={name
           ?.split(" ")
           .filter((_, i, arr) => i === 0 || i === arr.length - 1)
           .map((palabra) => palabra.charAt(0))
-          .join("")}
-      </Avatar>
+          .join("")
+          .toUpperCase()}
+        color={colors.main_app_color}
+      />
     </Flex>
   )
 }

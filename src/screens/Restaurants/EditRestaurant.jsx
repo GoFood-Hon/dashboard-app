@@ -26,14 +26,18 @@ export const EditRestaurant = () => {
   const [planCancelled, setPlanCancelled] = useState(false)
   const [newPlan, setNewPlan] = useState({})
   const isLoading = useSelector((state) => state.restaurants.updatingRestaurant)
+  const page = useSelector((state) => state.restaurants.currentPage)
+  const restaurantsPerPage = useSelector((state) => state.restaurants.restaurantsPerPage)
+  const restaurantsList = restaurantsPerPage[page] || []
+  const restaurantToEdit = restaurantsList[restaurantsList.findIndex((restaurant) => restaurant?.id === restaurantId)]
 
-  useEffect(() => {
-    ;(async () => {
-      const response = await restaurantsApi.getRestaurant(restaurantId)
-      const details = response?.data
-      setRestaurantDetails(details)
-    })()
-  }, [])
+  // useEffect(() => {
+  //   ;(async () => {
+  //     const response = await restaurantsApi.getRestaurant(restaurantId)
+  //     const details = response?.data
+  //     setRestaurantDetails(details)
+  //   })()
+  // }, [])
 
   const handlePlanCancel = (cancelled) => {
     setPlanCancelled(cancelled)
@@ -51,7 +55,7 @@ export const EditRestaurant = () => {
     reset,
     watch,
     formState: { errors }
-  } = useForm({ defaultValues: restaurantDetails || {} })
+  } = useForm({ defaultValues: restaurantToEdit || {} })
 
   const imageLocation = watch("images[0].location")
   const [isDataCleared, setIsDataCleared] = useState(false)
@@ -237,12 +241,12 @@ export const EditRestaurant = () => {
     }
   }
 
-  useEffect(() => {
-    if (Object.keys(restaurantDetails).length > 0) {
-      reset(restaurantDetails)
-    }
-    window.scrollTo(0, 0)
-  }, [restaurantDetails, reset])
+  // useEffect(() => {
+  //   if (Object.keys(restaurantDetails).length > 0) {
+  //     reset(restaurantDetails)
+  //   }
+  //   window.scrollTo(0, 0)
+  // }, [restaurantDetails, reset])
 
   const accordionStructure = [
     {
@@ -283,7 +287,7 @@ export const EditRestaurant = () => {
           setNewPlan={setNewPlan}
           classes={classes}
           colors={colors}
-          restaurantDetails={restaurantDetails}
+          restaurantDetails={restaurantToEdit}
           handlePlanCancel={handlePlanCancel}
           handleSelectNewPlan={handleSelectNewPlan}
           restaurantId={restaurantId}
@@ -312,7 +316,7 @@ export const EditRestaurant = () => {
     <>
       <section>
         <div className="flex flex-row justify-between items-center pb-4">
-          <BackButton title={restaurantDetails?.name} show />
+          <BackButton title={restaurantToEdit?.name} show />
         </div>
       </section>
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -321,7 +325,7 @@ export const EditRestaurant = () => {
             variant="separated"
             multiple
             defaultValue={["Información general", "Datos de reservación", "Selección del plan"]}>
-            {restaurantDetails?.Subscription ? items : items.slice(0, 2)}
+            {restaurantToEdit?.Subscription ? items : items.slice(0, 2)}
           </Accordion>
         </section>
         <section className="mt-2">

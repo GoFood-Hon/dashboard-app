@@ -87,7 +87,7 @@ export const NAVIGATION_ROUTES_SUPER_ADMIN_TWO = [
         link: "/restaurantes"
       },
       {
-        label: "Tags y tipos de cocina",
+        label: "Especialidades de cocina y tags",
         link: "/tipos-cocina-tags"
       }
     ]

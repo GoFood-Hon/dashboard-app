@@ -3,6 +3,7 @@ import { ITEMS_PER_PAGE } from "../../utils/paginationConfig"
 import toast from "react-hot-toast"
 import menuApi from "../../api/menuApi"
 import { showNotification } from "@mantine/notifications"
+import dishesApi from "../../api/dishesApi"
 
 const initialState = {
   menus: [],
@@ -15,6 +16,13 @@ const initialState = {
   loadingMenus: false,
   creatimgMenus: false,
   updatingMenus: false,
+  //DISHES STATE
+  dishes: [],
+  currentDishPage: 1,
+  dishesPerPage: ITEMS_PER_PAGE,
+  hasMore: true,
+  dishesLoading: false,
+  updatingDishes: false,
   filters: {
     startDate: null,
     endDate: null,
@@ -60,6 +68,51 @@ export const fetchMenus = createAsyncThunk(
         color: "red",
         duration: 7000
       })
+    }
+  }
+)
+
+export const getAllDishes = createAsyncThunk(
+  "menus/getDishes",
+  async ({ limit, restaurantId, page, search_field, search }, { rejectWithValue }) => {
+    try {
+      const response = await dishesApi.getAllDishesByRestaurant({
+        limit,
+        restaurantId,
+        page,
+        order: "DESC",
+        search_field,
+        search
+      })
+
+      if (response.error) {
+        showNotification({
+          title: "Error",
+          message: response.message,
+          color: "red",
+          duration: 7000
+        })
+        return rejectWithValue(response.error)
+      }
+
+      return {
+        data: response.data.map((item) => ({
+          id: item.id,
+          name: item.name,
+          images: item.images,
+          price: item.price
+        })),
+        results: response.results,
+        page
+      }
+    } catch (error) {
+      showNotification({
+        title: "Error",
+        message: error.message || error,
+        color: "red",
+        duration: 7000
+      })
+      return rejectWithValue(error.message)
     }
   }
 )
@@ -174,7 +227,7 @@ export const updateMenu = createAsyncThunk(
     try {
       const formData = updateMenuFormData(data, propertyToUpdate)
       const response = await menuApi.updateMenu(formData, data.id)
-      let images = []
+      let menuData = response.data
 
       if (response.error) {
         showNotification({
@@ -188,7 +241,6 @@ export const updateMenu = createAsyncThunk(
       } else {
         if (data?.files) {
           const imageResponse = await uploadMenuImage(data?.id, data?.files?.[0])
-          images = imageResponse.data
           if (imageResponse.error) {
             showNotification({
               title: "Error",
@@ -199,6 +251,7 @@ export const updateMenu = createAsyncThunk(
 
             return rejectWithValue(imageResponse.error)
           }
+          menuData = { ...menuData, images: imageResponse.data.imagesa }
         }
 
         if (data.dishes) {
@@ -222,7 +275,7 @@ export const updateMenu = createAsyncThunk(
           duration: 7000
         })
 
-        return { ...response.data, images }
+        return menuData
       }
     } catch (error) {
       dispatch(setError("Error updating menu"))
@@ -280,6 +333,9 @@ export const menusSlice = createSlice({
     setPage: (state, action) => {
       state.currentPage = action.payload
     },
+    setCurrentDishPage: (state, action) => {
+      state.currentDishPage = action.payload
+    },
     setMenus: (state, action) => {
       state.menus = action.payload
       state.status = "succeeded"
@@ -311,6 +367,34 @@ export const menusSlice = createSlice({
         state.status = "failed"
         state.error = action.error.message
       })
+      .addCase(getAllDishes.pending, (state, action) => {
+        const { page } = action.meta.arg
+
+        if (page === 1) {
+          state.dishesLoading = true
+        } else {
+          state.updatingDishes = true
+        }
+      })
+      .addCase(getAllDishes.fulfilled, (state, action) => {
+        const { data, results, page } = action.payload
+
+        if (page === 1) {
+          state.dishes = data
+        } else {
+          state.dishes = [...state.dishes, ...data]
+        }
+
+        state.currentDishPage = page
+        state.hasMore = state.dishes.length < results
+        state.dishesLoading = false
+        state.updatingDishes = false
+      })
+      .addCase(getAllDishes.rejected, (state, action) => {
+        state.dishesLoading = false
+        state.updatingDishes = false
+        state.error = action.error.message
+      })
       .addCase(updateMenuStatus.fulfilled, (state, action) => {
         const { id, isActive } = action.payload
         const currentPageMenus = state.menusPerPage[state.currentPage]
@@ -326,7 +410,7 @@ export const menusSlice = createSlice({
       .addCase(updateMenu.fulfilled, (state, action) => {
         const { id, name, images } = action.payload
         const currentPageMenus = state.menusPerPage[state.currentPage]
-        const index = currentPageMenus.findIndex((menu) => menu?.id === id)
+        const index = currentPageMenus.findIndex((menu) => menu.id === id)
 
         if (index !== -1) {
           currentPageMenus[index] = {
@@ -336,6 +420,7 @@ export const menusSlice = createSlice({
           }
         }
         state.updatingMenus = false
+        console.log(currentPageMenus[index])
       })
       .addCase(updateMenu.rejected, (state) => {
         state.updatingMenus = false
@@ -343,7 +428,7 @@ export const menusSlice = createSlice({
   }
 })
 
-export const { setMenus, setError, setPage, setFilters, setLoading } = menusSlice.actions
+export const { setMenus, setError, setPage, setFilters, setLoading, setCurrentDishPage } = menusSlice.actions
 
 export const selectAllMenus = (state) => state.menus.menus
 

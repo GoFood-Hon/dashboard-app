@@ -7,14 +7,14 @@ import { CreateKitchenTypes } from "./CreateKitchenTypes"
 export const KitchenTypesAndTags = () => {
   const accordionStructure = [
     {
+      title: "Lista de especialidades",
+      requirement: "Opcional",
+      form: <CreateKitchenTypes />
+    },
+    {
       title: "Lista de Tags",
       requirement: "Opcional",
       form: <CreateTags />
-    },
-    {
-      title: "Tipos de cocina",
-      requirement: "Opcional",
-      form: <CreateKitchenTypes />
     }
   ]
 
@@ -38,11 +38,11 @@ export const KitchenTypesAndTags = () => {
     <>
       <section>
         <div className="flex flex-row justify-between items-center pb-4 flex-wrap xs:gap-3">
-          <BackButton title="Tags / Tipos de cocina" />
+          <BackButton title="Especialidad de cocina / Tags" />
         </div>
       </section>
       <section>
-        <Accordion variant="separated" multiple defaultValue={["Lista de Tags", "Tipos de cocina"]}>
+        <Accordion variant="separated" multiple defaultValue={["Lista de Tags", "Lista de especialidades"]}>
           {items}
         </Accordion>
       </section>

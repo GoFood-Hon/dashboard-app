@@ -9,7 +9,7 @@ import GeneralInformationForm from "./GeneralInformationForm"
 import ComplementsForm from "../Dishes/ComplementsForm"
 import dishesApi from "../../api/dishesApi"
 import { newMenuValidation } from "../../utils/inputRules"
-import { createMenu } from "../../store/features/menuSlice"
+import { createMenu, getAllDishes } from "../../store/features/menuSlice"
 import BackButton from "../Dishes/components/BackButton"
 import { NAVIGATION_ROUTES_RES_ADMIN } from "../../routes"
 import { colors } from "../../theme/colors"
@@ -20,6 +20,19 @@ export default function NewMenu() {
   const restaurant = useSelector((state) => state.restaurants.restaurants)
   const user = useSelector((state) => state.user.value)
   const [isLoading, setIsLoading] = useState(false)
+  const { dishes, currentDishPage, hasMore, dishesLoading, dishesPerPage } = useSelector((state) => state.menus)
+
+  useEffect(() => {
+    if (currentDishPage === 1 || dishes.length === 0 || currentDishPage > 1) {
+      dispatch(
+        getAllDishes({
+          limit: dishesPerPage,
+          restaurantId: user.restaurantId,
+          page: currentDishPage
+        })
+      )
+    }
+  }, [dispatch, currentDishPage, dishesPerPage, user.restaurantId])
 
   const {
     register,
@@ -33,26 +46,26 @@ export default function NewMenu() {
   })
 
   const [isDataCleared, setIsDataCleared] = useState(false)
-  const [dishes, setDishes] = useState([])
+  //const [dishes, setDishes] = useState([])
 
-  useEffect(() => {
-    async function getDishes() {
-      try {
-        const response = await dishesApi.getAllDishesByRestaurant({
-          restaurantId: user.restaurantId
-        })
+  // useEffect(() => {
+  //   async function getDishes() {
+  //     try {
+  //       const response = await dishesApi.getAllDishesByRestaurant({
+  //         restaurantId: user.restaurantId
+  //       })
 
-        const activeDishes = response.data.filter((dish) => dish.isActive)
-        setDishes(activeDishes)
-        return response
-      } catch (error) {
-        toast.error(`Hubo un error obteniendo los platos, ${error}`)
-        throw error
-      }
-    }
+  //       const activeDishes = response.data.filter((dish) => dish.isActive)
+  //       setDishes(activeDishes)
+  //       return response
+  //     } catch (error) {
+  //       toast.error(`Hubo un error obteniendo los platos, ${error}`)
+  //       throw error
+  //     }
+  //   }
 
-    getDishes()
-  }, [restaurant])
+  //   getDishes()
+  // }, [restaurant])
 
   const accordionStructure = [
     {
@@ -71,11 +84,15 @@ export default function NewMenu() {
     {
       title: "Platillos",
       requirement: "Obligatorio",
-      form: (
+      form: dishesLoading ? (
+        <div>Cargando platillos...</div>
+      ) : (
         <ComplementsForm
           setValue={setValue}
+          loading={dishesLoading}
+          moreData={hasMore}
           isDataCleared={isDataCleared}
-          defaultMessage="Por favor seleccione platillos para este menú"
+          defaultMessage="Los platillos seleccionados aparecerán aquí"
           itemsAvailableLabel="Platillos disponibles"
           data={dishes}
           name={"dishes"}

@@ -45,7 +45,7 @@ export function AdminHeader({ burger }) {
         />
         {user.role !== APP_ROLES.superAdmin ? (
           <Image
-            src={imgUrl}
+            src={user?.Restaurant?.images?.[0]?.location}
             h={45}
             w={45}
             radius={"md"}

@@ -7,7 +7,7 @@ import BackButton from "../Dishes/components/BackButton"
 import GeneralInformationForm from "./GeneralInformationForm"
 import ComplementsForm from "../Dishes/ComplementsForm"
 import dishesApi from "../../api/dishesApi"
-import { updateMenu } from "../../store/features/menuSlice"
+import { getAllDishes, updateMenu } from "../../store/features/menuSlice"
 import menuApi from "../../api/menuApi"
 import { NAVIGATION_ROUTES_RES_ADMIN } from "../../routes"
 import { showNotification } from "@mantine/notifications"
@@ -21,8 +21,21 @@ export default function EditMenuScreen() {
   const [menuDetails, setMenuDetails] = useState({})
   const restaurant = useSelector((state) => state?.restaurant?.value)
   const [isDataCleared, setIsDataCleared] = useState(false)
-  const [dishes, setDishes] = useState([])
-  const [isLoading, setIsLoading] = useState(false)
+  //const [dishes, setDishes] = useState([])
+  const isLoading = useSelector((state) => state.menus.updatingMenus)
+  const { dishes, currentDishPage, hasMore, dishesLoading, dishesPerPage } = useSelector((state) => state.menus)
+
+  useEffect(() => {
+    if (currentDishPage === 1 || dishes.length === 0 || currentDishPage > 1) {
+      dispatch(
+        getAllDishes({
+          limit: dishesPerPage,
+          restaurantId: user.restaurantId,
+          page: currentDishPage
+        })
+      )
+    }
+  }, [dispatch, currentDishPage, dishesPerPage, user.restaurantId])
 
   const {
     register,
@@ -38,27 +51,27 @@ export default function EditMenuScreen() {
 
   const imageLocation = watch("images[0].location")
 
-  useEffect(() => {
-    async function getDishes() {
-      try {
-        const response = await dishesApi.getAllDishesByRestaurant({
-          restaurantId: user.restaurantId
-        })
-        setDishes(response.data)
+  // useEffect(() => {
+  //   async function getDishes() {
+  //     try {
+  //       const response = await dishesApi.getAllDishesByRestaurant({
+  //         restaurantId: user.restaurantId
+  //       })
+  //       setDishes(response.data)
 
-        return response
-      } catch (error) {
-        showNotification({
-          title: "Error",
-          message: error,
-          color: "red",
-          duration: 7000
-        })
-        throw error
-      }
-    }
-    getDishes()
-  }, [])
+  //       return response
+  //     } catch (error) {
+  //       showNotification({
+  //         title: "Error",
+  //         message: error,
+  //         color: "red",
+  //         duration: 7000
+  //       })
+  //       throw error
+  //     }
+  //   }
+  //   getDishes()
+  // }, [])
 
   useEffect(() => {
     const fetchMenu = async () => {
@@ -106,9 +119,11 @@ export default function EditMenuScreen() {
       form: (
         <ComplementsForm
           setValue={setValue}
-          isDataCleared={isDataCleared}
+          loading={dishesLoading}
+          moreData={hasMore}
           selectedDishes={menuDetails?.Dishes}
-          defaultMessage="Por favor seleccione platillos para este menú"
+          isDataCleared={isDataCleared}
+          defaultMessage="Los platillos seleccionados aparecerán aquí"
           itemsAvailableLabel="Platillos disponibles"
           data={dishes}
           name={"dishes"}

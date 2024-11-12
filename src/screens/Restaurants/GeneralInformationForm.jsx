@@ -8,6 +8,7 @@ import { bytesToMB } from "../../utils"
 import { useDispatch, useSelector } from "react-redux"
 import { fetchAllKitchenTypes } from "../../store/features/kitchenAndTagsSlice"
 import { Controller } from "react-hook-form"
+import InputCheckbox from "../../components/Form/InputCheckbox"
 
 export const GeneralInformationForm = ({ register, control, errors, setValue, isDataCleared, image, watch }) => {
   const dispatch = useDispatch()
@@ -21,16 +22,8 @@ export const GeneralInformationForm = ({ register, control, errors, setValue, is
     dispatch(fetchAllKitchenTypes())
   }, [dispatch])
 
-  useEffect(() => {
-    if (isFreeDelivery) {
-      setValue("shippingPrice", null)
-    } else {
-      setValue("shippingPrice", "")
-    }
-  }, [isFreeDelivery, setValue])
-
   const handleHasFreeDelivery = () => {
-    setValue("shippingFree", !isFreeDelivery)
+    //setValue("shippingFree", !isFreeDelivery)
   }
 
   const handleDrop = (acceptedFiles) => {
@@ -69,7 +62,7 @@ export const GeneralInformationForm = ({ register, control, errors, setValue, is
     <Grid>
       <Grid.Col span={{ base: 12, md: 8, lg: 8 }}>
         <Paper withBorder radius="md" p="xs">
-          <Grid gutter='md'>
+          <Grid gutter="md">
             <Grid.Col span={{ base: 12, md: 6 }}>
               <InputField label="Nombre del restaurante" name="name" register={register} errors={errors} className="text-black" />
             </Grid.Col>
@@ -119,19 +112,11 @@ export const GeneralInformationForm = ({ register, control, errors, setValue, is
               />
             </Grid.Col>
             <Grid.Col span={{ base: 12, md: 6 }}>
-              <Checkbox
-                mt={"md"}
-                labelPosition="left"
-                label={<div className="text-sm font-bold leading-snug">¿Cuenta con delivery gratis?</div>}
-                color={colors.main_app_color}
-                checked={isFreeDelivery}
-                size="sm"
-                onChange={handleHasFreeDelivery}
-              />
+              <InputCheckbox label="¿Cuenta con delivery gratis?" name="shippingFree" register={register} />
             </Grid.Col>
 
             {isFreeDelivery ? null : (
-              <Grid.Col span={{ base: 6 }}>
+              <Grid.Col span={{ base: 12, md: 6 }}>
                 <InputField label="Precio del envío" name="shippingPrice" register={register} errors={errors} />
               </Grid.Col>
             )}

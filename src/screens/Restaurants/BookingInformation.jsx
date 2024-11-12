@@ -9,7 +9,7 @@ const BookingInformation = ({ register, errors }) => {
       </Grid.Col>
       <Grid.Col span={{ base: 12, md: 6, lg: 3 }}>
         <InputField
-          label="Horas antes de la reservación para cancelarla"
+          label="Horas de anticipo para reservación"
           type="number"
           name="hoursBeforeCancellation"
           register={register}

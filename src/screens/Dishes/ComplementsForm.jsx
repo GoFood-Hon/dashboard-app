@@ -1,12 +1,30 @@
 import React, { useEffect, useState } from "react"
-import { Grid, Image, Text, ScrollArea, Paper } from "@mantine/core"
+import {
+  Grid,
+  Image,
+  Text,
+  ScrollArea,
+  Paper,
+  Box,
+  useMantineTheme,
+  rem,
+  TextInput,
+  ActionIcon,
+  Button,
+  Loader
+} from "@mantine/core"
 import { useSelector } from "react-redux"
 import { getFormattedHNL } from "../../utils"
 import { SortableList } from "./components"
 import LoadingCircle from "../../components/LoadingCircle"
 import { selectComplementsError, selectComplementsStatus } from "../../store/features/complementsSlice"
-import { TrashIcon } from "../../assets/icons/TrashIcon"
 import { IconX } from "@tabler/icons-react"
+import { IconArrowRight } from "@tabler/icons-react"
+import { IconSearch } from "@tabler/icons-react"
+import { colors } from "../../theme/colors"
+import { useDebouncedState } from "@mantine/hooks"
+import { useDispatch } from "react-redux"
+import { setCurrentDishPage } from "../../store/features/menuSlice"
 
 const AvailableComplementsCard = ({ item, onItemClick }) => {
   const { images, name, price } = item
@@ -15,8 +33,8 @@ const AvailableComplementsCard = ({ item, onItemClick }) => {
   }
 
   return (
-    <Paper withBorder radius='md' onClick={handleItemClick}>
-      <div className="w-full p-3 my-3 rounded-lg flex-row justify-between items-center flex text-sm">
+    <Paper withBorder radius="md" onClick={handleItemClick}>
+      <div className="w-full p-3 my-3 rounded-lg flex-row justify-between items-center flex text-sm cursor-pointer">
         <div className="flex flex-row items-center w-1/2">
           <Image
             h={"40"}
@@ -75,6 +93,8 @@ export default function ComplementsForm({
   setValue,
   isDataCleared,
   defaultMessage,
+  loading,
+  moreData,
   itemsAvailableLabel,
   data,
   name,
@@ -82,9 +102,12 @@ export default function ComplementsForm({
 }) {
   const status = useSelector(selectComplementsStatus)
   const error = useSelector(selectComplementsError)
-
+  const theme = useMantineTheme()
   const [addedComplements, setAddedComplements] = useState([])
   const [extras, setExtras] = useState([])
+  const [search, setSearch] = useDebouncedState("", 300)
+  const { currentDishPage, updatingDishes } = useSelector((state) => state.menus)
+  const dispatch = useDispatch()
 
   useEffect(() => {
     if (selectedDishes && Array.isArray(selectedDishes)) {
@@ -127,7 +150,51 @@ export default function ComplementsForm({
 
   return (
     <Grid>
-      <Grid.Col span={{ base: 12, md: 7 }}>
+      <Grid.Col span={{ base: 12, md: 6 }}>
+        <Paper withBorder radius="md" p="md" className="w-full h-full">
+          {loading ? (
+            <div className="h-[calc(100vh-350px)] w-full flex justify-center items-center">
+              <Loader color={colors.main_app_color} />
+            </div>
+          ) : (
+            <>
+              <Text mb='xs'>Platillos disponibles</Text>
+              <ScrollArea w={"100%"} h={350}>
+                <div className="w-full space-y-2">
+                  {extras.length > 0 ? (
+                    extras?.map((item, key) => (
+                      <AvailableComplementsCard
+                        item={item}
+                        key={key}
+                        onItemClick={handleComplementClick}
+                        handleRemoveComplement={handleRemoveComplement}
+                      />
+                    ))
+                  ) : (
+                    <Text size="sm" c="dimmed" inline mt={50} className="text-center leading-10">
+                      No hay platillos para mostrar
+                    </Text>
+                  )}
+                  {/* Mostrar el botón "Cargar más" solo si hasMore es true */}
+                  {moreData && (
+                    <div className="w-full flex justify-center mt-4">
+                      <Button
+                        loading={updatingDishes}
+                        color={colors.main_app_color}
+                        onClick={() => {
+                          dispatch(setCurrentDishPage(currentDishPage + 1))
+                        }}>
+                        Cargar más
+                      </Button>
+                    </div>
+                  )}
+                </div>
+              </ScrollArea>
+            </>
+          )}
+        </Paper>
+      </Grid.Col>
+      <Grid.Col span={{ base: 12, md: 6 }}>
         <Paper withBorder p="md" radius="md" className="w-full h-full">
           {addedComplements.length > 0 ? (
             <ScrollArea w={"100%"} h={350}>
@@ -143,37 +210,8 @@ export default function ComplementsForm({
               />
             </ScrollArea>
           ) : (
-            <div className="flex flex-col w-full h-full text-xl justify-center item-center text-center">{defaultMessage}</div>
+            <div className="flex flex-col w-full h-full text-md justify-center item-center text-center">{defaultMessage}</div>
           )}
-        </Paper>
-      </Grid.Col>
-      <Grid.Col span={{ base: 12, md: 5 }}>
-        <Paper withBorder radius="md" p="md" className="w-full h-full">
-          <span className="text-sm font-semibold ">{itemsAvailableLabel}</span>
-          <ScrollArea w={"100%"} h={350}>
-            <div className="w-full mt-2 space-y-2">
-              {status === "loading" && (
-                <div className="h-[calc(100vh-350px)] w-full flex justify-center items-center">
-                  <LoadingCircle />
-                </div>
-              )}
-              {status === "error" && <div>Error: {error}</div>}
-              {extras.length > 0 ? (
-                extras?.map((item, key) => (
-                  <AvailableComplementsCard
-                    item={item}
-                    key={key}
-                    onItemClick={handleComplementClick}
-                    handleRemoveComplement={handleRemoveComplement}
-                  />
-                ))
-              ) : (
-                <Text size="sm" c="dimmed" inline mt={50} className="text-center leading-10">
-                  No hay platillos para mostrar
-                </Text>
-              )}
-            </div>
-          </ScrollArea>
         </Paper>
       </Grid.Col>
     </Grid>

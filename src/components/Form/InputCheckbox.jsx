@@ -4,7 +4,7 @@ import { colors } from "../../theme/colors"
 
 export default function InputCheckbox({ label, name, register }) {
   return (
-    <Group className="flex items-center">
+    <Group>
       <Checkbox
         {...register(name)}
         mt={"md"}
