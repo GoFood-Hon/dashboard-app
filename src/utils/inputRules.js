@@ -82,6 +82,13 @@ export const newMenuValidation = Yup.object().shape({
   files: Yup.array().required("Imagen es requerida").min(1, "Debe seleccionar al menos una imagen")
 })
 
+export const newCollectionValidation = Yup.object().shape({
+  name: Yup.string().required("Nombre del menú es requerido."),
+  description: Yup.string().required("Descripción del menú es requerido."),
+  type: Yup.string().required("Debes seleccionar el tipo de colección"),
+  files: Yup.array().required("Imagen es requerida").min(1, "Debe seleccionar al menos una imagen")
+})
+
 export const newBranchValidation = Yup.object().shape({
   name: Yup.string().required("Nombre de la sucursal es requerido."),
   address: Yup.string().required("Dirección es requerido."),

@@ -1,8 +1,9 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit"
 import collectionsApi from "../../api/collectionsApi"
-import { ITEMS_PER_PAGE } from "../../utils/paginationConfig"
+import { ITEMS_PER_PAGE, ITEMS_PER_PAGE_CARDS } from "../../utils/paginationConfig"
 import { showNotification } from "@mantine/notifications"
 import dishesApi from "../../api/dishesApi"
+import restaurantsApi from "../../api/restaurantApi"
 
 export const fetchCollections = createAsyncThunk(
   "collections/fetchCollections",
@@ -41,7 +42,48 @@ export const fetchDishesForCollections = createAsyncThunk(
         search
       })
 
-      return { data: response.data, results: response.results, page }
+      return {
+        data: response.data.map((item) => ({
+          id: item.id,
+          name: item.name,
+          images: item.images
+        })),
+        results: response.results,
+        page
+      }
+    } catch (error) {
+      showNotification({
+        title: "Error",
+        message: error,
+        color: "red",
+        duration: 7000
+      })
+      return rejectWithValue(error.message)
+    }
+  }
+)
+
+export const fetchRestaurantsForCollections = createAsyncThunk(
+  "collections/fetchRestaurantsForCollections",
+  async ({ limit, page, search_field, search }, { rejectWithValue }) => {
+    try {
+      const response = await restaurantsApi.getAllRestaurants({
+        limit,
+        page,
+        order: "DESC",
+        search_field,
+        search
+      })
+
+      return {
+        data: response.data.map((item) => ({
+          id: item.id,
+          name: item.name,
+          images: item.images
+        })),
+        results: response.results,
+        page
+      }
     } catch (error) {
       showNotification({
         title: "Error",
@@ -66,14 +108,61 @@ export const fetchCollectionDetails = createAsyncThunk(
   }
 )
 
-export const createCollection = createAsyncThunk("collections/createCollection", async (params, { rejectWithValue }) => {
-  try {
-    const response = await collectionsApi.createCollection(params)
-    return response.data
-  } catch (error) {
-    return rejectWithValue(error.response.data)
+export const createCollection = createAsyncThunk(
+  "collections/createCollection",
+  async ({ params, formDataImage }, { rejectWithValue }) => {
+    try {
+      const response = await collectionsApi.createCollection({
+        name: params.name,
+        description: params.description,
+        type: params.type
+      })
+
+      if (response.error) {
+        showNotification({
+          title: "Error",
+          message: response.message,
+          color: "red"
+        })
+
+        return rejectWithValue(response.message)
+      }
+
+      let banner = []
+      if (formDataImage) {
+        const imageResponse = await collectionsApi.createCollectionImage(response.data.id, formDataImage)
+        banner = imageResponse.data.banner
+        if (imageResponse.error) {
+          showNotification({
+            title: "Error",
+            message: response.message,
+            color: "red"
+          })
+
+          return rejectWithValue(imageResponse.message)
+        }
+      }
+
+      if (params.type === "dishes") {
+        await Promise.all(params.dishes.map((dishId) => collectionsApi.addDishToCollection(response.data.id, dishId)))
+      } else {
+        await Promise.all(
+          params.restaurants.map((restaurantId) => collectionsApi.addRestaurantToCollection(response.data.id, restaurantId))
+        )
+      }
+
+      showNotification({
+        title: "Creación exitosa",
+        message: `La coleccíon fue creada exitosamente`,
+        color: "green"
+      })
+
+      return { ...response.data, banner }
+    } catch (error) {
+      return rejectWithValue(error.response.data)
+    }
   }
-})
+)
 
 export const updateCollection = createAsyncThunk(
   "collections/updateCollection",
@@ -163,7 +252,24 @@ const collectionsSlice = createSlice({
     fetchingDishes: false,
     itemsPerPage: ITEMS_PER_PAGE,
     status: "idle",
-    error: null
+    error: null,
+    collectionType: "dishes",
+
+    //Dishes store params
+    dishes: [],
+    currentDishPage: 1,
+    dishesPerPage: ITEMS_PER_PAGE_CARDS,
+    hasMoreDishes: true,
+    dishesLoading: false,
+    updatingDishes: false,
+
+    //Restaurants store params
+    restaurants: [],
+    currentRestaurantPage: 1,
+    restaurantsPerPage: ITEMS_PER_PAGE_CARDS,
+    hasMoreRestaurants: true,
+    restaurantsLoading: false,
+    updatingRestaurants: false
   },
   reducers: {
     setCurrentPage: (state, action) => {
@@ -171,6 +277,15 @@ const collectionsSlice = createSlice({
     },
     setTotalCollections: (state, action) => {
       state.totalCollections = action.payload
+    },
+    setCurrentDishPage: (state, action) => {
+      state.currentDishPage = action.payload
+    },
+    setCurrentRestaurantPage: (state, action) => {
+      state.currentRestaurantPage = action.payload
+    },
+    setCollectionType: (state, action) => {
+      state.collectionType = action.payload
     }
   },
   extraReducers: (builder) => {
@@ -193,22 +308,61 @@ const collectionsSlice = createSlice({
         state.loadingCollections = false
         state.error = action.payload
       })
-      .addCase(fetchDishesForCollections.pending, (state) => {
-        state.fetchingDishes = true
+      .addCase(fetchDishesForCollections.pending, (state, action) => {
+        const { page } = action.meta.arg
+
+        if (page === 1) {
+          state.dishesLoading = true
+        } else {
+          state.updatingDishes = true
+        }
       })
       .addCase(fetchDishesForCollections.fulfilled, (state, action) => {
         const { data, results, page } = action.payload
 
-        state.dishesList = data
+        if (page === 1) {
+          state.dishes = data
+        } else {
+          state.dishes = [...state.dishes, ...data]
+        }
 
-        state.fetchingDishes = false
-        // state.currentPage = page
-        // state.totalCollections = results
-        // state.totalPagesCount = Math.ceil(results / action.meta.arg.limit)
+        state.currentDishPage = page
+        state.hasMore = state.dishes.length < results
+        state.dishesLoading = false
+        state.updatingDishes = false
       })
       .addCase(fetchDishesForCollections.rejected, (state, action) => {
-        state.fetchingDishes = false
-        state.error = action.payload
+        state.dishesLoading = false
+        state.updatingDishes = false
+        state.error = action.error.message
+      })
+      .addCase(fetchRestaurantsForCollections.pending, (state, action) => {
+        const { page } = action.meta.arg
+
+        if (page === 1) {
+          state.restaurantsLoading = true
+        } else {
+          state.updatingRestaurants = true
+        }
+      })
+      .addCase(fetchRestaurantsForCollections.fulfilled, (state, action) => {
+        const { data, results, page } = action.payload
+
+        if (page === 1) {
+          state.restaurants = data
+        } else {
+          state.restaurants = [...state.restaurants, ...data]
+        }
+
+        state.currentRestaurantPage = page
+        state.hasMoreRestaurants = state.restaurants.length < results
+        state.restaurantsLoading = false
+        state.updatingRestaurants = false
+      })
+      .addCase(fetchRestaurantsForCollections.rejected, (state, action) => {
+        state.restaurantsLoading = false
+        state.updatingRestaurants = false
+        state.error = action.error.message
       })
       // Fetch Collection Details
       .addCase(fetchCollectionDetails.pending, (state) => {
@@ -224,14 +378,45 @@ const collectionsSlice = createSlice({
       })
       // Create Collection
       .addCase(createCollection.pending, (state) => {
-        state.status = "loading"
+        state.creatingCollection = true
       })
       .addCase(createCollection.fulfilled, (state, action) => {
-        state.status = "succeeded"
-        state.collections.push(action.payload)
+        console.log(action.payload)
+        const newCollection = action.payload
+
+        if (!state.collectionsPerPage[1]) {
+          state.collectionsPerPage[1] = []
+        }
+        state.collectionsPerPage[1].unshift(newCollection)
+
+        for (let i = 1; i <= state.totalPagesCount; i++) {
+          if (state.collectionsPerPage[i]?.length > state.itemsPerPage) {
+            const lastItem = state.collectionsPerPage[i].pop()
+            if (state.collectionsPerPage[i + 1]) {
+              state.collectionsPerPage[i + 1].unshift(lastItem)
+            }
+          } else {
+            break
+          }
+        }
+
+        const consecutivePages = [1]
+        for (let i = 2; i <= state.totalPagesCount; i++) {
+          if (state.adminUsersByPage[i]) {
+            if (consecutivePages.includes(i - 1)) {
+              consecutivePages.push(i)
+            } else {
+              delete state.adminUsersByPage[i]
+            }
+          }
+        }
+
+        state.totalCollections += 1
+        state.totalPagesCount = Math.ceil(state.totalCollections / state.itemsPerPage)
+        state.creatingCollection = false
       })
       .addCase(createCollection.rejected, (state, action) => {
-        state.status = "failed"
+        state.creatingCollection = false
         state.error = action.payload
       })
       // Update Collection
@@ -300,6 +485,7 @@ const collectionsSlice = createSlice({
   }
 })
 
-export const { setCurrentPage, setTotalCollections } = collectionsSlice.actions
+export const { setCurrentPage, setTotalCollections, setCurrentDishPage, setCurrentRestaurantPage, setCollectionType } =
+  collectionsSlice.actions
 
 export default collectionsSlice.reducer

@@ -93,7 +93,6 @@ export default function ComplementsForm({
   setValue,
   isDataCleared,
   defaultMessage,
-  loading,
   moreData,
   itemsAvailableLabel,
   data,
@@ -106,8 +105,8 @@ export default function ComplementsForm({
   const [addedComplements, setAddedComplements] = useState([])
   const [extras, setExtras] = useState([])
   const [search, setSearch] = useDebouncedState("", 300)
-  const { currentDishPage, updatingDishes } = useSelector((state) => state.menus)
   const dispatch = useDispatch()
+  const { currentDishPage, updatingDishes, dishesLoading } = useSelector((state) => state.menus)
 
   useEffect(() => {
     if (selectedDishes && Array.isArray(selectedDishes)) {
@@ -152,13 +151,12 @@ export default function ComplementsForm({
     <Grid>
       <Grid.Col span={{ base: 12, md: 6 }}>
         <Paper withBorder radius="md" p="md" className="w-full h-full">
-          {loading ? (
+          {dishesLoading ? (
             <div className="h-[calc(100vh-350px)] w-full flex justify-center items-center">
               <Loader color={colors.main_app_color} />
             </div>
           ) : (
             <>
-              <Text mb='xs'>Platillos disponibles</Text>
               <ScrollArea w={"100%"} h={350}>
                 <div className="w-full space-y-2">
                   {extras.length > 0 ? (

@@ -51,7 +51,7 @@ export const fetchRestaurants = createAsyncThunk(
 
 export const createRestaurant = createAsyncThunk(
   "restaurants/createRestaurant",
-  async ({ params, imageParams }, { rejectWithValue }) => {
+  async ({ params, imageParams, formDataBanner }, { rejectWithValue }) => {
     try {
       const response = await restaurantsApi.createRestaurant(params)
       const restaurantData = response.data
@@ -70,6 +70,20 @@ export const createRestaurant = createAsyncThunk(
       if (imageParams) {
         const imageResponse = await restaurantsApi.addImage(restaurantData.id, imageParams)
         images = imageResponse.data.images
+
+        if (imageResponse.error) {
+          showNotification({
+            title: "Error",
+            message: imageResponse.message,
+            color: "red"
+          })
+
+          return rejectWithValue(imageResponse.message)
+        }
+      }
+
+      if (formDataBanner) {
+        const imageResponse = await restaurantsApi.updateBannerImage(restaurantData.id, formDataBanner)
 
         if (imageResponse.error) {
           showNotification({
@@ -215,7 +229,7 @@ export const updateRestaurantStatus = createAsyncThunk("restaurant/updateRestaur
 
 export const updateRestaurantData = createAsyncThunk(
   "restaurant/updateRestaurantData",
-  async ({ formData, restaurantId, formDataImage }, { rejectWithValue }) => {
+  async ({ formData, restaurantId, formDataImage, formDataBanner }, { rejectWithValue }) => {
     try {
       const response = await restaurantsApi.updateRestaurant(formData, restaurantId)
       let restaurantData = response.data
@@ -235,7 +249,7 @@ export const updateRestaurantData = createAsyncThunk(
 
         if (imageResponse.error) {
           showNotification({
-            title: "Error",
+            title: "Error acá",
             message: imageResponse.message,
             color: "red"
           })
@@ -244,6 +258,20 @@ export const updateRestaurantData = createAsyncThunk(
         }
 
         restaurantData = { ...restaurantData, images: imageResponse.data.images }
+      }
+
+      if (formDataBanner) {
+        const imageResponse = await restaurantsApi.updateBannerImage(restaurantId, formDataBanner)
+
+        if (imageResponse.error) {
+          showNotification({
+            title: "Error",
+            message: imageResponse.message,
+            color: "red"
+          })
+
+          return rejectWithValue(imageResponse.message)
+        }
       }
 
       showNotification({

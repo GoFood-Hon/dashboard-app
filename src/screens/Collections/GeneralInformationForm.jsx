@@ -8,10 +8,15 @@ import InputSearchCombobox from "../../components/Form/InputSearchCombobox"
 import { colors } from "../../theme/colors"
 import { bytesToMB } from "../../utils"
 import { menuType } from "../../utils/constants"
+import { useDispatch } from "react-redux"
+import { setCollectionType } from "../../store/features/collectionsSlice"
+import { useSelector } from "react-redux"
 
 export default function GeneralInformationForm({ register, errors, setValue, isDataCleared, image }) {
   const [images, setImages] = useState([])
   const [fileInformation, setFileInformation] = useState(null)
+  const collectionType = useSelector((state) => state.collections.collectionType)
+  const dispatch = useDispatch()
 
   const handleDrop = (acceptedFiles) => {
     if (acceptedFiles.length > 0) {
@@ -22,8 +27,13 @@ export default function GeneralInformationForm({ register, errors, setValue, isD
     }
   }
 
+  useEffect(() => {
+    setValue("type", "dishes")
+  }, [])
+
   const handleCollectionType = (value) => {
-    setValue("type", value)
+    setValue("type", value === "Platillos" ? "dishes" : "restaurants")
+    dispatch(setCollectionType(value === "Platillos" ? "dishes" : "restaurants"))
   }
 
   const deleteImage = () => {
@@ -57,8 +67,11 @@ export default function GeneralInformationForm({ register, errors, setValue, isD
             <InputField label="Nombre (Obligatorio)" name="name" register={register} errors={errors} />
             <InputTextAreaField label="Descripción (Obligatorio)" name="description" register={register} errors={errors} />
             <Select
+              name="type"
               label="Contenido de la colección"
-              data={["Menús", "Platillos"]}
+              data={["Restaurantes", "Platillos"]}
+              defaultValue={collectionType === "dishes" ? "Platillos" : "Restaurantes"}
+              allowDeselect={false}
               maxDropdownHeight={200}
               onChange={handleCollectionType}
             />

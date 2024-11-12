@@ -13,6 +13,7 @@ import BookingInformation from "./BookingInformation"
 import { createRestaurant } from "../../store/features/restaurantSlice"
 import { useDispatch } from "react-redux"
 import { useSelector } from "react-redux"
+import { RestaurantBanner } from "./RestaurantBanner"
 
 export const NewRestaurant = () => {
   const navigate = useNavigate()
@@ -59,6 +60,9 @@ export const NewRestaurant = () => {
     const formDataImage = new FormData()
     formDataImage.append("files", data.files[0])
 
+    const formDataBanner = new FormData()
+    formDataBanner.append("files", data.bannerDishes[0])
+
     dispatch(createRestaurant({ params: formData, imageParams: formDataImage }))
       .unwrap()
       .then(() => {
@@ -70,6 +74,20 @@ export const NewRestaurant = () => {
   }
 
   const accordionStructure = [
+    {
+      title: "Añadir banner",
+      requirement: "Obligatorio",
+      form: (
+        <RestaurantBanner
+          register={register}
+          errors={errors}
+          setValue={setValue}
+          control={control}
+          isDataCleared={isDataCleared}
+          watch={watch}
+        />
+      )
+    },
     {
       title: "Información general",
       requirement: "Obligatorio",
@@ -127,7 +145,7 @@ export const NewRestaurant = () => {
           <Accordion
             variant="separated"
             multiple
-            defaultValue={["Información general", "Datos de reservación", "Selección del plan"]}>
+            defaultValue={["Añadir banner", "Información general", "Datos de reservación"]}>
             {items}
           </Accordion>
         </section>

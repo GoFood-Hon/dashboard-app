@@ -6,53 +6,113 @@ import { useDispatch, useSelector } from "react-redux"
 import { yupResolver } from "@hookform/resolvers/yup"
 import toast from "react-hot-toast"
 import GeneralInformationForm from "./GeneralInformationForm"
-import ComplementsForm from "../Dishes/ComplementsForm"
 import dishesApi from "../../api/dishesApi"
 import { newMenuValidation } from "../../utils/inputRules"
 import { createMenu } from "../../store/features/menuSlice"
 import BackButton from "../Dishes/components/BackButton"
 import { NAVIGATION_ROUTES_RES_ADMIN, NAVIGATION_ROUTES_SUPER_ADMIN } from "../../routes"
 import { colors } from "../../theme/colors"
+import { fetchDishesForCollections, fetchRestaurantsForCollections, setCollectionType } from "../../store/features/collectionsSlice"
+import collectionsApi from "../../api/collectionsApi"
+import ComplementsForm from "./ComplementsForm"
+import { useParams } from "react-router-dom"
 
 export default function EditCollection() {
+  const { collectionId } = useParams()
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const restaurant = useSelector((state) => state.restaurants.restaurants)
   const user = useSelector((state) => state.user.value)
+  const [elements, setElements] = useState([])
   const [isLoading, setIsLoading] = useState(false)
+  const {
+    dishes,
+    currentDishPage,
+    dishesPerPage,
+    hasMoreDishes,
+    creatingCollection,
+    restaurants,
+    currentRestaurantPage,
+    restaurantsPerPage,
+    hasMoreRestaurants,
+    collectionType
+  } = useSelector((state) => state.collections)
+  console.log(collectionId)
 
   const {
     register,
     handleSubmit,
     setValue,
-    control,
     reset,
+    control,
+    watch,
     formState: { errors }
   } = useForm({
-    resolver: yupResolver(newMenuValidation)
+    defaultValues: elements || {}
   })
 
-  const [isDataCleared, setIsDataCleared] = useState(false)
-  const [dishes, setDishes] = useState([])
+  const bannerLocation = watch("banner[0].location")
 
   useEffect(() => {
-    async function getDishes() {
+    const fetchMenu = async () => {
       try {
-        const response = await dishesApi.getAllDishesByRestaurant({
-          restaurantId: user.restaurantId
-        })
-
-        const activeDishes = response.data.data.filter((dish) => dish.isActive)
-        setDishes(activeDishes)
-        return response
+        const response = await collectionsApi.getCollectionDetails(collectionId)
+        console.log(response)
+        const collectionDetails = response?.data
+        setElements(collectionDetails)
       } catch (error) {
-        toast.error(`Hubo un error obteniendo los platos, ${error}`)
+        showNotification({
+          title: "Error",
+          message: error,
+          color: "red",
+          duration: 7000
+        })
         throw error
       }
     }
+    fetchMenu()
+  }, [collectionId, reset])
 
-    getDishes()
-  }, [restaurant])
+  useEffect(() => {
+    if (currentDishPage === 1 || dishes.length === 0 || currentDishPage > 1) {
+      dispatch(
+        fetchDishesForCollections({
+          limit: dishesPerPage,
+          page: currentDishPage
+        })
+      )
+    }
+    if (currentRestaurantPage === 1 || restaurants.length === 0 || currentRestaurantPage > 1) {
+      dispatch(
+        fetchRestaurantsForCollections({
+          limit: restaurantsPerPage,
+          page: currentRestaurantPage
+        })
+      )
+    }
+  }, [dispatch, currentDishPage, dishesPerPage, currentRestaurantPage, restaurantsPerPage])
+
+  const [isDataCleared, setIsDataCleared] = useState(false)
+  //const [dishes, setDishes] = useState([])
+
+  // useEffect(() => {
+  //   async function getDishes() {
+  //     try {
+  //       const response = await dishesApi.getAllDishesByRestaurant({
+  //         restaurantId: user.restaurantId
+  //       })
+
+  //       const activeDishes = response.data.data.filter((dish) => dish.isActive)
+  //       setDishes(activeDishes)
+  //       return response
+  //     } catch (error) {
+  //       toast.error(`Hubo un error obteniendo los platos, ${error}`)
+  //       throw error
+  //     }
+  //   }
+
+  //   getDishes()
+  // }, [restaurant])
 
   const accordionStructure = [
     {
@@ -63,26 +123,35 @@ export default function EditCollection() {
           register={register}
           errors={errors}
           setValue={setValue}
+          image={bannerLocation}
           control={control}
           isDataCleared={isDataCleared}
         />
       )
     },
     {
-      title: "Lista de platillos/menús",
+      title: `Lista de ${collectionType === "dishes" ? "platillos" : "restaurantes"}`,
       requirement: "Obligatorio",
       form: (
         <ComplementsForm
           setValue={setValue}
+          moreData={collectionType === "dishes" ? hasMoreDishes : hasMoreRestaurants}
           isDataCleared={isDataCleared}
+          selectedDishes={Array.isArray(elements.dishes) && elements.dishes.length > 0 ? elements.dishes : elements.restaurants}
           defaultMessage="Por favor añada elementos a esta colección"
           itemsAvailableLabel="Platillos/Menús disponibles"
-          data={dishes}
-          name={"dishes"}
+          data={collectionType === "dishes" ? dishes : restaurants}
+          name={collectionType === "dishes" ? "dishes" : "restaurants"}
         />
       )
     }
   ]
+
+  useEffect(() => {
+    if (Object.keys(elements).length > 0) {
+      reset(elements)
+    }
+  }, [elements, reset])
 
   const items = accordionStructure.map((item, key) => (
     <Accordion.Item key={key} value={item.title}>
@@ -123,7 +192,10 @@ export default function EditCollection() {
           </div>
         </section>
         <section>
-          <Accordion variant="separated" multiple defaultValue={["Información general", "Lista de platillos/menús"]}>
+          <Accordion
+            variant="separated"
+            multiple
+            defaultValue={["Información general", "Lista de platillos", "Lista de restaurantes"]}>
             {items}
           </Accordion>
         </section>
@@ -141,10 +213,10 @@ export default function EditCollection() {
               </Button>
               <Button
                 loading={isLoading}
+                disabled
                 color={colors.main_app_color}
-                type="submit"
-                className="w-24 text-center flex h-10 items-center justify-center rounded-md shadow-sm transition-all duration-700 focus:outline-none text-xs bg-sky-950 text-slate-50">
-                Guardar
+                type="submit">
+                Actualizar
               </Button>
             </Flex>
           </Paper>

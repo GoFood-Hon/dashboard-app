@@ -450,13 +450,22 @@ export default function MenuTable({ items, screenType, totalItems, currentPage, 
       }
     ],
     collectionsScreen: [
-      { label: "Nombre", accessor: "name" },
+      {
+        label: "Nombre",
+        accessor: "name",
+        render: (name, item) => (
+          <div className="flex items-center gap-2">
+            <Avatar size={30} src={item?.banner?.[0]?.location} radius={26} />
+            {name}
+          </div>
+        )
+      },
       { label: "Contiene", accessor: "type", render: (type) => (type === "restaurants" ? "Restaurantes" : "Platillos") },
       {
         label: "Cantidad",
         accessor: "dishes",
         center: true,
-        render: (dishes, item) => (item.type === "restaurants" ? item.restaurants.length : dishes.length)
+        render: (dishes, item) => (item.type === "restaurants" ? item.restaurants?.length || 0 : dishes?.length || 0)
       },
       { label: "Fecha de creación", accessor: "createdAt" },
       {

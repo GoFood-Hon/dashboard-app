@@ -89,7 +89,6 @@ export default function NewMenu() {
       ) : (
         <ComplementsForm
           setValue={setValue}
-          loading={dishesLoading}
           moreData={hasMore}
           isDataCleared={isDataCleared}
           defaultMessage="Los platillos seleccionados aparecerán aquí"
