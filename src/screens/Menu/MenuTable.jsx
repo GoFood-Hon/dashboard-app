@@ -33,6 +33,7 @@ import utc from "dayjs/plugin/utc"
 import timezone from "dayjs/plugin/timezone"
 import { updateMenuStatus } from "../../store/features/menuSlice"
 import { updatePlanStatus } from "../../store/features/plansSlice"
+import { updateCollectionStatus } from "../../store/features/collectionsSlice"
 
 dayjs.extend(utc)
 dayjs.extend(timezone)
@@ -471,15 +472,15 @@ export default function MenuTable({ items, screenType, totalItems, currentPage, 
       {
         label: "Estado",
         accessor: "isActive",
-        render: (active) => (
+        render: (isActive, item) => (
           <MantineProvider theme={theme}>
             <Switch
-              checked={active}
-              //onChange={() => (isActive ? handleDisableSelected(item.id) : handleEnableSelected(item.id))}
+              checked={isActive}
+              onChange={() => dispatch(updateCollectionStatus({ setId: item.id, params: { isActive: !item.isActive } }))}
               color={colors.main_app_color}
               size="sm"
               thumbIcon={
-                active ? (
+                isActive ? (
                   <IconCheck style={{ width: rem(12), height: rem(12) }} stroke={3} color={colors.main_app_color} />
                 ) : (
                   <IconX style={{ width: rem(12), height: rem(12) }} stroke={3} color={colors.main_app_color} />

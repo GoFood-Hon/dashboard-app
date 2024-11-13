@@ -289,7 +289,7 @@ export const EditRestaurant = () => {
             variant="separated"
             multiple
             defaultValue={["Añadir banner", "Información general", "Datos de reservación", "Selección del plan"]}>
-            {restaurantDetails?.Subscription ? items : items.slice(0, 3)}
+            {restaurantDetails?.CreditCardRestaurant ? items : items.slice(0, 3)}
           </Accordion>
         </section>
         <section className="mt-2">

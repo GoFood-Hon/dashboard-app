@@ -30,7 +30,8 @@ export default function NewCollection() {
     currentRestaurantPage,
     restaurantsPerPage,
     hasMoreRestaurants,
-    collectionType
+    collectionType,
+    totalRestaurantsPageCount
   } = useSelector((state) => state.collections)
 
   const {

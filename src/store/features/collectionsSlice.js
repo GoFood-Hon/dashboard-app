@@ -164,6 +164,18 @@ export const createCollection = createAsyncThunk(
   }
 )
 
+export const updateCollectionStatus = createAsyncThunk(
+  "collections/updateCollectionStatus",
+  async ({ setId, params }, { rejectWithValue }) => {
+    try {
+      const response = await collectionsApi.updateCollection(setId, params)
+      return response.data
+    } catch (error) {
+      return rejectWithValue(error.response.data)
+    }
+  }
+)
+
 export const updateCollection = createAsyncThunk(
   "collections/updateCollection",
   async ({ setId, params }, { rejectWithValue }) => {
@@ -308,6 +320,8 @@ const collectionsSlice = createSlice({
         state.loadingCollections = false
         state.error = action.payload
       })
+
+      //Fetch dishes for collection
       .addCase(fetchDishesForCollections.pending, (state, action) => {
         const { page } = action.meta.arg
 
@@ -323,7 +337,9 @@ const collectionsSlice = createSlice({
         if (page === 1) {
           state.dishes = data
         } else {
-          state.dishes = [...state.dishes, ...data]
+          if (state.hasMoreDishes) {
+            state.dishes = [...state.dishes, ...data]
+          }
         }
 
         state.currentDishPage = page
@@ -336,6 +352,8 @@ const collectionsSlice = createSlice({
         state.updatingDishes = false
         state.error = action.error.message
       })
+
+      //Fetch restaurants for collections
       .addCase(fetchRestaurantsForCollections.pending, (state, action) => {
         const { page } = action.meta.arg
 
@@ -351,7 +369,9 @@ const collectionsSlice = createSlice({
         if (page === 1) {
           state.restaurants = data
         } else {
-          state.restaurants = [...state.restaurants, ...data]
+          if (state.hasMoreRestaurants) {
+            state.restaurants = [...state.restaurants, ...data]
+          }
         }
 
         state.currentRestaurantPage = page
@@ -364,6 +384,7 @@ const collectionsSlice = createSlice({
         state.updatingRestaurants = false
         state.error = action.error.message
       })
+
       // Fetch Collection Details
       .addCase(fetchCollectionDetails.pending, (state) => {
         state.status = "loading"
@@ -376,6 +397,7 @@ const collectionsSlice = createSlice({
         state.status = "failed"
         state.error = action.payload
       })
+
       // Create Collection
       .addCase(createCollection.pending, (state) => {
         state.creatingCollection = true
@@ -419,6 +441,7 @@ const collectionsSlice = createSlice({
         state.creatingCollection = false
         state.error = action.payload
       })
+
       // Update Collection
       .addCase(updateCollection.pending, (state) => {
         state.status = "loading"
@@ -434,6 +457,18 @@ const collectionsSlice = createSlice({
         state.status = "failed"
         state.error = action.payload
       })
+
+      // Update Collection Status
+      .addCase(updateCollectionStatus.fulfilled, (state, action) => {
+        const { id, isActive } = action.payload
+        const currentPageCollections = state.collectionsPerPage[state.currentPage]
+        const index = currentPageCollections.findIndex((collection) => collection?.id === id)
+
+        if (index !== -1) {
+          currentPageCollections[index] = { ...currentPageCollections[index], isActive }
+        }
+      })
+
       // Create Collection Image
       .addCase(createCollectionImage.pending, (state) => {
         state.status = "loading"
