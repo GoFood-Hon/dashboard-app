@@ -92,7 +92,7 @@ export const GeneralInformationForm = ({ register, control, errors, setValue, is
                 control={control}
                 render={({ field, fieldState }) => (
                   <Select
-                    label="Especalidad de cocina"
+                    label="Especialidad de cocina"
                     data={kitchenTypes.map((item) => ({
                       value: item.id,
                       label: item.name
