@@ -150,7 +150,7 @@ export default function ComplementsForm({
             </div>
           ) : (
             <>
-              <ScrollArea style={{ width: "100%" }} h={350} type="always" offsetScrollbars>
+              <ScrollArea style={{ width: "100%" }} h={350} offsetScrollbars>
                 <Grid columns={2} gutter="md">
                   {extras.length > 0 ? (
                     extras.map((item, key) => (

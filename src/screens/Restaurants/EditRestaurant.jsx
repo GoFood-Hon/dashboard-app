@@ -17,6 +17,8 @@ import { PlanForm } from "../Users/PlanForm"
 import { useDispatch } from "react-redux"
 import { updateRestaurantData } from "../../store/features/restaurantSlice"
 import { RestaurantBanner } from "./RestaurantBanner"
+import { yupResolver } from "@hookform/resolvers/yup"
+import { restaurantValidation } from "../../utils/inputRules"
 
 export const EditRestaurant = () => {
   const { restaurantId } = useParams()
@@ -93,7 +95,7 @@ export const EditRestaurant = () => {
         formDataImage = new FormData()
         formDataImage.append("files", data.files[0])
       }
-      
+
       let formDataBanner = null
       if (data?.bannerDishes?.[0]) {
         formDataBanner = new FormData()

@@ -121,15 +121,46 @@ export const userValidation = Yup.object().shape({
 })
 
 export const restaurantValidation = Yup.object().shape({
-  name: Yup.string().required("*Campo requerido"),
-  email: Yup.string().required("*Campo requerido"),
-  phoneNumber: Yup.string().required("*Campo requerido"),
-  socialReason: Yup.string().required("*Campo requerido"),
-  rtn: Yup.string().required("*Campo requerido"),
-  billingAddress: Yup.string().required("*Campo requerido"),
-  cai: Yup.string().required("*Campo requerido"),
-  cuisineTypeId: Yup.string().required("*Campo requerido"),
-  files: Yup.array().required("Imagen es requerida").min(1, "Debe seleccionar al menos una imagen")
+  name: Yup.string().required("El nombre es requerido"),
+  email: Yup.string().email("El correo electrónico no es válido").required("El correo electrónico es requerido"),
+  phoneNumber: Yup
+    .string()
+    .required("El número de teléfono es requerido"),
+  socialReason: Yup.string().required("La razón social es requerida"),
+  rtn: Yup.string().required("El RTN es requerido"),
+  billingAddress: Yup.string().required("La dirección de facturación es requerida"),
+  cai: Yup.string().required("El CAI es requerido"),
+  shippingFree: Yup.boolean().default(false),
+  cuisineTypeId: Yup
+    .number()
+    .required("El ID de tipo de cocina es requerido"),
+  pricePerChair: Yup.number().nullable().min(0, "El precio por silla debe ser un valor positivo").optional(),
+  hoursBeforeCancellation: Yup
+    .number()
+    .nullable()
+    .min(0, "Las horas antes de la cancelación deben ser un valor positivo")
+    .optional(),
+  hoursBeforeBooking: Yup.number().nullable().min(0, "Las horas antes de la reserva deben ser un valor positivo").optional(),
+  shippingPrice: Yup
+    .number()
+    .nullable()
+    .transform((value, originalValue) => (originalValue.trim() === "" ? null : value))
+    .when("shippingFree", {
+      is: false,
+      then: Yup
+        .number()
+        .required("El precio de envío es requerido cuando no es gratuito")
+        .min(0, "El precio de envío debe ser un valor positivo"),
+      otherwise: Yup.number().notRequired()
+    }),
+  files: Yup
+    .array()
+    .of(Yup.mixed().test("file", "El archivo es requerido", (value) => value instanceof File))
+    .optional(),
+  bannerDishes: Yup
+    .array()
+    .of(Yup.mixed().test("file", "El archivo es requerido", (value) => value instanceof File))
+    .optional()
 })
 
 export const couponsValidationFrom = (componentMounted) => {

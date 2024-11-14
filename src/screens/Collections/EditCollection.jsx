@@ -37,7 +37,6 @@ export default function EditCollection() {
     hasMoreRestaurants,
     collectionType
   } = useSelector((state) => state.collections)
-  console.log(collectionId)
 
   const {
     register,

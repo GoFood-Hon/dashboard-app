@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { CloseIcon, Group, Text, rem, Grid, Paper, Flex, Button } from "@mantine/core"
+import { CloseIcon, Group, Text, rem, Grid, Paper, Flex, Button, Container, Image } from "@mantine/core"
 import SettingsCard from "../../components/SettingsCard"
 import authApi from "../../api/authApi"
 import InputField from "../../components/Form/InputField"
@@ -28,7 +28,8 @@ export default function AccountSettings() {
     register,
     handleSubmit,
     setValue,
-    formState: { errors }
+    formState: { errors },
+    watch
   } = useForm({
     defaultValues: async () => {
       try {
@@ -59,6 +60,8 @@ export default function AccountSettings() {
     setFileInformation(null)
     setImages([])
   }
+
+  const image = watch("image")
 
   const previews = images.map((file, index) => {
     const imageUrl = URL.createObjectURL(file)
@@ -134,44 +137,46 @@ export default function AccountSettings() {
           <SettingsCard title="Información general" iconName="user">
             <Grid>
               <Grid.Col span={{ base: 12, md: 8, lg: 8 }}>
-                <Grid>
-                  <Grid.Col span={{ base: 12, md: 6 }}>
-                    <InputField label="Nombre" name="firstName" register={register} errors={errors} className="text-black" />
-                  </Grid.Col>
-                  <Grid.Col span={{ base: 12, md: 6 }}>
-                    <InputField label="Email" name="email" register={register} errors={errors} className="text-black" />
-                  </Grid.Col>
-                  <Grid.Col span={{ base: 12, md: 12 }}>
-                    <InputField
-                      label="Numero de teléfono"
-                      name="phoneNumber"
-                      register={register}
-                      errors={errors}
-                      className="text-black"
-                      countryPrefix="+504"
-                    />
-                  </Grid.Col>
-                  <Grid.Col span={{ base: 12, md: 6 }}>
-                    <InputField
-                      label="Ingrese la contraseña"
-                      name="password"
-                      register={register}
-                      errors={errors}
-                      className="text-black"
-                      type="password"
-                    />
-                  </Grid.Col>
-                  <Grid.Col span={{ base: 12, md: 6 }}>
-                    <InputField
-                      label="Vuelva a ingresar la contraseña"
-                      name="passwordConfirm"
-                      register={register}
-                      errors={errors}
-                      className="text-black"
-                      type="password"
-                    />
-                  </Grid.Col>
-                </Grid>
+                <Paper withBorder p="lg" radius="md">
+                  <Grid>
+                    <Grid.Col span={{ base: 12, md: 6 }}>
+                      <InputField label="Nombre" name="firstName" register={register} errors={errors} className="text-black" />
+                    </Grid.Col>
+                    <Grid.Col span={{ base: 12, md: 6 }}>
+                      <InputField label="Email" name="email" register={register} errors={errors} className="text-black" />
+                    </Grid.Col>
+                    <Grid.Col span={{ base: 12, md: 12 }}>
+                      <InputField
+                        label="Numero de teléfono"
+                        name="phoneNumber"
+                        register={register}
+                        errors={errors}
+                        className="text-black"
+                        countryPrefix="+504"
+                      />
+                    </Grid.Col>
+                    <Grid.Col span={{ base: 12, md: 6 }}>
+                      <InputField
+                        label="Ingrese la contraseña"
+                        name="password"
+                        register={register}
+                        errors={errors}
+                        className="text-black"
+                        type="password"
+                      />
+                    </Grid.Col>
+                    <Grid.Col span={{ base: 12, md: 6 }}>
+                      <InputField
+                        label="Vuelva a ingresar la contraseña"
+                        name="passwordConfirm"
+                        register={register}
+                        errors={errors}
+                        className="text-black"
+                        type="password"
+                      />
+                    </Grid.Col>
+                  </Grid>
+                </Paper>
               </Grid.Col>
               <Grid.Col span={{ base: 12, md: 4, lg: 4 }}>
                 <Paper withBorder radius="md" h="100%" p="md">
@@ -199,19 +204,28 @@ export default function AccountSettings() {
                     </Flex>
                   ) : (
                     <Dropzone onDrop={handleDrop} accept={IMAGE_MIME_TYPE}>
-                      <Group justify="center" gap="xl" mih={220} style={{ pointerEvents: "none" }}>
-                        <div className="flex items-center flex-col">
-                          <IconPhoto
-                            style={{ width: rem(52), height: rem(52), color: "var(--mantine-color-dimmed)" }}
-                            stroke={1.5}
-                          />
-                          <Text size="xl" inline className="text-center">
-                            Seleccione una imagen
-                          </Text>
-                          <Text size="sm" c="dimmed" inline mt={7} className="text-center leading-10">
-                            Haga clic o arrastre la imagen del perfil
-                          </Text>
-                        </div>
+                      <Group justify="center" gap="xl" align="center" style={{ pointerEvents: "none" }}>
+                        <Container maw={400}>
+                          <Flex direction="column" align="center" style={{ cursor: "pointer" }}>
+                            <Image src={image} radius="md" alt="" style={{ cursor: "pointer" }} />
+                            <IconPhoto
+                              className={`${image ? "hidden" : ""}`}
+                              style={{ width: rem(52), height: rem(52), color: "var(--mantine-color-dimmed)" }}
+                              stroke={1.5}
+                            />
+                            <Text className={`${image ? "hidden" : ""} text-center`} size="xl" inline>
+                              Seleccione una imagen
+                            </Text>
+                            <Text
+                              className={`${image ? "hidden" : ""} text-center leading-10`}
+                              size="sm"
+                              c="dimmed"
+                              inline
+                              mt={7}>
+                              Haga clic o arrastre la imagen del perfil
+                            </Text>
+                          </Flex>
+                        </Container>
                       </Group>
                     </Dropzone>
                   )}
