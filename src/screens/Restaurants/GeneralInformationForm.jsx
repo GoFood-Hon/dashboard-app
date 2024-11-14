@@ -97,6 +97,7 @@ export const GeneralInformationForm = ({ register, control, errors, setValue, is
                       value: item.id,
                       label: item.name
                     }))}
+                    allowDeselect={false}
                     maxDropdownHeight={200}
                     value={field.value}
                     onChange={field.onChange}
