@@ -1,4 +1,4 @@
-import { ActionIcon, Image, Flex } from "@mantine/core"
+import { ActionIcon, Image, Flex, Menu, rem } from "@mantine/core"
 import { IconSun, IconMoon } from "@tabler/icons-react"
 import classes from "./AdminHeader.module.css"
 import { useMantineColorScheme } from "@mantine/core"
@@ -12,7 +12,6 @@ import { useNavigate } from "react-router-dom"
 
 export function AdminHeader({ burger }) {
   const navigate = useNavigate()
-  const imgUrl = useSelector(selectImage)
   const dispatch = useDispatch()
   const user = useSelector((state) => state.user.value)
   const { colorScheme, setColorScheme } = useMantineColorScheme()
@@ -22,6 +21,7 @@ export function AdminHeader({ burger }) {
   }
 
   useEffect(() => {
+    console.log(user)
     if (user.role === APP_ROLES.restaurantAdmin) {
       dispatch(
         fetchRestaurantData({
@@ -64,7 +64,7 @@ export function AdminHeader({ burger }) {
           color={colors.main_app_color}>
           {colorScheme === "dark" ? <IconSun size="1.25rem" /> : <IconMoon size="1.25rem" />}
         </ActionIcon>
-        <UserButton image={user?.images?.[0]?.location} name={user.name} email={user.email} />
+        <UserButton image={user?.images?.[0]?.location} name={user.name} email={user.email} role={user.role} />
       </Flex>
     </header>
   )

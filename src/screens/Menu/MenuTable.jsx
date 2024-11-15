@@ -180,7 +180,20 @@ export default function MenuTable({ items, screenType, totalItems, currentPage, 
           </div>
         )
       },
-      { label: "Rol", accessor: "role" },
+      {
+        label: "Rol",
+        accessor: "role",
+        render: (role) =>
+          role === "admin-restaurant"
+            ? "Admin. de restaurante"
+            : role === "admin-sucursal"
+              ? "Admin. de sucursal"
+              : role === "cashier"
+                ? "Cajero"
+                : role === "kitchen"
+                  ? "Cocinero"
+                  : "Motorista"
+      },
       { label: "Correo", accessor: "email" },
       { label: "Teléfono", accessor: "phoneNumber" },
       { label: "Fecha", accessor: "createdAt" },

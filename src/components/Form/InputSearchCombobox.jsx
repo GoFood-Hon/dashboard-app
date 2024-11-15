@@ -64,7 +64,7 @@ export default function InputSearchCombobox({ items, label, errors, name, placeh
                 options
               ) : (
                 <Combobox.Empty>
-                  {status === "loading" ? (
+                  {status ? (
                     <div className="flex flex-col items-center justify-center">
                       <LoadingCircle />
                       <span>Cargando opciones...</span>
