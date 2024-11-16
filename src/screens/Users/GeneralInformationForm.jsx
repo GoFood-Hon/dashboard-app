@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { CloseIcon, Grid, Group, Paper, Text, rem } from "@mantine/core"
+import { CloseIcon, Grid, Group, Paper, Select, Text, rem } from "@mantine/core"
 import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone"
 import { IconPhoto } from "@tabler/icons-react"
 import InputField from "../../components/Form/InputField"
@@ -7,8 +7,9 @@ import InputTextAreaField from "../../components/Form/InputTextAreaField"
 import { bytesToMB } from "../../utils"
 import InputCombobox from "../../components/Form/InputCombobox"
 import { USER_ROLES, userTypes } from "../../utils/constants"
+import { Controller } from "react-hook-form"
 
-export default function GeneralInformationForm({ register, errors, setValue, isDataCleared }) {
+export default function GeneralInformationForm({ register, errors, setValue, isDataCleared, control }) {
   const [images, setImages] = useState([])
   const [fileInformation, setFileInformation] = useState(null)
   const [role, setRole] = useState(USER_ROLES.administrator)
@@ -45,6 +46,7 @@ export default function GeneralInformationForm({ register, errors, setValue, isD
   })
 
   const handleChangeRol = (value, name) => {
+    console.log('Sii')
     setRole(name)
     setValue(value, name)
   }
@@ -52,7 +54,7 @@ export default function GeneralInformationForm({ register, errors, setValue, isD
   return (
     <Grid>
       <Grid.Col span={{ base: 12, md: 8, lg: 8 }}>
-        <Paper withBorder radius='md' className="w-full h-full items-center justify-center flex  rounded-2xl p-4">
+        <Paper withBorder radius="md" className="w-full h-full items-center justify-center flex  rounded-2xl p-4">
           <Grid>
             <Grid.Col span={{ base: 12, md: 6 }}>
               <InputField label="Nombre (Obligatorio)" name="name" register={register} errors={errors} className="text-black" />
@@ -74,43 +76,39 @@ export default function GeneralInformationForm({ register, errors, setValue, isD
             </Grid.Col>
 
             <Grid.Col span={{ base: 12, md: 6 }}>
-              <InputCombobox
-                items={userTypes}
-                placeholder="Seleccione el tipo de usuario"
-                setValue={handleChangeRol}
-                errors={errors}
-                label="Tipo de usuario (Obligatorio)"
+              <Controller
                 name="role"
+                control={control}
+                render={({ field, fieldState }) => (
+                  <Select
+                    label="Rol del usuario (Obligatorio)"
+                    data={userTypes}
+                    allowDeselect={false}
+                    maxDropdownHeight={200}
+                    value={field.value}
+                    onChange={(value, name) => {
+                      field.onChange(value)
+                      handleChangeRol(value, name)
+                    }}
+                    error={fieldState.error ? fieldState.error.message : null}
+                    searchable
+                    clearable
+                  />
+                )}
               />
             </Grid.Col>
-            {role === USER_ROLES.driver && (
+            {role === 'driver' && (
               <>
                 <Grid.Col span={{ base: 12, md: 6 }}>
-                  <InputField
-                    label="Id del vehículo"
-                    name="motorcycleId"
-                    register={register}
-                    errors={errors}
-                  />
+                  <InputField label="Id del vehículo" name="motorcycleId" register={register} errors={errors} />
                 </Grid.Col>
                 <Grid.Col span={{ base: 12, md: 6 }}>
-                  <InputField
-                    label="Numero de identidad"
-                    name="nationalIdentityNumber"
-                    register={register}
-                    errors={errors}
-                  />
+                  <InputField label="Numero de identidad" name="nationalIdentityNumber" register={register} errors={errors} />
                 </Grid.Col>
               </>
             )}
             <Grid.Col span={{ base: 12, md: 6 }}>
-              <InputField
-                label="Contraseña"
-                name="password"
-                type="password"
-                register={register}
-                errors={errors}
-              />
+              <InputField label="Contraseña" name="password" type="password" register={register} errors={errors} />
             </Grid.Col>
             <Grid.Col span={{ base: 12, md: 6 }}>
               <InputField
@@ -128,7 +126,7 @@ export default function GeneralInformationForm({ register, errors, setValue, isD
         </Paper>
       </Grid.Col>
       <Grid.Col span={{ base: 12, md: 4, lg: 4 }}>
-        <Paper withBorder radius='md' className="flex flex-col justify-center items-center w-full h-full rounded-2xl  p-4">
+        <Paper withBorder radius="md" className="flex flex-col justify-center items-center w-full h-full rounded-2xl  p-4">
           {previews.length > 0 ? (
             <div className="w-full">
               <Text size="lg" inline className="text-left mb-5">

@@ -36,7 +36,7 @@ export default function NewUser() {
       formData.append("role", data.role)
       formData.append("note", data.note)
 
-      formData.append("sucursalId", data.branchId)
+      formData.append("sucursalId", data.sucursalId)
       formData.append("password", data.password)
       formData.append("confirmPassword", data.confirmPassword)
 

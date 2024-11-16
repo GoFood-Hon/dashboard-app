@@ -18,6 +18,7 @@ const initialState = {
   currentBranch: null,
   totalItems: 0,
   imageUrl: "",
+  shippingRange: 0
 }
 
 export const fetchBranches = createAsyncThunk(
@@ -33,6 +34,28 @@ export const fetchBranches = createAsyncThunk(
         search_field
       })
       return { data: response.data, results: response.results, page }
+    } catch (error) {
+      return rejectWithValue(error.response?.data || "Error fetching branches")
+    }
+  }
+)
+
+export const fetchNoPaginatedBranches = createAsyncThunk(
+  "branches/fetchNoPaginatedBranches",
+  async ({ restaurantId }, { getState, rejectWithValue }) => {
+    const state = getState().branches
+
+    if (state.branches && state.branches.length > 0) {
+      return state.branches
+    }
+
+    try {
+      const response = await branchesApi.getNoPaginatedBranches({
+        restaurantId,
+        order: "DESC",
+        orderBy: "created_at"
+      })
+      return response.data
     } catch (error) {
       return rejectWithValue(error.response?.data || "Error fetching branches")
     }
@@ -141,6 +164,9 @@ export const branchesSlice = createSlice({
     },
     setLoading: (state, action) => {
       state.loading = action.payload
+    },
+    setShippingRange: (state, action) => {
+      state.shippingRange = action.payload
     }
   },
   extraReducers: (builder) => {
@@ -161,6 +187,17 @@ export const branchesSlice = createSlice({
         state.loadingBranches = false
         state.error = action.error
       })
+      .addCase(fetchNoPaginatedBranches.pending, (state) => {
+        state.loadingBranches = true
+      })
+      .addCase(fetchNoPaginatedBranches.fulfilled, (state, action) => {
+        state.branches = action.payload
+        state.loadingBranches = false
+      })
+      .addCase(fetchNoPaginatedBranches.rejected, (state, action) => {
+        state.loadingBranches = false
+        state.error = action.error
+      })
       .addCase(updateBranchStatus.fulfilled, (state, action) => {
         const { id, isActive } = action.payload
         const currentPageBranches = state.branchesPerPage[state.currentPage]
@@ -173,7 +210,7 @@ export const branchesSlice = createSlice({
   }
 })
 
-export const { setBranches, setError, setPage, setFilters, setBranchData, setImageUrl } = branchesSlice.actions
+export const { setBranches, setError, setPage, setFilters, setBranchData, setImageUrl, setShippingRange } = branchesSlice.actions
 
 export const setLoading = (state) => state.branches.loading
 

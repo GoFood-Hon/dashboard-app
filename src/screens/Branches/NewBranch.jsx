@@ -1,10 +1,8 @@
 import React, { useState } from "react"
 import { Accordion, Flex, Paper, Button } from "@mantine/core"
-import { useLocation, useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import { yupResolver } from "@hookform/resolvers/yup"
 import { useForm } from "react-hook-form"
-import { useSelector } from "react-redux"
-import { LoaderComponent } from "../../components/LoaderComponent"
 import { newBranchValidation } from "../../utils/inputRules"
 import { NAVIGATION_ROUTES_RES_ADMIN } from "../../routes"
 import GeneralInformationForm from "./GeneralInformationForm"
@@ -12,15 +10,15 @@ import LocationForm from "./LocationForm"
 import { TimeForm } from "./TimeForm"
 import BackButton from "../Dishes/components/BackButton"
 import branchesApi from "../../api/branchesApi"
-
 import { getDepartmentNameById } from "../../utils"
 import { showNotification } from "@mantine/notifications"
 import { colors } from "../../theme/colors"
+import { useDispatch } from "react-redux"
+import { setShippingRange } from "../../store/features/branchesSlice"
 
 export default function NewBranch() {
-  const location = useLocation()
+  const dispatch = useDispatch()
   const navigate = useNavigate()
-  const restaurant = useSelector((state) => state.restaurants.restaurants)
   const [isLoading, setIsLoading] = useState(false)
   const [daysData, setDaysData] = useState([])
   const [workSchedule, setWorkSchedule] = useState([])
@@ -37,6 +35,8 @@ export default function NewBranch() {
   } = useForm({
     resolver: yupResolver(newBranchValidation)
   })
+
+  dispatch(setShippingRange(watch("maxDistanceShipping") || 0))
 
   const [isDataCleared, setIsDataCleared] = useState(false)
 
@@ -68,7 +68,6 @@ export default function NewBranch() {
     {
       title: "Horario",
       requirement: "Obligatorio",
-      // form: <TimeForm setValue={setValue} watch={watch} />
       form: (
         <TimeForm
           schedule={workSchedule}

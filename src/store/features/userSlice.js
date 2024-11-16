@@ -39,6 +39,42 @@ export const fetchAdminUsers = createAsyncThunk(
   }
 )
 
+export const fetchUsers = createAsyncThunk(
+  "user/fetchUsers",
+  async ({ restaurantId, limit, page, search_field, search }, { rejectWithValue }) => {
+    try {
+      const response = await userApi.getUsersByRestaurant({
+        restaurantId,
+        limit,
+        page,
+        order: "DESC",
+        search_field,
+        search
+      })
+
+      if (response.error) {
+        showNotification({
+          title: "Error",
+          message: response.message,
+          color: "red",
+          duration: 7000
+        })
+        return rejectWithValue(response.error)
+      }
+
+      return { data: response.data, results: response.results, page }
+    } catch (error) {
+      showNotification({
+        title: "Error",
+        message: error.message || error,
+        color: "red",
+        duration: 7000
+      })
+      return rejectWithValue(error.message)
+    }
+  }
+)
+
 export const createAdminUser = createAsyncThunk(
   "user/createAdminUser",
   async ({ params, formDataImage }, { rejectWithValue }) => {
@@ -170,9 +206,63 @@ export const updateUserStatus = createAsyncThunk("user/updateUserStatus", async 
   }
 })
 
-// Estado inicial
+export const updateUser = createAsyncThunk(
+  "user/updateUser",
+  async ({ params, userId }, { rejectWithValue }) => {
+    try {
+      const response = await userApi.updateUserRestaurant(params, userId)
+      if (response.error) {
+        showNotification({
+          title: "Error",
+          message: response.message,
+          color: "red",
+          duration: 7000
+        })
+
+        return rejectWithValue(response.message)
+      }
+      return response.data
+    } catch (error) {
+      showNotification({
+        title: "Error",
+        message: error,
+        color: "red",
+        duration: 7000
+      })
+    }
+  }
+)
+
+export const updateOtherUserStatus = createAsyncThunk(
+  "user/updateOtherUserStatus",
+  async ({ params, userId }, { rejectWithValue }) => {
+    try {
+      const response = await userApi.updateUserRestaurant(params, userId)
+      if (response.error) {
+        showNotification({
+          title: "Error",
+          message: response.message,
+          color: "red",
+          duration: 7000
+        })
+
+        return rejectWithValue(response.message)
+      }
+      return response.data
+    } catch (error) {
+      showNotification({
+        title: "Error",
+        message: error,
+        color: "red",
+        duration: 7000
+      })
+    }
+  }
+)
+
 const initialState = {
   value: {},
+  //Estado de usuarios administradores
   currentPage: 1,
   totalAdminUsers: 0,
   itemsPerPage: ITEMS_PER_PAGE,
@@ -181,6 +271,15 @@ const initialState = {
   loadingUsers: false,
   updatingUser: false,
   creatingUser: false,
+
+  //Estado de los demás usuarios
+  currentUserPage: 1,
+  totalUsers: 0,
+  totalUserPagesCount: 0,
+  usersByPage: [],
+  loadingOtherUsers: false,
+  updatingOtherUser: false,
+  creatingOtherUser: false,
   error: null
 }
 
@@ -194,6 +293,9 @@ export const userSlice = createSlice({
     },
     setCurrentPage: (state, action) => {
       state.currentPage = action.payload
+    },
+    setCurrentUserPage: (state, action) => {
+      state.currentUserPage = action.payload
     },
     setTotalAdminUsers: (state, action) => {
       state.totalAdminUsers = action.payload
@@ -215,6 +317,22 @@ export const userSlice = createSlice({
       })
       .addCase(fetchAdminUsers.rejected, (state, action) => {
         state.loadingUsers = false
+        state.error = action.payload
+      })
+      .addCase(fetchUsers.pending, (state) => {
+        state.loadingOtherUsers = true
+        state.error = null
+      })
+      .addCase(fetchUsers.fulfilled, (state, action) => {
+        const { data, results, page } = action.payload
+        state.usersByPage[page] = data
+        state.loadingOtherUsers = false
+        state.currentUserPage = page
+        state.totalUsers = results
+        state.totalUserPagesCount = Math.ceil(results / action.meta.arg.limit)
+      })
+      .addCase(fetchUsers.rejected, (state, action) => {
+        state.loadingOtherUsers = false
         state.error = action.payload
       })
       .addCase(createAdminUser.pending, (state) => {
@@ -271,6 +389,15 @@ export const userSlice = createSlice({
         state.loadingUsers = false
         state.error = action.payload
       })
+      .addCase(updateOtherUserStatus.fulfilled, (state, action) => {
+        const { id, active } = action.payload
+        const currentPageOtherUsers = state.usersByPage[state.currentUserPage]
+        const index = currentPageOtherUsers.findIndex((user) => user?.id === id)
+
+        if (index !== -1) {
+          currentPageOtherUsers[index] = { ...currentPageOtherUsers[index], active }
+        }
+      })
       .addCase(updateUserData.pending, (state) => {
         state.updatingUser = true
       })
@@ -297,6 +424,6 @@ export const userSlice = createSlice({
   }
 })
 
-export const { setUser, setCurrentPage, setTotalAdminUsers } = userSlice.actions
+export const { setUser, setCurrentPage, setCurrentUserPage, setTotalAdminUsers } = userSlice.actions
 
 export default userSlice.reducer

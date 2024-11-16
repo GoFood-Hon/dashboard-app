@@ -1,10 +1,21 @@
 import React, { useEffect, useRef, useState } from "react"
-import { InputBase, Combobox, useCombobox } from "@mantine/core"
+import { InputBase, Combobox, useCombobox, ScrollArea } from "@mantine/core"
 import { ErrorMessage } from "./ErrorMessage"
 import LoadingCircle from "../LoadingCircle"
 import { colors } from "../../theme/colors"
 
-export default function InputSearchCombobox({ items, label, errors, name, placeholder, emptyMessage, setValue, status, searchValue, defaultValue }) {
+export default function InputSearchCombobox({
+  items,
+  label,
+  errors,
+  name,
+  placeholder,
+  emptyMessage,
+  setValue,
+  status,
+  searchValue,
+  defaultValue
+}) {
   const [search, setSearch] = useState("")
   const [selectedCategory, setSelectedCategory] = useState(null)
 
@@ -20,7 +31,12 @@ export default function InputSearchCombobox({ items, label, errors, name, placeh
     : items
 
   const options = filteredOptions.map((item) => (
-    <Combobox.Option value={item.name} key={item.id} defaultValue={defaultValue} color={colors.primary_button} selected={selectedCategory === item}>
+    <Combobox.Option
+      value={item.name}
+      key={item.id}
+      defaultValue={defaultValue}
+      color={colors.primary_button}
+      selected={selectedCategory === item}>
       {item.name}
     </Combobox.Option>
   ))
@@ -51,7 +67,7 @@ export default function InputSearchCombobox({ items, label, errors, name, placeh
               onClick={() => combobox.openDropdown()}
               onFocus={() => combobox.openDropdown()}
               placeholder={placeholder}
-              value={search ?  search : searchValue}
+              value={search ? search : searchValue}
               onChange={(event) => {
                 combobox.updateSelectedOptionIndex()
                 setSearch(event.currentTarget.value)
@@ -59,21 +75,23 @@ export default function InputSearchCombobox({ items, label, errors, name, placeh
             />
           </Combobox.Target>
           <Combobox.Dropdown>
-            <Combobox.Options>
-              {options.length > 0 ? (
-                options
-              ) : (
-                <Combobox.Empty>
-                  {status ? (
-                    <div className="flex flex-col items-center justify-center">
-                      <LoadingCircle />
-                      <span>Cargando opciones...</span>
-                    </div>
-                  ) : (
-                    emptyMessage
-                  )}
-                </Combobox.Empty>
-              )}
+            <Combobox.Options defaultValue={'McDonalds'}>
+              <ScrollArea.Autosize type="scroll" mah={200}>
+                {options.length > 0 ? (
+                  options
+                ) : (
+                  <Combobox.Empty>
+                    {status ? (
+                      <div className="flex flex-col items-center justify-center">
+                        <LoadingCircle />
+                        <span>Cargando opciones...</span>
+                      </div>
+                    ) : (
+                      emptyMessage
+                    )}
+                  </Combobox.Empty>
+                )}
+              </ScrollArea.Autosize>
             </Combobox.Options>
           </Combobox.Dropdown>
         </Combobox>

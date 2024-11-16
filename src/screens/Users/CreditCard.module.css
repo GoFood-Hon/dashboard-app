@@ -1,0 +1,36 @@
+.card {
+  background: linear-gradient(135deg, #4c6ef5 0%, #339af0 100%); /* Ajusta los colores si es necesario */
+  color: white;
+  border-radius: 8px; /* Puedes ajustar el valor para adaptarlo a tu diseño */
+  height: 200px;
+  width: 340px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Representación del theme.shadows.md */
+}
+
+.cardNumber {
+  letter-spacing: 0.1em;
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.cardDetails {
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.iconBackground {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  opacity: 0.3;
+  font-size: 5rem;
+}
+
+.chip {
+  width: 40px;
+  height: 25px;
+  background-color: #e9ecef; /* theme.colors.gray[4] */
+  border-radius: 4px; /* theme.radius.xs */
+}

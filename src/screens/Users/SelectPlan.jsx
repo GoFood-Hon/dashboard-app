@@ -33,8 +33,15 @@ export function SelectPlan({ onSelected }) {
   }
 
   const cards = plans.map((plan) => (
-    <Card withBorder key={plan.id} p="md" radius="md" h={400} className={classes.card}>
-      <Stack>
+    <Card
+      withBorder
+      key={plan.id}
+      p="md"
+      radius="md"
+      h={420}
+      className={classes.card}
+      style={{ display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+      <Stack spacing="sm">
         <Flex align="center" gap="sm">
           <ThemeIcon size="lg" radius="md" variant="gradient" gradient={{ deg: 0, from: "#EE364C", to: "#EDB23B" }}>
             <IconCreditCard style={{ width: rem(28), height: rem(28) }} stroke={1.5} />
@@ -67,27 +74,21 @@ export function SelectPlan({ onSelected }) {
               <IconCircleCheckFilled />
             </ThemeIcon>
           }>
-          {plan?.PlanFeatures?.map((feature) => (
-            <Flex align="center" gap="xs">
+          {plan?.PlanFeatures?.map((feature, index) => (
+            <Flex key={index} align="center" gap="xs">
               <List.Item>{feature.name}:</List.Item>
               {feature.type === "amount" && feature.PlanPlanFeatures?.quantity ? (
                 <Text size="sm">{feature.PlanPlanFeatures.quantity}</Text>
               ) : (
                 <Text size="sm">{feature.PlanPlanFeatures?.available ? "Habilitado" : "Deshabilitado"}</Text>
               )}
-              {/* <span className="font-bold">{feature.name}:</span>
-              {feature.type === "amount" && feature.PlanPlanFeatures?.quantity ? (
-                <span className="ml-2">{feature.PlanPlanFeatures.quantity}</span>
-              ) : (
-                <span className="ml-2">{feature.PlanPlanFeatures?.available ? "Habilitado" : "Deshabilitado"}</span>
-              )} */}
             </Flex>
           ))}
         </List>
-        <Button onClick={() => onSubmit({ id: plan.id, name: plan.name })} color={colors.main_app_color}>
-          Seleccionar
-        </Button>
       </Stack>
+      <Button onClick={() => onSubmit({ id: plan.id, name: plan.name })} color={colors.main_app_color} mt="md">
+        Seleccionar
+      </Button>
     </Card>
   ))
 

@@ -12,7 +12,7 @@ import { useDispatch } from "react-redux"
 import { setCollectionType } from "../../store/features/collectionsSlice"
 import { useSelector } from "react-redux"
 
-export default function GeneralInformationForm({ register, errors, setValue, isDataCleared, image }) {
+export default function GeneralInformationForm({ register, errors, setValue, isDataCleared, image, control }) {
   const [images, setImages] = useState([])
   const [fileInformation, setFileInformation] = useState(null)
   const collectionType = useSelector((state) => state.collections.collectionType)

@@ -1,6 +1,5 @@
-import React, { useState } from "react"
+import React from "react"
 import { Grid, Input, PasswordInput } from "@mantine/core"
-import { IconEye, IconEyeOff } from "@tabler/icons-react"
 
 export default function InputField({
   label,
@@ -12,7 +11,6 @@ export default function InputField({
   type = "text",
   value,
   onChange,
-  countryPrefix,
   defaultValue
 }) {
   return (

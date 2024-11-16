@@ -6,6 +6,20 @@ const branchesApi = {
     return axiosClient.get(url)
   },
 
+  getNoPaginatedBranches: ({ restaurantId, order, orderBy }) => {
+    const params = {
+      order,
+      orderBy
+    }
+
+    const validParams = Object.fromEntries(Object.entries(params).filter(([_, value]) => value !== undefined && value))
+
+    const queryString = new URLSearchParams(validParams).toString()
+    const url = `api/v1/restaurant/${restaurantId}/sucursals/no-pagination${queryString ? `?${queryString}` : ""}`
+
+    return axiosClient.get(url)
+  },
+
   getBranch: (id) => axiosClient.get(`api/v1/sucursal/${id}`),
 
   updateBranches: (params, id) => axiosClient.patch(`api/v1/sucursal/${id}`, params),
@@ -19,7 +33,7 @@ const branchesApi = {
 
   getBranchesByRestaurant: ({ limit, page, order, startDate, endDate, status, price, dateSort }) => {
     const params = {
-      limit,  
+      limit,
       page,
       order,
       startDate,

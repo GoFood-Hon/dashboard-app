@@ -20,6 +20,7 @@ export const EditAdminUser = () => {
   useEffect(() => {
     ;(async () => {
       const response = await authApi.getUserDetails(adminId)
+      console.log(response)
 
       if (response?.data) {
         const details = response.data

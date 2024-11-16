@@ -76,7 +76,7 @@ export const EditRestaurant = () => {
       formData.append("billingAddress", data.billingAddress)
       formData.append("cai", data.cai)
       formData.append("shippingFree", data.shippingFree ?? false)
-      formData.append("cuisineTypeId", data.cuisineTypeId ?? null)
+      formData.append("cuisineTypeId", data.cuisineTypeId ?? "")
       if (data.pricePerChair) {
         formData.append("pricePerChair", data.pricePerChair)
       }
@@ -97,7 +97,8 @@ export const EditRestaurant = () => {
       }
 
       let formDataBanner = null
-      if (data?.bannerDishes?.[0]) {
+
+      if (data?.bannerDishes?.[0] instanceof File) {
         formDataBanner = new FormData()
         formDataBanner.append("files", data.bannerDishes[0])
       }

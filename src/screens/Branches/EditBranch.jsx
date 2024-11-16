@@ -12,6 +12,7 @@ import { NAVIGATION_ROUTES_RES_ADMIN } from "../../routes"
 import BackButton from "../Dishes/components/BackButton"
 import { showNotification } from "@mantine/notifications"
 import { colors } from "../../theme/colors"
+import { setShippingRange } from "../../store/features/branchesSlice"
 
 export const EditBranch = () => {
   const { branchId } = useParams()
@@ -71,6 +72,7 @@ export const EditBranch = () => {
   })
   const navigate = useNavigate()
   const imageLocation = watch("images[0].location")
+  dispatch(setShippingRange(watch("maxDistanceShipping") || 0))
 
   const restaurant = useSelector((state) => state?.restaurant?.value)
   const [isDataCleared, setIsDataCleared] = useState(false)
@@ -145,7 +147,6 @@ export const EditBranch = () => {
     {
       title: "Horario",
       requirement: "Obligatorio",
-      // form: <TimeForm setValue={setValue} watch={watch} />
       form: (
         <TimeForm
           schedule={workSchedule}
@@ -186,7 +187,7 @@ export const EditBranch = () => {
       address: data.address,
       city: data.city,
       state: getDepartmentNameById(parseInt(data.state)),
-      geolocation: data.geolocation.coordinates,
+      geolocation: data.geolocation.coordinates ? data.geolocation.coordinates : data.geolocation,
       delivery: data.delivery ?? false,
       pickup: data.pickup ?? false,
       onSite: data.onSite ?? false,

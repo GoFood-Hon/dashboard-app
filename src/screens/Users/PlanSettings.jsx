@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { Tabs } from "@mantine/core"
+import { Tabs, Card, Text, Group, Divider, Stack } from "@mantine/core"
 import SettingsCard from "../../components/SettingsCard"
 import { useSelector } from "react-redux"
 import { useForm } from "react-hook-form"
@@ -10,13 +10,18 @@ import { SETTING_NAVIGATION_ROUTES } from "../../routes"
 import plansApi from "../../api/plansApi"
 import toast from "react-hot-toast"
 import { colors } from "../../theme/colors"
+import { IconCreditCard } from "@tabler/icons-react"
+import classes from "./CreditCard.module.css"
+import { PlanInfoCard } from "../../components/Plans/PlanInfoCard"
+import { SelectPlan } from "./SelectPlan"
 
 export default function PlanSettings() {
   const user = useSelector((state) => state.user.value)
   const planData = user?.Restaurant?.Subscription?.Plan
-
   const navigate = useNavigate()
   const [creditCard, setCreditCard] = useState()
+  const [planCancelled, setPlanCancelled] = useState(false)
+  const [newPlan, setNewPlan] = useState({})
 
   // TODO: Validaciones
   const {
@@ -24,6 +29,14 @@ export default function PlanSettings() {
     handleSubmit,
     formState: { errors }
   } = useForm()
+
+  const handlePlanCancel = (cancelled) => {
+    setPlanCancelled(cancelled)
+  }
+
+  const handleSelectNewPlan = (planId) => {
+    setNewPlan(planId)
+  }
 
   const onSubmit = async (data) => {
     try {
@@ -53,6 +66,8 @@ export default function PlanSettings() {
   }
 
   useEffect(() => {
+    console.log(planData)
+    console.log(user)
     ;(async () => {
       try {
         const response = await plansApi.getCard()
@@ -89,13 +104,21 @@ export default function PlanSettings() {
           <Tabs.Panel value="payments">
             {planData && planData.name ? (
               <SettingsCard title="Plan actual" iconName="creditCard">
+                <PlanInfoCard data={planData} onCancelPlan={handlePlanCancel} />
+              </SettingsCard>
+            ) : Object.keys(newPlan).length === 0 ? (
+              <></>
+            ) : // <SelectPlan restaurantId={restaurantId} onSelected={handleSelectNewPlan} />
+            null}
+            {/* {planData && planData.name ? (
+              <SettingsCard title="Plan actual" iconName="creditCard">
                 <PlanDetailsCard plan={planData} />
               </SettingsCard>
             ) : (
               <SettingsCard title="Plan actual" iconName="creditCard">
                 <p className="p-10 text-center font-semibold text-gray-400">Sin plan activo</p>
               </SettingsCard>
-            )}
+            )} */}
           </Tabs.Panel>
           <Tabs.Panel value="paymentMethod">
             <SettingsCard title="Tarjeta actual" iconName="creditCard">
@@ -166,23 +189,53 @@ const CreditCardInfo = ({ data }) => {
   const expMonth = validThru?.substring(0, 2)
   const expYear = validThru?.substring(2)
   return (
-    <div className=" w-2/4 shadow-xl border-2 rounded-lg p-4 m-10">
-      <div className="flex items-center justify-between mb-4">
-        <h2 className="text-lg font-semibold text-gray-800">Tarjeta actual</h2>
-        <span className="text-gray-600">
-          <i className="fas fa-credit-card mr-1"></i>
-          {brand}
-        </span>
-      </div>
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center">
-          <i className="fas fa-lock mr-1 text-gray-600"></i>
-          <span className="text-gray-600">{safeIdentifier}</span>
-        </div>
-        <div className="text-gray-600">
-          {expMonth}/{expYear}
-        </div>
-      </div>
-    </div>
+    // <div className=" w-2/4 shadow-xl border-2 rounded-lg p-4 m-10">
+    //   <div className="flex items-center justify-between mb-4">
+    //     <h2 className="text-lg font-semibold text-gray-800">Tarjeta actual</h2>
+    //     <span className="text-gray-600">
+    //       <i className="fas fa-credit-card mr-1"></i>
+    //       {brand}
+    //     </span>
+    //   </div>
+    //   <div className="flex items-center justify-between mb-4">
+    //     <div className="flex items-center">
+    //       <i className="fas fa-lock mr-1 text-gray-600"></i>
+    //       <span className="text-gray-600">{safeIdentifier}</span>
+    //     </div>
+    //     <div className="text-gray-600">
+    //       {expMonth}/{expYear}
+    //     </div>
+    //   </div>
+    // </div>
+    <Card className={classes.card} radius="md" withBorder>
+      {/* Ícono de fondo */}
+      <IconCreditCard className={classes.iconBackground} />
+
+      <Stack spacing="md" h="100%" justify="space-between">
+        {/* Chip */}
+        <div className={classes.chip}></div>
+
+        {/* Número de la tarjeta */}
+        <Text className={classes.cardNumber}>{"1458 8756 8441 7711" || "#### #### #### ####"}</Text>
+
+        <Group position="apart" spacing="xs">
+          {/* Nombre del titular */}
+          <Stack spacing={0}>
+            <Text size="xs" transform="uppercase">
+              Titular
+            </Text>
+            <Text className={classes.cardDetails}>{"Victor Alfonso Reyes Gudiel" || "Nombre Apellido"}</Text>
+          </Stack>
+
+          {/* Fecha de expiración */}
+          <Stack spacing={0}>
+            <Text size="xs" transform="uppercase">
+              Vence
+            </Text>
+            <Text className={classes.cardDetails}>{"11/27" || "MM/AA"}</Text>
+          </Stack>
+        </Group>
+      </Stack>
+    </Card>
   )
 }

@@ -173,9 +173,7 @@ export const OrderDetails = () => {
                 <Grid.Col span={{ base: 12, md: "auto" }}>
                   <div className="flex flex-col">
                     <span className="text-sm  font-medium leading-normal">Fecha</span>
-                    <span className="text-sm  font-bold leading-normal">
-                      {formatDateDistanceToNow(orderDetails?.createdAt)}
-                    </span>
+                    <span className="text-sm  font-bold leading-normal">{formatDateDistanceToNow(orderDetails?.createdAt)}</span>
                   </div>
                 </Grid.Col>
               </Grid>
@@ -231,13 +229,9 @@ export const OrderDetails = () => {
                       - {getFormattedHNL(orderDetails?.OrderDetails?.[0]?.discount)}
                     </span>
                     <span className="text-sm py-2 font-normal leading-normal">+ {orderDetails?.shippingPrice}</span>
-                    <span className="text-sm py-2 font-normal leading-normal">
-                      + {getFormattedHNL(orderDetails?.isv)}
-                    </span>
+                    <span className="text-sm py-2 font-normal leading-normal">+ {getFormattedHNL(orderDetails?.isv)}</span>
                     <div className="w-full border border-blue-100" />
-                    <span className="text-sm pt-4 font-normal leading-normal">
-                      {getFormattedHNL(orderDetails?.total)}
-                    </span>
+                    <span className="text-sm pt-4 font-normal leading-normal">{getFormattedHNL(orderDetails?.total)}</span>
                   </div>
                 </Grid.Col>
               </Grid>
@@ -274,13 +268,13 @@ export const OrderDetails = () => {
                   onClick={() => confirmOrder()}
                   className={"text-white text-md px-3 py-2 mb-4 bg-primary_button  font-bold"}
                 />
+                <Button
+                  text={"Cancelar pedido"}
+                  onClick={() => cancelOrder()}
+                  className={"text-md px-3 py-2 mb-4 text-white bg-red-500 font-bold"}
+                />
               </>
             ) : null}
-            <Button
-              text={"Cancelar pedido"}
-              onClick={() => cancelOrder()}
-              className={"text-md px-3 py-2 mb-4 text-white bg-red-500 font-bold"}
-            />
             {(orderDetails?.status === orderStatusValues.confirmed) & (user.role === APP_ROLES.kitchenUser) ? (
               <Button
                 type="submit"
@@ -374,17 +368,13 @@ export const OrderDetails = () => {
                 radius={"xl"}
                 fallbackSrc="https://placehold.co/600x400?text=Imagen+no+disponible"
               />
-              <div className="text-2xl font-bold pl-4 leading-loose">
-                {orderDetails?.OrderDetails?.[0]?.Dish?.name}
-              </div>
+              <div className="text-2xl font-bold pl-4 leading-loose">{orderDetails?.OrderDetails?.[0]?.Dish?.name}</div>
             </div>
             <Grid mt={"xl"}>
               <Grid.Col span={{ base: 12, md: "auto" }}>
                 <div className="flex flex-col">
                   <span className="text-sm  font-medium leading-normal">Cantidad</span>
-                  <span className="text-xs py-2 font-bold leading-normal">
-                    {orderDetails?.OrderDetails?.[0]?.quantity}
-                  </span>
+                  <span className="text-xs py-2 font-bold leading-normal">{orderDetails?.OrderDetails?.[0]?.quantity}</span>
                 </div>
               </Grid.Col>
               <Grid.Col span={{ base: 12, md: "auto" }}>
@@ -405,9 +395,7 @@ export const OrderDetails = () => {
               <Grid.Col span={{ base: 12, md: 2 }}>
                 <div className="flex flex-col">
                   <span className="text-sm  font-medium leading-normal">Total</span>
-                  <span className="text-xs py-2 font-bold leading-normal">
-                    {getFormattedHNL(orderDetails?.total)}
-                  </span>
+                  <span className="text-xs py-2 font-bold leading-normal">{getFormattedHNL(orderDetails?.total)}</span>
                 </div>
               </Grid.Col>
             </Grid>

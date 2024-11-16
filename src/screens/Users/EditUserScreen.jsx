@@ -83,9 +83,9 @@ export const EditUserScreen = () => {
       formData.append("email", data.email)
       formData.append("phoneNumber", data.phoneNumber)
       formData.append("role", data.role)
-      // formData.append("note", data.note)
+      formData.append("note", data.note)
 
-      formData.append("sucursalId", data.branchId)
+      formData.append("sucursalId", data.sucursalId)
 
       if (data.role === USER_ROLES.driver) {
         formData.append("motorcycleId", data.motorcycleId)

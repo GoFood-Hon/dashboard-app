@@ -387,7 +387,6 @@ export const NAVIGATION_ROUTES_KITCHEN = {
 export const NAVIGATION_ROUTES_KITCHEN_TWO = [
   { label: "Inicio", icon: IconHome, link: "/" },
   { label: "Pedidos", icon: IconShoppingCart, link: "/pedidos" },
-  { label: "Historial", icon: IconFileInvoice, link: "/historialDelPedido" },
   { label: "Cuenta", path: "/miCuenta", icon: IconSettings }
 ]
 

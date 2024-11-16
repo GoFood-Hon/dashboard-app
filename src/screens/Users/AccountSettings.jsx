@@ -66,13 +66,7 @@ export default function AccountSettings() {
   const previews = images.map((file, index) => {
     const imageUrl = URL.createObjectURL(file)
     return (
-      <img
-        key={index}
-        src={imageUrl}
-        onLoad={() => URL.revokeObjectURL(imageUrl)}
-        alt={`Preview ${index + 1}`}
-        className="h-14 w-14 rounded-xl object-cover object-center border m-1"
-      />
+      <Image radius="md" h={250} src={imageUrl} />
     )
   })
 
@@ -128,7 +122,7 @@ export default function AccountSettings() {
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className={`${user.role === APP_ROLES.restaurantAdmin && ""}`}>
           <section>
-            <div className="flex flex-row justify-between items-center pb-3">
+            <div className="flex flex-row justify-between items-center">
               <div className="flex flex-row gap-x-3 items-center">
                 <BackButton title="Configurar cuenta" />
               </div>
@@ -151,17 +145,14 @@ export default function AccountSettings() {
                         name="phoneNumber"
                         register={register}
                         errors={errors}
-                        className="text-black"
-                        countryPrefix="+504"
                       />
                     </Grid.Col>
                     <Grid.Col span={{ base: 12, md: 6 }}>
                       <InputField
-                        label="Ingrese la contraseña"
+                        label="Nueva contraseña"
                         name="password"
                         register={register}
                         errors={errors}
-                        className="text-black"
                         type="password"
                       />
                     </Grid.Col>
@@ -171,7 +162,6 @@ export default function AccountSettings() {
                         name="passwordConfirm"
                         register={register}
                         errors={errors}
-                        className="text-black"
                         type="password"
                       />
                     </Grid.Col>
@@ -179,35 +169,15 @@ export default function AccountSettings() {
                 </Paper>
               </Grid.Col>
               <Grid.Col span={{ base: 12, md: 4, lg: 4 }}>
-                <Paper withBorder radius="md" h="100%" p="md">
-                  {previews.length > 0 ? (
-                    <Flex direction="column" h="100%" justify="center">
-                      <Text size="lg" mb="xs">
-                        Imagen seleccionada:
-                      </Text>
-                      <Paper withBorder radius="md" p="xs">
-                        <Flex>
-                          <div className="flex flex-row w-full items-center gap-2 flex-wrap p-2">
-                            {previews}
-                            <div className="flex flex-col">
-                              <Text className="font-semibold italic">{fileInformation?.name}</Text>
-                              <Text className="font-semibold" size="sm" c="dimmed" inline>
-                                {bytesToMB(fileInformation?.size)} MB
-                              </Text>
-                            </div>
-                          </div>
-                          <button onClick={deleteImage} className="pr-3">
-                            <CloseIcon size={24} />
-                          </button>
-                        </Flex>
-                      </Paper>
-                    </Flex>
-                  ) : (
-                    <Dropzone onDrop={handleDrop} accept={IMAGE_MIME_TYPE}>
-                      <Group justify="center" gap="xl" align="center" style={{ pointerEvents: "none" }}>
-                        <Container maw={400}>
-                          <Flex direction="column" align="center" style={{ cursor: "pointer" }}>
-                            <Image src={image} radius="md" alt="" style={{ cursor: "pointer" }} />
+                <Paper withBorder radius="md" h="100%">
+                  <Flex align="center" h="100%" justify="center">
+                    <Dropzone onDrop={handleDrop} accept={IMAGE_MIME_TYPE} h={220} style={{ cursor: "pointer" }}>
+                      <Flex direction="column" justify="center" align="center" h={220}>
+                        {previews.length > 0 ? (
+                          previews
+                        ) : (
+                          <>
+                            <Image radius="md" h={250} src={image} />
                             <IconPhoto
                               className={`${image ? "hidden" : ""}`}
                               style={{ width: rem(52), height: rem(52), color: "var(--mantine-color-dimmed)" }}
@@ -222,13 +192,13 @@ export default function AccountSettings() {
                               c="dimmed"
                               inline
                               mt={7}>
-                              Haga clic o arrastre la imagen del perfil
+                              Haga clic o arrastre la imagen del restaurante
                             </Text>
-                          </Flex>
-                        </Container>
-                      </Group>
+                          </>
+                        )}
+                      </Flex>
                     </Dropzone>
-                  )}
+                  </Flex>
                   {errors.files && <p className="text-red-500 text-center w-full">* Imagen es requerida.</p>}
                 </Paper>
               </Grid.Col>

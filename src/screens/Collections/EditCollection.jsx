@@ -1,13 +1,9 @@
-import React, { useEffect, useRef, useState } from "react"
+import React, { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { Accordion, Button, Flex, Paper } from "@mantine/core"
 import { useForm } from "react-hook-form"
 import { useDispatch, useSelector } from "react-redux"
-import { yupResolver } from "@hookform/resolvers/yup"
-import toast from "react-hot-toast"
 import GeneralInformationForm from "./GeneralInformationForm"
-import dishesApi from "../../api/dishesApi"
-import { newMenuValidation } from "../../utils/inputRules"
 import { createMenu } from "../../store/features/menuSlice"
 import BackButton from "../Dishes/components/BackButton"
 import { NAVIGATION_ROUTES_RES_ADMIN, NAVIGATION_ROUTES_SUPER_ADMIN } from "../../routes"
@@ -21,7 +17,6 @@ export default function EditCollection() {
   const { collectionId } = useParams()
   const navigate = useNavigate()
   const dispatch = useDispatch()
-  const restaurant = useSelector((state) => state.restaurants.restaurants)
   const user = useSelector((state) => state.user.value)
   const [elements, setElements] = useState([])
   const [isLoading, setIsLoading] = useState(false)
@@ -30,7 +25,6 @@ export default function EditCollection() {
     currentDishPage,
     dishesPerPage,
     hasMoreDishes,
-    creatingCollection,
     restaurants,
     currentRestaurantPage,
     restaurantsPerPage,
@@ -56,7 +50,6 @@ export default function EditCollection() {
     const fetchMenu = async () => {
       try {
         const response = await collectionsApi.getCollectionDetails(collectionId)
-        console.log(response)
         const collectionDetails = response?.data
         setElements(collectionDetails)
       } catch (error) {
@@ -92,26 +85,6 @@ export default function EditCollection() {
   }, [dispatch, currentDishPage, dishesPerPage, currentRestaurantPage, restaurantsPerPage])
 
   const [isDataCleared, setIsDataCleared] = useState(false)
-  //const [dishes, setDishes] = useState([])
-
-  // useEffect(() => {
-  //   async function getDishes() {
-  //     try {
-  //       const response = await dishesApi.getAllDishesByRestaurant({
-  //         restaurantId: user.restaurantId
-  //       })
-
-  //       const activeDishes = response.data.data.filter((dish) => dish.isActive)
-  //       setDishes(activeDishes)
-  //       return response
-  //     } catch (error) {
-  //       toast.error(`Hubo un error obteniendo los platos, ${error}`)
-  //       throw error
-  //     }
-  //   }
-
-  //   getDishes()
-  // }, [restaurant])
 
   const accordionStructure = [
     {
@@ -174,7 +147,6 @@ export default function EditCollection() {
     dispatch(createMenu({ data, restaurantId })).then((response) => {
       if (response.payload) {
         reset()
-        // localStorage.removeItem("draft")
         navigate(NAVIGATION_ROUTES_RES_ADMIN.Menu.path)
         setIsDataCleared(true)
       }

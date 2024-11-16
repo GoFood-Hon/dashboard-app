@@ -26,7 +26,7 @@ import "dayjs/locale/es"
 import { useDebouncedCallback } from "@mantine/hooks"
 import { useDispatch, useSelector } from "react-redux"
 import { TableSkeleton } from "../../components/Skeletons/TableSkeleton"
-import { fetchAdminUsers, updateUserStatus } from "../../store/features/userSlice"
+import { fetchAdminUsers, updateOtherUserStatus, updateUserStatus } from "../../store/features/userSlice"
 import { getFormattedHNL } from "../../utils"
 import customParseFormat from "dayjs/plugin/customParseFormat"
 import utc from "dayjs/plugin/utc"
@@ -200,11 +200,11 @@ export default function MenuTable({ items, screenType, totalItems, currentPage, 
       {
         label: "Estado",
         accessor: "active",
-        render: (active) => (
+        render: (active, item) => (
           <MantineProvider theme={theme}>
             <Switch
               checked={active}
-              //onChange={() => (isActive ? handleDisableSelected(item.id) : handleEnableSelected(item.id))}
+              onChange={() => dispatch(updateOtherUserStatus({ params: { active: !item.active }, userId: item.id }))}
               color={colors.main_app_color}
               size="sm"
               thumbIcon={
@@ -308,19 +308,21 @@ export default function MenuTable({ items, screenType, totalItems, currentPage, 
             size="md"
             w={120}
             color={
-              status === "pending" || status === "on-hold"
+              status === "pending" || status === "on-hold" || status === "confirmed"
                 ? colors.yellow_logo
-                : status === "cancelled"
+                : status === "canceled"
                   ? colors.main_app_color
                   : "green"
             }>
             {status === "pending"
               ? "Pendiente"
-              : status === "cancelled"
+              : status === "canceled"
                 ? "Cancelado"
                 : status === "on-hold"
                   ? "En espera"
-                  : "Completado"}
+                  : status === "confirmed"
+                    ? "Confirmado"
+                    : "Completado"}
           </Badge>
         )
       },

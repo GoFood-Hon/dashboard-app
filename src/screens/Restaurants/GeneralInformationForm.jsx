@@ -1,50 +1,32 @@
 import React, { useEffect, useState } from "react"
-import { Checkbox, CloseIcon, Container, Flex, Grid, Group, Paper, Text, rem, Image, Select } from "@mantine/core"
+import { Flex, Grid, Paper, Text, rem, Image, Select } from "@mantine/core"
 import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone"
 import { IconPhoto } from "@tabler/icons-react"
 import InputField from "../../components/Form/InputField"
-import { colors } from "../../theme/colors"
-import { bytesToMB } from "../../utils"
 import { useDispatch, useSelector } from "react-redux"
-import { fetchAllKitchenTypes } from "../../store/features/kitchenAndTagsSlice"
 import { Controller } from "react-hook-form"
 import InputCheckbox from "../../components/Form/InputCheckbox"
+import { fetchNoPaginatedRestaurants } from "../../store/features/restaurantSlice"
 
-export const GeneralInformationForm = ({ register, control, errors, setValue, isDataCleared, image, watch }) => {
+export const GeneralInformationForm = ({ register, control, errors, setValue, image, watch }) => {
   const dispatch = useDispatch()
-  const kitchenTypes = useSelector((state) => state.kitchenAndTags.kitchenTypes)
+  const restaurants = useSelector((state) => state.restaurants.restaurants)
   const [images, setImages] = useState([])
-  const [fileInformation, setFileInformation] = useState(null)
 
   const isFreeDelivery = watch("shippingFree", true)
 
   useEffect(() => {
-    dispatch(fetchAllKitchenTypes())
+    console.log(restaurants)
+    dispatch(fetchNoPaginatedRestaurants())
   }, [dispatch])
-
-  const handleHasFreeDelivery = () => {
-    //setValue("shippingFree", !isFreeDelivery)
-  }
 
   const handleDrop = (acceptedFiles) => {
     if (acceptedFiles.length > 0) {
       const [file] = acceptedFiles
-      setFileInformation(file)
       setImages(acceptedFiles)
       setValue("files", acceptedFiles)
     }
   }
-
-  const deleteImage = () => {
-    setFileInformation(null)
-    setImages([])
-  }
-
-  useEffect(() => {
-    if (isDataCleared) {
-      deleteImage()
-    }
-  }, [isDataCleared])
 
   const previews = images.map((file, index) => {
     const imageUrl = URL.createObjectURL(file)
@@ -88,12 +70,12 @@ export const GeneralInformationForm = ({ register, control, errors, setValue, is
             </Grid.Col>
             <Grid.Col span={{ base: 6 }}>
               <Controller
-                name="cuisineTypeId"
+                name="restaurantId"
                 control={control}
                 render={({ field, fieldState }) => (
                   <Select
                     label="Especialidad de cocina"
-                    data={kitchenTypes.map((item) => ({
+                    data={restaurants.map((item) => ({
                       value: item.id,
                       label: item.name
                     }))}

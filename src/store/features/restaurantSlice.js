@@ -49,6 +49,27 @@ export const fetchRestaurants = createAsyncThunk(
   }
 )
 
+export const fetchNoPaginatedRestaurants = createAsyncThunk(
+  "restaurants/fetchNoPaginatedRestaurants",
+  async (_, { getState, rejectWithValue }) => {
+    const state = getState().restaurants
+
+    if (state.restaurants && state.restaurants.length > 0) {
+      return state.restaurants
+    }
+
+    try {
+      const response = await restaurantsApi.getAllRestaurantsNoPagination({
+        order: 'DESC',
+        orderBy: 'created_at'
+      })
+      return response.data
+    } catch (error) {
+      return rejectWithValue(error.response?.data || "Error fetching dish tags")
+    }
+  }
+)
+
 export const createRestaurant = createAsyncThunk(
   "restaurants/createRestaurant",
   async ({ params, imageParams, formDataBanner }, { rejectWithValue }) => {
@@ -236,7 +257,7 @@ export const updateRestaurantData = createAsyncThunk(
 
       if (response.error) {
         showNotification({
-          title: "Error",
+          title: "Error asss",
           message: response.message,
           color: "red"
         })
@@ -335,6 +356,17 @@ export const restaurantsSlice = createSlice({
         state.totalPagesCount = Math.ceil(results / action.meta.arg.limit)
       })
       .addCase(fetchRestaurants.rejected, (state, action) => {
+        state.loadingRestaurants = false
+        state.error = action.error
+      })
+      .addCase(fetchNoPaginatedRestaurants.pending, (state) => {
+        state.loadingRestaurants = true
+      })
+      .addCase(fetchNoPaginatedRestaurants.fulfilled, (state, action) => {
+        state.restaurants = action.payload
+        state.loadingRestaurants = false
+      })
+      .addCase(fetchNoPaginatedRestaurants.rejected, (state, action) => {
         state.loadingRestaurants = false
         state.error = action.error
       })

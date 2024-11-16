@@ -54,7 +54,7 @@ export default function GeneralSettings() {
   return (
     <>
       <section>
-        <div className="flex flex-row justify-between items-center pb-3">
+        <div className="flex flex-row justify-between items-center">
           <div className="flex flex-row gap-x-3 items-center">
             <h1 className="text-white-200 text-2xl font-semibold">General</h1>
           </div>
@@ -74,7 +74,7 @@ export default function GeneralSettings() {
               </Box>
             </Flex>
             <Box>
-              <Text c="dimmed">{restaurants?.isActive ? "Habilitado" : "Deshabilitado"}</Text>
+              <Text c="dimmed" size="sm">{restaurants?.isActive ? "Habilitado" : "Deshabilitado"}</Text>
             </Box>
           </Flex>
         </Paper>
@@ -85,16 +85,18 @@ export default function GeneralSettings() {
           <Flex align="center" justify="space-between">
             <Box>
               <Text fw={700}>Correo</Text>
-              <Text c="dimmed">{restaurants.email}</Text>
+              <Text c="dimmed" size="sm">{restaurants.email}</Text>
             </Box>
             <Box>
-              <Text fw={700} ta='right'>Teléfono</Text>
-              <Text c="dimmed">{restaurants.phoneNumber}</Text>
+              <Text fw={700} ta="right">
+                Teléfono
+              </Text>
+              <Text c="dimmed" size="sm">{restaurants.phoneNumber}</Text>
             </Box>
           </Flex>
           <Box mt="md">
             <Text fw={700}>Dirección principal</Text>
-            <Text c="dimmed">{restaurants.billingAddress}</Text>
+            <Text c="dimmed" size="sm">{restaurants.billingAddress}</Text>
           </Box>
         </Paper>
 
@@ -104,15 +106,19 @@ export default function GeneralSettings() {
           <Flex align="center" justify="space-between">
             <Box>
               <Text fw={700}>Razón social</Text>
-              <Text c="dimmed">{restaurants.socialReason}</Text>
+              <Text c="dimmed" size="sm">{restaurants.socialReason}</Text>
             </Box>
             <Box>
-              <Text fw={700} ta='center'>CAI</Text>
-              <Text c="dimmed">{restaurants.cai}</Text>
+              <Text fw={700} ta="center">
+                CAI
+              </Text>
+              <Text c="dimmed" size="sm">{restaurants.cai}</Text>
             </Box>
             <Box>
-              <Text fw={700} ta='right'>RTN</Text>
-              <Text c="dimmed">{restaurants.rtn}</Text>
+              <Text fw={700} ta="right">
+                RTN
+              </Text>
+              <Text c="dimmed" size="sm">{restaurants.rtn}</Text>
             </Box>
           </Flex>
         </Paper>
@@ -124,7 +130,17 @@ export default function GeneralSettings() {
             <Avatar size="md" src={userData?.images?.[0]?.location} />
             <Box>
               <Text fw={700}>{userData.name}</Text>
-              <Text c="dimmed">{userData.role}</Text>
+              <Text c="dimmed" size="sm">
+                {userData.role === "admin-restaurant"
+                  ? "Administrador de restaurante"
+                  : userData.role === "admin-sucursal"
+                    ? "Administrador de sucursal"
+                    : userData.role === "cashier"
+                      ? "Cajero"
+                      : userData.role === "kitchen"
+                        ? "Cocinero"
+                        : "Motorista"}
+              </Text>
             </Box>
           </Flex>
         </Paper>
@@ -135,11 +151,13 @@ export default function GeneralSettings() {
           <Flex align="center" justify="space-between">
             <Box>
               <Text fw={700}>Correo</Text>
-              <Text c="dimmed">{userData.email}</Text>
+              <Text c="dimmed" size="sm">{userData.email}</Text>
             </Box>
             <Box>
-              <Text fw={700} ta='right'>Teléfono</Text>
-              <Text c="dimmed">{userData.phoneNumber}</Text>
+              <Text fw={700} ta="right">
+                Teléfono
+              </Text>
+              <Text c="dimmed" size="sm">{userData.phoneNumber}</Text>
             </Box>
           </Flex>
         </Paper>

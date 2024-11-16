@@ -1,18 +1,33 @@
-import React, { useEffect, useState, useRef } from "react"
-import { Grid, Paper } from "@mantine/core"
-import Map, { GeolocateControl, Marker } from "react-map-gl"
+import React, { useState, useEffect } from "react"
+import { Grid, Paper, SimpleGrid, Stack, Text, TextInput, useMantineColorScheme } from "@mantine/core"
+import Map, { GeolocateControl, Marker, Source, Layer } from "react-map-gl"
 import "mapbox-gl/dist/mapbox-gl.css"
 import InputSearchCombobox from "../../components/Form/InputSearchCombobox"
 import InputField from "../../components/Form/InputField"
-import { hondurasDepartments, mapBoxStyles } from "../../utils/constants"
-import { MAPBOX_KEY } from "../../services/env"
+import { hondurasDepartments } from "../../utils/constants"
 import InputTextAreaField from "../../components/Form/InputTextAreaField"
+import * as turf from "@turf/turf"
+import { useSelector } from "react-redux"
+import { colors } from "../../theme/colors"
 
 export default function LocationForm({ register, errors, setValue, itemDetails }) {
+  const { colorScheme } = useMantineColorScheme()
   const [markerPosition, setMarkerPosition] = useState(null)
-  const [errorLocalizacion, setErrorLocalizacion] = useState(false)
   const [lng, setLng] = useState(0)
   const [lat, setLat] = useState(0)
+  const [isMapReady, setIsMapReady] = useState(false)
+  const range = useSelector((state) => state.branches.shippingRange)
+
+  useEffect(() => {
+    if (itemDetails?.geolocation?.coordinates) {
+      const [initialLng, initialLat] = itemDetails.geolocation.coordinates
+      setLng(initialLng)
+      setLat(initialLat)
+      setMarkerPosition({ longitude: initialLng, latitude: initialLat })
+      setValue("geolocation", [initialLng, initialLat])
+      setIsMapReady(true)
+    }
+  }, [itemDetails])
 
   const handleMapClick = (event) => {
     const { lngLat } = event
@@ -20,27 +35,25 @@ export default function LocationForm({ register, errors, setValue, itemDetails }
     setLat(lngLat.lat)
     setMarkerPosition({ longitude: lngLat.lng, latitude: lngLat.lat })
     setValue("geolocation", [lngLat.lng, lngLat.lat])
-    setErrorLocalizacion(false)
   }
 
-  const handleMapInput = () => {
-    setErrorLocalizacion(false)
-    setMarkerPosition({ longitude: lng, latitude: lat })
-    setValue("geolocation", [lng, lat])
+  const generateCircle = () => {
+    if (!lng || !lat) return null
+    const point = turf.point([lng, lat])
+    return turf.circle(point, range, {
+      steps: 64,
+      units: "kilometers"
+    })
   }
+
+  const circleGeoJSON = generateCircle()
 
   return (
     <Grid>
       <Grid.Col span={{ base: 12 }}>
-        <Paper withBorder radius="md" className="w-full h-full items-center justify-center flex  rounded-2xl p-4">
-          <div className="flex flex-col w-full">
-            <InputTextAreaField
-              label="Dirección exacta (Obligatorio)"
-              name="address"
-              register={register}
-              errors={errors}
-              className="text-black"
-            />
+        <Paper withBorder radius="md" p="md">
+          <Stack>
+            <InputTextAreaField label="Dirección exacta (Obligatorio)" name="address" register={register} errors={errors} />
             <InputSearchCombobox
               label="Departamento (Obligatorio)"
               name={"state"}
@@ -50,38 +63,71 @@ export default function LocationForm({ register, errors, setValue, itemDetails }
               errors={errors}
               setValue={setValue}
             />
-            <InputField label="Ciudad" name="city" register={register} errors={errors} className="text-black" />
-            <div className="min-h-[25rem] flex flex-col w-full h-full rounded-2xl p-4">
-              <label className="text-sm font-bold leading-snug pb-4">Ubicación en mapa (Obligatorio)</label>
-              <label className="text-sm font-bold leading-snug pb-4">(Mueva el pin a la dirección exacta)</label>
-              {/* Select direction from map */}
-              <div className="flex flex-col gap-2">
-                <div className="h-72 relative">
-                  <Map
-                    initialViewState={{
-                      longitude: -88.025,
-                      latitude: 15.50417,
-                      zoom: 10
-                    }}
-                    style={{ borderRadius: "6px" }}
-                    mapStyle={import.meta.env.VITE_MAPBOX_STYLE_URL}
-                    mapboxAccessToken={import.meta.env.VITE_MAPBOX_ACCESS_TOKEN}
-                    onClick={handleMapClick}>
-                    {markerPosition && <Marker {...markerPosition} longitude={lng} latitude={lat} color="red" />}
-                    <GeolocateControl
-                      positionOptions={{ enableHighAccuracy: true }}
-                      trackUserLocation={true}
-                      onGeolocate={(position) => {
-                        setLng(position.coords.longitude)
-                        setLat(position.coords.latitude)
-                        handleMapInput()
+            <InputField label="Ciudad" name="city" register={register} errors={errors} />
+            <Stack>
+              <Paper>
+                <Text fw={700}>Ubicación en mapa (Obligatorio)</Text>
+                <Text size="sm" pb="xs">
+                  (Mueva el pin a la dirección exacta)
+                </Text>
+                <Paper h={380} className="h-72 relative">
+                  {isMapReady && (
+                    <Map
+                      initialViewState={{
+                        longitude: lng,
+                        latitude: lat,
+                        zoom: 12
                       }}
-                    />
-                  </Map>
-                </div>
-              </div>
-            </div>
-          </div>
+                      style={{ borderRadius: "6px" }}
+                      mapStyle={
+                        colorScheme === "dark"
+                          ? import.meta.env.VITE_MAPBOX_DARK_STYLE_URL
+                          : import.meta.env.VITE_MAPBOX_LIGHT_STYLE_URL
+                      }
+                      mapboxAccessToken={import.meta.env.VITE_MAPBOX_ACCESS_TOKEN}
+                      onClick={handleMapClick}>
+                      {markerPosition && <Marker {...markerPosition} longitude={lng} latitude={lat} color={colors.main_app_color} />}
+
+                      <GeolocateControl
+                        showAccuracyCircle={false}
+                        showUserLocation={false}
+                        onGeolocate={(position) => {
+                          setLng(position.coords.longitude)
+                          setLat(position.coords.latitude)
+                          setValue("geolocation", [position.coords.longitude, position.coords.latitude])
+                        }}
+                      />
+
+                      {circleGeoJSON && (
+                        <Source id="circle" type="geojson" data={circleGeoJSON}>
+                          <Layer
+                            id="circle-fill"
+                            type="fill"
+                            paint={{
+                              "fill-color": `${colors.main_app_color}`,
+                              "fill-opacity": 0.3
+                            }}
+                          />
+                          <Layer
+                            id="circle-outline"
+                            type="line"
+                            paint={{
+                              "line-color": `${colors.main_app_color}`,
+                              "line-width": 2
+                            }}
+                          />
+                        </Source>
+                      )}
+                    </Map>
+                  )}
+                </Paper>
+                <SimpleGrid mt="sm" cols={{ base: 1, sm: 2 }}>
+                  <TextInput disabled label="Longitud" value={lng} placeholder="Disabled input" />
+                  <TextInput disabled label="Latitud" value={lat} placeholder="Disabled input" />
+                </SimpleGrid>
+              </Paper>
+            </Stack>
+          </Stack>
         </Paper>
       </Grid.Col>
     </Grid>

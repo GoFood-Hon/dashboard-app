@@ -1,11 +1,6 @@
 import React, { useEffect, useState } from "react"
 import { Grid, Image, Text, ScrollArea, Paper, Flex, Group, Avatar, Button, Loader, Box } from "@mantine/core"
 import { useSelector } from "react-redux"
-import { getFormattedHNL } from "../../utils"
-
-import LoadingCircle from "../../components/LoadingCircle"
-import { selectComplementsError, selectComplementsStatus } from "../../store/features/complementsSlice"
-import { TrashIcon } from "../../assets/icons/TrashIcon"
 import { IconX } from "@tabler/icons-react"
 import { SortableList } from "../Dishes/components"
 import { useDispatch } from "react-redux"
@@ -78,6 +73,7 @@ export default function ComplementsForm({
 }) {
   const [addedComplements, setAddedComplements] = useState([])
   const [extras, setExtras] = useState([])
+  const [deletedElements, setDeletedElements] = useState([])
   const dispatch = useDispatch()
   const {
     currentDishPage,
@@ -128,6 +124,8 @@ export default function ComplementsForm({
   }
 
   const handleRemoveComplement = (complement) => {
+    console.log(selectedDishes)
+    console.log(complement)
     const updatedAddedComplements = addedComplements.filter((item) => item !== complement)
     setAddedComplements(updatedAddedComplements)
 

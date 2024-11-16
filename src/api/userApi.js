@@ -3,23 +3,20 @@ import axiosClient from "./axiosClient"
 const userApi = {
   createUser: (params) => axiosClient.post("api/v1/users/create-user", params),
 
-  getUsersByRestaurant: ({ limit, page, order, id, startDate, endDate, status, price, dateSort }) => {
+  getUsersByRestaurant: ({ restaurantId, limit, page, order, search_field, search }) => {
     const params = {
       limit,
       page,
       order,
-      startDate,
-      endDate,
-      status,
-      price,
-      dateSort
+      search_field,
+      search
     }
 
     const validParams = Object.fromEntries(Object.entries(params).filter(([_, value]) => value !== undefined && value))
 
     const queryString = new URLSearchParams(validParams).toString()
 
-    const url = `api/v1/users/${id}/restaurant${queryString ? `?${queryString}` : ""}`
+    const url = `api/v1/users/${restaurantId}/restaurant${queryString ? `?${queryString}` : ""}`
 
     return axiosClient.get(url)
   },
