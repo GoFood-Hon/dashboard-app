@@ -1,4 +1,9 @@
+import { IconClockHour3 } from "@tabler/icons-react"
 import { NAVIGATION_ROUTES_BRANCH_ADMIN, NAVIGATION_ROUTES_KITCHEN } from "../routes"
+import { IconToolsKitchen } from "@tabler/icons-react"
+import { IconMoped } from "@tabler/icons-react"
+import { IconUserPlus } from "@tabler/icons-react"
+import { IconHomeCheck } from "@tabler/icons-react"
 
 export const DEFAULT_DISCOUNT_PERCENTAGE = "5%"
 export const DEFAULT_COUPON_TYPE = "Por fecha"
@@ -200,3 +205,23 @@ export const preparationTime = [
 export const daysOfWeek = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"]
 
 export const daysOfWeekEn = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
+
+export const orderStates = {
+  delivery: [
+    { icon: IconClockHour3, value: "confirmed", label: "Confirmación", step: 1 },
+    { icon: IconToolsKitchen, value: "ready", label: "Preparación", step: 2 },
+    { icon: IconUserPlus, value: "ready-to-pickup", label: "Asignar repartidor", step: 3 },
+    { icon: IconMoped, value: "on-delivery", label: "En camino", step: 4 },
+    { icon: IconHomeCheck, value: "delivered", label: "Entregado", step: 5 },
+  ],
+  pickup: [
+    { icon: IconClockHour3, value: "confirmed", label: "Confirmación", step: 1 },
+    { icon: IconToolsKitchen, value: "ready-for-customer", label: "Preparación", step: 2 },
+    { icon: IconHomeCheck, value: "delivered", label: "Entregado", step: 3 },
+  ],
+  onSite: [
+    { icon: IconClockHour3, value: "confirmed", label: "Confirmación", step: 1 },
+    { icon: IconToolsKitchen, value: "ready-for-customer", label: "Preparación", step: 2 },
+    { icon: IconHomeCheck, value: "delivered", label: "Entregado", step: 3 },
+  ]
+}

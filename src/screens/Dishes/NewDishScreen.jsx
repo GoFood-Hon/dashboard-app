@@ -1,6 +1,6 @@
-import React, { useRef, useState } from "react"
-import { useLocation, useNavigate } from "react-router-dom"
-import { Accordion, Flex, Paper, Button } from "@mantine/core"
+import React, { useState } from "react"
+import { useNavigate } from "react-router-dom"
+import { Accordion } from "@mantine/core"
 import { useForm } from "react-hook-form"
 import { useDispatch, useSelector } from "react-redux"
 import { yupResolver } from "@hookform/resolvers/yup"
@@ -10,20 +10,16 @@ import { createDish } from "../../store/features/dishesSlice"
 import { newItemValidationSchema } from "../../utils/inputRules"
 import PreparationForm from "./PreparationForm"
 import { NAVIGATION_ROUTES_RES_ADMIN } from "../../routes"
-import BackButton from "./components/BackButton"
 import { AdditionalForm } from "./AdditionalForm"
-import { colors } from "../../theme/colors"
+import FormLayout from "../../components/Form/FormLayout"
 
 export default function NewDish() {
-  const location = useLocation()
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const user = useSelector((state) => state.user.value)
   const [isDataCleared, setIsDataCleared] = useState(false)
   const [additional, setAdditional] = useState([])
   const [isLoading, setIsLoading] = useState(false)
-
-  const containerRef = useRef(null)
 
   const {
     register,
@@ -99,39 +95,14 @@ export default function NewDish() {
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <section>
-          <div className="xs:gap-3 flex flex-row flex-wrap items-center justify-between pb-6">
-            <BackButton title="Nuevo platillo" show />
-          </div>
-        </section>
-        <section>
-          <Accordion variant="separated" multiple defaultValue={["Información general", "Pagos", "Preparación", "Adicionales"]}>
-            {items}
-          </Accordion>
-        </section>
-        <section>
-          <Paper withBorder radius="md" className="w-full flex md:justify-end mt-3 md:gap-3 rounded-md px-8 py-5">
-            <Flex justify="end" gap="xs">
-              <Button
-                color={colors.main_app_color}
-                variant="outline"
-                onClick={() => {
-                  reset()
-                  localStorage.removeItem("draft")
-                  navigate(NAVIGATION_ROUTES_RES_ADMIN.Menu.submenu.Dishes.path)
-                }}>
-                Descartar
-              </Button>
-              <Button
-                loading={isLoading}
-                color={colors.main_app_color}
-                type="submit"
-                className="w-24 text-center flex h-10 items-center justify-center rounded-md shadow-sm transition-all duration-700 focus:outline-none text-xs bg-sky-950 text-slate-50">
-                Guardar
-              </Button>
-            </Flex>
-          </Paper>
-        </section>
+        <FormLayout
+          title="Nuevo platillo"
+          show
+          accordionTitles={["Información general", "Pagos", "Preparación", "Adicionales"]}
+          accordionItems={items}
+          navigate={() => navigate(NAVIGATION_ROUTES_RES_ADMIN.Menu.submenu.Dishes.path)}
+          isLoading={isLoading}
+        />
       </form>
     </>
   )

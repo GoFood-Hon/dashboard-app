@@ -28,7 +28,7 @@ export const Plans = () => {
   const handleNewPlan = () => {
     navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Plans.NewPlan.path)
   }
-  
+
   return (
     <>
       <Group grow className="mb-3">
@@ -50,17 +50,13 @@ export const Plans = () => {
           </Flex>
         </Flex>
       </Group>
-      <section>
-        <Paper withBorder p="md" radius="md">
-          <MenuTable
-            items={plans}
-            screenType="planScreen"
-            totalItems={totalPagesCount}
-            currentPage={page}
-            loadingData={loadingPlans}
-          />
-        </Paper>
-      </section>
+      <MenuTable
+        items={plans}
+        screenType="planScreen"
+        totalItems={totalPagesCount}
+        currentPage={page}
+        loadingData={loadingPlans}
+      />
     </>
   )
 }

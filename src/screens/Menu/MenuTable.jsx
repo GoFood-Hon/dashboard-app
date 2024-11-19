@@ -12,9 +12,9 @@ import {
   MantineProvider,
   rem,
   Flex,
-  Text,
-  Container,
-  Badge
+  Badge,
+  Box,
+  Paper
 } from "@mantine/core"
 import { IconEye, IconCheck, IconX } from "@tabler/icons-react"
 import { colors } from "../../theme/colors"
@@ -34,6 +34,8 @@ import timezone from "dayjs/plugin/timezone"
 import { updateMenuStatus } from "../../store/features/menuSlice"
 import { updatePlanStatus } from "../../store/features/plansSlice"
 import { updateCollectionStatus } from "../../store/features/collectionsSlice"
+import Lottie from "react-lottie"
+import animationData from "../../assets/animation/NothingFoundAnimation.json"
 
 dayjs.extend(utc)
 dayjs.extend(timezone)
@@ -49,6 +51,14 @@ export default function MenuTable({ items, screenType, totalItems, currentPage, 
   const [searchResults, setSearchResults] = useState([])
   const dispatch = useDispatch()
   const userData = useSelector((state) => state.user)
+  const defaultOptions = {
+    loop: true,
+    autoplay: true,
+    animationData: animationData,
+    rendererSettings: {
+      preserveAspectRatio: "xMidYMid slice"
+    }
+  }
 
   const getSearchResults = async (query, searchField) => {
     try {
@@ -306,9 +316,15 @@ export default function MenuTable({ items, screenType, totalItems, currentPage, 
         render: (status) => (
           <Badge
             size="md"
-            w={120}
+            w={160}
             color={
-              status === "pending" || status === "on-hold" || status === "confirmed"
+              status === "pending" ||
+              status === "on-hold" ||
+              status === "confirmed" ||
+              status === "ready" ||
+              status === "ready-to-pick-up" ||
+              status === "ready-for-customer" ||
+              status === "on-delivery"
                 ? colors.yellow_logo
                 : status === "canceled"
                   ? colors.main_app_color
@@ -322,7 +338,13 @@ export default function MenuTable({ items, screenType, totalItems, currentPage, 
                   ? "En espera"
                   : status === "confirmed"
                     ? "Confirmado"
-                    : "Completado"}
+                    : status === "ready"
+                      ? "Listo para enviar"
+                      : status === "ready-to-pick-up"
+                        ? "Listo para recoger"
+                        : status === "ready-for-customer"
+                          ? "Listo para entregar"
+                          : "Completado"}
           </Badge>
         )
       },
@@ -543,62 +565,64 @@ export default function MenuTable({ items, screenType, totalItems, currentPage, 
       {loadingData ? (
         <TableSkeleton />
       ) : items && items.length > 0 ? (
-        <ScrollArea>
-          <Table miw={800} verticalSpacing="sm">
-            <Table.Thead>
-              <Table.Tr>
-                <Table.Th style={{ width: 40 }}>
-                  <Checkbox
-                    onChange={toggleAll}
-                    checked={itemsSelected.length === items.length}
-                    indeterminate={itemsSelected.length > 0 && itemsSelected.length !== items.length}
-                    color={colors.main_app_color}
-                  />
-                </Table.Th>
-                {currentColumns.map((column) => (
-                  <Table.Th style={{ textAlign: column.center ? "center" : "left" }} key={column.label}>
-                    {column.label}
+        <Paper withBorder p='md' radius='md'>
+          <ScrollArea>
+            <Table miw={800} verticalSpacing="sm">
+              <Table.Thead>
+                <Table.Tr>
+                  <Table.Th style={{ width: 40 }}>
+                    <Checkbox
+                      onChange={toggleAll}
+                      checked={itemsSelected.length === items.length}
+                      indeterminate={itemsSelected.length > 0 && itemsSelected.length !== items.length}
+                      color={colors.main_app_color}
+                    />
                   </Table.Th>
-                ))}
-              </Table.Tr>
-            </Table.Thead>
-            <Table.Tbody>
-              {items.map((item) => {
-                const selected = itemsSelected.includes(item.id)
-                return (
-                  <Table.Tr key={item.id}>
-                    <Table.Td>
-                      <Checkbox color={colors.main_app_color} checked={selected} onChange={() => toggleRow(item.id)} />
-                    </Table.Td>
-                    {currentColumns.map((column) => (
-                      <Table.Td
-                        style={{
-                          textAlign: column.center ? "center" : "left"
-                        }}
-                        key={column.accessor}>
-                        {column.accessor === "createdAt" || column.accessor === "updatedAt"
-                          ? dayjs(item[column.accessor]).fromNow()
-                          : column.accessor === "reservationDate"
-                            ? dayjs(item[column.accessor])
-                                .tz("America/Tegucigalpa")
-                                .format("D [de] MMMM [del] YYYY [a las] h:mm A")
-                            : column.render
-                              ? column.render(item[column.accessor], item)
-                              : item[column.accessor]}
+                  {currentColumns.map((column) => (
+                    <Table.Th style={{ textAlign: column.center ? "center" : "left" }} key={column.label}>
+                      {column.label}
+                    </Table.Th>
+                  ))}
+                </Table.Tr>
+              </Table.Thead>
+              <Table.Tbody>
+                {items.map((item) => {
+                  const selected = itemsSelected.includes(item.id)
+                  return (
+                    <Table.Tr key={item.id}>
+                      <Table.Td>
+                        <Checkbox color={colors.main_app_color} checked={selected} onChange={() => toggleRow(item.id)} />
                       </Table.Td>
-                    ))}
-                  </Table.Tr>
-                )
-              })}
-            </Table.Tbody>
-          </Table>
-        </ScrollArea>
+                      {currentColumns.map((column) => (
+                        <Table.Td
+                          style={{
+                            textAlign: column.center ? "center" : "left"
+                          }}
+                          key={column.accessor}>
+                          {column.accessor === "createdAt" || column.accessor === "updatedAt"
+                            ? dayjs(item[column.accessor]).fromNow()
+                            : column.accessor === "reservationDate"
+                              ? dayjs(item[column.accessor])
+                                  .tz("America/Tegucigalpa")
+                                  .format("D [de] MMMM [del] YYYY [a las] h:mm A")
+                              : column.render
+                                ? column.render(item[column.accessor], item)
+                                : item[column.accessor]}
+                        </Table.Td>
+                      ))}
+                    </Table.Tr>
+                  )
+                })}
+              </Table.Tbody>
+            </Table>
+          </ScrollArea>
+        </Paper>
       ) : (
-        <Container h={450}>
-          <Flex justify="center" h={450} align="center">
-            <Text>No hay datos para mostrar</Text>
+        <Box>
+          <Flex direction="column" align="center">
+            <Lottie options={defaultOptions} height={440} width={440} />
           </Flex>
-        </Container>
+        </Box>
       )}
 
       <div className="flex w-full justify-end">

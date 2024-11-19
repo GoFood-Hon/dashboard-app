@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { Accordion, Flex, Paper, Button } from "@mantine/core"
+import { Accordion } from "@mantine/core"
 import { useNavigate } from "react-router-dom"
 import { yupResolver } from "@hookform/resolvers/yup"
 import { useForm } from "react-hook-form"
@@ -8,13 +8,12 @@ import { NAVIGATION_ROUTES_RES_ADMIN } from "../../routes"
 import GeneralInformationForm from "./GeneralInformationForm"
 import LocationForm from "./LocationForm"
 import { TimeForm } from "./TimeForm"
-import BackButton from "../Dishes/components/BackButton"
 import branchesApi from "../../api/branchesApi"
 import { getDepartmentNameById } from "../../utils"
 import { showNotification } from "@mantine/notifications"
-import { colors } from "../../theme/colors"
 import { useDispatch } from "react-redux"
 import { setShippingRange } from "../../store/features/branchesSlice"
+import FormLayout from "../../components/Form/FormLayout"
 
 export default function NewBranch() {
   const dispatch = useDispatch()
@@ -168,35 +167,14 @@ export default function NewBranch() {
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <section>
-          <div className="flex flex-row justify-between items-center pb-6 flex-wrap xs:gap-3">
-            <BackButton title="Nueva sucursal" show />
-          </div>
-        </section>
-        <section>
-          <Accordion variant="separated" multiple defaultValue={["Información general", "Ubicación", "Horario"]}>
-            {items}
-          </Accordion>
-        </section>
-        <section className="mt-2">
-          <Paper withBorder radius="md" className="w-full flex md:justify-end md:gap-3 rounded-md px-8 py-5">
-            <Flex justify="end" gap="xs">
-              <Button
-                color={colors.main_app_color}
-                variant="outline"
-                onClick={() => {
-                  reset()
-                  localStorage.removeItem("draft")
-                  navigate(NAVIGATION_ROUTES_RES_ADMIN.Branches.path)
-                }}>
-                Descartar
-              </Button>
-              <Button loading={isLoading} color={colors.main_app_color} type="submit">
-                Guardar
-              </Button>
-            </Flex>
-          </Paper>
-        </section>
+        <FormLayout
+          title="Nueva sucursal"
+          show
+          accordionTitles={["Información general", "Ubicación", "Horario"]}
+          accordionItems={items}
+          navigate={() => navigate(NAVIGATION_ROUTES_RES_ADMIN.Branches.path)}
+          isLoading={isLoading}
+        />
       </form>
     </>
   )

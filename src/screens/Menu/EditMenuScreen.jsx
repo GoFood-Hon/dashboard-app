@@ -2,8 +2,7 @@ import React, { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 import { useDispatch, useSelector } from "react-redux"
 import { useNavigate, useParams } from "react-router-dom"
-import { Accordion, Paper, Button, Flex } from "@mantine/core"
-import BackButton from "../Dishes/components/BackButton"
+import { Accordion } from "@mantine/core"
 import GeneralInformationForm from "./GeneralInformationForm"
 import ComplementsForm from "../Dishes/ComplementsForm"
 import { getAllDishes, updateMenu } from "../../store/features/menuSlice"
@@ -11,6 +10,7 @@ import menuApi from "../../api/menuApi"
 import { NAVIGATION_ROUTES_RES_ADMIN } from "../../routes"
 import { showNotification } from "@mantine/notifications"
 import { colors } from "../../theme/colors"
+import FormLayout from "../../components/Form/FormLayout"
 
 export default function EditMenuScreen() {
   const { menuId } = useParams()
@@ -20,7 +20,7 @@ export default function EditMenuScreen() {
   const [menuDetails, setMenuDetails] = useState({})
   const [isDataCleared, setIsDataCleared] = useState(false)
   const isLoading = useSelector((state) => state.menus.updatingMenus)
-  const { dishes, currentDishPage, hasMore, dishesLoading, dishesPerPage } = useSelector((state) => state.menus)
+  const { dishes, currentDishPage, hasMore, dishesPerPage } = useSelector((state) => state.menus)
 
   useEffect(() => {
     if (currentDishPage === 1 || dishes.length === 0 || currentDishPage > 1) {
@@ -133,34 +133,15 @@ export default function EditMenuScreen() {
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <section>
-          <div className="flex flex-row justify-between items-center pb-6 flex-wrap xs:gap-3">
-            <BackButton title="Editar menú" show />
-          </div>
-        </section>
-        <section>
-          <Accordion variant="separated" multiple defaultValue={["Información general", "Platillos"]}>
-            {items}
-          </Accordion>
-        </section>
-        <section>
-          <Paper withBorder radius="md" className="w-full flex md:justify-end mt-3 md:gap-3 rounded-md px-8 py-5">
-            <Flex justify="end" gap="xs">
-              <Button
-                color={colors.main_app_color}
-                variant="outline"
-                onClick={() => {
-                  reset()
-                  navigate(NAVIGATION_ROUTES_RES_ADMIN.Menu.path)
-                }}>
-                Descartar
-              </Button>
-              <Button loading={isLoading} color={colors.main_app_color} type="submit">
-                Actualizar
-              </Button>
-            </Flex>
-          </Paper>
-        </section>
+        <FormLayout
+          title={menuDetails?.name}
+          show
+          accordionTitles={["Información general", "Platillos"]}
+          accordionItems={items}
+          navigate={() => navigate(NAVIGATION_ROUTES_RES_ADMIN.Menu.path)}
+          isLoading={isLoading}
+          update
+        />
       </form>
     </>
   )

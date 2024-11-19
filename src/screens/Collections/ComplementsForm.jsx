@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { Grid, Image, Text, ScrollArea, Paper, Flex, Group, Avatar, Button, Loader, Box } from "@mantine/core"
+import { Grid, Image, Text, ScrollArea, Paper, Group, Button, Loader, Box } from "@mantine/core"
 import { useSelector } from "react-redux"
 import { IconX } from "@tabler/icons-react"
 import { SortableList } from "../Dishes/components"
@@ -29,7 +29,7 @@ const AvailableComplementsCard = ({ item, onItemClick }) => {
 }
 
 const ComplementCard = ({ item, handleRemoveComplement }) => {
-  const { images, name, price } = item
+  const { images, name } = item
 
   return (
     <div className="w-full h-full">
@@ -81,8 +81,7 @@ export default function ComplementsForm({
     updatingDishes,
     dishesLoading,
     collectionType,
-    updatingRestaurants,
-    restaurantsLoading
+    updatingRestaurants
   } = useSelector((state) => state.collections)
 
   useEffect(() => {
@@ -98,12 +97,7 @@ export default function ComplementsForm({
   }, [selectedDishes, data])
 
   useEffect(() => {
-    if (Array.isArray(selectedDishes)) {
-      const filteredExtras = data.filter((item) => !selectedDishes.some((selected) => selected.id === item.id))
-      setExtras(filteredExtras)
-    } else {
-      setExtras(data)
-    }
+    setExtras(data)
   }, [data, selectedDishes])
 
   const updateComplementsValue = (complements) => {
@@ -112,13 +106,10 @@ export default function ComplementsForm({
   }
 
   const handleComplementClick = (complement) => {
-    // Verificar si el complemento ya existe en `addedComplements`
     const exists = addedComplements.some((item) => item.id === complement.id)
 
-    // Si no existe, se agrega
     if (!exists) {
       setAddedComplements([...addedComplements, complement])
-      //setExtras((prevExtras) => prevExtras.filter((extra) => extra.id !== complement.id))
       updateComplementsValue([...addedComplements, complement])
     }
   }
@@ -167,7 +158,6 @@ export default function ComplementsForm({
                       </Text>
                     </Grid.Col>
                   )}
-                  {/* Mostrar el botón "Cargar más" solo si hasMore es true */}
                   {moreData && (
                     <div className="w-full flex justify-center mt-4">
                       <Button

@@ -44,22 +44,17 @@ export const Reservations = () => {
           </Flex>
         </Flex>
       </Group>
-      <section>
-        <Paper withBorder p="md" radius="md">
-          <MenuTable
-            items={reservationsList.map((reservation) => ({
-              ...reservation,
-              name: reservation.Sucursal.name
-            }))}
-            //handleDisableSelected={handleDisableSelected}
-            screenType="reservationsScreen"
-            totalItems={totalPageCount}
-            currentPage={page}
-            loadingData={loadingReservations}
-            setPage={(newPage) => dispatch(setPage(newPage))}
-          />
-        </Paper>
-      </section>
+      <MenuTable
+        items={reservationsList.map((reservation) => ({
+          ...reservation,
+          name: reservation.Sucursal.name
+        }))}
+        screenType="reservationsScreen"
+        totalItems={totalPageCount}
+        currentPage={page}
+        loadingData={loadingReservations}
+        setPage={(newPage) => dispatch(setPage(newPage))}
+      />
     </>
   )
 }

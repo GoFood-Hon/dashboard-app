@@ -10,6 +10,7 @@ import BackButton from "../Dishes/components/BackButton"
 import { USER_ROLES } from "../../utils/constants"
 import { showNotification } from "@mantine/notifications"
 import { colors } from "../../theme/colors"
+import FormLayout from "../../components/Form/FormLayout"
 
 export default function NewUser() {
   const navigate = useNavigate()
@@ -32,7 +33,7 @@ export default function NewUser() {
       const formData = new FormData()
       formData.append("name", data.name)
       formData.append("email", data.email)
-      formData.append("phoneNumber", `+504${data.phoneNumber}`)
+      formData.append("phoneNumber", data.phoneNumber.startsWith("+504") ? data.phoneNumber : `+504${data.phoneNumber}`)
       formData.append("role", data.role)
       formData.append("note", data.note)
 
@@ -124,33 +125,14 @@ export default function NewUser() {
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <section>
-          <div className="flex flex-row justify-between items-center pb-6 flex-wrap xs:gap-3">
-            <BackButton title="Nuevo usuario" show />
-          </div>
-        </section>
-        <section>
-          <Accordion variant="separated" multiple defaultValue={["Información general", "Sucursal"]}>
-            {items}
-          </Accordion>
-        </section>
-        <section>
-          <Paper withBorder radius="md" className="w-full flex md:justify-end mt-3 md:gap-3 rounded-md px-8 py-5">
-            <Flex justify="end" gap="xs">
-              <Button
-                color={colors.main_app_color}
-                variant="outline"
-                onClick={() => {
-                  navigate(NAVIGATION_ROUTES_RES_ADMIN.Users.path)
-                }}>
-                Descartar
-              </Button>
-              <Button loading={isLoading} color={colors.main_app_color} type="submit">
-                Guardar
-              </Button>
-            </Flex>
-          </Paper>
-        </section>
+        <FormLayout
+          title="Nuevo usuario"
+          show
+          accordionTitles={["Información general", "Sucursal"]}
+          accordionItems={items}
+          navigate={() => navigate(NAVIGATION_ROUTES_RES_ADMIN.Users.path)}
+          isLoading={isLoading}
+        />
       </form>
     </>
   )

@@ -1,19 +1,18 @@
 import React, { useState } from "react"
-import { Accordion, Flex, Paper, Button } from "@mantine/core"
+import { Accordion } from "@mantine/core"
 import { useNavigate } from "react-router-dom"
 import { useForm } from "react-hook-form"
 import { yupResolver } from "@hookform/resolvers/yup"
 import { GeneralInformationForm } from "./GeneralInformationForm"
-import BackButton from "../Dishes/components/BackButton"
 import { NAVIGATION_ROUTES_SUPER_ADMIN } from "../../routes"
 import { restaurantValidation } from "../../utils/inputRules"
 import { convertToDecimal } from "../../utils"
-import { colors } from "../../theme/colors"
 import BookingInformation from "./BookingInformation"
 import { createRestaurant } from "../../store/features/restaurantSlice"
 import { useDispatch } from "react-redux"
 import { useSelector } from "react-redux"
 import { RestaurantBanner } from "./RestaurantBanner"
+import FormLayout from "../../components/Form/FormLayout"
 
 export const NewRestaurant = () => {
   const navigate = useNavigate()
@@ -43,7 +42,7 @@ export const NewRestaurant = () => {
     formData.append("billingAddress", data.billingAddress)
     formData.append("cai", data.cai)
     formData.append("shippingFree", data.shippingFree ?? true)
-    formData.append("cuisineTypeId", data.cuisineTypeId ?? '')
+    formData.append("cuisineTypeId", data.cuisineTypeId ?? "")
     if (data.pricePerChair) {
       formData.append("pricePerChair", data.pricePerChair)
     }
@@ -136,36 +135,14 @@ export const NewRestaurant = () => {
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <section>
-          <div className="flex flex-row justify-between items-center pb-4 flex-wrap xs:gap-3">
-            <BackButton title="Nuevo restaurante" show />
-          </div>
-        </section>
-        <section>
-          <Accordion
-            variant="separated"
-            multiple
-            defaultValue={["Añadir banner", "Información general", "Datos de reservación"]}>
-            {items}
-          </Accordion>
-        </section>
-        <section>
-          <Paper withBorder radius="md" className="w-full flex md:justify-end mt-3 md:gap-3 rounded-md px-8 py-5">
-            <Flex justify="end" gap="xs">
-              <Button
-                color={colors.main_app_color}
-                variant="outline"
-                onClick={() => {
-                  navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Restaurants.path)
-                }}>
-                Descartar
-              </Button>
-              <Button loading={isLoading} color={colors.main_app_color} type="submit">
-                Guardar
-              </Button>
-            </Flex>
-          </Paper>
-        </section>
+        <FormLayout
+          title="Nuevo restaurante"
+          show
+          accordionTitles={["Añadir banner", "Información general", "Datos de reservación"]}
+          accordionItems={items}
+          navigate={() => navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Restaurants.path)}
+          isLoading={isLoading}
+        />
       </form>
     </>
   )

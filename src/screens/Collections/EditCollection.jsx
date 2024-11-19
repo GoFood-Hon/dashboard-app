@@ -1,17 +1,21 @@
 import React, { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
-import { Accordion, Button, Flex, Paper } from "@mantine/core"
+import { Accordion } from "@mantine/core"
 import { useForm } from "react-hook-form"
 import { useDispatch, useSelector } from "react-redux"
 import GeneralInformationForm from "./GeneralInformationForm"
 import { createMenu } from "../../store/features/menuSlice"
-import BackButton from "../Dishes/components/BackButton"
 import { NAVIGATION_ROUTES_RES_ADMIN, NAVIGATION_ROUTES_SUPER_ADMIN } from "../../routes"
 import { colors } from "../../theme/colors"
-import { fetchDishesForCollections, fetchRestaurantsForCollections, setCollectionType } from "../../store/features/collectionsSlice"
+import {
+  fetchDishesForCollections,
+  fetchRestaurantsForCollections,
+  setCollectionType
+} from "../../store/features/collectionsSlice"
 import collectionsApi from "../../api/collectionsApi"
 import ComplementsForm from "./ComplementsForm"
 import { useParams } from "react-router-dom"
+import FormLayout from "../../components/Form/FormLayout"
 
 export default function EditCollection() {
   const { collectionId } = useParams()
@@ -157,41 +161,15 @@ export default function EditCollection() {
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <section>
-          <div className="flex flex-row justify-between items-center pb-4 flex-wrap xs:gap-3">
-            <BackButton title="Editar colección" show />
-          </div>
-        </section>
-        <section>
-          <Accordion
-            variant="separated"
-            multiple
-            defaultValue={["Información general", "Lista de platillos", "Lista de restaurantes"]}>
-            {items}
-          </Accordion>
-        </section>
-        <section>
-          <Paper withBorder radius="md" className="w-full flex md:justify-end mt-3 md:gap-3 rounded-md px-8 py-5">
-            <Flex justify="end" gap="xs">
-              <Button
-                color={colors.main_app_color}
-                variant="outline"
-                onClick={() => {
-                  reset()
-                  navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Collections.path)
-                }}>
-                Descartar
-              </Button>
-              <Button
-                loading={isLoading}
-                disabled
-                color={colors.main_app_color}
-                type="submit">
-                Actualizar
-              </Button>
-            </Flex>
-          </Paper>
-        </section>
+        <FormLayout
+          title={elements.name}
+          show
+          accordionTitles={["Información general", "Lista de platillos", "Lista de restaurantes"]}
+          accordionItems={items}
+          navigate={() => navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Collections.path)}
+          isLoading={isLoading}
+          update
+        />
       </form>
     </>
   )

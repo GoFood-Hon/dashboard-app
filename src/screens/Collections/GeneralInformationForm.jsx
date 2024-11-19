@@ -62,7 +62,7 @@ export default function GeneralInformationForm({ register, errors, setValue, isD
   return (
     <Grid>
       <Grid.Col span={{ base: 12, md: 8, lg: 8 }}>
-        <Paper withBorder className="w-full h-full items-center justify-center flex rounded-2xl p-4">
+        <Paper withBorder radius='md' className="w-full h-full items-center justify-center flex rounded-2xl p-4">
           <div className="flex flex-col w-full justify-evenly h-full">
             <InputField label="Nombre (Obligatorio)" name="name" register={register} errors={errors} />
             <InputTextAreaField label="Descripción (Obligatorio)" name="description" register={register} errors={errors} />

@@ -1,18 +1,17 @@
 import React, { useEffect, useState } from "react"
-import { Accordion, Flex, Paper, Button } from "@mantine/core"
+import { Accordion } from "@mantine/core"
 import { useForm } from "react-hook-form"
 import toast from "react-hot-toast"
 import plansApi from "../../api/plansApi"
 import { convertToDecimal } from "../../utils"
 import { useNavigate, useParams } from "react-router-dom"
 import { NAVIGATION_ROUTES_SUPER_ADMIN } from "../../routes"
-import BackButton from "../Dishes/components/BackButton"
 import { colors } from "../../theme/colors"
 import { EditGeneralInformationForm } from "./EditGeneralInformationForm"
-import { DEFAULT_CURRENCY, DEFAULT_PAYMENT_TYPE } from "../../utils/constants"
 import { updatePlanData } from "../../store/features/plansSlice"
 import { useSelector } from "react-redux"
 import { useDispatch } from "react-redux"
+import FormLayout from "../../components/Form/FormLayout"
 
 export const EditPlan = () => {
   const { planId } = useParams()
@@ -141,34 +140,16 @@ export const EditPlan = () => {
 
   return (
     <>
-      <section>
-        <div className="flex flex-row justify-between items-center pb-6">
-          <BackButton title={planDetails?.name} show />
-        </div>
-      </section>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <section>
-          <Accordion variant="separated" multiple defaultValue={["Información general"]}>
-            {items}
-          </Accordion>
-        </section>
-        <section>
-          <Paper withBorder radius="md" className="w-full flex md:justify-end mt-6 md:gap-3 rounded-md px-8 py-5">
-            <Flex justify="end" gap="xs">
-              <Button
-                color={colors.main_app_color}
-                variant="outline"
-                onClick={() => {
-                  navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Plans.path)
-                }}>
-                Descartar
-              </Button>
-              <Button loading={isLoading} color={colors.main_app_color} type="submit">
-                Actualizar
-              </Button>
-            </Flex>
-          </Paper>
-        </section>
+        <FormLayout
+          title={planDetails?.name}
+          show
+          accordionTitles={["Información general"]}
+          accordionItems={items}
+          navigate={() => navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Plans.path)}
+          isLoading={isLoading}
+          update
+        />
       </form>
     </>
   )

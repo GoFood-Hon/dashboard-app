@@ -88,21 +88,17 @@ export default function Menu() {
           </Flex>
         </Flex>
       </Group>
-      <section>
-        <Paper withBorder p="md" radius="md">
-          <MenuTable
-            items={menusList.map((menu) => {
-              return { ...menu, dishesCount: menu?.Dishes?.length }
-            })}
-            //handleDisableSelected={handleDisableSelected}
-            screenType="menuScreen"
-            loadingData={loadingMenus}
-            currentPage={page}
-            totalItems={totalPageCount}
-            setPage={(newPage) => dispatch(setPage(newPage))}
-          />
-        </Paper>
-      </section>
+      <MenuTable
+        items={menusList.map((menu) => {
+          return { ...menu, dishesCount: menu?.Dishes?.length }
+        })}
+        //handleDisableSelected={handleDisableSelected}
+        screenType="menuScreen"
+        loadingData={loadingMenus}
+        currentPage={page}
+        totalItems={totalPageCount}
+        setPage={(newPage) => dispatch(setPage(newPage))}
+      />
     </>
   )
 }

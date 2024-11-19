@@ -50,18 +50,14 @@ export default function Users() {
           </Flex>
         </Flex>
       </Group>
-      <section>
-        <Paper withBorder p="md" radius="md">
-          <MenuTable
-            items={users}
-            screenType="usersScreen"
-            totalItems={totalPageCount}
-            currentPage={page}
-            loadingData={loadingUsers}
-            setPage={(newPage) => dispatch(setCurrentUserPage(newPage))}
-          />
-        </Paper>
-      </section>
+      <MenuTable
+        items={users}
+        screenType="usersScreen"
+        totalItems={totalPageCount}
+        currentPage={page}
+        loadingData={loadingUsers}
+        setPage={(newPage) => dispatch(setCurrentUserPage(newPage))}
+      />
     </>
   )
 }

@@ -180,28 +180,6 @@ export default function RestaurantsScreen() {
           withEdges
         />
       </section>
-      {/* <section>
-        {cardsSelected.length >= 1 && (
-          <Affix position={{ bottom: 20, left: "calc(50% - 270px)" }}>
-            <Card radius="md">
-              <Flex gap="sm">
-                <Button onClick={handleDisableSelected} color={colors.main_app_color}>
-                  Deshabilitar seleccionados
-                </Button>
-                <Button onClick={handleEnableSelected} color={colors.main_app_color}>
-                  Habilitar seleccionados
-                </Button>
-                <Button onClick={handleDeselectAll} color={colors.main_app_color}>
-                  Deseleccionar todos
-                </Button>
-                <Button onClick={handleSelectAll} color={colors.main_app_color}>
-                  Seleccionar todos
-                </Button>
-              </Flex>
-            </Card>
-          </Affix>
-        )}
-      </section> */}
     </>
   )
 }

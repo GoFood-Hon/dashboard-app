@@ -1,16 +1,26 @@
-import { Avatar, Flex, Menu, Text, rem } from "@mantine/core"
+import { Avatar, Flex, Menu, Text, rem, useMantineColorScheme } from "@mantine/core"
 import { colors } from "../../theme/colors"
 import { IconSettings } from "@tabler/icons-react"
-import { IconMessageCircle } from "@tabler/icons-react"
-import { IconPhoto } from "@tabler/icons-react"
-import { IconSearch } from "@tabler/icons-react"
-import { IconArrowsLeftRight } from "@tabler/icons-react"
 import { useState } from "react"
 import { IconLogout } from "@tabler/icons-react"
 import { IconSun } from "@tabler/icons-react"
+import { AUTH_NAVIGATION_ROUTES } from "../../routes"
+import { useNavigate } from "react-router-dom"
+import { IconMoon } from "@tabler/icons-react"
 
 export function UserButton({ image, name, email, role }) {
   const [opened, setOpened] = useState(false)
+  const navigate = useNavigate()
+  const { colorScheme, setColorScheme } = useMantineColorScheme()
+  const logout = () => {
+    localStorage.removeItem("token")
+    localStorage.removeItem("setUserRole")
+    navigate(AUTH_NAVIGATION_ROUTES.Login.path)
+  }
+
+  const toggleColorScheme = () => {
+    setColorScheme(colorScheme === "dark" ? "light" : "dark")
+  }
 
   return (
     <Flex direction="row" gap={8}>
@@ -44,9 +54,9 @@ export function UserButton({ image, name, email, role }) {
         <Menu.Dropdown>
           <Menu.Label>
             {role === "admin-restaurant"
-              ? "Admin. de restaurante"
+              ? "Administrador de restaurante"
               : role === "admin-sucursal"
-                ? "Admin. de sucursal"
+                ? "Administrador de sucursal"
                 : role === "cashier"
                   ? "Cajero"
                   : role === "kitchen"
@@ -55,10 +65,20 @@ export function UserButton({ image, name, email, role }) {
                       ? "Administrador principal"
                       : "Motorista"}
           </Menu.Label>
-          <Menu.Item leftSection={<IconSettings style={{ width: rem(14), height: rem(14) }} />}>Cuenta</Menu.Item>
-          <Menu.Item leftSection={<IconSun style={{ width: rem(14), height: rem(14) }} />}>Modo claro</Menu.Item>
+          {/* <Menu.Item leftSection={<IconSettings style={{ width: rem(14), height: rem(14) }} />}>Cuenta</Menu.Item> */}
+          <Menu.Item
+            leftSection={
+              colorScheme === "dark" ? (
+                <IconSun style={{ width: rem(14), height: rem(14) }} />
+              ) : (
+                <IconMoon style={{ width: rem(14), height: rem(14) }} />
+              )
+            }
+            onClick={toggleColorScheme}>
+            {colorScheme === "dark" ? "Modo claro" : "Modo oscuro"}
+          </Menu.Item>
           <Menu.Divider />
-          <Menu.Item color="red" leftSection={<IconLogout style={{ width: rem(14), height: rem(14) }} />}>
+          <Menu.Item color="red" leftSection={<IconLogout style={{ width: rem(14), height: rem(14) }} />} onClick={logout}>
             Cerrar sesión
           </Menu.Item>
         </Menu.Dropdown>

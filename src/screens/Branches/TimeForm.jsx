@@ -117,8 +117,8 @@ export const TimeForm = ({ setDaysData, hoursData, isAlwaysOpen, setIsAlwaysOpen
             <Grid.Col>
               <Paper bg={colors.main_app_color} withBorder p="lg" radius="md" shadow="md">
                 <Flex align="center" justify="center" gap="xs">
-                  <IconRosetteDiscountCheckFilled size={40} />
-                  <Text fw={700}>Esta sucursal estará abierta al público las 24 horas del día</Text>
+                  <IconRosetteDiscountCheckFilled color="white" size={40} />
+                  <Text color="white" fw={700}>Esta sucursal estará abierta al público las 24 horas del día</Text>
                 </Flex>
               </Paper>
             </Grid.Col>

@@ -53,19 +53,14 @@ export const CollectionsList = () => {
           </Flex>
         </Flex>
       </Group>
-      <section>
-        <Paper withBorder p="md" radius="md">
-          <MenuTable
-            items={collectionsList}
-            //handleDisableSelected={handleDisableSelected}
-            screenType="collectionsScreen"
-            totalItems={totalPageCount}
-            currentPage={page}
-            loadingData={loadingCollections}
-            setPage={(newPage) => dispatch(setCurrentPage(newPage))}
-          />
-        </Paper>
-      </section>
+      <MenuTable
+        items={collectionsList}
+        screenType="collectionsScreen"
+        totalItems={totalPageCount}
+        currentPage={page}
+        loadingData={loadingCollections}
+        setPage={(newPage) => dispatch(setCurrentPage(newPage))}
+      />
     </>
   )
 }

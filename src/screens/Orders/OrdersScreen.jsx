@@ -1,13 +1,12 @@
 import React, { useEffect } from "react"
 import MenuTable from "../Menu/MenuTable"
-import { Flex, Group, Title, Paper, Text } from "@mantine/core"
+import { Flex, Group, Title, Text } from "@mantine/core"
 import { useSelector } from "react-redux"
 import { fetchAllOrders, setCurrentPage } from "../../store/features/ordersSlice"
 import { useDispatch } from "react-redux"
 
 export default function OrdersScreen() {
   const dispatch = useDispatch()
-
   const limit = useSelector((state) => state.orders.itemsPerPage)
   const page = useSelector((state) => state.orders.currentPage)
   const ordersPerPage = useSelector((state) => state.orders.ordersPerPage)
@@ -42,21 +41,16 @@ export default function OrdersScreen() {
           </Flex>
         </Flex>
       </Group>
-      <section>
-        <Paper withBorder p="md" radius="md">
-          <MenuTable
-            items={ordersList.map((order) => {
-              return { ...order, user: order?.Order?.User?.name, phone: order?.Order?.User?.phoneNumber }
-            })}
-            //handleDisableSelected={handleDisableSelected}
-            screenType="ordersScreen"
-            totalItems={totalPageCount}
-            currentPage={page}
-            loadingData={loadingOrders}
-            setPage={(newPage) => dispatch(setCurrentPage(newPage))}
-          />
-        </Paper>
-      </section>
+      <MenuTable
+        items={ordersList.map((order) => {
+          return { ...order, user: order?.Order?.User?.name, phone: order?.Order?.User?.phoneNumber }
+        })}
+        screenType="ordersScreen"
+        totalItems={totalPageCount}
+        currentPage={page}
+        loadingData={loadingOrders}
+        setPage={(newPage) => dispatch(setCurrentPage(newPage))}
+      />
     </>
   )
 }

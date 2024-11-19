@@ -50,6 +50,23 @@ export const fetchOrderDetails = createAsyncThunk("orders/fetchOrderDetails", as
 export const updateOrderStatus = createAsyncThunk("orders/updateOrderStatus", async (id, { rejectWithValue }) => {
   try {
     const response = await orderApi.updateOrderStatus(id)
+    if (response.error) {
+      showNotification({
+        title: "Error",
+        message: response.message,
+        color: "red"
+      })
+
+      return rejectWithValue(response.message)
+    }
+
+    showNotification({
+      title: "Actualización exitosa",
+      message: 'El estado del pedido se actualizó correctamente',
+      color: "green",
+      duration: 7000
+    })
+
     return response.data
   } catch (error) {
     return rejectWithValue(error.response?.data || error.message)
@@ -59,6 +76,23 @@ export const updateOrderStatus = createAsyncThunk("orders/updateOrderStatus", as
 export const confirmOrder = createAsyncThunk("orders/confirmOrder", async (id, { rejectWithValue }) => {
   try {
     const response = await orderApi.confirmOrder(id)
+
+    if (response.error) {
+      showNotification({
+        title: "Error",
+        message: response.message,
+        color: "red"
+      })
+
+      return rejectWithValue(response.message)
+    }
+
+    showNotification({
+      title: "Actualización exitosa",
+      message: 'El pedido fue confirmado correctamente',
+      color: "green",
+      duration: 7000
+    })
     return response.data
   } catch (error) {
     return rejectWithValue(error.response?.data || error.message)
@@ -68,6 +102,22 @@ export const confirmOrder = createAsyncThunk("orders/confirmOrder", async (id, {
 export const cancelOrder = createAsyncThunk("orders/cancelOrder", async (id, { rejectWithValue }) => {
   try {
     const response = await orderApi.cancelOrder(id)
+    if (response.error) {
+      showNotification({
+        title: "Error",
+        message: response.message,
+        color: "red"
+      })
+
+      return rejectWithValue(response.message)
+    }
+
+    showNotification({
+      title: "Actualización exitosa",
+      message: 'El pedido se marcó como cancelado',
+      color: "green",
+      duration: 7000
+    })
     return response.data
   } catch (error) {
     return rejectWithValue(error.response?.data || error.message)
@@ -95,6 +145,23 @@ export const fetchDrivers = createAsyncThunk("orders/fetchDrivers", async (sucur
 export const assignDriver = createAsyncThunk("orders/assignDriver", async (params, { rejectWithValue }) => {
   try {
     const response = await orderApi.assignDriver(params)
+    if (response.error) {
+      showNotification({
+        title: "Error",
+        message: response.message,
+        color: "red"
+      })
+
+      return rejectWithValue(response.message)
+    }
+
+    showNotification({
+      title: "Asignación exitosa",
+      message: 'Se asignó un conductor al pedido',
+      color: "green",
+      duration: 7000
+    })
+
     return response.data
   } catch (error) {
     return rejectWithValue(error.response?.data || error.message)
@@ -104,6 +171,22 @@ export const assignDriver = createAsyncThunk("orders/assignDriver", async (param
 export const markOrderDelivered = createAsyncThunk("orders/markOrderDelivered", async (id, { rejectWithValue }) => {
   try {
     const response = await orderApi.markOrderDelivered(id)
+    if (response.error) {
+      showNotification({
+        title: "Error",
+        message: response.message,
+        color: "red"
+      })
+
+      return rejectWithValue(response.message)
+    }
+
+    showNotification({
+      title: "Actualización exitosa",
+      message: 'El se marcó como entregado',
+      color: "green",
+      duration: 7000
+    })
     return response.data
   } catch (error) {
     return rejectWithValue(error.response?.data || error.message)
@@ -119,9 +202,10 @@ const ordersSlice = createSlice({
     currentPage: 1,
     totalPagesCount: 0,
     totalOrders: 0,
-    ordersPerPage: {},
+    ordersPerPage: [],
     orderDetails: null,
     loadingOrders: false,
+    updatingOrderStatus: false,
     drivers: [],
     status: "idle",
     error: null
@@ -136,6 +220,8 @@ const ordersSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+
+      //Obtener todos los pedidos
       .addCase(fetchAllOrders.pending, (state) => {
         state.loadingOrders = true
       })
@@ -151,17 +237,8 @@ const ordersSlice = createSlice({
         state.loadingOrders = false
         state.error = action.payload
       })
-      .addCase(fetchOrdersForKitchen.pending, (state) => {
-        state.status = "loading"
-      })
-      .addCase(fetchOrdersForKitchen.fulfilled, (state, action) => {
-        state.status = "succeeded"
-        state.orders = action.payload
-      })
-      .addCase(fetchOrdersForKitchen.rejected, (state, action) => {
-        state.status = "failed"
-        state.error = action.payload
-      })
+
+      //Obtener el detalle de la orden
       .addCase(fetchOrderDetails.pending, (state) => {
         state.status = "loading"
       })
@@ -173,31 +250,123 @@ const ordersSlice = createSlice({
         state.status = "failed"
         state.error = action.payload
       })
+
+      //Marcar el pedido como listo desde el rol de cocina
+      .addCase(updateOrderStatus.pending, (state, action) => {
+        state.updatingOrderStatus = true
+      })
       .addCase(updateOrderStatus.fulfilled, (state, action) => {
-        const updatedOrder = action.payload
-        state.orders = state.orders.map((order) => (order.id === updatedOrder.id ? updatedOrder : order))
+        const { id, status } = action.payload
+        const currentPageOrders = state.orderDetails[state.currentPage]
+        const index = currentPageOrders.findIndex((order) => order?.id === id)
+
+        if (index !== -1) {
+          currentPageOrders[index] = { ...currentPageOrders[index], status }
+        }
+
+        state.updatingOrderStatus = false
+      })
+      .addCase(updateOrderStatus.rejected, (state, action) => {
+        state.updatingOrderStatus = false
+        state.error = action.payload
+      })
+
+      //Confirmar orden desde el rol de administrador de restaurante o de sucursal
+      .addCase(confirmOrder.pending, (state, action) => {
+        state.updatingOrderStatus = true
       })
       .addCase(confirmOrder.fulfilled, (state, action) => {
-        const confirmedOrder = action.payload
-        state.orders = state.orders.map((order) => (order.id === confirmedOrder.id ? confirmedOrder : order))
+        const { id, status } = action.payload
+        const currentPageOrders = state.orderDetails[state.currentPage]
+        const index = currentPageOrders.findIndex((order) => order?.id === id)
+
+        if (index !== -1) {
+          currentPageOrders[index] = { ...currentPageOrders[index], status }
+        }
+
+        state.updatingOrderStatus = false
+      })
+      .addCase(confirmOrder.rejected, (state, action) => {
+        state.updatingOrderStatus = false
+        state.error = action.payload
+      })
+
+      //Cancelar la orden desde el rol de administrador de restaurante o de sucursal
+      .addCase(cancelOrder.pending, (state, action) => {
+        state.updatingOrderStatus = true
       })
       .addCase(cancelOrder.fulfilled, (state, action) => {
-        const cancelledOrder = action.payload
-        state.orders = state.orders.map((order) => (order.id === cancelledOrder.id ? cancelledOrder : order))
+        const { id, status } = action.payload
+        const currentPageOrders = state.orderDetails[state.currentPage]
+        const index = currentPageOrders.findIndex((order) => order?.id === id)
+
+        if (index !== -1) {
+          currentPageOrders[index] = { ...currentPageOrders[index], status }
+        }
+
+        state.updatingOrderStatus = false
       })
-      .addCase(fetchKitchenOrders.fulfilled, (state, action) => {
+      .addCase(cancelOrder.rejected, (state, action) => {
+        state.updatingOrderStatus = false
+        state.error = action.payload
+      })
+
+      //Obtener las órdenes para las personas de cocina
+      .addCase(fetchOrdersForKitchen.pending, (state) => {
+        state.status = "loading"
+      })
+      .addCase(fetchOrdersForKitchen.fulfilled, (state, action) => {
+        state.status = "succeeded"
         state.orders = action.payload
+      })
+      .addCase(fetchOrdersForKitchen.rejected, (state, action) => {
+        state.status = "failed"
+        state.error = action.payload
+      })
+
+      //Obtener la lista de motoristas de la sucursal
+      .addCase(fetchDrivers.pending, (state, action) => {
+        state.drivers = action.payload
       })
       .addCase(fetchDrivers.fulfilled, (state, action) => {
         state.drivers = action.payload
+      })
+      .addCase(fetchDrivers.rejected, (state, action) => {
+        state.drivers = action.payload
+      })
+
+      //Asignar un motorista para que entrege el pedido
+      .addCase(assignDriver.pending, (state, action) => {
+        const updatedOrder = action.payload
+        state.orders = state.orders.map((order) => (order.id === updatedOrder.id ? updatedOrder : order))
       })
       .addCase(assignDriver.fulfilled, (state, action) => {
         const updatedOrder = action.payload
         state.orders = state.orders.map((order) => (order.id === updatedOrder.id ? updatedOrder : order))
       })
+      .addCase(assignDriver.rejected, (state, action) => {
+        const updatedOrder = action.payload
+        state.orders = state.orders.map((order) => (order.id === updatedOrder.id ? updatedOrder : order))
+      })
+
+      //Marcar el pedido como entregado desde el rol de administrador de restaurante o de sucursal
+      .addCase(markOrderDelivered.pending, (state) => {
+        state.updatingOrderStatus = true
+      })
       .addCase(markOrderDelivered.fulfilled, (state, action) => {
-        const deliveredOrder = action.payload
-        state.orders = state.orders.map((order) => (order.id === deliveredOrder.id ? deliveredOrder : order))
+        const { id, status } = action.payload
+        const currentPageOrders = state.orderDetails[state.currentPage]
+        const index = currentPageOrders.findIndex((order) => order?.id === id)
+
+        if (index !== -1) {
+          currentPageOrders[index] = { ...currentPageOrders[index], status }
+        }
+
+        state.updatingOrderStatus = false
+      })
+      .addCase(markOrderDelivered.rejected, (state, action) => {
+        state.updatingOrderStatus = false
+        state.error = action.payload
       })
   }
 })

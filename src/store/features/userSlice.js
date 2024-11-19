@@ -280,7 +280,9 @@ const initialState = {
   loadingOtherUsers: false,
   updatingOtherUser: false,
   creatingOtherUser: false,
-  error: null
+  error: null,
+
+  userRole: null
 }
 
 // Slice de usuarios
@@ -299,6 +301,9 @@ export const userSlice = createSlice({
     },
     setTotalAdminUsers: (state, action) => {
       state.totalAdminUsers = action.payload
+    },
+    setUserRole: (state, action) => {
+      state.userRole = action.payload
     }
   },
   extraReducers: (builder) => {
@@ -424,6 +429,6 @@ export const userSlice = createSlice({
   }
 })
 
-export const { setUser, setCurrentPage, setCurrentUserPage, setTotalAdminUsers } = userSlice.actions
+export const { setUser, setCurrentPage, setCurrentUserPage, setTotalAdminUsers, setUserRole } = userSlice.actions
 
 export default userSlice.reducer

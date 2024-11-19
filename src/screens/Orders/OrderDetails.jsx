@@ -1,65 +1,100 @@
 /* eslint-disable indent */
-import { Avatar, Breadcrumbs, Grid, Image, Modal, Paper, Select } from "@mantine/core"
+import {
+  Avatar,
+  Divider,
+  Flex,
+  Grid,
+  Group,
+  Image,
+  Modal,
+  Paper,
+  Select,
+  SimpleGrid,
+  Space,
+  Stack,
+  Stepper,
+  Text,
+  Title,
+  Button,
+  Container
+} from "@mantine/core"
 import React, { useEffect, useState } from "react"
 import { useLocation, useNavigate, useParams } from "react-router-dom"
 import toast from "react-hot-toast"
 import { useDisclosure } from "@mantine/hooks"
-import BaseLayout from "../../components/BaseLayout"
-import BreadCrumbNavigation from "../../components/BreadCrumbNavigation"
 import { formatDateDistanceToNow, getFormattedHNL } from "../../utils"
-import Button from "../../components/Button"
-import BackButton from "../Dishes/components/BackButton"
+//import Button from "../../components/Button"
 import orderApi from "../../api/orderApi"
-import { APP_ROLES, orderDeliveryTypes, orderStatusValues } from "../../utils/constants"
+import { APP_ROLES, orderDeliveryTypes, orderStates, orderStatusValues } from "../../utils/constants"
 import { NAVIGATION_ROUTES_RES_ADMIN } from "../../routes"
 import { DishOrderDetailCard } from "./DishOrderDetailCard"
 import { useSelector } from "react-redux"
+import { IconCircleCheck } from "@tabler/icons-react"
+import { IconUserCheck } from "@tabler/icons-react"
+import { IconMailOpened } from "@tabler/icons-react"
+import { IconShieldCheck } from "@tabler/icons-react"
+import { colors } from "../../theme/colors"
+import { IconCancel } from "@tabler/icons-react"
+import BackButton from "../Dishes/components/BackButton"
+import { useDispatch } from "react-redux"
+import { fetchOrderDetails } from "../../store/features/ordersSlice"
 
 export const OrderDetails = () => {
   const { orderId } = useParams()
-
+  const dispatch = useDispatch()
   const user = useSelector((state) => state.user.value)
-  const location = useLocation()
   const navigate = useNavigate()
-
   const [orderDetailModalOpened, { open: openOrderDetailsModal, close: closeOrderDetailModal }] = useDisclosure(false)
-  const [orderDetails, setOrderDetails] = useState({})
+  //const [orderDetails, setOrderDetails] = useState({})
   const [driver, setDriver] = useState(null)
   const [driverList, setDriverList] = useState([])
+  const { orderDetails } = useSelector((state) => state.orders)
+
+  // Función para obtener el step inicial basado en serviceType y status
+  const getInitialStep = () => {
+    const serviceSteps = orderStates[orderDetails?.serviceType] || []
+    const matchingStep = serviceSteps.find((step) => step.value === orderDetails.status)
+    return matchingStep ? matchingStep.step : 0 // Default a 1 si no se encuentra
+  }
+  const [active, setActive] = useState(getInitialStep)
 
   useEffect(() => {
-    ;(async () => {
-      try {
-        const response = await orderApi.getOrderDetails(orderId)
-        setOrderDetails(response?.data)
+    console.log(orderDetails)
+    setActive(getInitialStep())
+  }, [orderDetails])
 
-        if (user.role === APP_ROLES.restaurantAdmin) {
-          let sucursalId = 0
-          sucursalId = response?.data?.sucursalId
+  useEffect(() => {
+    dispatch(fetchOrderDetails(orderId))
+    // ;(async () => {
+    //   try {
+    //     const response = await orderApi.getOrderDetails(orderId)
+    //     setOrderDetails(response?.data)
 
-          // TODO: change to sucursal ID "ea6ceeb0-5cd4-4f6e-8c20-2a71cfb79324" if want to make it work
+    //     if (user.role === APP_ROLES.restaurantAdmin) {
+    //       let sucursalId = 0
+    //       sucursalId = response?.data?.sucursalId
 
-          const driversResponseRequest = await orderApi.getDrivers(sucursalId)
+    //       const driversResponseRequest = await orderApi.getDrivers(sucursalId)
 
-          const newDriverList = driversResponseRequest?.data?.map((item) => ({
-            label: item.AdminUser.name,
-            value: item.driverId
-          }))
+    //       const newDriverList = driversResponseRequest?.data?.map((item) => ({
+    //         label: item.AdminUser.name,
+    //         value: item.driverId
+    //       }))
 
-          setDriverList(newDriverList)
+    //       setDriverList(newDriverList)
 
-          if (response?.status !== "success") {
-            toast.error(`Fallo al obtener la información de la orden. ${response.message}`, {
-              duration: 7000
-            })
-          }
-        }
-      } catch (error) {
-        toast.error(`Error. Por favor intente de nuevo. ${error.message}`, {
-          duration: 7000
-        })
-      }
-    })()
+    //       if (response?.status !== "success") {
+    //         toast.error(`Fallo al obtener la información de la orden. ${response.message}`, {
+    //           duration: 7000
+    //         })
+    //       }
+    //     }
+    //   } catch (error) {
+    //     toast.error(`Error. Por favor intente de nuevo. ${error.message}`, {
+    //       duration: 7000
+    //     })
+    //   }
+    // })()
   }, [])
 
   const confirmOrder = async () => {
@@ -134,19 +169,152 @@ export const OrderDetails = () => {
   }
 
   return (
-    <>
-      <section>
-        <div className="flex flex-row justify-between items-center pb-6">
-          <div className="flex flex-row gap-x-3 items-center">
-            <BackButton title="Pedidos" show />
-          </div>
-        </div>
-      </section>
+    <Container fluid>
+      <Group grow className="mb-2">
+        <Flex align="center" justify="space-between">
+          <BackButton title="Vista detalla del pedido" show />
+        </Flex>
+      </Group>
 
-      <section>
-        {/*
-         * PRIMARY ORDER INFO
-         */}
+      <Stack gap="sm">
+        <Paper withBorder p="md" radius="md" bg={orderDetails?.status === "canceled" ? "red" : ""}>
+          {orderDetails?.status !== "canceled" ? (
+            <Stepper
+              active={active}
+              color={colors.main_app_color}
+              size="sm"
+              onStepClick={setActive}
+              allowNextStepsSelect={false}
+              completedIcon={<IconCircleCheck size="1.8rem" />}>
+              {orderStates[orderDetails?.serviceType]?.map((item, index) => (
+                <Stepper.Step
+                  key={index}
+                  icon={<item.icon size="1.2rem" />}
+                  label={`Paso ${index + 1}`}
+                  description={item.label}
+                />
+              ))}
+            </Stepper>
+          ) : (
+            <Flex align="center" justify="center" gap="xs">
+              <IconCancel color="white" size={40} />
+              <Text fw={700} color="white">
+                Este pedido fue marcado como cancelado
+              </Text>
+            </Flex>
+          )}
+        </Paper>
+
+        <Grid>
+          <Grid.Col span={{ base: 12, md: 8 }}>
+            <Paper withBorder radius="md" p="md">
+              <Stack gap="sm">
+                <Title order={4}>Lista de productos</Title>
+                <SimpleGrid cols={{ base: 1, sm: 2 }}>
+                  {orderDetails?.OrderDetails?.map((item, index) => (
+                    <DishOrderDetailCard key={index} orderDetails={item} />
+                  ))}
+                </SimpleGrid>
+              </Stack>
+            </Paper>
+          </Grid.Col>
+          <Grid.Col span={{ base: 12, md: 4 }}>
+            <Paper withBorder radius="md" p="md">
+              <Stack gap="sm">
+                <Title order={4}>Detalles de facturación</Title>
+                <Divider />
+                <Grid>
+                  <Grid.Col span={{ base: 12, md: "auto" }}>
+                    <Flex direction="column">
+                      <Stack gap="md">
+                        <Text>Subtotal</Text>
+                        <Text>Descuento</Text>
+                        <Text>Precio de envío</Text>
+                        <Text>ISV ( 15% )</Text>
+                        <Space />
+                        <Text>Total</Text>
+                      </Stack>
+                    </Flex>
+                  </Grid.Col>
+                  <Grid.Col span={{ base: 12, md: "auto" }}>
+                    <Flex direction="column">
+                      <Stack gap="md">
+                        <Text c="dimmed">+ {getFormattedHNL(orderDetails?.OrderDetails?.[0]?.subtotal)}</Text>
+                        <Text c="dimmed">- {getFormattedHNL(orderDetails?.OrderDetails?.[0]?.discount)}</Text>
+                        <Text c="dimmed">+ {orderDetails?.shippingPrice}</Text>
+                        <Text c="dimmed">+ {getFormattedHNL(orderDetails?.isv)}</Text>
+                        <Divider />
+                        <Text c="dimmed">{getFormattedHNL(orderDetails?.total)}</Text>
+                      </Stack>
+                    </Flex>
+                  </Grid.Col>
+                </Grid>
+              </Stack>
+            </Paper>
+          </Grid.Col>
+          <Grid.Col>
+            {/* Botones que realizan las acciones de actualización del pedido */}
+            {orderDetails?.status === orderStatusValues.onHold &&
+            (user.role === APP_ROLES.branchAdmin ||
+              user.role === APP_ROLES.cashierUser ||
+              user.role === APP_ROLES.restaurantAdmin) ? (
+              <Flex justify="end" gap="sm">
+                <Button color={colors.main_app_color} variant="outline" onClick={() => cancelOrder()}>
+                  Cancelar pedido
+                </Button>
+                <Button color={colors.main_app_color} onClick={() => dispatch(confirmOrder({ id: orderId }))}>
+                  Confirmar pedido
+                </Button>
+              </Flex>
+            ) : (
+              orderDetails?.status === orderStatusValues.confirmed && user.role === APP_ROLES.kitchenUser
+            )}
+            {(orderDetails?.status === orderStatusValues.confirmed) & (user.role === APP_ROLES.kitchenUser) ? (
+              <Flex justify="end">
+                <Button color={colors.main_app_color} onClick={() => orderReady()}>
+                  Marcar pedido preparado
+                </Button>
+              </Flex>
+            ) : null}
+
+            {orderDetails?.Order?.type === orderDeliveryTypes.delivery &&
+            (user.role === APP_ROLES.restaurantAdmin ||
+              user.role === APP_ROLES.branchAdmin ||
+              user.role === APP_ROLES.cashierUser) &&
+            orderDetails?.status === orderStatusValues.ready ? (
+              <div className="w-full rounded-md p-5 mt-4">
+                <span>Seleccionar motorista</span>
+                <div className="w-full mt-4" />
+                <div className="my-4 flex flex-col gap-4">
+                  <Select
+                    placeholder="Seleccione motorista"
+                    data={driverList}
+                    allowDeselect={false}
+                    size="md"
+                    value={driver}
+                    onChange={setDriver}
+                    searchable
+                    nothingFoundMessage="No se ha encontrado"
+                  />
+                  <Button
+                    text={"Confirmar motorista"}
+                    onClick={confirmDriver}
+                    className={"text-md px-3 py-2 text-white bg-primary_button font-bold"}
+                  />
+                </div>
+              </div>
+            ) : orderDetails?.status === orderStatusValues.readyForCustomer ? (
+              <Flex justify="end">
+                <Button color={colors.main_app_color} onClick={() => confirmDelivery()}>
+                  Marcar como entregado
+                </Button>
+              </Flex>
+            ) : null}
+          </Grid.Col>
+        </Grid>
+      </Stack>
+
+      {/* <section>
 
         <Grid grow gutter="sm">
           <Grid.Col span={{ base: 12, md: 8 }}>
@@ -187,27 +355,16 @@ export const OrderDetails = () => {
                 </Grid.Col>
               </Grid>
 
-              {/*
-               * ORDER CARD
-               */}
+          
 
               {orderDetails?.OrderDetails?.map((item, index) => (
                 <DishOrderDetailCard key={index} orderDetails={item} />
               ))}
 
-              {/*
-               * PAYMENT SECTION
-               */}
+            
 
               <Grid pt="lg">
-                {/*  <Grid.Col span={{ base: 12, md: 3 }}>
-                    <div className="text-sky-950 text-lg font-medium">Método de pago</div>
-                    <div className="text-zinc-500 text-base font-medium">
-                      BAC VISA
-                      <br />
-                      **** **** **** 5874
-                    </div>
-                  </Grid.Col> */}
+                
                 <Grid.Col span={{ base: 12, md: 3 }} />
 
                 <Grid.Col span={{ base: 12, md: "auto" }}>
@@ -235,27 +392,10 @@ export const OrderDetails = () => {
                   </div>
                 </Grid.Col>
               </Grid>
-              {/*
-               * BUTTONS
-               */}
-              {/*   <Grid justify="flex-end" pt="lg">
-                  <Grid.Col span={{ base: 12, md: 3 }}>
-                    <Button text={"Descargar"} className={"text-white text-md px-3 py-2 bg-primary_button"} />
-                  </Grid.Col>
-
-                  <Grid.Col span={{ base: 12, md: 3 }}>
-                    <Button text={"Imprimir"} className={"text-white text-md px-3 py-2 bg-primary_button"} />
-                  </Grid.Col>
-
-                  <Grid.Col span={{ base: 12, md: 3 }}>
-                    <Button text={"Enviar factura"} className={"text-white text-md px-3 py-2 bg-primary_button"} />
-                  </Grid.Col>
-                </Grid> */}
+              
             </div>
           </Grid.Col>
-          {/*
-           * 2nd GRID
-           */}
+          
           <Grid.Col span={4}>
             {orderDetails?.status === orderStatusValues.onHold &&
             (user.role === APP_ROLES.branchAdmin ||
@@ -274,22 +414,17 @@ export const OrderDetails = () => {
                   className={"text-md px-3 py-2 mb-4 text-white bg-red-500 font-bold"}
                 />
               </>
-            ) : null}
+            ) : (
+              orderDetails?.status === orderStatusValues.confirmed && user.role === APP_ROLES.kitchenUser
+            )}
             {(orderDetails?.status === orderStatusValues.confirmed) & (user.role === APP_ROLES.kitchenUser) ? (
               <Button
                 type="submit"
-                text={"Pedido listo"}
+                text={"Marcar pedido como listo"}
                 onClick={() => orderReady()}
-                className={"text-white text-md px-3 py-2 mb-4 bg-green-500  font-bold"}
+                className={"text-white text-md px-3 py-2 mb-4 bg-green-700  font-bold"}
               />
             ) : null}
-            {/*  <div className="w-full bg-white rounded-md border border-blue-100 p-5">
-              <span>Nota del pedido</span>
-              <div className="w-full border border-blue-100 mt-4" />
-              <div className="w-full text-sky-950 text-xs font-normal mt-4">
-                {orderDetails?.OrderDetails?.[0]?.orderDetailNote}
-              </div>
-            </div> */}
             <div className="w-full rounded-md p-5">
               <span>Cliente</span>
               <div className="w-full mt-4" />
@@ -404,7 +539,7 @@ export const OrderDetails = () => {
             <div className="text-base font-normal leading-normal"></div>
           </Paper>
         </Modal>
-      </section>
-    </>
+      </section> */}
+    </Container>
   )
 }

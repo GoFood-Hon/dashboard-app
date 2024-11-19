@@ -14,7 +14,7 @@ const initialState = {
   totalPagesCount: 0,
   currentPage: 1,
   loadingMenus: false,
-  creatimgMenus: false,
+  creatingMenus: false,
   updatingMenus: false,
   //DISHES STATE
   dishes: [],

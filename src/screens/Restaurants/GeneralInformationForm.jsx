@@ -37,7 +37,7 @@ export const GeneralInformationForm = ({ register, control, errors, setValue, im
 
   return (
     <Grid>
-      <Grid.Col span={{ base: 12, md: 8, lg: 8 }}>
+      <Grid.Col order={{ base: 2, sm: 2, md: 2 }} span={{ base: 12, md: 8, lg: 8 }}>
         <Paper withBorder radius="md" p="xs">
           <Grid gutter="md">
             <Grid.Col span={{ base: 12, md: 6 }}>
@@ -65,10 +65,10 @@ export const GeneralInformationForm = ({ register, control, errors, setValue, im
             <Grid.Col span={{ base: 12, md: 6 }}>
               <InputField label="CAI" name="cai" register={register} errors={errors} />
             </Grid.Col>
-            <Grid.Col span={{ base: 6 }}>
+            <Grid.Col span={{ base: 12, md: 6 }}>
               <InputField label="Dirección de facturación" name="billingAddress" register={register} errors={errors} />
             </Grid.Col>
-            <Grid.Col span={{ base: 6 }}>
+            <Grid.Col span={{ base: 12, md: 6 }}>
               <Controller
                 name="restaurantId"
                 control={control}
@@ -101,7 +101,7 @@ export const GeneralInformationForm = ({ register, control, errors, setValue, im
           </Grid>
         </Paper>
       </Grid.Col>
-      <Grid.Col span={{ base: 12, md: 4, lg: 4 }}>
+      <Grid.Col order={{ base: 1, sm: 1, md: 2 }} span={{ base: 12, md: 4, lg: 4 }}>
         <Paper withBorder radius="md" h="100%">
           <Flex align="center" h="100%" justify="center">
             <Dropzone onDrop={handleDrop} accept={IMAGE_MIME_TYPE} h={220} style={{ cursor: "pointer" }}>

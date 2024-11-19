@@ -13,6 +13,7 @@ import BackButton from "../Dishes/components/BackButton"
 import { showNotification } from "@mantine/notifications"
 import { colors } from "../../theme/colors"
 import { setShippingRange } from "../../store/features/branchesSlice"
+import FormLayout from "../../components/Form/FormLayout"
 
 export const EditBranch = () => {
   const { branchId } = useParams()
@@ -252,36 +253,16 @@ export const EditBranch = () => {
 
   return (
     <>
-      <section>
-        <div className="flex flex-row justify-between items-center pb-6">
-          <BackButton title={details?.name} show />
-        </div>
-      </section>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <section>
-          <Accordion variant="separated" multiple defaultValue={["Información general", "Ubicación", "Horario"]}>
-            {items}
-          </Accordion>
-        </section>
-        <section>
-          <Paper withBorder radius="md" className="w-full flex md:justify-end mt-3 md:gap-3 rounded-md px-8 py-5">
-            <Flex justify="end" gap="xs">
-              <Button
-                color={colors.main_app_color}
-                variant="outline"
-                onClick={() => {
-                  reset()
-                  localStorage.removeItem("draft")
-                  navigate(NAVIGATION_ROUTES_RES_ADMIN.Branches.path)
-                }}>
-                Descartar
-              </Button>
-              <Button loading={isLoading} color={colors.main_app_color} type="submit">
-                Actualizar
-              </Button>
-            </Flex>
-          </Paper>
-        </section>
+        <FormLayout
+          title={details?.name}
+          show
+          accordionTitles={["Información general", "Ubicación", "Horario"]}
+          accordionItems={items}
+          navigate={() => navigate(NAVIGATION_ROUTES_RES_ADMIN.Branches.path)}
+          isLoading={isLoading}
+          update
+        />
       </form>
     </>
   )

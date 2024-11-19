@@ -2,7 +2,7 @@ import { Paper, Skeleton } from "@mantine/core"
 
 export const TableSkeleton = () => {
   return (
-    <Paper>
+    <Paper withBorder p="md" radius="md">
       <div className="flex flex-col rounded-25 shadow-5xl px-2">
         <div className="overflow-x-auto">
           <div className="inline-block min-w-full">

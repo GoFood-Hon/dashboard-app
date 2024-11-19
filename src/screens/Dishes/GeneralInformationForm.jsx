@@ -12,7 +12,8 @@ import {
   Paper,
   Stack,
   TagsInput,
-  MultiSelect
+  MultiSelect,
+  Flex
 } from "@mantine/core"
 import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone"
 import { IconPhoto } from "@tabler/icons-react"
@@ -81,14 +82,7 @@ export default function GeneralInformationForm({ register, errors, setValue, isD
 
   const previews = images.map((file, index) => {
     const imageUrl = URL.createObjectURL(file)
-    return (
-      <img
-        key={index}
-        src={imageUrl}
-        onLoad={() => URL.revokeObjectURL(imageUrl)}
-        className="m-1 h-14 w-14 rounded-xl border object-cover object-center"
-      />
-    )
+    return <Image radius="md" h={250} src={imageUrl} />
   })
 
   return (
@@ -133,48 +127,32 @@ export default function GeneralInformationForm({ register, errors, setValue, isD
         </Paper>
       </Grid.Col>
       <Grid.Col span={{ base: 12, md: 4, lg: 4 }}>
-        <Paper withBorder radius="md" p="md">
-          {previews.length > 0 ? (
-            <div className="w-full">
-              <Text size="lg" inline className="mb-5 text-left">
-                Imagen seleccionada:
-              </Text>
-              <div className="my-3 flex w-full flex-row items-center justify-center rounded-2xl">
-                <div className="flex w-full flex-row flex-wrap items-center gap-2 p-2">
-                  {previews}
-                  <div className="flex flex-col">
-                    <Text className="font-semibold italic">{fileInformation?.name}</Text>
-                    <Text className="font-semibold" size="sm" c="dimmed" inline>
-                      {bytesToMB(fileInformation?.size)} MB
+        <Paper withBorder radius="md" h="100%">
+          <Flex align="center" h="100%" justify="center">
+            <Dropzone onDrop={handleDrop} accept={IMAGE_MIME_TYPE} h={220} style={{ cursor: "pointer" }}>
+              <Flex direction="column" justify="center" align="center" h={220}>
+                {previews.length > 0 ? (
+                  previews
+                ) : (
+                  <>
+                    <Image radius="md" h={250} src={image} />
+                    <IconPhoto
+                      className={`${image ? "hidden" : ""}`}
+                      style={{ width: rem(52), height: rem(52), color: "var(--mantine-color-dimmed)" }}
+                      stroke={1.5}
+                    />
+                    <Text className={`${image ? "hidden" : ""} text-center`} size="xl" inline>
+                      Seleccione una imagen
                     </Text>
-                  </div>
-                </div>
-                <button onClick={deleteImage} className="pr-3">
-                  <CloseIcon size={24} />
-                </button>
-              </div>
-            </div>
-          ) : (
-            <Dropzone onDrop={handleDrop} accept={IMAGE_MIME_TYPE}>
-              <Group justify="center" gap="xl" mih={220} style={{ pointerEvents: "none" }}>
-                <div className="flex flex-col items-center">
-                  <Image src={image} alt="" maw={300} />
-                  <IconPhoto
-                    className={`${image ? "hidden" : ""}`}
-                    style={{ width: rem(52), height: rem(52), color: "var(--mantine-color-dimmed)" }}
-                    stroke={1.5}
-                  />
-                  <Text className={`${image ? "hidden" : ""} text-center`} size="xl" inline>
-                    Seleccione una imagen
-                  </Text>
-                  <Text className={`${image ? "hidden" : ""} text-center leading-10`} size="sm" c="dimmed" inline mt={7}>
-                    Haga clic o arrastre la imagen del usuario
-                  </Text>
-                </div>
-              </Group>
+                    <Text className={`${image ? "hidden" : ""} text-center leading-10`} size="sm" c="dimmed" inline mt={7}>
+                      Haga clic o arrastre la imagen del platillo
+                    </Text>
+                  </>
+                )}
+              </Flex>
             </Dropzone>
-          )}
-          {errors.files && <p className="w-full text-center text-red-500">* Imagen es requerida.</p>}
+          </Flex>
+          {errors.files && <p className="text-red-500 text-center w-full">* Imagen es requerida.</p>}
         </Paper>
       </Grid.Col>
     </Grid>

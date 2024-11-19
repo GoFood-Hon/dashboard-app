@@ -15,6 +15,7 @@ import {
   fetchDishesForCollections,
   fetchRestaurantsForCollections
 } from "../../store/features/collectionsSlice"
+import FormLayout from "../../components/Form/FormLayout"
 
 export default function NewCollection() {
   const navigate = useNavigate()
@@ -125,37 +126,14 @@ export default function NewCollection() {
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <section>
-          <div className="flex flex-row justify-between items-center pb-4 flex-wrap xs:gap-3">
-            <BackButton title="Nueva colección" show />
-          </div>
-        </section>
-        <section>
-          <Accordion
-            variant="separated"
-            multiple
-            defaultValue={["Información general", "Lista de platillos", "Lista de restaurantes"]}>
-            {items}
-          </Accordion>
-        </section>
-        <section>
-          <Paper withBorder radius="md" className="w-full flex md:justify-end mt-3 md:gap-3 rounded-md px-8 py-5">
-            <Flex justify="end" gap="xs">
-              <Button
-                color={colors.main_app_color}
-                variant="outline"
-                onClick={() => {
-                  reset()
-                  navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Collections.path)
-                }}>
-                Descartar
-              </Button>
-              <Button loading={creatingCollection} color={colors.main_app_color} type="submit">
-                Guardar
-              </Button>
-            </Flex>
-          </Paper>
-        </section>
+        <FormLayout
+          title="Nueva colección"
+          show
+          accordionTitles={["Información general", "Lista de platillos", "Lista de restaurantes"]}
+          accordionItems={items}
+          navigate={() => navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Collections.path)}
+          isLoading={creatingCollection}
+        />
       </form>
     </>
   )

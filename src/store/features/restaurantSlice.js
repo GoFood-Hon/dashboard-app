@@ -257,7 +257,7 @@ export const updateRestaurantData = createAsyncThunk(
 
       if (response.error) {
         showNotification({
-          title: "Error asss",
+          title: "Error",
           message: response.message,
           color: "red"
         })

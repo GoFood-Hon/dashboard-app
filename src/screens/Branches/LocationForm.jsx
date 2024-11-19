@@ -21,8 +21,8 @@ export default function LocationForm({ register, errors, setValue, itemDetails }
   useEffect(() => {
     if (itemDetails?.geolocation?.coordinates) {
       const [initialLng, initialLat] = itemDetails.geolocation.coordinates
-      setLng(initialLng)
-      setLat(initialLat)
+      setLng(initialLng || -88.025)
+      setLat(initialLat || 15.50417)
       setMarkerPosition({ longitude: initialLng, latitude: initialLat })
       setValue("geolocation", [initialLng, initialLat])
       setIsMapReady(true)
@@ -67,8 +67,8 @@ export default function LocationForm({ register, errors, setValue, itemDetails }
             <Stack>
               <Paper>
                 <Text fw={700}>Ubicación en mapa (Obligatorio)</Text>
-                <Text size="sm" pb="xs">
-                  (Mueva el pin a la dirección exacta)
+                <Text size="sm" c="dimmed" pb="xs">
+                  Haga clic en el mapa para seleccionar la ubicación
                 </Text>
                 <Paper h={380} className="h-72 relative">
                   {isMapReady && (
@@ -86,7 +86,9 @@ export default function LocationForm({ register, errors, setValue, itemDetails }
                       }
                       mapboxAccessToken={import.meta.env.VITE_MAPBOX_ACCESS_TOKEN}
                       onClick={handleMapClick}>
-                      {markerPosition && <Marker {...markerPosition} longitude={lng} latitude={lat} color={colors.main_app_color} />}
+                      {markerPosition && (
+                        <Marker {...markerPosition} longitude={lng} latitude={lat} color={colors.main_app_color} />
+                      )}
 
                       <GeolocateControl
                         showAccuracyCircle={false}
@@ -95,6 +97,7 @@ export default function LocationForm({ register, errors, setValue, itemDetails }
                           setLng(position.coords.longitude)
                           setLat(position.coords.latitude)
                           setValue("geolocation", [position.coords.longitude, position.coords.latitude])
+                          setMarkerPosition({ longitude: position.coords.longitude, latitude: position.coords.latitude })
                         }}
                       />
 

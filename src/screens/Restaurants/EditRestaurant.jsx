@@ -19,6 +19,7 @@ import { updateRestaurantData } from "../../store/features/restaurantSlice"
 import { RestaurantBanner } from "./RestaurantBanner"
 import { yupResolver } from "@hookform/resolvers/yup"
 import { restaurantValidation } from "../../utils/inputRules"
+import FormLayout from "../../components/Form/FormLayout"
 
 export const EditRestaurant = () => {
   const { restaurantId } = useParams()
@@ -281,37 +282,16 @@ export const EditRestaurant = () => {
 
   return (
     <>
-      <section>
-        <div className="flex flex-row justify-between items-center pb-4">
-          <BackButton title={restaurantDetails?.name} show />
-        </div>
-      </section>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <section>
-          <Accordion
-            variant="separated"
-            multiple
-            defaultValue={["Añadir banner", "Información general", "Datos de reservación", "Selección del plan"]}>
-            {restaurantDetails?.CreditCardRestaurant ? items : items.slice(0, 3)}
-          </Accordion>
-        </section>
-        <section className="mt-2">
-          <Paper withBorder radius="md" className="w-full flex md:justify-end md:gap-3 rounded-md px-8 py-5">
-            <Flex justify="end" gap="xs">
-              <Button
-                color={colors.main_app_color}
-                variant="outline"
-                onClick={() => {
-                  navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Restaurants.path)
-                }}>
-                Descartar
-              </Button>
-              <Button loading={isLoading} color={colors.main_app_color} type="submit">
-                Actualizar
-              </Button>
-            </Flex>
-          </Paper>
-        </section>
+        <FormLayout
+          title={restaurantDetails?.name}
+          show
+          accordionTitles={["Añadir banner", "Información general", "Datos de reservación", "Selección del plan"]}
+          accordionItems={restaurantDetails?.CreditCardRestaurant ? items : items.slice(0, 3)}
+          navigate={() => navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Restaurants.path)}
+          isLoading={isLoading}
+          update
+        />
       </form>
     </>
   )

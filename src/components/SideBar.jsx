@@ -92,20 +92,7 @@ export default function SideBar() {
       <div className="p-5 h-full">
         <div className="flex flex-col justify-between h-full">
           <div>
-            <ul className="text-sm text-light_secondary_text  border-b-light_selected_element pb-2 dark:border-b-dark_selected_element dark:text-dark_secondary_text">
-              {/* <li className="flex h-12 w-full items-center">
-                <Link to="/" className="flex w-full items-center duration-300">
-                  <AlarmIcon />
-                  <span className="ml-3">Notificaciones</span>
-                </Link>
-              </li> */}
-              {/*  <li className="flex h-12 w-full items-center">
-                <Link to="/" className="flex w-full items-center duration-300">
-                  <MailIcon />
-                  <span className="ml-3">Mensajes</span>
-                </Link>
-              </li> */}
-            </ul>
+            <ul className="text-sm text-light_secondary_text  border-b-light_selected_element pb-2 dark:border-b-dark_selected_element dark:text-dark_secondary_text"></ul>
             <ul className="py-4 text-sm">{renderedItems}</ul>
           </div>
           <div>

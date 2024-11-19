@@ -11,6 +11,7 @@ import BackButton from "../Dishes/components/BackButton"
 import { colors } from "../../theme/colors"
 import GeneralInformationForm from "./GeneralInformationForm"
 import authApi from "../../api/authApi"
+import FormLayout from "../../components/Form/FormLayout"
 
 export const EditUserScreen = () => {
   const { userId } = useParams()
@@ -139,34 +140,16 @@ export const EditUserScreen = () => {
 
   return (
     <>
-      <section>
-        <div className="flex flex-row justify-between items-center pb-3 flex-wrap xs:gap-3">
-          <BackButton title={userDetails.name} show />
-        </div>
-      </section>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <section>
-          <Accordion variant="separated" multiple defaultValue={["Información general", "Sucursal"]}>
-            {items}
-          </Accordion>
-        </section>
-        <section>
-          <Paper withBorder radius="md" className="w-full flex md:justify-end mt-3 md:gap-3 rounded-md px-8 py-5">
-            <Flex justify="end" gap="xs">
-              <Button
-                color={colors.main_app_color}
-                variant="outline"
-                onClick={() => {
-                  navigate(NAVIGATION_ROUTES_RES_ADMIN.Users.path)
-                }}>
-                Descartar
-              </Button>
-              <Button loading={isLoading} color={colors.main_app_color} type="submit">
-                Actualizar
-              </Button>
-            </Flex>
-          </Paper>
-        </section>
+        <FormLayout
+          title={userDetails?.name}
+          show
+          accordionTitles={["Información general", "Sucursal"]}
+          accordionItems={items}
+          navigate={() => navigate(NAVIGATION_ROUTES_RES_ADMIN.Users.path)}
+          isLoading={isLoading}
+          update
+        />
       </form>
     </>
   )

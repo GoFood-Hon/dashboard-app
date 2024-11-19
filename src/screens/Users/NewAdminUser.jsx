@@ -1,16 +1,15 @@
-import React, { useState } from "react"
+import React from "react"
 import { useNavigate } from "react-router-dom"
-import { Accordion, Flex, Paper, Button } from "@mantine/core"
+import { Accordion } from "@mantine/core"
 import { useForm } from "react-hook-form"
 import { yupResolver } from "@hookform/resolvers/yup"
 import { AdminInformationForm } from "./AdminInformationForm"
-import BackButton from "../Dishes/components/BackButton"
 import { NAVIGATION_ROUTES_SUPER_ADMIN } from "../../routes"
 import { newAdminValidationSchema } from "../../utils/inputRules"
 import { useDispatch } from "react-redux"
 import { createAdminUser } from "../../store/features/userSlice"
-import { colors } from "../../theme/colors"
 import { useSelector } from "react-redux"
+import FormLayout from "../../components/Form/FormLayout"
 
 export const NewAdminUser = () => {
   const navigate = useNavigate()
@@ -75,37 +74,14 @@ export const NewAdminUser = () => {
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <section>
-          <div className="xs:gap-3 flex flex-row flex-wrap items-center justify-between pb-4">
-            <BackButton title="Nuevo administrador" show />
-          </div>
-        </section>
-        <section>
-          <Accordion variant="separated" multiple defaultValue={["Información general"]}>
-            {items}
-          </Accordion>
-        </section>
-        <section>
-          <Paper withBorder radius="md" className="w-full flex md:justify-end mt-3 md:gap-3 rounded-md px-8 py-5">
-            <Flex justify="end" gap="xs">
-              <Button
-                color={colors.main_app_color}
-                variant="outline"
-                onClick={() => {
-                  navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Restaurants.path)
-                }}>
-                Descartar
-              </Button>
-              <Button
-                loading={isLoading}
-                color={colors.main_app_color}
-                type="submit"
-                className="w-24 text-center flex h-10 items-center justify-center rounded-md shadow-sm transition-all duration-700 focus:outline-none text-xs bg-sky-950 text-slate-50">
-                Guardar
-              </Button>
-            </Flex>
-          </Paper>
-        </section>
+        <FormLayout
+          title={"Nuevo administrador"}
+          show
+          accordionTitles={["Información general"]}
+          accordionItems={items}
+          navigate={() => navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Users.path)}
+          isLoading={isLoading}
+        />
       </form>
     </>
   )

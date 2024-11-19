@@ -1,24 +1,16 @@
-import { ActionIcon, Image, Flex, Menu, rem } from "@mantine/core"
-import { IconSun, IconMoon } from "@tabler/icons-react"
+import { Image, Flex } from "@mantine/core"
 import classes from "./AdminHeader.module.css"
-import { useMantineColorScheme } from "@mantine/core"
 import { UserButton } from "../UserButton/UserButton"
-import { fetchRestaurantData, selectImage } from "../../store/features/restaurantSlice"
+import { fetchRestaurantData } from "../../store/features/restaurantSlice"
 import { useDispatch, useSelector } from "react-redux"
 import { APP_ROLES } from "../../utils/constants"
 import { useEffect } from "react"
-import { colors } from "../../theme/colors"
 import { useNavigate } from "react-router-dom"
 
 export function AdminHeader({ burger }) {
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const user = useSelector((state) => state.user.value)
-  const { colorScheme, setColorScheme } = useMantineColorScheme()
-
-  const toggleColorScheme = () => {
-    setColorScheme(colorScheme === "dark" ? "light" : "dark")
-  }
 
   useEffect(() => {
     console.log(user)
@@ -56,14 +48,6 @@ export function AdminHeader({ burger }) {
       </Flex>
 
       <Flex justify="end" align="center" gap={18}>
-        <ActionIcon
-          onClick={() => {
-            toggleColorScheme()
-          }}
-          variant="subtle"
-          color={colors.main_app_color}>
-          {colorScheme === "dark" ? <IconSun size="1.25rem" /> : <IconMoon size="1.25rem" />}
-        </ActionIcon>
         <UserButton image={user?.images?.[0]?.location} name={user.name} email={user.email} role={user.role} />
       </Flex>
     </header>

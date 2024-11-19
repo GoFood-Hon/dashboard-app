@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from "react"
-import { Accordion, Button, Flex, Paper } from "@mantine/core"
+import { Accordion } from "@mantine/core"
 import { useForm } from "react-hook-form"
 import { useNavigate, useParams } from "react-router-dom"
 import { AdminGeneralInformationForm } from "./AdminGeneralInformationForm"
 import { NAVIGATION_ROUTES_SUPER_ADMIN } from "../../routes"
 import authApi from "../../api/authApi"
-import BackButton from "../Dishes/components/BackButton"
-import { colors } from "../../theme/colors"
 import { updateUserData } from "../../store/features/userSlice"
 import { useSelector, useDispatch } from "react-redux"
+import FormLayout from "../../components/Form/FormLayout"
 
 export const EditAdminUser = () => {
   const { adminId } = useParams()
@@ -20,7 +19,6 @@ export const EditAdminUser = () => {
   useEffect(() => {
     ;(async () => {
       const response = await authApi.getUserDetails(adminId)
-      console.log(response)
 
       if (response?.data) {
         const details = response.data
@@ -104,34 +102,16 @@ export const EditAdminUser = () => {
 
   return (
     <>
-      <section>
-        <div className="flex flex-row justify-between items-center pb-4">
-          <BackButton title={details.name} show />
-        </div>
-      </section>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <section>
-          <Accordion variant="separated" multiple defaultValue={["Información general"]}>
-            {items}
-          </Accordion>
-        </section>
-        <section>
-          <Paper withBorder radius="md" className="w-full flex md:justify-end mt-3 md:gap-3 rounded-md px-8 py-5">
-            <Flex justify="end" gap="xs">
-              <Button
-                color={colors.main_app_color}
-                variant="outline"
-                onClick={() => {
-                  navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Users.path)
-                }}>
-                Descartar
-              </Button>
-              <Button loading={loading} color={colors.main_app_color} type="submit">
-                Actualizar
-              </Button>
-            </Flex>
-          </Paper>
-        </section>
+        <FormLayout
+          title={details.name}
+          show
+          accordionTitles={["Información general"]}
+          accordionItems={items}
+          navigate={() => navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Users.path)}
+          isLoading={loading}
+          update
+        />
       </form>
     </>
   )

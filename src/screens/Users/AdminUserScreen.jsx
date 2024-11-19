@@ -70,19 +70,15 @@ export const AdminUserScreen = () => {
           </Flex>
         </Flex>
       </Group>
-      <section>
-        <Paper withBorder p="md" radius="md">
-          <MenuTable
-            items={adminUsers}
-            handleDisableSelected={handleDisableSelected}
-            screenType="adminUserScreen"
-            totalItems={totalPageCount}
-            currentPage={page}
-            loadingData={loadingUsers}
-            setPage={(newPage) => dispatch(setCurrentPage(newPage))}
-          />
-        </Paper>
-      </section>
+      <MenuTable
+        items={adminUsers}
+        handleDisableSelected={handleDisableSelected}
+        screenType="adminUserScreen"
+        totalItems={totalPageCount}
+        currentPage={page}
+        loadingData={loadingUsers}
+        setPage={(newPage) => dispatch(setCurrentPage(newPage))}
+      />
     </>
   )
 }
