@@ -186,19 +186,19 @@ export const menuType = [
 export const preparationTime = [
   {
     value: "5-9",
-    label: "5 - 9 minutos"
+    label: "De 5 a 9 minutos"
   },
   {
     value: "10-19",
-    label: "10 - 19 minutos"
+    label: "De 10 a 19 minutos"
   },
   {
     value: "20-29",
-    label: "20 - 29 minutos"
+    label: "De 20 a 29 minutos"
   },
   {
     value: "+30",
-    label: "+30 minutos"
+    label: "Más de 30 minutos"
   }
 ]
 
@@ -215,9 +215,9 @@ export const orderStates = {
     { icon: IconHomeCheck, value: "delivered", label: "Entregado", step: 5 },
   ],
   pickup: [
-    { icon: IconClockHour3, value: "confirmed", label: "Confirmación", step: 1 },
-    { icon: IconToolsKitchen, value: "ready-for-customer", label: "Preparación", step: 2 },
-    { icon: IconHomeCheck, value: "delivered", label: "Entregado", step: 3 },
+    { icon: IconClockHour3, value: "confirmed", label: "Confirmación", step: 1, loading: true },
+    { icon: IconToolsKitchen, value: "ready-for-customer", label: "Preparación", step: 2, loading: false },
+    { icon: IconHomeCheck, value: "delivered", label: "Entregado", step: 3, loading: false },
   ],
   onSite: [
     { icon: IconClockHour3, value: "confirmed", label: "Confirmación", step: 1 },

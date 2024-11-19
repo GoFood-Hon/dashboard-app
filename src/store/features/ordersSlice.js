@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit"
 import orderApi from "../../api/orderApi"
 import { ITEMS_PER_PAGE } from "../../utils/paginationConfig"
+import { showNotification } from "@mantine/notifications"
 
 export const fetchAllOrders = createAsyncThunk(
   "orders/fetchAllOrders",
@@ -62,7 +63,7 @@ export const updateOrderStatus = createAsyncThunk("orders/updateOrderStatus", as
 
     showNotification({
       title: "Actualización exitosa",
-      message: 'El estado del pedido se actualizó correctamente',
+      message: "El estado del pedido se actualizó correctamente",
       color: "green",
       duration: 7000
     })
@@ -89,7 +90,7 @@ export const confirmOrder = createAsyncThunk("orders/confirmOrder", async (id, {
 
     showNotification({
       title: "Actualización exitosa",
-      message: 'El pedido fue confirmado correctamente',
+      message: "El pedido fue confirmado correctamente",
       color: "green",
       duration: 7000
     })
@@ -114,7 +115,7 @@ export const cancelOrder = createAsyncThunk("orders/cancelOrder", async (id, { r
 
     showNotification({
       title: "Actualización exitosa",
-      message: 'El pedido se marcó como cancelado',
+      message: "El pedido se marcó como cancelado",
       color: "green",
       duration: 7000
     })
@@ -157,7 +158,7 @@ export const assignDriver = createAsyncThunk("orders/assignDriver", async (param
 
     showNotification({
       title: "Asignación exitosa",
-      message: 'Se asignó un conductor al pedido',
+      message: "Se asignó un conductor al pedido",
       color: "green",
       duration: 7000
     })
@@ -183,7 +184,7 @@ export const markOrderDelivered = createAsyncThunk("orders/markOrderDelivered", 
 
     showNotification({
       title: "Actualización exitosa",
-      message: 'El se marcó como entregado',
+      message: "El se marcó como entregado",
       color: "green",
       duration: 7000
     })
@@ -204,8 +205,10 @@ const ordersSlice = createSlice({
     totalOrders: 0,
     ordersPerPage: [],
     orderDetails: null,
+    loadingDetails: false,
     loadingOrders: false,
     updatingOrderStatus: false,
+    cancelOrderStatus: false,
     drivers: [],
     status: "idle",
     error: null
@@ -240,14 +243,14 @@ const ordersSlice = createSlice({
 
       //Obtener el detalle de la orden
       .addCase(fetchOrderDetails.pending, (state) => {
-        state.status = "loading"
+        state.loadingDetails = true
       })
       .addCase(fetchOrderDetails.fulfilled, (state, action) => {
-        state.status = "succeeded"
+        state.loadingDetails = false
         state.orderDetails = action.payload
       })
       .addCase(fetchOrderDetails.rejected, (state, action) => {
-        state.status = "failed"
+        state.loadingDetails = false
         state.error = action.payload
       })
 
@@ -257,14 +260,15 @@ const ordersSlice = createSlice({
       })
       .addCase(updateOrderStatus.fulfilled, (state, action) => {
         const { id, status } = action.payload
-        const currentPageOrders = state.orderDetails[state.currentPage]
+        state.orderDetails.status = status
+        state.updatingOrderStatus = false
+        const currentPageOrders = state.ordersPerPage[state.currentPage]
         const index = currentPageOrders.findIndex((order) => order?.id === id)
 
         if (index !== -1) {
           currentPageOrders[index] = { ...currentPageOrders[index], status }
         }
 
-        state.updatingOrderStatus = false
       })
       .addCase(updateOrderStatus.rejected, (state, action) => {
         state.updatingOrderStatus = false
@@ -277,8 +281,9 @@ const ordersSlice = createSlice({
       })
       .addCase(confirmOrder.fulfilled, (state, action) => {
         const { id, status } = action.payload
-        const currentPageOrders = state.orderDetails[state.currentPage]
+        const currentPageOrders = state.ordersPerPage[state.currentPage]
         const index = currentPageOrders.findIndex((order) => order?.id === id)
+        state.orderDetails.status = status
 
         if (index !== -1) {
           currentPageOrders[index] = { ...currentPageOrders[index], status }
@@ -293,21 +298,22 @@ const ordersSlice = createSlice({
 
       //Cancelar la orden desde el rol de administrador de restaurante o de sucursal
       .addCase(cancelOrder.pending, (state, action) => {
-        state.updatingOrderStatus = true
+        state.cancelOrderStatus = true
       })
       .addCase(cancelOrder.fulfilled, (state, action) => {
         const { id, status } = action.payload
-        const currentPageOrders = state.orderDetails[state.currentPage]
+        state.orderDetails.status = status
+        state.cancelOrderStatus = false
+        const currentPageOrders = state.ordersPerPage[state.currentPage]
         const index = currentPageOrders.findIndex((order) => order?.id === id)
 
         if (index !== -1) {
           currentPageOrders[index] = { ...currentPageOrders[index], status }
         }
 
-        state.updatingOrderStatus = false
       })
       .addCase(cancelOrder.rejected, (state, action) => {
-        state.updatingOrderStatus = false
+        state.cancelOrderStatus = false
         state.error = action.payload
       })
 
@@ -336,13 +342,20 @@ const ordersSlice = createSlice({
       })
 
       //Asignar un motorista para que entrege el pedido
-      .addCase(assignDriver.pending, (state, action) => {
-        const updatedOrder = action.payload
-        state.orders = state.orders.map((order) => (order.id === updatedOrder.id ? updatedOrder : order))
+      .addCase(assignDriver.pending, (state) => {
+        state.updatingOrderStatus = true
       })
       .addCase(assignDriver.fulfilled, (state, action) => {
-        const updatedOrder = action.payload
-        state.orders = state.orders.map((order) => (order.id === updatedOrder.id ? updatedOrder : order))
+        const { id, status } = action.payload
+        state.orderDetails.status = status
+        state.updatingOrderStatus = false
+        const currentPageOrders = state.ordersPerPage[state.currentPage]
+        const index = currentPageOrders.findIndex((order) => order?.id === id)
+
+        if (index !== -1) {
+          currentPageOrders[index] = { ...currentPageOrders[index], status }
+        }
+
       })
       .addCase(assignDriver.rejected, (state, action) => {
         const updatedOrder = action.payload
@@ -355,14 +368,15 @@ const ordersSlice = createSlice({
       })
       .addCase(markOrderDelivered.fulfilled, (state, action) => {
         const { id, status } = action.payload
-        const currentPageOrders = state.orderDetails[state.currentPage]
+        state.orderDetails.status = status
+        state.updatingOrderStatus = false
+        const currentPageOrders = state.ordersPerPage[state.currentPage]
         const index = currentPageOrders.findIndex((order) => order?.id === id)
 
         if (index !== -1) {
           currentPageOrders[index] = { ...currentPageOrders[index], status }
         }
 
-        state.updatingOrderStatus = false
       })
       .addCase(markOrderDelivered.rejected, (state, action) => {
         state.updatingOrderStatus = false

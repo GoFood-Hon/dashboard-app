@@ -15,13 +15,15 @@ export const NotificationProvider = ({ children }) => {
 
     const handleNewOrder = (order) => {
       notifications.show({
-        title: "Nueva orden recibida!",
-        message: `Numero de orden: ${order.id}`,
+        title: "Se ha creado un nuevo pedido",
+        message: `Número de orden: ${order.id}`,
         autoClose: false,
         withCloseButton: true,
-        color: "green",
-        style: { backgroundColor: colors.light_bg_child, border: "2px solid #e2e8f0" }
+        color: "green"
       })
+      {
+        console.log(order)
+      }
     }
 
     const handleOrderReady = (order) => {
@@ -31,8 +33,7 @@ export const NotificationProvider = ({ children }) => {
         icon: <IconCheck icon="arrowRight" size={20} />,
         autoClose: false,
         withCloseButton: true,
-        color: "green",
-        style: { backgroundColor: colors.light_bg_child, border: "2px solid #e2e8f0" }
+        color: "green"
       })
     }
     const handleOrderUpdate = (order) => {
@@ -41,8 +42,7 @@ export const NotificationProvider = ({ children }) => {
         message: `Numero de orden: ${order.id}`,
         autoClose: false,
         withCloseButton: true,
-        color: "indigo",
-        style: { backgroundColor: colors.light_bg_child, border: "2px solid #e2e8f0" }
+        color: "indigo"
       })
     }
 

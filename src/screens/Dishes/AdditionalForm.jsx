@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { MantineProvider, createTheme, Button, Checkbox, Grid, Input, ScrollArea, Paper, Text } from "@mantine/core"
+import { MantineProvider, createTheme, Button, Checkbox, Grid, Input, ScrollArea, Paper, Text, CloseButton } from "@mantine/core"
 import { IconPlus, IconX } from "@tabler/icons-react"
 import toast from "react-hot-toast"
 import { colors } from "../../theme/colors"
@@ -113,7 +113,7 @@ export const AdditionalForm = ({ additional, setAdditional }) => {
               </>
             ) : null}
           </div>
-          <Paper withBorder className="p-2 my-4 rounded-lg">
+          <Paper withBorder radius="md" className="p-2 my-4 rounded-lg">
             {additionalItem?.map((item, index) => (
               <div key={index}>
                 <div className="flex w-full gap-2 my-2 items-center justify-between">
@@ -133,11 +133,7 @@ export const AdditionalForm = ({ additional, setAdditional }) => {
                     className="text-black w-full"
                   />
 
-                  <div
-                    className="cursor-pointer flex items-center text-red-500 transition ease-in-out duration-200 rounded-full hover:bg-red-500 hover:text-white p-1"
-                    onClick={() => handleDeleteItem(index)}>
-                    <IconX size={20} />
-                  </div>
+                  <CloseButton onClick={() => handleDeleteItem(index)} />
                 </div>
                 <Checkbox
                   mt={"md"}
@@ -184,11 +180,7 @@ export const AdditionalForm = ({ additional, setAdditional }) => {
                         <h3 className="font-bold text-md">
                           {category.name} {category.requiredMinimum ? `(min: ${category.requiredMinimum})` : null}:
                         </h3>
-                        <span
-                          onClick={() => handleDeleteAdditional(index)}
-                          className="cursor-pointer text-red-500 transition ease-in-out duration-200 rounded-full hover:bg-red-500 hover:text-white p-1">
-                          <IconX size={20} />
-                        </span>
+                        <CloseButton onClick={() => handleDeleteAdditional(index)} />
                       </div>
 
                       <ul className="space-y-2">
@@ -196,7 +188,7 @@ export const AdditionalForm = ({ additional, setAdditional }) => {
                           <li key={i} className="flex flex-row gap-1 items-center">
                             <span>{item.name}</span>
                             <IconArrowNarrowRight />
-                            <span className="italic">{item.price == "0.00" ? "Gratis" : getFormattedHNL(item.price)}</span>
+                            <Text c='dimmed' fs='italic'>{item.price == "0.00" ? "Gratis" : getFormattedHNL(item.price)}</Text>
                           </li>
                         ))}
                       </ul>
