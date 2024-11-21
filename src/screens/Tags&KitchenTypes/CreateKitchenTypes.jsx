@@ -1,17 +1,4 @@
-import {
-  Button,
-  CloseButton,
-  Flex,
-  Grid,
-  Group,
-  Input,
-  Paper,
-  Text,
-  Space,
-  Modal,
-  SimpleGrid,
-  UnstyledButton
-} from "@mantine/core"
+import { Button, CloseButton, Flex, Grid, Input, Paper, Text, Space, SimpleGrid } from "@mantine/core"
 import React, { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { colors } from "../../theme/colors"
@@ -19,6 +6,7 @@ import { createKitchenType, fetchAllKitchenTypes, deleteKitchenType } from "../.
 import { useDisclosure } from "@mantine/hooks"
 import classes from "./ActionsGrid.module.css"
 import { IconToolsKitchen2 } from "@tabler/icons-react"
+import ConfirmationModal from "../ConfirmationModal"
 
 export const CreateKitchenTypes = () => {
   const dispatch = useDispatch()
@@ -91,38 +79,17 @@ export const CreateKitchenTypes = () => {
         </SimpleGrid>
       ) : (
         <Text c="dimmed" ta="center" size="sm">
-          Los tipos de cocina creados se mostrarán aquí
+          Las especialidades de cocina creadas se mostrarán aquí
         </Text>
       )}
 
-      <Modal
+      <ConfirmationModal
         opened={opened}
-        onClose={close}
-        withCloseButton={false}
-        closeOnEscape
-        radius="md"
-        size="md"
-        overlayProps={{
-          backgroundOpacity: 0.55,
-          blur: 3
-        }}
-        title="¿Estás seguro que deseas eliminar?">
-        <Text>El tipo de cocina se quitará de todos los restaurantes a los que esté asociado</Text>
-
-        <Group mt="sm" justify="end">
-          <Button color={colors.main_app_color} variant="outline" onClick={close}>
-            Cancelar
-          </Button>
-          <Button
-            color={colors.main_app_color}
-            onClick={() => {
-              handleDeleteKitchenType(kitchenId)
-              close()
-            }}>
-            Confirmar
-          </Button>
-        </Group>
-      </Modal>
+        close={close}
+        title="¿Estás seguro que deseas eliminar?"
+        description="Se quitará la especialidad de todos los restaurantes a los que esté asociado"
+        onConfirm={() => handleDeleteKitchenType(kitchenId)}
+      />
     </Paper>
   )
 }

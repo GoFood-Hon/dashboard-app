@@ -7,6 +7,7 @@ import { useDispatch } from "react-redux"
 
 export default function OrdersScreen() {
   const dispatch = useDispatch()
+  const user = useSelector((state) => state.user.value)
   const limit = useSelector((state) => state.orders.itemsPerPage)
   const page = useSelector((state) => state.orders.currentPage)
   const ordersPerPage = useSelector((state) => state.orders.ordersPerPage)
@@ -17,9 +18,13 @@ export default function OrdersScreen() {
 
   useEffect(() => {
     if (!ordersPerPage[page]) {
-      dispatch(fetchAllOrders({ limit, page, order: "DESC" }))
+      if (user.role === "kitchen") {
+        dispatch(fetchAllOrders({ limit, page, order: "DESC" }))
+      } else {
+        dispatch(fetchAllOrders({ limit, page, order: "DESC" }))
+      }
     }
-  }, [dispatch, limit, page, ordersPerPage])
+  }, [dispatch, limit, page, ordersPerPage, user.role])
 
   return (
     <>

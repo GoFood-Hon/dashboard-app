@@ -1,4 +1,4 @@
-import { Divider, Flex, ScrollArea, ThemeIcon } from "@mantine/core"
+import { Box, Divider, Flex, ScrollArea, ThemeIcon } from "@mantine/core"
 import { NavLinksGroup } from "./NavLinksGroup"
 import classes from "./Navbar.module.css"
 import { useNavigate } from "react-router-dom"
@@ -22,7 +22,7 @@ export function Navbar({ data }) {
   return (
     <>
       <ScrollArea className={classes.links}>
-        <div className={classes.linksInner}>{links}</div>
+        <Box mt='sm'>{links}</Box>
       </ScrollArea>
       <Divider />
       <div className={`cursor-pointer hover:bg-${colors.main_app_color}`} onClick={logout}>

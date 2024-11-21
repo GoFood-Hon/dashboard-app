@@ -22,6 +22,7 @@ export const EditUserScreen = () => {
     const fetchDetails = async () => {
       try {
         const response = await authApi.getUserDetails(userId)
+        console.log(response)
         const userDetailsData = response?.data
         setUserDetails(userDetailsData)
       } catch (error) {

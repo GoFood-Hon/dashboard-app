@@ -1,49 +1,54 @@
 import React, { useEffect } from "react"
 import { useSocket } from "../hooks/useOrderSocket"
 import { notifications } from "@mantine/notifications"
-import { colors } from "../theme/colors"
 import { IconCheck } from "@tabler/icons-react"
 import { USER_ROLES } from "../utils/constants"
 import { useSelector } from "react-redux"
+import { useDispatch } from "react-redux"
+import { setNewOrder, setOrderStatus } from "../store/features/ordersSlice"
 
 export const NotificationProvider = ({ children }) => {
   const user = useSelector((state) => state.user.value)
   const orderSocket = useSocket()
+  const dispatch = useDispatch()
 
   useEffect(() => {
     if (!orderSocket) return
 
     const handleNewOrder = (order) => {
       notifications.show({
-        title: "Se ha creado un nuevo pedido",
-        message: `Número de orden: ${order.id}`,
+        title: "Nueva orden",
+        message: `Una nueva orden acaba de ser creada`,
         autoClose: false,
         withCloseButton: true,
         color: "green"
       })
-      {
-        console.log(order)
-      }
+      console.log(order)
+      dispatch(setNewOrder(order))
     }
 
     const handleOrderReady = (order) => {
       notifications.show({
-        title: "Orden lista",
-        message: `Numero de orden: ${order.id}`,
+        title: "Orden preparada",
+        message: "La cocineros terminaron de preparar el pedido",
         icon: <IconCheck icon="arrowRight" size={20} />,
         autoClose: false,
         withCloseButton: true,
         color: "green"
       })
+      dispatch(setOrderStatus(order))
     }
+
     const handleOrderUpdate = (order) => {
       notifications.show({
-        title: "Nueva orden!",
-        message: `Numero de orden: ${order.id}`,
+        title: "Nueva orden",
+        message: "Se agregó un nuevo pedido a las órdenes en curso",
         autoClose: false,
         withCloseButton: true,
-        color: "indigo"
+        color: "green"
       })
+      dispatch(setOrderStatus(order))
+      dispatch(setNewOrder(order))
     }
 
     orderSocket.on("newOrder", handleNewOrder)

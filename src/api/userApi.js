@@ -43,7 +43,7 @@ const userApi = {
     return axiosClient.get(url)
   },
 
-  updateUserRestaurant: (params, userId) => axiosClient.put(`api/v1/users/update-user/${userId}`, params),
+  updateUserRestaurant: (params, userId) => axiosClient.patch(`api/v1/users/update-user/${userId}`, params),
 
   getAdminUsers: ({ limit, page, order, search_field, search } = {}) => {
     const params = {
@@ -54,7 +54,6 @@ const userApi = {
       search
     }
 
-    // Filtrar valores no definidos o vacíos (más robusto)
     const validParams = Object.fromEntries(Object.entries(params).filter(([_, value]) => value !== undefined && value !== ""))
 
     const queryString = new URLSearchParams(validParams).toString()

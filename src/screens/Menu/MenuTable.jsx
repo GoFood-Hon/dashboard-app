@@ -202,7 +202,7 @@ export default function MenuTable({ items, screenType, totalItems, currentPage, 
                 ? "Cajero"
                 : role === "kitchen"
                   ? "Cocinero"
-                  : "Motorista"
+                  : "Repartidor"
       },
       { label: "Correo", accessor: "email" },
       { label: "Teléfono", accessor: "phoneNumber" },
@@ -214,7 +214,14 @@ export default function MenuTable({ items, screenType, totalItems, currentPage, 
           <MantineProvider theme={theme}>
             <Switch
               checked={active}
-              onChange={() => dispatch(updateOtherUserStatus({ params: { active: !item.active }, userId: item.id }))}
+              onChange={() =>
+                dispatch(
+                  updateOtherUserStatus({
+                    params: { active: !item.active },
+                    userId: item.role === "driver " ? item.AdminUserId : item.id
+                  })
+                )
+              }
               color={colors.main_app_color}
               size="sm"
               thumbIcon={
@@ -301,7 +308,7 @@ export default function MenuTable({ items, screenType, totalItems, currentPage, 
     ordersScreen: [
       { label: "Usuario", accessor: "user" },
       { label: "Teléfono", accessor: "phone" },
-      { label: "Fecha", accessor: "createdAt" },
+      { label: "Fecha", accessor: "paidDate" },
       {
         label: "Tipo de servicio",
         accessor: "serviceType",
@@ -315,8 +322,9 @@ export default function MenuTable({ items, screenType, totalItems, currentPage, 
         center: true,
         render: (status) => (
           <Badge
-            size="md"
-            w={160}
+            size="lg"
+            w={200}
+            tt="capitalize"
             color={
               status === "pending" ||
               status === "on-hold" ||
@@ -339,12 +347,14 @@ export default function MenuTable({ items, screenType, totalItems, currentPage, 
                   : status === "confirmed"
                     ? "Confirmado"
                     : status === "ready"
-                      ? "Listo para enviar"
+                      ? "Esperando repartidor"
                       : status === "ready-to-pick-up"
                         ? "Listo para recoger"
                         : status === "ready-for-customer"
                           ? "Listo para entregar"
-                          : "Completado"}
+                          : status === "on-delivery"
+                            ? "En camino"
+                            : "Completado"}
           </Badge>
         )
       },
@@ -565,7 +575,7 @@ export default function MenuTable({ items, screenType, totalItems, currentPage, 
       {loadingData ? (
         <TableSkeleton />
       ) : items && items.length > 0 ? (
-        <Paper withBorder p='md' radius='md'>
+        <Paper withBorder p="md" radius="md">
           <ScrollArea>
             <Table miw={800} verticalSpacing="sm">
               <Table.Thead>
@@ -599,7 +609,7 @@ export default function MenuTable({ items, screenType, totalItems, currentPage, 
                             textAlign: column.center ? "center" : "left"
                           }}
                           key={column.accessor}>
-                          {column.accessor === "createdAt" || column.accessor === "updatedAt"
+                          {column.accessor === "createdAt" || column.accessor === "updatedAt" || column.accessor === "paidDate"
                             ? dayjs(item[column.accessor]).fromNow()
                             : column.accessor === "reservationDate"
                               ? dayjs(item[column.accessor])

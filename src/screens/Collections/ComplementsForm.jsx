@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { Grid, Image, Text, ScrollArea, Paper, Group, Button, Loader, Box } from "@mantine/core"
+import { Grid, Image, Text, ScrollArea, Paper, Group, Button, Loader, Box, CloseButton } from "@mantine/core"
 import { useSelector } from "react-redux"
 import { IconX } from "@tabler/icons-react"
 import { SortableList } from "../Dishes/components"
@@ -49,11 +49,7 @@ const ComplementCard = ({ item, handleRemoveComplement }) => {
         </div>
         <div className="flex flex-row w-1/2 justify-end items-center gap-2">
           <div className=" flex justify-center items-center">
-            <span
-              onClick={() => handleRemoveComplement(item)}
-              className="cursor-pointer text-red-500 transition ease-in-out duration-200 rounded-full hover:bg-red-500 hover:text-white p-1">
-              <IconX size={20} />
-            </span>
+            <CloseButton onClick={() => handleRemoveComplement(item)} />
           </div>
         </div>
       </div>
@@ -66,7 +62,6 @@ export default function ComplementsForm({
   isDataCleared,
   defaultMessage,
   moreData,
-  itemsAvailableLabel,
   data,
   name,
   selectedDishes
@@ -115,13 +110,8 @@ export default function ComplementsForm({
   }
 
   const handleRemoveComplement = (complement) => {
-    console.log(selectedDishes)
-    console.log(complement)
     const updatedAddedComplements = addedComplements.filter((item) => item !== complement)
     setAddedComplements(updatedAddedComplements)
-
-    setExtras((prevExtras) => [...prevExtras, complement])
-
     updateComplementsValue(updatedAddedComplements)
   }
 
@@ -194,7 +184,7 @@ export default function ComplementsForm({
               />
             </ScrollArea>
           ) : (
-            <Text className="flex flex-col w-full h-full text-xl justify-center item-center text-center">{defaultMessage}</Text>
+            <Text c='dimmed' className="flex flex-col w-full h-full text-xl justify-center item-center text-center">{defaultMessage}</Text>
           )}
         </Paper>
       </Grid.Col>

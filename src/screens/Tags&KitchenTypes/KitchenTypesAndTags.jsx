@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { Accordion, Flex, Paper, Button } from "@mantine/core"
+import { Accordion, Flex, Paper, Button, Stack } from "@mantine/core"
 import BackButton from "../Dishes/components/BackButton"
 import { CreateTags } from "./CreateTags"
 import { CreateKitchenTypes } from "./CreateKitchenTypes"
@@ -35,17 +35,11 @@ export const KitchenTypesAndTags = () => {
   ))
 
   return (
-    <>
-      <section>
-        <div className="flex flex-row justify-between items-center pb-4 flex-wrap xs:gap-3">
-          <BackButton title="Especialidad de cocina / Tags" />
-        </div>
-      </section>
-      <section>
-        <Accordion variant="separated" multiple defaultValue={["Lista de Tags", "Lista de especialidades"]}>
-          {items}
-        </Accordion>
-      </section>
-    </>
+    <Stack gap='xs'>
+      <BackButton title="Especialidad de cocina / Tags" />
+      <Accordion radius="md" variant="separated" multiple defaultValue={["Lista de Tags", "Lista de especialidades"]}>
+        {items}
+      </Accordion>
+    </Stack>
   )
 }

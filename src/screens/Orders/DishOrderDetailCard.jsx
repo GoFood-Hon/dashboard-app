@@ -8,7 +8,7 @@ export const DishOrderDetailCard = ({ orderDetails }) => {
           h={"70px"}
           w={"70px"}
           radius="sm"
-          fit="cover"
+          fit="contain"
           src={orderDetails?.Dish?.images?.[0]?.location}
           fallbackSrc="https://placehold.co/600x400?text=Imagen+no+disponible"
         />

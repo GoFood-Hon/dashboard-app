@@ -4,6 +4,7 @@ import { IconToolsKitchen } from "@tabler/icons-react"
 import { IconMoped } from "@tabler/icons-react"
 import { IconUserPlus } from "@tabler/icons-react"
 import { IconHomeCheck } from "@tabler/icons-react"
+import { createTheme } from "@mantine/core"
 
 export const DEFAULT_DISCOUNT_PERCENTAGE = "5%"
 export const DEFAULT_COUPON_TYPE = "Por fecha"
@@ -110,7 +111,7 @@ export const userTypes = [
   },
   {
     value: "kitchen",
-    label: "Cocina"
+    label: "Cocinero"
   },
   {
     value: "cashier",
@@ -118,7 +119,7 @@ export const userTypes = [
   },
   {
     value: "driver",
-    label: "Motorista"
+    label: "Repartidor"
   }
 ]
 
@@ -210,7 +211,7 @@ export const orderStates = {
   delivery: [
     { icon: IconClockHour3, value: "confirmed", label: "Confirmación", step: 1 },
     { icon: IconToolsKitchen, value: "ready", label: "Preparación", step: 2 },
-    { icon: IconUserPlus, value: "ready-to-pickup", label: "Asignar repartidor", step: 3 },
+    { icon: IconUserPlus, value: "ready-to-pick-up", label: "Asignar repartidor", step: 3 },
     { icon: IconMoped, value: "on-delivery", label: "En camino", step: 4 },
     { icon: IconHomeCheck, value: "delivered", label: "Entregado", step: 5 },
   ],
@@ -225,3 +226,7 @@ export const orderStates = {
     { icon: IconHomeCheck, value: "delivered", label: "Entregado", step: 3 },
   ]
 }
+
+export const theme = createTheme({
+  cursorType: 'pointer',
+});

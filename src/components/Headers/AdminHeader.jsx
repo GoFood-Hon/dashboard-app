@@ -13,7 +13,6 @@ export function AdminHeader({ burger }) {
   const user = useSelector((state) => state.user.value)
 
   useEffect(() => {
-    console.log(user)
     if (user.role === APP_ROLES.restaurantAdmin) {
       dispatch(
         fetchRestaurantData({
@@ -25,8 +24,8 @@ export function AdminHeader({ burger }) {
 
   return (
     <header className={classes.header}>
-      {burger && burger}
-      <Flex gap={10}>
+      <Flex align='center' gap={10}>
+        {burger && burger}
         <Image
           style={{ cursor: "pointer" }}
           src="https://tkdmymipjaevgekdbsgz.supabase.co/storage/v1/object/public/user_profiles/goFood.png?t=2024-07-30T01%3A25%3A16.174Z"

@@ -2,16 +2,16 @@ import axiosClient from "./axiosClient"
 
 const orderApi = {
   // Restaurant and Branch
-  getAllOrders: ({ limit, page, order, search_field, search } = {}) => {
+  getAllOrders: ({ limit, page, order, search_field, search, status } = {}) => {
     const params = {
       limit,
       page,
       order,
       search_field,
-      search
+      search,
+      status
     }
 
-    // Filtrar valores no definidos o vacíos (más robusto)
     const validParams = Object.fromEntries(Object.entries(params).filter(([_, value]) => value !== undefined && value !== ""))
 
     const queryString = new URLSearchParams(validParams).toString()

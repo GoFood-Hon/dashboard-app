@@ -23,6 +23,7 @@ import { getFormattedHNL } from "../utils"
 import Lottie from "react-lottie"
 import animationData from "../assets/animation/NothingFoundAnimation.json"
 import { APP_ROLES } from "../utils/constants"
+import { useMediaQuery } from "@mantine/hooks"
 
 const CardsViewLayout = ({
   title,
@@ -51,6 +52,7 @@ const CardsViewLayout = ({
       preserveAspectRatio: "xMidYMid slice"
     }
   }
+  const isSmallScreen = useMediaQuery("(max-width: 768px)");
 
   return (
     <Stack>
@@ -88,10 +90,10 @@ const CardsViewLayout = ({
               <Grid.Col span={{ base: 12, md: 6, lg: 4, xl: 3 }} key={key}>
                 <Card shadow="sm" padding="lg" radius="md" withBorder>
                   <Card.Section>
-                    {item?.images && item.images.length > 0 ? (
+                    {item?.images && item?.images?.length > 0 ? (
                       <Image
-                        src={item.images[0]?.location}
-                        h={200}
+                        src={item?.images[0]?.location}
+                        h={160}
                         fit={elementsName === "platillos" ? "contain" : "cover"}
                         alt={item?.name || "Imagen"}
                       />

@@ -26,7 +26,6 @@ function AuthLayout() {
 
   const [loading, setLoading] = useState(true)
 
-  //Start sidebar options
   const user = useSelector((state) => state.user.value)
   const roleRoutesMap = {
     [APP_ROLES.restaurantAdmin]: NAVIGATION_ROUTES_RES_ADMIN_TWO,

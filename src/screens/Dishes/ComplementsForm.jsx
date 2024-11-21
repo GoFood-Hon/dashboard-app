@@ -5,22 +5,15 @@ import {
   Text,
   ScrollArea,
   Paper,
-  Box,
   useMantineTheme,
-  rem,
-  TextInput,
-  ActionIcon,
   Button,
-  Loader
+  Loader,
+  CloseButton
 } from "@mantine/core"
 import { useSelector } from "react-redux"
 import { getFormattedHNL } from "../../utils"
 import { SortableList } from "./components"
-import LoadingCircle from "../../components/LoadingCircle"
 import { selectComplementsError, selectComplementsStatus } from "../../store/features/complementsSlice"
-import { IconX } from "@tabler/icons-react"
-import { IconArrowRight } from "@tabler/icons-react"
-import { IconSearch } from "@tabler/icons-react"
 import { colors } from "../../theme/colors"
 import { useDebouncedState } from "@mantine/hooks"
 import { useDispatch } from "react-redux"
@@ -77,11 +70,7 @@ const ComplementCard = ({ item, handleRemoveComplement }) => {
         <div className="flex flex-row w-1/2 justify-end items-center gap-2">
           <span className="pl-3">{getFormattedHNL(price)}</span>
           <div className=" flex justify-center items-center">
-            <span
-              onClick={() => handleRemoveComplement(item)}
-              className="cursor-pointer text-red-500 transition ease-in-out duration-200 rounded-full hover:bg-red-500 hover:text-white p-1">
-              <IconX size={20} />
-            </span>
+            <CloseButton onClick={() => handleRemoveComplement(item)} />
           </div>
         </div>
       </div>
@@ -129,17 +118,17 @@ export default function ComplementsForm({
   }
 
   const handleComplementClick = (complement) => {
-    setAddedComplements([...addedComplements, complement])
-    setExtras((prevExtras) => prevExtras.filter((extra) => extra !== complement))
-    updateComplementsValue([...addedComplements, complement])
+    const exists = addedComplements.some((item) => item.id === complement.id)
+
+    if (!exists) {
+      setAddedComplements([...addedComplements, complement])
+      updateComplementsValue([...addedComplements, complement])
+    }
   }
 
   const handleRemoveComplement = (complement) => {
     const updatedAddedComplements = addedComplements.filter((item) => item !== complement)
     setAddedComplements(updatedAddedComplements)
-
-    setExtras((prevExtras) => [...prevExtras, complement])
-
     updateComplementsValue(updatedAddedComplements)
   }
 
@@ -208,7 +197,9 @@ export default function ComplementsForm({
               />
             </ScrollArea>
           ) : (
-            <div className="flex flex-col w-full h-full text-md justify-center item-center text-center">{defaultMessage}</div>
+            <Text c="dimmed" className="flex flex-col w-full h-full text-md justify-center item-center text-center">
+              {defaultMessage}
+            </Text>
           )}
         </Paper>
       </Grid.Col>

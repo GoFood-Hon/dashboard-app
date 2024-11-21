@@ -1,13 +1,10 @@
 import React, { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
-import { Accordion, Button, Flex, Paper } from "@mantine/core"
+import { Accordion } from "@mantine/core"
 import { useForm } from "react-hook-form"
 import { useDispatch, useSelector } from "react-redux"
-import { yupResolver } from "@hookform/resolvers/yup"
 import GeneralInformationForm from "./GeneralInformationForm"
 import ComplementsForm from "./ComplementsForm"
-import { newCollectionValidation } from "../../utils/inputRules"
-import BackButton from "../Dishes/components/BackButton"
 import { NAVIGATION_ROUTES_SUPER_ADMIN } from "../../routes"
 import { colors } from "../../theme/colors"
 import {
@@ -31,8 +28,7 @@ export default function NewCollection() {
     currentRestaurantPage,
     restaurantsPerPage,
     hasMoreRestaurants,
-    collectionType,
-    totalRestaurantsPageCount
+    collectionType
   } = useSelector((state) => state.collections)
 
   const {
@@ -86,7 +82,6 @@ export default function NewCollection() {
           moreData={collectionType === "dishes" ? hasMoreDishes : hasMoreRestaurants}
           isDataCleared={isDataCleared}
           defaultMessage="Por favor añada elementos a esta colección"
-          itemsAvailableLabel="Platillos/Menús disponibles"
           data={collectionType === "dishes" ? dishes : restaurants}
           name={collectionType === "dishes" ? "dishes" : "restaurants"}
         />

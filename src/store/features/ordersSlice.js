@@ -5,14 +5,15 @@ import { showNotification } from "@mantine/notifications"
 
 export const fetchAllOrders = createAsyncThunk(
   "orders/fetchAllOrders",
-  async ({ limit, page, search_field, search }, { rejectWithValue }) => {
+  async ({ limit, page, search_field, search, status }, { rejectWithValue }) => {
     try {
       const response = await orderApi.getAllOrders({
         limit,
         page,
         order: "DESC",
         search_field,
-        search
+        search,
+        status
       })
       return { data: response.data, result: response.result, page }
     } catch (error) {
@@ -163,7 +164,7 @@ export const assignDriver = createAsyncThunk("orders/assignDriver", async (param
       duration: 7000
     })
 
-    return response.data
+    return {...response.data, status: 'ready-to-pick-up'}
   } catch (error) {
     return rejectWithValue(error.response?.data || error.message)
   }
@@ -209,6 +210,10 @@ const ordersSlice = createSlice({
     loadingOrders: false,
     updatingOrderStatus: false,
     cancelOrderStatus: false,
+
+    //Drivers data
+    loadingDrivers: false,
+    updatingDriver: false,
     drivers: [],
     status: "idle",
     error: null
@@ -219,6 +224,52 @@ const ordersSlice = createSlice({
     },
     setTotalOrders: (state, action) => {
       state.totalOrders = action.payload
+    },
+    setNewOrder: (state, action) => {
+      const newOrder = action.payload
+
+      if (!state.ordersPerPage[1]) {
+        state.ordersPerPage[1] = []
+      }
+      state.ordersPerPage[1].unshift(newOrder)
+
+      for (let i = 1; i <= state.totalPagesCount; i++) {
+        if (state.ordersPerPage[i]?.length > state.itemsPerPage) {
+          const lastItem = state.ordersPerPage[i].pop()
+          if (state.ordersPerPage[i + 1]) {
+            state.ordersPerPage[i + 1].unshift(lastItem)
+          }
+        } else {
+          break
+        }
+      }
+
+      const consecutivePages = [1]
+      for (let i = 2; i <= state.totalPagesCount; i++) {
+        if (state.restaurantsPerPage[i]) {
+          if (consecutivePages.includes(i - 1)) {
+            consecutivePages.push(i)
+          } else {
+            delete state.restaurantsPerPage[i]
+          }
+        }
+      }
+
+      state.totalOrders += 1
+      state.totalPagesCount = Math.ceil(state.totalOrders / state.itemsPerPage)
+    },
+    setOrderStatus: (state, action) => {
+      const { id, status } = action.payload
+      const currentPageOrders = state.ordersPerPage[state.currentPage]
+      const index = currentPageOrders.findIndex((order) => order?.id === id)
+
+      if (index !== -1) {
+        currentPageOrders[index] = { ...currentPageOrders[index], status }
+      }
+
+      if (state.orderDetails && state.orderDetails.id === id) {
+        state.orderDetails = { ...state.orderDetails, status }
+      }
     }
   },
   extraReducers: (builder) => {
@@ -268,7 +319,6 @@ const ordersSlice = createSlice({
         if (index !== -1) {
           currentPageOrders[index] = { ...currentPageOrders[index], status }
         }
-
       })
       .addCase(updateOrderStatus.rejected, (state, action) => {
         state.updatingOrderStatus = false
@@ -310,7 +360,6 @@ const ordersSlice = createSlice({
         if (index !== -1) {
           currentPageOrders[index] = { ...currentPageOrders[index], status }
         }
-
       })
       .addCase(cancelOrder.rejected, (state, action) => {
         state.cancelOrderStatus = false
@@ -331,14 +380,16 @@ const ordersSlice = createSlice({
       })
 
       //Obtener la lista de motoristas de la sucursal
-      .addCase(fetchDrivers.pending, (state, action) => {
-        state.drivers = action.payload
+      .addCase(fetchDrivers.pending, (state) => {
+        state.loadingDrivers = true
       })
       .addCase(fetchDrivers.fulfilled, (state, action) => {
         state.drivers = action.payload
+        state.loadingDrivers = false
       })
       .addCase(fetchDrivers.rejected, (state, action) => {
-        state.drivers = action.payload
+        state.loadingDrivers = false
+        state.error = action.payload
       })
 
       //Asignar un motorista para que entrege el pedido
@@ -348,6 +399,7 @@ const ordersSlice = createSlice({
       .addCase(assignDriver.fulfilled, (state, action) => {
         const { id, status } = action.payload
         state.orderDetails.status = status
+        state.orderDetails.driver = action.payload
         state.updatingOrderStatus = false
         const currentPageOrders = state.ordersPerPage[state.currentPage]
         const index = currentPageOrders.findIndex((order) => order?.id === id)
@@ -355,11 +407,10 @@ const ordersSlice = createSlice({
         if (index !== -1) {
           currentPageOrders[index] = { ...currentPageOrders[index], status }
         }
-
       })
       .addCase(assignDriver.rejected, (state, action) => {
-        const updatedOrder = action.payload
-        state.orders = state.orders.map((order) => (order.id === updatedOrder.id ? updatedOrder : order))
+        state.updatingOrderStatus = false
+        state.error = action.payload
       })
 
       //Marcar el pedido como entregado desde el rol de administrador de restaurante o de sucursal
@@ -376,7 +427,6 @@ const ordersSlice = createSlice({
         if (index !== -1) {
           currentPageOrders[index] = { ...currentPageOrders[index], status }
         }
-
       })
       .addCase(markOrderDelivered.rejected, (state, action) => {
         state.updatingOrderStatus = false
@@ -385,6 +435,6 @@ const ordersSlice = createSlice({
   }
 })
 
-export const { setCurrentPage, setTotalOrders } = ordersSlice.actions
+export const { setCurrentPage, setTotalOrders, setNewOrder, setOrderStatus } = ordersSlice.actions
 
 export default ordersSlice.reducer
