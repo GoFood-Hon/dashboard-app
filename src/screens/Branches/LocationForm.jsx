@@ -10,19 +10,19 @@ import * as turf from "@turf/turf"
 import { useSelector } from "react-redux"
 import { colors } from "../../theme/colors"
 
-export default function LocationForm({ register, errors, setValue, itemDetails }) {
+export default function LocationForm({ register, errors, setValue, itemDetails, newBranch }) {
   const { colorScheme } = useMantineColorScheme()
   const [markerPosition, setMarkerPosition] = useState(null)
   const [lng, setLng] = useState(0)
   const [lat, setLat] = useState(0)
-  const [isMapReady, setIsMapReady] = useState(false)
+  const [isMapReady, setIsMapReady] = useState(newBranch)
   const range = useSelector((state) => state.branches.shippingRange)
 
   useEffect(() => {
     if (itemDetails?.geolocation?.coordinates) {
       const [initialLng, initialLat] = itemDetails.geolocation.coordinates
-      setLng(initialLng || -88.025)
-      setLat(initialLat || 15.50417)
+      setLng(initialLng)
+      setLat(initialLat)
       setMarkerPosition({ longitude: initialLng, latitude: initialLat })
       setValue("geolocation", [initialLng, initialLat])
       setIsMapReady(true)
@@ -73,11 +73,15 @@ export default function LocationForm({ register, errors, setValue, itemDetails }
                 <Paper h={380} className="h-72 relative">
                   {isMapReady && (
                     <Map
-                      initialViewState={{
-                        longitude: lng,
-                        latitude: lat,
-                        zoom: 12
-                      }}
+                      initialViewState={
+                        newBranch
+                          ? { longitude: -88.025, latitude: 15.50417, zoom: 12 }
+                          : {
+                              longitude: lng,
+                              latitude: lat,
+                              zoom: 12
+                            }
+                      }
                       style={{ borderRadius: "6px" }}
                       mapStyle={
                         colorScheme === "dark"
@@ -98,6 +102,16 @@ export default function LocationForm({ register, errors, setValue, itemDetails }
                           setLat(position.coords.latitude)
                           setValue("geolocation", [position.coords.longitude, position.coords.latitude])
                           setMarkerPosition({ longitude: position.coords.longitude, latitude: position.coords.latitude })
+                        }}
+                        ref={(ref) => {
+                          if (ref) {
+                            const button = ref._container?.querySelector("button")
+                            if (button) {
+                              button.setAttribute("aria-label", "Find my location")
+                              const tooltip = button.querySelector(".mapboxgl-ctrl-icon")
+                              if (tooltip) tooltip.title = "Encuentra mi ubicación"
+                            }
+                          }
                         }}
                       />
 

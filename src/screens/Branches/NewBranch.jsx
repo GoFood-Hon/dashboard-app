@@ -61,7 +61,7 @@ export default function NewBranch() {
       title: "Ubicación",
       requirement: "Obligatorio",
       form: (
-        <LocationForm register={register} errors={errors} setValue={setValue} control={control} isDataCleared={isDataCleared} />
+        <LocationForm register={register} errors={errors} setValue={setValue} control={control} isDataCleared={isDataCleared} newBranch />
       )
     },
     {

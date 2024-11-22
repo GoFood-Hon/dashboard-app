@@ -5,7 +5,6 @@ import { colors } from "../../theme/colors"
 import {
   Text,
   Button,
-  Image,
   Group,
   Stack,
   Grid,
@@ -15,7 +14,6 @@ import {
   Modal,
   Textarea,
   Avatar,
-  TypographyStylesProvider,
   Title,
   Divider,
   Flex,
@@ -213,7 +211,7 @@ export const ReservationDetails = () => {
           {reservationDetails?.ReservationComments?.map((comment) =>
             comment?.AdminUser ? (
               <Paper key={comment?.id} withBorder radius="md" mb="xs" className={classes.comment}>
-                <Group justify="flex-end">
+                <Group justify="flex-end" gap='xs'>
                   <Box>
                     <Text fz="sm" ta="end">
                       {comment?.AdminUser?.name}
@@ -222,33 +220,40 @@ export const ReservationDetails = () => {
                       {dayjs(comment?.createdAt).fromNow()}
                     </Text>
                   </Box>
-                  <Avatar src={comment?.AdminUser?.photo} alt={comment?.AdminUser?.name} radius="xl" />
-                  {/* <Avatar
-                    src={image}
+                  <Avatar
+                    src={comment?.AdminUser?.photo}
                     alt="it's me"
-                    name={name
+                    name={comment?.AdminUser?.name
                       ?.split(" ")
                       .filter((_, i, arr) => i === 0 || i === arr.length - 1)
-                      .map((palabra) => palabra.charAt(0))
+                      .map((word) => word.charAt(0))
                       .join("")
                       .toUpperCase()}
-                    color={colors.main_app_color}
-                  /> */}
+                  />
                 </Group>
-                <Text pr={54} pt="sm" size="sm" ta="right">
+                <Text pr={50} pt="sm" size="sm" ta="right">
                   {comment?.comment}
                 </Text>
               </Paper>
             ) : (
               <Paper key={comment?.id} withBorder radius="md" mb="xs" className={classes.comment}>
-                <Group>
+                <Group gap='xs'>
                   <Box>
                     <Text fz="sm">{comment?.User?.name}</Text>
                     <Text fz="xs" c="dimmed">
                       {dayjs(comment?.createdAt).fromNow()}
                     </Text>
                   </Box>
-                  <Avatar src={comment?.User?.photo} alt={comment?.User?.name} radius="xl" />
+                  <Avatar
+                    src={comment?.User?.photo}
+                    alt="it's me"
+                    name={comment?.User?.name
+                      ?.split(" ")
+                      .filter((_, i, arr) => i === 0 || i === arr.length - 1)
+                      .map((word) => word.charAt(0))
+                      .join("")
+                      .toUpperCase()}
+                  />
                 </Group>
                 <Text pl={54} pt="sm" size="sm">
                   {comment?.comment}

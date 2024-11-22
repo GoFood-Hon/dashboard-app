@@ -1,4 +1,3 @@
-import React from "react"
 import {
   AUTH_NAVIGATION_ROUTES,
   NAVIGATION_ROUTES_RES_ADMIN,
@@ -7,30 +6,23 @@ import {
   SETTING_NAVIGATION_ROUTES,
   NAVIGATION_ROUTES_KITCHEN
 } from "./routes"
-import { Navigate, Route, RouterProvider, createBrowserRouter, createRoutesFromElements } from "react-router-dom"
+import { Route, RouterProvider, createBrowserRouter, createRoutesFromElements } from "react-router-dom"
 import AuthLayout from "./layout/AuthLayout"
-
 import Login from "./screens/auth/Login"
 import UnauthenticatedLayout from "./layout/UnauthenticatedLayout"
 import Register from "./screens/auth/Register"
 import ForgetPassword from "./screens/auth/PasswordRecovery/ForgetPassword"
 import Home from "./screens/Home"
 import Orders from "./screens/Orders/OrdersScreen"
-import Transactions from "./screens/Transactions"
 import Menu from "./screens/Menu/Menu"
-
 import Branches from "./screens/Branches/Branches"
 import Users from "./screens/Users/Users"
 import Logout from "./screens/Logout"
 import Dishes from "./screens/Dishes/DishesScreen"
 import NewDish from "./screens/Dishes/NewDishScreen"
 import DishDetails from "./screens/Dishes/DishDetails"
-import ComplementsDetails from "./screens/Complements/ComplementsDetails"
-import NewComplement from "./screens/Complements/NewComplement"
-import Complements from "./screens/Complements/Complements"
 import NewMenu from "./screens/Menu/NewMenu"
 import NewBranch from "./screens/Branches/NewBranch"
-import BranchesDetails from "./screens/Branches/BranchesDetails"
 import NewUser from "./screens/Users/NewUser"
 import GeneralSettings from "./screens/Users/GeneralSettings"
 import AccountSettings from "./screens/Users/AccountSettings"
@@ -41,22 +33,18 @@ import BankSettings from "./screens/Users/BankSettings"
 import PlanSettings from "./screens/Users/PlanSettings"
 import AdministrativeSettings from "./screens/Users/AdministrativeSettings"
 import MenuDetails from "./screens/Menu/MenuDetails"
-import UserDetails from "./screens/Users/UserDetails"
 import { OrderDetails } from "./screens/Orders/OrderDetails"
 import RestaurantsScreen from "./screens/Restaurants/RestaurantsScreen"
 import PrivateRoute from "./layout/PrivateRoute"
 import { useSelector } from "react-redux"
 import { APP_ROLES } from "./utils/constants"
-import { RestaurantDetailScreen } from "./screens/Restaurants/RestaurantDetailScreen"
 import { NewAdminUser } from "./screens/Users/NewAdminUser"
 import { AdminUserScreen } from "./screens/Users/AdminUserScreen"
-import { AdminUserDetails } from "./screens/Users/AdminUserDetails"
 import { NewRestaurant } from "./screens/Restaurants/NewRestaurant"
 import { Plans } from "./screens/Plans/Plans"
 import { NotFound } from "./screens/NotFound"
 import { WelcomeScreen } from "./screens/Welcome/WelcomeScreen"
 import { NewPlan } from "./screens/Plans/NewPlan"
-import { PlanDetails } from "./screens/Plans/PlanDetails"
 import { OrderHistory } from "./screens/Orders/OrderHistory"
 import { NotificationProvider } from "./components/NotificationProvider"
 import EditMenuScreen from "./screens/Menu/EditMenuScreen"
@@ -110,15 +98,11 @@ function App() {
             <Route path={NAVIGATION_ROUTES_SUPER_ADMIN.Collections.NewCollection.path} element={<NewCollection />} />
 
             <Route path={NAVIGATION_ROUTES_SUPER_ADMIN.Collections.EditCollection.path} element={<EditCollection />} />
-
-            {/* <Route path={NAVIGATION_ROUTES_SUPER_ADMIN.Password.path} element={<PasswordSettings />} /> */}
           </>
         )
       case APP_ROLES.restaurantAdmin:
         return (
           <>
-            {/* Main routes */}
-
             <Route path={NAVIGATION_ROUTES_RES_ADMIN.Dashboard.path} element={<Home />} />
 
             <Route path={NAVIGATION_ROUTES_RES_ADMIN.Pedidos.path} element={<Orders />} />
@@ -137,17 +121,6 @@ function App() {
 
             <Route path={NAVIGATION_ROUTES_RES_ADMIN.Menu.submenu.Dishes.NewDish.path} element={<NewDish />} />
 
-            {/* <Route path={NAVIGATION_ROUTES_RES_ADMIN.Menu.submenu.Complements.path} element={<Complements />} /> */}
-
-            <Route
-              // path={NAVIGATION_ROUTES_RES_ADMIN.Menu.submenu.Complements.ComplementDetails.path}
-              element={<ComplementsDetails />}
-            />
-
-            {/* <Route path={NAVIGATION_ROUTES_RES_ADMIN.Menu.submenu.Complements.NewComplement.path} element={<NewComplement />} /> */}
-
-            {/* <Route path={NAVIGATION_ROUTES_RES_ADMIN.Transactions.path} element={<Transactions />} /> */}
-
             <Route path={NAVIGATION_ROUTES_RES_ADMIN.Branches.path} element={<Branches />} />
 
             <Route path={NAVIGATION_ROUTES_RES_ADMIN.Reservations.path} element={<Reservations />} />
@@ -165,8 +138,6 @@ function App() {
             <Route path={NAVIGATION_ROUTES_RES_ADMIN.Users.NewUser.path} element={<NewUser />} />
 
             <Route path={NAVIGATION_ROUTES_RES_ADMIN.Settings.path} element={<GeneralSettings />} />
-
-            {/* Settings Routes */}
 
             <Route path={SETTING_NAVIGATION_ROUTES.General.path} element={<GeneralSettings />} />
 
@@ -198,8 +169,6 @@ function App() {
 
             <Route path={NAVIGATION_ROUTES_BRANCH_ADMIN.Dishes.path} element={<Dishes />} />
 
-            {/* <Route path={NAVIGATION_ROUTES_RES_ADMIN.Menu.submenu.Complements.path} element={<Complements />} /> */}
-
             <Route path={NAVIGATION_ROUTES_BRANCH_ADMIN.Dishes.DishDetails.path} element={<DishDetails />} />
 
             <Route path={NAVIGATION_ROUTES_BRANCH_ADMIN.Reservations.path} element={<Reservations />} />
@@ -227,8 +196,6 @@ function App() {
             <Route path={NAVIGATION_ROUTES_BRANCH_ADMIN.Dishes.path} element={<Dishes />} />
 
             <Route path={NAVIGATION_ROUTES_RES_ADMIN.Menu.submenu.Dishes.DishDetails.path} element={<DishDetails />} />
-
-            {/* <Route path={NAVIGATION_ROUTES_RES_ADMIN.Menu.submenu.Complements.path} element={<Complements />} /> */}
 
             <Route path={NAVIGATION_ROUTES_BRANCH_ADMIN.Account.path} element={<AccountSettings />} />
 
@@ -280,9 +247,7 @@ function App() {
             }>
             {renderRoutesForRole(userRole)}
           </Route>
-          {/* <Route path={"/unauthorized"} element={<Navigate to="/" />} /> */}
           <Route path={AUTH_NAVIGATION_ROUTES.Logout.path} element={<Logout />} />
-          {/* <Route path={"/notificaciones"} element={<NotificationScreen />} /> */}
         </Route>
         <Route element={<UnauthenticatedLayout />}>
           <Route path={AUTH_NAVIGATION_ROUTES.Login.path} element={<Login />} />

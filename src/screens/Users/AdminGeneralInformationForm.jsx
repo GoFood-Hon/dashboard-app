@@ -51,7 +51,7 @@ export const AdminGeneralInformationForm = ({ register, errors, setValue, image,
                 countryPrefix="+504"
               />
             </Grid.Col>
-            <Grid.Col span={{ base: 12, md: 6 }}>
+            {/* <Grid.Col span={{ base: 12, md: 6 }}>
               <InputField
                 label="Nueva contraseña"
                 name="password"
@@ -72,7 +72,7 @@ export const AdminGeneralInformationForm = ({ register, errors, setValue, image,
                 placeholder="*******************"
                 type="password"
               />
-            </Grid.Col>
+            </Grid.Col> */}
             <Grid.Col span={{ base: 12 }}>
               <Controller
                 name="restaurantId"
@@ -107,7 +107,7 @@ export const AdminGeneralInformationForm = ({ register, errors, setValue, image,
                   previews
                 ) : (
                   <>
-                    <Image radius="md" h={250} src={image} />
+                    <Image radius="md" h={220} src={image} />
                     <IconPhoto
                       className={`${image ? "hidden" : ""}`}
                       style={{ width: rem(52), height: rem(52), color: "var(--mantine-color-dimmed)" }}

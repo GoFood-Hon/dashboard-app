@@ -323,7 +323,7 @@ export default function MenuTable({ items, screenType, totalItems, currentPage, 
         render: (status) => (
           <Badge
             size="lg"
-            w={200}
+            w={180}
             tt="capitalize"
             color={
               status === "pending" ||
@@ -333,10 +333,10 @@ export default function MenuTable({ items, screenType, totalItems, currentPage, 
               status === "ready-to-pick-up" ||
               status === "ready-for-customer" ||
               status === "on-delivery"
-                ? colors.yellow_logo
+                ? "rgba(153, 135, 0, 1)"
                 : status === "canceled"
                   ? colors.main_app_color
-                  : "green"
+                  : "rgba(0, 94, 2, 1)"
             }>
             {status === "pending"
               ? "Pendiente"
@@ -346,15 +346,13 @@ export default function MenuTable({ items, screenType, totalItems, currentPage, 
                   ? "En espera"
                   : status === "confirmed"
                     ? "Confirmado"
-                    : status === "ready"
+                    : status === "ready-to-pick-up"
                       ? "Esperando repartidor"
-                      : status === "ready-to-pick-up"
-                        ? "Listo para recoger"
-                        : status === "ready-for-customer"
-                          ? "Listo para entregar"
-                          : status === "on-delivery"
-                            ? "En camino"
-                            : "Completado"}
+                      : status === "ready" || status === "ready-for-customer"
+                        ? "Preparado"
+                        : status === "on-delivery"
+                          ? "En camino"
+                          : "Completado"}
           </Badge>
         )
       },
@@ -473,10 +471,11 @@ export default function MenuTable({ items, screenType, totalItems, currentPage, 
         center: true,
         render: (status) => (
           <Badge
-            size="md"
-            w={100}
+            size="lg"
+            w={160}
+            tt="capitalize"
             color={status === "pending" ? colors.yellow_logo : status === "cancelled" ? colors.main_app_color : "green"}>
-            {status === "pending" ? "Pendiente" : status === "cancelled" ? "Cancelado" : "Aprobado"}
+            {status === "pending" ? "Pendiente" : status === "cancelled" ? "Cancelada" : "Aprobada"}
           </Badge>
         )
       },

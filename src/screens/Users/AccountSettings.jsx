@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { CloseIcon, Group, Text, rem, Grid, Paper, Flex, Button, Container, Image } from "@mantine/core"
+import { CloseIcon, Group, Text, rem, Grid, Paper, Flex, Button, Container, Image, Stack } from "@mantine/core"
 import SettingsCard from "../../components/SettingsCard"
 import authApi from "../../api/authApi"
 import InputField from "../../components/Form/InputField"
@@ -65,9 +65,7 @@ export default function AccountSettings() {
 
   const previews = images.map((file, index) => {
     const imageUrl = URL.createObjectURL(file)
-    return (
-      <Image radius="md" h={250} src={imageUrl} />
-    )
+    return <Image radius="md" h={250} src={imageUrl} />
   })
 
   const handleDrop = (acceptedFiles) => {
@@ -120,41 +118,28 @@ export default function AccountSettings() {
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <div className={`${user.role === APP_ROLES.restaurantAdmin && ""}`}>
-          <section>
-            <div className="flex flex-row justify-between items-center">
-              <div className="flex flex-row gap-x-3 items-center">
-                <BackButton title="Configurar cuenta" />
-              </div>
-            </div>
-          </section>
+        <Stack>
+          <Group grow>
+            <Flex align="center" justify="space-between">
+              <BackButton title="Configurar cuenta" />
+            </Flex>
+          </Group>
           <SettingsCard title="Información general" iconName="user">
             <Grid>
               <Grid.Col span={{ base: 12, md: 8, lg: 8 }}>
                 <Paper withBorder p="lg" radius="md">
                   <Grid>
                     <Grid.Col span={{ base: 12, md: 6 }}>
-                      <InputField label="Nombre" name="firstName" register={register} errors={errors} className="text-black" />
+                      <InputField label="Nombre" name="firstName" register={register} errors={errors} />
                     </Grid.Col>
                     <Grid.Col span={{ base: 12, md: 6 }}>
-                      <InputField label="Email" name="email" register={register} errors={errors} className="text-black" />
+                      <InputField label="Email" name="email" register={register} errors={errors} />
                     </Grid.Col>
                     <Grid.Col span={{ base: 12, md: 12 }}>
-                      <InputField
-                        label="Numero de teléfono"
-                        name="phoneNumber"
-                        register={register}
-                        errors={errors}
-                      />
+                      <InputField label="Numero de teléfono" name="phoneNumber" register={register} errors={errors} />
                     </Grid.Col>
                     <Grid.Col span={{ base: 12, md: 6 }}>
-                      <InputField
-                        label="Nueva contraseña"
-                        name="password"
-                        register={register}
-                        errors={errors}
-                        type="password"
-                      />
+                      <InputField label="Nueva contraseña" name="password" register={register} errors={errors} type="password" />
                     </Grid.Col>
                     <Grid.Col span={{ base: 12, md: 6 }}>
                       <InputField
@@ -192,7 +177,7 @@ export default function AccountSettings() {
                               c="dimmed"
                               inline
                               mt={7}>
-                              Haga clic o arrastre la imagen del restaurante
+                              Haga clic o arrastre la imagen del usuario
                             </Text>
                           </>
                         )}
@@ -204,16 +189,14 @@ export default function AccountSettings() {
               </Grid.Col>
             </Grid>
           </SettingsCard>
-        </div>
-        <section>
-          <Paper withBorder radius="md" className="w-full flex md:justify-end mt-6 md:gap-3 rounded-md px-8 py-5">
+          <Paper withBorder radius="md" p="md">
             <Flex justify="end" gap="xs">
               <Button loading={isLoading} color={colors.main_app_color} type="submit">
                 Actualizar
               </Button>
             </Flex>
           </Paper>
-        </section>
+        </Stack>
       </form>
     </>
   )

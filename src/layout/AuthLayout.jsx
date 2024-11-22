@@ -10,11 +10,15 @@ import {
   NAVIGATION_ROUTES_RES_ADMIN_TWO,
   NAVIGATION_ROUTES_BRANCH_ADMIN_TWO
 } from "../routes"
-import { AppShell, Burger, useMantineColorScheme, useMantineTheme } from "@mantine/core"
+import { AppShell, Burger, Container, Loader, useMantineColorScheme, useMantineTheme } from "@mantine/core"
 import { useDisclosure } from "@mantine/hooks"
 import { AdminHeader } from "../components/Headers/AdminHeader"
 import { Navbar } from "../components/Navbar/Navbar"
 import { APP_ROLES } from "../utils/constants"
+import LoadingCircle from "../components/LoadingCircle"
+import { colors } from "../theme/colors"
+import Lottie from "react-lottie"
+import animatedBurger from '../assets/animation/LoadingBurgerAnimation.json'
 
 function AuthLayout() {
   const dispatch = useDispatch()
@@ -23,7 +27,14 @@ function AuthLayout() {
   const { colorScheme } = useMantineColorScheme()
   const theme = useMantineTheme()
   const bg = colorScheme === "dark" ? theme.colors.dark[7] : theme.colors.gray[1]
-
+  const defaultOptions = {
+    loop: true,
+    autoplay: true,
+    animationData: animatedBurger,
+    rendererSettings: {
+      preserveAspectRatio: "xMidYMid slice"
+    }
+  }
   const [loading, setLoading] = useState(true)
 
   const user = useSelector((state) => state.user.value)
@@ -50,22 +61,35 @@ function AuthLayout() {
 
   return (
     <>
-      <AppShell
-        header={{ height: 70 }}
-        navbar={{ width: 300, breakpoint: "sm", collapsed: { mobile: !opened } }}
-        padding="md"
-        transitionDuration={500}
-        transitionTimingFunction="ease">
-        <AppShell.Navbar>
-          <Navbar data={roleRoutesMap[user.role]} hidden={!opened} />
-        </AppShell.Navbar>
-        <AppShell.Header>
-          <AdminHeader burger={<Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />} />
-        </AppShell.Header>
-        <AppShell.Main bg={bg}>
-          <Outlet />
-        </AppShell.Main>
-      </AppShell>
+      {loading ? (
+        <Container
+          fluid
+          style={{
+            height: "100vh",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center"
+          }}>
+          <Lottie options={defaultOptions} height={180} width={180} />
+        </Container>
+      ) : (
+        <AppShell
+          header={{ height: 70 }}
+          navbar={{ width: 300, breakpoint: "sm", collapsed: { mobile: !opened } }}
+          padding="md"
+          transitionDuration={500}
+          transitionTimingFunction="ease">
+          <AppShell.Navbar>
+            <Navbar data={roleRoutesMap[user.role]} hidden={!opened} />
+          </AppShell.Navbar>
+          <AppShell.Header>
+            <AdminHeader burger={<Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />} />
+          </AppShell.Header>
+          <AppShell.Main bg={bg}>
+            <Outlet />
+          </AppShell.Main>
+        </AppShell>
+      )}
     </>
   )
 }

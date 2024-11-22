@@ -6,18 +6,17 @@ import InputField from "../../components/Form/InputField"
 import { useDispatch, useSelector } from "react-redux"
 import { Controller } from "react-hook-form"
 import InputCheckbox from "../../components/Form/InputCheckbox"
-import { fetchNoPaginatedRestaurants } from "../../store/features/restaurantSlice"
+import { fetchAllKitchenTypes } from "../../store/features/kitchenAndTagsSlice"
 
 export const GeneralInformationForm = ({ register, control, errors, setValue, image, watch }) => {
   const dispatch = useDispatch()
-  const restaurants = useSelector((state) => state.restaurants.restaurants)
+  const kitchenTypes = useSelector((state) => state.kitchenAndTags.kitchenTypes)
   const [images, setImages] = useState([])
 
   const isFreeDelivery = watch("shippingFree", true)
 
   useEffect(() => {
-    console.log(restaurants)
-    dispatch(fetchNoPaginatedRestaurants())
+    dispatch(fetchAllKitchenTypes())
   }, [dispatch])
 
   const handleDrop = (acceptedFiles) => {
@@ -70,12 +69,12 @@ export const GeneralInformationForm = ({ register, control, errors, setValue, im
             </Grid.Col>
             <Grid.Col span={{ base: 12, md: 6 }}>
               <Controller
-                name="restaurantId"
+                name="cuisineTypeId"
                 control={control}
                 render={({ field, fieldState }) => (
                   <Select
                     label="Especialidad de cocina (Obligatorio)"
-                    data={restaurants.map((item) => ({
+                    data={kitchenTypes.map((item) => ({
                       value: item.id,
                       label: item.name
                     }))}

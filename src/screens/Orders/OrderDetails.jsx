@@ -420,37 +420,43 @@ export const OrderDetails = () => {
             centered
             radius="md">
             <Stack>
-              {loadingDrivers
-                ? Array.from({ length: 5 }).map((_, index) => <Skeleton key={index} radius="md" h={70} />)
-                : drivers &&
-                  drivers.map((driverItem) => (
-                    <Card key={driverItem.driverId} radius="md">
-                      <Flex align="center" justify="space-between">
-                        <Flex align="center" gap="xs">
-                          <Avatar
-                            src={driverItem?.AdminUser?.photo}
-                            alt="it's me"
-                            name={driverItem?.AdminUser?.name
-                              ?.split(" ")
-                              .filter((_, i, arr) => i === 0 || i === arr.length - 1)
-                              .map((word) => word.charAt(0))
-                              .join("")
-                              .toUpperCase()}
-                          />
-                          <Text size="sm" fw={500}>
-                            {driverItem?.AdminUser?.name}
-                          </Text>
-                        </Flex>
-                        <MantineProvider theme={theme}>
-                          <Checkbox
-                            color={colors.main_app_color}
-                            checked={driver === driverItem.driverId}
-                            onChange={() => setDriver(driverItem.driverId)}
-                          />
-                        </MantineProvider>
+              {loadingDrivers ? (
+                Array.from({ length: 5 }).map((_, index) => <Skeleton key={index} radius="md" h={70} />)
+              ) : drivers && drivers.length > 0 ? (
+                drivers.map((driverItem) => (
+                  <Card key={driverItem.driverId} radius="md">
+                    <Flex align="center" justify="space-between">
+                      <Flex align="center" gap="xs">
+                        <Avatar
+                          src={driverItem?.AdminUser?.photo}
+                          alt="it's me"
+                          name={driverItem?.AdminUser?.name
+                            ?.split(" ")
+                            .filter((_, i, arr) => i === 0 || i === arr.length - 1)
+                            .map((word) => word.charAt(0))
+                            .join("")
+                            .toUpperCase()}
+                        />
+                        <Text size="sm" fw={500}>
+                          {driverItem?.AdminUser?.name}
+                        </Text>
                       </Flex>
-                    </Card>
-                  ))}
+                      <MantineProvider theme={theme}>
+                        <Checkbox
+                          color={colors.main_app_color}
+                          checked={driver === driverItem.driverId}
+                          onChange={() => setDriver(driverItem.driverId)}
+                        />
+                      </MantineProvider>
+                    </Flex>
+                  </Card>
+                ))
+              ) : (
+                <Text my='xl' size="sm" c="dimmed" align="center">
+                  No hay repartidores disponibles
+                </Text>
+              )}
+
               <Button
                 disabled={!driver}
                 color={colors.main_app_color}

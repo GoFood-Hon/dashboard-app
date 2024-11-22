@@ -5,7 +5,7 @@ import { IconBolt } from "@tabler/icons-react"
 
 export default function SettingsCard({ title, iconName, linkPage, children }) {
   return (
-    <Paper withBorder radius="md" mt="sm">
+    <Paper withBorder radius="md">
       <Paper withBorder p="sm" radius='md'>
         <Flex align="center" direction="row" justify="space-between">
           <Flex align="center" gap="xs">
