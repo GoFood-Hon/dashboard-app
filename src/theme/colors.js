@@ -48,6 +48,7 @@ export const colors = {
   light_link_text: palette.dodger_blue,
   main_app_color: '#EE364C',
 
+
   /**
    * Dashboard colors
    */

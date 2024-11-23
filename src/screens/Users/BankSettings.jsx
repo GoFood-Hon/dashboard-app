@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { Grid, Select, Tabs, rem } from "@mantine/core"
+import { Flex, Grid, Group, Select, Stack, Tabs, rem } from "@mantine/core"
 import SettingsCard from "../../components/SettingsCard"
 import InputField from "../../components/Form/InputField"
 import { Controller, useForm } from "react-hook-form"
@@ -7,6 +7,7 @@ import restaurantsApi from "../../api/restaurantApi"
 import toast from "react-hot-toast"
 import { useSelector } from "react-redux"
 import { colors } from "../../theme/colors"
+import BackButton from "../Dishes/components/BackButton"
 
 export default function BankSettings() {
   const user = useSelector((state) => state.user.value)
@@ -69,64 +70,57 @@ export default function BankSettings() {
   }, [])
 
   return (
-    <>
-      <div>
-        <section>
-          <div className="flex flex-row justify-between items-center pb-3">
-            <div className="flex flex-row gap-x-3 items-center">
-              <h1 className="text-white-200 text-2xl font-semibold">Banco</h1>
-            </div>
-          </div>
-        </section>
-        <section>
-          <Tabs defaultValue="banks" color={colors.main_app_color}>
-            <Tabs.List>
-              <Tabs.Tab value="banks">Bancos</Tabs.Tab>
-              <Tabs.Tab value="api">API</Tabs.Tab>
-            </Tabs.List>
-            <Tabs.Panel value="banks">
-              <SettingsCard title="Banco" iconName="bank">
-                <Grid my={20}>
-                  <Grid.Col span={{ sm: 12 }}>
-                    <span className="text-sm font-bold leading-snug">Banco</span>
-                    <Controller
-                      control={control}
-                      name="bank"
-                      render={({ field: { onChange, onBlur, value, ref } }) => (
-                        <Select
-                          placeholder="Seleccione banco"
-                          data={banks}
-                          allowDeselect={false}
-                          size="md"
-                          onChange={onChange}
-                          onBlur={onBlur}
-                          selected={value}
-                        />
-                      )}
+    <Stack gap='xs'>
+      <Group grow>
+        <Flex align="center" justify="space-between">
+          <BackButton title="Banco" />
+        </Flex>
+      </Group>
+      <Tabs defaultValue="banks" color={colors.main_app_color}>
+        <Tabs.List>
+          <Tabs.Tab value="banks">Bancos</Tabs.Tab>
+          <Tabs.Tab value="api">API</Tabs.Tab>
+        </Tabs.List>
+        <Tabs.Panel value="banks" pt='sm'>
+          <SettingsCard title="Banco" iconName="bank">
+            <Grid my={20}>
+              <Grid.Col span={{ sm: 12 }}>
+                <span className="text-sm font-bold leading-snug">Banco</span>
+                <Controller
+                  control={control}
+                  name="bank"
+                  render={({ field: { onChange, onBlur, value, ref } }) => (
+                    <Select
+                      placeholder="Seleccione banco"
+                      data={banks}
+                      allowDeselect={false}
+                      size="md"
+                      onChange={onChange}
+                      onBlur={onBlur}
+                      selected={value}
                     />
-                  </Grid.Col>
-                  <Grid.Col span={{ sm: 12 }}>
-                    <InputField label="Titular de la cuenta" name="bankAccountOwner" register={register} errors={errors} />
-                  </Grid.Col>
-                </Grid>
-              </SettingsCard>
-              
-            </Tabs.Panel>
-            <Tabs.Panel value="api">
-              <SettingsCard title="Accesos de la API" iconName="creditCard">
-                <Grid my={20}>
-                  <Grid.Col span={{ sm: 12 }}>
-                    <InputField label="CLIENT ID" name="bankClientId" register={register} errors={errors} />
-                  </Grid.Col>
-                  <Grid.Col>
-                    <InputField label="TOKEN" name="bankToken" register={register} errors={errors} />
-                  </Grid.Col>
-                </Grid>
-              </SettingsCard>
-            </Tabs.Panel>
-          </Tabs>
-        </section>
-      </div>
-    </>
+                  )}
+                />
+              </Grid.Col>
+              <Grid.Col span={{ sm: 12 }}>
+                <InputField label="Titular de la cuenta" name="bankAccountOwner" register={register} errors={errors} />
+              </Grid.Col>
+            </Grid>
+          </SettingsCard>
+        </Tabs.Panel>
+        <Tabs.Panel value="api" pt='sm'>
+          <SettingsCard title="Accesos de la API" iconName="creditCard">
+            <Grid my={20}>
+              <Grid.Col span={{ sm: 12 }}>
+                <InputField label="CLIENT ID" name="bankClientId" register={register} errors={errors} />
+              </Grid.Col>
+              <Grid.Col>
+                <InputField label="TOKEN" name="bankToken" register={register} errors={errors} />
+              </Grid.Col>
+            </Grid>
+          </SettingsCard>
+        </Tabs.Panel>
+      </Tabs>
+    </Stack>
   )
 }

@@ -12,16 +12,17 @@ import branchesApi from "../../api/branchesApi"
 import { getDepartmentNameById } from "../../utils"
 import { showNotification } from "@mantine/notifications"
 import { useDispatch } from "react-redux"
-import { setShippingRange } from "../../store/features/branchesSlice"
+import { createBranch, setShippingRange } from "../../store/features/branchesSlice"
 import FormLayout from "../../components/Form/FormLayout"
+import { useSelector } from "react-redux"
 
 export default function NewBranch() {
   const dispatch = useDispatch()
   const navigate = useNavigate()
-  const [isLoading, setIsLoading] = useState(false)
   const [daysData, setDaysData] = useState([])
   const [workSchedule, setWorkSchedule] = useState([])
   const [isAlwaysOpen, setIsAlwaysOpen] = useState(false)
+  const { creatingBranches } = useSelector((state) => state.branches)
 
   const {
     register,
@@ -61,7 +62,14 @@ export default function NewBranch() {
       title: "Ubicación",
       requirement: "Obligatorio",
       form: (
-        <LocationForm register={register} errors={errors} setValue={setValue} control={control} isDataCleared={isDataCleared} newBranch />
+        <LocationForm
+          register={register}
+          errors={errors}
+          setValue={setValue}
+          control={control}
+          isDataCleared={isDataCleared}
+          newBranch
+        />
       )
     },
     {
@@ -95,7 +103,6 @@ export default function NewBranch() {
   ))
 
   const onSubmit = async (data) => {
-    setIsLoading(true)
     const formData = {
       name: data.name,
       email: data.email,
@@ -105,6 +112,7 @@ export default function NewBranch() {
       city: data.city,
       state: getDepartmentNameById(parseInt(data.state)),
       geolocation: data.geolocation,
+      note: data.note,
       delivery: data.delivery ?? false,
       pickup: data.pickup ?? false,
       onSite: data.onSite ?? false,
@@ -112,56 +120,21 @@ export default function NewBranch() {
       schedules: !isAlwaysOpen ? Object.values(daysData) : null
     }
 
-    try {
-      const response = await branchesApi.createBranch(formData)
+    let formDataImage = null
 
-      if (response.error) {
-        showNotification({
-          title: "Error",
-          message: response.message,
-          color: "red",
-          duration: 7000
-        })
-      } else {
-        const branchId = response.data.id
-
-        const uploadBranchImage = async (branchId, file) => {
-          const formDataImage = new FormData()
-          formDataImage.append("files", file)
-
-          return await branchesApi.addImage(branchId, formDataImage)
-        }
-
-        const addImageResponse = await uploadBranchImage(branchId, data?.files?.[0])
-
-        if (addImageResponse.error) {
-          showNotification({
-            title: "Error",
-            message: addImageResponse.message,
-            color: "red",
-            duration: 7000
-          })
-        } else {
-          showNotification({
-            title: "Creación exitosa",
-            message: "La sucursal fue creada correctamente",
-            color: "green",
-            duration: 7000
-          })
-          navigate(NAVIGATION_ROUTES_RES_ADMIN.Branches.path)
-        }
-      }
-      setIsLoading(false)
-      return response.data
-    } catch (e) {
-      showNotification({
-        title: "Error",
-        message: e,
-        color: "red",
-        duration: 7000
-      })
-      setIsLoading(false)
+    if (data?.files?.[0] && data.files[0] instanceof File) {
+      formDataImage = new FormData()
+      formDataImage.append("files", data.files[0])
     }
+
+    dispatch(createBranch({ formData, formDataImage }))
+      .unwrap()
+      .then(() => {
+        navigate(NAVIGATION_ROUTES_RES_ADMIN.Branches.path)
+      })
+      .catch((error) => {
+        console.error("Error creating branch:", error)
+      })
   }
 
   return (
@@ -173,7 +146,7 @@ export default function NewBranch() {
           accordionTitles={["Información general", "Ubicación", "Horario"]}
           accordionItems={items}
           navigate={() => navigate(NAVIGATION_ROUTES_RES_ADMIN.Branches.path)}
-          isLoading={isLoading}
+          isLoading={creatingBranches}
         />
       </form>
     </>

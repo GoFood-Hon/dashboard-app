@@ -1,7 +1,7 @@
 import React from "react"
 import BaseLayout from "../components/BaseLayout"
 
-import { Grid } from "@mantine/core"
+import { Grid, Stack, Title } from "@mantine/core"
 import { DashboardScreen } from "./Dashboards/DashboardScreen"
 import { OrderAmountChart } from "./Dashboards/OrderAmountChart"
 import { DailySalesChart } from "./Dashboards/DailySalesChart"
@@ -12,10 +12,10 @@ import { TopProductsSales } from "./Dashboards/TopProductsSales"
 
 function Home() {
   return (
-    <>
-      <h1 className="text-white-200 text-2xl font-semibold pb-3">Dashboard</h1>
+    <Stack gap='md'>
+      <Title order={2}>Dashboard</Title>
       <DashboardScreen />
-      <Grid className="mt-6">
+      <Grid>
         <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
           <OrderAmountChart />
         </Grid.Col>
@@ -35,7 +35,7 @@ function Home() {
           <TopProductsSales />
         </Grid.Col> */}
       </Grid>
-    </>
+    </Stack>
   )
 }
 

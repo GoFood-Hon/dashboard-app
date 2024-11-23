@@ -62,6 +62,52 @@ export const fetchNoPaginatedBranches = createAsyncThunk(
   }
 )
 
+export const createBranch = createAsyncThunk(
+  "branches/createBranches",
+  async ({ formData, formDataImage }, { rejectWithValue }) => {
+    try {
+      const response = await branchesApi.createBranch(formData)
+      const branchData = response.data
+
+      if (response.error) {
+        showNotification({
+          title: "Error",
+          message: response.message,
+          color: "red"
+        })
+
+        return rejectWithValue(response.message)
+      }
+
+      let images = []
+      if (formDataImage) {
+        const imageResponse = await branchesApi.addImage(branchData.id, formDataImage)
+        images = imageResponse.data.images
+
+        if (imageResponse.error) {
+          showNotification({
+            title: "Error",
+            message: imageResponse.message,
+            color: "red"
+          })
+
+          return rejectWithValue(imageResponse.message)
+        }
+      }
+
+      showNotification({
+        title: "Creación exitosa",
+        message: `Se creó la sucursal ${branchData.name}`,
+        color: "green"
+      })
+
+      return { ...branchData, images }
+    } catch (error) {
+      return rejectWithValue(error.response?.data || "Error al crear el restaurante")
+    }
+  }
+)
+
 const updateFormData = (data, propertyToUpdate) => {
   const formData = new FormData()
   if (propertyToUpdate === "isActive") {
@@ -77,12 +123,11 @@ const updateFormData = (data, propertyToUpdate) => {
 }
 
 export const updateBranches = createAsyncThunk(
-  "complements/updateBranches",
-  async ({ data, propertyToUpdate = "all" }, { dispatch }) => {
+  "branches/updateBranches",
+  async ({ formData, formDataImage }, { dispatch, rejectWithValue }) => {
     try {
-      const formData = updateFormData(data, propertyToUpdate)
-
-      const response = await branchesApi.updateBranches(formData, data?.id)
+      const response = await branchesApi.updateBranches(formData, formData.id)
+      let branchUpdated = response.data
 
       if (response.error) {
         showNotification({
@@ -91,19 +136,30 @@ export const updateBranches = createAsyncThunk(
           color: "red",
           duration: 7000
         })
+
+        return rejectWithValue(response.message)
       } else {
+        if (formDataImage) {
+          const imageResponse = await branchesApi.addImage(formData.id, formDataImage)
+
+          branchUpdated = { ...branchUpdated, images: imageResponse.data.images }
+        }
+
         showNotification({
-          title: "¡Estado actualizado!",
-          message: `La sucursal ${response.data.name} fue ${response.data.isActive ? "habilitada" : "deshabilitada"}`,
+          title: "Actualización exitosa",
+          message: `La sucursal ${branchUpdated.name} fue actualizada correctamente`,
           color: "green",
           radius: "md"
         })
       }
-      return response.data
+      return branchUpdated
     } catch (error) {
       dispatch(setError("Error updating branch"))
-      toast.error("Fallo al actualizar el sucursal. Por favor intente de nuevo.", {
-        duration: 7000
+      showNotification({
+        title: "Error",
+        message: error,
+        color: "red",
+        radius: "md"
       })
 
       throw error
@@ -112,7 +168,7 @@ export const updateBranches = createAsyncThunk(
 )
 
 export const updateBranchStatus = createAsyncThunk(
-  "complements/updateBranches",
+  "branches/updateBranchesStatus",
   async ({ data, propertyToUpdate = "all" }, { rejectWithValue }) => {
     try {
       const formData = updateFormData(data, propertyToUpdate)
@@ -142,10 +198,6 @@ export const updateBranchStatus = createAsyncThunk(
     }
   }
 )
-
-/*
- * BRANCHES SLICE
- */
 
 export const branchesSlice = createSlice({
   name: "branches",
@@ -206,6 +258,63 @@ export const branchesSlice = createSlice({
         if (index !== -1) {
           currentPageBranches[index] = { ...currentPageBranches[index], isActive }
         }
+      })
+      .addCase(updateBranches.pending, (state) => {
+        state.updatingBranches = true
+      })
+      .addCase(updateBranches.fulfilled, (state, action) => {
+        const { id } = action.payload
+        const currentPageBranches = state.branchesPerPage[state.currentPage]
+        const index = currentPageBranches.findIndex((branch) => branch?.id === id)
+        
+        if (index !== -1) {
+          currentPageBranches[index] = action.payload
+        }
+        state.updatingBranches = false
+      })
+      .addCase(updateBranches.rejected, (state, action) => {
+        state.updatingBranches = false
+        state.error = action.error
+      })
+      .addCase(createBranch.pending, (state) => {
+        state.creatingBranches = true
+      })
+      .addCase(createBranch.fulfilled, (state, action) => {
+        const newBranch = action.payload
+
+        if (!state.branchesPerPage[1]) {
+          state.branchesPerPage[1] = []
+        }
+        state.branchesPerPage[1].unshift(newBranch)
+
+        for (let i = 1; i <= state.totalPagesCount; i++) {
+          if (state.branchesPerPage[i]?.length > state.itemsPerPage) {
+            const lastItem = state.branchesPerPage[i].pop()
+            if (state.branchesPerPage[i + 1]) {
+              state.branchesPerPage[i + 1].unshift(lastItem)
+            }
+          } else {
+            break
+          }
+        }
+
+        const consecutivePages = [1]
+        for (let i = 2; i <= state.totalPagesCount; i++) {
+          if (state.branchesPerPage[i]) {
+            if (consecutivePages.includes(i - 1)) {
+              consecutivePages.push(i)
+            } else {
+              delete state.branchesPerPage[i]
+            }
+          }
+        }
+
+        state.totalBranches += 1
+        state.totalPagesCount = Math.ceil(state.totalBranches / state.itemsPerPage)
+        state.creatingBranches = false
+      })
+      .addCase(createBranch.rejected, (state) => {
+        state.creatingBranches = false
       })
   }
 })

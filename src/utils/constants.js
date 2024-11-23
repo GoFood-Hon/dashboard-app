@@ -213,20 +213,23 @@ export const orderStates = {
     { icon: IconToolsKitchen, value: "ready", label: "Preparación", step: 2 },
     { icon: IconUserPlus, value: "ready-to-pick-up", label: "Asignar repartidor", step: 3 },
     { icon: IconMoped, value: "on-delivery", label: "En camino", step: 4 },
-    { icon: IconHomeCheck, value: "delivered", label: "Entregado", step: 5 },
+    { icon: IconHomeCheck, value: "delivered", label: "Entregado", step: 5 }
   ],
   pickup: [
     { icon: IconClockHour3, value: "confirmed", label: "Confirmación", step: 1, loading: true },
     { icon: IconToolsKitchen, value: "ready-for-customer", label: "Preparación", step: 2, loading: false },
-    { icon: IconHomeCheck, value: "delivered", label: "Entregado", step: 3, loading: false },
+    { icon: IconHomeCheck, value: "delivered", label: "Entregado", step: 3, loading: false }
   ],
   onSite: [
     { icon: IconClockHour3, value: "confirmed", label: "Confirmación", step: 1 },
     { icon: IconToolsKitchen, value: "ready-for-customer", label: "Preparación", step: 2 },
-    { icon: IconHomeCheck, value: "delivered", label: "Entregado", step: 3 },
+    { icon: IconHomeCheck, value: "delivered", label: "Entregado", step: 3 }
   ]
 }
 
+export const PRIMARY_COL_HEIGHT = "515px"
+export const SECONDARY_COL_HEIGHT = `calc(${PRIMARY_COL_HEIGHT} / 2 - var(--mantine-spacing-md) / 2)`
+
 export const theme = createTheme({
-  cursorType: 'pointer',
-});
+  cursorType: "pointer"
+})

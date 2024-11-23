@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react"
-import { Avatar, Box, Divider, Flex, Image, Paper, Text } from "@mantine/core"
+import { Avatar, Box, Divider, Flex, Group, Image, Paper, Stack, Text } from "@mantine/core"
 import { SETTING_NAVIGATION_ROUTES } from "../../routes"
 import restaurantsApi from "../../api/restaurantApi"
 import { useSelector } from "react-redux"
 import SettingsCard from "../../components/SettingsCard"
 import toast from "react-hot-toast"
 import authApi from "../../api/authApi"
+import BackButton from "../Dishes/components/BackButton"
 
 export default function GeneralSettings() {
   const user = useSelector((state) => state.user.value)
@@ -52,14 +53,12 @@ export default function GeneralSettings() {
   }, [])
 
   return (
-    <>
-      <section>
-        <div className="flex flex-row justify-between items-center">
-          <div className="flex flex-row gap-x-3 items-center">
-            <h1 className="text-white-200 text-2xl font-semibold">General</h1>
-          </div>
-        </div>
-      </section>
+    <Stack gap='sm'>
+      <Group grow>
+        <Flex align="center" justify="space-between">
+          <BackButton title="General" />
+        </Flex>
+      </Group>
 
       <SettingsCard title="Negocio" iconName="building" linkPage={SETTING_NAVIGATION_ROUTES.Business_btn.path}>
         <Paper py="md">
@@ -74,7 +73,9 @@ export default function GeneralSettings() {
               </Box>
             </Flex>
             <Box>
-              <Text c="dimmed" size="sm">{restaurants?.isActive ? "Habilitado" : "Deshabilitado"}</Text>
+              <Text c="dimmed" size="sm">
+                {restaurants?.isActive ? "Habilitado" : "Deshabilitado"}
+              </Text>
             </Box>
           </Flex>
         </Paper>
@@ -85,18 +86,24 @@ export default function GeneralSettings() {
           <Flex align="center" justify="space-between">
             <Box>
               <Text fw={700}>Correo</Text>
-              <Text c="dimmed" size="sm">{restaurants.email}</Text>
+              <Text c="dimmed" size="sm">
+                {restaurants.email}
+              </Text>
             </Box>
             <Box>
               <Text fw={700} ta="right">
                 Teléfono
               </Text>
-              <Text c="dimmed" size="sm">{restaurants.phoneNumber}</Text>
+              <Text c="dimmed" size="sm">
+                {restaurants.phoneNumber}
+              </Text>
             </Box>
           </Flex>
           <Box mt="md">
             <Text fw={700}>Dirección principal</Text>
-            <Text c="dimmed" size="sm">{restaurants.billingAddress}</Text>
+            <Text c="dimmed" size="sm">
+              {restaurants.billingAddress}
+            </Text>
           </Box>
         </Paper>
 
@@ -106,19 +113,25 @@ export default function GeneralSettings() {
           <Flex align="center" justify="space-between">
             <Box>
               <Text fw={700}>Razón social</Text>
-              <Text c="dimmed" size="sm">{restaurants.socialReason}</Text>
+              <Text c="dimmed" size="sm">
+                {restaurants.socialReason}
+              </Text>
             </Box>
             <Box>
               <Text fw={700} ta="center">
                 CAI
               </Text>
-              <Text c="dimmed" size="sm">{restaurants.cai}</Text>
+              <Text c="dimmed" size="sm">
+                {restaurants.cai}
+              </Text>
             </Box>
             <Box>
               <Text fw={700} ta="right">
                 RTN
               </Text>
-              <Text c="dimmed" size="sm">{restaurants.rtn}</Text>
+              <Text c="dimmed" size="sm">
+                {restaurants.rtn}
+              </Text>
             </Box>
           </Flex>
         </Paper>
@@ -151,17 +164,21 @@ export default function GeneralSettings() {
           <Flex align="center" justify="space-between">
             <Box>
               <Text fw={700}>Correo</Text>
-              <Text c="dimmed" size="sm">{userData.email}</Text>
+              <Text c="dimmed" size="sm">
+                {userData.email}
+              </Text>
             </Box>
             <Box>
               <Text fw={700} ta="right">
                 Teléfono
               </Text>
-              <Text c="dimmed" size="sm">{userData.phoneNumber}</Text>
+              <Text c="dimmed" size="sm">
+                {userData.phoneNumber}
+              </Text>
             </Box>
           </Flex>
         </Paper>
       </SettingsCard>
-    </>
+    </Stack>
   )
 }

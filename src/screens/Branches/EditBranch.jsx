@@ -9,46 +9,21 @@ import { TimeForm } from "./TimeForm"
 import { getDepartmentNameById } from "../../utils"
 import branchesApi from "../../api/branchesApi"
 import { NAVIGATION_ROUTES_RES_ADMIN } from "../../routes"
-import BackButton from "../Dishes/components/BackButton"
-import { showNotification } from "@mantine/notifications"
-import { colors } from "../../theme/colors"
-import { setShippingRange } from "../../store/features/branchesSlice"
+import { setShippingRange, updateBranches } from "../../store/features/branchesSlice"
 import FormLayout from "../../components/Form/FormLayout"
+import { updateRestaurantData } from "../../store/features/restaurantSlice"
 
 export const EditBranch = () => {
   const { branchId } = useParams()
-  const user = useSelector((state) => state.user.value.role)
+  const dispatch = useDispatch()
   const [daysData, setDaysData] = useState([])
   const [workSchedule, setWorkSchedule] = useState([])
-  const [markerPosition, setMarkerPosition] = useState(null)
-  const [errorLocalizacion, setErrorLocalizacion] = useState(false)
-  const [lng, setLng] = useState(0)
-  const [lat, setLat] = useState(0)
   const [isAlwaysOpen, setIsAlwaysOpen] = useState(false)
-
-  const handleMapClick = (event) => {
-    const { lngLat } = event
-    setLng(lngLat.lng)
-    setLat(lngLat.lat)
-    setMarkerPosition({ longitude: lngLat.lng, latitude: lngLat.lat })
-    setValue("geolocation", [lngLat.lng, lngLat.lat])
-    setErrorLocalizacion(false)
-  }
-
+  const { updatingBranches } = useSelector((state) => state.branches)
   const handleScheduleChange = (newSchedule) => {
     setWorkSchedule(newSchedule)
     setTableOfficeModified(true)
   }
-
-  const handleMapInput = () => {
-    setErrorLocalizacion(false)
-    setMarkerPosition({ longitude: lng, latitude: lat })
-    setValue("geolocation", [lng, lat])
-  }
-
-  const location = useLocation()
-  const dispatch = useDispatch()
-
   const [details, setDetails] = useState({})
   const [marker, setMarker] = useState({
     longitude: -88.025,
@@ -75,28 +50,13 @@ export const EditBranch = () => {
   const imageLocation = watch("images[0].location")
   dispatch(setShippingRange(watch("maxDistanceShipping") || 0))
 
-  const restaurant = useSelector((state) => state?.restaurant?.value)
   const [isDataCleared, setIsDataCleared] = useState(false)
-  const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await branchesApi.getBranch(branchId)
         setDetails(response?.data)
-
-        setViewState({
-          longitude: details?.geolocation?.coordinates?.[0],
-          latitude: details?.geolocation?.coordinates?.[1],
-          zoom: 15
-        })
-
-        setMarker({
-          longitude: details?.geolocation?.coordinates?.[0],
-          latitude: details?.geolocation?.coordinates?.[1]
-        })
-
-        console.log(response?.data?.alwaysOpen)
 
         setIsAlwaysOpen(response?.data?.alwaysOpen)
       } catch (error) {
@@ -177,7 +137,6 @@ export const EditBranch = () => {
   ))
 
   const onSubmit = async (data) => {
-    setIsLoading(true)
     const formData = {
       id: branchId,
       name: data.name,
@@ -197,58 +156,21 @@ export const EditBranch = () => {
       schedules: !isAlwaysOpen ? Object.values(daysData) : null
     }
 
-    console.log(formData)
+    let formDataImage = null
 
-    try {
-      const response = await branchesApi.updateBranches(formData, branchId)
-
-      if (response.error) {
-        showNotification({
-          title: "Error",
-          message: response.message,
-          color: "red",
-          duration: 7000
-        })
-        setIsLoading(false)
-      } else {
-        if (data?.files) {
-          const uploadBranchImage = async (branchId, file) => {
-            const formDataImage = new FormData()
-            formDataImage.append("files", file)
-
-            return await branchesApi.addImage(branchId, formDataImage)
-          }
-
-          const addImageResponse = await uploadBranchImage(branchId, data?.files?.[0])
-
-          if (addImageResponse.error) {
-            showNotification({
-              title: "Error",
-              message: addImageResponse.message,
-              color: "red",
-              duration: 7000
-            })
-          }
-        }
-        setIsLoading(false)
-        showNotification({
-          title: "Actualización exitosa",
-          message: `Se actualizó la sucursal ${response?.data?.name}`,
-          color: "green",
-          duration: 7000
-        })
-        reset()
-        navigate(NAVIGATION_ROUTES_RES_ADMIN.Branches.path)
-      }
-      return response.data
-    } catch (e) {
-      showNotification({
-        title: "Error",
-        message: e,
-        color: "red",
-        duration: 7000
-      })
+    if (data?.files?.[0] && data.files[0] instanceof File) {
+      formDataImage = new FormData()
+      formDataImage.append("files", data.files[0])
     }
+
+    dispatch(updateBranches({ formData, formDataImage }))
+      .unwrap()
+      .then(() => {
+        navigate(NAVIGATION_ROUTES_RES_ADMIN.Branches.path)
+      })
+      .catch((error) => {
+        console.error("Error updating branch:", error)
+      })
   }
 
   return (
@@ -260,7 +182,7 @@ export const EditBranch = () => {
           accordionTitles={["Información general", "Ubicación", "Horario"]}
           accordionItems={items}
           navigate={() => navigate(NAVIGATION_ROUTES_RES_ADMIN.Branches.path)}
-          isLoading={isLoading}
+          isLoading={updatingBranches}
           update
         />
       </form>

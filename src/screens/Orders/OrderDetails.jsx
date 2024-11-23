@@ -24,7 +24,7 @@ import {
 import React, { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import { getFormattedHNL } from "../../utils"
-import { APP_ROLES, orderDeliveryTypes, orderStates, orderStatusValues, theme } from "../../utils/constants"
+import { APP_ROLES, orderDeliveryTypes, orderStates, orderStatusValues, PRIMARY_COL_HEIGHT, SECONDARY_COL_HEIGHT, theme } from "../../utils/constants"
 import { DishOrderDetailCard } from "./DishOrderDetailCard"
 import { useSelector } from "react-redux"
 import { IconCircleCheck } from "@tabler/icons-react"
@@ -63,8 +63,6 @@ export const OrderDetails = () => {
   )
   const [opened, { open, close }] = useDisclosure(false)
   const [openedModal, { openModal, closeModal }] = useDisclosure(false)
-  const PRIMARY_COL_HEIGHT = "515px"
-  const SECONDARY_COL_HEIGHT = `calc(${PRIMARY_COL_HEIGHT} / 2 - var(--mantine-spacing-md) / 2)`
   const isMediumScreen = useMediaQuery("(max-width: 1140px)")
   const isSmallScreen = useMediaQuery("(max-width: 760px)")
   const getInitialStep = () => {

@@ -8,6 +8,7 @@ import forkImage from "../assets/images/fork.png"
 import background from "../assets/images/background-gofood.webp"
 import authUtils from "../utils/authUtils"
 import LoadingCircle from "../components/LoadingCircle"
+import { AuthenticationImage } from "../components/Auth/AuthenticationImage"
 
 export default function UnauthenticatedLayout() {
   const location = useLocation()
@@ -40,6 +41,7 @@ export default function UnauthenticatedLayout() {
       <LoadingCircle />
     </div>
   ) : (
+    //<AuthenticationImage />
     <div className="w-screen h-screen flex flex-col items-center justify-between dark:bg-slate-900 bg-slate-100 text-black dark:text-white">
       <div className="w-full p-1 bg-white flex justify-center mb-2 border-slate-200 border  dark:bg-slate-800 dark:border-slate-700 ">
         <img className="w-44 h-[54px] " src={logoImage} />

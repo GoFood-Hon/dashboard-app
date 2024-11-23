@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { Checkbox, Flex, Grid, Group, Image, Paper, Text, rem, Button } from "@mantine/core"
+import { Checkbox, Flex, Grid, Group, Image, Paper, Text, rem, Button, Stack } from "@mantine/core"
 import SettingsCard from "../../components/SettingsCard"
 import { useForm } from "react-hook-form"
 import { IconPhoto } from "@tabler/icons-react"
@@ -15,6 +15,7 @@ import PreviewImageCard from "../../components/PreviewImageCard"
 import { colors } from "../../theme/colors"
 import { updateRestaurantData } from "../../store/features/restaurantSlice"
 import InputTextAreaField from "../../components/Form/InputTextAreaField"
+import BackButton from "../Dishes/components/BackButton"
 
 export default function BusinessSettings() {
   const navigate = useNavigate()
@@ -109,14 +110,12 @@ export default function BusinessSettings() {
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="space-y-3">
-          <section>
-            <div className="flex flex-row items-center justify-between pb-3">
-              <div className="flex flex-row items-center gap-x-3">
-                <h1 className="text-white-200 text-2xl font-semibold">Negocio</h1>
-              </div>
-            </div>
-          </section>
+        <Stack>
+          <Group grow>
+            <Flex align="center" justify="space-between">
+              <BackButton title="Negocio" />
+            </Flex>
+          </Group>
           <SettingsCard title="Logo" iconName="building">
             <div className="flex flex-row justify-between h-full">
               {user && previews.length === 0 ? (
@@ -226,7 +225,7 @@ export default function BusinessSettings() {
               </Flex>
             </Paper>
           </section>
-        </div>
+        </Stack>
       </form>
     </>
   )

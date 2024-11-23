@@ -1,23 +1,41 @@
 .wrapper {
-  min-height: rem(900px);
+  display: flex; /* Usa flexbox para organizar en columnas */
+  height: 100vh; /* Ocupa toda la altura de la pantalla */
+}
+
+.imageSection {
+  flex: 1; /* Ocupa la mitad izquierda */
+  background-image: url("/src/assets/images/layout1.png");
   background-size: cover;
-  background-image: url(https://images.unsplash.com/photo-1484242857719-4b9144542727?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1280&q=80);
+  background-position: center;
 }
 
 .form {
-  border-right: rem(1px) solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-7));
-  min-height: rem(900px);
-  max-width: rem(450px);
-  padding-top: rem(80px);
-
-  @media (max-width: $mantine-breakpoint-sm) {
-    max-width: 100%;
-  }
+  flex: 1; /* Ocupa la mitad derecha */
+  max-width: 450px;
+  padding: 80px 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .title {
-  color: light-dark(var(--mantine-color-black), var(--mantine-color-white));
-  font-family:
-    Greycliff CF,
-    var(--mantine-font-family);
+  font-family: "Greycliff CF", var(--mantine-font-family);
+  font-weight: 900;
+}
+
+@media (max-width: 768px) {
+  .wrapper {
+    flex-direction: column; /* En pantallas pequeñas, organiza las columnas en filas */
+  }
+
+  .imageSection {
+    height: 50%; /* Ajusta el tamaño de la imagen para dispositivos pequeños */
+  }
+
+  .form {
+    height: 50%; /* Ajusta el tamaño del formulario */
+    max-width: 100%; /* Ocupa todo el ancho */
+  }
 }

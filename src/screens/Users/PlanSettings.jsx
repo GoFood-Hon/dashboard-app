@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { Tabs, Card, Text, Group, Divider, Stack } from "@mantine/core"
+import { Tabs, Card, Text, Group, Divider, Stack, Flex } from "@mantine/core"
 import SettingsCard from "../../components/SettingsCard"
 import { useSelector } from "react-redux"
 import { useForm } from "react-hook-form"
@@ -14,6 +14,7 @@ import { IconCreditCard } from "@tabler/icons-react"
 import classes from "./CreditCard.module.css"
 import { PlanInfoCard } from "../../components/Plans/PlanInfoCard"
 import { SelectPlan } from "./SelectPlan"
+import BackButton from "../Dishes/components/BackButton"
 
 export default function PlanSettings() {
   const user = useSelector((state) => state.user.value)
@@ -87,40 +88,30 @@ export default function PlanSettings() {
   }, [])
 
   return (
-    <>
-      <div>
-        <section>
-          <div className="flex flex-row justify-between items-center pb-3">
-            <div className="flex flex-row gap-x-3 items-center">
-              <h1 className="text-white-200 text-2xl font-semibold">Plan</h1>
-            </div>
-          </div>
-        </section>
-        <Tabs defaultValue="payments" color={colors.main_app_color}>
-          <Tabs.List>
-            <Tabs.Tab value="payments">Plan activo</Tabs.Tab>
-            <Tabs.Tab value="paymentMethod">Método de pago</Tabs.Tab>
-          </Tabs.List>
-          <Tabs.Panel value="payments">
-            {planData && planData.name ? (
-              <SettingsCard title="Plan actual" iconName="creditCard">
-                <PlanInfoCard data={planData} onCancelPlan={handlePlanCancel} />
-              </SettingsCard>
-            ) : Object.keys(newPlan).length === 0 ? (
-              <></>
-            ) : // <SelectPlan restaurantId={restaurantId} onSelected={handleSelectNewPlan} />
-            null}
-            {/* {planData && planData.name ? (
-              <SettingsCard title="Plan actual" iconName="creditCard">
-                <PlanDetailsCard plan={planData} />
-              </SettingsCard>
-            ) : (
-              <SettingsCard title="Plan actual" iconName="creditCard">
-                <p className="p-10 text-center font-semibold text-gray-400">Sin plan activo</p>
-              </SettingsCard>
-            )} */}
-          </Tabs.Panel>
-          <Tabs.Panel value="paymentMethod">
+    <Stack gap="xs">
+      <Group grow>
+        <Flex align="center" justify="space-between">
+          <BackButton title="Plan" />
+        </Flex>
+      </Group>
+      <Tabs defaultValue="payments" color={colors.main_app_color}>
+        <Tabs.List>
+          <Tabs.Tab value="payments">Plan activo</Tabs.Tab>
+          <Tabs.Tab value="paymentMethod">Método de pago</Tabs.Tab>
+        </Tabs.List>
+        <Tabs.Panel value="payments" pt="sm">
+          {planData && planData.name ? (
+            <SettingsCard title="Plan actual" iconName="creditCard">
+              <PlanDetailsCard plan={planData} />
+            </SettingsCard>
+          ) : (
+            <SettingsCard title="Plan actual" iconName="creditCard">
+              <p className="p-10 text-center font-semibold text-gray-400">Sin plan activo</p>
+            </SettingsCard>
+          )}
+        </Tabs.Panel>
+        <Tabs.Panel value="paymentMethod" pt="sm">
+          <Stack gap="sm">
             <SettingsCard title="Tarjeta actual" iconName="creditCard">
               {creditCard ? (
                 <div className="flex justify-center items-center">
@@ -154,10 +145,10 @@ export default function PlanSettings() {
                 </div>
               </form>
             </SettingsCard>
-          </Tabs.Panel>
-        </Tabs>
-      </div>
-    </>
+          </Stack>
+        </Tabs.Panel>
+      </Tabs>
+    </Stack>
   )
 }
 
@@ -189,53 +180,53 @@ const CreditCardInfo = ({ data }) => {
   const expMonth = validThru?.substring(0, 2)
   const expYear = validThru?.substring(2)
   return (
-    // <div className=" w-2/4 shadow-xl border-2 rounded-lg p-4 m-10">
-    //   <div className="flex items-center justify-between mb-4">
-    //     <h2 className="text-lg font-semibold text-gray-800">Tarjeta actual</h2>
-    //     <span className="text-gray-600">
-    //       <i className="fas fa-credit-card mr-1"></i>
-    //       {brand}
-    //     </span>
-    //   </div>
-    //   <div className="flex items-center justify-between mb-4">
-    //     <div className="flex items-center">
-    //       <i className="fas fa-lock mr-1 text-gray-600"></i>
-    //       <span className="text-gray-600">{safeIdentifier}</span>
-    //     </div>
-    //     <div className="text-gray-600">
-    //       {expMonth}/{expYear}
-    //     </div>
-    //   </div>
-    // </div>
-    <Card className={classes.card} radius="md" withBorder>
-      {/* Ícono de fondo */}
-      <IconCreditCard className={classes.iconBackground} />
+    <div className=" w-2/4 shadow-xl border-2 rounded-lg p-4 m-10">
+      <div className="flex items-center justify-between mb-4">
+        <h2 className="text-lg font-semibold">Tarjeta actual</h2>
+        <span>
+          <i className="fas fa-credit-card mr-1"></i>
+          {brand}
+        </span>
+      </div>
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center">
+          <i className="fas fa-lock mr-1 "></i>
+          <span>{safeIdentifier}</span>
+        </div>
+        <div>
+          {expMonth}/{expYear}
+        </div>
+      </div>
+    </div>
+    // <Card className={classes.card} radius="md" withBorder>
+    //   {/* Ícono de fondo */}
+    //   <IconCreditCard className={classes.iconBackground} />
 
-      <Stack spacing="md" h="100%" justify="space-between">
-        {/* Chip */}
-        <div className={classes.chip}></div>
+    //   <Stack spacing="md" h="100%" justify="space-between">
+    //     {/* Chip */}
+    //     <div className={classes.chip}></div>
 
-        {/* Número de la tarjeta */}
-        <Text className={classes.cardNumber}>{"1458 8756 8441 7711" || "#### #### #### ####"}</Text>
+    //     {/* Número de la tarjeta */}
+    //     <Text className={classes.cardNumber}>{"1458 8756 8441 7711" || "#### #### #### ####"}</Text>
 
-        <Group position="apart" spacing="xs">
-          {/* Nombre del titular */}
-          <Stack spacing={0}>
-            <Text size="xs" transform="uppercase">
-              Titular
-            </Text>
-            <Text className={classes.cardDetails}>{"Victor Alfonso Reyes Gudiel" || "Nombre Apellido"}</Text>
-          </Stack>
+    //     <Group position="apart" spacing="xs">
+    //       {/* Nombre del titular */}
+    //       <Stack spacing={0}>
+    //         <Text size="xs" transform="uppercase">
+    //           Titular
+    //         </Text>
+    //         <Text className={classes.cardDetails}>{"Victor Alfonso Reyes Gudiel" || "Nombre Apellido"}</Text>
+    //       </Stack>
 
-          {/* Fecha de expiración */}
-          <Stack spacing={0}>
-            <Text size="xs" transform="uppercase">
-              Vence
-            </Text>
-            <Text className={classes.cardDetails}>{"11/27" || "MM/AA"}</Text>
-          </Stack>
-        </Group>
-      </Stack>
-    </Card>
+    //       {/* Fecha de expiración */}
+    //       <Stack spacing={0}>
+    //         <Text size="xs" transform="uppercase">
+    //           Vence
+    //         </Text>
+    //         <Text className={classes.cardDetails}>{"11/27" || "MM/AA"}</Text>
+    //       </Stack>
+    //     </Group>
+    //   </Stack>
+    // </Card>
   )
 }

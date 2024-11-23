@@ -118,7 +118,7 @@ export default function AccountSettings() {
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <Stack>
+        <Stack gap='sm'>
           <Group grow>
             <Flex align="center" justify="space-between">
               <BackButton title="Configurar cuenta" />

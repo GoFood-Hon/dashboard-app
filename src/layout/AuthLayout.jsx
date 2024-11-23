@@ -10,13 +10,11 @@ import {
   NAVIGATION_ROUTES_RES_ADMIN_TWO,
   NAVIGATION_ROUTES_BRANCH_ADMIN_TWO
 } from "../routes"
-import { AppShell, Burger, Container, Loader, useMantineColorScheme, useMantineTheme } from "@mantine/core"
+import { AppShell, Burger, Container, useMantineColorScheme, useMantineTheme } from "@mantine/core"
 import { useDisclosure } from "@mantine/hooks"
 import { AdminHeader } from "../components/Headers/AdminHeader"
 import { Navbar } from "../components/Navbar/Navbar"
 import { APP_ROLES } from "../utils/constants"
-import LoadingCircle from "../components/LoadingCircle"
-import { colors } from "../theme/colors"
 import Lottie from "react-lottie"
 import animatedBurger from '../assets/animation/LoadingBurgerAnimation.json'
 
@@ -26,7 +24,7 @@ function AuthLayout() {
   const [opened, { toggle }] = useDisclosure()
   const { colorScheme } = useMantineColorScheme()
   const theme = useMantineTheme()
-  const bg = colorScheme === "dark" ? theme.colors.dark[7] : theme.colors.gray[1]
+  const bg = colorScheme === "dark" ? theme.colors.dark[8] : theme.colors.gray[2]
   const defaultOptions = {
     loop: true,
     autoplay: true,
