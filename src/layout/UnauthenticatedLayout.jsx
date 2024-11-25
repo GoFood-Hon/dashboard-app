@@ -1,20 +1,71 @@
 import React, { useEffect, useState } from "react"
-import { Outlet, useLocation, useNavigate } from "react-router-dom"
-import Footer from "../components/Footer"
+import { useLocation, useNavigate } from "react-router-dom"
 import livingImage from "../assets/images/living.png"
 import layout1Image from "../assets/images/layout1.png"
 import logoImage from "../assets/images/goFood.png"
-import forkImage from "../assets/images/fork.png"
-import background from "../assets/images/background-gofood.webp"
+import otLogoDark from "../assets/images/logo__ot__dark.svg"
+import otLogoLight from "../assets/images/logo__ot__light.svg"
 import authUtils from "../utils/authUtils"
-import LoadingCircle from "../components/LoadingCircle"
-import { AuthenticationImage } from "../components/Auth/AuthenticationImage"
+import { Anchor, Button, Checkbox, Container, Flex, Group, Image, Paper, Stack, Text, useMantineColorScheme } from "@mantine/core"
+import { colors } from "../theme/colors"
+import Lottie from "react-lottie"
+import loginAnimation from "../assets/animation/LoginAnimation.json"
+import { useMediaQuery } from "@mantine/hooks"
+import InputField from "../components/Form/InputField"
+import { useDispatch } from "react-redux"
+import authApi from "../api/authApi"
+import { setUser } from "../store/features/userSlice"
+import { useForm } from "react-hook-form"
+import { emailRules, passwordRules } from "../utils/inputRules"
+import { AUTH_NAVIGATION_ROUTES } from "../routes"
 
 export default function UnauthenticatedLayout() {
   const location = useLocation()
+  const dispatch = useDispatch()
   const navigate = useNavigate()
   const [bgImage, setBgImage] = useState(layout1Image)
   const [loading, setLoading] = useState(true)
+  const defaultOptions = {
+    loop: true,
+    autoplay: true,
+    animationData: loginAnimation
+  }
+  const isSmallScreen = useMediaQuery("(max-width: 760px)")
+  const { colorScheme } = useMantineColorScheme()
+
+  const [isLoading, setIsLoading] = useState(false)
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors }
+  } = useForm()
+
+  const onSubmit = async ({ email, password }) => {
+    setIsLoading(true)
+    try {
+      const res = await authApi.login({ email, password })
+
+      if (res.status === "fail") {
+        setIsLoading(false)
+        toast.error(res.message)
+        return
+      }
+      const userData = res?.data?.user
+
+      if (userData) {
+        setIsLoading(false)
+        localStorage.setItem("token", res.token)
+        localStorage.setItem("refreshToken", res.refreshToken)
+        localStorage.setItem("setUserRole", res.data.user.role)
+        dispatch(setUser(res.data.user))
+        navigate("/")
+      }
+    } catch (err) {
+      toast.error("Hubo un error!")
+      setIsLoading(false)
+    }
+  }
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -36,40 +87,59 @@ export default function UnauthenticatedLayout() {
     }
   }, [location])
 
-  return loading ? (
-    <div className="flex flex-col items-center justify-center h-screen w-screen">
-      <LoadingCircle />
-    </div>
-  ) : (
-    //<AuthenticationImage />
-    <div className="w-screen h-screen flex flex-col items-center justify-between dark:bg-slate-900 bg-slate-100 text-black dark:text-white">
-      <div className="w-full p-1 bg-white flex justify-center mb-2 border-slate-200 border  dark:bg-slate-800 dark:border-slate-700 ">
-        <img className="w-44 h-[54px] " src={logoImage} />
-      </div>
-      <div className="w-full xs:h-fit xs:rounded-2xl xs:drop-shadow-none xs:shadow-none sm:w-5/6 md:w-3/6 lg:w-5/6 lg:max-w-[1100px] xl:w-5/6 2xl:w-5/6 lg:justify-between bg-light_bg_child rounded-2xl dark:bg-slate-800 dark:border-slate-700 md:drop-shadow-xl md:shadow-slate-100 overflow-hidden md:shadow-xl md:border dark:shadow-slate-800 flex flex-row mb-2">
-        <div className="lg:w-full lg:min-w-[500px] lg:max-w-[620px] lg:h-[660px] relative -left-2 hidden md:hidden lg:flex">
-          <img
-            src={bgImage}
-            className="lg:w-full h-[600px] left-0 -top-2 absolute bg-opacity-20 rounded-2xl object-cover"
-            style={{ clipPath: "inset(8px)" }}
-            alt="hamburger"
-          />
-          <img
-            className="w-[394px] h-[394px] left-[394px] top-[394px] absolute origin-top-left rotate-180 object-cover filter grayscale opacity-60"
-            src={forkImage}
-            alt="fork"
-          />
-          <div className="w-[477px] pl-10 top-[400px] absolute text-white text-[32px] font-bold  leading-10">
-            Gestión y entrega de tus platillos: Tu socio de negocios es GoFood
-          </div>
-        </div>
-        <div className="xs:w-full md:w-full md:h-full lg:w-full h-fit lg:border-none flex flex-col items-center justify-between px-10 py-3 rounded-2xl border border-slate-200 dark:border-slate-700">
-          <div />
-          {<Outlet />}
-          <div className="flex items-end" />
-        </div>
-      </div>
-      <Footer />
-    </div>
+  return (
+    <Container
+      h="100vh"
+      fluid
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center"
+      }}>
+      <Flex align="center" gap="md">
+        <Lottie style={isSmallScreen && { display: "none" }} options={defaultOptions} height={500} />
+        <Paper withBorder shadow="md" py={50} p={30} radius="md" w="100%">
+          <Stack>
+            <Group justify="center" position="center">
+              <Image src={logoImage} alt="logo" h={45} />
+            </Group>
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <Flex direction="column" gap="md">
+                <InputField label="Correo" name="email" type="email" register={register} rules={emailRules} errors={errors} />
+                <InputField
+                  label="Contraseña"
+                  name="password"
+                  type="password"
+                  rules={passwordRules}
+                  register={register}
+                  errors={errors}
+                />
+                <Group justify="space-between" mt="md">
+                  <Checkbox color={colors.main_app_color} label="Recuérdame" />
+                  <Anchor
+                    c="dimmed"
+                    href={AUTH_NAVIGATION_ROUTES.ForgetPassword.path}
+                    target="_blank"
+                    component="button"
+                    size="sm">
+                    ¿Olvidaste tu contraseña?
+                  </Anchor>
+                </Group>
+                <Button type="submit" loading={isLoading} radius="md" fullWidth color={colors.main_app_color}>
+                  Iniciar sesión
+                </Button>
+              </Flex>
+            </form>
+            <Flex direction="column" mt="md" align="center">
+              <Text c="dimmed" fs="italic" size="xs">
+                powered by
+              </Text>
+              <Image src={colorScheme === "dark" ? otLogoDark : otLogoLight} style={{ color: "red" }} w={120} />
+            </Flex>
+          </Stack>
+        </Paper>
+      </Flex>
+    </Container>
   )
 }

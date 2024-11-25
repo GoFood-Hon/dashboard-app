@@ -1,24 +1,43 @@
-import { Button, Paper, PasswordInput, TextInput, Title } from "@mantine/core"
-import classes from "./AuthenticationImage.module.css"
-import { colors } from "../../theme/colors"
+import {
+  Anchor,
+  Button,
+  Checkbox,
+  Container,
+  Group,
+  Paper,
+  PasswordInput,
+  Text,
+  TextInput,
+  Title,
+} from '@mantine/core';
+import classes from './AuthenticationImage.module.css';
+import { colors } from '../../theme/colors';
 
 export function AuthenticationImage() {
   return (
-    <div className={classes.wrapper}>
-      {/* Imagen en la izquierda */}
-      <div className={classes.imageSection}></div>
-
-      {/* Formulario en la derecha */}
-      <Paper className={classes.form} radius={0} p={30}>
-        <Title order={2} className={classes.title} ta="center" mt="md" mb={50}>
-          ¡Bienvenido de vuelta!
-        </Title>
-        <TextInput radius="md" label="Correo" />
-        <PasswordInput radius="md" label="Contraseña" mt="md" />
-        <Button color={colors.main_app_color} radius="md" fullWidth mt="xl">
-          Iniciar
+    <Container size={550} h='100%'>
+      <Title ta="center" className={classes.title}>
+        Bienvenido de vuelta
+      </Title>
+      <Text c="dimmed" size="sm" ta="center" mt={5}>
+        Do not have an account yet?{" "}
+        <Anchor size="sm" component="button">
+          Create account
+        </Anchor>
+      </Text>
+      <Paper withBorder shadow="md" p={30} mt={30} radius="md">
+        <TextInput radius='md' label="Email" required />
+        <PasswordInput radius='md' label="Password" required mt="md" />
+        <Group justify="space-between" mt="lg">
+          <Checkbox label="Recuérdame" />
+          <Anchor component="button" size="sm">
+            ¿Olvidaste tu contraseña?
+          </Anchor>
+        </Group>
+        <Button radius='md' fullWidth color={colors.main_app_color} mt="xl">
+          Iniciar sesión
         </Button>
       </Paper>
-    </div>
+    </Container>
   )
 }

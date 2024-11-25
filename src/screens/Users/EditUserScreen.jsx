@@ -39,10 +39,17 @@ export const EditUserScreen = () => {
     setValue,
     control,
     reset,
+    watch,
     formState: { errors }
   } = useForm({
-    defaultValues: userDetails || []
+    defaultValues:
+      {
+        ...userDetails,
+        motorcycleId: userDetails?.Driver?.motorcycleId,
+        nationalIdentityNumber: userDetails?.Driver?.nationalIdentityNumber
+      } || []
   })
+  const imageUrl = watch("images[0].location")
 
   const navigate = useNavigate()
 
@@ -54,24 +61,13 @@ export const EditUserScreen = () => {
       requirement: "Obligatorio",
       form: (
         <GeneralInformationForm
+          watch={watch}
           register={register}
           errors={errors}
           setValue={setValue}
           control={control}
           isDataCleared={isDataCleared}
-        />
-      )
-    },
-    {
-      title: "Sucursal",
-      requirement: "Obligatorio",
-      form: (
-        <SucursalSettings
-          register={register}
-          errors={errors}
-          setValue={setValue}
-          control={control}
-          isDataCleared={isDataCleared}
+          image={imageUrl}
         />
       )
     }

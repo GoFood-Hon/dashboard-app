@@ -19,7 +19,7 @@ export default function OrdersScreen() {
   useEffect(() => {
     if (!ordersPerPage[page]) {
       if (user.role === "kitchen") {
-        dispatch(fetchAllOrders({ limit, page, order: "DESC" }))
+        dispatch(fetchAllOrders({ limit, page, order: "DESC", status: "confirmed" }))
       } else {
         dispatch(fetchAllOrders({ limit, page, order: "DESC" }))
       }

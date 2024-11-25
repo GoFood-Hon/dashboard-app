@@ -85,7 +85,7 @@ export const createAdminUser = createAsyncThunk(
       if (response.error) {
         showNotification({
           title: "Error",
-          message: "Fallé en la data: " + response.message,
+          message: response.message,
           color: "red",
           duration: 7000
         })
@@ -101,7 +101,7 @@ export const createAdminUser = createAsyncThunk(
         if (imageResponse.error) {
           showNotification({
             title: "Error",
-            message: "Fallé en la imagen: " + imageResponse.message,
+            message: imageResponse.message,
             color: "red",
             duration: 7000
           })
@@ -113,6 +113,62 @@ export const createAdminUser = createAsyncThunk(
       showNotification({
         title: "Creación exitosa",
         message: `El administrador ${userData.name} fue creado`,
+        color: "green",
+        duration: 5000
+      })
+
+      return { ...userData, images }
+    } catch (error) {
+      showNotification({
+        title: "Error",
+        message: error.message || "Error desconocido",
+        color: "red",
+        duration: 7000
+      })
+
+      return rejectWithValue(error.message)
+    }
+  }
+)
+
+export const createUser = createAsyncThunk(
+  "user/createUser",
+  async ({ params, formDataImage }, { rejectWithValue }) => {
+    try {
+      const response = await userApi.createUser(params)
+      const userData = response.data
+
+      if (response.error) {
+        showNotification({
+          title: "Error",
+          message: response.message,
+          color: "red",
+          duration: 7000
+        })
+
+        return rejectWithValue(response.message)
+      }
+
+      let images = []
+      if (formDataImage) {
+        const imageResponse = await userApi.addImage(userData.id, formDataImage)
+        images = imageResponse.data
+
+        if (imageResponse.error) {
+          showNotification({
+            title: "Error",
+            message: imageResponse.message,
+            color: "red",
+            duration: 7000
+          })
+
+          return rejectWithValue(imageResponse.message)
+        }
+      }
+
+      showNotification({
+        title: "Creación exitosa",
+        message: `El usuario ${userData.name} fue creado`,
         color: "green",
         duration: 5000
       })
@@ -379,6 +435,47 @@ export const userSlice = createSlice({
       })
       .addCase(createAdminUser.rejected, (state, action) => {
         state.creatingUser = false
+        state.error = action.payload
+      })
+      .addCase(createUser.pending, (state) => {
+        state.creatingOtherUser = true
+      })
+      .addCase(createUser.fulfilled, (state, action) => {
+        const newUser = action.payload
+
+        if (!state.usersByPage[1]) {
+          state.usersByPage[1] = []
+        }
+        state.usersByPage[1].unshift(newUser)
+
+        for (let i = 1; i <= state.totalPagesCount; i++) {
+          if (state.usersByPage[i]?.length > state.itemsPerPage) {
+            const lastItem = state.usersByPage[i].pop()
+            if (state.usersByPage[i + 1]) {
+              state.usersByPage[i + 1].unshift(lastItem)
+            }
+          } else {
+            break
+          }
+        }
+
+        const consecutivePages = [1]
+        for (let i = 2; i <= state.totalPagesCount; i++) {
+          if (state.usersByPage[i]) {
+            if (consecutivePages.includes(i - 1)) {
+              consecutivePages.push(i)
+            } else {
+              delete state.usersByPage[i]
+            }
+          }
+        }
+
+        state.totalUsers += 1
+        state.totalUserPagesCount = Math.ceil(state.totalUsers / state.itemsPerPage)
+        state.creatingOtherUser = false
+      })
+      .addCase(createUser.rejected, (state, action) => {
+        state.creatingOtherUser = false
         state.error = action.payload
       })
       .addCase(updateUserStatus.fulfilled, (state, action) => {

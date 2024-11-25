@@ -9,13 +9,16 @@ import { Controller } from "react-hook-form"
 import { useDispatch } from "react-redux"
 import { setUserRole } from "../../store/features/userSlice"
 import { useSelector } from "react-redux"
+import { fetchNoPaginatedBranches } from "../../store/features/branchesSlice"
 
-export default function GeneralInformationForm({ register, errors, setValue, isDataCleared, control, image }) {
+export default function GeneralInformationForm({ register, errors, setValue, isDataCleared, control, image, newUser, watch }) {
   const dispatch = useDispatch()
   const [images, setImages] = useState([])
   const [fileInformation, setFileInformation] = useState(null)
-  const [role, setRole] = useState(USER_ROLES.administrator)
-  const { userRole } = useSelector((state) => state.user)
+  const selectedRole = watch("role")
+  const [role, setRole] = useState(watch("role"))
+  const user = useSelector((state) => state.user.value)
+  const branchesList = useSelector((state) => state.branches.branches)
 
   const handleDrop = (acceptedFiles) => {
     if (acceptedFiles.length > 0) {
@@ -31,6 +34,10 @@ export default function GeneralInformationForm({ register, errors, setValue, isD
   }
 
   useEffect(() => {
+    dispatch(fetchNoPaginatedBranches({ restaurantId: user.Restaurant.id }))
+  }, [])
+
+  useEffect(() => {
     if (isDataCleared) {
       deleteImage()
     }
@@ -38,9 +45,7 @@ export default function GeneralInformationForm({ register, errors, setValue, isD
 
   const previews = images.map((file, index) => {
     const imageUrl = URL.createObjectURL(file)
-    return (
-      <Image radius="md" h={250} src={imageUrl} />
-    )
+    return <Image radius="md" h={250} src={imageUrl} />
   })
 
   const handleChangeRol = (value, name) => {
@@ -97,36 +102,60 @@ export default function GeneralInformationForm({ register, errors, setValue, isD
                 )}
               />
             </Grid.Col>
-            {role === "driver" && (
+            {(role || selectedRole)  === "driver" && (
               <>
                 <Grid.Col span={{ base: 12, md: 6 }}>
-                  <InputField label="Id del vehículo" name="motorcycleId" register={register} errors={errors} />
+                  <InputField label="Id del vehículo" name="Driver.motorcycleId" register={register} errors={errors} />
                 </Grid.Col>
                 <Grid.Col span={{ base: 12, md: 6 }}>
-                  <InputField label="Numero de identidad" name="nationalIdentityNumber" register={register} errors={errors} />
+                  <InputField label="Número de identidad" name="Driver.nationalIdentityNumber" register={register} errors={errors} />
                 </Grid.Col>
               </>
             )}
-            <Grid.Col span={{ base: 12, md: 6 }}>
-              <InputField label="Contraseña" name="password" type="password" register={register} errors={errors} />
-            </Grid.Col>
-            <Grid.Col span={{ base: 12, md: 6 }}>
-              <InputField
-                label="Confirmar contraseña"
-                name="confirmPassword"
-                type="password"
-                register={register}
-                errors={errors}
+
+            <Grid.Col>
+              <Controller
+                name="sucursalId"
+                control={control}
+                render={({ field, fieldState }) => (
+                  <Select
+                    label="Sucursal asignada"
+                    data={branchesList.map((item) => ({
+                      value: item.id,
+                      label: item.name
+                    }))}
+                    allowDeselect={false}
+                    maxDropdownHeight={200}
+                    value={field.value}
+                    onChange={field.onChange}
+                    error={fieldState.error ? fieldState.error.message : null}
+                    searchable
+                    clearable
+                  />
+                )}
               />
             </Grid.Col>
-            <Grid.Col span={{ base: 12 }}>
-              <InputTextAreaField label="Nota" name="note" register={register} errors={errors} />
-            </Grid.Col>
+            {newUser && (
+              <>
+                <Grid.Col span={{ base: 12, md: 6 }}>
+                  <InputField label="Contraseña" name="password" type="password" register={register} errors={errors} />
+                </Grid.Col>
+                <Grid.Col span={{ base: 12, md: 6 }}>
+                  <InputField
+                    label="Confirmar contraseña"
+                    name="confirmPassword"
+                    type="password"
+                    register={register}
+                    errors={errors}
+                  />
+                </Grid.Col>
+              </>
+            )}
           </Grid>
         </Paper>
       </Grid.Col>
       <Grid.Col span={{ base: 12, md: 4, lg: 4 }}>
-      <Paper withBorder radius="md" h="100%">
+        <Paper withBorder radius="md" h="100%">
           <Flex align="center" h="100%" justify="center">
             <Dropzone onDrop={handleDrop} accept={IMAGE_MIME_TYPE} h={220} style={{ cursor: "pointer" }}>
               <Flex direction="column" justify="center" align="center" h={220}>

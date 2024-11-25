@@ -3,9 +3,9 @@ import { useSocket } from "../hooks/useOrderSocket"
 import { notifications } from "@mantine/notifications"
 import { IconCheck } from "@tabler/icons-react"
 import { USER_ROLES } from "../utils/constants"
-import { useSelector } from "react-redux"
-import { useDispatch } from "react-redux"
+import { useSelector, useDispatch } from "react-redux"
 import { setNewOrder, setOrderStatus } from "../store/features/ordersSlice"
+import notificationSound from "../assets/sound/notificationSound.wav"
 
 export const NotificationProvider = ({ children }) => {
   const user = useSelector((state) => state.user.value)
@@ -15,7 +15,15 @@ export const NotificationProvider = ({ children }) => {
   useEffect(() => {
     if (!orderSocket) return
 
+    const audio = new Audio(notificationSound)
+
+    const playSound = () => {
+      audio.currentTime = 0
+      audio.play().catch((error) => console.error("Error al reproducir sonido:", error))
+    }
+
     const handleNewOrder = (order) => {
+      playSound() 
       notifications.show({
         title: "Nueva orden",
         message: `Una nueva orden acaba de ser creada`,
@@ -23,15 +31,15 @@ export const NotificationProvider = ({ children }) => {
         withCloseButton: true,
         color: "green"
       })
-      console.log(order)
       dispatch(setNewOrder(order))
     }
 
     const handleOrderReady = (order) => {
+      playSound()
       notifications.show({
         title: "Orden preparada",
-        message: "La cocineros terminaron de preparar el pedido",
-        icon: <IconCheck icon="arrowRight" size={20} />,
+        message: "El pedido se marcó como preparado desde cocina",
+        icon: <IconCheck size={20} />,
         autoClose: false,
         withCloseButton: true,
         color: "green"
@@ -40,6 +48,7 @@ export const NotificationProvider = ({ children }) => {
     }
 
     const handleOrderUpdate = (order) => {
+      playSound()
       notifications.show({
         title: "Nueva orden",
         message: "Se agregó un nuevo pedido a las órdenes en curso",
