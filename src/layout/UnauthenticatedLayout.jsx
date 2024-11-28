@@ -98,7 +98,12 @@ export default function UnauthenticatedLayout() {
         alignItems: "center"
       }}>
       <Flex align="center" gap="md">
-        <Lottie style={isSmallScreen && { display: "none" }} options={defaultOptions} height={500} />
+        <Lottie
+          style={isSmallScreen && { display: "none" }}
+          options={defaultOptions}
+          isClickToPauseDisabled={true}
+          height={500}
+        />
         <Paper withBorder shadow="md" py={50} p={30} radius="md" w="100%">
           <Stack>
             <Group justify="center" position="center">
@@ -116,7 +121,7 @@ export default function UnauthenticatedLayout() {
                   errors={errors}
                 />
                 <Group justify="space-between" mt="md">
-                  <Checkbox color={colors.main_app_color} label="Recuérdame" />
+                  <Checkbox style={{ visibility: "hidden" }} color={colors.main_app_color} label="Recuérdame" />
                   <Anchor
                     c="dimmed"
                     href={AUTH_NAVIGATION_ROUTES.ForgetPassword.path}
@@ -126,7 +131,7 @@ export default function UnauthenticatedLayout() {
                     ¿Olvidaste tu contraseña?
                   </Anchor>
                 </Group>
-                <Button type="submit" loading={isLoading} radius="md" fullWidth color={colors.main_app_color}>
+                <Button type="submit" loading={isLoading} fullWidth color={colors.main_app_color}>
                   Iniciar sesión
                 </Button>
               </Flex>

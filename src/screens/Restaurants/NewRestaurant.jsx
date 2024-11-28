@@ -43,6 +43,7 @@ export const NewRestaurant = () => {
     formData.append("cai", data.cai)
     formData.append("shippingFree", data.shippingFree ?? true)
     formData.append("cuisineTypeId", data.cuisineTypeId ?? "")
+    formData.append("clinpaysCommerceToken", data.cuisineTypeId ?? null)
     if (data.pricePerChair) {
       formData.append("pricePerChair", data.pricePerChair)
     }

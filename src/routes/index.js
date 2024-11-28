@@ -1,5 +1,6 @@
 import { IconFileInvoice, IconListDetails } from "@tabler/icons-react"
 import { IconCalendarDue } from "@tabler/icons-react"
+import { IconAward } from "@tabler/icons-react"
 import { IconAdjustments } from "@tabler/icons-react"
 import { IconShoppingCart } from "@tabler/icons-react"
 import {
@@ -72,6 +73,15 @@ export const NAVIGATION_ROUTES_SUPER_ADMIN = {
     EditCollection: {
       path: "/lista-de-colecciones/:collectionId"
     }
+  },
+  Loyalty: {
+    path: "/programas-de-lealtad",
+    NewLoyalty: {
+      path: "/lista-de-colecciones/nueva-coleccion"
+    },
+    EditLoyalty: {
+      path: "/lista-de-colecciones/:collectionId"
+    }
   }
 }
 
@@ -79,7 +89,7 @@ export const NAVIGATION_ROUTES_SUPER_ADMIN_TWO = [
   { label: "Inicio", icon: IconHome, link: "/" },
   {
     label: "Restaurantes",
-    icon: IconBox,
+    icon: IconBuildingStore,
     initiallyOpened: false,
     links: [
       {
@@ -93,6 +103,7 @@ export const NAVIGATION_ROUTES_SUPER_ADMIN_TWO = [
     ]
   },
   { label: "Colecciones", icon: IconListDetails, link: "/lista-de-colecciones" },
+  { label: "Programas de lealtad", icon: IconAward, link: "/programas-de-lealtad" },
   { label: "Administradores", icon: IconUsers, link: "/administradores" },
   { label: "Planes", icon: IconCreditCard, link: "/planes" },
   { label: "Cuenta", icon: IconSettings, link: "/miCuenta" }

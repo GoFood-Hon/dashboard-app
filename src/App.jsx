@@ -60,6 +60,7 @@ import { ReservationDetails } from "./screens/Reservations/ReservationDetails"
 import { CollectionsList } from "./screens/Collections/CollectionsList"
 import NewCollection from "./screens/Collections/NewCollection"
 import EditCollection from "./screens/Collections/EditCollection"
+import LoyaltyProgram from "./screens/Loyalty/LoyaltyProgram"
 
 function App() {
   const userRole = useSelector((state) => state.user.value.role)
@@ -98,6 +99,8 @@ function App() {
             <Route path={NAVIGATION_ROUTES_SUPER_ADMIN.Collections.NewCollection.path} element={<NewCollection />} />
 
             <Route path={NAVIGATION_ROUTES_SUPER_ADMIN.Collections.EditCollection.path} element={<EditCollection />} />
+
+            <Route path={NAVIGATION_ROUTES_SUPER_ADMIN.Loyalty.path} element={<LoyaltyProgram/>} />
           </>
         )
       case APP_ROLES.restaurantAdmin:

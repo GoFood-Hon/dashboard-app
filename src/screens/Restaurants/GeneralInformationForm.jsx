@@ -29,9 +29,7 @@ export const GeneralInformationForm = ({ register, control, errors, setValue, im
 
   const previews = images.map((file, index) => {
     const imageUrl = URL.createObjectURL(file)
-    return (
-      <Image key={index} radius="md" h={250} src={imageUrl} />
-    )
+    return <Image key={index} radius="md" h={250} src={imageUrl} />
   })
 
   return (
@@ -40,10 +38,22 @@ export const GeneralInformationForm = ({ register, control, errors, setValue, im
         <Paper withBorder radius="md" p="xs">
           <Grid gutter="md">
             <Grid.Col span={{ base: 12, md: 6 }}>
-              <InputField label="Nombre del restaurante (Obligatorio)" name="name" register={register} errors={errors} className="text-black" />
+              <InputField
+                label="Nombre del restaurante (Obligatorio)"
+                name="name"
+                register={register}
+                errors={errors}
+                className="text-black"
+              />
             </Grid.Col>
             <Grid.Col span={{ base: 12, md: 6 }}>
-              <InputField label="Correo electrónico (Obligatorio)" name="email" register={register} errors={errors} className="text-black" />
+              <InputField
+                label="Correo electrónico (Obligatorio)"
+                name="email"
+                register={register}
+                errors={errors}
+                className="text-black"
+              />
             </Grid.Col>
             <Grid.Col span={{ base: 12, md: 6 }}>
               <InputField
@@ -65,7 +75,12 @@ export const GeneralInformationForm = ({ register, control, errors, setValue, im
               <InputField label="CAI (Obligatorio)" name="cai" register={register} errors={errors} />
             </Grid.Col>
             <Grid.Col span={{ base: 12, md: 6 }}>
-              <InputField label="Dirección de facturación (Obligatorio)" name="billingAddress" register={register} errors={errors} />
+              <InputField
+                label="Dirección de facturación (Obligatorio)"
+                name="billingAddress"
+                register={register}
+                errors={errors}
+              />
             </Grid.Col>
             <Grid.Col span={{ base: 12, md: 6 }}>
               <Controller
@@ -86,6 +101,14 @@ export const GeneralInformationForm = ({ register, control, errors, setValue, im
                     searchable
                   />
                 )}
+              />
+            </Grid.Col>
+            <Grid.Col span={{ base: 12 }}>
+              <InputField
+                label="Clinpays Token (Obligatorio)"
+                name="clinpaysCommerceToken"
+                register={register}
+                errors={errors}
               />
             </Grid.Col>
             <Grid.Col span={{ base: 12, md: 6 }}>

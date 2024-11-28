@@ -37,6 +37,7 @@ export default function NewCollection() {
     setValue,
     control,
     reset,
+    watch,
     formState: { errors }
   } = useForm({})
 
@@ -70,6 +71,7 @@ export default function NewCollection() {
           setValue={setValue}
           control={control}
           isDataCleared={isDataCleared}
+          watch={watch}
         />
       )
     },

@@ -44,8 +44,8 @@ export default function NewUser() {
     formData.append("confirmPassword", data.confirmPassword)
 
     if (data.role === USER_ROLES.driver) {
-      formData.append("motorcycleId", data.motorcycleId)
-      formData.append("nationalIdentityNumber", data.nationalIdentityNumber)
+      formData.append("motorcycleId", data.Driver.motorcycleId)
+      formData.append("nationalIdentityNumber", data.Driver.nationalIdentityNumber)
     }
 
     const formDataImage = new FormData()

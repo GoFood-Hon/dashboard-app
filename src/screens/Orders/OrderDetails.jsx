@@ -24,7 +24,15 @@ import {
 import React, { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import { getFormattedHNL } from "../../utils"
-import { APP_ROLES, orderDeliveryTypes, orderStates, orderStatusValues, PRIMARY_COL_HEIGHT, SECONDARY_COL_HEIGHT, theme } from "../../utils/constants"
+import {
+  APP_ROLES,
+  orderDeliveryTypes,
+  orderStates,
+  orderStatusValues,
+  PRIMARY_COL_HEIGHT,
+  SECONDARY_COL_HEIGHT,
+  theme
+} from "../../utils/constants"
 import { DishOrderDetailCard } from "./DishOrderDetailCard"
 import { useSelector } from "react-redux"
 import { IconCircleCheck } from "@tabler/icons-react"
@@ -58,9 +66,8 @@ export const OrderDetails = () => {
   const dispatch = useDispatch()
   const user = useSelector((state) => state.user.value)
   const [driver, setDriver] = useState(null)
-  const { orderDetails, loadingDetails, updatingOrderStatus, cancelOrderStatus, loadingDrivers, drivers } = useSelector(
-    (state) => state.orders
-  )
+  const { orderDetails, loadingDetails, updatingOrderStatus, cancelOrderStatus, loadingDrivers, drivers, updatingDriver } =
+    useSelector((state) => state.orders)
   const [opened, { open, close }] = useDisclosure(false)
   const [openedModal, { openModal, closeModal }] = useDisclosure(false)
   const isMediumScreen = useMediaQuery("(max-width: 1140px)")
@@ -125,7 +132,7 @@ export const OrderDetails = () => {
         </>
       ) : (
         <Flex direction="column" justify="center" align="center" style={{ flexGrow: 1 }} gap="sm">
-          {updatingOrderStatus ? (
+          {updatingDriver ? (
             <Loader color={colors.main_app_color} />
           ) : (
             <Text size={isSmallScreen ? "xs" : "sm"} c="dimmed">
@@ -449,7 +456,7 @@ export const OrderDetails = () => {
                   </Card>
                 ))
               ) : (
-                <Text my='xl' size="sm" c="dimmed" align="center">
+                <Text my="xl" size="sm" c="dimmed" align="center">
                   No hay repartidores disponibles
                 </Text>
               )}

@@ -18,10 +18,9 @@ const AvailableComplementsCard = ({ item, onItemClick }) => {
       <Group p="xs">
         <Image w={35} h={35} src={images?.[0]?.location} radius="md" />
         <Box w={215}>
-
-        <Text truncate="end" fz="sm" fw={500}>
-          {name}
-        </Text>
+          <Text truncate="end" fz="sm" fw={500}>
+            {name}
+          </Text>
         </Box>
       </Group>
     </Paper>
@@ -57,15 +56,7 @@ const ComplementCard = ({ item, handleRemoveComplement }) => {
   )
 }
 
-export default function ComplementsForm({
-  setValue,
-  isDataCleared,
-  defaultMessage,
-  moreData,
-  data,
-  name,
-  selectedDishes
-}) {
+export default function ComplementsForm({ setValue, isDataCleared, defaultMessage, moreData, data, name, selectedDishes }) {
   const [addedComplements, setAddedComplements] = useState([])
   const [extras, setExtras] = useState([])
   const [deletedElements, setDeletedElements] = useState([])
@@ -76,20 +67,23 @@ export default function ComplementsForm({
     updatingDishes,
     dishesLoading,
     collectionType,
-    updatingRestaurants
+    updatingRestaurants,
+    restaurantsLoading
   } = useSelector((state) => state.collections)
 
   useEffect(() => {
-    setAddedComplements([])
-    setValue("dishes", [])
-    setValue("restaurants", [])
+    setDeletedElements(addedComplements)
+    // setAddedComplements([])
+    // setValue("dishes", [])
+    // setValue("restaurants", [])
+    console.log(deletedElements)
   }, [collectionType])
 
   useEffect(() => {
-    if (selectedDishes && Array.isArray(selectedDishes)) {
+    if (!addedComplements.length && selectedDishes && Array.isArray(selectedDishes)) {
       setAddedComplements(selectedDishes)
     }
-  }, [selectedDishes, data])
+  }, [selectedDishes])
 
   useEffect(() => {
     setExtras(data)
@@ -110,7 +104,11 @@ export default function ComplementsForm({
   }
 
   const handleRemoveComplement = (complement) => {
+    const isInSelectedDishes = selectedDishes.some((dish) => dish === complement)
     const updatedAddedComplements = addedComplements.filter((item) => item !== complement)
+    if (isInSelectedDishes) {
+      setDeletedElements([...deletedElements, complement])
+    }
     setAddedComplements(updatedAddedComplements)
     updateComplementsValue(updatedAddedComplements)
   }
@@ -123,7 +121,7 @@ export default function ComplementsForm({
     <Grid>
       <Grid.Col span={{ base: 12, md: 7 }}>
         <Paper withBorder radius="md" p="md" className="w-full h-full">
-          {dishesLoading ? (
+          {(collectionType === "dishes" ? dishesLoading : restaurantsLoading) ? (
             <div className="h-[calc(100vh-350px)] w-full flex justify-center items-center">
               <Loader color={colors.main_app_color} />
             </div>
@@ -133,7 +131,7 @@ export default function ComplementsForm({
                 <Grid columns={2} gutter="md">
                   {extras.length > 0 ? (
                     extras.map((item, key) => (
-                      <Grid.Col span={1} key={key} style={{cursor: 'pointer'}}>
+                      <Grid.Col span={1} key={key} style={{ cursor: "pointer" }}>
                         <AvailableComplementsCard
                           item={item}
                           onItemClick={handleComplementClick}
@@ -184,7 +182,9 @@ export default function ComplementsForm({
               />
             </ScrollArea>
           ) : (
-            <Text c='dimmed' className="flex flex-col w-full h-full text-xl justify-center item-center text-center">{defaultMessage}</Text>
+            <Text c="dimmed" className="flex flex-col w-full h-full text-xl justify-center item-center text-center">
+              {defaultMessage}
+            </Text>
           )}
         </Paper>
       </Grid.Col>

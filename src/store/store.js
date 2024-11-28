@@ -12,6 +12,7 @@ import reservationsReducer from "./features/reservationsSlice"
 import collectionsReducer from "./features/collectionsSlice"
 import ordersReducer from "./features/ordersSlice"
 import authReducer from  "./features/authSlice"
+import loyaltyReducer from './features/loyaltySlice'
 
 
 const appReducer = combineReducers({
@@ -27,7 +28,8 @@ const appReducer = combineReducers({
   reservations: reservationsReducer,
   collections: collectionsReducer,
   orders: ordersReducer,
-  auth: authReducer
+  auth: authReducer,
+  loyalty: loyaltyReducer
 })
 
 const rootReducer = (state, action) => {

@@ -474,7 +474,7 @@ export default function MenuTable({ items, screenType, totalItems, currentPage, 
             size="lg"
             w={160}
             tt="capitalize"
-            color={status === "pending" ? colors.yellow_logo : status === "cancelled" ? colors.main_app_color : "green"}>
+            color={status === "pending" ? 'rgba(153, 135, 0, 1)' : status === "cancelled" ? colors.main_app_color : "rgba(0, 94, 2, 1)"}>
             {status === "pending" ? "Pendiente" : status === "cancelled" ? "Cancelada" : "Aprobada"}
           </Badge>
         )

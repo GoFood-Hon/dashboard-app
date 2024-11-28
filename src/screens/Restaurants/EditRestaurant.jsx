@@ -67,7 +67,6 @@ export const EditRestaurant = () => {
 
   const onSubmit = async (data) => {
     try {
-      // Crear la data del formulario
       const formData = new FormData()
       formData.append("name", data.name)
       formData.append("email", data.email)
@@ -78,6 +77,7 @@ export const EditRestaurant = () => {
       formData.append("cai", data.cai)
       formData.append("shippingFree", data.shippingFree ?? false)
       formData.append("cuisineTypeId", data.cuisineTypeId ?? "")
+      formData.append("clinpaysCommerceToken", data.cuisineTypeId ?? null)
       if (data.pricePerChair) {
         formData.append("pricePerChair", data.pricePerChair)
       }
@@ -104,7 +104,6 @@ export const EditRestaurant = () => {
         formDataBanner.append("files", data.bannerDishes[0])
       }
 
-      // Actualizar el restaurante
       dispatch(updateRestaurantData({ formData, restaurantId, formDataImage, formDataBanner }))
         .unwrap()
         .then(() => {
@@ -115,7 +114,6 @@ export const EditRestaurant = () => {
         })
 
       if (planCancelled && Object.keys(newPlan).length > 0) {
-        // Cancelar el plan existente (si es necesario)
         try {
           const cancelPlanResponse = await plansApi.cancelPlan({ restaurantId })
 

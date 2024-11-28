@@ -123,6 +123,17 @@ export const userTypes = [
   }
 ]
 
+export const collectionTypes = [
+  {
+    value: "dishes",
+    label: "Platillos"
+  },
+  {
+    value: "restaurants",
+    label: "Restaurantes"
+  }
+]
+
 export const dashboardCards = [
   {
     icon: "money",

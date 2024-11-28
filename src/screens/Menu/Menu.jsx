@@ -1,17 +1,16 @@
-import React, { useEffect, useState } from "react"
-import { Button, Flex, Group, Paper, Text, Title } from "@mantine/core"
+import React, { useEffect } from "react"
+import { Button, Flex, Group, Text, Title } from "@mantine/core"
 import { useDispatch, useSelector } from "react-redux"
 import { useNavigate } from "react-router-dom"
 import { NAVIGATION_ROUTES_RES_ADMIN } from "../../routes"
 import MenuTable from "./MenuTable"
-import { fetchMenus, updateMenu, setPage } from "../../store/features/menuSlice"
+import { fetchMenus, setPage } from "../../store/features/menuSlice"
 import { APP_ROLES } from "../../utils/constants"
 import { colors } from "../../theme/colors"
 
 export default function Menu() {
   const navigate = useNavigate()
   const dispatch = useDispatch()
-
   const user = useSelector((state) => state.user.value)
   const limit = useSelector((state) => state.menus.itemsPerPage)
   const page = useSelector((state) => state.menus.currentPage)
@@ -20,8 +19,6 @@ export default function Menu() {
   const totalPageCount = useSelector((state) => state.menus.totalPagesCount)
   const menusList = menusPerPage[page] || []
   const loadingMenus = useSelector((state) => state.menus.loadingMenus)
-
-  const [cardsSelected, setCardsSelected] = useState([])
 
   const handleDishes = () => {
     navigate(NAVIGATION_ROUTES_RES_ADMIN.Menu.submenu.Dishes.path)
@@ -36,24 +33,6 @@ export default function Menu() {
       dispatch(fetchMenus({ restaurantId: user.restaurantId, limit, page, order: "DESC" }))
     }
   }, [dispatch, limit, page, menusPerPage])
-
-  // const handleDisableSelected = async (cardsSelected) => {
-  //   await Promise.all(
-  //     cardsSelected.map(async (data) => {
-  //       await dispatch(updateMenu({ data: { id: data, isActive: false }, propertyToUpdate: "isActive" }))
-  //     })
-  //   )
-  // }
-
-  // //* enable menu data *//
-
-  // const handleEnableSelected = async (cardsSelected) => {
-  //   await Promise.all(
-  //     cardsSelected.map(async (id) => {
-  //       await dispatch(updateDish({ data: { id, isActive: true }, propertyToUpdate: "isActive" }))
-  //     })
-  //   )
-  // }
 
   return (
     <>
@@ -92,7 +71,6 @@ export default function Menu() {
         items={menusList.map((menu) => {
           return { ...menu, dishesCount: menu?.Dishes?.length }
         })}
-        //handleDisableSelected={handleDisableSelected}
         screenType="menuScreen"
         loadingData={loadingMenus}
         currentPage={page}

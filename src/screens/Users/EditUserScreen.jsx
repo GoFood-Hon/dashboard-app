@@ -81,14 +81,15 @@ export const EditUserScreen = () => {
       formData.append("email", data.email)
       formData.append("phoneNumber", data.phoneNumber)
       formData.append("role", data.role)
-      formData.append("note", data.note)
-
       formData.append("sucursalId", data.sucursalId)
-
       if (data.role === USER_ROLES.driver) {
-        formData.append("motorcycleId", data.motorcycleId)
-        formData.append("nationalIdentityNumber", data.nationalIdentityNumber)
+        formData.append("motorcycleId", data.Driver.motorcycleId)
+        formData.append("nationalIdentityNumber", data.Driver.nationalIdentityNumber)
       }
+
+      formData.forEach((value, key) => {
+        console.log(`${key}: ${value}`)
+      })
 
       const response = await userApi.updateUserRestaurant(formData, userId)
 

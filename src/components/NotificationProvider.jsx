@@ -60,8 +60,36 @@ export const NotificationProvider = ({ children }) => {
       dispatch(setNewOrder(order))
     }
 
+    const handleOrderPickedUp = (order) => {
+      playSound()
+      notifications.show({
+        title: "Orden en camino",
+        message: "El repartidor recogió el pedido y va en camino a entregarlo",
+        autoClose: false,
+        withCloseButton: true,
+        color: "green"
+      })
+      console.log(order)
+      dispatch(setOrderStatus(order))
+    }
+
+    const handleOrderDelivered = (order) => {
+      playSound()
+      notifications.show({
+        title: "Orden entregada",
+        message: "El repartidor marcó el pedido como entregado",
+        autoClose: false,
+        withCloseButton: true,
+        color: "green"
+      })
+      console.log(order)
+      dispatch(setOrderStatus(order))
+    }
+
     orderSocket.on("newOrder", handleNewOrder)
     orderSocket.on("orderReady", handleOrderReady)
+    orderSocket.on("orderPickedUp", handleOrderPickedUp)
+    orderSocket.on("orderDelivered", handleOrderDelivered)
 
     if (user.role === USER_ROLES.kitchen) {
       orderSocket.on("orderUpdate", handleOrderUpdate)
@@ -71,6 +99,8 @@ export const NotificationProvider = ({ children }) => {
       orderSocket.off("newOrder", handleNewOrder)
       orderSocket.off("orderReady", handleOrderReady)
       orderSocket.off("orderUpdate", handleOrderUpdate)
+      orderSocket.off("orderPickedUp", handleOrderPickedUp)
+      orderSocket.off("orderDelivered", handleOrderDelivered)
     }
   }, [orderSocket, user.role])
 

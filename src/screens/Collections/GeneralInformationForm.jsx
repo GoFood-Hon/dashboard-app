@@ -70,7 +70,8 @@ export default function GeneralInformationForm({ register, errors, setValue, isD
               name="type"
               label="Contenido de la colección"
               data={["Restaurantes", "Platillos"]}
-              defaultValue={collectionType === "dishes" ? "Platillos" : "Restaurantes"}
+              defaultValue={'Platillos'}
+              value={collectionType === "dishes" ? "Platillos" : "Restaurantes"}
               allowDeselect={false}
               maxDropdownHeight={200}
               onChange={handleCollectionType}

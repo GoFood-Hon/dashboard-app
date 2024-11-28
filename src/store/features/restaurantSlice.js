@@ -386,14 +386,13 @@ export const restaurantsSlice = createSlice({
         state.updatingRestaurant = true
       })
       .addCase(updateRestaurantData.fulfilled, (state, action) => {
-        // const { id, name, socialReason, images } = action.payload
-        const data = action.payload
+        const { id } = action.payload
         const currentPageRestaurants = state.restaurantsPerPage[state.currentPage]
-        const index = currentPageRestaurants.findIndex((restaurant) => restaurant?.id == data?.id)
+        const index = currentPageRestaurants.findIndex((restaurant) => restaurant?.id == id)
 
         state.updatingRestaurant = false
         if (index !== -1) {
-          currentPageRestaurants[index] = data
+          currentPageRestaurants[index] = action.payload
         }
       })
       .addCase(updateRestaurantData.rejected, (state) => {

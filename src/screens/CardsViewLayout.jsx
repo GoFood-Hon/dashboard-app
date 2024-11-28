@@ -14,7 +14,10 @@ import {
   Card,
   MantineProvider,
   createTheme,
-  rem
+  rem,
+  ActionIcon,
+  Modal,
+  Paper
 } from "@mantine/core"
 import { IconCheck, IconX } from "@tabler/icons-react"
 import BackButton from "./Dishes/components/BackButton"
@@ -23,7 +26,12 @@ import { getFormattedHNL } from "../utils"
 import Lottie from "react-lottie"
 import animationData from "../assets/animation/NothingFoundAnimation.json"
 import { APP_ROLES } from "../utils/constants"
-import { useMediaQuery } from "@mantine/hooks"
+import { useDisclosure } from "@mantine/hooks"
+import { IconQrcode } from "@tabler/icons-react"
+import { QRCodeCanvas } from "qrcode.react"
+import { useState } from "react"
+import { IconPrinter } from "@tabler/icons-react"
+import { createRoot } from "react-dom/client"
 
 const CardsViewLayout = ({
   title,
@@ -41,6 +49,8 @@ const CardsViewLayout = ({
   onPaginationChange,
   user
 }) => {
+  const [opened, { open, close }] = useDisclosure(false)
+  const [branchData, setBranchData] = useState(null)
   const theme = createTheme({
     cursorType: "pointer"
   })
@@ -52,7 +62,85 @@ const CardsViewLayout = ({
       preserveAspectRatio: "xMidYMid slice"
     }
   }
-  const isSmallScreen = useMediaQuery("(max-width: 768px)");
+
+  const handlePrint = (value) => {
+    const parsedValue = JSON.parse(value)
+    const printWindow = window.open("", "_blank")
+
+    if (printWindow) {
+      printWindow.document.write(`
+        <html>
+          <head>
+            <title>Código QR de ${parsedValue.sucursalName}</title>
+            <style>
+              body {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100vh;
+                margin: 0;
+                font-family: Arial, sans-serif;
+                background-color: #ffffff;
+              }
+              .qr-container {
+                width: 350px;
+                text-align: center;
+                position: relative;
+              }
+              .menu-header {
+                color: #EE364C;
+                font-size: 3.5rem;
+                padding: 10px 0;
+                font-weight: bold;
+              }
+              .scan-label {
+                position: absolute;
+                top: 100px;
+                right: 0px;
+                color: #EE364C;
+                font-size: 1.5rem;
+                padding: 5px 10px;
+                border-radius: 5px;
+                transform: translateY(-40%);
+              }
+              .qr-box {
+                margin: 50px auto;
+                width: 350px;
+                height: 350px;
+                border: 4px solid #EE364C;
+                border-radius: 10px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+              }
+              .qr-code {
+                width: 80%;
+                height: auto;
+              }
+            </style>
+          </head>
+          <body>
+            <div class="qr-container">
+              <div class="menu-header">Bienvenido</div>
+              <div class="scan-label">¡Escanéame!</div>
+              <div class="qr-box" id="qr-root"></div>
+            </div>
+          </body>
+        </html>
+      `)
+
+      printWindow.document.close()
+
+      const qrRoot = printWindow.document.getElementById("qr-root")
+      const root = createRoot(qrRoot)
+      root.render(<QRCodeCanvas value={value} size={300} bgColor="transparent" fgColor="#000" />)
+
+      setTimeout(() => {
+        printWindow.print()
+        printWindow.close()
+      }, 500)
+    }
+  }
 
   return (
     <Stack>
@@ -72,6 +160,9 @@ const CardsViewLayout = ({
             <Button
               color={colors.main_app_color}
               className={`text-white text-md px-3 py-2 bg-primary_button mb-0 ${user.role !== APP_ROLES.branchAdmin && user.role !== APP_ROLES.cashierUser ? "" : "hidden"}`}
+              style={{
+                visibility: `${user.role !== APP_ROLES.branchAdmin && user.role !== APP_ROLES.cashierUser ? "" : "hidden"}`
+              }}
               onClick={onNewItemClick}>
               Nuevo
             </Button>
@@ -89,7 +180,28 @@ const CardsViewLayout = ({
             {elementsList?.map((item, key) => (
               <Grid.Col span={{ base: 12, md: 6, lg: 4, xl: 3 }} key={key}>
                 <Card shadow="sm" padding="lg" radius="md" withBorder>
-                  <Card.Section>
+                  <Card.Section style={{ position: "relative" }}>
+                    {elementsName === "sucursales" && item?.onSite && (
+                      <Tooltip
+                        transitionProps={{ transition: "slide-down", duration: 300 }}
+                        arrowOffset={50}
+                        arrowSize={4}
+                        label="Generar código QR"
+                        color={colors.main_app_color}
+                        position="bottom-start">
+                        <ActionIcon
+                          color={colors.main_app_color}
+                          style={{ position: "absolute", left: 20, top: 20 }}
+                          variant="filled"
+                          size="md"
+                          onClick={() => {
+                            open()
+                            setBranchData({ id: item?.id, name: item?.name })
+                          }}>
+                          <IconQrcode style={{ width: "80%", height: "80%" }} stroke={1.5} />
+                        </ActionIcon>
+                      </Tooltip>
+                    )}
                     {item?.images && item?.images?.length > 0 ? (
                       <Image
                         src={item?.images[0]?.location}
@@ -107,7 +219,8 @@ const CardsViewLayout = ({
                       <Tooltip
                         label={item?.name}
                         position="bottom-start"
-                        transitionProps={{ transition: "fade-down", duration: 300 }}>
+                        transitionProps={{ transition: "fade-down", duration: 300 }}
+                        color={colors.main_app_color}>
                         <Text truncate="end" size="lg" fw={700}>
                           {item?.name}
                         </Text>
@@ -167,6 +280,42 @@ const CardsViewLayout = ({
           </Box>
         )}
       </Group>
+
+      <Modal radius="md" opened={opened} onClose={close} title="Código QR de la sucursal" centered>
+        <Stack>
+          <Flex align="center" justify="center">
+            <Paper withBorder p="md" radius="md" style={{ border: "solid 2px", borderColor: colors.main_app_color }}>
+              <QRCodeCanvas
+                value={JSON.stringify({
+                  restaurantId: user?.Restaurant?.id,
+                  sucursalId: branchData?.id,
+                  sucursalName: branchData?.name
+                })}
+                size={200}
+                bgColor="transparent"
+                fgColor="#fff"
+              />
+            </Paper>
+          </Flex>
+          <Flex align="center" justify="center" gap="sm">
+            <Button
+              fullWidth
+              leftSection={<IconPrinter size="1.4rem" />}
+              color={colors.main_app_color}
+              onClick={() =>
+                handlePrint(
+                  JSON.stringify({
+                    restaurantId: user?.Restaurant?.id,
+                    sucursalId: branchData?.id,
+                    sucursalName: branchData?.name
+                  })
+                )
+              }>
+              Imprimir / Exportar PDF
+            </Button>
+          </Flex>
+        </Stack>
+      </Modal>
     </Stack>
   )
 }

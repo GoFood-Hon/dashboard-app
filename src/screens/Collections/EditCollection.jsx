@@ -56,6 +56,7 @@ export default function EditCollection() {
         const response = await collectionsApi.getCollectionDetails(collectionId)
         const collectionDetails = response?.data
         setElements(collectionDetails)
+        dispatch(setCollectionType(collectionDetails?.type))
       } catch (error) {
         showNotification({
           title: "Error",
@@ -102,6 +103,7 @@ export default function EditCollection() {
           image={bannerLocation}
           control={control}
           isDataCleared={isDataCleared}
+          watch={watch}
         />
       )
     },
