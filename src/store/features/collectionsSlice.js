@@ -178,12 +178,76 @@ export const updateCollectionStatus = createAsyncThunk(
 
 export const updateCollection = createAsyncThunk(
   "collections/updateCollection",
-  async ({ setId, params }, { rejectWithValue }) => {
+  async ({ id, params, formDataImage }, { rejectWithValue, getState }) => {
     try {
-      const response = await collectionsApi.updateCollection(setId, params)
-      return response.data
+      const state = getState()
+      const response = await collectionsApi.updateCollection(id, {
+        name: params?.name,
+        description: params?.description,
+        type: params?.type
+      })
+      let collectionData = response?.data
+
+      if (response?.error) {
+        showNotification({
+          title: "Error",
+          message: response.message,
+          color: "red"
+        })
+
+        return rejectWithValue(response?.message)
+      }
+
+      let banner = []
+      if (formDataImage) {
+        const imageResponse = await collectionsApi.createCollectionImage(id, formDataImage)
+        banner = imageResponse?.data?.banner
+        if (imageResponse.error) {
+          showNotification({
+            title: "Error",
+            message: response.message,
+            color: "red"
+          })
+
+          return rejectWithValue(imageResponse?.message)
+        }
+
+        collectionData = { ...collectionData, banner }
+      }
+
+      if (params?.newElements) {
+        if (params?.type === "dishes") {
+          await Promise.all(params?.newElements?.map((elementId) => collectionsApi.addDishToCollection(id, elementId)))
+        } else {
+          await Promise.all(params?.newElements?.map((elementId) => collectionsApi.addRestaurantToCollection(id, elementId)))
+        }
+      }
+
+      if (params?.deletedElements) {
+        if (params?.type === "dishes") {
+          await Promise.all(params?.deletedElements?.map((elementId) => collectionsApi.deleteDishFromCollection(id, elementId)))
+        } else {
+          await Promise.all(
+            params?.deletedElements?.map((elementId) => collectionsApi.deleteRestaurantFromCollection(id, elementId))
+          )
+        }
+      }
+
+      if (params?.type === "restaurants") {
+        collectionData = { ...collectionData, restaurants: state.collections.elementsCount }
+      } else {
+        collectionData = { ...collectionData, dishes: state.collections.elementsCount }
+      }
+
+      showNotification({
+        title: "Actualización exitosa",
+        message: `La coleccíon se actualizó correctamente`,
+        color: "green"
+      })
+
+      return collectionData
     } catch (error) {
-      return rejectWithValue(error.response.data)
+      return rejectWithValue(error)
     }
   }
 )
@@ -281,7 +345,10 @@ const collectionsSlice = createSlice({
     restaurantsPerPage: ITEMS_PER_PAGE_CARDS,
     hasMoreRestaurants: true,
     restaurantsLoading: false,
-    updatingRestaurants: false
+    updatingRestaurants: false,
+
+    //Elements count
+    elementsCount: 0
   },
   reducers: {
     setCurrentPage: (state, action) => {
@@ -298,6 +365,9 @@ const collectionsSlice = createSlice({
     },
     setCollectionType: (state, action) => {
       state.collectionType = action.payload
+    },
+    setElementsCount: (state, action) => {
+      state.elementsCount = action.payload
     }
   },
   extraReducers: (builder) => {
@@ -444,17 +514,20 @@ const collectionsSlice = createSlice({
 
       // Update Collection
       .addCase(updateCollection.pending, (state) => {
-        state.status = "loading"
+        state.updatingCollection = true
       })
       .addCase(updateCollection.fulfilled, (state, action) => {
-        state.status = "succeeded"
-        const index = state.collections.findIndex((collection) => collection.id === action.payload.id)
+        const { id } = action.payload
+        const currentPageCollections = state.collectionsPerPage[state.currentPage]
+        const index = currentPageCollections.findIndex((collection) => collection?.id == id)
+
         if (index !== -1) {
-          state.collections[index] = action.payload
+          currentPageCollections[index] = action.payload
         }
+        state.updatingCollection = false
       })
       .addCase(updateCollection.rejected, (state, action) => {
-        state.status = "failed"
+        state.updatingCollection = false
         state.error = action.payload
       })
 
@@ -481,6 +554,7 @@ const collectionsSlice = createSlice({
         state.status = "failed"
         state.error = action.payload
       })
+
       // Add Dish to Collection
       .addCase(addDishToCollection.pending, (state) => {
         state.status = "loading"
@@ -493,11 +567,13 @@ const collectionsSlice = createSlice({
         state.status = "failed"
         state.error = action.payload
       })
+
       // Delete Dish from Collection
       .addCase(deleteDishFromCollection.fulfilled, (state, action) => {
         const { dishId } = action.payload
         state.collectionDetails.dishes = state.collectionDetails.dishes.filter((dish) => dish.id !== dishId)
       })
+
       // Add Restaurant to Collection
       .addCase(addRestaurantToCollection.pending, (state) => {
         state.status = "loading"
@@ -510,6 +586,7 @@ const collectionsSlice = createSlice({
         state.status = "failed"
         state.error = action.payload
       })
+
       // Delete Restaurant from Collection
       .addCase(deleteRestaurantFromCollection.fulfilled, (state, action) => {
         const { restaurantId } = action.payload
@@ -520,7 +597,13 @@ const collectionsSlice = createSlice({
   }
 })
 
-export const { setCurrentPage, setTotalCollections, setCurrentDishPage, setCurrentRestaurantPage, setCollectionType } =
-  collectionsSlice.actions
+export const {
+  setCurrentPage,
+  setTotalCollections,
+  setCurrentDishPage,
+  setCurrentRestaurantPage,
+  setCollectionType,
+  setElementsCount
+} = collectionsSlice.actions
 
 export default collectionsSlice.reducer

@@ -23,10 +23,7 @@ export default function GeneralInformationForm({ register, errors, setValue, isD
   const [isOnSite, setIsOnSite] = useState(itemDetails?.onSite ?? false)
 
   const handleInputChange = (e) => {
-    alert("fuck")
     const value = e.target.value
-    console.log(value)
-    //dispatch(setShippingRange(value)) // Actualiza Redux
   }
 
   const handleDrop = (acceptedFiles) => {
@@ -89,7 +86,7 @@ export default function GeneralInformationForm({ register, errors, setValue, isD
   return (
     <Grid>
       <Grid.Col span={{ base: 12, md: 8, lg: 8 }}>
-        <Paper withBorder className="w-full h-full items-center justify-center flex  rounded-2xl" p={"md"}>
+        <Paper withBorder radius='md' className="w-full h-full items-center justify-center flex  rounded-2xl" p={"md"}>
           <Grid>
             <Grid.Col span={{ base: 12, md: 6 }}>
               <InputField label="Nombre (Obligatorio)" name="name" register={register} errors={errors} />

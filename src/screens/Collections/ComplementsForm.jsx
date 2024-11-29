@@ -4,7 +4,7 @@ import { useSelector } from "react-redux"
 import { IconX } from "@tabler/icons-react"
 import { SortableList } from "../Dishes/components"
 import { useDispatch } from "react-redux"
-import { setCurrentDishPage, setCurrentRestaurantPage } from "../../store/features/collectionsSlice"
+import { setCurrentDishPage, setCurrentRestaurantPage, setElementsCount } from "../../store/features/collectionsSlice"
 import { colors } from "../../theme/colors"
 
 const AvailableComplementsCard = ({ item, onItemClick }) => {
@@ -60,6 +60,7 @@ export default function ComplementsForm({ setValue, isDataCleared, defaultMessag
   const [addedComplements, setAddedComplements] = useState([])
   const [extras, setExtras] = useState([])
   const [deletedElements, setDeletedElements] = useState([])
+  const [newElements, setNewElements] = useState([])
   const dispatch = useDispatch()
   const {
     currentDishPage,
@@ -68,15 +69,14 @@ export default function ComplementsForm({ setValue, isDataCleared, defaultMessag
     dishesLoading,
     collectionType,
     updatingRestaurants,
-    restaurantsLoading
+    restaurantsLoading,
+    elementsCount
   } = useSelector((state) => state.collections)
 
   useEffect(() => {
-    setDeletedElements(addedComplements)
-    // setAddedComplements([])
-    // setValue("dishes", [])
-    // setValue("restaurants", [])
-    console.log(deletedElements)
+    setAddedComplements([])
+    setValue("dishes", [])
+    setValue("restaurants", [])
   }, [collectionType])
 
   useEffect(() => {
@@ -87,6 +87,7 @@ export default function ComplementsForm({ setValue, isDataCleared, defaultMessag
 
   useEffect(() => {
     setExtras(data)
+    dispatch(setElementsCount(selectedDishes?.length))
   }, [data, selectedDishes])
 
   const updateComplementsValue = (complements) => {
@@ -94,21 +95,45 @@ export default function ComplementsForm({ setValue, isDataCleared, defaultMessag
     setValue(name, complementIds)
   }
 
+  const updateAddedComplementsValue = (complements) => {
+    const complementIds = complements.map((complement) => complement.id)
+    setValue("newElements", complementIds)
+  }
+
+  const updateDeletedComplementsValue = (complements) => {
+    const complementIds = complements.map((complement) => complement.id)
+    setValue("deletedElements", complementIds)
+  }
+
   const handleComplementClick = (complement) => {
     const exists = addedComplements.some((item) => item.id === complement.id)
 
     if (!exists) {
+      const isInSelectedDishes = selectedDishes.some((element) => element.id === complement.id)
+      if (!isInSelectedDishes) {
+        setNewElements([...newElements, complement])
+        updateAddedComplementsValue([...newElements, complement])
+      }
       setAddedComplements([...addedComplements, complement])
       updateComplementsValue([...addedComplements, complement])
+      dispatch(setElementsCount(elementsCount + 1))
     }
   }
 
   const handleRemoveComplement = (complement) => {
-    const isInSelectedDishes = selectedDishes.some((dish) => dish === complement)
+    const isInSelectedDishes = selectedDishes.some((element) => element.id === complement.id)
     const updatedAddedComplements = addedComplements.filter((item) => item !== complement)
     if (isInSelectedDishes) {
       setDeletedElements([...deletedElements, complement])
+      updateDeletedComplementsValue([...deletedElements, complement])
+    } else {
+      if (newElements.some((element) => element.id === complement.id)) {
+        const updatedNewElements = newElements.filter((element) => element.id !== complement.id)
+        setNewElements(updatedNewElements)
+        updateAddedComplementsValue(updatedNewElements)
+      }
     }
+    dispatch(setElementsCount(elementsCount - 1))
     setAddedComplements(updatedAddedComplements)
     updateComplementsValue(updatedAddedComplements)
   }

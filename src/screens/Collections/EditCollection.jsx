@@ -10,7 +10,8 @@ import { colors } from "../../theme/colors"
 import {
   fetchDishesForCollections,
   fetchRestaurantsForCollections,
-  setCollectionType
+  setCollectionType,
+  updateCollection
 } from "../../store/features/collectionsSlice"
 import collectionsApi from "../../api/collectionsApi"
 import ComplementsForm from "./ComplementsForm"
@@ -33,7 +34,8 @@ export default function EditCollection() {
     currentRestaurantPage,
     restaurantsPerPage,
     hasMoreRestaurants,
-    collectionType
+    collectionType,
+    updatingCollection
   } = useSelector((state) => state.collections)
 
   const {
@@ -104,6 +106,7 @@ export default function EditCollection() {
           control={control}
           isDataCleared={isDataCleared}
           watch={watch}
+          edit
         />
       )
     },
@@ -148,15 +151,16 @@ export default function EditCollection() {
   ))
 
   const onSubmit = (data) => {
-    setIsLoading(true)
-    const restaurantId = user.restaurantId
-    dispatch(createMenu({ data, restaurantId })).then((response) => {
+    let formDataImage = null
+    if (data?.files?.[0]) {
+      formDataImage = new FormData()
+      formDataImage.append("files", data.files[0])
+    }
+
+    dispatch(updateCollection({ id: collectionId, params: data, formDataImage })).then((response) => {
       if (response.payload) {
-        reset()
-        navigate(NAVIGATION_ROUTES_RES_ADMIN.Menu.path)
-        setIsDataCleared(true)
+        navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Collections.path)
       }
-      setIsLoading(false)
     })
   }
 
@@ -169,7 +173,7 @@ export default function EditCollection() {
           accordionTitles={["Información general", "Lista de platillos", "Lista de restaurantes"]}
           accordionItems={items}
           navigate={() => navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Collections.path)}
-          isLoading={isLoading}
+          isLoading={updatingCollection}
           update
         />
       </form>

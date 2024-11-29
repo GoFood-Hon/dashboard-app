@@ -63,7 +63,7 @@ export const NewRestaurant = () => {
     const formDataBanner = new FormData()
     formDataBanner.append("files", data.bannerDishes[0])
 
-    dispatch(createRestaurant({ params: formData, imageParams: formDataImage }))
+    dispatch(createRestaurant({ params: formData, imageParams: formDataImage, formDataBanner }))
       .unwrap()
       .then(() => {
         navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Restaurants.path)

@@ -110,7 +110,7 @@ export const addCommentsToReservation = createAsyncThunk(
 // Thunk para cancelar una reserva
 export const cancelReservation = createAsyncThunk(
   "reservations/cancel",
-  async ({ reservationId, params }, { rejectWithValue, getState }) => {
+  async ({ reservationId, params }, { rejectWithValue }) => {
     try {
       const response = await reservationsApi.cancelReservation(reservationId, params)
       showNotification({
@@ -251,18 +251,16 @@ const reservationsSlice = createSlice({
         state.updatingReservation = true
       })
       .addCase(cancelReservation.fulfilled, (state, action) => {
-        state.updatingReservation = false
-        state.reservations = state.reservations.map((reservation) =>
-          reservation.id === action.payload.id ? action.payload : reservation
-        )
+        const { id, status, ReservationComments } = action.payload
+        const currentPageReservations = state.reservationsPerPage[state.currentPage]
+        const index = currentPageReservations.findIndex((reservation) => reservation?.id === id)
 
-        if (state.reservationDetails?.id === action.payload.id) {
-          state.reservationDetails = {
-            ...state.reservationDetails,
-            ...action.payload,
-            total: state.reservationDetails.total
-          }
+        if (index !== -1) {
+          currentPageReservations[index] = { ...currentPageReservations[index], status }
         }
+        state.reservationDetails.status = status
+        state.reservationDetails.ReservationComments = ReservationComments
+        state.updatingReservation = false
       })
       .addCase(cancelReservation.rejected, (state, action) => {
         state.updatingReservation = false
@@ -274,16 +272,15 @@ const reservationsSlice = createSlice({
         state.updatingReservation = true
       })
       .addCase(approveReservation.fulfilled, (state, action) => {
-        state.updatingReservation = false
-        state.reservations = state.reservations.map((reservation) =>
-          reservation.id === action.payload.id ? action.payload : reservation
-        )
-        if (state.reservationDetails?.id === action.payload.id) {
-          state.reservationDetails = {
-            ...state.reservationDetails,
-            status: action.payload.status
-          }
+        const { id, status } = action.payload
+        const currentPageReservations = state.reservationsPerPage[state.currentPage]
+        const index = currentPageReservations.findIndex((reservation) => reservation?.id === id)
+
+        if (index !== -1) {
+          currentPageReservations[index] = { ...currentPageReservations[index], status }
         }
+        state.reservationDetails.status = status
+        state.updatingReservation = false
       })
       .addCase(approveReservation.rejected, (state, action) => {
         state.updatingReservation = false

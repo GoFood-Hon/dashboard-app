@@ -26,7 +26,7 @@ import { getFormattedHNL } from "../utils"
 import Lottie from "react-lottie"
 import animationData from "../assets/animation/NothingFoundAnimation.json"
 import { APP_ROLES } from "../utils/constants"
-import { useDisclosure } from "@mantine/hooks"
+import { useDisclosure, useMediaQuery } from "@mantine/hooks"
 import { IconQrcode } from "@tabler/icons-react"
 import { QRCodeCanvas } from "qrcode.react"
 import { useState } from "react"
@@ -62,6 +62,7 @@ const CardsViewLayout = ({
       preserveAspectRatio: "xMidYMid slice"
     }
   }
+  const isSmallScreen = useMediaQuery("(max-width: 430px)")
 
   const handlePrint = (value) => {
     const parsedValue = JSON.parse(value)
@@ -148,7 +149,7 @@ const CardsViewLayout = ({
         <Flex align="center" justify="space-between">
           <BackButton title={title} />
           <Flex align="center" gap="xs">
-            <Flex align="center" gap={5}>
+            <Flex style={{display: `${isSmallScreen ? 'none' : ''}`}} align="center" gap={5}>
               <Text fw={700}>
                 {page === 1 ? 1 : (page - 1) * limit + 1}-{page === 1 ? limit : Math.min(page * limit, totalElements)}
               </Text>

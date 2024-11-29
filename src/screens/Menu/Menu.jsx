@@ -69,7 +69,7 @@ export default function Menu() {
       </Group>
       <MenuTable
         items={menusList.map((menu) => {
-          return { ...menu, dishesCount: menu?.Dishes?.length }
+          return { ...menu, dishesCount: menu?.Dishes?.length || menu?.Dishes }
         })}
         screenType="menuScreen"
         loadingData={loadingMenus}

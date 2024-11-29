@@ -1,25 +1,23 @@
 import React, { useState } from "react"
-import { CloseIcon, Group, Text, rem, Grid, Paper, Flex, Button, Container, Image, Stack } from "@mantine/core"
+import { Group, Text, rem, Grid, Paper, Flex, Button, Image, Stack } from "@mantine/core"
 import SettingsCard from "../../components/SettingsCard"
 import authApi from "../../api/authApi"
 import InputField from "../../components/Form/InputField"
 import { useForm } from "react-hook-form"
-import { useNavigate } from "react-router-dom"
 import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone"
 import { IconPhoto } from "@tabler/icons-react"
-import { useDispatch, useSelector } from "react-redux"
-import { bytesToMB } from "../../utils"
+import { useDispatch } from "react-redux"
 import toast from "react-hot-toast"
-import { APP_ROLES } from "../../utils/constants"
 import BackButton from "../Dishes/components/BackButton"
 import { colors } from "../../theme/colors"
+import { setUser } from "../../store/features/userSlice"
+import { useSelector } from "react-redux"
+import { showNotification } from "@mantine/notifications"
 
 export default function AccountSettings() {
-  const navigate = useNavigate()
-  const user = useSelector((state) => state.user.value)
   const [isLoading, setIsLoading] = useState(false)
   const dispatch = useDispatch()
-
+  const user = useSelector((state) => state.user.value)
   const [userData, setUserData] = useState({})
   const [images, setImages] = useState([])
   const [fileInformation, setFileInformation] = useState(null)
@@ -31,37 +29,10 @@ export default function AccountSettings() {
     formState: { errors },
     watch
   } = useForm({
-    defaultValues: async () => {
-      try {
-        const response = await authApi.getUser()
-
-        if (response.error) {
-          toast.error("Error en la respuesta de la información del usuario")
-          return {}
-        }
-
-        const userData = response.data.data
-        setUserData(userData)
-
-        return {
-          firstName: userData?.name || "",
-          email: userData?.email || "",
-          phoneNumber: userData?.phoneNumber || "",
-
-          image: userData?.images?.[0]?.location
-        }
-      } catch (error) {
-        toast.error("Error obteniendo información del usuario")
-        return {}
-      }
-    }
+    defaultValues: user
   })
-  const deleteImage = () => {
-    setFileInformation(null)
-    setImages([])
-  }
 
-  const image = watch("image")
+  const image = watch("images.[0].location")
 
   const previews = images.map((file, index) => {
     const imageUrl = URL.createObjectURL(file)
@@ -77,21 +48,19 @@ export default function AccountSettings() {
     }
   }
 
-  const uploadProfileImage = async (file) => {
-    const formDataImage = new FormData()
-    formDataImage.append("files", file)
-
-    return await authApi.addImage(formDataImage)
-  }
-
   const onSubmit = async (data) => {
     setIsLoading(true)
     try {
       const formData = new FormData()
 
-      formData.append("name", data.firstName)
+      formData.append("name", data.name)
       formData.append("email", data.email)
       formData.append("phoneNumber", data.phoneNumber.startsWith("+504") ? data.phoneNumber : `+504${data.phoneNumber}`)
+      let formDataImage = null
+      if (data?.files?.[0]) {
+        formDataImage = new FormData()
+        formDataImage.append("files", data.files[0])
+      }
 
       const response = await authApi.updateUser(formData)
 
@@ -100,9 +69,20 @@ export default function AccountSettings() {
           duration: 7000
         })
       } else {
-        await uploadProfileImage(data?.files?.[0])
-        toast.success("Usuario actualizado exitosamente", {
-          duration: 7000
+        if (data?.files?.[0]) {
+          const formDataImage = new FormData()
+          formDataImage.append("files", data?.files?.[0])
+          const imageResponse = await authApi.addImage(formDataImage)
+          console.log(imageResponse)
+
+          dispatch(setUser({ ...user, images: imageResponse?.data }))
+        }
+        dispatch(setUser({ ...user, name: data.name, email: data.email, phoneNumber: data.phoneNumber }))
+
+        showNotification({
+          title: "Actualización exitosa",
+          message: `Su información fue actualizada correctamente`,
+          color: "green"
         })
       }
       setIsLoading(false)
@@ -118,7 +98,7 @@ export default function AccountSettings() {
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <Stack gap='sm'>
+        <Stack gap="sm">
           <Group grow>
             <Flex align="center" justify="space-between">
               <BackButton title="Configurar cuenta" />
@@ -130,7 +110,7 @@ export default function AccountSettings() {
                 <Paper withBorder p="lg" radius="md">
                   <Grid>
                     <Grid.Col span={{ base: 12, md: 6 }}>
-                      <InputField label="Nombre" name="firstName" register={register} errors={errors} />
+                      <InputField label="Nombre" name="name" register={register} errors={errors} />
                     </Grid.Col>
                     <Grid.Col span={{ base: 12, md: 6 }}>
                       <InputField label="Email" name="email" register={register} errors={errors} />

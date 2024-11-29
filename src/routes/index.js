@@ -260,7 +260,7 @@ export const NAVIGATION_ROUTES_RES_ADMIN_TWO = [
         link: "/configuraciones/bancos"
       },
       {
-        label: "Datos del plan",
+        label: "Administrar plan",
         link: "/configuraciones/plan"
       }
     ]

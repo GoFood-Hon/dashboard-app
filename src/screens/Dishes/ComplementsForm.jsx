@@ -1,15 +1,5 @@
 import React, { useEffect, useState } from "react"
-import {
-  Grid,
-  Image,
-  Text,
-  ScrollArea,
-  Paper,
-  useMantineTheme,
-  Button,
-  Loader,
-  CloseButton
-} from "@mantine/core"
+import { Grid, Image, Text, ScrollArea, Paper, useMantineTheme, Button, Loader, CloseButton } from "@mantine/core"
 import { useSelector } from "react-redux"
 import { getFormattedHNL } from "../../utils"
 import { SortableList } from "./components"
@@ -17,7 +7,7 @@ import { selectComplementsError, selectComplementsStatus } from "../../store/fea
 import { colors } from "../../theme/colors"
 import { useDebouncedState } from "@mantine/hooks"
 import { useDispatch } from "react-redux"
-import { setCurrentDishPage } from "../../store/features/menuSlice"
+import { setCurrentDishPage, setDishesAddedToMenuCount } from "../../store/features/menuSlice"
 
 const AvailableComplementsCard = ({ item, onItemClick }) => {
   const { images, name, price } = item
@@ -95,7 +85,7 @@ export default function ComplementsForm({
   const [extras, setExtras] = useState([])
   const [search, setSearch] = useDebouncedState("", 300)
   const dispatch = useDispatch()
-  const { currentDishPage, updatingDishes, dishesLoading } = useSelector((state) => state.menus)
+  const { currentDishPage, updatingDishes, dishesLoading, dishesAddedToMenu } = useSelector((state) => state.menus)
 
   useEffect(() => {
     if (selectedDishes && Array.isArray(selectedDishes)) {
@@ -104,12 +94,8 @@ export default function ComplementsForm({
   }, [selectedDishes, data])
 
   useEffect(() => {
-    if (Array.isArray(selectedDishes)) {
-      const filteredExtras = data.filter((item) => !selectedDishes.some((selected) => selected.id === item.id))
-      setExtras(filteredExtras)
-    } else {
-      setExtras(data)
-    }
+    dispatch(setDishesAddedToMenuCount(selectedDishes?.length))
+    setExtras(data)
   }, [data, selectedDishes])
 
   const updateComplementsValue = (complements) => {
@@ -121,6 +107,8 @@ export default function ComplementsForm({
     const exists = addedComplements.some((item) => item.id === complement.id)
 
     if (!exists) {
+      dispatch(setDishesAddedToMenuCount(dishesAddedToMenu + 1))
+      console.log(dishesAddedToMenu)
       setAddedComplements([...addedComplements, complement])
       updateComplementsValue([...addedComplements, complement])
     }
@@ -129,6 +117,8 @@ export default function ComplementsForm({
   const handleRemoveComplement = (complement) => {
     const updatedAddedComplements = addedComplements.filter((item) => item !== complement)
     setAddedComplements(updatedAddedComplements)
+    dispatch(setDishesAddedToMenuCount(dishesAddedToMenu - 1))
+    console.log(dishesAddedToMenu)
     updateComplementsValue(updatedAddedComplements)
   }
 

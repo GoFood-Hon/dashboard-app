@@ -512,7 +512,7 @@ export default function MenuTable({ items, screenType, totalItems, currentPage, 
         label: "Cantidad",
         accessor: "dishes",
         center: true,
-        render: (dishes, item) => (item.type === "restaurants" ? item.restaurants?.length || 0 : dishes?.length || 0)
+        render: (dishes, item) => (item.type === "restaurants" ? item.restaurants?.length || item.restaurants : dishes?.length || dishes)
       },
       { label: "Fecha de creación", accessor: "createdAt" },
       {

@@ -17,6 +17,7 @@ export default function GeneralSettings() {
     const fetchRestaurantInformation = async () => {
       try {
         const response = await restaurantsApi.getRestaurant(user?.restaurantId)
+        console.log(response)
 
         if (response.error) {
           toast.error(`Fallo al obtenerla información del restaurante. Por favor intente de nuevo. ${response.message}`, {
@@ -53,12 +54,20 @@ export default function GeneralSettings() {
   }, [])
 
   return (
-    <Stack gap='sm'>
+    <Stack gap="sm">
       <Group grow>
         <Flex align="center" justify="space-between">
           <BackButton title="General" />
         </Flex>
       </Group>
+
+      <SettingsCard title="Banner" iconName="building" linkPage={SETTING_NAVIGATION_ROUTES.Business_btn.path}>
+        <Paper py="md">
+          <Flex direction="column" justify="center" align="center" h={200}>
+            <Image radius="md" h={200} src={restaurants?.bannerDishes?.[0]?.location} />
+          </Flex>
+        </Paper>
+      </SettingsCard>
 
       <SettingsCard title="Negocio" iconName="building" linkPage={SETTING_NAVIGATION_ROUTES.Business_btn.path}>
         <Paper py="md">
