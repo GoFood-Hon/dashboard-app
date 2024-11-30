@@ -91,9 +91,9 @@ export const kitchenWelcomeCards = [
     link: NAVIGATION_ROUTES_KITCHEN.OrderHistory.path
   },
   {
-    title: "Ver mis configuraciones",
+    title: "Ver mi cuenta",
     description: "Ajustar configuraciones",
-    link: NAVIGATION_ROUTES_KITCHEN.Home.path
+    link: NAVIGATION_ROUTES_KITCHEN.Account.path
   }
 ]
 

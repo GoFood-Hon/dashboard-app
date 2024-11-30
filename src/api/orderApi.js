@@ -30,7 +30,6 @@ const orderApi = {
       search
     }
 
-    // Filtrar valores no definidos o vacíos (más robusto)
     const validParams = Object.fromEntries(Object.entries(params).filter(([_, value]) => value !== undefined && value !== ""))
 
     const queryString = new URLSearchParams(validParams).toString()
@@ -52,7 +51,22 @@ const orderApi = {
   cancelOrder: (id) => axiosClient.patch(`api/v1/order/cancel-order/${id}`),
 
   // Get Order History (kitchen)
-  getKitchenOrders: () => axiosClient.get("api/v1/order/get-kitchen-order-history"),
+  getKitchenOrders: ({ limit, page, order, search_field, search } = {}) => {
+    const params = {
+      limit,
+      page,
+      order,
+      search_field,
+      search
+    }
+
+    const validParams = Object.fromEntries(Object.entries(params).filter(([_, value]) => value !== undefined && value !== ""))
+
+    const queryString = new URLSearchParams(validParams).toString()
+    const url = `api/v1/order/get-kitchen-order-history${queryString ? `?${queryString}` : ""}`
+
+    return axiosClient.get(url)
+  },
 
   // Get Drivers by Sucursal (admin sucursal, admin restaurant)
   getDrivers: (sucursalId) => axiosClient.get(`api/v1/order/get-drivers/${sucursalId}`),

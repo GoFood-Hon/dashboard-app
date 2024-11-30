@@ -6,6 +6,7 @@ import { SortableList } from "../Dishes/components"
 import { useDispatch } from "react-redux"
 import { setCurrentDishPage, setCurrentRestaurantPage, setElementsCount } from "../../store/features/collectionsSlice"
 import { colors } from "../../theme/colors"
+import { se } from "date-fns/locale"
 
 const AvailableComplementsCard = ({ item, onItemClick }) => {
   const { images, name } = item
@@ -109,10 +110,12 @@ export default function ComplementsForm({ setValue, isDataCleared, defaultMessag
     const exists = addedComplements.some((item) => item.id === complement.id)
 
     if (!exists) {
-      const isInSelectedDishes = selectedDishes.some((element) => element.id === complement.id)
-      if (!isInSelectedDishes) {
-        setNewElements([...newElements, complement])
-        updateAddedComplementsValue([...newElements, complement])
+      if (selectedDishes) {
+        const isInSelectedDishes = selectedDishes.some((element) => element.id === complement.id)
+        if (!isInSelectedDishes) {
+          setNewElements([...newElements, complement])
+          updateAddedComplementsValue([...newElements, complement])
+        }
       }
       setAddedComplements([...addedComplements, complement])
       updateComplementsValue([...addedComplements, complement])
@@ -121,19 +124,21 @@ export default function ComplementsForm({ setValue, isDataCleared, defaultMessag
   }
 
   const handleRemoveComplement = (complement) => {
-    const isInSelectedDishes = selectedDishes.some((element) => element.id === complement.id)
     const updatedAddedComplements = addedComplements.filter((item) => item !== complement)
-    if (isInSelectedDishes) {
-      setDeletedElements([...deletedElements, complement])
-      updateDeletedComplementsValue([...deletedElements, complement])
-    } else {
-      if (newElements.some((element) => element.id === complement.id)) {
-        const updatedNewElements = newElements.filter((element) => element.id !== complement.id)
-        setNewElements(updatedNewElements)
-        updateAddedComplementsValue(updatedNewElements)
+    if (selectedDishes) {
+      const isInSelectedDishes = selectedDishes.some((element) => element.id === complement.id)
+      if (isInSelectedDishes) {
+        setDeletedElements([...deletedElements, complement])
+        updateDeletedComplementsValue([...deletedElements, complement])
+      } else {
+        if (newElements.some((element) => element.id === complement.id)) {
+          const updatedNewElements = newElements.filter((element) => element.id !== complement.id)
+          setNewElements(updatedNewElements)
+          updateAddedComplementsValue(updatedNewElements)
+        }
       }
+      dispatch(setElementsCount(elementsCount - 1))
     }
-    dispatch(setElementsCount(elementsCount - 1))
     setAddedComplements(updatedAddedComplements)
     updateComplementsValue(updatedAddedComplements)
   }
@@ -200,7 +205,7 @@ export default function ComplementsForm({ setValue, isDataCleared, defaultMessag
                 onChange={setAddedComplements}
                 renderItem={(item) => (
                   <SortableList.Item id={item.id}>
-                    <SortableList.DragHandle />
+                    
                     <ComplementCard item={item} handleRemoveComplement={() => handleRemoveComplement(item)} />
                   </SortableList.Item>
                 )}

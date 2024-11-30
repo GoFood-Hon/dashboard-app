@@ -17,7 +17,8 @@ import {
   rem,
   ActionIcon,
   Modal,
-  Paper
+  Paper,
+  useMantineColorScheme
 } from "@mantine/core"
 import { IconCheck, IconX } from "@tabler/icons-react"
 import BackButton from "./Dishes/components/BackButton"
@@ -63,6 +64,7 @@ const CardsViewLayout = ({
     }
   }
   const isSmallScreen = useMediaQuery("(max-width: 430px)")
+  const { colorScheme } = useMantineColorScheme()
 
   const handlePrint = (value) => {
     const parsedValue = JSON.parse(value)
@@ -149,7 +151,7 @@ const CardsViewLayout = ({
         <Flex align="center" justify="space-between">
           <BackButton title={title} />
           <Flex align="center" gap="xs">
-            <Flex style={{display: `${isSmallScreen ? 'none' : ''}`}} align="center" gap={5}>
+            <Flex style={{ display: `${isSmallScreen ? "none" : ""}` }} align="center" gap={5}>
               <Text fw={700}>
                 {page === 1 ? 1 : (page - 1) * limit + 1}-{page === 1 ? limit : Math.min(page * limit, totalElements)}
               </Text>
@@ -160,9 +162,9 @@ const CardsViewLayout = ({
             </Flex>
             <Button
               color={colors.main_app_color}
-              className={`text-white text-md px-3 py-2 bg-primary_button mb-0 ${user.role !== APP_ROLES.branchAdmin && user.role !== APP_ROLES.cashierUser ? "" : "hidden"}`}
+              
               style={{
-                visibility: `${user.role !== APP_ROLES.branchAdmin && user.role !== APP_ROLES.cashierUser ? "" : "hidden"}`
+                display: `${user.role !== APP_ROLES.branchAdmin && user.role !== APP_ROLES.cashierUser ? "" : "none"}`
               }}
               onClick={onNewItemClick}>
               Nuevo
@@ -294,7 +296,7 @@ const CardsViewLayout = ({
                 })}
                 size={200}
                 bgColor="transparent"
-                fgColor="#fff"
+                fgColor={colorScheme === "dark" ? "#fff" : "#000"}
               />
             </Paper>
           </Flex>

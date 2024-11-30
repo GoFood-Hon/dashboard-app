@@ -52,7 +52,7 @@ export default function LocationForm({ register, errors, setValue, itemDetails, 
     <Grid>
       <Grid.Col span={{ base: 12 }}>
         <Paper withBorder radius="md" p="md">
-          <Stack>
+          <Stack gap='xs'>
             <InputTextAreaField label="Dirección exacta (Obligatorio)" name="address" register={register} errors={errors} />
             <InputSearchCombobox
               label="Departamento (Obligatorio)"

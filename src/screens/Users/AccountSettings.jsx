@@ -98,12 +98,12 @@ export default function AccountSettings() {
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <Stack gap="sm">
-          <Group grow>
-            <Flex align="center" justify="space-between">
-              <BackButton title="Configurar cuenta" />
-            </Flex>
-          </Group>
+        <Group grow mb='xs'>
+          <Flex align="center" justify="space-between">
+            <BackButton title="Configurar cuenta" />
+          </Flex>
+        </Group>
+        <Stack gap="md">
           <SettingsCard title="Información general" iconName="user">
             <Grid>
               <Grid.Col span={{ base: 12, md: 8, lg: 8 }}>

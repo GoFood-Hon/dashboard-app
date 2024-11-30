@@ -26,14 +26,15 @@ export const fetchOrdersForKitchen = createAsyncThunk(
   "orders/fetchOrdersForKitchen",
   async ({ limit, page, search_field, search }, { rejectWithValue }) => {
     try {
-      const response = await orderApi.getOrdersForKitchen({
+      const response = await orderApi.getKitchenOrders({
         limit,
         page,
         order: "DESC",
         search_field,
-        search
+        search,
+        status
       })
-      return { data: response.data, result: response.result, page }
+      return { data: response.data, result: response.results, page }
     } catch (error) {
       return rejectWithValue(error.response?.data || error.message)
     }
@@ -211,6 +212,13 @@ const ordersSlice = createSlice({
     updatingOrderStatus: false,
     cancelOrderStatus: false,
 
+    //kitchen data
+    currentHistoryPage: 1,
+    totalHistoryPagesCount: 0,
+    totalHistoryOrders: 0,
+    ordersHistoryPerPage: [],
+    loadingHistory: false,
+
     //Drivers data
     loadingDrivers: false,
     updatingDriver: false,
@@ -378,14 +386,18 @@ const ordersSlice = createSlice({
 
       //Obtener las órdenes para las personas de cocina
       .addCase(fetchOrdersForKitchen.pending, (state) => {
-        state.status = "loading"
+        state.loadingHistory = true
       })
       .addCase(fetchOrdersForKitchen.fulfilled, (state, action) => {
-        state.status = "succeeded"
-        state.orders = action.payload
+        const { data, result, page } = action.payload
+        state.ordersHistoryPerPage[page] = data
+        state.loadingHistory = false
+        state.currentHistoryPage = page
+        state.totalHistoryOrders = result
+        state.totalHistoryPagesCount = Math.ceil(result / action.meta.arg.limit)
       })
       .addCase(fetchOrdersForKitchen.rejected, (state, action) => {
-        state.status = "failed"
+        state.loadingHistory = false
         state.error = action.payload
       })
 

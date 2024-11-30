@@ -50,16 +50,6 @@ export default function NewDish() {
       title: "Adicionales",
       requirement: "Opcional",
       form: <AdditionalForm additional={additional} setAdditional={setAdditional} />
-    },
-    {
-      title: "Pagos",
-      requirement: "Obligatorio",
-      form: <PaymentForm register={register} errors={errors} />
-    },
-    {
-      title: "Preparación",
-      requirement: "Obligatorio",
-      form: <PreparationForm setValue={setValue} errors={errors} register={register} />
     }
   ]
 

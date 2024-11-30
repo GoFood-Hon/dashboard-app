@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react"
-import { Grid, Image, Text, ScrollArea, Paper, useMantineTheme, Button, Loader, CloseButton } from "@mantine/core"
+import { Grid, Image, Text, ScrollArea, Paper, Button, Loader, CloseButton } from "@mantine/core"
 import { useSelector } from "react-redux"
 import { getFormattedHNL } from "../../utils"
 import { SortableList } from "./components"
-import { selectComplementsError, selectComplementsStatus } from "../../store/features/complementsSlice"
 import { colors } from "../../theme/colors"
 import { useDebouncedState } from "@mantine/hooks"
 import { useDispatch } from "react-redux"
@@ -78,9 +77,6 @@ export default function ComplementsForm({
   name,
   selectedDishes
 }) {
-  const status = useSelector(selectComplementsStatus)
-  const error = useSelector(selectComplementsError)
-  const theme = useMantineTheme()
   const [addedComplements, setAddedComplements] = useState([])
   const [extras, setExtras] = useState([])
   const [search, setSearch] = useDebouncedState("", 300)
@@ -152,7 +148,6 @@ export default function ComplementsForm({
                       No hay platillos para mostrar
                     </Text>
                   )}
-                  {/* Mostrar el botón "Cargar más" solo si hasMore es true */}
                   {moreData && (
                     <div className="w-full flex justify-center mt-4">
                       <Button
@@ -180,7 +175,6 @@ export default function ComplementsForm({
                 onChange={setAddedComplements}
                 renderItem={(item) => (
                   <SortableList.Item id={item.id}>
-                    <SortableList.DragHandle />
                     <ComplementCard item={item} handleRemoveComplement={() => handleRemoveComplement(item)} />
                   </SortableList.Item>
                 )}

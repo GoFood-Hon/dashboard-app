@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react"
 import BaseLayout from "../../components/BaseLayout"
-import { Breadcrumbs, Card, Grid, Image, Modal } from "@mantine/core"
+import { Breadcrumbs, Card, Grid, Image, Modal, Paper, Stack } from "@mantine/core"
 import BreadCrumbNavigation from "../../components/BreadCrumbNavigation"
 import { useLocation, useParams } from "react-router-dom"
 import menuApi from "../../api/menuApi"
@@ -17,7 +17,6 @@ import { APP_ROLES, dashboardCards } from "../../utils/constants"
 export default function MenuDetails() {
   const { menuId } = useParams()
   const user = useSelector((state) => state.user.value)
-  const location = useLocation()
   const restaurant = useSelector((state) => state.restaurants.restaurants)
 
   const [menuDetails, setMenuDetails] = useState({})
@@ -27,6 +26,7 @@ export default function MenuDetails() {
     const fetchMenu = async () => {
       try {
         const response = await menuApi.getMenuDetails({ menuId })
+        console.log(response)
 
         const menuDetails = response?.data
         setMenuDetails(menuDetails)
@@ -39,20 +39,21 @@ export default function MenuDetails() {
   }, [closeFormModal, formModalOpened])
 
   return (
-    <BaseLayout>
+    <>
       <section>
         <div className="flex flex-row justify-between items-center pb-6">
-          <BackButton title={menuDetails?.name} />
+          <BackButton title='Detalles del menú' show />
         </div>
       </section>
-      <div className="flex flex-row w-full flex-wrap gap-2 xl:flex-nowrap bg-white">
+      <div className="flex flex-row w-full flex-wrap gap-2 xl:flex-nowrap ">
         <section className="w-full rounded-lg ">
           <div className="relative">
             <Image
-              src={restaurant?.bannerDishes?.[0]?.location}
+              src={menuDetails?.images?.[0]?.location}
               h={"240px"}
               w={"100%"}
               fit="contain"
+              radius='md'
               fallbackSrc="https://placehold.co/600x400?text=Imagen+no+disponible"
             />
           </div>
@@ -77,32 +78,30 @@ export default function MenuDetails() {
           </section>
           <section className="px-20">
             <div className="pt-8">
-              <span className="text-sky-950 text-base font-bold  leading-normal">Platillos </span>
-              <span className="text-sky-950 text-base font-normal leading-normal">( {menuDetails?.Dishes?.length ?? 0} )</span>
-
-              {menuDetails?.Dishes?.map((item) => (
-                <div
-                  className="w-full p-5 my-3 bg-white rounded-lg border border-blue-100 flex-row justify-between items-center flex text-sm"
-                  key={item?.id}>
-                  <div className="flex flex-row items-center w-1/2">
-                    <div className="w-10 h-10 grid place-items-center">
-                      <Image
-                        h={"full"}
-                        w="full"
-                        fit="contain"
-                        src={item?.images?.[0]?.location}
-                        radius={"xs"}
-                        fallbackSrc="https://placehold.co/600x400?text=Imagen+no+disponible"
-                      />
+              <span>Platillos ({menuDetails?.Dishes?.length ?? 0}) </span>
+              <Stack gap="xs" mt="xs">
+                {menuDetails?.Dishes?.map((item) => (
+                  <Paper withBorder radius="md">
+                    <div className="w-full p-3 my-3 rounded-lg flex-row justify-between items-center flex text-sm">
+                      <div className="flex flex-row items-center w-1/2">
+                        <Image
+                          h={"40"}
+                          w="auto"
+                          fit="contain"
+                          src={item?.images?.[0]?.location}
+                          alt={item?.name}
+                          radius={"sm"}
+                          fallbackSrc="https://placehold.co/600x400?text=Imagen+no+disponible"
+                        />
+                        <span className="pl-3">{item?.name}</span>
+                      </div>
+                      <div className="flex flex-row w-1/2 justify-end">
+                        <span className="pl-3">{getFormattedHNL(item?.price)}</span>
+                      </div>
                     </div>
-
-                    <span className="text-sky-950 pl-3">{item?.name}</span>
-                  </div>
-                  <div className="flex flex-row w-1/2 justify-end">
-                    <span className="text-sky-950 pl-3">{getFormattedHNL(item?.price)}</span>
-                  </div>
-                </div>
-              ))}
+                  </Paper>
+                ))}
+              </Stack>
             </div>
           </section>
         </section>
@@ -121,6 +120,6 @@ export default function MenuDetails() {
           </Modal>
         </section>
       </div>
-    </BaseLayout>
+    </>
   )
 }

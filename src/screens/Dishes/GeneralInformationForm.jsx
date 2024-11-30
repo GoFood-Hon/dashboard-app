@@ -1,26 +1,9 @@
-import {
-  CloseIcon,
-  Grid,
-  Group,
-  Image,
-  SimpleGrid,
-  Text,
-  rem,
-  InputBase,
-  Combobox,
-  useCombobox,
-  Paper,
-  Stack,
-  TagsInput,
-  MultiSelect,
-  Flex
-} from "@mantine/core"
+import { Grid, Image, Text, rem, Paper, Stack, MultiSelect, Flex, Select } from "@mantine/core"
 import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone"
 import { IconPhoto } from "@tabler/icons-react"
 import React, { useEffect, useState } from "react"
 import InputTextAreaField from "../../components/Form/InputTextAreaField"
 import InputField from "../../components/Form/InputField"
-import { bytesToMB } from "../../utils"
 import InputCheckbox from "../../components/Form/InputCheckbox"
 import { useDispatch, useSelector } from "react-redux"
 import {
@@ -29,21 +12,19 @@ import {
   selectAllDishesCategoriesStatus
 } from "../../store/features/categorySlice"
 import { fetchAllDishesTags } from "../../store/features/kitchenAndTagsSlice"
+import { Controller } from "react-hook-form"
+import { preparationTime } from "../../utils/constants"
 
-export default function GeneralInformationForm({ register, errors, setValue, isDataCleared, image, data }) {
+export default function GeneralInformationForm({ register, errors, setValue, isDataCleared, image, data, control }) {
   const dispatch = useDispatch()
   const user = useSelector((state) => state.user.value)
   const tags = useSelector((state) => state.kitchenAndTags.dishTags)
-  const categories = useSelector(selectAllDishesCategories)
   const status = useSelector(selectAllDishesCategoriesStatus)
   const [selectedTags, setSelectedTags] = useState([])
   const [images, setImages] = useState([])
-  const [fileInformation, setFileInformation] = useState(null)
 
   const handleDrop = (acceptedFiles) => {
     if (acceptedFiles.length > 0) {
-      const [file] = acceptedFiles
-      setFileInformation(file)
       setImages(acceptedFiles)
       setValue("files", acceptedFiles)
     }
@@ -58,17 +39,6 @@ export default function GeneralInformationForm({ register, errors, setValue, isD
     setValue("tags", selected)
   }
 
-  const deleteImage = () => {
-    setFileInformation(null)
-    setImages([])
-  }
-
-  useEffect(() => {
-    if (isDataCleared) {
-      deleteImage()
-    }
-  }, [isDataCleared])
-
   useEffect(() => {
     const initialTags = data?.tags?.map((tag) => tag.id)
     setSelectedTags(initialTags)
@@ -82,52 +52,67 @@ export default function GeneralInformationForm({ register, errors, setValue, isD
 
   const previews = images.map((file, index) => {
     const imageUrl = URL.createObjectURL(file)
-    return <Image radius="md" h={250} src={imageUrl} />
+    return <Image radius="md" h={220} src={imageUrl} />
   })
 
   return (
     <Grid>
       <Grid.Col span={{ base: 12, md: 8, lg: 8 }}>
-        <Paper withBorder radius="md" className="flex h-full w-full items-center justify-center rounded-2xl p-4">
-          <Stack>
-            <InputField
-              label="Nombre (Obligatorio)"
-              name="name"
-              register={register}
-              errors={errors}
-              placeholder="Ej. Pollo con papas"
-              className="text-black"
-            />
-
-            <InputTextAreaField
-              label="Descripción (Obligatorio)"
-              name="description"
-              register={register}
-              errors={errors}
-              placeholder="Ej. Rico pollo con papas, salsas..."
-            />
-
-            <MultiSelect
-              label="Lista de tags (Obligatorio)"
-              data={tags.map((item) => ({
-                value: item.id,
-                label: item.name
-              }))}
-              searchable
-              maxValues={10}
-              hidePickedOptions
-              onChange={handleTagsChange}
-              nothingFoundMessage="No se encontraron tags"
-              value={selectedTags}
-              clearable
-            />
-
-            <InputCheckbox label="¿Incluye bebida?" name="includesDrink" register={register} />
-          </Stack>
+        <Paper withBorder radius="md" h="100%" p="md">
+          <Grid>
+            <Grid.Col span={{ base: 12 }}>
+              <InputField label="Nombre (Obligatorio)" name="name" register={register} errors={errors} />
+            </Grid.Col>
+            <Grid.Col span={{ base: 12 }}>
+              <InputTextAreaField label="Descripción (Obligatorio)" name="description" register={register} errors={errors} />
+            </Grid.Col>
+            <Grid.Col span={{ base: 12 }}>
+              <MultiSelect
+                label="Lista de tags (Obligatorio)"
+                data={tags.map((item) => ({
+                  value: item.id,
+                  label: item.name
+                }))}
+                searchable
+                maxValues={10}
+                hidePickedOptions
+                onChange={handleTagsChange}
+                nothingFoundMessage="No se encontraron tags"
+                value={selectedTags}
+                clearable
+              />
+            </Grid.Col>
+            <Grid.Col span={{ base: 12, md: 6 }}>
+              <InputField label="Precio inicial" name="price" register={register} errors={errors} />
+            </Grid.Col>
+            <Grid.Col span={{ base: 12, md: 6 }}>
+              <Controller
+                name="preparationTime"
+                control={control}
+                render={({ field, fieldState }) => (
+                  <Select
+                    label="Tiempo de preparación (Obligatorio)"
+                    data={preparationTime.map((item) => ({
+                      value: item.value,
+                      label: item.label
+                    }))}
+                    allowDeselect={false}
+                    maxDropdownHeight={200}
+                    value={field.value}
+                    onChange={field.onChange}
+                    error={fieldState.error ? fieldState.error.message : null}
+                  />
+                )}
+              />
+            </Grid.Col>
+            <Grid.Col span={{ base: 12 }}>
+              <InputCheckbox label="¿Incluye bebida?" name="includesDrink" register={register} />
+            </Grid.Col>
+          </Grid>
         </Paper>
       </Grid.Col>
       <Grid.Col span={{ base: 12, md: 4, lg: 4 }}>
-        <Paper withBorder radius="md" h="100%">
+        <Paper withBorder radius="md" h="100%" style={{ overflow: "hidden" }}>
           <Flex align="center" h="100%" justify="center">
             <Dropzone onDrop={handleDrop} accept={IMAGE_MIME_TYPE} h={220} style={{ cursor: "pointer" }}>
               <Flex direction="column" justify="center" align="center" h={220}>
@@ -135,10 +120,23 @@ export default function GeneralInformationForm({ register, errors, setValue, isD
                   previews
                 ) : (
                   <>
-                    <Image radius="md" h={250} src={image} />
+                    <Image
+                      radius="md"
+                      h={220}
+                      src={image}
+                      style={{
+                        maxWidth: "100%",
+                        maxHeight: "100%",
+                        objectFit: "contain"
+                      }}
+                    />
                     <IconPhoto
                       className={`${image ? "hidden" : ""}`}
-                      style={{ width: rem(52), height: rem(52), color: "var(--mantine-color-dimmed)" }}
+                      style={{
+                        width: rem(52),
+                        height: rem(52),
+                        color: "var(--mantine-color-dimmed)"
+                      }}
                       stroke={1.5}
                     />
                     <Text className={`${image ? "hidden" : ""} text-center`} size="xl" inline>

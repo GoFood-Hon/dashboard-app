@@ -1,5 +1,17 @@
 import React, { useState } from "react"
-import { MantineProvider, createTheme, Button, Checkbox, Grid, Input, ScrollArea, Paper, Text, CloseButton } from "@mantine/core"
+import {
+  MantineProvider,
+  createTheme,
+  Button,
+  Checkbox,
+  Grid,
+  Input,
+  ScrollArea,
+  Paper,
+  Text,
+  CloseButton,
+  Stack
+} from "@mantine/core"
 import { IconPlus, IconX } from "@tabler/icons-react"
 import toast from "react-hot-toast"
 import { colors } from "../../theme/colors"
@@ -164,17 +176,13 @@ export const AdditionalForm = ({ additional, setAdditional }) => {
       </Grid.Col>
 
       <Grid.Col span={{ base: 12, md: 5 }}>
-        <Paper withBorder radius="md" className="w-full h-full p-6 rounded-lg">
+        <Paper withBorder radius="md" h="100%" p="md">
           <span className="text-sm font-semibold">Adicionales del platillo:</span>
           <ScrollArea w={"100%"} h={360}>
-            <ul>
+            <Stack gap='xs'>
               {additional.length > 0 ? (
                 additional?.map((category, index) => (
-                  <Paper
-                    key={index}
-                    withBorder
-                    radius="md"
-                    className="p-2 my-4 bg-white rounded-lg border border-blue-100 flex flex-row justify-between items-center">
+                  <Paper key={index} withBorder radius="md" h="100%" p="md">
                     <article className="w-full">
                       <div className="flex items-center justify-between mb-1">
                         <h3 className="font-bold text-md">
@@ -188,7 +196,9 @@ export const AdditionalForm = ({ additional, setAdditional }) => {
                           <li key={i} className="flex flex-row gap-1 items-center">
                             <span>{item.name}</span>
                             <IconArrowNarrowRight />
-                            <Text c='dimmed' fs='italic'>{item.price == "0.00" ? "Gratis" : getFormattedHNL(item.price)}</Text>
+                            <Text c="dimmed" fs="italic">
+                              {item.price == "0.00" ? "Gratis" : getFormattedHNL(item.price)}
+                            </Text>
                           </li>
                         ))}
                       </ul>
@@ -198,7 +208,7 @@ export const AdditionalForm = ({ additional, setAdditional }) => {
               ) : (
                 <Text c="dimmed">Los adicionales se mostrarán aquí</Text>
               )}
-            </ul>
+            </Stack>
           </ScrollArea>
         </Paper>
       </Grid.Col>

@@ -142,7 +142,7 @@ function App() {
 
             <Route path={NAVIGATION_ROUTES_RES_ADMIN.Settings.path} element={<GeneralSettings />} />
 
-            <Route path={SETTING_NAVIGATION_ROUTES.General.path} element={<GeneralSettings />} />
+            <Route path={SETTING_NAVIGATION_ROUTES.General.path} element={<BusinessSettings />} />
 
             <Route path={SETTING_NAVIGATION_ROUTES.Cuenta.path} element={<AccountSettings />} />
 
@@ -157,6 +157,8 @@ function App() {
             <Route path={SETTING_NAVIGATION_ROUTES.Plan.path} element={<PlanSettings />} />
 
             <Route path={SETTING_NAVIGATION_ROUTES.Administrative.path} element={<AdministrativeSettings />} />
+
+            <Route path={NAVIGATION_ROUTES_SUPER_ADMIN.Loyalty.path} element={<LoyaltyProgram/>} />
           </>
         )
       case APP_ROLES.branchAdmin:

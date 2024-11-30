@@ -269,8 +269,6 @@ export const updateMenu = createAsyncThunk(
 
           return rejectWithValue(complementsResponse.error)
         }
-
-        menuData = {...menuData, Dishes: state.menus.dishesAddedToMenu}
       }
 
       showNotification({
@@ -280,7 +278,7 @@ export const updateMenu = createAsyncThunk(
         duration: 7000
       })
 
-      return menuData
+      return {...menuData, Dishes: state.menus.dishesAddedToMenu}
     } catch (error) {
       dispatch(setError("Error updating menu"))
       toast.error("Fallo al actualizar el menu. Por favor intente de nuevo.", {
@@ -415,7 +413,6 @@ export const menusSlice = createSlice({
       })
       .addCase(updateMenu.fulfilled, (state, action) => {
         const { id } = action.payload
-        console.log(action.payload)
         const currentPageMenus = state.menusPerPage[state.currentPage]
         const index = currentPageMenus.findIndex((menu) => menu.id === id)
 
@@ -423,7 +420,6 @@ export const menusSlice = createSlice({
           currentPageMenus[index] = action.payload
         }
         state.updatingMenus = false
-        console.log(currentPageMenus[index])
       })
       .addCase(updateMenu.rejected, (state) => {
         state.updatingMenus = false

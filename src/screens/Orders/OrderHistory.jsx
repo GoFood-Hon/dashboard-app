@@ -1,74 +1,57 @@
 import React, { useEffect, useState } from "react"
-import BaseLayout from "../../components/BaseLayout"
 import MenuTable from "../Menu/MenuTable"
-import orderApi from "../../api/orderApi"
-import BackButton from "../Dishes/components/BackButton"
 import { useSelector } from "react-redux"
-import LoadingCircle from "../../components/LoadingCircle"
-import { showNotification } from "@mantine/notifications"
+import { Flex, Group, Text, Title } from "@mantine/core"
+import { useDispatch } from "react-redux"
+import { fetchOrdersForKitchen } from "../../store/features/ordersSlice"
 
 export const OrderHistory = () => {
+  const dispatch = useDispatch()
   const user = useSelector((state) => state.user.value)
-
-  const [orders, setOrders] = useState([])
-  const [isLoading, setIsLoading] = useState(false)
-
-  const fetchOrders = async () => {
-    try {
-      setIsLoading(true)
-      const response = await orderApi.getKitchenOrders()
-      if (response.error) {
-        showNotification({
-          title: "Error",
-          message: response.message,
-          color: "red",
-          duration: 7000
-        })
-      } else {
-        setOrders(response?.data)
-      }
-    } catch (e) {
-      showNotification({
-        title: "Error",
-        message: e.message,
-        color: "red",
-        duration: 7000
-      })
-    } finally {
-      setIsLoading(false)
-    }
-  }
+  const limit = useSelector((state) => state.orders.itemsPerPage)
+  const page = useSelector((state) => state.orders.currentHistoryPage)
+  const ordersPerPage = useSelector((state) => state.orders.ordersHistoryPerPage)
+  const totalOrders = useSelector((state) => state.orders.totalHistoryOrders)
+  const totalPageCount = useSelector((state) => state.orders.totalHistoryPagesCount)
+  const ordersList = ordersPerPage[page] || []
+  const loadingOrders = useSelector((state) => state.orders.loadingHistory)
 
   useEffect(() => {
-    fetchOrders()
-  }, [])
-
-  const refreshPage = () => {
-    fetchOrders()
-  }
+    if (!ordersPerPage[page]) {
+      dispatch(fetchOrdersForKitchen({ limit, page, order: "DESC" }))
+    }
+  }, [dispatch, limit, page, ordersPerPage, user.role])
 
   return (
-    <BaseLayout>
-      <section>
-        <div className="flex flex-row justify-between items-center pb-6">
-          <div className="flex flex-row gap-x-3 items-center">
-            <BackButton title="Historial de Pedidos" />
-          </div>
-        </div>
-      </section>
-      <section>
-        {isLoading ? (
-          <div className="flex justify-center items-center">
-            <LoadingCircle />
-          </div>
-        ) : orders && orders.length > 0 ? (
-          <div className="w-full p-4 h-full bg-white rounded-2xl border border-blue-100">
-            <MenuTable refreshPage={refreshPage} items={orders} screenType="orderHistoryScreen" />
-          </div>
-        ) : (
-          <div className="text-center mt-4 text-gray-500">Sin historial de ordenes disponibles!</div>
-        )}
-      </section>
-    </BaseLayout>
+    <>
+      <Group grow className="mb-3">
+        <Flex align="center" justify="space-between">
+          <Title order={2} fw={700}>
+            Historial de pedidos
+          </Title>
+          <Flex align="center" gap="xs">
+            <Flex align="center" gap={5}>
+              <Text fw={700}>
+                <Flex gap={5}>
+                  {page === 1 ? 1 : (page - 1) * limit + 1}-{page === 1 ? limit : Math.min(page * limit, totalOrders)}{" "}
+                  <Text>de</Text>
+                  {totalOrders} pedidos
+                </Flex>
+              </Text>
+            </Flex>
+          </Flex>
+        </Flex>
+      </Group>
+      <MenuTable
+        items={ordersList.map((order) => {
+          return { ...order, user: order?.Order?.User?.name, phone: order?.Order?.User?.phoneNumber }
+        })}
+        screenType="orderHistoryScreen"
+        totalItems={totalPageCount}
+        currentPage={page}
+        loadingData={loadingOrders}
+        setPage={(newPage) => dispatch(setCurrentPage(newPage))}
+      />
+    </>
   )
 }

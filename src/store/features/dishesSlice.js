@@ -15,6 +15,8 @@ const initialState = {
   totalPagesCount: 0,
   currentPage: 1,
   loadingDishes: false,
+  updatingDish: false,
+  creatingDish: false,
   filters: {
     startDate: null,
     endDate: null,
@@ -216,10 +218,10 @@ const handleErrorOnCreateDish = (error, dispatch) => {
 
 export const updateDish = createAsyncThunk(
   "dishes/updateDish",
-  async ({ dishData, propertyToUpdate = "all", dishId }, { dispatch }) => {
-    let images = []
+  async ({ dishData, propertyToUpdate = "all", dishId }, { dispatch, rejectWithValue }) => {
     try {
       const response = await dishesApi.updateDishWithExtra(dishId, dishData)
+      let dishResponse = response.data
       if (response.error) {
         showNotification({
           title: "Error",
@@ -228,21 +230,34 @@ export const updateDish = createAsyncThunk(
           duration: 7000
         })
 
-        return response.error
-      } else {
-        if (propertyToUpdate !== "isActive" && dishData.files) {
-          const imageResponse = await uploadDishImage(dishData?.id, dishData?.files?.[0])
-          images = imageResponse.data.images
+        return rejectWithValue(response.error)
+      }
+
+      if (propertyToUpdate !== "isActive" && dishData.files) {
+        const imageResponse = await uploadDishImage(dishData?.id, dishData?.files?.[0])
+
+        if (imageResponse.error) {
+          showNotification({
+            title: "Error",
+            message: imageResponse.message,
+            color: "red",
+            duration: 7000
+          })
+
+          return rejectWithValue(response.error)
         }
 
-        showNotification({
-          title: "Actualización exitosa",
-          message: response.message,
-          color: "green",
-          duration: 7000
-        })
+        dishResponse = { ...dishData, images: imageResponse.data.images }
       }
-      return { ...response.data, images }
+
+      showNotification({
+        title: "Actualización exitosa",
+        message: response.message,
+        color: "green",
+        duration: 7000
+      })
+
+      return dishResponse
     } catch (error) {
       dispatch(setError("Error updating dish"))
       showNotification({
@@ -348,7 +363,9 @@ export const dishesSlice = createSlice({
       .addCase(updateDishStatus.rejected, (state, action) => {
         state.error = action.error
       })
-      .addCase(updateDish.pending, (state) => {})
+      .addCase(updateDish.pending, (state) => {
+        state.updatingDish = true
+      })
       .addCase(updateDish.fulfilled, (state, action) => {
         const { id, name, price, images } = action.payload
         const currentPageDishes = state.dishesPerPage[state.currentPage]
@@ -362,8 +379,11 @@ export const dishesSlice = createSlice({
             images
           }
         }
+
+        state.updatingDish = false
       })
       .addCase(updateDish.rejected, (state, action) => {
+        state.updatingDish = false
         state.error = action.error
       })
   }

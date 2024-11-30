@@ -12,6 +12,7 @@ import { useNavigate, useParams } from "react-router-dom"
 import { NAVIGATION_ROUTES_RES_ADMIN } from "../../routes"
 import { AdditionalForm } from "./AdditionalForm"
 import FormLayout from "../../components/Form/FormLayout"
+import { useSelector } from "react-redux"
 
 export default function EditDishScreen() {
   const dispatch = useDispatch()
@@ -20,7 +21,7 @@ export default function EditDishScreen() {
   const [isDataCleared, setIsDataCleared] = useState(false)
   const [dishDetails, setDishDetails] = useState({})
   const [additional, setAdditional] = useState([])
-  const [isLoading, setIsLoading] = useState(false)
+  const isLoading = useSelector((state) => state.dishes.updatingDish)
 
   const {
     register,
@@ -79,16 +80,6 @@ export default function EditDishScreen() {
       title: "Adicionales",
       requirement: "Opcional",
       form: <AdditionalForm additional={additional} setAdditional={setAdditional} />
-    },
-    {
-      title: "Pagos",
-      requirement: "Obligatorio",
-      form: <PaymentForm register={register} errors={errors} />
-    },
-    {
-      title: "Preparación",
-      requirement: "Opcional",
-      form: <PreparationForm setValue={setValue} errors={errors} isDataCleared={isDataCleared} register={register} />
     }
   ]
   const items = accordionStructure.map((item, key) => (
@@ -107,7 +98,6 @@ export default function EditDishScreen() {
   ))
 
   const onSubmit = async (data) => {
-    setIsLoading(true)
     const dishId = data.id
     const { additionals: _, tags, ...restOfData } = data
 
@@ -129,10 +119,7 @@ export default function EditDishScreen() {
       if (!response.payload.status) {
         navigate(NAVIGATION_ROUTES_RES_ADMIN.Menu.submenu.Dishes.path)
       }
-      setIsLoading(false)
     })
-
-    close()
   }
 
   return (

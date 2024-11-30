@@ -1,8 +1,8 @@
-import { IconFileInvoice, IconListDetails } from "@tabler/icons-react"
+import { IconListDetails } from "@tabler/icons-react"
 import { IconCalendarDue } from "@tabler/icons-react"
+import { IconHistory } from "@tabler/icons-react"
 import { IconAward } from "@tabler/icons-react"
 import { IconAdjustments } from "@tabler/icons-react"
-import { IconShoppingCart } from "@tabler/icons-react"
 import {
   IconBox,
   IconHome,
@@ -103,7 +103,6 @@ export const NAVIGATION_ROUTES_SUPER_ADMIN_TWO = [
     ]
   },
   { label: "Colecciones", icon: IconListDetails, link: "/lista-de-colecciones" },
-  { label: "Programas de lealtad", icon: IconAward, link: "/programas-de-lealtad" },
   { label: "Administradores", icon: IconUsers, link: "/administradores" },
   { label: "Planes", icon: IconCreditCard, link: "/planes" },
   { label: "Cuenta", icon: IconSettings, link: "/miCuenta" }
@@ -203,6 +202,15 @@ export const NAVIGATION_ROUTES_RES_ADMIN = {
     label: "Configuraciones",
     icon: "setting",
     path: "/configuraciones/"
+  },
+  Loyalty: {
+    path: "/programas-de-lealtad",
+    NewLoyalty: {
+      path: "/lista-de-colecciones/nueva-coleccion"
+    },
+    EditLoyalty: {
+      path: "/lista-de-colecciones/:collectionId"
+    }
   }
 }
 
@@ -225,6 +233,7 @@ export const NAVIGATION_ROUTES_RES_ADMIN_TWO = [
     ]
   },
   { label: "Reservaciones", icon: IconCalendarDue, link: "/lista-de-reservaciones" },
+  { label: "Programas de lealtad", icon: IconAward, link: "/programas-de-lealtad" },
   { label: "Sucursales", icon: IconBuildingStore, link: "/sucursales" },
   { label: "Usuarios", icon: IconUsers, link: "/usuarios" },
   {
@@ -247,10 +256,6 @@ export const NAVIGATION_ROUTES_RES_ADMIN_TWO = [
     icon: IconAdjustments,
     initiallyOpened: false,
     links: [
-      {
-        label: "Negocios",
-        link: "/configuraciones/negocios"
-      },
       {
         label: "Promociones",
         link: "/configuraciones/promociones"
@@ -397,7 +402,8 @@ export const NAVIGATION_ROUTES_KITCHEN = {
 
 export const NAVIGATION_ROUTES_KITCHEN_TWO = [
   { label: "Inicio", icon: IconHome, link: "/" },
-  { label: "Pedidos", icon: IconShoppingCart, link: "/pedidos" },
+  { label: "Pedidos activos", icon: IconBox, link: "/pedidos" },
+  { label: "Historial de pedidos", icon: IconHistory, link: "/historialDelPedido" },
   { label: "Cuenta", icon: IconSettings, link: "/miCuenta" }
 ]
 
