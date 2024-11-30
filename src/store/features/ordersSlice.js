@@ -164,7 +164,7 @@ export const assignDriver = createAsyncThunk("orders/assignDriver", async (param
       duration: 7000
     })
 
-    return {...response.data, status: 'ready-to-pick-up'}
+    return { ...response.data, status: "ready-to-pick-up" }
   } catch (error) {
     return rejectWithValue(error.response?.data || error.message)
   }
@@ -227,36 +227,46 @@ const ordersSlice = createSlice({
     },
     setNewOrder: (state, action) => {
       const newOrder = action.payload
+      const itemsPerPage = state.itemsPerPage
 
-      if (!state.ordersPerPage[1]) {
-        state.ordersPerPage[1] = []
+      const newOrdersPerPage = { ...state.ordersPerPage }
+
+      if (!newOrdersPerPage[1]) {
+        newOrdersPerPage[1] = []
       }
-      state.ordersPerPage[1].unshift(newOrder)
+
+      newOrdersPerPage[1] = [newOrder, ...newOrdersPerPage[1]]
 
       for (let i = 1; i <= state.totalPagesCount; i++) {
-        if (state.ordersPerPage[i]?.length > state.itemsPerPage) {
-          const lastItem = state.ordersPerPage[i].pop()
-          if (state.ordersPerPage[i + 1]) {
-            state.ordersPerPage[i + 1].unshift(lastItem)
+        if (newOrdersPerPage[i]?.length > itemsPerPage) {
+          const lastItem = newOrdersPerPage[i].pop()
+
+          if (!newOrdersPerPage[i + 1]) {
+            newOrdersPerPage[i + 1] = []
           }
+
+          newOrdersPerPage[i + 1] = [lastItem, ...newOrdersPerPage[i + 1]]
         } else {
           break
         }
       }
 
-      const consecutivePages = [1]
-      for (let i = 2; i <= state.totalPagesCount; i++) {
-        if (state.restaurantsPerPage[i]) {
-          if (consecutivePages.includes(i - 1)) {
-            consecutivePages.push(i)
-          } else {
-            delete state.restaurantsPerPage[i]
-          }
+      const updatedTotalOrders = state.totalOrders + 1
+      const updatedTotalPagesCount = Math.ceil(updatedTotalOrders / itemsPerPage)
+
+      const validPages = new Set([...Array(updatedTotalPagesCount).keys()].map((i) => i + 1))
+      const newRestaurantsPerPage = { ...state.restaurantsPerPage }
+
+      for (const page in newRestaurantsPerPage) {
+        if (!validPages.has(Number(page))) {
+          delete newRestaurantsPerPage[page]
         }
       }
 
-      state.totalOrders += 1
-      state.totalPagesCount = Math.ceil(state.totalOrders / state.itemsPerPage)
+      state.ordersPerPage = newOrdersPerPage
+      state.totalOrders = updatedTotalOrders
+      state.totalPagesCount = updatedTotalPagesCount
+      state.restaurantsPerPage = newRestaurantsPerPage
     },
     setOrderStatus: (state, action) => {
       const { id, status } = action.payload
@@ -306,14 +316,14 @@ const ordersSlice = createSlice({
       })
 
       //Marcar el pedido como listo desde el rol de cocina
-      .addCase(updateOrderStatus.pending, (state, action) => {
+      .addCase(updateOrderStatus.pending, (state) => {
         state.updatingOrderStatus = true
       })
       .addCase(updateOrderStatus.fulfilled, (state, action) => {
         const { id, status } = action.payload
         const currentPageOrders = state.ordersPerPage[state.currentPage]
         const index = currentPageOrders.findIndex((order) => order?.id === id)
-        
+
         if (index !== -1) {
           currentPageOrders[index] = { ...currentPageOrders[index], status }
         }
@@ -333,11 +343,11 @@ const ordersSlice = createSlice({
         const { id, status } = action.payload
         const currentPageOrders = state.ordersPerPage[state.currentPage]
         const index = currentPageOrders.findIndex((order) => order?.id === id)
-        
+
         if (index !== -1) {
           currentPageOrders[index] = { ...currentPageOrders[index], status }
         }
-        
+
         state.orderDetails.status = status
         state.updatingOrderStatus = false
       })
@@ -354,7 +364,7 @@ const ordersSlice = createSlice({
         const { id, status } = action.payload
         const currentPageOrders = state.ordersPerPage[state.currentPage]
         const index = currentPageOrders.findIndex((order) => order?.id === id)
-        
+
         if (index !== -1) {
           currentPageOrders[index] = { ...currentPageOrders[index], status }
         }
@@ -421,7 +431,7 @@ const ordersSlice = createSlice({
         const { id, status } = action.payload
         const currentPageOrders = state.ordersPerPage[state.currentPage]
         const index = currentPageOrders.findIndex((order) => order?.id === id)
-        
+
         if (index !== -1) {
           currentPageOrders[index] = { ...currentPageOrders[index], status }
         }

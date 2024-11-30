@@ -1,7 +1,6 @@
-import React, { useEffect } from "react"
+import { useEffect } from "react"
 import { useSocket } from "../hooks/useOrderSocket"
 import { notifications } from "@mantine/notifications"
-import { IconCheck } from "@tabler/icons-react"
 import { USER_ROLES } from "../utils/constants"
 import { useSelector, useDispatch } from "react-redux"
 import { setNewOrder, setOrderStatus } from "../store/features/ordersSlice"
@@ -23,7 +22,7 @@ export const NotificationProvider = ({ children }) => {
     }
 
     const handleNewOrder = (order) => {
-      playSound() 
+      playSound()
       notifications.show({
         title: "Nueva orden",
         message: `Una nueva orden acaba de ser creada`,
@@ -31,7 +30,12 @@ export const NotificationProvider = ({ children }) => {
         withCloseButton: true,
         color: "green"
       })
-      dispatch(setNewOrder(order))
+      console.log(order)
+      try {
+        dispatch(setNewOrder(order))
+      } catch (error) {
+        console.error("Error al despachar la acción setNewOrder:", error)
+      }
     }
 
     const handleOrderReady = (order) => {
@@ -39,7 +43,6 @@ export const NotificationProvider = ({ children }) => {
       notifications.show({
         title: "Orden preparada",
         message: "El pedido se marcó como preparado desde cocina",
-        icon: <IconCheck size={20} />,
         autoClose: false,
         withCloseButton: true,
         color: "green"
