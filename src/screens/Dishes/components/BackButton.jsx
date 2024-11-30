@@ -10,7 +10,7 @@ export default function BackButton({ title, show }) {
     <Group>
       <Flex onClick={() => navigate(-1)} align='center' gap='xs'>
         {show ? <IconArrowNarrowLeft style={{cursor: 'pointer'}} size="1.6rem" /> : ""}
-        <Title order={3}>{title}</Title>
+        <Title order={2}>{title}</Title>
       </Flex>
     </Group>
   )
