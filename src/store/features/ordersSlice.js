@@ -89,13 +89,6 @@ export const confirmOrder = createAsyncThunk("orders/confirmOrder", async (id, {
 
       return rejectWithValue(response.message)
     }
-
-    showNotification({
-      title: "Actualización exitosa",
-      message: "El pedido fue confirmado correctamente",
-      color: "green",
-      duration: 7000
-    })
     return response.data
   } catch (error) {
     return rejectWithValue(error.response?.data || error.message)
@@ -157,13 +150,6 @@ export const assignDriver = createAsyncThunk("orders/assignDriver", async (param
 
       return rejectWithValue(response.message)
     }
-
-    showNotification({
-      title: "Asignación exitosa",
-      message: "Se asignó un conductor al pedido",
-      color: "green",
-      duration: 7000
-    })
 
     return { ...response.data, status: "ready-to-pick-up" }
   } catch (error) {
