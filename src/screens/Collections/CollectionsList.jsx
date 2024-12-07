@@ -1,12 +1,10 @@
 import React, { useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import { NAVIGATION_ROUTES_SUPER_ADMIN } from "../../routes"
-import MenuTable from "../Menu/MenuTable"
 import { useDispatch, useSelector } from "react-redux"
 import { setCurrentPage } from "../../store/features/userSlice"
-import { Paper, Button, Text, Title, Group, Flex } from "@mantine/core"
-import { colors } from "../../theme/colors"
 import { fetchCollections } from "../../store/features/collectionsSlice"
+import TableViewLayout from "../TableViewLayout"
 
 export const CollectionsList = () => {
   const navigate = useNavigate()
@@ -32,33 +30,16 @@ export const CollectionsList = () => {
 
   return (
     <>
-      <Group grow className="mb-3">
-        <Flex align="center" justify="space-between">
-          <Title order={2} fw={700}>
-            Colecciones
-          </Title>
-          <Flex align="center" gap="xs">
-            <Flex align="center" gap={5}>
-              <Text fw={700}>
-                <Flex gap={5}>
-                  {page === 1 ? 1 : (page - 1) * limit + 1}-{page === 1 ? limit : Math.min(page * limit, totalCollections)}{" "}
-                  <Text>de</Text>
-                  {totalCollections} colecciones
-                </Flex>
-              </Text>
-            </Flex>
-            <Button color={colors.main_app_color} onClick={handleNewItem}>
-              Nuevo
-            </Button>
-          </Flex>
-        </Flex>
-      </Group>
-      <MenuTable
+      <TableViewLayout
+        title="Colecciones"
+        page={page}
+        limit={limit}
+        totalElements={totalCollections}
+        onNewItemClick={handleNewItem}
         items={collectionsList}
-        screenType="collectionsScreen"
+        tableStructure="collectionsScreen"
         totalItems={totalPageCount}
-        currentPage={page}
-        loadingData={loadingCollections}
+        loading={loadingCollections}
         setPage={(newPage) => dispatch(setCurrentPage(newPage))}
       />
     </>

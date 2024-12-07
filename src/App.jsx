@@ -60,7 +60,8 @@ import { ReservationDetails } from "./screens/Reservations/ReservationDetails"
 import { CollectionsList } from "./screens/Collections/CollectionsList"
 import NewCollection from "./screens/Collections/NewCollection"
 import EditCollection from "./screens/Collections/EditCollection"
-import LoyaltyProgram from "./screens/Loyalty/LoyaltyProgram"
+import { LoyaltyProgram } from "./screens/Loyalty/LoyaltyProgram"
+import { LoyaltyProgramsList } from "./screens/Loyalty/LoyaltyProgramsList"
 
 function App() {
   const userRole = useSelector((state) => state.user.value.role)
@@ -100,7 +101,9 @@ function App() {
 
             <Route path={NAVIGATION_ROUTES_SUPER_ADMIN.Collections.EditCollection.path} element={<EditCollection />} />
 
-            <Route path={NAVIGATION_ROUTES_SUPER_ADMIN.Loyalty.path} element={<LoyaltyProgram/>} />
+            <Route path={NAVIGATION_ROUTES_SUPER_ADMIN.Loyalty.path} element={<LoyaltyProgramsList />} />
+
+            <Route path={NAVIGATION_ROUTES_SUPER_ADMIN.Loyalty.EditLoyalty.path} element={<LoyaltyProgram />} />
           </>
         )
       case APP_ROLES.restaurantAdmin:
@@ -158,7 +161,7 @@ function App() {
 
             <Route path={SETTING_NAVIGATION_ROUTES.Administrative.path} element={<AdministrativeSettings />} />
 
-            <Route path={NAVIGATION_ROUTES_SUPER_ADMIN.Loyalty.path} element={<LoyaltyProgram/>} />
+            <Route path={NAVIGATION_ROUTES_SUPER_ADMIN.Loyalty.path} element={<LoyaltyProgram />} />
           </>
         )
       case APP_ROLES.branchAdmin:

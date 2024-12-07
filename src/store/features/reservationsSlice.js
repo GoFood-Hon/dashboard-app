@@ -1,6 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit"
 import reservationsApi from "../../api/reservationsApi"
-import toast from "react-hot-toast"
 import { showNotification } from "@mantine/notifications"
 import { ITEMS_PER_PAGE } from "../../utils/paginationConfig"
 

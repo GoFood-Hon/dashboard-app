@@ -2,27 +2,26 @@ import React, { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 import { useNavigate, useParams } from "react-router-dom"
 import toast from "react-hot-toast"
-import { Accordion, Flex, Paper, Button } from "@mantine/core"
-import SucursalSettings from "./SucursalSettings"
+import { Accordion } from "@mantine/core"
 import { USER_ROLES } from "../../utils/constants"
 import { NAVIGATION_ROUTES_RES_ADMIN } from "../../routes"
-import userApi from "../../api/userApi"
-import BackButton from "../Dishes/components/BackButton"
-import { colors } from "../../theme/colors"
 import GeneralInformationForm from "./GeneralInformationForm"
 import authApi from "../../api/authApi"
 import FormLayout from "../../components/Form/FormLayout"
+import { updateUser } from "../../store/features/userSlice"
+import { useSelector } from "react-redux"
+import { useDispatch } from "react-redux"
 
 export const EditUserScreen = () => {
   const { userId } = useParams()
+  const dispatch = useDispatch()
   const [userDetails, setUserDetails] = useState({})
-  const [isLoading, setIsLoading] = useState(false)
+  const isLoading = useSelector((state) => state.user.updatingOtherUser)
 
   useEffect(() => {
     const fetchDetails = async () => {
       try {
         const response = await authApi.getUserDetails(userId)
-        console.log(response)
         const userDetailsData = response?.data
         setUserDetails(userDetailsData)
       } catch (error) {
@@ -68,50 +67,53 @@ export const EditUserScreen = () => {
           control={control}
           isDataCleared={isDataCleared}
           image={imageUrl}
+          edit
         />
       )
     }
   ]
 
   const onSubmit = async (data) => {
-    setIsLoading(true)
-    try {
-      const formData = new FormData()
-      formData.append("name", data.name)
-      formData.append("email", data.email)
-      formData.append("phoneNumber", data.phoneNumber)
-      formData.append("role", data.role)
-      formData.append("sucursalId", data.sucursalId)
-      if (data.role === USER_ROLES.driver) {
-        formData.append("motorcycleId", data.Driver.motorcycleId)
-        formData.append("nationalIdentityNumber", data.Driver.nationalIdentityNumber)
-      }
-
-      formData.forEach((value, key) => {
-        console.log(`${key}: ${value}`)
-      })
-
-      const response = await userApi.updateUserRestaurant(formData, userId)
-
-      if (response?.error) {
-        toast.error(`Fallo al crear un nuevo usuario. Por favor intente de nuevo. ${response.message}`, {
-          duration: 7000
-        })
-      } else {
-        toast.success(`Usuario creado exitosamente`, {
-          duration: 7000
-        })
-        reset()
-        setIsDataCleared(true)
-        navigate(NAVIGATION_ROUTES_RES_ADMIN.Users.path)
-      }
-    } catch (error) {
-      toast.error(`Fallo al crear un nuevo usuario. Por favor intente de nuevo.`, {
-        duration: 7000
-      })
-      throw error
+    const formData = new FormData()
+    formData.append("name", data.name)
+    formData.append("email", data.email)
+    formData.append("phoneNumber", data.phoneNumber)
+    formData.append("role", data.role)
+    formData.append("sucursalId", data.sucursalId)
+    if (data.role === USER_ROLES.driver) {
+      formData.append("motorcycleId", data.Driver.motorcycleId)
+      formData.append("nationalIdentityNumber", data.Driver.nationalIdentityNumber)
     }
-    setIsLoading(false)
+
+    let formDataImage = null
+    if (data?.files?.[0]) {
+      formDataImage = new FormData()
+      formDataImage.append("files", data.files[0])
+    }
+
+    dispatch(updateUser({ formData, userId, formDataImage }))
+      .unwrap()
+      .then(() => {
+        navigate(NAVIGATION_ROUTES_RES_ADMIN.Users.path)
+      })
+      .catch((error) => {
+        console.error("Error updating user:", error)
+      })
+
+    // const response = await userApi.updateUserRestaurant(formData, userId)
+
+    // if (response?.error) {
+    //   toast.error(`Fallo al crear un nuevo usuario. Por favor intente de nuevo. ${response.message}`, {
+    //     duration: 7000
+    //   })
+    // } else {
+    //   toast.success(`Usuario creado exitosamente`, {
+    //     duration: 7000
+    //   })
+    //   reset()
+    //   setIsDataCleared(true)
+    //   navigate(NAVIGATION_ROUTES_RES_ADMIN.Users.path)
+    // }
   }
 
   useEffect(() => {

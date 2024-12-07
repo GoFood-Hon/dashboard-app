@@ -11,7 +11,17 @@ import { setUserRole } from "../../store/features/userSlice"
 import { useSelector } from "react-redux"
 import { fetchNoPaginatedBranches } from "../../store/features/branchesSlice"
 
-export default function GeneralInformationForm({ register, errors, setValue, isDataCleared, control, image, newUser, watch }) {
+export default function GeneralInformationForm({
+  register,
+  errors,
+  setValue,
+  isDataCleared,
+  control,
+  image,
+  newUser,
+  watch,
+  edit
+}) {
   const dispatch = useDispatch()
   const [images, setImages] = useState([])
   const [fileInformation, setFileInformation] = useState(null)
@@ -83,6 +93,7 @@ export default function GeneralInformationForm({ register, errors, setValue, isD
                 control={control}
                 render={({ field, fieldState }) => (
                   <Select
+                    disabled={edit}
                     label="Rol del usuario (Obligatorio)"
                     data={userTypes.map((item) => ({
                       value: item.value,
@@ -97,18 +108,22 @@ export default function GeneralInformationForm({ register, errors, setValue, isD
                     }}
                     error={fieldState.error ? fieldState.error.message : null}
                     searchable
-                    clearable
                   />
                 )}
               />
             </Grid.Col>
-            {(role || selectedRole)  === "driver" && (
+            {(role || selectedRole) === "driver" && (
               <>
                 <Grid.Col span={{ base: 12, md: 6 }}>
                   <InputField label="Id del vehículo" name="Driver.motorcycleId" register={register} errors={errors} />
                 </Grid.Col>
                 <Grid.Col span={{ base: 12, md: 6 }}>
-                  <InputField label="Número de identidad" name="Driver.nationalIdentityNumber" register={register} errors={errors} />
+                  <InputField
+                    label="Número de identidad"
+                    name="Driver.nationalIdentityNumber"
+                    register={register}
+                    errors={errors}
+                  />
                 </Grid.Col>
               </>
             )}
@@ -130,7 +145,6 @@ export default function GeneralInformationForm({ register, errors, setValue, isD
                     onChange={field.onChange}
                     error={fieldState.error ? fieldState.error.message : null}
                     searchable
-                    clearable
                   />
                 )}
               />

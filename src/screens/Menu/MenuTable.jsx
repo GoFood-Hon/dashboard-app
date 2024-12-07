@@ -107,7 +107,8 @@ export default function MenuTable({ items, screenType, totalItems, currentPage, 
       planScreen: NAVIGATION_ROUTES_SUPER_ADMIN.Plans.path,
       orderHistoryScreen: NAVIGATION_ROUTES_KITCHEN.Orders.path,
       reservationsScreen: NAVIGATION_ROUTES_RES_ADMIN.Reservations.path,
-      collectionsScreen: NAVIGATION_ROUTES_SUPER_ADMIN.Collections.path
+      collectionsScreen: NAVIGATION_ROUTES_SUPER_ADMIN.Collections.path,
+      loyaltyProgramsScreen: NAVIGATION_ROUTES_RES_ADMIN.Loyalty.path
     }
 
     navigate(`${routes[screenType]}/${id}`)
@@ -218,7 +219,7 @@ export default function MenuTable({ items, screenType, totalItems, currentPage, 
                 dispatch(
                   updateOtherUserStatus({
                     params: { active: !item.active },
-                    userId: item.role === "driver " ? item.AdminUserId : item.id
+                    userId: item.id
                   })
                 )
               }
@@ -474,9 +475,55 @@ export default function MenuTable({ items, screenType, totalItems, currentPage, 
             size="lg"
             w={160}
             tt="capitalize"
-            color={status === "pending" ? 'rgba(153, 135, 0, 1)' : status === "cancelled" ? colors.main_app_color : "rgba(0, 94, 2, 1)"}>
+            color={
+              status === "pending" ? "rgba(153, 135, 0, 1)" : status === "cancelled" ? colors.main_app_color : "rgba(0, 94, 2, 1)"
+            }>
             {status === "pending" ? "Pendiente" : status === "cancelled" ? "Cancelada" : "Aprobada"}
           </Badge>
+        )
+      },
+      {
+        label: "Acciones",
+        accessor: "id",
+        center: true,
+        render: (id) => (
+          <ActionIcon
+            className="transition ease-in-out duration-200"
+            variant="subtle"
+            size="lg"
+            onClick={() => handleClick(id)}
+            color={colors.main_app_color}
+            radius="xl">
+            <IconEye />
+          </ActionIcon>
+        )
+      }
+    ],
+    loyaltyProgramsScreen: [
+      { label: "Título", accessor: "title" },
+      { label: "Cantidad máxima de compras", accessor: "maximumAmountOfPurchasesAllowed", center: true },
+      { label: "Precio mínimo de compra para activación", accessor: "minimumPurchasePriceForActivation", center: true },
+      { label: "Fecha de creación", accessor: "createdAt" },
+      {
+        label: "Estado",
+        accessor: "id",
+        center: true,
+        render: (item) => (
+          <MantineProvider theme={theme}>
+            <Switch
+              checked={item.isActive}
+              onChange={() => console.log(item.isActive)}
+              color={colors.main_app_color}
+              size="sm"
+              thumbIcon={
+                item.isActive ? (
+                  <IconCheck style={{ width: rem(12), height: rem(12) }} stroke={3} color={colors.main_app_color} />
+                ) : (
+                  <IconX style={{ width: rem(12), height: rem(12) }} stroke={3} color={colors.main_app_color} />
+                )
+              }
+            />
+          </MantineProvider>
         )
       },
       {
@@ -512,7 +559,8 @@ export default function MenuTable({ items, screenType, totalItems, currentPage, 
         label: "Cantidad",
         accessor: "dishes",
         center: true,
-        render: (dishes, item) => (item.type === "restaurants" ? item.restaurants?.length || item.restaurants : dishes?.length || dishes)
+        render: (dishes, item) =>
+          item.type === "restaurants" ? item.restaurants?.length || item.restaurants : dishes?.length || dishes
       },
       { label: "Fecha de creación", accessor: "createdAt" },
       {
@@ -559,18 +607,6 @@ export default function MenuTable({ items, screenType, totalItems, currentPage, 
 
   return (
     <>
-      {/* <Grid className={`flex w-full justify-between items-center mb-4 `}>
-        <Grid.Col span={{ base: 12 }}>
-          <TextInput
-            radius="md"
-            placeholder="Buscar"
-            value={search}
-            onChange={handleChange}
-            rightSection={loading && <Loader color={colors.main_app_color} size={20} />}
-          />
-        </Grid.Col>
-      </Grid> */}
-
       {loadingData ? (
         <TableSkeleton />
       ) : items && items.length > 0 ? (
@@ -629,7 +665,7 @@ export default function MenuTable({ items, screenType, totalItems, currentPage, 
       ) : (
         <Box>
           <Flex direction="column" align="center">
-            <Lottie options={defaultOptions} height={440} width={440} />
+            <Lottie options={defaultOptions} height={440} width={440} isClickToPauseDisabled={true} />
           </Flex>
         </Box>
       )}

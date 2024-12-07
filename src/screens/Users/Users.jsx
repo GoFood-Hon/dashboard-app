@@ -1,13 +1,10 @@
 import React, { useEffect } from "react"
-import { Paper, Button, Group, Flex, Text } from "@mantine/core"
-import MenuTable from "../Menu/MenuTable"
 import { useNavigate } from "react-router-dom"
 import { NAVIGATION_ROUTES_RES_ADMIN } from "../../routes"
 import { useSelector } from "react-redux"
-import { colors } from "../../theme/colors"
-import BackButton from "../../screens/Dishes/components/BackButton"
 import { fetchUsers, setCurrentUserPage } from "../../store/features/userSlice"
 import { useDispatch } from "react-redux"
+import TableViewLayout from "../TableViewLayout"
 
 export default function Users() {
   const dispatch = useDispatch()
@@ -33,29 +30,16 @@ export default function Users() {
 
   return (
     <>
-      <Group grow className="mb-3">
-        <Flex align="center" justify="space-between">
-          <BackButton title="Usuarios" />
-          <Flex align="center" gap="xs">
-            <Flex align="center" gap={5}>
-              <Text fw={700}>
-                {page === 1 ? 1 : (page - 1) * limit + 1}-{page === 1 ? limit : Math.min(page * limit, totalUsers)}
-              </Text>
-              <Text>de</Text>
-              <Text fw={700}>{totalUsers} usuarios</Text>
-            </Flex>
-            <Button color={colors.main_app_color} onClick={handleNavigateNewUser}>
-              Nuevo
-            </Button>
-          </Flex>
-        </Flex>
-      </Group>
-      <MenuTable
+      <TableViewLayout
+        title="Usuarios"
+        page={page}
+        limit={limit}
+        totalElements={totalUsers}
+        onNewItemClick={handleNavigateNewUser}
         items={users}
-        screenType="usersScreen"
+        tableStructure="usersScreen"
         totalItems={totalPageCount}
-        currentPage={page}
-        loadingData={loadingUsers}
+        loading={loadingUsers}
         setPage={(newPage) => dispatch(setCurrentUserPage(newPage))}
       />
     </>

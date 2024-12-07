@@ -104,6 +104,7 @@ export const NAVIGATION_ROUTES_SUPER_ADMIN_TWO = [
   },
   { label: "Colecciones", icon: IconListDetails, link: "/lista-de-colecciones" },
   { label: "Administradores", icon: IconUsers, link: "/administradores" },
+  { label: "Programas de lealtad", icon: IconAward, link: "/programas-de-lealtad" },
   { label: "Planes", icon: IconCreditCard, link: "/planes" },
   { label: "Cuenta", icon: IconSettings, link: "/miCuenta" }
 ]
@@ -233,7 +234,7 @@ export const NAVIGATION_ROUTES_RES_ADMIN_TWO = [
     ]
   },
   { label: "Reservaciones", icon: IconCalendarDue, link: "/lista-de-reservaciones" },
-  { label: "Programas de lealtad", icon: IconAward, link: "/programas-de-lealtad" },
+  { label: "Programa de lealtad", icon: IconAward, link: "/programas-de-lealtad" },
   { label: "Sucursales", icon: IconBuildingStore, link: "/sucursales" },
   { label: "Usuarios", icon: IconUsers, link: "/usuarios" },
   {

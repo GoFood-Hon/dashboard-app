@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { fetchAllPlans } from "../../store/features/plansSlice"
 import { Paper, Button, Group, Flex, Title, Text } from "@mantine/core"
 import { colors } from "../../theme/colors"
+import TableViewLayout from "../TableViewLayout"
 
 export const Plans = () => {
   const navigate = useNavigate()
@@ -31,31 +32,17 @@ export const Plans = () => {
 
   return (
     <>
-      <Group grow className="mb-3">
-        <Flex align="center" justify="space-between">
-          <Title order={2} fw={700}>
-            Planes
-          </Title>
-          <Flex align="center" gap="xs">
-            <Flex align="center" gap={5}>
-              <Text fw={700}>
-                {page === 1 ? 1 : (page - 1) * limit + 1}-{page === 1 ? limit : Math.min(page * limit, totalPlans)}
-              </Text>
-              <Text>de</Text>
-              <Text fw={700}>{totalPlans} planes</Text>
-            </Flex>
-            <Button color={colors.main_app_color} onClick={handleNewPlan}>
-              Nuevo
-            </Button>
-          </Flex>
-        </Flex>
-      </Group>
-      <MenuTable
+      <TableViewLayout
+        title="Planes"
+        page={page}
+        limit={limit}
+        totalElements={totalPlans}
+        onNewItemClick={handleNewPlan}
         items={plans}
-        screenType="planScreen"
+        tableStructure="planScreen"
         totalItems={totalPagesCount}
-        currentPage={page}
-        loadingData={loadingPlans}
+        loading={loadingPlans}
+        setPage={(newPage) => dispatch(setCurrentPage(newPage))}
       />
     </>
   )

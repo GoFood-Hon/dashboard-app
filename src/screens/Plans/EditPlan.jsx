@@ -85,25 +85,6 @@ export const EditPlan = () => {
     </Accordion.Item>
   ))
 
-  const handleResponse = (response) => {
-    if (response.error) {
-      toast.error(`Fallo al actualizar el plan. Por favor intente de nuevo. ${response.message}`, {
-        duration: 7000
-      })
-    } else {
-      navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Plans.path)
-
-      toast.success("Plan actualizado exitosamente", {
-        duration: 7000
-      })
-    }
-  }
-  const handleError = (error) => {
-    toast.error(`Error. Por favor intente de nuevo. ${error}`, {
-      duration: 7000
-    })
-  }
-
   const onSubmit = async (data) => {
     const planId = data.id
 

@@ -162,7 +162,6 @@ const CardsViewLayout = ({
             </Flex>
             <Button
               color={colors.main_app_color}
-              
               style={{
                 display: `${user.role !== APP_ROLES.branchAdmin && user.role !== APP_ROLES.cashierUser ? "" : "none"}`
               }}

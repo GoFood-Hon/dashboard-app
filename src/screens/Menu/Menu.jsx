@@ -1,12 +1,9 @@
 import React, { useEffect } from "react"
-import { Button, Flex, Group, Text, Title } from "@mantine/core"
 import { useDispatch, useSelector } from "react-redux"
 import { useNavigate } from "react-router-dom"
 import { NAVIGATION_ROUTES_RES_ADMIN } from "../../routes"
-import MenuTable from "./MenuTable"
 import { fetchMenus, setPage } from "../../store/features/menuSlice"
-import { APP_ROLES } from "../../utils/constants"
-import { colors } from "../../theme/colors"
+import TableViewLayout from "../../screens/TableViewLayout"
 
 export default function Menu() {
   const navigate = useNavigate()
@@ -20,10 +17,6 @@ export default function Menu() {
   const menusList = menusPerPage[page] || []
   const loadingMenus = useSelector((state) => state.menus.loadingMenus)
 
-  const handleDishes = () => {
-    navigate(NAVIGATION_ROUTES_RES_ADMIN.Menu.submenu.Dishes.path)
-  }
-
   const handleNewMenu = () => {
     navigate(NAVIGATION_ROUTES_RES_ADMIN.Menu.NewMenu.path)
   }
@@ -36,45 +29,18 @@ export default function Menu() {
 
   return (
     <>
-      <Group grow className="mb-3">
-        <Flex align="center" justify="space-between">
-          <Title order={2} fw={700}>
-            Menús
-          </Title>
-          <Flex align="center" gap="xs">
-            <Flex align="center" gap={5}>
-              <Text fw={700}>
-                <Flex gap={5}>
-                  {page === 1 ? 1 : (page - 1) * limit + 1}-{page === 1 ? limit : Math.min(page * limit, totalMenus)}{" "}
-                  <Text>de</Text>
-                  {totalMenus} menús
-                </Flex>
-              </Text>
-            </Flex>
-            {user.role !== APP_ROLES.branchAdmin && user.role !== APP_ROLES.cashierUser ? (
-              <Button
-                text="Nuevo"
-                color={colors.main_app_color}
-                style={{
-                  visibility: `${user.role !== APP_ROLES.branchAdmin && user.role !== APP_ROLES.cashierUser ? "" : "hidden"}`
-                }}
-                onClick={handleNewMenu}>
-                Nuevo
-              </Button>
-            ) : (
-              ""
-            )}
-          </Flex>
-        </Flex>
-      </Group>
-      <MenuTable
+      <TableViewLayout
+        title="Menús"
+        page={page}
+        limit={limit}
+        totalElements={totalMenus}
+        onNewItemClick={handleNewMenu}
         items={menusList.map((menu) => {
           return { ...menu, dishesCount: menu?.Dishes?.length || menu?.Dishes }
         })}
-        screenType="menuScreen"
-        loadingData={loadingMenus}
-        currentPage={page}
+        tableStructure="menuScreen"
         totalItems={totalPageCount}
+        loading={loadingMenus}
         setPage={(newPage) => dispatch(setPage(newPage))}
       />
     </>

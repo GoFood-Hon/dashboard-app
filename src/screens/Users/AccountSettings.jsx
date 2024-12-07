@@ -63,6 +63,7 @@ export default function AccountSettings() {
       }
 
       const response = await authApi.updateUser(formData)
+      dispatch(setUser({ ...user, name: data.name, email: data.email, phoneNumber: data.phoneNumber }))
 
       if (response.error) {
         toast.error(`Fallo al actualizar la información del perfil. Por favor intente de nuevo. ${response.message}`, {
@@ -73,11 +74,9 @@ export default function AccountSettings() {
           const formDataImage = new FormData()
           formDataImage.append("files", data?.files?.[0])
           const imageResponse = await authApi.addImage(formDataImage)
-          console.log(imageResponse)
 
           dispatch(setUser({ ...user, images: imageResponse?.data }))
         }
-        dispatch(setUser({ ...user, name: data.name, email: data.email, phoneNumber: data.phoneNumber }))
 
         showNotification({
           title: "Actualización exitosa",

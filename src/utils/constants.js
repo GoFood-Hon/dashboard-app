@@ -214,6 +214,17 @@ export const preparationTime = [
   }
 ]
 
+export const loyaltyCardsDiscountType = [
+  {
+    value: "porcentaje",
+    label: "Descuento porcentual"
+  },
+  {
+    value: "fijo",
+    label: "Descuento fijo"
+  }
+]
+
 export const daysOfWeek = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"]
 
 export const daysOfWeekEn = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
@@ -238,7 +249,7 @@ export const orderStates = {
   ]
 }
 
-export const PRIMARY_COL_HEIGHT = "515px"
+export const PRIMARY_COL_HEIGHT = "512px"
 export const SECONDARY_COL_HEIGHT = `calc(${PRIMARY_COL_HEIGHT} / 2 - var(--mantine-spacing-md) / 2)`
 
 export const theme = createTheme({

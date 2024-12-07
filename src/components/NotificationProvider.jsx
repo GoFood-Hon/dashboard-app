@@ -110,12 +110,51 @@ export const NotificationProvider = ({ children }) => {
       dispatch(setOrderStatus(order))
     }
 
+    const handleNewReservation = (reservation) => {
+      playSound()
+      notifications.show({
+        title: "Solicitud de reservación",
+        message: "Se ha creado una nueva solicitud de reservación",
+        autoClose: false,
+        withCloseButton: true,
+        color: "green"
+      })
+    }
+
+    const handleReservationStatus = (reservation) => {
+      playSound()
+      notifications.show({
+        title: "Reservación actualizada",
+        message: "Se cambió el estado de la reservación",
+        autoClose: false,
+        withCloseButton: true,
+        color: "green"
+      })
+    }
+
+    const handleReservationNewComment = (reservation) => {
+      playSound()
+      notifications.show({
+        title: "Reservación actualizada",
+        message: "Se cambió el estado de la reservación",
+        autoClose: false,
+        withCloseButton: true,
+        color: "green"
+      })
+    }
+
+    //Orders sockets
     orderSocket.on("newOrder", handleNewOrder)
     orderSocket.on("orderReady", handleOrderReady)
     orderSocket.on("orderDriverAssigned", handleDriverAssigned)
     orderSocket.on("orderPickedUp", handleOrderPickedUp)
     orderSocket.on("orderDelivered", handleOrderDelivered)
     orderSocket.on("orderUpdate", handleOrderUpdate)
+
+    //Reservations sockets
+    orderSocket.on("newTableReservation", handleNewReservation)
+    orderSocket.on("tableReservationStatusUpdated", handleReservationStatus)
+    orderSocket.on("tableReservationNewComment", handleReservationNewComment)
 
     return () => {
       orderSocket.off("newOrder", handleNewOrder)
@@ -124,6 +163,10 @@ export const NotificationProvider = ({ children }) => {
       orderSocket.off("orderUpdate", handleOrderUpdate)
       orderSocket.off("orderPickedUp", handleOrderPickedUp)
       orderSocket.off("orderDelivered", handleOrderDelivered)
+
+      orderSocket.off("newTableReservation", handleNewReservation)
+      orderSocket.off("tableReservationStatusUpdated", handleReservationStatus)
+      orderSocket.off("tableReservationNewComment", handleReservationNewComment)
     }
   }, [orderSocket, user.role])
 

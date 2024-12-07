@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit"
 import loyaltyApi from "../../api/loyaltyApi"
+import { ITEMS_PER_PAGE } from "../../utils/paginationConfig"
 
 // Async thunks para interactuar con los endpoints
 export const fetchLoyaltyProgramsByRestaurant = createAsyncThunk(
@@ -7,7 +8,7 @@ export const fetchLoyaltyProgramsByRestaurant = createAsyncThunk(
   async ({ restaurantId, page, limit, order, orderBy }, { rejectWithValue }) => {
     try {
       const response = await loyaltyApi.getLoyaltyProgramsByRestaurant({ restaurantId, page, limit, order, orderBy })
-      return response.data
+      return { data: response.data, results: response.results, page }
     } catch (error) {
       return rejectWithValue(error.response.data)
     }
@@ -19,7 +20,7 @@ export const fetchAllLoyaltyPrograms = createAsyncThunk(
   async ({ page, limit, order, orderby, search, search_field, status }, { rejectWithValue }) => {
     try {
       const response = await loyaltyApi.getAllLoyaltyPrograms({ page, limit, order, orderby, search, search_field, status })
-      return response.data
+      return { data: response.data, results: response.results, page }
     } catch (error) {
       return rejectWithValue(error.response.data)
     }
@@ -61,41 +62,59 @@ const loyaltySlice = createSlice({
   name: "loyalty",
   initialState: {
     programs: [],
+    itemsPerPage: ITEMS_PER_PAGE,
+    programsPerPage: [],
+    totalPrograms: 0,
+    totalPagesCount: 0,
+    currentPage: 1,
+    loadingPrograms: false,
+    updatinPrograms: false,
     loading: false,
     error: null
   },
   reducers: {
     resetError(state) {
       state.error = null
+    },
+    setPage: (state, action) => {
+      state.currentPage = action.payload
     }
   },
   extraReducers: (builder) => {
     builder
       // Fetch Loyalty Programs by Restaurant
       .addCase(fetchLoyaltyProgramsByRestaurant.pending, (state) => {
-        state.loading = true
-        state.error = null
+        state.loadingPrograms = true
       })
       .addCase(fetchLoyaltyProgramsByRestaurant.fulfilled, (state, action) => {
-        state.loading = false
-        state.programs = action.payload
+        const { data, results, page } = action.payload
+        state.programsPerPage[page] = data
+
+        state.loadingPrograms = false
+        state.currentPage = page
+        state.totalPrograms = results
+        state.totalPagesCount = Math.ceil(results / action.meta.arg.limit)
       })
       .addCase(fetchLoyaltyProgramsByRestaurant.rejected, (state, action) => {
-        state.loading = false
+        state.loadingPrograms = false
         state.error = action.payload
       })
 
       // Fetch All Loyalty Programs
       .addCase(fetchAllLoyaltyPrograms.pending, (state) => {
-        state.loading = true
-        state.error = null
+        state.loadingPrograms = true
       })
       .addCase(fetchAllLoyaltyPrograms.fulfilled, (state, action) => {
-        state.loading = false
-        state.programs = action.payload
+        const { data, results, page } = action.payload
+        state.programsPerPage[page] = data
+
+        state.loadingPrograms = false
+        state.currentPage = page
+        state.totalPrograms = results
+        state.totalPagesCount = Math.ceil(results / action.meta.arg.limit)
       })
       .addCase(fetchAllLoyaltyPrograms.rejected, (state, action) => {
-        state.loading = false
+        state.loadingPrograms = false
         state.error = action.payload
       })
 
@@ -146,6 +165,6 @@ const loyaltySlice = createSlice({
   }
 })
 
-export const { resetError } = loyaltySlice.actions
+export const { resetError, setPage } = loyaltySlice.actions
 
 export default loyaltySlice.reducer

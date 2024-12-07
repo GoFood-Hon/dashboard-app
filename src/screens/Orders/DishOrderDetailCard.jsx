@@ -5,8 +5,8 @@ export const DishOrderDetailCard = ({ orderDetails }) => {
     <Paper withBorder radius="md" p="xs">
       <Group>
         <Image
-          h={"70px"}
-          w={"70px"}
+          h={"64px"}
+          w={"64px"}
           radius="sm"
           fit="contain"
           src={orderDetails?.Dish?.images?.[0]?.location}

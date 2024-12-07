@@ -264,9 +264,10 @@ export const updateUserStatus = createAsyncThunk("user/updateUserStatus", async 
 
 export const updateUser = createAsyncThunk(
   "user/updateUser",
-  async ({ params, userId }, { rejectWithValue }) => {
+  async ({ formData, userId, formDataImage }, { rejectWithValue }) => {
     try {
-      const response = await userApi.updateUserRestaurant(params, userId)
+      const response = await userApi.updateUserRestaurant(formData, userId)
+      let userData = response.data.AdminUser
       if (response.error) {
         showNotification({
           title: "Error",
@@ -277,7 +278,30 @@ export const updateUser = createAsyncThunk(
 
         return rejectWithValue(response.message)
       }
-      return response.data
+
+      if (formDataImage) {
+        const imageResponse = await userApi.addImage(userId, formDataImage)
+
+        if (imageResponse.error) {
+          showNotification({
+            title: "Error",
+            message: imageResponse.message,
+            color: "red"
+          })
+
+          return rejectWithValue(imageResponse.message)
+        }
+
+        userData = { ...userData, images: imageResponse.data }
+      }
+
+      showNotification({
+        title: "Actualización exitosa",
+        message: `El administrador ${userData.name} fue actualizado`,
+        color: "green"
+      })
+
+      return userData
     } catch (error) {
       showNotification({
         title: "Error",
@@ -521,6 +545,23 @@ export const userSlice = createSlice({
       })
       .addCase(updateUserData.rejected, (state, action) => {
         state.updatingUser = false
+        state.error = action.payload
+      })
+      .addCase(updateUser.pending, (state) => {
+        state.updatingOtherUser = true
+      })
+      .addCase(updateUser.fulfilled, (state, action) => {
+        const { id } = action.payload
+        const currentPageUsers = state.usersByPage[state.currentUserPage]
+        const index = currentPageUsers.findIndex((user) => user?.id == id)
+        
+        if (index !== -1) {
+          currentPageUsers[index] = action.payload
+        }
+        state.updatingOtherUser = false
+      })
+      .addCase(updateUser.rejected, (state, action) => {
+        state.updatingOtherUser = false
         state.error = action.payload
       })
   }

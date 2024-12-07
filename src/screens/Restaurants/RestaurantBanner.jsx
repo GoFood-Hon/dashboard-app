@@ -37,19 +37,19 @@ export const RestaurantBanner = ({ register, control, errors, setValue, isDataCl
 
   const previews = images.map((file, index) => {
     const imageUrl = URL.createObjectURL(file)
-    return <Image radius="md" h={200} src={imageUrl} />
+    return <Image radius="md" h={250} src={imageUrl} />
   })
 
   return (
-    <Paper withBorder radius="md">
+    <Paper withBorder radius="md" p='xs'>
       <Flex align="center" justify="center">
-        <Dropzone onDrop={handleDrop} accept={IMAGE_MIME_TYPE} h={220} style={{ cursor: "pointer" }}>
-          <Flex direction="column" justify="center" align="center" h={220}>
+        <Dropzone onDrop={handleDrop} accept={IMAGE_MIME_TYPE} h={250} style={{ cursor: "pointer" }}>
+          <Flex direction="column" justify="center" align="center" h={250}>
             {previews.length > 0 ? (
               previews
             ) : (
               <>
-                <Image radius="md" h={200} src={image} />
+                <Image radius="md" h={250} src={image} />
                 <IconPhoto
                   className={`${image ? "hidden" : ""}`}
                   style={{ width: rem(52), height: rem(52), color: "var(--mantine-color-dimmed)" }}

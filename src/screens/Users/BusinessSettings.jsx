@@ -1,40 +1,31 @@
 import React, { useState } from "react"
-import { Checkbox, Flex, Grid, Group, Image, Paper, Text, rem, Button, Stack } from "@mantine/core"
+import { Flex, Group, Paper, Button, Stack } from "@mantine/core"
 import SettingsCard from "../../components/SettingsCard"
 import { useForm } from "react-hook-form"
-import { IconPhoto } from "@tabler/icons-react"
-import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone"
-import { bytesToMB, convertToDecimal } from "../../utils"
+import { convertToDecimal } from "../../utils"
 import toast from "react-hot-toast"
-import InputField from "../../components/Form/InputField"
-import { NAVIGATION_ROUTES_SUPER_ADMIN, SETTING_NAVIGATION_ROUTES } from "../../routes"
+import { NAVIGATION_ROUTES_SUPER_ADMIN } from "../../routes"
 import { useNavigate } from "react-router-dom"
 import { useDispatch, useSelector } from "react-redux"
 import restaurantsApi from "../../api/restaurantApi"
-import PreviewImageCard from "../../components/PreviewImageCard"
 import { colors } from "../../theme/colors"
-import { updateRestaurantData } from "../../store/features/restaurantSlice"
-import InputTextAreaField from "../../components/Form/InputTextAreaField"
 import BackButton from "../Dishes/components/BackButton"
 import { RestaurantBanner } from "../Restaurants/RestaurantBanner"
 import { GeneralInformationForm } from "../Restaurants/GeneralInformationForm"
 import BookingInformation from "../Restaurants/BookingInformation"
+import { showNotification } from "@mantine/notifications"
+import { setUser } from "../../store/features/userSlice"
 
 export default function BusinessSettings() {
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const user = useSelector((state) => state.user.value)
-  const [images, setImages] = useState([])
-  const [fileInformation, setFileInformation] = useState(null)
-  const [isFreeShipping, setIsFreeShipping] = useState(false)
-  const [restaurantImg, setRestaurantImg] = useState([{}])
   const [isLoading, setIsLoading] = useState(false)
 
   const {
     register,
     handleSubmit,
     setValue,
-    reset,
     control,
     watch,
     formState: { errors }
@@ -47,15 +38,10 @@ export default function BusinessSettings() {
             duration: 7000
           })
           return {}
-        } else {
-          setRestaurantImg(response.data.images)
-
-          return response.data
         }
+        return response.data
       } catch (error) {
-        toast.error(`Failed to fetch restaurant information. Please try again.`, {
-          duration: 7000
-        })
+        console.log(error)
         throw error
       }
     }
@@ -64,61 +50,102 @@ export default function BusinessSettings() {
   const bannerLocation = watch("bannerDishes[0].location")
   const imageLocation = watch("images[0].location")
 
-  const deleteImage = () => {
-    setFileInformation(null)
-    setImages([])
-  }
-
-  const previews = images.map((file, index) => {
-    const imageUrl = URL.createObjectURL(file)
-    return (
-      <img
-        key={index}
-        src={imageUrl}
-        onLoad={() => URL.revokeObjectURL(imageUrl)}
-        className="m-1 h-14 w-14 rounded-xl border object-cover object-center"
-      />
-    )
-  })
-
-  const handleDrop = (acceptedFiles) => {
-    if (acceptedFiles.length > 0) {
-      const [file] = acceptedFiles
-      setFileInformation(file)
-      setImages(acceptedFiles)
-      setValue("files", acceptedFiles)
-    }
-  }
-
   const onSubmit = async (data) => {
+    setIsLoading(true)
     const formData = new FormData()
     formData.append("name", data.name)
     formData.append("email", data.email)
-    formData.append("phoneNumber", data.phoneNumber)
+    formData.append("phoneNumber", data.phoneNumber.startsWith("+504") ? data.phoneNumber : `+504${data.phoneNumber}`)
     formData.append("socialReason", data.socialReason)
     formData.append("rtn", data.rtn)
     formData.append("billingAddress", data.billingAddress)
     formData.append("cai", data.cai)
-    formData.append("shippingFree", isFreeShipping)
-    if (!isFreeShipping) {
+    formData.append("shippingFree", data.shippingFree ?? false)
+    formData.append("cuisineTypeId", data.cuisineTypeId ?? "")
+    formData.append("clinpaysCommerceToken", data.cuisineTypeId ?? null)
+    if (data.pricePerChair) {
+      formData.append("pricePerChair", data.pricePerChair)
+    }
+    if (data.hoursBeforeCancellation) {
+      formData.append("hoursBeforeCancellation", data.hoursBeforeCancellation)
+    }
+    if (data.hoursBeforeBooking) {
+      formData.append("hoursBeforeBooking", data.hoursBeforeBooking)
+    }
+    if (data.shippingFree !== null) {
       formData.append("shippingPrice", convertToDecimal(data.shippingPrice))
-    } else {
-      formData.append("shippingPrice", null)
     }
 
-    dispatch(updateRestaurantData({ data, restaurantId: user.restaurantId, formData })).then((response) => {
-      if (response.payload) {
-        window.location.reload()
-        reset()
-        navigate(SETTING_NAVIGATION_ROUTES.General.path)
+    let formDataImage = null
+    if (data?.files?.[0]) {
+      formDataImage = new FormData()
+      formDataImage.append("files", data.files[0])
+    }
+
+    let formDataBanner = null
+
+    if (data?.bannerDishes?.[0] instanceof File) {
+      formDataBanner = new FormData()
+      formDataBanner.append("files", data.bannerDishes[0])
+    }
+
+    const response = await restaurantsApi.updateRestaurant(formData, user.Restaurant.id)
+
+    if (response.error) {
+      showNotification({
+        title: "Error",
+        message: response.message,
+        color: "red"
+      })
+    } else {
+      showNotification({
+        title: "Actualización exitosa",
+        message: 'Los datos se actualizaron correctamente',
+        color: "green"
+      })
+    }
+
+    if (formDataImage) {
+      const imageResponse = await restaurantsApi.addImage(user.Restaurant.id, formDataImage)
+
+      if (imageResponse.error) {
+        showNotification({
+          title: "Error",
+          message: imageResponse.message,
+          color: "red"
+        })
+      } else {
+        dispatch(
+          setUser({
+            ...user,
+            Restaurant: {
+              ...user.Restaurant,
+              images: imageResponse.data.images
+            }
+          })
+        )
       }
-    })
+    }
+
+    if (formDataBanner) {
+      const imageResponse = await restaurantsApi.updateBannerImage(user.Restaurant.id, formDataBanner)
+
+      if (imageResponse.error) {
+        showNotification({
+          title: "Error",
+          message: imageResponse.message,
+          color: "red"
+        })
+      }
+    }
+
+    setIsLoading(false)
   }
 
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <Group grow mb='xs'>
+        <Group grow mb="xs">
           <Flex align="center" justify="space-between">
             <BackButton title="Información del restaurante" />
           </Flex>

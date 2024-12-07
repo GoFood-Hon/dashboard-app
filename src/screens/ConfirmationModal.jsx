@@ -18,7 +18,7 @@ const ConfirmationModal = ({ opened, close, title, description, onConfirm }) => 
         title={title}>
         <Text size="md">{description}</Text>
 
-        <Group mt="sm" justify="end">
+        <Group mt="sm" gap='xs' justify="end">
           <Button color={colors.main_app_color} variant="outline" onClick={close}>
             Cancelar
           </Button>

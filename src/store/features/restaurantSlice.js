@@ -270,7 +270,7 @@ export const updateRestaurantData = createAsyncThunk(
 
         if (imageResponse.error) {
           showNotification({
-            title: "Error acá",
+            title: "Error",
             message: imageResponse.message,
             color: "red"
           })
