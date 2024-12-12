@@ -56,7 +56,7 @@ export const LoyaltyProgram = () => {
 
   useEffect(() => {
     if (user.role === "superadmin") {
-      programs.length === 0 && dispatch(getLoyaltyProgramById(loyaltyId))
+      dispatch(getLoyaltyProgramById(loyaltyId))
     } else {
       programs.length === 0 && dispatch(fetchLoyaltyProgramsByRestaurant(user?.restaurantId))
     }

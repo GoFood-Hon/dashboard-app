@@ -12,7 +12,6 @@ import { IconStarFilled } from "@tabler/icons-react"
 import { useState } from "react"
 import { colors } from "../../theme/colors"
 import ConfirmationModal from "../ConfirmationModal"
-import { useEffect } from "react"
 import { useSelector } from "react-redux"
 import InputTextAreaField from "../../components/Form/InputTextAreaField"
 import { useDispatch } from "react-redux"
@@ -22,13 +21,11 @@ const LoyaltyCards = ({ register, setValue, control, errors, watch, loyaltyCards
   const user = useSelector((state) => state.user.value)
   const dispatch = useDispatch()
   const [opened, { open, close }] = useDisclosure(false)
-  const [cardsCreated, setCardsCreated] = useState([])
   const isRewardADiscountInPurchase = watch("isRewardADiscountInPurchase")
   const type = watch("type", "porcentaje")
-  const [isLoading, setIsLoading] = useState(false)
   const [openedDelete, { close: closeDelete, open: openDelete }] = useDisclosure(false)
   const [index, setIndex] = useState(null)
-  const { loyaltyCards, deletedCards } = useSelector((state) => state.loyalty)
+  const { loyaltyCards } = useSelector((state) => state.loyalty)
 
   const defaultOptions = {
     loop: true,
@@ -39,13 +36,7 @@ const LoyaltyCards = ({ register, setValue, control, errors, watch, loyaltyCards
     }
   }
 
-  useEffect(() => {
-    setCardsCreated(loyaltyCardsData)
-  }, [loyaltyCardsData])
-
-  useEffect(() => {
-    setValue("LoyaltyCards", cardsCreated)
-  }, [cardsCreated, deletedCards])
+  console.log(loyaltyCards)
 
   const handleReset = () => {
     setValue("purchasesWithWhichRewardBegins", "")
@@ -98,7 +89,7 @@ const LoyaltyCards = ({ register, setValue, control, errors, watch, loyaltyCards
         {loyaltyCards?.map((card, index) => (
           <Paper mih={190} key={index} p="sm" radius="md" style={{ position: "relative", overflow: "hidden" }}>
             <CloseButton
-              style={{ position: "absolute", right: 8, top: 8, zIndex: 12 }}
+              style={{ position: "absolute", right: 8, top: 8, zIndex: 12, display: user?.role === 'superadmin' ? 'none' : 'block' }}
               onClick={() => {
                 openDelete()
                 setIndex(index)
@@ -278,7 +269,7 @@ const LoyaltyCards = ({ register, setValue, control, errors, watch, loyaltyCards
           )}
           <Grid.Col span={12}>
             <Flex justify="end" gap={5}>
-              <Button loading={isLoading} color={colors.main_app_color} onClick={handleAddCard}>
+              <Button color={colors.main_app_color} onClick={handleAddCard}>
                 Añadir tarjeta
               </Button>
             </Flex>

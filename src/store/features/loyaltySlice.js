@@ -315,6 +315,9 @@ const loyaltySlice = createSlice({
       .addCase(getLoyaltyProgramById.fulfilled, (state, action) => {
         state.loading = false
         state.programs = action.payload
+        state.loyaltyCards = state.programs.LoyaltyCards.sort((a, b) => {
+          return a.purchasesWithWhichRewardBegins - b.purchasesWithWhichRewardBegins
+        })
       })
       .addCase(getLoyaltyProgramById.rejected, (state, action) => {
         state.loading = false

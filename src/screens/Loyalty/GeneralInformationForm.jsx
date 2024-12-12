@@ -2,9 +2,10 @@ import React, { useEffect } from "react"
 import { Grid, Paper } from "@mantine/core"
 import InputField from "../../components/Form/InputField"
 import InputTextAreaField from "../../components/Form/InputTextAreaField"
+import { useSelector } from "react-redux"
 
 export const GeneralInformationForm = ({ register, errors, setValue, data }) => {
-
+  const user = useSelector((state) => state.user.value)
   useEffect(() => {
     if (data?.paymentType) {
       setPaymentType(data.paymentType)
@@ -18,10 +19,17 @@ export const GeneralInformationForm = ({ register, errors, setValue, data }) => 
           <div className="flex flex-col w-full">
             <Grid>
               <Grid.Col span={{ base: 12, sm: 6 }}>
-                <InputField label="Nombre del programa (Obligatorio)" name="title" register={register} errors={errors} />
+                <InputField
+                  disabled={user?.role === "superadmin"}
+                  label="Nombre del programa (Obligatorio)"
+                  name="title"
+                  register={register}
+                  errors={errors}
+                />
               </Grid.Col>
               <Grid.Col span={{ base: 12, sm: 6 }}>
                 <InputField
+                  disabled={user?.role === "superadmin"}
                   label="Cantidad de días desde la primer compra para reiniciar conteo (Obligatorio)"
                   name="amountOfDaysSinceFirstPurchaseToRestartCounting"
                   register={register}
@@ -30,6 +38,7 @@ export const GeneralInformationForm = ({ register, errors, setValue, data }) => 
               </Grid.Col>
               <Grid.Col span={{ base: 12, sm: 6 }}>
                 <InputField
+                  disabled={user?.role === "superadmin"}
                   label="Número máximo de compras permitidas (Obligatorio)"
                   name="maximumAmountOfPurchasesAllowed"
                   register={register}
@@ -38,6 +47,7 @@ export const GeneralInformationForm = ({ register, errors, setValue, data }) => 
               </Grid.Col>
               <Grid.Col span={{ base: 12, sm: 6 }}>
                 <InputField
+                  disabled={user?.role === "superadmin"}
                   label="Precio mínimo para activación (Obligatorio)"
                   name="minimumPurchasePriceForActivation"
                   register={register}
@@ -45,7 +55,13 @@ export const GeneralInformationForm = ({ register, errors, setValue, data }) => 
                 />
               </Grid.Col>
               <Grid.Col span={{ base: 12 }}>
-                <InputTextAreaField label="Descripción" name="description" register={register} errors={errors} />
+                <InputTextAreaField
+                  disabled={user?.role === "superadmin"}
+                  label="Descripción"
+                  name="description"
+                  register={register}
+                  errors={errors}
+                />
               </Grid.Col>
             </Grid>
           </div>
