@@ -44,23 +44,21 @@ export default function Branches() {
   }
 
   return (
-    <>
-      <CardsViewLayout
-        title="Sucursales"
-        page={page}
-        limit={limit}
-        totalPageCount={totalPageCount}
-        totalElements={totalBranches}
-        elementsName="sucursales"
-        loadingElements={loadingBranches}
-        elementsList={branchesList}
-        onNewItemClick={handleNewItem}
-        onEnableItem={handleEnableSelected}
-        onDisableItem={handleDisableSelected}
-        onDetailsClick={handleClick}
-        onPaginationChange={onChangePagination}
-        user={user}
-      />
-    </>
+    <CardsViewLayout
+      title="Sucursales"
+      page={page}
+      limit={limit}
+      totalPageCount={totalPageCount}
+      totalElements={totalBranches}
+      elementsName="sucursales"
+      loadingElements={loadingBranches}
+      elementsList={branchesList}
+      onNewItemClick={handleNewItem}
+      onEnableItem={handleEnableSelected}
+      onDisableItem={handleDisableSelected}
+      onDetailsClick={handleClick}
+      onPaginationChange={onChangePagination}
+      user={user}
+    />
   )
 }

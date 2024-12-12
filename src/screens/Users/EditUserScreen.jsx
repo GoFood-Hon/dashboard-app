@@ -99,21 +99,6 @@ export const EditUserScreen = () => {
       .catch((error) => {
         console.error("Error updating user:", error)
       })
-
-    // const response = await userApi.updateUserRestaurant(formData, userId)
-
-    // if (response?.error) {
-    //   toast.error(`Fallo al crear un nuevo usuario. Por favor intente de nuevo. ${response.message}`, {
-    //     duration: 7000
-    //   })
-    // } else {
-    //   toast.success(`Usuario creado exitosamente`, {
-    //     duration: 7000
-    //   })
-    //   reset()
-    //   setIsDataCleared(true)
-    //   navigate(NAVIGATION_ROUTES_RES_ADMIN.Users.path)
-    // }
   }
 
   useEffect(() => {

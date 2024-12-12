@@ -95,14 +95,12 @@ export default function SideBar() {
             <ul className="text-sm text-light_secondary_text  border-b-light_selected_element pb-2 dark:border-b-dark_selected_element dark:text-dark_secondary_text"></ul>
             <ul className="py-4 text-sm">{renderedItems}</ul>
           </div>
-          <div>
-            <button
-              className="flex flex-row w-full items-center duration-300 hover:bg-red-400 hover:rounded-lg p-3"
-              onClick={logout}>
-              <Icon icon="exit" size={17} />
-              <span className="text-sm ml-3">Cerrar sesión</span>
-            </button>
-          </div>
+          <button
+            className="flex flex-row w-full items-center duration-300 hover:bg-red-400 hover:rounded-lg p-3"
+            onClick={logout}>
+            <Icon icon="exit" size={17} />
+            <span className="text-sm">Cerrar sesión</span>
+          </button>
         </div>
       </div>
     </div>

@@ -501,8 +501,8 @@ export default function MenuTable({ items, screenType, totalItems, currentPage, 
     ],
     loyaltyProgramsScreen: [
       { label: "Título", accessor: "title" },
+      { label: "Restaurante", accessor: "restaurantName" },
       { label: "Cantidad máxima de compras", accessor: "maximumAmountOfPurchasesAllowed", center: true },
-      { label: "Precio mínimo de compra para activación", accessor: "minimumPurchasePriceForActivation", center: true },
       { label: "Fecha de creación", accessor: "createdAt" },
       {
         label: "Estado",

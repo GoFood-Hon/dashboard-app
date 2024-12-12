@@ -277,7 +277,7 @@ const CardsViewLayout = ({
         ) : (
           <Box>
             <Flex direction="column" align="center">
-              <Lottie options={defaultOptions} height={440} width={440} />
+              <Lottie isClickToPauseDisabled={true} options={defaultOptions} height={440} width={440} />
             </Flex>
           </Box>
         )}

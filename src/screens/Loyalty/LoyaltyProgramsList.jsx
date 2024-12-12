@@ -14,6 +14,7 @@ export const LoyaltyProgramsList = () => {
   const loadingPrograms = useSelector((state) => state.loyalty.loadingPrograms)
 
   useEffect(() => {
+    console.log(programsList)
     if (!programsPerPage[page]) {
       dispatch(fetchAllLoyaltyPrograms({ limit, page, order: "DESC" }))
     }
@@ -26,7 +27,10 @@ export const LoyaltyProgramsList = () => {
         page={page}
         limit={limit}
         totalElements={totalPrograms}
-        items={programsList}
+        items={programsList.map((program) => ({
+          ...program,
+          restaurantName: program?.Restaurant?.name
+        }))}
         tableStructure="loyaltyProgramsScreen"
         totalItems={totalPageCount}
         loading={loadingPrograms}

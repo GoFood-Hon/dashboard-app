@@ -1,23 +1,24 @@
 import React, { useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import { fetchAllLoyaltyPrograms, fetchLoyaltyProgramsByRestaurant, setPage } from "../../store/features/loyaltySlice"
+import {
+  createLoyaltyProgram,
+  fetchLoyaltyProgramsByRestaurant,
+  getLoyaltyProgramById,
+  updateLoyaltyProgram
+} from "../../store/features/loyaltySlice"
 import { useForm } from "react-hook-form"
 import FormLayout from "../../components/Form/FormLayout"
 import { colors } from "../../theme/colors"
 import { GeneralInformationForm } from "./GeneralInformationForm"
 import { Accordion } from "@mantine/core"
 import LoyaltyCards from "./LoyaltyCards"
+import { useParams } from "react-router-dom"
 
 export const LoyaltyProgram = () => {
+  const { loyaltyId } = useParams()
   const dispatch = useDispatch()
   const user = useSelector((state) => state.user.value)
-  const limit = useSelector((state) => state.loyalty.itemsPerPage)
-  const page = useSelector((state) => state.loyalty.currentPage)
-  const programsPerPage = useSelector((state) => state.loyalty.programsPerPage)
-  const totalPrograms = useSelector((state) => state.loyalty.totalPrograms)
-  const totalPageCount = useSelector((state) => state.loyalty.totalPagesCount)
-  const programsList = programsPerPage[page] || []
-  const loadingPrograms = useSelector((state) => state.loyalty.loadingPrograms)
+  const { programs, updatingPrograms, creatingPrograms } = useSelector((state) => state.loyalty)
 
   const {
     register,
@@ -28,33 +29,38 @@ export const LoyaltyProgram = () => {
     watch,
     formState: { errors }
   } = useForm({
-    defaultValues: programsList
+    defaultValues: programs
   })
 
   const accordionStructure = [
     {
       title: "Información general",
       requirement: "Obligatorio",
-      form: (
-        <GeneralInformationForm data={programsList} register={register} errors={errors} setValue={setValue} control={control} />
-      )
+      form: <GeneralInformationForm data={programs} register={register} errors={errors} setValue={setValue} control={control} />
     },
     {
       title: "Tarjetas de descuento",
       requirement: "Obligatorio",
-      form: <LoyaltyCards register={register} errors={errors} setValue={setValue} control={control} watch={watch} reset={reset} />
+      form: (
+        <LoyaltyCards
+          loyaltyCardsData={programs?.LoyaltyCards}
+          register={register}
+          errors={errors}
+          setValue={setValue}
+          control={control}
+          watch={watch}
+        />
+      )
     }
   ]
 
   useEffect(() => {
-    if (!programsPerPage[page]) {
-      if (user.role === "superadmin") {
-        dispatch(fetchAllLoyaltyPrograms({ limit, page, order: "DESC" }))
-      } else {
-        dispatch(fetchLoyaltyProgramsByRestaurant({ restaurantId: user?.restaurantId, limit, page, order: "DESC" }))
-      }
+    if (user.role === "superadmin") {
+      programs.length === 0 && dispatch(getLoyaltyProgramById(loyaltyId))
+    } else {
+      programs.length === 0 && dispatch(fetchLoyaltyProgramsByRestaurant(user?.restaurantId))
     }
-  }, [dispatch, limit, page, programsPerPage])
+  }, [dispatch])
 
   const items = accordionStructure.map((item, key) => (
     <Accordion.Item key={key} value={item.title}>
@@ -73,27 +79,45 @@ export const LoyaltyProgram = () => {
   ))
 
   useEffect(() => {
-    if (Object.keys(programsList).length > 0) {
-      reset(programsList)
+    if (programs) {
+      reset(programs)
     }
-    window.scrollTo(0, 0)
-  }, [programsList, reset])
+  }, [reset, programs])
 
   const onSubmit = async (data) => {
-    console.log(data)
+    const formData = new FormData()
+    formData.append("amountOfDaysSinceFirstPurchaseToRestartCounting", data.amountOfDaysSinceFirstPurchaseToRestartCounting)
+    formData.append("maximumAmountOfPurchasesAllowed", data.maximumAmountOfPurchasesAllowed)
+    formData.append("minimumPurchasePriceForActivation", data.minimumPurchasePriceForActivation)
+    formData.append("title", data.title)
+    formData.append("description", data.description)
+
+    if (programs && Object.keys(programs).length !== 0) {
+      dispatch(
+        updateLoyaltyProgram({
+          id: programs.id,
+          params: formData
+        })
+      )
+    } else {
+      formData.append("restaurantId", user?.restaurantId)
+      dispatch(createLoyaltyProgram(formData))
+    }
   }
 
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)}>
         <FormLayout
-          title={programsList?.title}
+          title={"Vista detallada del programa"}
+          show={user.role === "superadmin"}
           accordionTitles={["Información general", "Tarjetas de descuento"]}
           accordionItems={items}
           navigate={() => navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Plans.path)}
-          isLoading={loadingPrograms}
-          update
+          isLoading={programs && Object.keys(programs).length !== 0 ? updatingPrograms : creatingPrograms}
+          update={programs && Object.keys(programs).length !== 0}
           noDiscard
+          noButtons={user.role === "superadmin"}
         />
       </form>
     </>

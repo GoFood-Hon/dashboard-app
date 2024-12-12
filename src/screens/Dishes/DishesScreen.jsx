@@ -4,7 +4,7 @@ import { NAVIGATION_ROUTES_RES_ADMIN } from "../../routes"
 import { useDispatch, useSelector } from "react-redux"
 import { getAllDishes, setPage, updateDishStatus } from "../../store/features/dishesSlice"
 import { APP_ROLES } from "../../utils/constants"
-import CardsViewLayout from '../../screens/CardsViewLayout'
+import CardsViewLayout from "../../screens/CardsViewLayout"
 
 export default function Dishes() {
   const navigate = useNavigate()
@@ -61,23 +61,21 @@ export default function Dishes() {
   }
 
   return (
-    <>
     <CardsViewLayout
-        title="Platillos"
-        page={page}
-        limit={limit}
-        totalPageCount={totalPageCount}
-        totalElements={totalDishes}
-        elementsName="platillos"
-        loadingElements={loadingDishes}
-        elementsList={dishesList}
-        onNewItemClick={handleNewItem}
-        onEnableItem={handleEnableSelected}
-        onDisableItem={handleDisableSelected}
-        onDetailsClick={handleClick}
-        onPaginationChange={onChangePagination}
-        user={user}
-      />
-    </>
+      title="Platillos"
+      page={page}
+      limit={limit}
+      totalPageCount={totalPageCount}
+      totalElements={totalDishes}
+      elementsName="platillos"
+      loadingElements={loadingDishes}
+      elementsList={dishesList}
+      onNewItemClick={handleNewItem}
+      onEnableItem={handleEnableSelected}
+      onDisableItem={handleDisableSelected}
+      onDetailsClick={handleClick}
+      onPaginationChange={onChangePagination}
+      user={user}
+    />
   )
 }

@@ -3,7 +3,7 @@ import React from "react"
 import BackButton from "../../screens/Dishes/components/BackButton"
 import { colors } from "../../theme/colors"
 
-const FormLayout = ({ title, show, accordionTitles, accordionItems, update, navigate, isLoading, noDiscard }) => {
+const FormLayout = ({ title, show, accordionTitles, accordionItems, update, navigate, isLoading, noDiscard, noButtons }) => {
   return (
     <>
       <Group grow mb="xs">
@@ -15,7 +15,7 @@ const FormLayout = ({ title, show, accordionTitles, accordionItems, update, navi
         <Accordion variant="separated" multiple radius="md" defaultValue={accordionTitles}>
           {accordionItems}
         </Accordion>
-        <Paper withBorder radius="md" p="lg">
+        <Paper style={{ display: noButtons ? "none" : "block" }} withBorder radius="md" p="lg">
           <Flex justify="end" gap="xs">
             <Button
               style={{ display: noDiscard ? "none" : "block" }}

@@ -16,6 +16,7 @@ import { APP_ROLES, dashboardCards } from "../../utils/constants"
 
 export default function MenuDetails() {
   const { menuId } = useParams()
+  console.log(menuId)
   const user = useSelector((state) => state.user.value)
   const restaurant = useSelector((state) => state.restaurants.restaurants)
 

@@ -47,23 +47,21 @@ export default function RestaurantsScreen() {
   }
 
   return (
-    <>
-      <CardsViewLayout
-        title="Restaurantes"
-        page={page}
-        limit={limit}
-        totalPageCount={totalPageCount}
-        totalElements={totalRestaurants}
-        elementsName="restaurantes"
-        loadingElements={loadingRestaurants}
-        elementsList={restaurantsList}
-        onNewItemClick={handleNewItem}
-        onEnableItem={handleEnableSelected}
-        onDisableItem={handleDisableSelected}
-        onDetailsClick={handleClick}
-        onPaginationChange={onChangePagination}
-        user={user}
-      />
-    </>
+    <CardsViewLayout
+      title="Restaurantes"
+      page={page}
+      limit={limit}
+      totalPageCount={totalPageCount}
+      totalElements={totalRestaurants}
+      elementsName="restaurantes"
+      loadingElements={loadingRestaurants}
+      elementsList={restaurantsList}
+      onNewItemClick={handleNewItem}
+      onEnableItem={handleEnableSelected}
+      onDisableItem={handleDisableSelected}
+      onDetailsClick={handleClick}
+      onPaginationChange={onChangePagination}
+      user={user}
+    />
   )
 }

@@ -12,8 +12,15 @@ import { IconStarFilled } from "@tabler/icons-react"
 import { useState } from "react"
 import { colors } from "../../theme/colors"
 import ConfirmationModal from "../ConfirmationModal"
+import { useEffect } from "react"
+import { useSelector } from "react-redux"
+import InputTextAreaField from "../../components/Form/InputTextAreaField"
+import { useDispatch } from "react-redux"
+import { addCards, removeLoyaltyCard } from "../../store/features/loyaltySlice"
 
-const LoyaltyCards = ({ register, setValue, control, errors, watch, reset }) => {
+const LoyaltyCards = ({ register, setValue, control, errors, watch, loyaltyCardsData }) => {
+  const user = useSelector((state) => state.user.value)
+  const dispatch = useDispatch()
   const [opened, { open, close }] = useDisclosure(false)
   const [cardsCreated, setCardsCreated] = useState([])
   const isRewardADiscountInPurchase = watch("isRewardADiscountInPurchase")
@@ -21,6 +28,7 @@ const LoyaltyCards = ({ register, setValue, control, errors, watch, reset }) => 
   const [isLoading, setIsLoading] = useState(false)
   const [openedDelete, { close: closeDelete, open: openDelete }] = useDisclosure(false)
   const [index, setIndex] = useState(null)
+  const { loyaltyCards, deletedCards } = useSelector((state) => state.loyalty)
 
   const defaultOptions = {
     loop: true,
@@ -30,6 +38,14 @@ const LoyaltyCards = ({ register, setValue, control, errors, watch, reset }) => 
       preserveAspectRatio: "xMidYMid slice"
     }
   }
+
+  useEffect(() => {
+    setCardsCreated(loyaltyCardsData)
+  }, [loyaltyCardsData])
+
+  useEffect(() => {
+    setValue("LoyaltyCards", cardsCreated)
+  }, [cardsCreated, deletedCards])
 
   const handleReset = () => {
     setValue("purchasesWithWhichRewardBegins", "")
@@ -42,41 +58,45 @@ const LoyaltyCards = ({ register, setValue, control, errors, watch, reset }) => 
   }
 
   const handleRemoveCard = (indexToRemove) => {
-    setCardsCreated((prevCards) => prevCards.filter((_, index) => index !== indexToRemove))
+    dispatch(removeLoyaltyCard(indexToRemove))
   }
 
   const handleAddCard = () => {
-    setIsLoading(true)
     const isDiscount = watch("isRewardADiscountInPurchase")
 
     const newCard = isDiscount
-      ? {
-          description: watch("cardDescription"),
-          purchasesWithWhichRewardBegins: watch("purchasesWithWhichRewardBegins"),
-          isDiscount,
-          type: watch("type"),
-          discountValue: type === "porcentaje" ? watch("discountPercentage") : watch("discountFixedAmount"),
-          minimumPurchase: watch("minimumPurchasePriceToRedeem")
-        }
+      ? type === "porcentaje"
+        ? {
+            description: watch("cardDescription"),
+            purchasesWithWhichRewardBegins: watch("purchasesWithWhichRewardBegins"),
+            isRewardADiscountInPurchase: isDiscount,
+            type,
+            discountPercentage: watch("discountPercentage"),
+            minPriceToRedeem: watch("minPriceToRedeem")
+          }
+        : {
+            description: watch("cardDescription"),
+            purchasesWithWhichRewardBegins: watch("purchasesWithWhichRewardBegins"),
+            isRewardADiscountInPurchase: isDiscount,
+            type,
+            discountFixedAmount: watch("discountFixedAmount"),
+            minPriceToRedeem: watch("minPriceToRedeem")
+          }
       : {
           description: watch("cardDescription"),
           purchasesWithWhichRewardBegins: watch("purchasesWithWhichRewardBegins"),
-          isDiscount
+          isRewardADiscountInPurchase: isDiscount
         }
 
-    setCardsCreated((prev) => [...prev, newCard])
-    handleReset()
+    dispatch(addCards(newCard))
     close()
-    setIsLoading(false)
   }
-
-  const placeholdersCount = Math.max(3 - cardsCreated.length, 0)
 
   return (
     <>
-      <SimpleGrid cols={{ base: 1, sm: 3 }}>
-        {cardsCreated.map((card, index) => (
-          <Paper key={index} withBorder p="sm" radius="md" style={{ position: "relative", overflow: "hidden" }}>
+      <SimpleGrid cols={{ base: 1, sm: 2, lg: 3 }}>
+        {loyaltyCards?.map((card, index) => (
+          <Paper mih={190} key={index} p="sm" radius="md" style={{ position: "relative", overflow: "hidden" }}>
             <CloseButton
               style={{ position: "absolute", right: 8, top: 8, zIndex: 12 }}
               onClick={() => {
@@ -95,7 +115,7 @@ const LoyaltyCards = ({ register, setValue, control, errors, watch, reset }) => 
                 pointerEvents: "none",
                 opacity: 0.5
               }}>
-              <Lottie speed={0.4} options={defaultOptions} width="100%" height="100%" isClickToPauseDisabled={true} />
+              <Lottie options={defaultOptions} width="100%" height="100%" isClickToPauseDisabled={true} />
             </div>
 
             <div style={{ position: "relative", zIndex: 10 }}>
@@ -113,17 +133,46 @@ const LoyaltyCards = ({ register, setValue, control, errors, watch, reset }) => 
                     </Text>
                   </Flex>
                   <Text fw={700} fz="sm">
-                    Descripción: {card?.description ? card?.description : "No se especificó"}
+                    Activación:{" "}
+                    <Text span fs="italic" fz="sm">
+                      A partir de{" "}
+                      {card?.purchasesWithWhichRewardBegins != "1"
+                        ? card?.purchasesWithWhichRewardBegins + " compras"
+                        : card?.purchasesWithWhichRewardBegins + " compra"}
+                    </Text>
                   </Text>
-                  {card?.isDiscount && (
+                  <Text fw={700} fz="sm">
+                    Descripción:{" "}
+                    <Text span fs="italic" fz="sm">
+                      {card?.description || card?.cardDescription
+                        ? card?.description || card?.cardDescription
+                        : "No se especificó"}
+                    </Text>
+                  </Text>
+                  {card?.isRewardADiscountInPurchase && (
                     <>
                       <Text fz="sm" fw={700}>
-                        {card?.type === "fijo"
-                          ? `Monto: ${getFormattedHNL(card?.discountValue)}`
-                          : `Se aplicará un porcentaje del ${card?.discountValue}%`}
+                        {card?.type === "fijo" ? (
+                          <>
+                            Monto de descuento:{" "}
+                            <Text span fs="italic" fz="sm">
+                              {getFormattedHNL(card?.discountFixedAmount)}
+                            </Text>
+                          </>
+                        ) : (
+                          <>
+                            Porcentaje de descuento:{" "}
+                            <Text span fs="italic" fz="sm">
+                              {card?.discountPercentage}%
+                            </Text>
+                          </>
+                        )}
                       </Text>
                       <Text fw={700} fz="sm">
-                        La cantidad mínima de compra para gozar de este beneficio es de {getFormattedHNL(card?.minimumPurchase)}
+                        Compra mínima:{" "}
+                        <Text span fs="italic" fz="sm">
+                          {getFormattedHNL(card?.minPriceToRedeem)}
+                        </Text>
                       </Text>
                     </>
                   )}
@@ -133,24 +182,25 @@ const LoyaltyCards = ({ register, setValue, control, errors, watch, reset }) => 
           </Paper>
         ))}
 
-        {Array.from({ length: placeholdersCount }).map((_, index) => (
-          <Paper
-            key={`placeholder-${index}`}
-            mih={180}
-            withBorder
-            p="md"
-            radius="md"
-            style={{ cursor: "pointer" }}
-            onClick={open}>
+        {user.role !== "superadmin" && (
+          <Paper mih={190} withBorder p="md" radius="md" style={{ cursor: "pointer" }} onClick={open}>
             <Flex justify="center" align="center" h="100%" gap={5}>
               <IconCircleDashedPlus style={{ opacity: 0.5 }} size="2rem" />
               <Text c="dimmed">Añadir tarjeta</Text>
             </Flex>
           </Paper>
-        ))}
+        )}
       </SimpleGrid>
 
-      <Modal radius='md' opened={opened} onClose={close} title="Nueva tarjeta" centered>
+      <Modal
+        radius="md"
+        opened={opened}
+        onClose={() => {
+          close()
+          handleReset()
+        }}
+        title="Nueva tarjeta"
+        centered>
         <Grid>
           <Grid.Col span={12}>
             <InputField
@@ -162,7 +212,12 @@ const LoyaltyCards = ({ register, setValue, control, errors, watch, reset }) => 
             />
           </Grid.Col>
           <Grid.Col span={12}>
-            <InputField label="Descripción" name="cardDescription" register={register} errors={errors} />
+            <InputTextAreaField
+              label={`Descripción (${isRewardADiscountInPurchase ? "Opcional" : "Obligatorio"})`}
+              name="cardDescription"
+              register={register}
+              errors={errors}
+            />
           </Grid.Col>
           <Grid.Col span={12}>
             <InputCheckbox label="¿Esta recompensa es un descuento?" name="isRewardADiscountInPurchase" register={register} />
@@ -214,7 +269,7 @@ const LoyaltyCards = ({ register, setValue, control, errors, watch, reset }) => 
                 <InputField
                   type="number"
                   label="Cantidad mínima de compra requerida"
-                  name="minimumPurchasePriceToRedeem"
+                  name="minPriceToRedeem"
                   register={register}
                   errors={errors}
                 />

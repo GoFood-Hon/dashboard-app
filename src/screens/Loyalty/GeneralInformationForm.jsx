@@ -1,12 +1,9 @@
-import React, { useEffect, useState } from "react"
-import { Grid, MultiSelect, Paper, Select } from "@mantine/core"
+import React, { useEffect } from "react"
+import { Grid, Paper } from "@mantine/core"
 import InputField from "../../components/Form/InputField"
-import { DEFAULT_CURRENCY, DEFAULT_PAYMENT_TYPE } from "../../utils/constants"
-import { useParams } from "react-router-dom"
 import InputTextAreaField from "../../components/Form/InputTextAreaField"
 
 export const GeneralInformationForm = ({ register, errors, setValue, data }) => {
-  const [currency, setCurrency] = useState(DEFAULT_CURRENCY)
 
   useEffect(() => {
     if (data?.paymentType) {

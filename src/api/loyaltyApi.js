@@ -2,21 +2,7 @@ import axiosClient from "./axiosClient"
 
 const loyaltyApi = {
   //Loyalty Programs
-  getLoyaltyProgramsByRestaurant: ({ restaurantId, page, limit, order, orderBy }) => {
-    const params = {
-      page,
-      limit,
-      order,
-      orderBy
-    }
-
-    const validParams = Object.fromEntries(Object.entries(params).filter(([_, value]) => value !== undefined && value))
-
-    const queryString = new URLSearchParams(validParams).toString()
-    const url = `api/v1/restaurant/${restaurantId}/loyalty-program${queryString ? `?${queryString}` : ""}`
-
-    return axiosClient.get(url)
-  },
+  getLoyaltyProgramsByRestaurant: (restaurantId) => axiosClient.get(`api/v1/restaurant/${restaurantId}/loyalty-program`),
 
   getAllLoyaltyPrograms: ({ page, limit, order, orderby, search, search_field, status }) => {
     const params = {
@@ -41,6 +27,13 @@ const loyaltyApi = {
   createLoyaltyProgram: (params) => axiosClient.post(`api/v1/loyalty-program/`, params),
 
   updateLoyaltyProgram: (id, params) => axiosClient.patch(`api/v1/loyalty-program/${id}`, params),
+
+  //Loyalty Cards with Rewards
+  createLoyaltyCardWithReward: (loyaltyProgramId, params) =>
+    axiosClient.post(`api/v1/loyalty-program/${loyaltyProgramId}/redeemable-card-with-reward`, params),
+
+  deleteLoyaltyCardWithReward: (loyaltyProgramId, redeemableCardId) =>
+    axiosClient.delete(`api/v1/loyalty-program/${loyaltyProgramId}/redeemable-card-with-reward/${redeemableCardId}`),
 
   //Loyalty Program Rewards
   createCardReward: (params) => axiosClient.post(`api/v1/loyalty-program/card-reward/`, params),

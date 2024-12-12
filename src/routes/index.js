@@ -76,11 +76,8 @@ export const NAVIGATION_ROUTES_SUPER_ADMIN = {
   },
   Loyalty: {
     path: "/programas-de-lealtad",
-    NewLoyalty: {
-      path: "/lista-de-colecciones/nueva-coleccion"
-    },
     EditLoyalty: {
-      path: "/lista-de-colecciones/:collectionId"
+      path: "/programas-de-lealtad/:loyaltyId"
     }
   }
 }

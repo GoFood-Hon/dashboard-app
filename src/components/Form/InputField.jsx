@@ -11,7 +11,8 @@ export default function InputField({
   type = "text",
   value,
   onChange,
-  defaultValue
+  defaultValue,
+  disabled
 }) {
   return (
     <React.Fragment>
@@ -31,6 +32,7 @@ export default function InputField({
               />
             ) : (
               <Input
+                disabled={disabled}
                 classNames={{
                   input: errors[name] ? "border-red-500" : ""
                 }}
