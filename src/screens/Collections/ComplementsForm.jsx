@@ -161,7 +161,7 @@ export default function ComplementsForm({ setValue, isDataCleared, defaultMessag
                 <Grid columns={2} gutter="md">
                   {extras.length > 0 ? (
                     extras.map((item, key) => (
-                      <Grid.Col span={1} key={key} style={{ cursor: "pointer" }}>
+                      <Grid.Col span={{base: 2, md: 1}} key={key} style={{ cursor: "pointer" }}>
                         <AvailableComplementsCard
                           item={item}
                           onItemClick={handleComplementClick}

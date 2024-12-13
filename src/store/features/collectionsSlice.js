@@ -473,7 +473,6 @@ const collectionsSlice = createSlice({
         state.creatingCollection = true
       })
       .addCase(createCollection.fulfilled, (state, action) => {
-        console.log(action.payload)
         const newCollection = action.payload
 
         if (!state.collectionsPerPage[1]) {

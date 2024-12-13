@@ -17,7 +17,6 @@ export default function GeneralSettings() {
     const fetchRestaurantInformation = async () => {
       try {
         const response = await restaurantsApi.getRestaurant(user?.restaurantId)
-        console.log(response)
 
         if (response.error) {
           toast.error(`Fallo al obtenerla información del restaurante. Por favor intente de nuevo. ${response.message}`, {

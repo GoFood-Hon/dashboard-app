@@ -84,7 +84,6 @@ export const OrderDetails = () => {
   }, [orderDetails])
 
   useEffect(() => {
-    console.log(orderDetails)
     dispatch(fetchOrderDetails(orderId))
   }, [])
 
@@ -228,7 +227,7 @@ export const OrderDetails = () => {
                 </Stack>
               </Paper>
               <Grid gutter="md">
-                <Grid.Col span={6}>
+                <Grid.Col span={{ base: 12, md: 6 }}>
                   <Paper withBorder radius="md" h={SECONDARY_COL_HEIGHT} p="md">
                     <UserData
                       title="Datos del cliente"
@@ -240,7 +239,7 @@ export const OrderDetails = () => {
                     />
                   </Paper>
                 </Grid.Col>
-                <Grid.Col span={6}>
+                <Grid.Col span={{ base: 12, md: 6 }}>
                   <Paper withBorder radius="md" h={SECONDARY_COL_HEIGHT} p="md">
                     <UserData
                       title="Datos del repartidor"
@@ -252,7 +251,7 @@ export const OrderDetails = () => {
                     />
                   </Paper>
                 </Grid.Col>
-                <Grid.Col span={6}>
+                <Grid.Col span={{ base: 12, md: 6 }}>
                   <Paper withBorder radius="md" h={SECONDARY_COL_HEIGHT} p="md">
                     <Stack gap="xs">
                       <Flex align="center" gap={5}>
@@ -299,7 +298,7 @@ export const OrderDetails = () => {
                     </Stack>
                   </Paper>
                 </Grid.Col>
-                <Grid.Col span={6}>
+                <Grid.Col span={{ base: 12, md: 6 }}>
                   <Paper withBorder radius="md" h={SECONDARY_COL_HEIGHT} p="md">
                     <Stack gap="xs" h="100%">
                       <Flex align="center" gap={5}>

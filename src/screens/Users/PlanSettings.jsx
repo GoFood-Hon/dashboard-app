@@ -67,8 +67,6 @@ export default function PlanSettings() {
   }
 
   useEffect(() => {
-    console.log(planData)
-    console.log(user)
     ;(async () => {
       try {
         const response = await plansApi.getCard()

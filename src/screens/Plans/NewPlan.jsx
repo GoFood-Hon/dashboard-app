@@ -61,7 +61,6 @@ export const NewPlan = () => {
   ))
 
   const onSubmit = async (data) => {
-    console.log(data)
     const features = featuresList
       .map((feature) => {
         if (data.featureIds.includes(feature.id)) {

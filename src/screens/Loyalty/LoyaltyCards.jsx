@@ -36,8 +36,6 @@ const LoyaltyCards = ({ register, setValue, control, errors, watch, loyaltyCards
     }
   }
 
-  console.log(loyaltyCards)
-
   const handleReset = () => {
     setValue("purchasesWithWhichRewardBegins", "")
     setValue("cardDescription", "")

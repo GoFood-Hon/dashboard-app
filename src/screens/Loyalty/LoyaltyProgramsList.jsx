@@ -14,7 +14,6 @@ export const LoyaltyProgramsList = () => {
   const loadingPrograms = useSelector((state) => state.loyalty.loadingPrograms)
 
   useEffect(() => {
-    console.log(programsList)
     if (!programsPerPage[page]) {
       dispatch(fetchAllLoyaltyPrograms({ limit, page, order: "DESC" }))
     }

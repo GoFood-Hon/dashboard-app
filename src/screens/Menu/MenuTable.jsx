@@ -36,6 +36,7 @@ import { updatePlanStatus } from "../../store/features/plansSlice"
 import { updateCollectionStatus } from "../../store/features/collectionsSlice"
 import Lottie from "react-lottie"
 import animationData from "../../assets/animation/NothingFoundAnimation.json"
+import { render } from "react-dom"
 
 dayjs.extend(utc)
 dayjs.extend(timezone)
@@ -504,28 +505,7 @@ export default function MenuTable({ items, screenType, totalItems, currentPage, 
       { label: "Restaurante", accessor: "restaurantName" },
       { label: "Cantidad máxima de compras", accessor: "maximumAmountOfPurchasesAllowed", center: true },
       { label: "Fecha de creación", accessor: "createdAt" },
-      {
-        label: "Estado",
-        accessor: "id",
-        center: true,
-        render: (item) => (
-          <MantineProvider theme={theme}>
-            <Switch
-              checked={item.isActive}
-              onChange={() => console.log(item.isActive)}
-              color={colors.main_app_color}
-              size="sm"
-              thumbIcon={
-                item.isActive ? (
-                  <IconCheck style={{ width: rem(12), height: rem(12) }} stroke={3} color={colors.main_app_color} />
-                ) : (
-                  <IconX style={{ width: rem(12), height: rem(12) }} stroke={3} color={colors.main_app_color} />
-                )
-              }
-            />
-          </MantineProvider>
-        )
-      },
+      { label: "Estado", accessor: "isActive", render: (active) => (active ? "Activo" : "Inactivo") },
       {
         label: "Acciones",
         accessor: "id",
@@ -615,14 +595,6 @@ export default function MenuTable({ items, screenType, totalItems, currentPage, 
             <Table miw={800} verticalSpacing="sm">
               <Table.Thead>
                 <Table.Tr>
-                  <Table.Th style={{ width: 40 }}>
-                    <Checkbox
-                      onChange={toggleAll}
-                      checked={itemsSelected.length === items.length}
-                      indeterminate={itemsSelected.length > 0 && itemsSelected.length !== items.length}
-                      color={colors.main_app_color}
-                    />
-                  </Table.Th>
                   {currentColumns.map((column) => (
                     <Table.Th style={{ textAlign: column.center ? "center" : "left" }} key={column.label}>
                       {column.label}
@@ -635,9 +607,6 @@ export default function MenuTable({ items, screenType, totalItems, currentPage, 
                   const selected = itemsSelected.includes(item.id)
                   return (
                     <Table.Tr key={item.id}>
-                      <Table.Td>
-                        <Checkbox color={colors.main_app_color} checked={selected} onChange={() => toggleRow(item.id)} />
-                      </Table.Td>
                       {currentColumns.map((column) => (
                         <Table.Td
                           style={{

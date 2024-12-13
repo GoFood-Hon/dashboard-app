@@ -104,7 +104,6 @@ export default function ComplementsForm({
 
     if (!exists) {
       dispatch(setDishesAddedToMenuCount(dishesAddedToMenu + 1))
-      console.log(dishesAddedToMenu)
       setAddedComplements([...addedComplements, complement])
       updateComplementsValue([...addedComplements, complement])
     }
@@ -114,7 +113,6 @@ export default function ComplementsForm({
     const updatedAddedComplements = addedComplements.filter((item) => item !== complement)
     setAddedComplements(updatedAddedComplements)
     dispatch(setDishesAddedToMenuCount(dishesAddedToMenu - 1))
-    console.log(dishesAddedToMenu)
     updateComplementsValue(updatedAddedComplements)
   }
 

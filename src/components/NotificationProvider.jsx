@@ -30,7 +30,6 @@ export const NotificationProvider = ({ children }) => {
         withCloseButton: true,
         color: "green"
       })
-      console.log(order)
       try {
         dispatch(setNewOrder(order))
       } catch (error) {
@@ -80,7 +79,6 @@ export const NotificationProvider = ({ children }) => {
         withCloseButton: true,
         color: "green"
       })
-      console.log(order)
       dispatch(setOrderStatus(order))
     }
 
@@ -93,7 +91,6 @@ export const NotificationProvider = ({ children }) => {
         withCloseButton: true,
         color: "green"
       })
-      console.log(order)
       dispatch(setOrderStatus(order))
     }
 
@@ -106,7 +103,6 @@ export const NotificationProvider = ({ children }) => {
         withCloseButton: true,
         color: "green"
       })
-      console.log(order)
       dispatch(setOrderStatus(order))
     }
 
