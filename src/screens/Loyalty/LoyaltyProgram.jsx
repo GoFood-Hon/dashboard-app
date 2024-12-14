@@ -43,7 +43,6 @@ export const LoyaltyProgram = () => {
       requirement: "Obligatorio",
       form: (
         <LoyaltyCards
-          loyaltyCardsData={programs?.LoyaltyCards}
           register={register}
           errors={errors}
           setValue={setValue}

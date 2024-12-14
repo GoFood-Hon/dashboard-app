@@ -16,8 +16,9 @@ import { useSelector } from "react-redux"
 import InputTextAreaField from "../../components/Form/InputTextAreaField"
 import { useDispatch } from "react-redux"
 import { addCards, removeLoyaltyCard } from "../../store/features/loyaltySlice"
+import { notifications } from "@mantine/notifications"
 
-const LoyaltyCards = ({ register, setValue, control, errors, watch, loyaltyCardsData }) => {
+const LoyaltyCards = ({ register, setValue, control, errors, watch }) => {
   const user = useSelector((state) => state.user.value)
   const dispatch = useDispatch()
   const [opened, { open, close }] = useDisclosure(false)
@@ -25,7 +26,7 @@ const LoyaltyCards = ({ register, setValue, control, errors, watch, loyaltyCards
   const type = watch("type", "porcentaje")
   const [openedDelete, { close: closeDelete, open: openDelete }] = useDisclosure(false)
   const [index, setIndex] = useState(null)
-  const { loyaltyCards } = useSelector((state) => state.loyalty)
+  const { loyaltyCards, programs } = useSelector((state) => state.loyalty)
 
   const defaultOptions = {
     loop: true,
@@ -43,7 +44,7 @@ const LoyaltyCards = ({ register, setValue, control, errors, watch, loyaltyCards
     setValue("type", "porcentaje")
     setValue("discountFixedAmount", "")
     setValue("discountPercentage", "")
-    setValue("minimumPurchasePriceToRedeem", "")
+    setValue("minPriceToRedeem", "")
   }
 
   const handleRemoveCard = (indexToRemove) => {
@@ -51,14 +52,64 @@ const LoyaltyCards = ({ register, setValue, control, errors, watch, loyaltyCards
   }
 
   const handleAddCard = () => {
-    const isDiscount = watch("isRewardADiscountInPurchase")
+    const validateCard = (card) => {
+      const errors = []
 
-    const newCard = isDiscount
+      if (!card.purchasesWithWhichRewardBegins) {
+        errors.push("El campo 'Compras para iniciar recompensa' es obligatorio")
+      } else if (!isRewardADiscountInPurchase && !card.description) {
+        errors.push("El campo 'Descripción' es obligatorio cuando la recompensa no es un descuento")
+      } else {
+        const duplicate = loyaltyCards.some(
+          (existingCard) => existingCard.purchasesWithWhichRewardBegins == card.purchasesWithWhichRewardBegins
+        )
+        if (duplicate) {
+          errors.push("No pueden haber dos tarjetas con el mismo número de compras para iniciar recompensa")
+        }
+      }
+
+      if (isRewardADiscountInPurchase) {
+        if (type === "porcentaje") {
+          if (!card.discountPercentage || card.discountPercentage < 1 || card.discountPercentage > 100) {
+            errors.push("El campo 'Porcentaje de descuento' es obligatorio y debe estar entre 1 y 100")
+          }
+          if (!card.minPriceToRedeem) {
+            errors.push("El campo 'Precio mínimo para redimir' es obligatorio")
+          }
+        } else {
+          if (!card.discountFixedAmount) {
+            errors.push("El campo 'Monto fijo de descuento' es obligatorio")
+          }
+          if (
+            card.discountFixedAmount &&
+            card.minPriceToRedeem &&
+            parseInt(card.discountFixedAmount) >= parseInt(card.minPriceToRedeem)
+          ) {
+            errors.push("El 'Monto fijo de descuento' debe ser menor que la 'Cantidad mínima de compra requerida'")
+          }
+        }
+      }
+
+      if (errors.length > 0) {
+        errors.forEach((error) => {
+          notifications.show({
+            title: "Error de validación",
+            message: error,
+            color: "red"
+          })
+        })
+        return false
+      }
+
+      return true
+    }
+
+    const newCard = isRewardADiscountInPurchase
       ? type === "porcentaje"
         ? {
             description: watch("cardDescription"),
             purchasesWithWhichRewardBegins: watch("purchasesWithWhichRewardBegins"),
-            isRewardADiscountInPurchase: isDiscount,
+            isRewardADiscountInPurchase: isRewardADiscountInPurchase,
             type,
             discountPercentage: watch("discountPercentage"),
             minPriceToRedeem: watch("minPriceToRedeem")
@@ -66,7 +117,7 @@ const LoyaltyCards = ({ register, setValue, control, errors, watch, loyaltyCards
         : {
             description: watch("cardDescription"),
             purchasesWithWhichRewardBegins: watch("purchasesWithWhichRewardBegins"),
-            isRewardADiscountInPurchase: isDiscount,
+            isRewardADiscountInPurchase: isRewardADiscountInPurchase,
             type,
             discountFixedAmount: watch("discountFixedAmount"),
             minPriceToRedeem: watch("minPriceToRedeem")
@@ -74,11 +125,21 @@ const LoyaltyCards = ({ register, setValue, control, errors, watch, loyaltyCards
       : {
           description: watch("cardDescription"),
           purchasesWithWhichRewardBegins: watch("purchasesWithWhichRewardBegins"),
-          isRewardADiscountInPurchase: isDiscount
+          isRewardADiscountInPurchase: isRewardADiscountInPurchase
         }
 
+    if (!validateCard(newCard)) {
+      return
+    }
+
     dispatch(addCards(newCard))
+    handleReset()
     close()
+    notifications.show({
+      title: "Tarjeta añadida",
+      message: `La tarjeta se añadió a la lista, presione '${programs && Object.keys(programs).length !== 0 ? "Actualizar" : "Guardar"}' para poder crearla`,
+      color: "green"
+    })
   }
 
   return (
@@ -87,7 +148,13 @@ const LoyaltyCards = ({ register, setValue, control, errors, watch, loyaltyCards
         {loyaltyCards?.map((card, index) => (
           <Paper mih={190} key={index} p="sm" radius="md" style={{ position: "relative", overflow: "hidden" }}>
             <CloseButton
-              style={{ position: "absolute", right: 8, top: 8, zIndex: 12, display: user?.role === 'superadmin' ? 'none' : 'block' }}
+              style={{
+                position: "absolute",
+                right: 8,
+                top: 8,
+                zIndex: 12,
+                display: user?.role === "superadmin" ? "none" : "block"
+              }}
               onClick={() => {
                 openDelete()
                 setIndex(index)
@@ -278,8 +345,12 @@ const LoyaltyCards = ({ register, setValue, control, errors, watch, loyaltyCards
       <ConfirmationModal
         opened={openedDelete}
         close={closeDelete}
-        title="¿Estás seguro que deseas eliminar?"
-        description="La tarjeta dejará de mostrarse pero no se eliminará hasta que se presione el botón de actualizar"
+        title={"¿Estás seguro que deseas eliminar?"}
+        description={
+          programs &&
+          Object.keys(programs).length !== 0 &&
+          "La tarjeta dejará de mostrarse pero no se eliminará hasta que se presione el botón de actualizar"
+        }
         onConfirm={() => handleRemoveCard(index)}
       />
     </>
