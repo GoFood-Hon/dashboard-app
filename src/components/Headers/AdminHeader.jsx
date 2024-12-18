@@ -7,6 +7,7 @@ import { APP_ROLES } from "../../utils/constants"
 import { useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import { useMediaQuery } from "@mantine/hooks"
+import logoImage from "../../assets/images/colorFUDGOLetters.png"
 
 export function AdminHeader({ burger }) {
   const navigate = useNavigate()
@@ -30,8 +31,8 @@ export function AdminHeader({ burger }) {
         {burger && burger}
         <Image
           style={{ cursor: "pointer" }}
-          src="https://tkdmymipjaevgekdbsgz.supabase.co/storage/v1/object/public/user_profiles/goFood.png?t=2024-07-30T01%3A25%3A16.174Z"
-          w={isSmallScreen ? 85 : 110}
+          src={logoImage}
+          w={isSmallScreen ? 65 : 90}
           fit="contain"
           fallbackSrc="https://placehold.co/600x400?text=Imagen+no+disponible"
           onClick={() => navigate("/")}

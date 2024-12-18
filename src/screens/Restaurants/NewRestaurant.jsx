@@ -1,11 +1,7 @@
-import React, { useState } from "react"
-import { Accordion } from "@mantine/core"
 import { useNavigate } from "react-router-dom"
 import { useForm } from "react-hook-form"
-import { yupResolver } from "@hookform/resolvers/yup"
 import { GeneralInformationForm } from "./GeneralInformationForm"
 import { NAVIGATION_ROUTES_SUPER_ADMIN } from "../../routes"
-import { restaurantValidation } from "../../utils/inputRules"
 import { convertToDecimal } from "../../utils"
 import BookingInformation from "./BookingInformation"
 import { createRestaurant } from "../../store/features/restaurantSlice"
@@ -13,6 +9,9 @@ import { useDispatch } from "react-redux"
 import { useSelector } from "react-redux"
 import { RestaurantBanner } from "./RestaurantBanner"
 import FormLayout from "../../components/Form/FormLayout"
+import { yupResolver } from "@hookform/resolvers/yup"
+import * as yup from "yup"
+import { restaurantValidation } from "../../utils/inputRules"
 
 export const NewRestaurant = () => {
   const navigate = useNavigate()
@@ -24,12 +23,9 @@ export const NewRestaurant = () => {
     handleSubmit,
     setValue,
     control,
-    reset,
     watch,
     formState: { errors }
-  } = useForm({ resolver: yupResolver(restaurantValidation) })
-
-  const [isDataCleared, setIsDataCleared] = useState(false)
+  } = useForm()
 
   const onSubmit = async (data) => {
     const formData = new FormData()
@@ -43,7 +39,7 @@ export const NewRestaurant = () => {
     formData.append("cai", data.cai)
     formData.append("shippingFree", data.shippingFree ?? true)
     formData.append("cuisineTypeId", data.cuisineTypeId ?? "")
-    formData.append("clinpaysCommerceToken", data.cuisineTypeId ?? null)
+    formData.append("clinpaysCommerceToken", data.clinpaysCommerceToken ?? null)
     if (data.pricePerChair) {
       formData.append("pricePerChair", data.pricePerChair)
     }
@@ -56,6 +52,13 @@ export const NewRestaurant = () => {
     if (data.shippingFree !== null) {
       formData.append("shippingPrice", convertToDecimal(data.shippingPrice))
     }
+
+    const formDataObject = {}
+    formData.forEach((value, key) => {
+      formDataObject[key] = value
+    })
+
+    console.log(formDataObject)
 
     const formDataImage = new FormData()
     formDataImage.append("files", data.files[0])
@@ -77,61 +80,19 @@ export const NewRestaurant = () => {
     {
       title: "Añadir banner",
       requirement: "Obligatorio",
-      form: (
-        <RestaurantBanner
-          register={register}
-          errors={errors}
-          setValue={setValue}
-          control={control}
-          isDataCleared={isDataCleared}
-          watch={watch}
-        />
-      )
+      form: <RestaurantBanner register={register} errors={errors} setValue={setValue} control={control} watch={watch} />
     },
     {
       title: "Información general",
       requirement: "Obligatorio",
-      form: (
-        <GeneralInformationForm
-          register={register}
-          errors={errors}
-          setValue={setValue}
-          control={control}
-          isDataCleared={isDataCleared}
-          watch={watch}
-        />
-      )
+      form: <GeneralInformationForm register={register} errors={errors} setValue={setValue} control={control} watch={watch} />
     },
     {
       title: "Datos de reservación",
       requirement: "Opcional",
-      form: (
-        <BookingInformation
-          register={register}
-          errors={errors}
-          setValue={setValue}
-          control={control}
-          isDataCleared={isDataCleared}
-        />
-      )
+      form: <BookingInformation register={register} errors={errors} setValue={setValue} control={control} />
     }
   ]
-
-  const items = accordionStructure.map((item, key) => (
-    <Accordion.Item key={key} value={item.title}>
-      <Accordion.Control>
-        <div className="w-full rounded-lg flex-row flex items-center">
-          <div
-            className={`text-slate-50 text-base font-bold bg-[#EE364C] rounded-full p-2 w-8 h-8 flex items-center justify-center`}>
-            {key + 1}
-          </div>
-          <span className="text-base font-bold  leading-normal ml-4">{item.title}</span>
-          <span className="text-base font-normal ml-1">({item?.requirement})</span>
-        </div>
-      </Accordion.Control>
-      <Accordion.Panel>{item.form}</Accordion.Panel>
-    </Accordion.Item>
-  ))
 
   return (
     <>
@@ -139,8 +100,8 @@ export const NewRestaurant = () => {
         <FormLayout
           title="Nuevo restaurante"
           show
+          accordionStructure={accordionStructure}
           accordionTitles={["Añadir banner", "Información general", "Datos de reservación"]}
-          accordionItems={items}
           navigate={() => navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Restaurants.path)}
           isLoading={isLoading}
         />

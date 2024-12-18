@@ -91,22 +91,6 @@ export default function NewCollection() {
     }
   ]
 
-  const items = accordionStructure.map((item, key) => (
-    <Accordion.Item key={key} value={item.title}>
-      <Accordion.Control>
-        <div className="w-full rounded-lg flex-row flex items-center">
-          <div
-            className={`text-slate-50 text-base font-bold bg-[${colors.main_app_color}] rounded-full p-2 w-8 h-8 flex items-center justify-center`}>
-            {key + 1}
-          </div>
-          <span className="text-base font-bold  leading-normal ml-4">{item.title}</span>
-          <span className="text-base font-normal ml-1">({item?.requirement})</span>
-        </div>
-      </Accordion.Control>
-      <Accordion.Panel>{item.form}</Accordion.Panel>
-    </Accordion.Item>
-  ))
-
   const onSubmit = (data) => {
     const formDataImage = new FormData()
     formDataImage.append("files", data.files[0])
@@ -126,8 +110,8 @@ export default function NewCollection() {
         <FormLayout
           title="Nueva colección"
           show
+          accordionStructure={accordionStructure}
           accordionTitles={["Información general", "Lista de platillos", "Lista de restaurantes"]}
-          accordionItems={items}
           navigate={() => navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Collections.path)}
           isLoading={creatingCollection}
         />

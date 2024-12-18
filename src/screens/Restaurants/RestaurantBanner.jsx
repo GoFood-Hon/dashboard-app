@@ -5,6 +5,7 @@ import { IconPhoto } from "@tabler/icons-react"
 import { bytesToMB } from "../../utils"
 import { useDispatch, useSelector } from "react-redux"
 import { fetchAllKitchenTypes } from "../../store/features/kitchenAndTagsSlice"
+import { colors } from "../../theme/colors"
 
 export const RestaurantBanner = ({ register, control, errors, setValue, isDataCleared, image, watch }) => {
   const dispatch = useDispatch()
@@ -41,7 +42,7 @@ export const RestaurantBanner = ({ register, control, errors, setValue, isDataCl
   })
 
   return (
-    <Paper withBorder radius="md" p='xs'>
+    <Paper withBorder radius="md" p="xs">
       <Flex align="center" justify="center">
         <Dropzone onDrop={handleDrop} accept={IMAGE_MIME_TYPE} h={250} style={{ cursor: "pointer" }}>
           <Flex direction="column" justify="center" align="center" h={250}>
@@ -61,12 +62,16 @@ export const RestaurantBanner = ({ register, control, errors, setValue, isDataCl
                 <Text className={`${image ? "hidden" : ""} text-center leading-10`} size="sm" c="dimmed" inline mt={7}>
                   Haga clic o arrastre el banner del restaurante
                 </Text>
+                {errors.files && (
+                  <Text c={colors.main_app_color} size="xs" ta="center">
+                    Banner es requerido
+                  </Text>
+                )}
               </>
             )}
           </Flex>
         </Dropzone>
       </Flex>
-      {errors.files && <p className="text-red-500 text-center w-full">* Imagen es requerida.</p>}
     </Paper>
   )
 }

@@ -46,7 +46,7 @@ export const colors = {
   dark_secondary_text: palette.light_slate_gray,
 
   light_link_text: palette.dodger_blue,
-  main_app_color: '#EE364C',
+  main_app_color: '#FF3148',
 
 
   /**

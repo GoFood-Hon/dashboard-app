@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react"
 import { useLocation, useNavigate } from "react-router-dom"
 import livingImage from "../assets/images/living.png"
 import layout1Image from "../assets/images/layout1.png"
-import logoImage from "../assets/images/goFood.png"
+import logoImage from "../assets/images/colorFUDGOLetters.png"
 import otLogoDark from "../assets/images/logo__ot__dark.svg"
 import otLogoLight from "../assets/images/logo__ot__light.svg"
 import authUtils from "../utils/authUtils"
@@ -107,7 +107,7 @@ export default function UnauthenticatedLayout() {
         <Paper withBorder shadow="md" py={50} p={30} radius="md" w="100%">
           <Stack>
             <Group justify="center" position="center">
-              <Image src={logoImage} alt="logo" h={45} />
+              <Image src={logoImage} alt="logo" h={28} />
             </Group>
             <form onSubmit={handleSubmit(onSubmit)}>
               <Flex direction="column" gap="md">

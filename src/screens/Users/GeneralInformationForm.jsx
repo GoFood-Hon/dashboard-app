@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { Flex, Grid, Paper, Select, Text, rem, Image } from "@mantine/core"
+import { Flex, Grid, Paper, Select, Text, rem, Image, MultiSelect } from "@mantine/core"
 import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone"
 import { IconPhoto } from "@tabler/icons-react"
 import InputField from "../../components/Form/InputField"
@@ -16,6 +16,7 @@ export default function GeneralInformationForm({
   isDataCleared,
   control,
   image,
+  data,
   newUser,
   watch,
   edit
@@ -27,6 +28,8 @@ export default function GeneralInformationForm({
   const [role, setRole] = useState(watch("role"))
   const user = useSelector((state) => state.user.value)
   const branchesList = useSelector((state) => state.branches.branches)
+  const [sucursalIds, setSucursalIds] = useState([])
+  const selectedSucursalIds = watch("sucursalId")
 
   const handleDrop = (acceptedFiles) => {
     if (acceptedFiles.length > 0) {
@@ -40,6 +43,15 @@ export default function GeneralInformationForm({
     setFileInformation(null)
     setImages([])
   }
+
+  const handleSucursalIds = (selected) => {
+    setSucursalIds(selected)
+    setValue("sucursalIds", selected)
+  }
+
+  useEffect(() => {
+    setSucursalIds(selectedSucursalIds)
+  }, [selectedSucursalIds])
 
   useEffect(() => {
     dispatch(fetchNoPaginatedBranches({ restaurantId: user.Restaurant.id }))
@@ -126,27 +138,45 @@ export default function GeneralInformationForm({
               </>
             )}
 
-            <Grid.Col>
-              <Controller
-                name="sucursalId"
-                control={control}
-                render={({ field, fieldState }) => (
-                  <Select
-                    label="Sucursal asignada"
-                    data={branchesList.map((item) => ({
-                      value: item.id,
-                      label: item.name
-                    }))}
-                    allowDeselect={false}
-                    maxDropdownHeight={200}
-                    value={field.value}
-                    onChange={field.onChange}
-                    error={fieldState.error ? fieldState.error.message : null}
-                    searchable
-                  />
-                )}
-              />
-            </Grid.Col>
+            {(role || selectedRole) === "driver" ? (
+              <Grid.Col span={{ base: 12 }}>
+                <MultiSelect
+                  label="Sucursales asignadas (Obligatorio)"
+                  data={branchesList?.map((item) => ({
+                    value: item.id,
+                    label: item.name
+                  }))}
+                  searchable
+                  hidePickedOptions
+                  onChange={handleSucursalIds}
+                  nothingFoundMessage="No se encontraron sucursales"
+                  value={sucursalIds}
+                  clearable
+                />
+              </Grid.Col>
+            ) : (
+              <Grid.Col>
+                <Controller
+                  name="sucursalId"
+                  control={control}
+                  render={({ field, fieldState }) => (
+                    <Select
+                      label="Sucursal asignada"
+                      data={branchesList.map((item) => ({
+                        value: item.id,
+                        label: item.name
+                      }))}
+                      allowDeselect={false}
+                      maxDropdownHeight={200}
+                      value={field.value}
+                      onChange={field.onChange}
+                      error={fieldState.error ? fieldState.error.message : null}
+                      searchable
+                    />
+                  )}
+                />
+              </Grid.Col>
+            )}
             {newUser && (
               <>
                 <Grid.Col span={{ base: 12, md: 6 }}>

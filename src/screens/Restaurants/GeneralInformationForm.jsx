@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { Controller } from "react-hook-form"
 import InputCheckbox from "../../components/Form/InputCheckbox"
 import { fetchAllKitchenTypes } from "../../store/features/kitchenAndTagsSlice"
+import { colors } from "../../theme/colors"
 
 export const GeneralInformationForm = ({ register, control, errors, setValue, image, watch }) => {
   const dispatch = useDispatch()
@@ -38,22 +39,10 @@ export const GeneralInformationForm = ({ register, control, errors, setValue, im
         <Paper withBorder radius="md" p="xs">
           <Grid gutter="md">
             <Grid.Col span={{ base: 12, md: 6 }}>
-              <InputField
-                label="Nombre del restaurante (Obligatorio)"
-                name="name"
-                register={register}
-                errors={errors}
-                className="text-black"
-              />
+              <InputField label="Nombre del restaurante (Obligatorio)" name="name" register={register} errors={errors} />
             </Grid.Col>
             <Grid.Col span={{ base: 12, md: 6 }}>
-              <InputField
-                label="Correo electrónico (Obligatorio)"
-                name="email"
-                register={register}
-                errors={errors}
-                className="text-black"
-              />
+              <InputField label="Correo electrónico (Obligatorio)" name="email" register={register} errors={errors} />
             </Grid.Col>
             <Grid.Col span={{ base: 12, md: 6 }}>
               <InputField
@@ -62,7 +51,6 @@ export const GeneralInformationForm = ({ register, control, errors, setValue, im
                 countryPrefix="+504"
                 register={register}
                 errors={errors}
-                className="text-black"
               />
             </Grid.Col>
             <Grid.Col span={{ base: 12, md: 6 }}>
@@ -104,12 +92,7 @@ export const GeneralInformationForm = ({ register, control, errors, setValue, im
               />
             </Grid.Col>
             <Grid.Col span={{ base: 12 }}>
-              <InputField
-                label="Clinpays Token (Obligatorio)"
-                name="clinpaysCommerceToken"
-                register={register}
-                errors={errors}
-              />
+              <InputField label="Clinpays Token (Obligatorio)" name="clinpaysCommerceToken" register={register} errors={errors} />
             </Grid.Col>
             <Grid.Col span={{ base: 12, md: 6 }}>
               <InputCheckbox label="¿Cuenta con delivery gratis?" name="shippingFree" register={register} />
@@ -147,9 +130,13 @@ export const GeneralInformationForm = ({ register, control, errors, setValue, im
                   </>
                 )}
               </Flex>
+              {errors.files && (
+                <Text c={colors.main_app_color} size="xs" ta='center'>
+                  Imagen es requerida
+                </Text>
+              )}
             </Dropzone>
           </Flex>
-          {errors.files && <p className="text-red-500 text-center w-full">* Imagen es requerida.</p>}
         </Paper>
       </Grid.Col>
     </Grid>

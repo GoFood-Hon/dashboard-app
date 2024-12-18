@@ -69,7 +69,7 @@ export default function GeneralInformationForm({ register, errors, setValue, isD
             <Grid.Col span={{ base: 12 }}>
               <MultiSelect
                 label="Lista de tags (Obligatorio)"
-                data={tags.map((item) => ({
+                data={tags?.map((item) => ({
                   value: item.id,
                   label: item.name
                 }))}

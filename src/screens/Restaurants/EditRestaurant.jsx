@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react"
-import { Accordion } from "@mantine/core"
 import { useForm } from "react-hook-form"
 import { useNavigate, useParams } from "react-router-dom"
 import { GeneralInformationForm } from "./GeneralInformationForm"
@@ -16,6 +15,7 @@ import { PlanForm } from "../Users/PlanForm"
 import { useDispatch } from "react-redux"
 import { updateRestaurantData } from "../../store/features/restaurantSlice"
 import { RestaurantBanner } from "./RestaurantBanner"
+import { restaurantValidation } from "../../utils/inputRules"
 import FormLayout from "../../components/Form/FormLayout"
 
 export const EditRestaurant = () => {
@@ -259,21 +259,12 @@ export const EditRestaurant = () => {
     }
   ]
 
-  const items = accordionStructure.map((item, key) => (
-    <Accordion.Item key={key} value={item.title}>
-      <Accordion.Control>
-        <div className="w-full rounded-lg flex-row flex items-center">
-          <div
-            className={`text-slate-50 text-base font-bold bg-[#EE364C] rounded-full p-2 w-8 h-8 flex items-center justify-center`}>
-            {key + 1}
-          </div>
-          <span className="text-base font-bold  leading-normal ml-4">{item.title}</span>
-          <span className="text-base font-normal ml-1">({item?.requirement})</span>
-        </div>
-      </Accordion.Control>
-      <Accordion.Panel>{item.form}</Accordion.Panel>
-    </Accordion.Item>
-  ))
+  const filteredAccordionStructure = accordionStructure.filter((item, index) => {
+    if (!restaurantDetails?.CreditCardRestaurant && index === accordionStructure.length - 1) {
+      return false
+    }
+    return true
+  })
 
   return (
     <>
@@ -281,8 +272,8 @@ export const EditRestaurant = () => {
         <FormLayout
           title={restaurantDetails?.name}
           show
+          accordionStructure={filteredAccordionStructure}
           accordionTitles={["Añadir banner", "Información general", "Datos de reservación", "Selección del plan"]}
-          accordionItems={restaurantDetails?.CreditCardRestaurant ? items : items.slice(0, 3)}
           navigate={() => navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Restaurants.path)}
           isLoading={isLoading}
           update

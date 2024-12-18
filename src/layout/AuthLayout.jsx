@@ -8,7 +8,8 @@ import {
   NAVIGATION_ROUTES_KITCHEN_TWO,
   NAVIGATION_ROUTES_SUPER_ADMIN_TWO,
   NAVIGATION_ROUTES_RES_ADMIN_TWO,
-  NAVIGATION_ROUTES_BRANCH_ADMIN_TWO
+  NAVIGATION_ROUTES_BRANCH_ADMIN_TWO,
+  NAVIGATION_ROUTES_CASHIER_TWO
 } from "../routes"
 import { AppShell, Burger, Container, useMantineColorScheme, useMantineTheme } from "@mantine/core"
 import { useDisclosure } from "@mantine/hooks"
@@ -40,7 +41,7 @@ function AuthLayout() {
     [APP_ROLES.restaurantAdmin]: NAVIGATION_ROUTES_RES_ADMIN_TWO,
     [APP_ROLES.superAdmin]: NAVIGATION_ROUTES_SUPER_ADMIN_TWO,
     [APP_ROLES.branchAdmin]: NAVIGATION_ROUTES_BRANCH_ADMIN_TWO,
-    [APP_ROLES.cashierUser]: NAVIGATION_ROUTES_BRANCH_ADMIN_TWO,
+    [APP_ROLES.cashierUser]: NAVIGATION_ROUTES_CASHIER_TWO,
     [APP_ROLES.kitchenUser]: NAVIGATION_ROUTES_KITCHEN_TWO
   }
 

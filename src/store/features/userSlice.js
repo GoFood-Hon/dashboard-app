@@ -267,7 +267,7 @@ export const updateUser = createAsyncThunk(
   async ({ formData, userId, formDataImage }, { rejectWithValue }) => {
     try {
       const response = await userApi.updateUserRestaurant(formData, userId)
-      let userData = response.data.AdminUser
+      let userData = response.data
       if (response.error) {
         showNotification({
           title: "Error",
@@ -551,6 +551,7 @@ export const userSlice = createSlice({
         state.updatingOtherUser = true
       })
       .addCase(updateUser.fulfilled, (state, action) => {
+        console.log(action.payload)
         const { id } = action.payload
         const currentPageUsers = state.usersByPage[state.currentUserPage]
         const index = currentPageUsers.findIndex((user) => user?.id == id)

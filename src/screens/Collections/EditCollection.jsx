@@ -1,12 +1,9 @@
 import React, { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
-import { Accordion } from "@mantine/core"
 import { useForm } from "react-hook-form"
 import { useDispatch, useSelector } from "react-redux"
 import GeneralInformationForm from "./GeneralInformationForm"
-import { createMenu } from "../../store/features/menuSlice"
-import { NAVIGATION_ROUTES_RES_ADMIN, NAVIGATION_ROUTES_SUPER_ADMIN } from "../../routes"
-import { colors } from "../../theme/colors"
+import { NAVIGATION_ROUTES_SUPER_ADMIN } from "../../routes"
 import {
   fetchDishesForCollections,
   fetchRestaurantsForCollections,
@@ -22,9 +19,7 @@ export default function EditCollection() {
   const { collectionId } = useParams()
   const navigate = useNavigate()
   const dispatch = useDispatch()
-  const user = useSelector((state) => state.user.value)
   const [elements, setElements] = useState([])
-  const [isLoading, setIsLoading] = useState(false)
   const {
     dishes,
     currentDishPage,
@@ -134,22 +129,6 @@ export default function EditCollection() {
     }
   }, [elements, reset])
 
-  const items = accordionStructure.map((item, key) => (
-    <Accordion.Item key={key} value={item.title}>
-      <Accordion.Control>
-        <div className="w-full rounded-lg flex-row flex items-center">
-          <div
-            className={`text-slate-50 text-base font-bold bg-[${colors.main_app_color}] rounded-full p-2 w-8 h-8 flex items-center justify-center`}>
-            {key + 1}
-          </div>
-          <span className="text-base font-bold  leading-normal ml-4">{item.title}</span>
-          <span className="text-base font-normal ml-1">({item?.requirement})</span>
-        </div>
-      </Accordion.Control>
-      <Accordion.Panel>{item.form}</Accordion.Panel>
-    </Accordion.Item>
-  ))
-
   const onSubmit = (data) => {
     let formDataImage = null
     if (data?.files?.[0]) {
@@ -170,8 +149,8 @@ export default function EditCollection() {
         <FormLayout
           title={elements.name}
           show
+          accordionStructure={accordionStructure}
           accordionTitles={["Información general", "Lista de platillos", "Lista de restaurantes"]}
-          accordionItems={items}
           navigate={() => navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Collections.path)}
           isLoading={updatingCollection}
           update

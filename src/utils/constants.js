@@ -63,19 +63,9 @@ export const branchWelcomeCards = [
     link: NAVIGATION_ROUTES_BRANCH_ADMIN.Dishes.path
   },
   {
-    title: "Ver mi Cuenta",
+    title: "Ver cuenta",
     description: "Consulta y administra tu cuenta",
     link: NAVIGATION_ROUTES_BRANCH_ADMIN.Account.path
-  },
-  {
-    title: "Actualizar contraseña",
-    description: "Crea o actualiza tu contraseña",
-    link: NAVIGATION_ROUTES_BRANCH_ADMIN.Password.path
-  },
-  {
-    title: "Ver Notificaciones",
-    description: "Ver las ultimas actualizaciones",
-    link: NAVIGATION_ROUTES_BRANCH_ADMIN.Home.path
   }
 ]
 
@@ -249,7 +239,7 @@ export const orderStates = {
   ]
 }
 
-export const PRIMARY_COL_HEIGHT = "512px"
+export const PRIMARY_COL_HEIGHT = "500px"
 export const SECONDARY_COL_HEIGHT = `calc(${PRIMARY_COL_HEIGHT} / 2 - var(--mantine-spacing-md) / 2)`
 
 export const theme = createTheme({

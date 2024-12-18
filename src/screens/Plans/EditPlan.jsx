@@ -69,22 +69,6 @@ export const EditPlan = () => {
     window.scrollTo(0, 0)
   }, [planDetails, reset])
 
-  const items = accordionStructure.map((item, key) => (
-    <Accordion.Item key={key} value={item.title}>
-      <Accordion.Control>
-        <div className="w-full rounded-lg flex-row flex items-center">
-          <div
-            className={`text-slate-50 text-base font-bold bg-[${colors.main_app_color}] rounded-full p-2 w-8 h-8 flex items-center justify-center`}>
-            {key + 1}
-          </div>
-          <span className="text-base font-bold  leading-normal ml-4">{item.title}</span>
-          <span className="text-base font-normal ml-1">({item?.requirement})</span>
-        </div>
-      </Accordion.Control>
-      <Accordion.Panel>{item.form}</Accordion.Panel>
-    </Accordion.Item>
-  ))
-
   const onSubmit = async (data) => {
     const planId = data.id
 
@@ -126,7 +110,7 @@ export const EditPlan = () => {
           title={planDetails?.name}
           show
           accordionTitles={["Información general"]}
-          accordionItems={items}
+          accordionStructure={accordionStructure}
           navigate={() => navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Plans.path)}
           isLoading={isLoading}
           update

@@ -77,22 +77,6 @@ export default function NewMenu() {
     }
   ]
 
-  const items = accordionStructure.map((item, key) => (
-    <Accordion.Item key={key} value={item.title}>
-      <Accordion.Control>
-        <div className="w-full rounded-lg flex-row flex items-center">
-          <div
-            className={`text-slate-50 text-base font-bold bg-[${colors.main_app_color}] rounded-full p-2 w-8 h-8 flex items-center justify-center`}>
-            {key + 1}
-          </div>
-          <span className="text-base font-bold  leading-normal ml-4">{item.title}</span>
-          <span className="text-base font-normal ml-1">({item?.requirement})</span>
-        </div>
-      </Accordion.Control>
-      <Accordion.Panel>{item.form}</Accordion.Panel>
-    </Accordion.Item>
-  ))
-
   const onSubmit = (data) => {
     setIsLoading(true)
     const restaurantId = user.restaurantId
@@ -113,7 +97,7 @@ export default function NewMenu() {
           title="Nuevo menú"
           show
           accordionTitles={["Información general", "Platillos"]}
-          accordionItems={items}
+          accordionStructure={accordionStructure}
           navigate={() => navigate(NAVIGATION_ROUTES_RES_ADMIN.Menu.path)}
           isLoading={isLoading}
         />

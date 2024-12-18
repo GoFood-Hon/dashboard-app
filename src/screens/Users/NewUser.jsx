@@ -39,7 +39,7 @@ export default function NewUser() {
     formData.append("role", data.role)
     formData.append("note", data.note)
 
-    formData.append("sucursalId", data.sucursalId)
+    formData.append("sucursalIds", data.sucursalId)
     formData.append("password", data.password)
     formData.append("confirmPassword", data.confirmPassword)
 
@@ -79,21 +79,6 @@ export default function NewUser() {
     }
   ]
 
-  const items = accordionStructure.map((item, key) => (
-    <Accordion.Item key={key} value={item.title}>
-      <Accordion.Control>
-        <div className="w-full rounded-lg flex-row flex items-center ">
-          <div className="text-slate-50 text-base font-bold bg-[#EE364C] rounded-full p-2 w-8 h-8 flex items-center justify-center">
-            {key + 1}
-          </div>
-          <span className="text-base font-bold  leading-normal ml-4">{item.title}</span>
-          <span className="text-base font-normal ml-1">({item?.requirement})</span>
-        </div>
-      </Accordion.Control>
-      <Accordion.Panel>{item.form}</Accordion.Panel>
-    </Accordion.Item>
-  ))
-
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -101,7 +86,7 @@ export default function NewUser() {
           title="Nuevo usuario"
           show
           accordionTitles={["Información general", "Sucursal"]}
-          accordionItems={items}
+          accordionStructure={accordionStructure}
           navigate={() => navigate(NAVIGATION_ROUTES_RES_ADMIN.Users.path)}
           isLoading={creatingOtherUser}
         />

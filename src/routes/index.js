@@ -362,6 +362,74 @@ export const NAVIGATION_ROUTES_BRANCH_ADMIN_TWO = [
   }
 ]
 
+export const NAVIGATION_ROUTES_CASHIER = {
+  Home: {
+    label: "Inicio",
+    path: "/",
+    icon: "dashboard"
+  },
+  Pedidos: {
+    label: "Pedidos",
+    path: "/pedidos",
+    icon: "shoppingCart",
+    OrderDetails: {
+      label: "Detalles del pedido",
+      path: "/pedidos/:orderId"
+    }
+  },
+  Menu: {
+    label: "Menú",
+    icon: "menu",
+    path: "/menu",
+    MenuDetails: {
+      label: "Detalles del menu",
+      path: "/menu/:menuId"
+    },
+    NewMenu: {
+      path: "/menu/nuevoMenu"
+    }
+  },
+  Dishes: {
+    label: "Platillos",
+    icon: "chefHat",
+    path: "menu/platillos",
+    DishDetails: {
+      label: "Detalles del platillo",
+      path: "menu/platillos/:dishId"
+    }
+  },
+  Account: {
+    label: "Cuenta",
+    icon: "users",
+    path: "/miCuenta"
+  }
+}
+
+export const NAVIGATION_ROUTES_CASHIER_TWO = [
+  { label: "Inicio", icon: IconHome, link: "/" },
+  { label: "Pedidos", icon: IconBox, link: "/pedidos" },
+  {
+    label: "Menús",
+    icon: IconToolsKitchen,
+    initiallyOpened: false,
+    links: [
+      {
+        label: "Lista de menús",
+        link: "/menu"
+      },
+      {
+        label: "Platillos",
+        link: "/menu/platillos"
+      }
+    ]
+  },
+  {
+    label: "Cuenta",
+    icon: IconSettings,
+    link: "/miCuenta"
+  }
+]
+
 export const NAVIGATION_ROUTES_KITCHEN = {
   Home: {
     label: "Inicio",

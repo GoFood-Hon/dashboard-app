@@ -4,7 +4,8 @@ import {
   NAVIGATION_ROUTES_BRANCH_ADMIN,
   NAVIGATION_ROUTES_SUPER_ADMIN,
   SETTING_NAVIGATION_ROUTES,
-  NAVIGATION_ROUTES_KITCHEN
+  NAVIGATION_ROUTES_KITCHEN,
+  NAVIGATION_ROUTES_CASHIER
 } from "./routes"
 import { Route, RouterProvider, createBrowserRouter, createRoutesFromElements } from "react-router-dom"
 import AuthLayout from "./layout/AuthLayout"
@@ -177,7 +178,7 @@ function App() {
 
             <Route path={NAVIGATION_ROUTES_BRANCH_ADMIN.Dishes.path} element={<Dishes />} />
 
-            <Route path={NAVIGATION_ROUTES_BRANCH_ADMIN.Dishes.DishDetails.path} element={<DishDetails />} />
+            <Route path={NAVIGATION_ROUTES_BRANCH_ADMIN.Dishes.DishDetails.path} element={<EditDishScreen />} />
 
             <Route path={NAVIGATION_ROUTES_BRANCH_ADMIN.Reservations.path} element={<Reservations />} />
 
@@ -187,29 +188,27 @@ function App() {
 
             <Route path={NAVIGATION_ROUTES_BRANCH_ADMIN.Password.path} element={<PasswordSettings />} />
 
-            <Route path={NAVIGATION_ROUTES_BRANCH_ADMIN.Menu.MenuDetails.path} element={<MenuDetails />} />
+            <Route path={NAVIGATION_ROUTES_BRANCH_ADMIN.Menu.MenuDetails.path} element={<EditMenuScreen />} />
           </>
         )
       case APP_ROLES.cashierUser:
         return (
           <>
-            <Route path={NAVIGATION_ROUTES_BRANCH_ADMIN.Home.path} element={<WelcomeScreen />} />
+            <Route path={NAVIGATION_ROUTES_CASHIER.Home.path} element={<WelcomeScreen />} />
 
-            <Route path={NAVIGATION_ROUTES_BRANCH_ADMIN.Pedidos.path} element={<Orders />} />
+            <Route path={NAVIGATION_ROUTES_CASHIER.Pedidos.path} element={<Orders />} />
 
-            <Route path={NAVIGATION_ROUTES_BRANCH_ADMIN.Pedidos.OrderDetails.path} element={<OrderDetails />} />
+            <Route path={NAVIGATION_ROUTES_CASHIER.Pedidos.OrderDetails.path} element={<OrderDetails />} />
 
-            <Route path={NAVIGATION_ROUTES_BRANCH_ADMIN.Menu.path} element={<Menu />} />
+            <Route path={NAVIGATION_ROUTES_CASHIER.Menu.path} element={<Menu />} />
 
-            <Route path={NAVIGATION_ROUTES_BRANCH_ADMIN.Dishes.path} element={<Dishes />} />
+            <Route path={NAVIGATION_ROUTES_CASHIER.Dishes.path} element={<Dishes />} />
 
-            <Route path={NAVIGATION_ROUTES_RES_ADMIN.Menu.submenu.Dishes.DishDetails.path} element={<DishDetails />} />
+            <Route path={NAVIGATION_ROUTES_CASHIER.Dishes.DishDetails.path} element={<EditDishScreen />} />
 
-            <Route path={NAVIGATION_ROUTES_BRANCH_ADMIN.Account.path} element={<AccountSettings />} />
+            <Route path={NAVIGATION_ROUTES_CASHIER.Account.path} element={<AccountSettings />} />
 
-            <Route path={NAVIGATION_ROUTES_BRANCH_ADMIN.Password.path} element={<PasswordSettings />} />
-
-            <Route path={NAVIGATION_ROUTES_BRANCH_ADMIN.Menu.MenuDetails.path} element={<MenuDetails />} />
+            <Route path={NAVIGATION_ROUTES_CASHIER.Menu.MenuDetails.path} element={<EditMenuScreen />} />
           </>
         )
       case APP_ROLES.kitchenUser:
