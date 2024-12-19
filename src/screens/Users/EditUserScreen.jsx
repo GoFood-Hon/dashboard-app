@@ -23,7 +23,6 @@ export const EditUserScreen = () => {
       try {
         const response = await authApi.getUserDetails(userId)
         const userDetailsData = response?.data
-        console.log(userDetailsData)
         setUserDetails(userDetailsData)
       } catch (error) {
         toast.error("Hubo un error obteniendo los detalles del usuario")
@@ -81,7 +80,7 @@ export const EditUserScreen = () => {
     formData.append("email", data.email)
     formData.append("phoneNumber", data.phoneNumber)
     formData.append("role", data.role)
-    formData.append("sucursalIds", data.sucursalId)
+    formData.append("sucursalId", data.sucursalId)
     if (data.role === USER_ROLES.driver) {
       formData.append("motorcycleId", data.Driver.motorcycleId)
       formData.append("nationalIdentityNumber", data.Driver.nationalIdentityNumber)
@@ -92,16 +91,16 @@ export const EditUserScreen = () => {
       formDataImage = new FormData()
       formDataImage.append("files", data.files[0])
     }
-    console.log(data)
 
-    dispatch(updateUser({ formData, userId, formDataImage }))
-      .unwrap()
-      .then(() => {
-        navigate(NAVIGATION_ROUTES_RES_ADMIN.Users.path)
-      })
-      .catch((error) => {
-        console.error("Error updating user:", error)
-      })
+    console.log(data)
+    // dispatch(updateUser({ formData, userId, formDataImage }))
+    //   .unwrap()
+    //   .then(() => {
+    //     navigate(NAVIGATION_ROUTES_RES_ADMIN.Users.path)
+    //   })
+    //   .catch((error) => {
+    //     console.error("Error updating user:", error)
+    //   })
   }
 
   useEffect(() => {

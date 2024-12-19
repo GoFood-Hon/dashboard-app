@@ -69,7 +69,11 @@ const userApi = {
   addImage: (id, params) =>
     axiosClient.post(`api/v1/users/update-image-user/${id}`, params, {
       contentType: `multipart/form-data; boundary=${params._boundary}`
-    })
+    }),
+
+  addDriverToSucursal: (params) => axiosClient.post("api/v1/users/assign-driver", params),
+  
+  deleteDriverFromSucursal: (params) => axiosClient.delete("api/v1/users/remove-driver-sucursal", params)
 }
 
 export default userApi

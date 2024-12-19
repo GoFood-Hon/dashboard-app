@@ -53,6 +53,7 @@ export const fetchOrderDetails = createAsyncThunk("orders/fetchOrderDetails", as
 export const updateOrderStatus = createAsyncThunk("orders/updateOrderStatus", async (id, { rejectWithValue }) => {
   try {
     const response = await orderApi.updateOrderStatus(id)
+    console.log(response)
     if (response.error) {
       showNotification({
         title: "Error",
@@ -89,6 +90,14 @@ export const confirmOrder = createAsyncThunk("orders/confirmOrder", async (id, {
 
       return rejectWithValue(response.message)
     }
+
+    showNotification({
+      title: "Confirmaciòn exitosa",
+      message: "El estado del pedido se marcó como confirmado",
+      color: "green",
+      duration: 7000
+    })
+    
     return response.data
   } catch (error) {
     return rejectWithValue(error.response?.data || error.message)
@@ -172,7 +181,7 @@ export const markOrderDelivered = createAsyncThunk("orders/markOrderDelivered", 
 
     showNotification({
       title: "Actualización exitosa",
-      message: "El se marcó como entregado",
+      message: "El pedido se marcó como entregado",
       color: "green",
       duration: 7000
     })

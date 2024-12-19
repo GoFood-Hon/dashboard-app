@@ -32,20 +32,19 @@ export default function NewUser() {
   const [isDataCleared, setIsDataCleared] = useState(false)
 
   const onSubmit = async (data) => {
-    const formData = new FormData()
-    formData.append("name", data.name)
-    formData.append("email", data.email)
-    formData.append("phoneNumber", data.phoneNumber.startsWith("+504") ? data.phoneNumber : `+504${data.phoneNumber}`)
-    formData.append("role", data.role)
-    formData.append("note", data.note)
-
-    formData.append("sucursalIds", data.sucursalId)
-    formData.append("password", data.password)
-    formData.append("confirmPassword", data.confirmPassword)
-
+    const formData = {
+      name: data.name,
+      email: data.email,
+      phoneNumber: data.phoneNumber.startsWith("+504") ? data.phoneNumber : `+504${data.phoneNumber}`,
+      role: data.role,
+      sucursalIds: data.sucursalIds,
+      password: data.password,
+      confirmPassword: data.confirmPassword,
+    };
+    
     if (data.role === USER_ROLES.driver) {
-      formData.append("motorcycleId", data.Driver.motorcycleId)
-      formData.append("nationalIdentityNumber", data.Driver.nationalIdentityNumber)
+      formData.motorcycleId = data.Driver.motorcycleId;
+      formData.nationalIdentityNumber = data.Driver.nationalIdentityNumber;
     }
 
     const formDataImage = new FormData()

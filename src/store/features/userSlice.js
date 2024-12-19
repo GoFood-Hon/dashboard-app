@@ -133,10 +133,10 @@ export const createAdminUser = createAsyncThunk(
 
 export const createUser = createAsyncThunk(
   "user/createUser",
-  async ({ params, formDataImage }, { rejectWithValue }) => {
+  async ({ params, imageParams }, { rejectWithValue }) => {
     try {
       const response = await userApi.createUser(params)
-      const userData = response.data
+      let userData = response.data
 
       if (response.error) {
         showNotification({
@@ -149,10 +149,8 @@ export const createUser = createAsyncThunk(
         return rejectWithValue(response.message)
       }
 
-      let images = []
-      if (formDataImage) {
-        const imageResponse = await userApi.addImage(userData.id, formDataImage)
-        images = imageResponse.data
+      if (imageParams) {
+        const imageResponse = await userApi.addImage(userData.id, imageParams)
 
         if (imageResponse.error) {
           showNotification({
@@ -164,6 +162,8 @@ export const createUser = createAsyncThunk(
 
           return rejectWithValue(imageResponse.message)
         }
+
+        userData = { ...userData, images: imageResponse.data }
       }
 
       showNotification({
@@ -173,7 +173,7 @@ export const createUser = createAsyncThunk(
         duration: 5000
       })
 
-      return { ...userData, images }
+      return userData
     } catch (error) {
       showNotification({
         title: "Error",
@@ -465,6 +465,7 @@ export const userSlice = createSlice({
         state.creatingOtherUser = true
       })
       .addCase(createUser.fulfilled, (state, action) => {
+        console.log(action.payload)
         const newUser = action.payload
 
         if (!state.usersByPage[1]) {
@@ -472,7 +473,7 @@ export const userSlice = createSlice({
         }
         state.usersByPage[1].unshift(newUser)
 
-        for (let i = 1; i <= state.totalPagesCount; i++) {
+        for (let i = 1; i <= state.totalUserPagesCount; i++) {
           if (state.usersByPage[i]?.length > state.itemsPerPage) {
             const lastItem = state.usersByPage[i].pop()
             if (state.usersByPage[i + 1]) {
@@ -484,7 +485,7 @@ export const userSlice = createSlice({
         }
 
         const consecutivePages = [1]
-        for (let i = 2; i <= state.totalPagesCount; i++) {
+        for (let i = 2; i <= state.totalUserPagesCount; i++) {
           if (state.usersByPage[i]) {
             if (consecutivePages.includes(i - 1)) {
               consecutivePages.push(i)

@@ -29,7 +29,10 @@ export default function GeneralInformationForm({
   const user = useSelector((state) => state.user.value)
   const branchesList = useSelector((state) => state.branches.branches)
   const [sucursalIds, setSucursalIds] = useState([])
-  const selectedSucursalIds = watch("sucursalId")
+  const [deletedSucursalIds, setDeletedSucursalIds] = useState([])
+  const [newSucursalIds, setNewSucursalIds] = useState([])
+  const selectedSucursalIds = watch("driverSucursals")
+  const selectedSucursalId = [{ id: watch("sucursalId") }]
 
   const handleDrop = (acceptedFiles) => {
     if (acceptedFiles.length > 0) {
@@ -44,13 +47,52 @@ export default function GeneralInformationForm({
     setImages([])
   }
 
+  // const handleSucursalIds = (selected) => {
+  //   setSucursalIds(selected)
+  //   setValue("sucursalIdsDriver", selected)
+  // }
+
   const handleSucursalIds = (selected) => {
-    setSucursalIds(selected)
-    setValue("sucursalIds", selected)
+    if ((role || selectedRole) === "driver" && edit) {
+      const currentSucursalIds = selectedSucursalIds.map((item) => item.id)
+      const removedIds = sucursalIds.filter((id) => !selected.includes(id))
+      const validRemovedIds = removedIds.filter((id) => currentSucursalIds.includes(id))
+      const addedIds = selected.filter((id) => !sucursalIds.includes(id))
+      const validAddedIds = addedIds.filter((id) => !currentSucursalIds.includes(id))
+
+      setDeletedSucursalIds((prev) => {
+        const updatedDeleted = [...prev, ...validRemovedIds]
+        setValue("deletedSucursals", updatedDeleted)
+        return updatedDeleted
+      })
+
+      setNewSucursalIds((prev) => {
+        const filteredNewSucursalIds = prev.filter((id) => !removedIds.includes(id))
+        const updatedNew = [...filteredNewSucursalIds, ...validAddedIds]
+        setValue("newSucursals", updatedNew)
+        return updatedNew
+      })
+
+      setSucursalIds(selected)
+      setValue("sucursalIdsDriver", selected)
+    } else {
+      setSucursalIds(selected)
+      setValue("sucursalIds", selected)
+    }
   }
 
   useEffect(() => {
-    setSucursalIds(selectedSucursalIds)
+    if ((role || selectedRole) === "driver") {
+      if (selectedSucursalIds && Array.isArray(selectedSucursalIds)) {
+        const ids = selectedSucursalIds.map((item) => item.id)
+        setSucursalIds(ids)
+      }
+    } else {
+      if (selectedSucursalIds && Array.isArray(selectedSucursalId)) {
+        const ids = selectedSucursalId.map((item) => item.id)
+        setSucursalIds(ids)
+      }
+    }
   }, [selectedSucursalIds])
 
   useEffect(() => {
@@ -71,6 +113,8 @@ export default function GeneralInformationForm({
   const handleChangeRol = (value, name) => {
     setRole(value)
     setValue(value, name)
+    setSucursalIds([])
+    setValue("sucursalIds", [])
   }
 
   return (
@@ -138,22 +182,22 @@ export default function GeneralInformationForm({
               </>
             )}
 
-            {(role || selectedRole) === "driver" ? (
-              <Grid.Col span={{ base: 12 }}>
-                <MultiSelect
-                  label="Sucursales asignadas (Obligatorio)"
-                  data={branchesList?.map((item) => ({
-                    value: item.id,
-                    label: item.name
-                  }))}
-                  searchable
-                  hidePickedOptions
-                  onChange={handleSucursalIds}
-                  nothingFoundMessage="No se encontraron sucursales"
-                  value={sucursalIds}
-                  clearable
-                />
-              </Grid.Col>
+            <Grid.Col span={{ base: 12 }}>
+              <MultiSelect
+                label="Sucursales asignadas (Obligatorio)"
+                data={branchesList?.map((item) => ({
+                  value: item.id,
+                  label: item.name
+                }))}
+                maxValues={(role || selectedRole) === "driver" ? undefined : 1}
+                searchable
+                hidePickedOptions
+                onChange={handleSucursalIds}
+                nothingFoundMessage="No se encontraron sucursales"
+                value={sucursalIds}
+              />
+            </Grid.Col>
+            {/* {(role || selectedRole) === "driver" ? (
             ) : (
               <Grid.Col>
                 <Controller
@@ -176,7 +220,7 @@ export default function GeneralInformationForm({
                   )}
                 />
               </Grid.Col>
-            )}
+            )} */}
             {newUser && (
               <>
                 <Grid.Col span={{ base: 12, md: 6 }}>

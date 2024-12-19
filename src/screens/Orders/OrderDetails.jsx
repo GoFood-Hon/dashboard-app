@@ -84,6 +84,7 @@ export const OrderDetails = () => {
   }, [orderDetails])
 
   useEffect(() => {
+    console.log(orderDetails)
     dispatch(fetchOrderDetails(orderId))
   }, [])
 
