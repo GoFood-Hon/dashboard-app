@@ -39,16 +39,19 @@ export default function NewUser() {
       role: data.role,
       sucursalIds: data.sucursalIds,
       password: data.password,
-      confirmPassword: data.confirmPassword,
-    };
-    
-    if (data.role === USER_ROLES.driver) {
-      formData.motorcycleId = data.Driver.motorcycleId;
-      formData.nationalIdentityNumber = data.Driver.nationalIdentityNumber;
+      confirmPassword: data.confirmPassword
     }
 
-    const formDataImage = new FormData()
-    formDataImage.append("files", data.files[0])
+    if (data.role === USER_ROLES.driver) {
+      formData.motorcycleId = data.Driver.motorcycleId
+      formData.nationalIdentityNumber = data.Driver.nationalIdentityNumber
+    }
+
+    let formDataImage = null
+    if (data?.files?.[0]) {
+      formDataImage = new FormData()
+      formDataImage.append("files", data.files[0])
+    }
 
     dispatch(createUser({ params: formData, imageParams: formDataImage }))
       .unwrap()

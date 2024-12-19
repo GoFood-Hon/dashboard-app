@@ -640,7 +640,7 @@ export default function MenuTable({ items, screenType, totalItems, currentPage, 
       )}
 
       <div className="flex w-full justify-end">
-        <Group mt={10}>
+        <Group>
           <Pagination
             total={totalItems}
             page={currentPage}

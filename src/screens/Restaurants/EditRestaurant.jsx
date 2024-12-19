@@ -74,7 +74,7 @@ export const EditRestaurant = () => {
       formData.append("cai", data.cai)
       formData.append("shippingFree", data.shippingFree ?? false)
       formData.append("cuisineTypeId", data.cuisineTypeId ?? "")
-      formData.append("clinpaysCommerceToken", data.cuisineTypeId ?? null)
+      formData.append("clinpaysCommerceToken", data.clinpaysCommerceToken ?? null)
       if (data.pricePerChair) {
         formData.append("pricePerChair", data.pricePerChair)
       }

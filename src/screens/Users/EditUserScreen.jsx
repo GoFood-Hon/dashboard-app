@@ -80,10 +80,11 @@ export const EditUserScreen = () => {
     formData.append("email", data.email)
     formData.append("phoneNumber", data.phoneNumber)
     formData.append("role", data.role)
-    formData.append("sucursalId", data.sucursalId)
     if (data.role === USER_ROLES.driver) {
       formData.append("motorcycleId", data.Driver.motorcycleId)
       formData.append("nationalIdentityNumber", data.Driver.nationalIdentityNumber)
+    } else {
+      formData.append("sucursalId", data.sucursalId)
     }
 
     let formDataImage = null
@@ -92,15 +93,23 @@ export const EditUserScreen = () => {
       formDataImage.append("files", data.files[0])
     }
 
-    console.log(data)
-    // dispatch(updateUser({ formData, userId, formDataImage }))
-    //   .unwrap()
-    //   .then(() => {
-    //     navigate(NAVIGATION_ROUTES_RES_ADMIN.Users.path)
-    //   })
-    //   .catch((error) => {
-    //     console.error("Error updating user:", error)
-    //   })
+    dispatch(
+      updateUser({
+        formData,
+        userId,
+        formDataImage,
+        newSucursals: data.newSucursals,
+        deletedSucursals: data.deletedSucursals,
+        driverId: userDetails?.Driver?.driverId
+      })
+    )
+      .unwrap()
+      .then(() => {
+        navigate(NAVIGATION_ROUTES_RES_ADMIN.Users.path)
+      })
+      .catch((error) => {
+        console.error("Error updating user:", error)
+      })
   }
 
   useEffect(() => {

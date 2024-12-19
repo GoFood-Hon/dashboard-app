@@ -131,61 +131,58 @@ export const createAdminUser = createAsyncThunk(
   }
 )
 
-export const createUser = createAsyncThunk(
-  "user/createUser",
-  async ({ params, imageParams }, { rejectWithValue }) => {
-    try {
-      const response = await userApi.createUser(params)
-      let userData = response.data
+export const createUser = createAsyncThunk("user/createUser", async ({ params, imageParams }, { rejectWithValue }) => {
+  try {
+    const response = await userApi.createUser(params)
+    let userData = response.data
 
-      if (response.error) {
-        showNotification({
-          title: "Error",
-          message: response.message,
-          color: "red",
-          duration: 7000
-        })
-
-        return rejectWithValue(response.message)
-      }
-
-      if (imageParams) {
-        const imageResponse = await userApi.addImage(userData.id, imageParams)
-
-        if (imageResponse.error) {
-          showNotification({
-            title: "Error",
-            message: imageResponse.message,
-            color: "red",
-            duration: 7000
-          })
-
-          return rejectWithValue(imageResponse.message)
-        }
-
-        userData = { ...userData, images: imageResponse.data }
-      }
-
-      showNotification({
-        title: "Creación exitosa",
-        message: `El usuario ${userData.name} fue creado`,
-        color: "green",
-        duration: 5000
-      })
-
-      return userData
-    } catch (error) {
+    if (response.error) {
       showNotification({
         title: "Error",
-        message: error.message || "Error desconocido",
+        message: response.message,
         color: "red",
         duration: 7000
       })
 
-      return rejectWithValue(error.message)
+      return rejectWithValue(response.message)
     }
+
+    if (imageParams) {
+      const imageResponse = await userApi.addImage(userData.id, imageParams)
+
+      if (imageResponse.error) {
+        showNotification({
+          title: "Error",
+          message: imageResponse.message,
+          color: "red",
+          duration: 7000
+        })
+
+        return rejectWithValue(imageResponse.message)
+      }
+
+      userData = { ...userData, images: imageResponse.data }
+    }
+
+    showNotification({
+      title: "Creación exitosa",
+      message: `El usuario ${userData.name} fue creado`,
+      color: "green",
+      duration: 5000
+    })
+
+    return userData
+  } catch (error) {
+    showNotification({
+      title: "Error",
+      message: error.message || "Error desconocido",
+      color: "red",
+      duration: 7000
+    })
+
+    return rejectWithValue(error.message)
   }
-)
+})
 
 export const updateUserData = createAsyncThunk(
   "user/updateUserData",
@@ -264,10 +261,11 @@ export const updateUserStatus = createAsyncThunk("user/updateUserStatus", async 
 
 export const updateUser = createAsyncThunk(
   "user/updateUser",
-  async ({ formData, userId, formDataImage }, { rejectWithValue }) => {
+  async ({ formData, userId, formDataImage, newSucursals, deletedSucursals, driverId }, { rejectWithValue }) => {
     try {
       const response = await userApi.updateUserRestaurant(formData, userId)
       let userData = response.data
+      console.log(userData)
       if (response.error) {
         showNotification({
           title: "Error",
@@ -292,12 +290,34 @@ export const updateUser = createAsyncThunk(
           return rejectWithValue(imageResponse.message)
         }
 
-        userData = { ...userData, images: imageResponse.data }
+        if (userData.AdminUser) {
+          userData = {
+            ...userData,
+            AdminUser: {
+              ...userData.AdminUser,
+              images: imageResponse.data
+            }
+          }
+        } else {
+          userData = { ...userData, images: imageResponse.data }
+        }
+      }
+
+      if (newSucursals) {
+        await Promise.all(
+          newSucursals.map((sucursal) => userApi.addDriverToSucursal({ driverId: driverId, sucursalId: sucursal }))
+        )
+      }
+
+      if (deletedSucursals) {
+        await Promise.all(
+          deletedSucursals.map((sucursal) => userApi.deleteDriverFromSucursal({ driverId: driverId, sucursalId: sucursal }))
+        )
       }
 
       showNotification({
         title: "Actualización exitosa",
-        message: `El administrador ${userData.name} fue actualizado`,
+        message: `El usuario ${userData.name || userData.AdminUser.name} fue actualizado`,
         color: "green"
       })
 
@@ -552,12 +572,13 @@ export const userSlice = createSlice({
         state.updatingOtherUser = true
       })
       .addCase(updateUser.fulfilled, (state, action) => {
-        console.log(action.payload)
-        const { id } = action.payload
+        const { id, AdminUser } = action.payload
         const currentPageUsers = state.usersByPage[state.currentUserPage]
-        const index = currentPageUsers.findIndex((user) => user?.id == id)
-        
-        if (index !== -1) {
+        const index = currentPageUsers.findIndex((user) => user?.id == (id || AdminUser.id))
+
+        if (index !== -1 && AdminUser) {
+          currentPageUsers[index] = action.payload.AdminUser
+        } else {
           currentPageUsers[index] = action.payload
         }
         state.updatingOtherUser = false

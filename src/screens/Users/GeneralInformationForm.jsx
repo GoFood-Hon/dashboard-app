@@ -75,6 +75,9 @@ export default function GeneralInformationForm({
 
       setSucursalIds(selected)
       setValue("sucursalIdsDriver", selected)
+    } else if ((role || selectedRole) !== "driver" && edit) {
+      setSucursalIds(selected)
+      setValue("sucursalId", selected)
     } else {
       setSucursalIds(selected)
       setValue("sucursalIds", selected)

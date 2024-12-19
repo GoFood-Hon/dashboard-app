@@ -72,8 +72,11 @@ const userApi = {
     }),
 
   addDriverToSucursal: (params) => axiosClient.post("api/v1/users/assign-driver", params),
-  
-  deleteDriverFromSucursal: (params) => axiosClient.delete("api/v1/users/remove-driver-sucursal", params)
+
+  deleteDriverFromSucursal: (params) =>
+    axiosClient.delete(`api/v1/users/remove-driver-sucursal`, {
+      data: params
+    })
 }
 
 export default userApi
