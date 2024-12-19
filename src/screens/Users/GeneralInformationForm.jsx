@@ -47,11 +47,6 @@ export default function GeneralInformationForm({
     setImages([])
   }
 
-  // const handleSucursalIds = (selected) => {
-  //   setSucursalIds(selected)
-  //   setValue("sucursalIdsDriver", selected)
-  // }
-
   const handleSucursalIds = (selected) => {
     if ((role || selectedRole) === "driver" && edit) {
       const currentSucursalIds = selectedSucursalIds.map((item) => item.id)
@@ -187,7 +182,7 @@ export default function GeneralInformationForm({
 
             <Grid.Col span={{ base: 12 }}>
               <MultiSelect
-                label="Sucursales asignadas (Obligatorio)"
+                label={(role || selectedRole) === "driver" ? "Sucursales asignadas (Obligatorio)" : 'Sucursal asignada (Obligatorio)'}
                 data={branchesList?.map((item) => ({
                   value: item.id,
                   label: item.name
@@ -200,30 +195,6 @@ export default function GeneralInformationForm({
                 value={sucursalIds}
               />
             </Grid.Col>
-            {/* {(role || selectedRole) === "driver" ? (
-            ) : (
-              <Grid.Col>
-                <Controller
-                  name="sucursalId"
-                  control={control}
-                  render={({ field, fieldState }) => (
-                    <Select
-                      label="Sucursal asignada"
-                      data={branchesList.map((item) => ({
-                        value: item.id,
-                        label: item.name
-                      }))}
-                      allowDeselect={false}
-                      maxDropdownHeight={200}
-                      value={field.value}
-                      onChange={field.onChange}
-                      error={fieldState.error ? fieldState.error.message : null}
-                      searchable
-                    />
-                  )}
-                />
-              </Grid.Col>
-            )} */}
             {newUser && (
               <>
                 <Grid.Col span={{ base: 12, md: 6 }}>

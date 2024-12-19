@@ -3,7 +3,6 @@ import dishesApi from "../../api/dishesApi"
 import toast from "react-hot-toast"
 import { ITEMS_PER_PAGE_CARDS } from "../../utils/paginationConfig"
 import { convertToDecimal } from "../../utils"
-import extrasApi from "../../api/extrasApi"
 import { showNotification } from "@mantine/notifications"
 
 const initialState = {
@@ -115,34 +114,29 @@ export const fetchDishes = createAsyncThunk(
   }
 )
 
-/*
- * CREATE DISHES
- */
+export const createDish = createAsyncThunk(
+  "dishes/createDish",
+  async ({ data, restaurantId, additionals }, { dispatch, rejectWithValue }) => {
+    try {
+      const formData = createDishFormData(data, restaurantId, additionals)
 
-export const createDish = createAsyncThunk("dishes/createDish", async ({ data, restaurantId, additionals }, { dispatch }) => {
-  try {
-    const formData = createDishFormData(data, restaurantId, additionals)
+      const response = await dishesApi.createDish(formData)
+      let dishResponse = response.data
 
-    const response = await dishesApi.createDish(formData)
+      dispatch(fetchDishes())
 
-    dispatch(fetchDishes())
+      if (response.error) {
+        showNotification({
+          title: "Error",
+          message: response.message,
+          color: "red",
+          duration: 7000
+        })
 
-    if (response.error) {
-      showNotification({
-        title: "Error",
-        message: response.message,
-        color: "red",
-        duration: 7000
-      })
+        return rejectWithValue(response.error)
+      }
 
-      return response.error
-    } else {
-      /**
-       * Add images to the dish
-       */
-      const dishId = response?.data?.id
-
-      const addImageResponse = await uploadDishImage(dishId, data?.files?.[0])
+      const addImageResponse = await uploadDishImage(response?.data?.id, data?.files?.[0])
 
       if (addImageResponse.error) {
         showNotification({
@@ -152,25 +146,25 @@ export const createDish = createAsyncThunk("dishes/createDish", async ({ data, r
           duration: 7000
         })
 
-        return addImageResponse.error
+        return rejectWithValue(addImageResponse.error)
       }
 
-      /**
-       * All was success
-       */
+      dishResponse = { ...dishResponse, images: addImageResponse.data.images }
+
       showNotification({
         title: "Creación exitosa",
         message: response.message,
         color: "green",
         duration: 7000
       })
-      return response.data
+
+      return dishResponse
+    } catch (error) {
+      handleErrorOnCreateDish(error, dispatch)
+      throw error
     }
-  } catch (error) {
-    handleErrorOnCreateDish(error, dispatch)
-    throw error
   }
-})
+)
 
 const createDishFormData = (data, restaurantId, additionals) => {
   const transformedAdditionals = additionals.map((additional) => ({
@@ -349,6 +343,28 @@ export const dishesSlice = createSlice({
       .addCase(getAllDishes.rejected, (state, action) => {
         state.loadingDishes = false
         state.error = action.error
+      })
+      .addCase(createDish.pending, (state) => {
+        state.creatingDish = true
+      })
+      .addCase(createDish.fulfilled, (state, action) => {
+        const newDish = action.payload
+        state.dishesPerPage[1].unshift(newDish)
+
+        if (state.dishesPerPage[1].length > state.itemsPerPage) {
+          state.dishesPerPage[1].pop()
+        }
+
+        for (let i = 2; i <= state.totalPagesCount; i++) {
+          delete state.dishesPerPage[i]
+        }
+
+        state.totalDishes += 1
+        state.totalPagesCount = Math.ceil(state.totalDishes / state.itemsPerPage)
+        state.creatingDish = false
+      })
+      .addCase(createDish.rejected, (state) => {
+        state.creatingDish = false
       })
       .addCase(updateDishStatus.pending, (state) => {})
       .addCase(updateDishStatus.fulfilled, (state, action) => {

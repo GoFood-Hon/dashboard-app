@@ -36,7 +36,6 @@ import { dateTimeConverter, getFormattedHNL } from "../../utils"
 import { IconCalendarStats } from "@tabler/icons-react"
 import { IconId } from "@tabler/icons-react"
 import { IconCreditCardFilled } from "@tabler/icons-react"
-import { IconNote } from "@tabler/icons-react"
 import { showNotification } from "@mantine/notifications"
 import dayjs from "dayjs"
 import relativeTime from "dayjs/plugin/relativeTime"
@@ -56,6 +55,7 @@ export const ReservationDetails = () => {
   const [cancelComment, setCancelComment] = useState("")
 
   useEffect(() => {
+    console.log(reservationDetails)
     dispatch(fetchReservationDetails(reservationId))
   }, [dispatch, reservationId])
 
@@ -207,7 +207,7 @@ export const ReservationDetails = () => {
               </Button>
             </Flex>
           </Card>
-          <Space h="xs" />
+          <Space h="md" />
           {reservationDetails?.ReservationComments?.map((comment) =>
             comment?.AdminUser ? (
               <Paper key={comment?.id} withBorder radius="md" mb="xs" className={classes.comment}>
@@ -221,7 +221,7 @@ export const ReservationDetails = () => {
                     </Text>
                   </Box>
                   <Avatar
-                    src={comment?.AdminUser?.photo}
+                    src={comment?.AdminUser?.images?.[0]?.location}
                     alt="it's me"
                     name={comment?.AdminUser?.name
                       ?.split(" ")

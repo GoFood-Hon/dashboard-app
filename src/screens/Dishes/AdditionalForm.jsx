@@ -12,7 +12,6 @@ import {
   CloseButton,
   Stack
 } from "@mantine/core"
-import { IconPlus, IconX } from "@tabler/icons-react"
 import toast from "react-hot-toast"
 import { colors } from "../../theme/colors"
 import { convertToDecimal, getFormattedHNL } from "../../utils"

@@ -90,7 +90,7 @@ export default function ComplementsForm({
   }, [selectedDishes, data])
 
   useEffect(() => {
-    dispatch(setDishesAddedToMenuCount(selectedDishes?.length))
+    dispatch(setDishesAddedToMenuCount(selectedDishes?.length || 0))
     setExtras(data)
   }, [data, selectedDishes])
 

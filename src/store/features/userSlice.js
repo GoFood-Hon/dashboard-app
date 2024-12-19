@@ -485,7 +485,6 @@ export const userSlice = createSlice({
         state.creatingOtherUser = true
       })
       .addCase(createUser.fulfilled, (state, action) => {
-        console.log(action.payload)
         const newUser = action.payload
 
         if (!state.usersByPage[1]) {

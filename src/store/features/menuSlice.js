@@ -134,7 +134,7 @@ const addComplements = async (id, dishes) => {
   return await menuApi.addDishesToMenu(id, raw)
 }
 
-export const createMenu = createAsyncThunk("menus/createMenu", async ({ data, restaurantId }, { dispatch }) => {
+export const createMenu = createAsyncThunk("menus/createMenu", async ({ data, restaurantId }, { rejectWithValue, getState }) => {
   try {
     const formData = new FormData()
     formData.append("name", data.name)
@@ -142,8 +142,9 @@ export const createMenu = createAsyncThunk("menus/createMenu", async ({ data, re
     formData.append("type", data.type)
     formData.append("restaurantId", restaurantId)
 
+    const state = getState()
     const response = await menuApi.createMenu(formData)
-    dispatch(fetchMenus())
+    let menuData = response.data
 
     if (response.error) {
       showNotification({
@@ -153,7 +154,7 @@ export const createMenu = createAsyncThunk("menus/createMenu", async ({ data, re
         duration: 7000
       })
 
-      return response.error
+      return rejectWithValue(response.error)
     } else {
       const dishId = response.data.id
       const addImageResponse = await uploadMenuImage(dishId, data?.files?.[0])
@@ -166,8 +167,11 @@ export const createMenu = createAsyncThunk("menus/createMenu", async ({ data, re
           duration: 7000
         })
 
-        return addImageResponse.error
+        return rejectWithValue(addImageResponse.error)
       }
+
+      menuData = { ...menuData, images: addImageResponse.data.images }
+
       const addComplementsResponse = await addComplements(dishId, data?.dishes)
 
       if (addComplementsResponse.error) {
@@ -178,7 +182,7 @@ export const createMenu = createAsyncThunk("menus/createMenu", async ({ data, re
           duration: 7000
         })
 
-        return addComplementsResponse.error
+        return rejectWithValue(addComplementsResponse.error)
       }
 
       showNotification({
@@ -187,10 +191,10 @@ export const createMenu = createAsyncThunk("menus/createMenu", async ({ data, re
         color: "green",
         duration: 7000
       })
-      return response.data
+
+      return { ...menuData, Dishes: state.menus.dishesAddedToMenu }
     }
   } catch (error) {
-    dispatch(setError("Error updating menu"))
     toast.error("Fallo al actualizar el menu. Por favor intente de nuevo.", {
       duration: 7000
     })
@@ -278,7 +282,7 @@ export const updateMenu = createAsyncThunk(
         duration: 7000
       })
 
-      return {...menuData, Dishes: state.menus.dishesAddedToMenu}
+      return { ...menuData, Dishes: state.menus.dishesAddedToMenu }
     } catch (error) {
       dispatch(setError("Error updating menu"))
       toast.error("Fallo al actualizar el menu. Por favor intente de nuevo.", {
@@ -398,6 +402,29 @@ export const menusSlice = createSlice({
         state.dishesLoading = false
         state.updatingDishes = false
         state.error = action.error.message
+      })
+      .addCase(createMenu.pending, (state) => {
+        state.creatingMenus = true
+      })
+      .addCase(createMenu.fulfilled, (state, action) => {
+        const newMenu = action.payload
+
+        state.menusPerPage[1].unshift(newMenu)
+
+        if (state.menusPerPage[1].length > state.itemsPerPage) {
+          state.menusPerPage[1].pop()
+        }
+
+        for (let i = 2; i <= state.totalPagesCount; i++) {
+          delete state.menusPerPage[i]
+        }
+
+        state.totalMenus += 1
+        state.totalPagesCount = Math.ceil(state.totalMenus / state.itemsPerPage)
+        state.creatingMenus = false
+      })
+      .addCase(createMenu.rejected, (status) => {
+        status.creatingMenus = false
       })
       .addCase(updateMenuStatus.fulfilled, (state, action) => {
         const { id, isActive } = action.payload
