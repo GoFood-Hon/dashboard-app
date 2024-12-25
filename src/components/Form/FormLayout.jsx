@@ -46,10 +46,9 @@ const FormLayout = ({
             style={{ display: statusButton ? "block" : "none" }}
             color={colors.main_app_color}
             onClick={() => {
-              console.log({ id: data?.id, isActive: !data?.isActive })
               dispatch(updateLoyaltyProgramStatus({ id: data?.id, params: { isActive: !data?.isActive } }))
             }}>
-            {data.isActive ? "Deshabilitar" : "Habilitar"}
+            {data?.isActive ? "Deshabilitar" : "Habilitar"}
           </Button>
         </Flex>
       </Group>
