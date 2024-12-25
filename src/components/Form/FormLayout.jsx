@@ -2,20 +2,23 @@ import { Accordion, Button, Flex, Group, Stack, Paper, ThemeIcon, Text, Space } 
 import React from "react"
 import BackButton from "../../screens/Dishes/components/BackButton"
 import { colors } from "../../theme/colors"
+import { updateLoyaltyProgramStatus } from "../../store/features/loyaltySlice"
+import { useDispatch } from "react-redux"
 
 const FormLayout = ({
   title,
   show,
   accordionStructure,
   accordionTitles,
-  accordionItems,
   update,
   navigate,
   isLoading,
   noDiscard,
   noButtons,
-  statusButton
+  statusButton,
+  data
 }) => {
+  const dispatch = useDispatch()
   const items = accordionStructure.map((item, key) => (
     <Accordion.Item key={key} value={item.title}>
       <Accordion.Control>
@@ -24,7 +27,9 @@ const FormLayout = ({
             <Text fw={700}>{key + 1}</Text>
           </ThemeIcon>
           <Flex>
-            <Text fw={700}>{item.title} <Text span>({item?.requirement})</Text></Text>
+            <Text fw={700}>
+              {item.title} <Text span>({item?.requirement})</Text>
+            </Text>
           </Flex>
         </Flex>
       </Accordion.Control>
@@ -33,17 +38,18 @@ const FormLayout = ({
   ))
 
   return (
-    <>
-      <Group grow mb="xs">
+    <Stack gap="xs">
+      <Group grow>
         <Flex align="center" justify="space-between">
           <BackButton title={title} show={show} />
           <Button
             style={{ display: statusButton ? "block" : "none" }}
             color={colors.main_app_color}
             onClick={() => {
-              navigate()
+              console.log({ id: data?.id, isActive: !data?.isActive })
+              dispatch(updateLoyaltyProgramStatus({ id: data?.id, params: { isActive: !data?.isActive } }))
             }}>
-            Habilitar
+            {data.isActive ? "Deshabilitar" : "Habilitar"}
           </Button>
         </Flex>
       </Group>
@@ -68,7 +74,7 @@ const FormLayout = ({
           </Flex>
         </Paper>
       </Stack>
-    </>
+    </Stack>
   )
 }
 

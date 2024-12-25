@@ -1,7 +1,7 @@
 import React, { useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import { useDispatch, useSelector } from "react-redux"
-import { fetchBranches, setPage, updateBranchStatus } from "../../store/features/branchesSlice"
+import { fetchBranches, setPage, setSearchData, updateBranchStatus } from "../../store/features/branchesSlice"
 import { NAVIGATION_ROUTES_RES_ADMIN } from "../../routes"
 import CardsViewLayout from "../../screens/CardsViewLayout"
 
@@ -16,6 +16,7 @@ export default function Branches() {
   const totalPageCount = useSelector((state) => state.branches.totalPagesCount)
   const branchesList = branchesPerPage[page] || []
   const loadingBranches = useSelector((state) => state.branches.loadingBranches)
+  const searchData = useSelector((state) => state.branches.searchData)
 
   useEffect(() => {
     if (!branchesPerPage[page]) {
@@ -43,6 +44,14 @@ export default function Branches() {
     navigate(`${NAVIGATION_ROUTES_RES_ADMIN.Branches.path}/${id}`)
   }
 
+  const handleSearch = (query) => {
+    dispatch(setSearchData(query))
+  }
+
+  const executeSearch = async (query) => {
+    dispatch(fetchBranches({ limit, page, order: "DESC", search_field: "name", search: query }))
+  }
+
   return (
     <CardsViewLayout
       title="Sucursales"
@@ -59,6 +68,9 @@ export default function Branches() {
       onDetailsClick={handleClick}
       onPaginationChange={onChangePagination}
       user={user}
+      onSearch={handleSearch}
+      value={searchData}
+      searchAction={executeSearch}
     />
   )
 }

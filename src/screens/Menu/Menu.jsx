@@ -2,7 +2,7 @@ import React, { useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { useNavigate } from "react-router-dom"
 import { NAVIGATION_ROUTES_RES_ADMIN } from "../../routes"
-import { fetchMenus, setPage } from "../../store/features/menuSlice"
+import { fetchMenus, setPage, setSearchData } from "../../store/features/menuSlice"
 import TableViewLayout from "../../screens/TableViewLayout"
 
 export default function Menu() {
@@ -16,6 +16,7 @@ export default function Menu() {
   const totalPageCount = useSelector((state) => state.menus.totalPagesCount)
   const menusList = menusPerPage[page] || []
   const loadingMenus = useSelector((state) => state.menus.loadingMenus)
+  const searchData = useSelector((state) => state.menus.searchData)
 
   const handleNewMenu = () => {
     navigate(NAVIGATION_ROUTES_RES_ADMIN.Menu.NewMenu.path)
@@ -26,6 +27,14 @@ export default function Menu() {
       dispatch(fetchMenus({ restaurantId: user.restaurantId, limit, page, order: "DESC" }))
     }
   }, [dispatch, limit, page, menusPerPage])
+
+  const handleSearch = (query) => {
+    dispatch(setSearchData(query))
+  }
+
+  const executeSearch = async (query) => {
+    dispatch(fetchMenus({ restaurantId: user.restaurantId, limit, page, order: "DESC", search_field: "name", search: query }))
+  }
 
   return (
     <>
@@ -42,6 +51,9 @@ export default function Menu() {
         totalItems={totalPageCount}
         loading={loadingMenus}
         setPage={(newPage) => dispatch(setPage(newPage))}
+        onSearch={handleSearch}
+        value={searchData}
+        searchAction={executeSearch}
       />
     </>
   )

@@ -114,7 +114,11 @@ export default function EditCollection() {
           moreData={collectionType === "dishes" ? hasMoreDishes : hasMoreRestaurants}
           isDataCleared={isDataCleared}
           selectedDishes={Array.isArray(elements.dishes) && elements.dishes.length > 0 ? elements.dishes : elements.restaurants}
-          defaultMessage="Por favor añada elementos a esta colección"
+          defaultMessage={
+            collectionType === "dishes"
+              ? "Los platillos seleccionados se mostrarán aquí"
+              : "Los platillos restaurantes se mostrarán aquí"
+          }
           itemsAvailableLabel="Platillos/Menús disponibles"
           data={collectionType === "dishes" ? dishes : restaurants}
           name={collectionType === "dishes" ? "dishes" : "restaurants"}

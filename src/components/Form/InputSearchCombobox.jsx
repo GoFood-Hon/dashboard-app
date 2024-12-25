@@ -72,6 +72,9 @@ export default function InputSearchCombobox({
                 combobox.updateSelectedOptionIndex()
                 setSearch(event.currentTarget.value)
               }}
+              classNames={{
+                input: "focus:border-gray-600"
+              }}
             />
           </Combobox.Target>
           <Combobox.Dropdown>

@@ -1,12 +1,19 @@
 import React, { useEffect, useState } from "react"
-import { Grid, Image, Text, ScrollArea, Paper, Group, Button, Loader, Box, CloseButton } from "@mantine/core"
+import { Grid, Image, Text, ScrollArea, Paper, Group, Button, Loader, Box, CloseButton, Stack } from "@mantine/core"
 import { useSelector } from "react-redux"
-import { IconX } from "@tabler/icons-react"
 import { SortableList } from "../Dishes/components"
 import { useDispatch } from "react-redux"
-import { setCurrentDishPage, setCurrentRestaurantPage, setElementsCount } from "../../store/features/collectionsSlice"
+import {
+  fetchDishesForCollections,
+  fetchRestaurantsForCollections,
+  setCurrentDishPage,
+  setCurrentRestaurantPage,
+  setElementsCount,
+  setSearchDishesData,
+  setSearchRestaurantsData
+} from "../../store/features/collectionsSlice"
 import { colors } from "../../theme/colors"
-import { se } from "date-fns/locale"
+import { SearchComponent } from "../../components/SearchComponent"
 
 const AvailableComplementsCard = ({ item, onItemClick }) => {
   const { images, name } = item
@@ -71,7 +78,11 @@ export default function ComplementsForm({ setValue, isDataCleared, defaultMessag
     collectionType,
     updatingRestaurants,
     restaurantsLoading,
-    elementsCount
+    elementsCount,
+    dishesPerPage,
+    restaurantsPerPage,
+    searchDishesData,
+    searchRestaurantsData
   } = useSelector((state) => state.collections)
 
   useEffect(() => {
@@ -147,21 +158,57 @@ export default function ComplementsForm({ setValue, isDataCleared, defaultMessag
     setAddedComplements([])
   }, [isDataCleared])
 
+  const handleSearch = (query) => {
+    if (collectionType === "dishes") {
+      dispatch(setSearchDishesData(query))
+    } else {
+      dispatch(setSearchRestaurantsData(query))
+    }
+  }
+
+  const executeSearch = async (query) => {
+    if (collectionType === "dishes") {
+      dispatch(
+        fetchDishesForCollections({
+          limit: dishesPerPage,
+          page: currentDishPage,
+          search_field: "name",
+          search: query
+        })
+      )
+    } else {
+      dispatch(
+        fetchRestaurantsForCollections({
+          limit: restaurantsPerPage,
+          page: currentRestaurantPage,
+          search_field: "name",
+          search: query
+        })
+      )
+    }
+  }
+
   return (
     <Grid>
       <Grid.Col span={{ base: 12, md: 7 }}>
         <Paper withBorder radius="md" p="md" className="w-full h-full">
-          {(collectionType === "dishes" ? dishesLoading : restaurantsLoading) ? (
-            <div className="h-[calc(100vh-350px)] w-full flex justify-center items-center">
-              <Loader color={colors.main_app_color} />
-            </div>
-          ) : (
-            <>
-              <ScrollArea style={{ width: "100%" }} h={350} offsetScrollbars>
-                <Grid columns={2} gutter="md">
+          <Stack gap="sm">
+            <SearchComponent
+              onSearch={handleSearch}
+              elementName={collectionType === "dishes" ? "platillos" : "restaurantes"}
+              value={collectionType === "dishes" ? searchDishesData : searchRestaurantsData}
+              searchAction={executeSearch}
+            />
+            {(collectionType === "dishes" ? dishesLoading : restaurantsLoading) ? (
+              <div className="h-[calc(100vh-350px)] w-full flex justify-center items-center">
+                <Loader color={colors.main_app_color} />
+              </div>
+            ) : (
+              <ScrollArea h={350} scrollbars='y'>
+                <Grid columns={2} grow gutter="xs">
                   {extras.length > 0 ? (
                     extras.map((item, key) => (
-                      <Grid.Col span={{base: 2, md: 1}} key={key} style={{ cursor: "pointer" }}>
+                      <Grid.Col span={{ base: 2, md: 1 }} key={key} style={{ cursor: "pointer" }}>
                         <AvailableComplementsCard
                           item={item}
                           onItemClick={handleComplementClick}
@@ -192,8 +239,8 @@ export default function ComplementsForm({ setValue, isDataCleared, defaultMessag
                   )}
                 </Grid>
               </ScrollArea>
-            </>
-          )}
+            )}
+          </Stack>
         </Paper>
       </Grid.Col>
       <Grid.Col span={{ base: 12, md: 5 }}>
@@ -205,7 +252,6 @@ export default function ComplementsForm({ setValue, isDataCleared, defaultMessag
                 onChange={setAddedComplements}
                 renderItem={(item) => (
                   <SortableList.Item id={item.id}>
-                    
                     <ComplementCard item={item} handleRemoveComplement={() => handleRemoveComplement(item)} />
                   </SortableList.Item>
                 )}

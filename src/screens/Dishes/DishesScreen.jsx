@@ -2,7 +2,7 @@ import React, { useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import { NAVIGATION_ROUTES_RES_ADMIN } from "../../routes"
 import { useDispatch, useSelector } from "react-redux"
-import { getAllDishes, setPage, updateDishStatus } from "../../store/features/dishesSlice"
+import { getAllDishes, setPage, setSearchData, updateDishStatus } from "../../store/features/dishesSlice"
 import { APP_ROLES } from "../../utils/constants"
 import CardsViewLayout from "../../screens/CardsViewLayout"
 
@@ -17,6 +17,7 @@ export default function Dishes() {
   const totalPageCount = useSelector((state) => state.dishes.totalPagesCount)
   const dishesList = dishesPerPage[page] || []
   const loadingDishes = useSelector((state) => state.dishes.loadingDishes)
+  const searchData = useSelector((state) => state.dishes.searchData)
 
   useEffect(() => {
     if (!dishesPerPage[page]) {
@@ -60,6 +61,14 @@ export default function Dishes() {
     navigate(route)
   }
 
+  const handleSearch = (query) => {
+    dispatch(setSearchData(query))
+  }
+
+  const executeSearch = async (query) => {
+    dispatch(getAllDishes({ limit, restaurantId: user.restaurantId, page, order: "DESC", search_field: "name", search: query }))
+  }
+
   return (
     <CardsViewLayout
       title="Platillos"
@@ -76,6 +85,9 @@ export default function Dishes() {
       onDetailsClick={handleClick}
       onPaginationChange={onChangePagination}
       user={user}
+      onSearch={handleSearch}
+      value={searchData}
+      searchAction={executeSearch}
     />
   )
 }

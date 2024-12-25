@@ -17,6 +17,7 @@ import InputTextAreaField from "../../components/Form/InputTextAreaField"
 import { useDispatch } from "react-redux"
 import { addCards, removeLoyaltyCard } from "../../store/features/loyaltySlice"
 import { notifications } from "@mantine/notifications"
+import LoyaltyCardView from "../../components/Loyalty/LoyaltyCardView"
 
 const LoyaltyCards = ({ register, setValue, control, errors, watch }) => {
   const user = useSelector((state) => state.user.value)
@@ -146,96 +147,21 @@ const LoyaltyCards = ({ register, setValue, control, errors, watch }) => {
     <>
       <SimpleGrid cols={{ base: 1, sm: 2, lg: 3 }}>
         {loyaltyCards?.map((card, index) => (
-          <Paper mih={190} key={index} p="sm" radius="md" style={{ position: "relative", overflow: "hidden" }}>
-            <CloseButton
-              style={{
-                position: "absolute",
-                right: 8,
-                top: 8,
-                zIndex: 12,
-                display: user?.role === "superadmin" ? "none" : "block"
-              }}
-              onClick={() => {
-                openDelete()
-                setIndex(index)
-              }}
-            />
-            <div
-              style={{
-                position: "absolute",
-                top: 0,
-                left: 0,
-                width: "100%",
-                height: "100%",
-                zIndex: 0,
-                pointerEvents: "none",
-                opacity: 0.5
-              }}>
-              <Lottie options={defaultOptions} width="100%" height="100%" isClickToPauseDisabled={true} />
-            </div>
-
-            <div style={{ position: "relative", zIndex: 10 }}>
-              <Group justify="apart" grow>
-                <Stack gap="xs">
-                  <Flex align="center" gap={4}>
-                    <IconStarFilled color={colors.yellow_logo} size="1rem" />
-                    <Text c={colors.yellow_logo} tt="uppercase" fw={700} fz="xs">
-                      Tarjeta de{" "}
-                      {card?.type === "fijo"
-                        ? "descuento fijo"
-                        : card?.type === "porcentaje"
-                          ? "descuento porcentual"
-                          : "beneficio"}
-                    </Text>
-                  </Flex>
-                  <Text fw={700} fz="sm">
-                    Activación:{" "}
-                    <Text span fs="italic" fz="sm">
-                      A partir de{" "}
-                      {card?.purchasesWithWhichRewardBegins != "1"
-                        ? card?.purchasesWithWhichRewardBegins + " compras"
-                        : card?.purchasesWithWhichRewardBegins + " compra"}
-                    </Text>
-                  </Text>
-                  <Text fw={700} fz="sm">
-                    Descripción:{" "}
-                    <Text span fs="italic" fz="sm">
-                      {card?.description || card?.cardDescription
-                        ? card?.description || card?.cardDescription
-                        : "No se especificó"}
-                    </Text>
-                  </Text>
-                  {card?.isRewardADiscountInPurchase && (
-                    <>
-                      <Text fz="sm" fw={700}>
-                        {card?.type === "fijo" ? (
-                          <>
-                            Monto de descuento:{" "}
-                            <Text span fs="italic" fz="sm">
-                              {getFormattedHNL(card?.discountFixedAmount)}
-                            </Text>
-                          </>
-                        ) : (
-                          <>
-                            Porcentaje de descuento:{" "}
-                            <Text span fs="italic" fz="sm">
-                              {card?.discountPercentage}%
-                            </Text>
-                          </>
-                        )}
-                      </Text>
-                      <Text fw={700} fz="sm">
-                        Compra mínima:{" "}
-                        <Text span fs="italic" fz="sm">
-                          {getFormattedHNL(card?.minPriceToRedeem)}
-                        </Text>
-                      </Text>
-                    </>
-                  )}
-                </Stack>
-              </Group>
-            </div>
-          </Paper>
+          <LoyaltyCardView
+            key={index}
+            user={user}
+            openDelete={openDelete}
+            setIndex={setIndex}
+            options={defaultOptions}
+            type={card?.type}
+            purchasesWithWhichRewardBegins={card?.purchasesWithWhichRewardBegins}
+            description={card?.description || card?.cardDescription}
+            isRewardADiscountInPurchase={card?.isRewardADiscountInPurchase}
+            discountFixedAmount={card?.discountFixedAmount}
+            discountPercentage={card?.discountPercentage}
+            minPriceToRedeem={card?.minPriceToRedeem}
+            cardIndex={index}
+          />
         ))}
 
         {user.role !== "superadmin" && (

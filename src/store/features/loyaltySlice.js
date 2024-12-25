@@ -148,6 +148,35 @@ export const updateLoyaltyProgram = createAsyncThunk(
   }
 )
 
+export const updateLoyaltyProgramStatus = createAsyncThunk(
+  "loyalty/updateLoyaltyProgramStatus",
+  async ({ id, params }, { rejectWithValue }) => {
+    try {
+      const response = await loyaltyApi.updateLoyaltyProgram(id, params)
+      console.log(response)
+
+      if (response.error) {
+        showNotification({
+          title: "Error",
+          message: response.message,
+          color: "red"
+        })
+        return rejectWithValue(response.error)
+      }
+
+      showNotification({
+        title: "Actualización exitosa",
+        message: "Se actualizó el estado del programa de lealtad",
+        color: "green"
+      })
+
+      return response.data
+    } catch (error) {
+      return rejectWithValue(error)
+    }
+  }
+)
+
 export const deleteLoyaltyCardWithReward = createAsyncThunk(
   "loyalty/deleteLoyaltyCardWithReward",
   async ({ loyaltyProgramId, redeemableCardId }, { rejectWithValue }) => {
@@ -176,7 +205,10 @@ const loyaltySlice = createSlice({
     creatingPrograms: false,
     updatingPrograms: false,
     loading: false,
-    error: null
+    error: null,
+
+    // Buscador de programas de lealtad
+    searchData: null
   },
   reducers: {
     resetError(state) {
@@ -212,6 +244,9 @@ const loyaltySlice = createSlice({
     },
     clearDeletedCards: (state) => {
       state.deletedCards = []
+    },
+    setSearchData: (state, action) => {
+      state.searchData = action.payload
     }
   },
   extraReducers: (builder) => {
@@ -294,6 +329,23 @@ const loyaltySlice = createSlice({
         state.error = action.payload
       })
 
+      // Update Loyalty Program Status
+      .addCase(updateLoyaltyProgramStatus.pending, (state) => {
+        state.updatingPrograms = true
+      })
+      .addCase(updateLoyaltyProgramStatus.fulfilled, (state, action) => {
+        const { isActive } = action.payload
+        state.programs = {
+          ...state.programs,
+          isActive
+        }
+        state.updatingPrograms = false
+      })
+      .addCase(updateLoyaltyProgramStatus.rejected, (state, action) => {
+        state.updatingPrograms = false
+        state.error = action.payload
+      })
+
       // Delete Card Reward
       .addCase(deleteLoyaltyCardWithReward.pending, (state) => {
         state.loading = true
@@ -326,6 +378,7 @@ const loyaltySlice = createSlice({
   }
 })
 
-export const { resetError, setPage, updateLoyaltyCards, removeLoyaltyCard, addCards, clearDeletedCards } = loyaltySlice.actions
+export const { resetError, setPage, updateLoyaltyCards, removeLoyaltyCard, addCards, clearDeletedCards, setSearchData } =
+  loyaltySlice.actions
 
 export default loyaltySlice.reducer

@@ -39,6 +39,7 @@ export default function OrdersScreen() {
         totalItems={totalPageCount}
         loading={loadingOrders}
         setPage={(newPage) => dispatch(setCurrentPage(newPage))}
+        noSearch
       />
     </>
   )

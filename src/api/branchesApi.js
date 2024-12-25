@@ -31,16 +31,13 @@ const branchesApi = {
       contentType: `multipart/form-data; boundary=${params._boundary}`
     }),
 
-  getBranchesByRestaurant: ({ limit, page, order, startDate, endDate, status, price, dateSort }) => {
+  getBranchesByRestaurant: ({ limit, page, order, search_field, search }) => {
     const params = {
       limit,
       page,
       order,
-      startDate,
-      endDate,
-      status,
-      price,
-      dateSort
+      search_field,
+      search
     }
 
     const validParams = Object.fromEntries(Object.entries(params).filter(([_, value]) => value !== undefined && value))

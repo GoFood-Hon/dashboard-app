@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react"
+import { useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import { useDispatch, useSelector } from "react-redux"
-import { fetchRestaurants, setPage, updateRestaurantStatus } from "../../store/features/restaurantSlice"
+import { fetchRestaurants, setPage, setSearchData, updateRestaurantStatus } from "../../store/features/restaurantSlice"
 import { NAVIGATION_ROUTES_SUPER_ADMIN } from "../../routes"
 import CardsViewLayout from "../CardsViewLayout"
 
@@ -16,18 +16,16 @@ export default function RestaurantsScreen() {
   const totalPageCount = useSelector((state) => state.restaurants.totalPagesCount)
   const restaurantsList = restaurantsPerPage[page] || []
   const loadingRestaurants = useSelector((state) => state.restaurants.loadingRestaurants)
-
-  const [cardsSelected, setCardsSelected] = useState([])
+  const searchData = useSelector((state) => state.restaurants.searchData)
 
   useEffect(() => {
     if (!restaurantsPerPage[page]) {
       dispatch(fetchRestaurants({ limit, page, order: "DESC" }))
     }
   }, [dispatch, limit, page, restaurantsPerPage, loadingRestaurants])
-
+  
   const onChangePagination = (newPage) => {
     dispatch(setPage(newPage))
-    setCardsSelected([])
   }
 
   const handleEnableSelected = async (id) => {
@@ -46,6 +44,14 @@ export default function RestaurantsScreen() {
     navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Restaurants.NewRestaurant.path)
   }
 
+  const handleSearch = (query) => {
+    dispatch(setSearchData(query))
+  }
+
+  const executeSearch = async (query) => {
+    dispatch(fetchRestaurants({ limit, page, order: "DESC", search_field: "name", search: query }))
+  }
+
   return (
     <CardsViewLayout
       title="Restaurantes"
@@ -62,6 +68,9 @@ export default function RestaurantsScreen() {
       onDetailsClick={handleClick}
       onPaginationChange={onChangePagination}
       user={user}
+      onSearch={handleSearch}
+      value={searchData}
+      searchAction={executeSearch}
     />
   )
 }

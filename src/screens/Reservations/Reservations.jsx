@@ -38,6 +38,7 @@ export const Reservations = () => {
         totalItems={totalPageCount}
         loading={loadingReservations}
         setPage={(newPage) => dispatch(setPage(newPage))}
+        noSearch
       />
     </>
   )

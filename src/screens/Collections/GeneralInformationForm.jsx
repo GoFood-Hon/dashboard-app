@@ -51,6 +51,9 @@ export default function GeneralInformationForm({ register, errors, setValue, isD
               allowDeselect={false}
               maxDropdownHeight={200}
               onChange={handleCollectionType}
+              classNames={{
+                input: "focus:border-gray-600"
+              }}
             />
           </div>
         </Paper>

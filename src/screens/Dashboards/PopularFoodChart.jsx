@@ -7,17 +7,17 @@ import { Divider, Paper } from "@mantine/core"
 export const PopularFoodChart = () => {
   const [dishes, setDishes] = useState([])
 
-  useEffect(() => {
-    ;(async () => {
-      try {
-        const response = await reportsApi.getMenuSales()
-        const formattedData = response?.data?.map((item) => [item?.name, parseInt(item.cantidad_vendidas)])
-        setDishes(formattedData)
-      } catch (error) {
-        toast.error("Error al obtener los platillos favoritos")
-      }
-    })()
-  }, [])
+  // useEffect(() => {
+  //   ;(async () => {
+  //     try {
+  //       const response = await reportsApi.getMenuSales()
+  //       const formattedData = response?.data?.map((item) => [item?.name, parseInt(item.cantidad_vendidas)])
+  //       setDishes(formattedData)
+  //     } catch (error) {
+  //       toast.error("Error al obtener los platillos favoritos")
+  //     }
+  //   })()
+  // }, [])
 
   const options = {
     title: "Platillos favoritos",
@@ -35,7 +35,7 @@ export const PopularFoodChart = () => {
         <h2 className="text-white-200 text-xl font-semibold">Gráfico de platillos más vendidos</h2>
       </div>
       <Divider my="md" />
-      <div className="pb-6 flex justify-center items-center h-full">
+      <div className="flex justify-center items-center h-full">
         {dishes ? (
           <Chart chartType="PieChart" width="100%" height="400px" data={[["Dishes", "Amount"], ...dishes]} options={options} />
         ) : (

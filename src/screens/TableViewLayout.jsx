@@ -3,6 +3,7 @@ import MenuTable from "./Menu/MenuTable"
 import { colors } from "../theme/colors"
 import BackButton from "../screens/Dishes/components/BackButton"
 import { useMediaQuery } from "@mantine/hooks"
+import { SearchComponent } from "../components/SearchComponent"
 
 const TableViewLayout = ({
   title,
@@ -14,12 +15,16 @@ const TableViewLayout = ({
   totalItems,
   loading,
   onNewItemClick,
-  setPage
+  setPage,
+  onSearch,
+  value,
+  searchAction,
+  noSearch
 }) => {
   const isSmallScreen = useMediaQuery("(max-width: 430px)")
 
   return (
-    <Stack>
+    <Stack gap="xs">
       <Group grow>
         <Flex align="center" justify="space-between">
           <BackButton title={title} />
@@ -39,6 +44,9 @@ const TableViewLayout = ({
           </Flex>
         </Flex>
       </Group>
+      {!noSearch && (
+        <SearchComponent onSearch={onSearch} elementName={title.toLowerCase()} value={value} searchAction={searchAction} />
+      )}
       <MenuTable
         items={items}
         screenType={tableStructure}

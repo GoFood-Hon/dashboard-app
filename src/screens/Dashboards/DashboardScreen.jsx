@@ -1,4 +1,4 @@
-import { Grid } from "@mantine/core"
+import { Grid, Stack } from "@mantine/core"
 import React, { useEffect, useState } from "react"
 
 import reportsApi from "../../api/reportsApi"
@@ -59,9 +59,9 @@ export const DashboardScreen = () => {
       }
     }
 
-    getAverageTicketDailyData()
-    getDailySales()
-    getNewUsers()
+    //getAverageTicketDailyData()
+    //getDailySales()
+    //getNewUsers()
   }, [])
 
   const icons = {
@@ -82,33 +82,37 @@ export const DashboardScreen = () => {
     const DiffIcon = stat.diff > 0 ? IconArrowUpRight : IconArrowDownRight
 
     return (
-      <Paper withBorder p="md" radius="md" key={stat.title}>
-        <Group justify="space-between">
-          <Text size="xs" c="dimmed" className={classes.title}>
-            {stat.title}
-          </Text>
-          {/* Renderizar el ícono como un componente JSX */}
-          <stat.icon className={classes.icon} size="1.4rem" stroke={1.5} />
-        </Group>
+      <Stack gap="sm">
+        <Paper withBorder p="md" radius="md" key={stat.title}>
+          <Group justify="space-between">
+            <Text size="xs" c="dimmed" className={classes.title}>
+              {stat.title}
+            </Text>
+            {/* Renderizar el ícono como un componente JSX */}
+            <stat.icon className={classes.icon} size="1.4rem" stroke={1.5} />
+          </Group>
 
-        <Group align="flex-end" gap="xs" mt={25}>
-          <Text className={classes.value}>{stat.value}</Text>
-          <Text c={stat.diff > 0 ? "teal" : "red"} fz="sm" fw={500} className={classes.diff}>
-            <span>{stat.diff}%</span>
-            <DiffIcon size="1rem" stroke={1.5} />
-          </Text>
-        </Group>
+          <Group align="flex-end" gap="xs" mt={25}>
+            <Text className={classes.value}>{stat.value}</Text>
+            <Text c={stat.diff > 0 ? "teal" : "red"} fz="sm" fw={500} className={classes.diff}>
+              <span>{stat.diff}%</span>
+              <DiffIcon size="1rem" stroke={1.5} />
+            </Text>
+          </Group>
 
-        <Text fz="sm" c="dimmed" mt={7}>
-          {stat.text}
-        </Text>
-      </Paper>
+          <Text fz="sm" c="dimmed" mt={7}>
+            {stat.text}
+          </Text>
+        </Paper>
+      </Stack>
     )
   })
 
   return (
     <div>
-      <SimpleGrid cols={{ base: 1, xs: 2, md: 4 }}>{stats}</SimpleGrid>
+      <SimpleGrid spacing="sm" cols={{ base: 1, xs: 2, md: 4 }}>
+        {stats}
+      </SimpleGrid>
     </div>
   )
 }

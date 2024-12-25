@@ -139,7 +139,10 @@ const initialState = {
   loadingPlans: false,
   creatingPlan: false,
   updatingPlan: false,
-  error: null
+  error: null,
+
+  //Buscar planes
+  searchData: null
 }
 
 const plansSlice = createSlice({
@@ -148,6 +151,9 @@ const plansSlice = createSlice({
   reducers: {
     clearSelectedPlans: (state) => {
       state.plans = []
+    },
+    setSearchData: (state, action) => {
+      state.searchData = action.payload
     }
   },
   extraReducers: (builder) => {
@@ -242,5 +248,5 @@ const plansSlice = createSlice({
   }
 })
 
-export const { clearSelectedPlans } = plansSlice.actions
+export const { clearSelectedPlans, setSearchData } = plansSlice.actions
 export default plansSlice.reducer

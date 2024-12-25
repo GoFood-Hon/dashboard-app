@@ -2,7 +2,7 @@ import React, { useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import { NAVIGATION_ROUTES_RES_ADMIN } from "../../routes"
 import { useSelector } from "react-redux"
-import { fetchUsers, setCurrentUserPage } from "../../store/features/userSlice"
+import { fetchUsers, setCurrentUserPage, setSearchUsersData } from "../../store/features/userSlice"
 import { useDispatch } from "react-redux"
 import TableViewLayout from "../TableViewLayout"
 
@@ -17,6 +17,7 @@ export default function Users() {
   const totalPageCount = useSelector((state) => state.user.totalUserPagesCount)
   const users = usersByPage[page] || []
   const loadingUsers = useSelector((state) => state.user.loadingOtherUsers)
+  const searchData = useSelector((state) => state.user.searchUsersData)
 
   useEffect(() => {
     if (!usersByPage[page]) {
@@ -26,6 +27,14 @@ export default function Users() {
 
   const handleNavigateNewUser = () => {
     navigate(NAVIGATION_ROUTES_RES_ADMIN.Users.NewUser.path)
+  }
+
+  const handleSearch = (query) => {
+    dispatch(setSearchUsersData(query))
+  }
+
+  const executeSearch = async (query) => {
+    dispatch(fetchUsers({ restaurantId: user.restaurantId, limit, page, order: "DESC", search_field: "name", search: query }))
   }
 
   return (
@@ -41,6 +50,9 @@ export default function Users() {
         totalItems={totalPageCount}
         loading={loadingUsers}
         setPage={(newPage) => dispatch(setCurrentUserPage(newPage))}
+        onSearch={handleSearch}
+        value={searchData}
+        searchAction={executeSearch}
       />
     </>
   )

@@ -348,7 +348,12 @@ const collectionsSlice = createSlice({
     updatingRestaurants: false,
 
     //Elements count
-    elementsCount: 0
+    elementsCount: 0,
+
+    //Search collections
+    searchData: null,
+    searchDishesData: null,
+    searchRestaurantsData: null
   },
   reducers: {
     setCurrentPage: (state, action) => {
@@ -368,6 +373,15 @@ const collectionsSlice = createSlice({
     },
     setElementsCount: (state, action) => {
       state.elementsCount = action.payload
+    },
+    setSearchData: (state, action) => {
+      state.searchData = action.payload
+    },
+    setSearchDishesData: (state, action) => {
+      state.searchDishesData = action.payload
+    },
+    setSearchRestaurantsData: (state, action) => {
+      state.searchRestaurantsData = action.payload
     }
   },
   extraReducers: (builder) => {
@@ -413,7 +427,7 @@ const collectionsSlice = createSlice({
         }
 
         state.currentDishPage = page
-        state.hasMore = state.dishes.length < results
+        state.hasMoreDishes = state.dishes.length < results
         state.dishesLoading = false
         state.updatingDishes = false
       })
@@ -602,7 +616,10 @@ export const {
   setCurrentDishPage,
   setCurrentRestaurantPage,
   setCollectionType,
-  setElementsCount
+  setElementsCount,
+  setSearchData,
+  setSearchDishesData,
+  setSearchRestaurantsData
 } = collectionsSlice.actions
 
 export default collectionsSlice.reducer

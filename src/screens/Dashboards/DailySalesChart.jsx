@@ -21,21 +21,21 @@ export const options = {
 
 export const DailySalesChart = () => {
   const [data, setData] = useState([])
-  useEffect(() => {
-    const getSales = async () => {
-      try {
-        const response = await reportsApi.getOrderSalesByChannel()
-        // TODO: Fix this response
-        setData(response?.data || [])
-      } catch (error) {
-        toast.error(`Error. Por favor intente de nuevo. ${error}`, {
-          duration: 7000
-        })
-      }
-    }
+  // useEffect(() => {
+  //   const getSales = async () => {
+  //     try {
+  //       const response = await reportsApi.getOrderSalesByChannel()
+  //       // TODO: Fix this response
+  //       setData(response?.data || [])
+  //     } catch (error) {
+  //       toast.error(`Error. Por favor intente de nuevo. ${error}`, {
+  //         duration: 7000
+  //       })
+  //     }
+  //   }
 
-    getSales()
-  }, [])
+  //   getSales()
+  // }, [])
 
   return (
     <Paper withBorder p="md" radius="md" className="min-h-[600px] h-[600px] w-full rounded-2xl shadow border flex flex-col p-2 mr-6">

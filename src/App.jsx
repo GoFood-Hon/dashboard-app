@@ -63,6 +63,7 @@ import NewCollection from "./screens/Collections/NewCollection"
 import EditCollection from "./screens/Collections/EditCollection"
 import { LoyaltyProgram } from "./screens/Loyalty/LoyaltyProgram"
 import { LoyaltyProgramsList } from "./screens/Loyalty/LoyaltyProgramsList"
+import RewardsTracking from "./screens/Loyalty/RewardsTracking"
 
 function App() {
   const userRole = useSelector((state) => state.user.value.role)
@@ -162,7 +163,9 @@ function App() {
 
             <Route path={SETTING_NAVIGATION_ROUTES.Administrative.path} element={<AdministrativeSettings />} />
 
-            <Route path={NAVIGATION_ROUTES_SUPER_ADMIN.Loyalty.path} element={<LoyaltyProgram />} />
+            <Route path={NAVIGATION_ROUTES_RES_ADMIN.Loyalty.path} element={<LoyaltyProgram />} />
+
+            <Route path={NAVIGATION_ROUTES_RES_ADMIN.Loyalty.RewardsTracking.path} element={<RewardsTracking />} />
           </>
         )
       case APP_ROLES.branchAdmin:

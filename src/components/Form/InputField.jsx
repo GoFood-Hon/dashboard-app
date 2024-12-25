@@ -22,7 +22,7 @@ export default function InputField({
             {type === "password" ? (
               <PasswordInput
                 classNames={{
-                  input: errors[name] ? "border-red-500" : ""
+                  input: errors[name] ? "border-red-500" : "focus:border-gray-600"
                 }}
                 value={value}
                 defaultValue={defaultValue}
@@ -34,7 +34,7 @@ export default function InputField({
               <Input
                 disabled={disabled}
                 classNames={{
-                  input: errors[name] ? "border-red-500" : ""
+                  input: errors[name] ? "border-red-500" : "focus:border-gray-600"
                 }}
                 type={type}
                 value={value}

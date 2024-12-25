@@ -33,6 +33,7 @@ import { QRCodeCanvas } from "qrcode.react"
 import { useState } from "react"
 import { IconPrinter } from "@tabler/icons-react"
 import { createRoot } from "react-dom/client"
+import { SearchComponent } from "../components/SearchComponent"
 
 const CardsViewLayout = ({
   title,
@@ -48,7 +49,10 @@ const CardsViewLayout = ({
   onDisableItem,
   onDetailsClick,
   onPaginationChange,
-  user
+  user,
+  onSearch, 
+  value,
+  searchAction
 }) => {
   const [opened, { open, close }] = useDisclosure(false)
   const [branchData, setBranchData] = useState(null)
@@ -146,7 +150,7 @@ const CardsViewLayout = ({
   }
 
   return (
-    <Stack>
+    <Stack gap="xs">
       <Group grow>
         <Flex align="center" justify="space-between">
           <BackButton title={title} />
@@ -171,17 +175,17 @@ const CardsViewLayout = ({
           </Flex>
         </Flex>
       </Group>
-
+      <SearchComponent onSearch={onSearch} elementName={elementsName} value={value} searchAction={searchAction} />
       <Group grow>
         {loadingElements ? (
           <Box className="h-[calc(100vh-220px)] w-full flex justify-center items-center">
             <Loader color={colors.main_app_color} />
           </Box>
         ) : elementsList && elementsList?.length > 0 ? (
-          <Grid>
+          <Grid gutter='sm'>
             {elementsList?.map((item, key) => (
               <Grid.Col span={{ base: 12, md: 6, lg: 4, xl: 3 }} key={key}>
-                <Card shadow="sm" padding="lg" radius="md" withBorder>
+                <Card shadow="sm" padding="sm" radius="md" withBorder>
                   <Card.Section style={{ position: "relative" }}>
                     {elementsName === "sucursales" && item?.onSite && (
                       <Tooltip
@@ -193,7 +197,7 @@ const CardsViewLayout = ({
                         position="bottom-start">
                         <ActionIcon
                           color={colors.main_app_color}
-                          style={{ position: "absolute", left: 20, top: 20 }}
+                          style={{ position: "absolute", left: 12, top: 12 }}
                           variant="filled"
                           size="md"
                           onClick={() => {

@@ -199,7 +199,14 @@ export const ReservationDetails = () => {
           <Card withBorder radius="md" className={classes.comment}>
             <Title order={4}>Comentarios ({reservationDetails?.ReservationComments?.length || 0})</Title>
             <Space h="sm" />
-            <Textarea placeholder="Escribe un comentario" onChange={(e) => setComment(e.target.value)} value={comment} />
+            <Textarea
+              classNames={{
+                input: "focus:border-gray-600"
+              }}
+              placeholder="Escribe un comentario"
+              onChange={(e) => setComment(e.target.value)}
+              value={comment}
+            />
             <Space h="sm" />
             <Flex justify="end">
               <Button color={colors.main_app_color} onClick={handleCreateComment}>
@@ -211,7 +218,7 @@ export const ReservationDetails = () => {
           {reservationDetails?.ReservationComments?.map((comment) =>
             comment?.AdminUser ? (
               <Paper key={comment?.id} withBorder radius="md" mb="xs" className={classes.comment}>
-                <Group justify="flex-end" gap='xs'>
+                <Group justify="flex-end" gap="xs">
                   <Box>
                     <Text fz="sm" ta="end">
                       {comment?.AdminUser?.name}
@@ -237,7 +244,7 @@ export const ReservationDetails = () => {
               </Paper>
             ) : (
               <Paper key={comment?.id} withBorder radius="md" mb="xs" className={classes.comment}>
-                <Group gap='xs'>
+                <Group gap="xs">
                   <Box>
                     <Text fz="sm">{comment?.User?.name}</Text>
                     <Text fz="xs" c="dimmed">

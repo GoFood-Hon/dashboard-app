@@ -10,7 +10,7 @@ function Home() {
     <Stack gap="md">
       <Title order={2}>Dashboard</Title>
       <DashboardScreen />
-      <Grid>
+      <Grid gutter='sm'>
         <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
           <OrderAmountChart />
         </Grid.Col>

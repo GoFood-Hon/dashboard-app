@@ -203,8 +203,8 @@ export const NAVIGATION_ROUTES_RES_ADMIN = {
   },
   Loyalty: {
     path: "/programas-de-lealtad",
-    NewLoyalty: {
-      path: "/lista-de-colecciones/nueva-coleccion"
+    RewardsTracking: {
+      path: "/seguimiento-de-recompensas"
     },
     EditLoyalty: {
       path: "/lista-de-colecciones/:collectionId"
@@ -231,7 +231,21 @@ export const NAVIGATION_ROUTES_RES_ADMIN_TWO = [
     ]
   },
   { label: "Reservaciones", icon: IconCalendarDue, link: "/lista-de-reservaciones" },
-  { label: "Programa de lealtad", icon: IconAward, link: "/programas-de-lealtad" },
+  {
+    label: "Programa de lealtad",
+    icon: IconAward,
+    initiallyOpened: false,
+    links: [
+      {
+        label: "Datos del programa",
+        link: "/programas-de-lealtad"
+      },
+      {
+        label: "Seguimiento de recompensas",
+        link: "/seguimiento-de-recompensas"
+      }
+    ]
+  },
   { label: "Sucursales", icon: IconBuildingStore, link: "/sucursales" },
   { label: "Usuarios", icon: IconUsers, link: "/usuarios" },
   {

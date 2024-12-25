@@ -1,7 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 import { ITEMS_PER_PAGE_CARDS } from "../../utils/paginationConfig"
 import branchesApi from "../../api/branchesApi"
-import toast from "react-hot-toast"
 import { convertToDecimal } from "../../utils"
 import { showNotification } from "@mantine/notifications"
 
@@ -18,18 +17,20 @@ const initialState = {
   currentBranch: null,
   totalItems: 0,
   imageUrl: "",
-  shippingRange: 0
+  shippingRange: 0,
+
+  //Buscar sucursal
+  searchData: null
 }
 
 export const fetchBranches = createAsyncThunk(
   "branches/fetchBranches",
-  async ({ limit, page, order, restaurantId, search, search_field }, { rejectWithValue }) => {
+  async ({ limit, page, order, search, search_field }, { rejectWithValue }) => {
     try {
       const response = await branchesApi.getBranchesByRestaurant({
         limit,
         page,
         order,
-        restaurantId,
         search,
         search_field
       })
@@ -219,6 +220,9 @@ export const branchesSlice = createSlice({
     },
     setShippingRange: (state, action) => {
       state.shippingRange = action.payload
+    },
+    setSearchData: (state, action) => {
+      state.searchData = action.payload
     }
   },
   extraReducers: (builder) => {
@@ -266,7 +270,7 @@ export const branchesSlice = createSlice({
         const { id } = action.payload
         const currentPageBranches = state.branchesPerPage[state.currentPage]
         const index = currentPageBranches.findIndex((branch) => branch?.id === id)
-        
+
         if (index !== -1) {
           currentPageBranches[index] = action.payload
         }
@@ -319,7 +323,8 @@ export const branchesSlice = createSlice({
   }
 })
 
-export const { setBranches, setError, setPage, setFilters, setBranchData, setImageUrl, setShippingRange } = branchesSlice.actions
+export const { setBranches, setError, setPage, setFilters, setBranchData, setImageUrl, setShippingRange, setSearchData } =
+  branchesSlice.actions
 
 export const setLoading = (state) => state.branches.loading
 

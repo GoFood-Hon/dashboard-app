@@ -21,7 +21,10 @@ const initialState = {
     endDate: null,
     status: null,
     startPrice: null
-  }
+  },
+
+  //Search params
+  searchData: null
 }
 
 export const fetchRestaurants = createAsyncThunk(
@@ -339,6 +342,9 @@ export const restaurantsSlice = createSlice({
     setError: (state, action) => {
       state.status = "failed"
       state.error = action.payload
+    },
+    setSearchData: (state, action) => {
+      state.searchData = action.payload
     }
   },
   extraReducers: (builder) => {
@@ -445,7 +451,7 @@ export const restaurantsSlice = createSlice({
   }
 })
 
-export const { setRestaurants, setRestaurantData, setPage, setFilters, setLoading, setImageUrl } = restaurantsSlice.actions
+export const { setRestaurants, setRestaurantData, setPage, setFilters, setLoading, setImageUrl, setSearchData } = restaurantsSlice.actions
 
 export const selectAllRestaurants = (state) => state.restaurants.restaurants
 

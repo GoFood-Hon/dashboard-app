@@ -382,7 +382,11 @@ const initialState = {
   creatingOtherUser: false,
   error: null,
 
-  userRole: null
+  userRole: null,
+
+  //Buscador de usuarios
+  searchAdminUsersData: null,
+  searchUsersData: null
 }
 
 // Slice de usuarios
@@ -404,6 +408,12 @@ export const userSlice = createSlice({
     },
     setUserRole: (state, action) => {
       state.userRole = action.payload
+    },
+    setSearchAdminUsersData: (state, action) => {
+      state.searchAdminUsersData = action.payload
+    },
+    setSearchUsersData: (state, action) => {
+      state.searchUsersData = action.payload
     }
   },
   extraReducers: (builder) => {
@@ -589,6 +599,14 @@ export const userSlice = createSlice({
   }
 })
 
-export const { setUser, setCurrentPage, setCurrentUserPage, setTotalAdminUsers, setUserRole } = userSlice.actions
+export const {
+  setUser,
+  setCurrentPage,
+  setCurrentUserPage,
+  setTotalAdminUsers,
+  setUserRole,
+  setSearchAdminUsersData,
+  setSearchUsersData
+} = userSlice.actions
 
 export default userSlice.reducer

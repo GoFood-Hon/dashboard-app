@@ -1,17 +1,13 @@
 import React, { useEffect } from "react"
 import { useNavigate } from "react-router-dom"
-import MenuTable from "../Menu/MenuTable"
 import { NAVIGATION_ROUTES_SUPER_ADMIN } from "../../routes"
 import { useDispatch, useSelector } from "react-redux"
-import { fetchAllPlans } from "../../store/features/plansSlice"
-import { Paper, Button, Group, Flex, Title, Text } from "@mantine/core"
-import { colors } from "../../theme/colors"
+import { fetchAllPlans, setSearchData } from "../../store/features/plansSlice"
 import TableViewLayout from "../TableViewLayout"
 
 export const Plans = () => {
   const navigate = useNavigate()
   const dispatch = useDispatch()
-
   const limit = useSelector((state) => state.plans.itemsPerPage)
   const page = useSelector((state) => state.plans.currentPage)
   const plansByPage = useSelector((state) => state.plans.plansByPage)
@@ -19,6 +15,7 @@ export const Plans = () => {
   const totalPlans = useSelector((state) => state.plans.totalPlans)
   const plans = plansByPage[page] || []
   const loadingPlans = useSelector((state) => state.plans.loadingPlans)
+  const searchData = useSelector((state) => state.plans.searchData)
 
   useEffect(() => {
     if (!plansByPage[page]) {
@@ -28,6 +25,14 @@ export const Plans = () => {
 
   const handleNewPlan = () => {
     navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Plans.NewPlan.path)
+  }
+
+  const handleSearch = (query) => {
+    dispatch(setSearchData(query))
+  }
+
+  const executeSearch = async (query) => {
+    dispatch(fetchAllPlans({ limit, page, order: "DESC", search_field: "name", search: query }))
   }
 
   return (
@@ -43,6 +48,9 @@ export const Plans = () => {
         totalItems={totalPagesCount}
         loading={loadingPlans}
         setPage={(newPage) => dispatch(setCurrentPage(newPage))}
+        onSearch={handleSearch}
+        value={searchData}
+        searchAction={executeSearch}
       />
     </>
   )

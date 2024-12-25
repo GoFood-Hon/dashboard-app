@@ -12,6 +12,9 @@ export default function InputTextAreaField({ label, name, register, rules, error
         {...register(name, rules)}
         autosize
         minRows={2}
+        classNames={{
+          input: "focus:border-gray-600"
+        }}
       />
     </React.Fragment>
   )

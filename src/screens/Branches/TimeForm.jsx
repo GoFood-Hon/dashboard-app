@@ -148,6 +148,9 @@ export const TimeForm = ({ setDaysData, hoursData, isAlwaysOpen, setIsAlwaysOpen
                         value={!day.isClosed ? day.openTime || "00:00" : "00:00"}
                         onChange={(e) => handleInputChange(index, "openTime", e.target.value)}
                         withSeconds
+                        classNames={{
+                          input: "focus:border-gray-600"
+                        }}
                       />
                     </Grid.Col>
                     <Grid.Col span={{ base: 3 }}>
@@ -160,6 +163,9 @@ export const TimeForm = ({ setDaysData, hoursData, isAlwaysOpen, setIsAlwaysOpen
                         value={!day.isClosed ? day.closeTime || "00:00" : "00:00"}
                         onChange={(e) => handleInputChange(index, "closeTime", e.target.value)}
                         withSeconds
+                        classNames={{
+                          input: "focus:border-gray-600"
+                        }}
                       />
                     </Grid.Col>
                   </>

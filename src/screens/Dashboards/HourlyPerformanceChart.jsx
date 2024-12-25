@@ -41,21 +41,21 @@ export const options = {}
 
 export const HourlyPerformanceChart = () => {
   const [data, setData] = useState([])
-  useEffect(() => {
-    const getHourlyPerformanceChart = async () => {
-      try {
-        const response = await reportsApi.getPerformanceByDayAndHour()
-        // TODO: Fix this response
-        setData(response?.data || [])
-      } catch (error) {
-        toast.error(`Error. Por favor intente de nuevo. ${error}`, {
-          duration: 7000
-        })
-      }
-    }
+  // useEffect(() => {
+  //   const getHourlyPerformanceChart = async () => {
+  //     try {
+  //       const response = await reportsApi.getPerformanceByDayAndHour()
+  //       // TODO: Fix this response
+  //       setData(response?.data || [])
+  //     } catch (error) {
+  //       toast.error(`Error. Por favor intente de nuevo. ${error}`, {
+  //         duration: 7000
+  //       })
+  //     }
+  //   }
 
-    getHourlyPerformanceChart()
-  }, [])
+  //   getHourlyPerformanceChart()
+  // }, [])
 
   return (
     <Paper

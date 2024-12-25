@@ -8,9 +8,7 @@ import {
 } from "../../store/features/loyaltySlice"
 import { useForm } from "react-hook-form"
 import FormLayout from "../../components/Form/FormLayout"
-import { colors } from "../../theme/colors"
 import { GeneralInformationForm } from "./GeneralInformationForm"
-import { Accordion } from "@mantine/core"
 import LoyaltyCards from "./LoyaltyCards"
 import { useParams } from "react-router-dom"
 
@@ -41,15 +39,7 @@ export const LoyaltyProgram = () => {
     {
       title: "Tarjetas de descuento",
       requirement: "Obligatorio",
-      form: (
-        <LoyaltyCards
-          register={register}
-          errors={errors}
-          setValue={setValue}
-          control={control}
-          watch={watch}
-        />
-      )
+      form: <LoyaltyCards register={register} errors={errors} setValue={setValue} control={control} watch={watch} />
     }
   ]
 
@@ -92,11 +82,12 @@ export const LoyaltyProgram = () => {
     <>
       <form onSubmit={handleSubmit(onSubmit)}>
         <FormLayout
-          title={"Vista detallada del programa"}
+          data={{ id: programs?.id, isActive: programs?.isActive }}
+          title={"Datos del programa"}
           show={user.role === "superadmin"}
           accordionTitles={["Información general", "Tarjetas de descuento"]}
           accordionStructure={accordionStructure}
-          statusButton
+          statusButton={user.role !== "superadmin"}
           navigate={() => navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Plans.path)}
           isLoading={programs && Object.keys(programs).length !== 0 ? updatingPrograms : creatingPrograms}
           update={programs && Object.keys(programs).length !== 0}

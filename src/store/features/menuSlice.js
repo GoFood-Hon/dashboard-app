@@ -31,7 +31,11 @@ const initialState = {
     dateSort: null
   },
   dishesAddedToMenu: 0,
-  isLoading: false // Nuevo estado de carga
+  isLoading: false, // Nuevo estado de carga
+
+  //Buscar menus
+  searchData: null,
+  searchDishesData: null
 }
 
 /*
@@ -355,6 +359,12 @@ export const menusSlice = createSlice({
     },
     setDishesAddedToMenuCount: (state, action) => {
       state.dishesAddedToMenu = action.payload
+    },
+    setSearchData: (state, action) => {
+      state.searchData = action.payload
+    },
+    setSearchDishesData: (state, action) => {
+      state.searchDishesData = action.payload
     }
   },
 
@@ -454,8 +464,17 @@ export const menusSlice = createSlice({
   }
 })
 
-export const { setMenus, setError, setPage, setFilters, setLoading, setCurrentDishPage, setDishesAddedToMenuCount } =
-  menusSlice.actions
+export const {
+  setMenus,
+  setError,
+  setPage,
+  setFilters,
+  setLoading,
+  setCurrentDishPage,
+  setDishesAddedToMenuCount,
+  setSearchData,
+  setSearchDishesData
+} = menusSlice.actions
 
 export const selectAllMenus = (state) => state.menus.menus
 

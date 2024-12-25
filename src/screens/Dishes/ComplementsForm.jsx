@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react"
-import { Grid, Image, Text, ScrollArea, Paper, Button, Loader, CloseButton } from "@mantine/core"
+import { Grid, Image, Text, ScrollArea, Paper, Button, Loader, CloseButton, Stack } from "@mantine/core"
 import { useSelector } from "react-redux"
 import { getFormattedHNL } from "../../utils"
 import { SortableList } from "./components"
 import { colors } from "../../theme/colors"
 import { useDebouncedState } from "@mantine/hooks"
 import { useDispatch } from "react-redux"
-import { setCurrentDishPage, setDishesAddedToMenuCount } from "../../store/features/menuSlice"
+import { getAllDishes, setCurrentDishPage, setDishesAddedToMenuCount, setSearchDishesData } from "../../store/features/menuSlice"
+import { SearchComponent } from "../../components/SearchComponent"
 
 const AvailableComplementsCard = ({ item, onItemClick }) => {
   const { images, name, price } = item
@@ -81,7 +82,10 @@ export default function ComplementsForm({
   const [extras, setExtras] = useState([])
   const [search, setSearch] = useDebouncedState("", 300)
   const dispatch = useDispatch()
-  const { currentDishPage, updatingDishes, dishesLoading, dishesAddedToMenu } = useSelector((state) => state.menus)
+  const user = useSelector((state) => state.user.value)
+  const { currentDishPage, updatingDishes, dishesLoading, dishesAddedToMenu, searchDishesData, dishesPerPage } = useSelector(
+    (state) => state.menus
+  )
 
   useEffect(() => {
     if (selectedDishes && Array.isArray(selectedDishes)) {
@@ -120,48 +124,73 @@ export default function ComplementsForm({
     setAddedComplements([])
   }, [isDataCleared])
 
+  const handleSearch = (query) => {
+    dispatch(setSearchDishesData(query))
+  }
+
+  const executeSearch = async (query) => {
+    dispatch(
+      getAllDishes({
+        limit: dishesPerPage,
+        restaurantId: user.restaurantId,
+        page: currentDishPage,
+        order: "DESC",
+        search_field: "name",
+        search: query
+      })
+    )
+  }
+
   return (
     <Grid>
       <Grid.Col span={{ base: 12, md: 6 }}>
         <Paper withBorder radius="md" p="md" className="w-full h-full">
-          {dishesLoading ? (
-            <div className="h-[calc(100vh-350px)] w-full flex justify-center items-center">
-              <Loader color={colors.main_app_color} />
-            </div>
-          ) : (
-            <>
-              <ScrollArea w={"100%"} h={350}>
-                <div className="w-full space-y-2">
-                  {extras.length > 0 ? (
-                    extras?.map((item, key) => (
-                      <AvailableComplementsCard
-                        item={item}
-                        key={key}
-                        onItemClick={handleComplementClick}
-                        handleRemoveComplement={handleRemoveComplement}
-                      />
-                    ))
-                  ) : (
-                    <Text size="sm" c="dimmed" inline mt={50} className="text-center leading-10">
-                      No hay platillos para mostrar
-                    </Text>
-                  )}
-                  {moreData && (
-                    <div className="w-full flex justify-center mt-4">
-                      <Button
-                        loading={updatingDishes}
-                        color={colors.main_app_color}
-                        onClick={() => {
-                          dispatch(setCurrentDishPage(currentDishPage + 1))
-                        }}>
-                        Cargar más
-                      </Button>
-                    </div>
-                  )}
-                </div>
-              </ScrollArea>
-            </>
-          )}
+          <Stack gap="xs">
+            <SearchComponent
+              onSearch={handleSearch}
+              elementName={"platillos"}
+              value={searchDishesData}
+              searchAction={executeSearch}
+            />
+            {dishesLoading ? (
+              <div className="h-[calc(100vh-350px)] w-full flex justify-center items-center">
+                <Loader color={colors.main_app_color} />
+              </div>
+            ) : (
+              <>
+                <ScrollArea w={"100%"} h={350}>
+                  <div className="w-full space-y-2">
+                    {extras.length > 0 ? (
+                      extras?.map((item, key) => (
+                        <AvailableComplementsCard
+                          item={item}
+                          key={key}
+                          onItemClick={handleComplementClick}
+                          handleRemoveComplement={handleRemoveComplement}
+                        />
+                      ))
+                    ) : (
+                      <Text size="sm" c="dimmed" inline mt={50} className="text-center leading-10">
+                        No hay platillos para mostrar
+                      </Text>
+                    )}
+                    {moreData && (
+                      <div className="w-full flex justify-center mt-4">
+                        <Button
+                          loading={updatingDishes}
+                          color={colors.main_app_color}
+                          onClick={() => {
+                            dispatch(setCurrentDishPage(currentDishPage + 1))
+                          }}>
+                          Cargar más
+                        </Button>
+                      </div>
+                    )}
+                  </div>
+                </ScrollArea>
+              </>
+            )}
+          </Stack>
         </Paper>
       </Grid.Col>
       <Grid.Col span={{ base: 12, md: 6 }}>
