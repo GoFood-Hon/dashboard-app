@@ -149,7 +149,7 @@ const LoyaltyCardView = ({
         opened={opened}
         close={close}
         title="¿Estás seguro que deseas marcar como reclamada?"
-        description="Una vez reclamada la tarjeta no se podrá marcar como no reclamada"
+        description="Una vez realizada esta acción, no se podrá deshacer."
         onConfirm={() => alert("Tarjeta marcada como reclamada")}
       />
     </>

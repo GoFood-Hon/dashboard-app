@@ -214,12 +214,17 @@ export const OrderDetails = () => {
                       </Flex>
                     </BackgroundImage>
                   </Group>
-                  <Flex align="center" gap={5}>
-                    <IconShoppingCart size="1.1rem" />
-                    <Title order={5}>Lista de productos</Title>
+                  <Flex align="center" justify='space-between'>
+                    <Flex align="center" gap={5}>
+                      <IconShoppingCart size="1.1rem" />
+                      <Title order={5}>Lista de productos</Title>
+                    </Flex>
+                    <Button style={{display: 'none'}} color={colors.main_app_color} radius='md'>
+                      Nota del pedido
+                    </Button>
                   </Flex>
                   <ScrollArea h={"280px"}>
-                    <SimpleGrid spacing="xs">
+                    <SimpleGrid spacing={4}>
                       {orderDetails?.OrderDetails?.map((item, index) => (
                         <DishOrderDetailCard key={index} orderDetails={item} />
                       ))}

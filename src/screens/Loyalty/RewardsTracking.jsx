@@ -98,11 +98,11 @@ const RewardsTracking = () => {
       loyaltyProgramId: "52071f1d-5964-416f-93c4-b5a078ec6f41",
       purchasesWithWhichRewardBegins: 10,
       isRewardADiscountInPurchase: false,
-      isRedeemed: true,
+      isRedeemed: false,
       createdAt: "2024-12-14T20:22:26.542Z",
       updatedAt: "2024-12-14T20:22:26.542Z",
       cardDescription: "Cena para 2 personas",
-      code: "ZIxCLW",
+      code: "ZIxCLW"
     }
   ]
 
@@ -217,7 +217,7 @@ const RewardsTracking = () => {
           </Paper>
 
           {/* Loyalty cards */}
-          {userData.LoyaltyCards && userData.LoyaltyCards.length !== 0 ? (
+          {userData?.LoyaltyCards && userData?.LoyaltyCards.length !== 0 ? (
             <>
               <Flex align="center" justify="space-between">
                 <Title order={4} tt="uppercase">

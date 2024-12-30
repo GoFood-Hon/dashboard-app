@@ -14,6 +14,7 @@ export function SearchComponent({ elementName, onSearch, value, searchAction }) 
 
   return (
     <TextInput
+      radius="md"
       value={value}
       onChange={(event) => handleChange(event.currentTarget.value)}
       placeholder={"Buscar " + elementName}
