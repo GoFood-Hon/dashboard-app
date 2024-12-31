@@ -50,7 +50,7 @@ const CardsViewLayout = ({
   onDetailsClick,
   onPaginationChange,
   user,
-  onSearch, 
+  onSearch,
   value,
   searchAction
 }) => {
@@ -175,14 +175,16 @@ const CardsViewLayout = ({
           </Flex>
         </Flex>
       </Group>
-      <SearchComponent onSearch={onSearch} elementName={elementsName} value={value} searchAction={searchAction} />
+      {elementsList.length > 0 && (
+        <SearchComponent onSearch={onSearch} elementName={elementsName} value={value} searchAction={searchAction} />
+      )}
       <Group grow>
         {loadingElements ? (
           <Box className="h-[calc(100vh-220px)] w-full flex justify-center items-center">
             <Loader color={colors.main_app_color} />
           </Box>
         ) : elementsList && elementsList?.length > 0 ? (
-          <Grid gutter='sm'>
+          <Grid gutter="sm">
             {elementsList?.map((item, key) => (
               <Grid.Col span={{ base: 12, md: 6, lg: 4, xl: 3 }} key={key}>
                 <Card shadow="sm" padding="sm" radius="md" withBorder>
