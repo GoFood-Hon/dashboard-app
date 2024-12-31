@@ -44,7 +44,7 @@ const TableViewLayout = ({
           </Flex>
         </Flex>
       </Group>
-      {!noSearch && (
+      {!noSearch && items && (
         <SearchComponent onSearch={onSearch} elementName={title.toLowerCase()} value={value} searchAction={searchAction} />
       )}
       <MenuTable

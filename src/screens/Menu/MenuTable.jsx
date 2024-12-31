@@ -70,7 +70,6 @@ export default function MenuTable({ items, screenType, totalItems, currentPage, 
 
       dispatch(fetchAdminUsers({ limit, page, order: "DESC", search_field, search }))
 
-      // Verifica el estado después de la acción
       if (userData.error) {
         return []
       } else {
@@ -590,47 +589,62 @@ export default function MenuTable({ items, screenType, totalItems, currentPage, 
       {loadingData ? (
         <TableSkeleton />
       ) : items && items.length > 0 ? (
-        <Paper withBorder p="md" radius="md">
-          <ScrollArea>
-            <Table miw={800} verticalSpacing="sm">
-              <Table.Thead>
-                <Table.Tr>
-                  {currentColumns.map((column) => (
-                    <Table.Th style={{ textAlign: column.center ? "center" : "left" }} key={column.label}>
-                      {column.label}
-                    </Table.Th>
-                  ))}
-                </Table.Tr>
-              </Table.Thead>
-              <Table.Tbody>
-                {items.map((item) => {
-                  const selected = itemsSelected.includes(item.id)
-                  return (
-                    <Table.Tr key={item.id}>
-                      {currentColumns.map((column) => (
-                        <Table.Td
-                          style={{
-                            textAlign: column.center ? "center" : "left"
-                          }}
-                          key={column.accessor}>
-                          {column.accessor === "createdAt" || column.accessor === "updatedAt" || column.accessor === "paidDate"
-                            ? dayjs(item[column.accessor]).fromNow()
-                            : column.accessor === "reservationDate"
-                              ? dayjs(item[column.accessor])
-                                  .tz("America/Tegucigalpa")
-                                  .format("D [de] MMMM [del] YYYY [a las] h:mm A")
-                              : column.render
-                                ? column.render(item[column.accessor], item)
-                                : item[column.accessor]}
-                        </Table.Td>
-                      ))}
-                    </Table.Tr>
-                  )
-                })}
-              </Table.Tbody>
-            </Table>
-          </ScrollArea>
-        </Paper>
+        <>
+          <Paper withBorder p="md" radius="md">
+            <ScrollArea>
+              <Table miw={800} verticalSpacing="sm">
+                <Table.Thead>
+                  <Table.Tr>
+                    {currentColumns.map((column) => (
+                      <Table.Th style={{ textAlign: column.center ? "center" : "left" }} key={column.label}>
+                        {column.label}
+                      </Table.Th>
+                    ))}
+                  </Table.Tr>
+                </Table.Thead>
+                <Table.Tbody>
+                  {items.map((item) => {
+                    const selected = itemsSelected.includes(item.id)
+                    return (
+                      <Table.Tr key={item.id}>
+                        {currentColumns.map((column) => (
+                          <Table.Td
+                            style={{
+                              textAlign: column.center ? "center" : "left"
+                            }}
+                            key={column.accessor}>
+                            {column.accessor === "createdAt" || column.accessor === "updatedAt" || column.accessor === "paidDate"
+                              ? dayjs(item[column.accessor]).fromNow()
+                              : column.accessor === "reservationDate"
+                                ? dayjs(item[column.accessor])
+                                    .tz("America/Tegucigalpa")
+                                    .format("D [de] MMMM [del] YYYY [a las] h:mm A")
+                                : column.render
+                                  ? column.render(item[column.accessor], item)
+                                  : item[column.accessor]}
+                          </Table.Td>
+                        ))}
+                      </Table.Tr>
+                    )
+                  })}
+                </Table.Tbody>
+              </Table>
+            </ScrollArea>
+          </Paper>
+          <Flex align="center" justify="end">
+            <Group>
+              <Pagination
+                total={totalItems}
+                page={currentPage}
+                onChange={(page) => setPage(page)}
+                color={colors.main_app_color}
+                defaultValue={currentPage}
+                size="md"
+                withEdges
+              />
+            </Group>
+          </Flex>
+        </>
       ) : (
         <Box>
           <Flex direction="column" align="center">
@@ -638,20 +652,6 @@ export default function MenuTable({ items, screenType, totalItems, currentPage, 
           </Flex>
         </Box>
       )}
-
-      <div className="flex w-full justify-end">
-        <Group>
-          <Pagination
-            total={totalItems}
-            page={currentPage}
-            onChange={(page) => setPage(page)}
-            color={colors.main_app_color}
-            defaultValue={currentPage}
-            size="md"
-            withEdges
-          />
-        </Group>
-      </div>
     </>
   )
 }
