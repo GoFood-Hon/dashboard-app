@@ -70,7 +70,6 @@ export const OrderDetails = () => {
     useSelector((state) => state.orders)
   const [opened, { open, close }] = useDisclosure(false)
   const [openedModal, { openModal, closeModal }] = useDisclosure(false)
-  const isMediumScreen = useMediaQuery("(max-width: 1140px)")
   const isSmallScreen = useMediaQuery("(max-width: 760px)")
   const getInitialStep = () => {
     const serviceSteps = orderStates[orderDetails?.serviceType] || []
@@ -89,7 +88,7 @@ export const OrderDetails = () => {
   }, [])
 
   const UserData = ({ title, photo, name, email, phoneNumber, address, bikeId }) => (
-    <Stack h="100%" gap="sm">
+    <Stack h="100%" gap="xs">
       <Flex align="center" gap={5}>
         {title.includes("repartidor") ? <IconHelmet size="1.1rem" /> : <IconUser size="1.1rem" />}
         <Title order={isSmallScreen ? 6 : 5}>{title}</Title>
@@ -157,13 +156,12 @@ export const OrderDetails = () => {
         </div>
       ) : (
         <>
-          <Group grow className="mb-2">
-            <Flex align="center" justify="space-between">
-              <BackButton title="Vista detallada del pedido" show />
-            </Flex>
-          </Group>
-
-          <Stack gap="md">
+          <Stack gap="xs">
+            <Group>
+              <Flex align="center" justify="space-between">
+                <BackButton title="Vista detallada del pedido" show />
+              </Flex>
+            </Group>
             <Paper withBorder p="md" radius="md" bg={orderDetails?.status === "canceled" ? "red" : ""}>
               {orderDetails?.status !== "canceled" ? (
                 <Stepper
@@ -172,9 +170,7 @@ export const OrderDetails = () => {
                   size={isSmallScreen ? "xs" : "sm"}
                   onStepClick={setActive}
                   allowNextStepsSelect={false}
-                  completedIcon={<IconCircleCheck size="1.8rem" />}
-                  //orientation={isMediumScreen ? "vertical" : "horizontal"}
-                >
+                  completedIcon={<IconCircleCheck size="1.8rem" />}>
                   {orderStates[orderDetails?.serviceType]?.map((item, index) => (
                     <Stepper.Step
                       key={index}
@@ -194,9 +190,9 @@ export const OrderDetails = () => {
               )}
             </Paper>
 
-            <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="md">
+            <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="xs">
               <Paper withBorder radius="md" h={PRIMARY_COL_HEIGHT} p="md">
-                <Stack gap="sm">
+                <Stack gap="xs">
                   <Group grow>
                     <BackgroundImage h={150} src={orderDetails?.Sucursal?.images?.[0]?.location} radius="md">
                       <Flex
@@ -214,12 +210,12 @@ export const OrderDetails = () => {
                       </Flex>
                     </BackgroundImage>
                   </Group>
-                  <Flex align="center" justify='space-between'>
+                  <Flex align="center" justify="space-between">
                     <Flex align="center" gap={5}>
                       <IconShoppingCart size="1.1rem" />
                       <Title order={5}>Lista de productos</Title>
                     </Flex>
-                    <Button style={{display: 'none'}} color={colors.main_app_color} radius='md'>
+                    <Button style={{ display: "none" }} color={colors.main_app_color} radius="md">
                       Nota del pedido
                     </Button>
                   </Flex>
@@ -232,7 +228,7 @@ export const OrderDetails = () => {
                   </ScrollArea>
                 </Stack>
               </Paper>
-              <Grid gutter="md">
+              <Grid grow gutter="xs">
                 <Grid.Col span={{ base: 12, md: 6 }}>
                   <Paper withBorder radius="md" h={SECONDARY_COL_HEIGHT} p="md">
                     <UserData

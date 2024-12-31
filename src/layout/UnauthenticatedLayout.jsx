@@ -18,6 +18,8 @@ import { setUser } from "../store/features/userSlice"
 import { useForm } from "react-hook-form"
 import { emailRules, passwordRules } from "../utils/inputRules"
 import { AUTH_NAVIGATION_ROUTES } from "../routes"
+import toast from "react-hot-toast"
+import { showNotification } from "@mantine/notifications"
 
 export default function UnauthenticatedLayout() {
   const location = useLocation()
@@ -48,7 +50,11 @@ export default function UnauthenticatedLayout() {
 
       if (res.status === "fail") {
         setIsLoading(false)
-        toast.error(res.message)
+        showNotification({
+          title: "Error",
+          message: 'Usuario o contraseña incorrecta',
+          color: "red"
+        })
         return
       }
       const userData = res?.data?.user

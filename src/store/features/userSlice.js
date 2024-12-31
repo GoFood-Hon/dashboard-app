@@ -134,39 +134,51 @@ export const createAdminUser = createAsyncThunk(
 export const createUser = createAsyncThunk("user/createUser", async ({ params, imageParams }, { rejectWithValue }) => {
   try {
     const response = await userApi.createUser(params)
-    let userData = response.data
 
-    if (response.error) {
+    if (!response || response.error) {
       showNotification({
         title: "Error",
-        message: response.message,
+        message: response?.message || "Error al crear el usuario.",
         color: "red",
         duration: 7000
       })
 
-      return rejectWithValue(response.message)
+      return rejectWithValue(response?.message || "Error desconocido.")
     }
 
-    if (imageParams) {
-      const imageResponse = await userApi.addImage(userData.id, imageParams)
+    let userData = response.data
 
-      if (imageResponse.error) {
+    if (imageParams) {
+      try {
+        const imageResponse = await userApi.addImage(userData.id, imageParams)
+
+        if (!imageResponse || imageResponse.error) {
+          showNotification({
+            title: "Error",
+            message: imageResponse?.message || "Error al subir la imagen.",
+            color: "red",
+            duration: 7000
+          })
+
+          return rejectWithValue(imageResponse?.message || "Error desconocido al subir la imagen.")
+        }
+
+        userData = { ...userData, images: imageResponse.data }
+      } catch (imageError) {
         showNotification({
           title: "Error",
-          message: imageResponse.message,
+          message: imageError.message || "Error desconocido al subir la imagen.",
           color: "red",
           duration: 7000
         })
 
-        return rejectWithValue(imageResponse.message)
+        return rejectWithValue(imageError.message)
       }
-
-      userData = { ...userData, images: imageResponse.data }
     }
 
     showNotification({
       title: "Creación exitosa",
-      message: `El usuario ${userData.name} fue creado`,
+      message: `El usuario ${userData.name} fue creado exitosamente.`,
       color: "green",
       duration: 5000
     })
@@ -175,7 +187,7 @@ export const createUser = createAsyncThunk("user/createUser", async ({ params, i
   } catch (error) {
     showNotification({
       title: "Error",
-      message: error.message || "Error desconocido",
+      message: error.message || "Error desconocido al crear el usuario.",
       color: "red",
       duration: 7000
     })
@@ -265,7 +277,6 @@ export const updateUser = createAsyncThunk(
     try {
       const response = await userApi.updateUserRestaurant(formData, userId)
       let userData = response.data
-      console.log(userData)
       if (response.error) {
         showNotification({
           title: "Error",

@@ -239,8 +239,8 @@ export const orderStates = {
   ]
 }
 
-export const PRIMARY_COL_HEIGHT = "500px"
-export const SECONDARY_COL_HEIGHT = `calc(${PRIMARY_COL_HEIGHT} / 2 - var(--mantine-spacing-md) / 2)`
+export const PRIMARY_COL_HEIGHT = "508px"
+export const SECONDARY_COL_HEIGHT = `calc(${PRIMARY_COL_HEIGHT} / 2 - var(--mantine-spacing-xs) / 2)`
 
 export const theme = createTheme({
   cursorType: "pointer"
