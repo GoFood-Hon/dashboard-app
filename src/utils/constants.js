@@ -1,10 +1,10 @@
 import { IconClockHour3 } from "@tabler/icons-react"
 import { NAVIGATION_ROUTES_BRANCH_ADMIN, NAVIGATION_ROUTES_KITCHEN } from "../routes"
 import { IconToolsKitchen } from "@tabler/icons-react"
-import { IconMoped } from "@tabler/icons-react"
 import { IconUserPlus } from "@tabler/icons-react"
 import { IconHomeCheck } from "@tabler/icons-react"
 import { createTheme } from "@mantine/core"
+import { IconMotorbike } from "@tabler/icons-react"
 
 export const DEFAULT_DISCOUNT_PERCENTAGE = "5%"
 export const DEFAULT_COUPON_TYPE = "Por fecha"
@@ -224,7 +224,7 @@ export const orderStates = {
     { icon: IconClockHour3, value: "confirmed", label: "Confirmación", step: 1 },
     { icon: IconToolsKitchen, value: "ready", label: "Preparación", step: 2 },
     { icon: IconUserPlus, value: "ready-to-pick-up", label: "Asignar repartidor", step: 3 },
-    { icon: IconMoped, value: "on-delivery", label: "En camino", step: 4 },
+    { icon: IconMotorbike, value: "on-delivery", label: "En camino", step: 4 },
     { icon: IconHomeCheck, value: "delivered", label: "Entregado", step: 5 }
   ],
   pickup: [

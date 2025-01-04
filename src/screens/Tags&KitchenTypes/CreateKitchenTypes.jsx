@@ -58,7 +58,7 @@ export const CreateKitchenTypes = () => {
       </Grid>
       <Space h={20} />
       {kitchenTypes && kitchenTypes.length > 0 ? (
-        <SimpleGrid cols={{ base: 2, sm: 3, md: 4, lg: 5 }}>
+        <SimpleGrid spacing='xs' cols={{ base: 2, sm: 3, md: 4, lg: 5 }}>
           {kitchenTypes.map((type) => (
             <Paper radius="md" withBorder key={type.id} className={classes.item} style={{ position: "relative" }}>
               <CloseButton

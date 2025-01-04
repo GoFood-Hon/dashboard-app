@@ -97,7 +97,7 @@ export const confirmOrder = createAsyncThunk("orders/confirmOrder", async (id, {
       color: "green",
       duration: 7000
     })
-    
+
     return response.data
   } catch (error) {
     return rejectWithValue(error.response?.data || error.message)
@@ -229,47 +229,49 @@ const ordersSlice = createSlice({
       state.totalOrders = action.payload
     },
     setNewOrder: (state, action) => {
-      const newOrder = action.payload
-      const itemsPerPage = state.itemsPerPage
+      if (state.ordersPerPage[1].length > 0) {
+        const newOrder = action.payload
+        const itemsPerPage = state.itemsPerPage
 
-      const newOrdersPerPage = { ...state.ordersPerPage }
+        const newOrdersPerPage = { ...state.ordersPerPage }
 
-      if (!newOrdersPerPage[1]) {
-        newOrdersPerPage[1] = []
-      }
+        if (!newOrdersPerPage[1]) {
+          newOrdersPerPage[1] = []
+        }
 
-      newOrdersPerPage[1] = [newOrder, ...newOrdersPerPage[1]]
+        newOrdersPerPage[1] = [newOrder, ...newOrdersPerPage[1]]
 
-      for (let i = 1; i <= state.totalPagesCount; i++) {
-        if (newOrdersPerPage[i]?.length > itemsPerPage) {
-          const lastItem = newOrdersPerPage[i].pop()
+        for (let i = 1; i <= state.totalPagesCount; i++) {
+          if (newOrdersPerPage[i]?.length > itemsPerPage) {
+            const lastItem = newOrdersPerPage[i].pop()
 
-          if (!newOrdersPerPage[i + 1]) {
-            newOrdersPerPage[i + 1] = []
+            if (!newOrdersPerPage[i + 1]) {
+              newOrdersPerPage[i + 1] = []
+            }
+
+            newOrdersPerPage[i + 1] = [lastItem, ...newOrdersPerPage[i + 1]]
+          } else {
+            break
           }
-
-          newOrdersPerPage[i + 1] = [lastItem, ...newOrdersPerPage[i + 1]]
-        } else {
-          break
         }
-      }
 
-      const updatedTotalOrders = state.totalOrders + 1
-      const updatedTotalPagesCount = Math.ceil(updatedTotalOrders / itemsPerPage)
+        const updatedTotalOrders = state.totalOrders + 1
+        const updatedTotalPagesCount = Math.ceil(updatedTotalOrders / itemsPerPage)
 
-      const validPages = new Set([...Array(updatedTotalPagesCount).keys()].map((i) => i + 1))
-      const newRestaurantsPerPage = { ...state.restaurantsPerPage }
+        const validPages = new Set([...Array(updatedTotalPagesCount).keys()].map((i) => i + 1))
+        const newRestaurantsPerPage = { ...state.restaurantsPerPage }
 
-      for (const page in newRestaurantsPerPage) {
-        if (!validPages.has(Number(page))) {
-          delete newRestaurantsPerPage[page]
+        for (const page in newRestaurantsPerPage) {
+          if (!validPages.has(Number(page))) {
+            delete newRestaurantsPerPage[page]
+          }
         }
-      }
 
-      state.ordersPerPage = newOrdersPerPage
-      state.totalOrders = updatedTotalOrders
-      state.totalPagesCount = updatedTotalPagesCount
-      state.restaurantsPerPage = newRestaurantsPerPage
+        state.ordersPerPage = newOrdersPerPage
+        state.totalOrders = updatedTotalOrders
+        state.totalPagesCount = updatedTotalPagesCount
+        state.restaurantsPerPage = newRestaurantsPerPage
+      }
     },
     setOrderStatus: (state, action) => {
       const { id, status } = action.payload

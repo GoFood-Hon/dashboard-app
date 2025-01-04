@@ -60,6 +60,10 @@ import { IconReceipt } from "@tabler/icons-react"
 import { IconBrandRedux } from "@tabler/icons-react"
 import { IconId } from "@tabler/icons-react"
 import ConfirmationModal from "../ConfirmationModal"
+import { IconMotorbike } from "@tabler/icons-react"
+import { IconCar } from "@tabler/icons-react"
+import { IconToolsKitchen3 } from "@tabler/icons-react"
+import ModalLayout from "./ModalLayout"
 
 export const OrderDetails = () => {
   const { orderId } = useParams()
@@ -69,7 +73,8 @@ export const OrderDetails = () => {
   const { orderDetails, loadingDetails, updatingOrderStatus, cancelOrderStatus, loadingDrivers, drivers, updatingDriver } =
     useSelector((state) => state.orders)
   const [opened, { open, close }] = useDisclosure(false)
-  const [openedModal, { openModal, closeModal }] = useDisclosure(false)
+  const [openedModal, { open: openModal, close: closeModal }] = useDisclosure(false)
+  const [openedComments, { open: openModalComment, close: closeModalComment }] = useDisclosure(false)
   const isSmallScreen = useMediaQuery("(max-width: 760px)")
   const getInitialStep = () => {
     const serviceSteps = orderStates[orderDetails?.serviceType] || []
@@ -83,7 +88,6 @@ export const OrderDetails = () => {
   }, [orderDetails])
 
   useEffect(() => {
-    console.log(orderDetails)
     dispatch(fetchOrderDetails(orderId))
   }, [])
 
@@ -93,7 +97,7 @@ export const OrderDetails = () => {
         {title.includes("repartidor") ? <IconHelmet size="1.1rem" /> : <IconUser size="1.1rem" />}
         <Title order={isSmallScreen ? 6 : 5}>{title}</Title>
       </Flex>
-      <Divider />
+      <Divider my={2} />
       {name ? (
         <>
           <Flex align="center" gap="sm">
@@ -103,7 +107,7 @@ export const OrderDetails = () => {
               name={name
                 ?.split(" ")
                 .filter((_, i, arr) => i === 0 || i === arr.length - 1)
-                .map((palabra) => palabra.charAt(0))
+                .map((word) => word.charAt(0))
                 .join("")
                 .toUpperCase()}
             />
@@ -124,9 +128,13 @@ export const OrderDetails = () => {
             </Text>
           </Flex>
           <Flex align="center" gap="xs" ml={5}>
-            {bikeId ? <IconId size="1.1rem" /> : <IconMapPin size="1.1rem" />}
-            <Text c="dimmed" size={isSmallScreen ? "xs" : "sm"}>
-              {bikeId ? bikeId : address || "No se proporcionó"}
+            {bikeId ? <IconId size="1.1rem" style={{ flexShrink: 0 }} /> : <IconMapPin size="1.1rem" style={{ flexShrink: 0 }} />}
+            <Text c="dimmed" size={isSmallScreen ? "xs" : "sm"} style={{ wordBreak: "break-word" }}>
+              {bikeId
+                ? bikeId
+                : orderDetails?.serviceType === "delivery"
+                  ? address || "No se proporcionó"
+                  : "La dirección no es requerida"}
             </Text>
           </Flex>
         </>
@@ -198,15 +206,34 @@ export const OrderDetails = () => {
                       <Flex
                         p="md"
                         direction="column"
+                        justify="space-between"
                         style={{
                           backgroundColor: "rgba(0, 0, 0, 0.6)",
                           height: "100%",
                           borderRadius: "inherit"
                         }}>
-                        <Text c="white" size="lg" tt="uppercase" fw={700}>
-                          {orderDetails?.Sucursal?.name}
-                        </Text>
-                        <Text c="white">{orderDetails?.Sucursal?.city + ", " + orderDetails?.Sucursal?.state}</Text>
+                        <Flex direction="column">
+                          <Text c="white" size="lg" tt="uppercase" fw={700}>
+                            {orderDetails?.Sucursal?.name}
+                          </Text>
+                          <Text c="white">{orderDetails?.Sucursal?.city + ", " + orderDetails?.Sucursal?.state}</Text>
+                        </Flex>
+                        <Flex align="center" gap={5}>
+                          {orderDetails?.serviceType === "delivery" ? (
+                            <IconMotorbike size="1.4rem" />
+                          ) : orderDetails?.serviceType === "onSite" ? (
+                            <IconToolsKitchen3 size="1.4rem" />
+                          ) : (
+                            <IconCar size="1.4rem" />
+                          )}
+                          <Title ta="end" order={isSmallScreen ? 6 : 5}>
+                            {orderDetails?.serviceType === "delivery"
+                              ? "Pedido a domicilio"
+                              : orderDetails?.serviceType === "omSite"
+                                ? "Pedido para comer en sitio"
+                                : "Pedido para llevar"}
+                          </Title>
+                        </Flex>
                       </Flex>
                     </BackgroundImage>
                   </Group>
@@ -215,9 +242,15 @@ export const OrderDetails = () => {
                       <IconShoppingCart size="1.1rem" />
                       <Title order={5}>Lista de productos</Title>
                     </Flex>
-                    <Button style={{ display: "none" }} color={colors.main_app_color} radius="md">
-                      Nota del pedido
-                    </Button>
+                    <Flex align="center" gap={5}>
+                      <Button
+                        style={{ display: orderDetails?.note ? "block" : "none" }}
+                        color={colors.main_app_color}
+                        radius="md"
+                        onClick={() => openModalComment()}>
+                        Ver nota
+                      </Button>
+                    </Flex>
                   </Flex>
                   <ScrollArea h={"280px"}>
                     <SimpleGrid spacing={4}>
@@ -237,7 +270,7 @@ export const OrderDetails = () => {
                       name={orderDetails?.Order?.User?.name}
                       email={orderDetails?.Order?.User?.email}
                       phoneNumber={orderDetails?.Order?.User?.phoneNumber}
-                      address={orderDetails?.Order?.User?.address}
+                      address={orderDetails?.userAddress?.address}
                     />
                   </Paper>
                 </Grid.Col>
@@ -308,7 +341,7 @@ export const OrderDetails = () => {
                         <Title order={isSmallScreen ? 6 : 5}>Acciones del pedido</Title>
                       </Flex>
                       <Divider />
-                      <Flex direction="column" justify="center" align="center" style={{ flexGrow: 1 }} gap="sm">
+                      <Flex direction="column" justify="center" align="center" style={{ flexGrow: 1 }} gap="xs">
                         <>
                           {orderDetails?.status === orderStatusValues.onHold ? (
                             user.role === APP_ROLES.branchAdmin ||
@@ -416,16 +449,14 @@ export const OrderDetails = () => {
             onConfirm={() => handleDeleteTag(tagId)}
           />
 
-          <Modal
+          <ModalLayout
             opened={opened}
             onClose={() => {
               close()
               setDriver(null)
             }}
-            title="Lista de repartidores disponibles"
-            centered
-            radius="md">
-            <Stack>
+            title="Lista de repartidores disponibles">
+            <Stack gap={5}>
               {loadingDrivers ? (
                 Array.from({ length: 5 }).map((_, index) => <Skeleton key={index} radius="md" h={70} />)
               ) : drivers && drivers.length > 0 ? (
@@ -476,7 +507,27 @@ export const OrderDetails = () => {
                 Seleccionar
               </Button>
             </Stack>
-          </Modal>
+          </ModalLayout>
+
+          <ModalLayout
+            opened={openedComments}
+            onClose={() => {
+              closeModalComment()
+            }}
+            title="Nota del pedido">
+            <Paper withBorder radius="md" p="sm">
+              <Group>
+                <Flex align="center">
+                  <Text fz="sm">
+                    {orderDetails?.Order?.User?.name + ' comentó:'}
+                  </Text>
+                </Flex>
+              </Group>
+              <Text c='dimmed' pt="xs" size="sm">
+                {orderDetails?.note}
+              </Text>
+            </Paper>
+          </ModalLayout>
         </>
       )}
     </>
