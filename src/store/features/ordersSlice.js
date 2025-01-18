@@ -5,12 +5,12 @@ import { showNotification } from "@mantine/notifications"
 
 export const fetchAllOrders = createAsyncThunk(
   "orders/fetchAllOrders",
-  async ({ limit, page, search_field, search, status }, { rejectWithValue }) => {
+  async ({ limit, page, order, search_field, search, status }, { rejectWithValue }) => {
     try {
       const response = await orderApi.getAllOrders({
         limit,
         page,
-        order: "DESC",
+        order,
         search_field,
         search,
         status
@@ -332,7 +332,10 @@ const ordersSlice = createSlice({
         if (index !== -1) {
           currentPageOrders[index] = { ...currentPageOrders[index], status }
         }
-        state.orderDetails.status = status
+        const updatedOrders = currentPageOrders.filter((order) => order.id !== id)
+        state.ordersPerPage[state.currentPage] = updatedOrders
+
+        //state.orderDetails.status = status
         state.updatingOrderStatus = false
       })
       .addCase(updateOrderStatus.rejected, (state, action) => {

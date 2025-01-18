@@ -1,7 +1,7 @@
 import { Accordion, Box, Divider, Flex, Group, Image, List, Text } from "@mantine/core"
 import { useState } from "react"
 
-export const DishOrderDetailCard = ({ orderDetails }) => {
+export const DishOrderDetailCard = ({ orderDetails, noText }) => {
   const [expanded, setExpanded] = useState(false)
 
   return (
@@ -11,8 +11,8 @@ export const DishOrderDetailCard = ({ orderDetails }) => {
           <Flex justify={"space-between"} align={"center"}>
             <Group>
               <Image
-                h={"64px"}
-                w={"64px"}
+                h={noText ? "58px" : "64px"}
+                w={noText ? "58px" : "64px"}
                 radius="sm"
                 fit="contain"
                 src={orderDetails?.Dish?.images?.[0]?.location}
@@ -30,7 +30,7 @@ export const DishOrderDetailCard = ({ orderDetails }) => {
                 </Text>
               </Box>
             </Group>
-            <Text size="sm" mr={5}>
+            <Text style={{ display: noText ? "none" : "block" }} size="sm" mr={5}>
               {expanded ? "Ocultar" : "Mostrar"} detalles
             </Text>
           </Flex>
@@ -40,7 +40,7 @@ export const DishOrderDetailCard = ({ orderDetails }) => {
           <Flex justify={"space-between"} align={"center"}>
             <Flex direction="column">
               <Text fw={700}>Complementos y extras:</Text>
-              <List c="dimmed" size="sm" listStyleType="decimal">
+              <List c="dimmed" size="sm" listStyleType="disc">
                 {orderDetails?.additionalsDetails?.length > 0 ? (
                   orderDetails?.additionalsDetails?.map((additional) => (
                     <List.Item key={additional.id}>{additional.name}</List.Item>

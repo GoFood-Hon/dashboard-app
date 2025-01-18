@@ -64,6 +64,7 @@ import EditCollection from "./screens/Collections/EditCollection"
 import { LoyaltyProgram } from "./screens/Loyalty/LoyaltyProgram"
 import { LoyaltyProgramsList } from "./screens/Loyalty/LoyaltyProgramsList"
 import RewardsTracking from "./screens/Loyalty/RewardsTracking"
+import OrdersForKitchen from "./screens/Orders/OrdersForKitchen"
 
 function App() {
   const userRole = useSelector((state) => state.user.value.role)
@@ -219,7 +220,7 @@ function App() {
           <>
             <Route path={NAVIGATION_ROUTES_KITCHEN.Home.path} element={<WelcomeScreen />} />
 
-            <Route path={NAVIGATION_ROUTES_KITCHEN.Orders.path} element={<Orders />} />
+            <Route path={NAVIGATION_ROUTES_KITCHEN.Orders.path} element={<OrdersForKitchen />} />
 
             <Route path={NAVIGATION_ROUTES_KITCHEN.Orders.OrderDetails.path} element={<OrderDetails />} />
 

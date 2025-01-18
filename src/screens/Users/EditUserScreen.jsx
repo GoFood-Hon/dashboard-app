@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 import { useNavigate, useParams } from "react-router-dom"
 import toast from "react-hot-toast"
-import { Accordion } from "@mantine/core"
 import { USER_ROLES } from "../../utils/constants"
 import { NAVIGATION_ROUTES_RES_ADMIN } from "../../routes"
 import GeneralInformationForm from "./GeneralInformationForm"
@@ -23,6 +22,7 @@ export const EditUserScreen = () => {
       try {
         const response = await authApi.getUserDetails(userId)
         const userDetailsData = response?.data
+        console.log(userDetailsData)
         setUserDetails(userDetailsData)
       } catch (error) {
         toast.error("Hubo un error obteniendo los detalles del usuario")

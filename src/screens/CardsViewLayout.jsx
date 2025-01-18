@@ -18,12 +18,16 @@ import {
   ActionIcon,
   Modal,
   Paper,
-  useMantineColorScheme
+  useMantineColorScheme,
+  Divider,
+  ScrollArea,
+  SimpleGrid,
+  Accordion
 } from "@mantine/core"
 import { IconCheck, IconX } from "@tabler/icons-react"
 import BackButton from "./Dishes/components/BackButton"
 import { colors } from "../theme/colors"
-import { getFormattedHNL } from "../utils"
+import { formatTime, getFormattedHNL } from "../utils"
 import Lottie from "react-lottie"
 import animationData from "../assets/animation/NothingFoundAnimation.json"
 import { APP_ROLES } from "../utils/constants"
@@ -34,6 +38,18 @@ import { useState } from "react"
 import { IconPrinter } from "@tabler/icons-react"
 import { createRoot } from "react-dom/client"
 import { SearchComponent } from "../components/SearchComponent"
+import classes from "../screens/Orders/BadgeCard.module.css"
+import { IconClock2 } from "@tabler/icons-react"
+import { IconFlame } from "@tabler/icons-react"
+import { IconClock } from "@tabler/icons-react"
+import { DishOrderDetailCard } from "./Orders/DishOrderDetailCard"
+import ConfirmationModal from "./ConfirmationModal"
+import { useStopwatch } from "react-timer-hook"
+import { IconStopwatch } from "@tabler/icons-react"
+import dayjs from "dayjs"
+import { useEffect } from "react"
+import { useDispatch } from "react-redux"
+import { updateOrderStatus } from "../store/features/ordersSlice"
 
 const CardsViewLayout = ({
   title,
@@ -52,9 +68,12 @@ const CardsViewLayout = ({
   user,
   onSearch,
   value,
-  searchAction
+  searchAction,
+  kitchenView
 }) => {
+  const dispatch = useDispatch()
   const [opened, { open, close }] = useDisclosure(false)
+  const [openedKitchen, { close: closeKitchen, open: openKitchen }] = useDisclosure(false)
   const [branchData, setBranchData] = useState(null)
   const theme = createTheme({
     cursorType: "pointer"
@@ -69,6 +88,25 @@ const CardsViewLayout = ({
   }
   const isSmallScreen = useMediaQuery("(max-width: 430px)")
   const { colorScheme } = useMantineColorScheme()
+  const [orderId, setOrderId] = useState(null)
+
+  const OrderStopwatch = ({ sentToKitchenTimestamp }) => {
+    const stopwatchOffset = new Date()
+    const elapsedSeconds = dayjs().diff(dayjs(sentToKitchenTimestamp), "second")
+    stopwatchOffset.setSeconds(stopwatchOffset.getSeconds() + elapsedSeconds)
+
+    const { seconds, minutes, hours, days } = useStopwatch({
+      autoStart: true,
+      offsetTimestamp: stopwatchOffset
+    })
+
+    return (
+      <Text size="sm">
+        {String(days).padStart(2, "0")}:{String(hours).padStart(2, "0")}:{String(minutes).padStart(2, "0")}:
+        {String(seconds).padStart(2, "0")}
+      </Text>
+    )
+  }
 
   const handlePrint = (value) => {
     const parsedValue = JSON.parse(value)
@@ -151,31 +189,33 @@ const CardsViewLayout = ({
 
   return (
     <Stack gap="xs">
-      <Group grow>
-        <Flex align="center" justify="space-between">
-          <BackButton title={title} />
-          <Flex align="center" gap="xs">
-            <Flex style={{ display: `${isSmallScreen ? "none" : ""}` }} align="center" gap={5}>
-              <Text fw={700}>
-                {page === 1 ? 1 : (page - 1) * limit + 1}-{page === 1 ? limit : Math.min(page * limit, totalElements)}
-              </Text>
-              <Text>de</Text>
-              <Text fw={700}>
-                {totalElements} {elementsName}
-              </Text>
+      {!kitchenView && (
+        <Group grow>
+          <Flex align="center" justify="space-between">
+            <BackButton title={title} />
+            <Flex align="center" gap="xs">
+              <Flex style={{ display: `${isSmallScreen ? "none" : ""}` }} align="center" gap={5}>
+                <Text fw={700}>
+                  {page === 1 ? 1 : (page - 1) * limit + 1}-{page === 1 ? limit : Math.min(page * limit, totalElements)}
+                </Text>
+                <Text>de</Text>
+                <Text fw={700}>
+                  {totalElements} {elementsName}
+                </Text>
+              </Flex>
+              <Button
+                color={colors.main_app_color}
+                style={{
+                  display: `${user.role !== APP_ROLES.branchAdmin && user.role !== APP_ROLES.cashierUser ? "" : "none"}`
+                }}
+                onClick={onNewItemClick}>
+                Nuevo
+              </Button>
             </Flex>
-            <Button
-              color={colors.main_app_color}
-              style={{
-                display: `${user.role !== APP_ROLES.branchAdmin && user.role !== APP_ROLES.cashierUser ? "" : "none"}`
-              }}
-              onClick={onNewItemClick}>
-              Nuevo
-            </Button>
           </Flex>
-        </Flex>
-      </Group>
-      {elementsList.length > 0 && (
+        </Group>
+      )}
+      {elementsList.length > 0 && !kitchenView && (
         <SearchComponent onSearch={onSearch} elementName={elementsName} value={value} searchAction={searchAction} />
       )}
       <Group grow>
@@ -184,107 +224,208 @@ const CardsViewLayout = ({
             <Loader color={colors.main_app_color} />
           </Box>
         ) : elementsList && elementsList?.length > 0 ? (
-          <Grid gutter="sm">
-            {elementsList?.map((item, key) => (
-              <Grid.Col span={{ base: 12, md: 6, lg: 4, xl: 3 }} key={key}>
-                <Card shadow="sm" padding="sm" radius="md" withBorder>
-                  <Card.Section style={{ position: "relative" }}>
-                    {elementsName === "sucursales" && item?.onSite && (
-                      <Tooltip
-                        transitionProps={{ transition: "slide-down", duration: 300 }}
-                        arrowOffset={50}
-                        arrowSize={4}
-                        label="Generar código QR"
-                        color={colors.main_app_color}
-                        position="bottom-start">
-                        <ActionIcon
+          !kitchenView ? (
+            <Grid gutter="sm">
+              {elementsList?.map((item, key) => (
+                <Grid.Col span={{ base: 12, md: 6, lg: 4, xl: 3 }} key={key}>
+                  <Card shadow="sm" padding="sm" radius="md" withBorder>
+                    <Card.Section style={{ position: "relative" }}>
+                      {elementsName === "sucursales" && item?.onSite && (
+                        <Tooltip
+                          transitionProps={{ transition: "slide-down", duration: 300 }}
+                          arrowOffset={50}
+                          arrowSize={4}
+                          label="Generar código QR"
                           color={colors.main_app_color}
-                          style={{ position: "absolute", left: 12, top: 12 }}
-                          variant="filled"
+                          position="bottom-start">
+                          <ActionIcon
+                            color={colors.main_app_color}
+                            style={{ position: "absolute", left: 12, top: 12 }}
+                            variant="filled"
+                            size="md"
+                            onClick={() => {
+                              open()
+                              setBranchData({ id: item?.id, name: item?.name })
+                            }}>
+                            <IconQrcode style={{ width: "80%", height: "80%" }} stroke={1.5} />
+                          </ActionIcon>
+                        </Tooltip>
+                      )}
+                      {item?.images && item?.images?.length > 0 ? (
+                        <Image
+                          src={item?.images[0]?.location}
+                          h={160}
+                          fit={elementsName === "platillos" ? "contain" : "cover"}
+                          alt={item?.name || "Imagen"}
+                        />
+                      ) : (
+                        <Image src="default-image-url.jpg" h={200} fit="cover" alt="Imagen no disponible" />
+                      )}
+                    </Card.Section>
+
+                    <Group justify="space-between" mt="md" mb="xs">
+                      <Box w={160}>
+                        <Tooltip
+                          label={item?.name}
+                          position="bottom-start"
+                          transitionProps={{ transition: "fade-down", duration: 300 }}
+                          color={colors.main_app_color}>
+                          <Text truncate="end" size="lg" fw={700}>
+                            {item?.name}
+                          </Text>
+                        </Tooltip>
+                      </Box>
+                      <MantineProvider theme={theme}>
+                        <Switch
+                          checked={item?.isActive}
+                          onChange={() => (item?.isActive ? onDisableItem(item?.id) : onEnableItem(item?.id))}
+                          color={colors.main_app_color}
                           size="md"
-                          onClick={() => {
-                            open()
-                            setBranchData({ id: item?.id, name: item?.name })
-                          }}>
-                          <IconQrcode style={{ width: "80%", height: "80%" }} stroke={1.5} />
-                        </ActionIcon>
-                      </Tooltip>
-                    )}
-                    {item?.images && item?.images?.length > 0 ? (
-                      <Image
-                        src={item?.images[0]?.location}
-                        h={160}
-                        fit={elementsName === "platillos" ? "contain" : "cover"}
-                        alt={item?.name || "Imagen"}
-                      />
-                    ) : (
-                      <Image src="default-image-url.jpg" h={200} fit="cover" alt="Imagen no disponible" />
-                    )}
-                  </Card.Section>
+                          thumbIcon={
+                            item?.isActive ? (
+                              <IconCheck style={{ width: rem(12), height: rem(12) }} stroke={3} color={colors.main_app_color} />
+                            ) : (
+                              <IconX style={{ width: rem(12), height: rem(12) }} stroke={3} color={colors.main_app_color} />
+                            )
+                          }
+                        />
+                      </MantineProvider>
+                    </Group>
 
-                  <Group justify="space-between" mt="md" mb="xs">
-                    <Box w={160}>
-                      <Tooltip
-                        label={item?.name}
-                        position="bottom-start"
-                        transitionProps={{ transition: "fade-down", duration: 300 }}
-                        color={colors.main_app_color}>
-                        <Text truncate="end" size="lg" fw={700}>
-                          {item?.name}
-                        </Text>
-                      </Tooltip>
-                    </Box>
-                    <MantineProvider theme={theme}>
-                      <Switch
-                        checked={item?.isActive}
-                        onChange={() => (item?.isActive ? onDisableItem(item?.id) : onEnableItem(item?.id))}
-                        color={colors.main_app_color}
-                        size="md"
-                        thumbIcon={
-                          item?.isActive ? (
-                            <IconCheck style={{ width: rem(12), height: rem(12) }} stroke={3} color={colors.main_app_color} />
-                          ) : (
-                            <IconX style={{ width: rem(12), height: rem(12) }} stroke={3} color={colors.main_app_color} />
-                          )
-                        }
-                      />
-                    </MantineProvider>
-                  </Group>
+                    <Text size="sm" c="dimmed" h={50}>
+                      {elementsName === "restaurantes"
+                        ? item?.socialReason
+                        : elementsName === "sucursales"
+                          ? item?.city + ", " + item?.state
+                          : getFormattedHNL(item?.price)}
+                    </Text>
 
-                  <Text size="sm" c="dimmed" h={50}>
-                    {elementsName === "restaurantes"
-                      ? item?.socialReason
-                      : elementsName === "sucursales"
-                        ? item?.city + ", " + item?.state
-                        : getFormattedHNL(item?.price)}
-                  </Text>
-
-                  <Button color={colors.main_app_color} fullWidth mt="md" radius="md" onClick={() => onDetailsClick(item?.id)}>
-                    Ver detalles
-                  </Button>
-                </Card>
+                    <Button color={colors.main_app_color} fullWidth mt="md" radius="md" onClick={() => onDetailsClick(item?.id)}>
+                      Ver detalles
+                    </Button>
+                  </Card>
+                </Grid.Col>
+              ))}
+              <Grid.Col>
+                <Flex justify="end">
+                  <Pagination
+                    total={totalPageCount}
+                    page={page}
+                    limit={limit}
+                    defaultValue={page}
+                    onChange={onPaginationChange}
+                    color={colors.main_app_color}
+                    size="md"
+                    withEdges
+                  />
+                </Flex>
               </Grid.Col>
-            ))}
-            <Grid.Col>
-              <Flex justify="end">
-                <Pagination
-                  total={totalPageCount}
-                  page={page}
-                  limit={limit}
-                  defaultValue={page}
-                  onChange={onPaginationChange}
-                  color={colors.main_app_color}
-                  size="md"
-                  withEdges
-                />
-              </Flex>
-            </Grid.Col>
-          </Grid>
+            </Grid>
+          ) : (
+            <Grid gutter="sm">
+              {elementsList?.map((item, key) => {
+                return (
+                  <Grid.Col span={{ base: 12, md: 6, lg: 4 }} key={key}>
+                    <Paper withBorder radius="md" p="md" className={classes.card}>
+                      <Stack gap="xs" style={{ position: "relative" }}>
+                        <Flex align="start" gap={2} style={{ position: "absolute", top: 3, right: 3 }}>
+                          <IconStopwatch size={18} />
+                          <OrderStopwatch sentToKitchenTimestamp={item.sentToKitchenTimestamp} />
+                        </Flex>
+
+                        <Flex align="center" gap="xs">
+                          <Flex direction="column" gap={5}>
+                            <Flex direction="column">
+                              <Text c="dimmed" size="sm">
+                                Cliente:
+                              </Text>
+                              <Text size="sm">{item?.Order?.User?.name || "Desconocido"}</Text>
+                            </Flex>
+                            <Flex direction="column">
+                              <Text c="dimmed" size="sm">
+                                Número de órden:
+                              </Text>
+                              <Text size="sm">{item?.id}</Text>
+                            </Flex>
+                          </Flex>
+                        </Flex>
+
+                        <Flex justify="space-between" align="center">
+                          <Flex align="center" gap={2}>
+                            <IconClock size={18} />
+                            <Text size="sm">{formatTime(item.createdAt)}</Text>
+                          </Flex>
+                          <Flex align="center" gap={2}>
+                            {item.isWantedAsSoonAsItIsReady ? <IconFlame size={18} /> : <IconClock size={18} />}
+                            <Text size="sm">{item.isWantedAsSoonAsItIsReady ? "Pedido inmediato" : "Pedido programado"}</Text>
+                          </Flex>
+                        </Flex>
+
+                        <Divider my={1} />
+
+                        <ScrollArea h={"280px"}>
+                          <SimpleGrid spacing={4} pb={1}>
+                            {item.note && (
+                              <Accordion variant="separated" radius="md">
+                                <Accordion.Item value="order-note">
+                                  <Accordion.Control icon={<IconNotes size={20} />} fz="sm">
+                                    Nota del pedido
+                                  </Accordion.Control>
+                                  <Accordion.Panel fz="sm">{item?.note}</Accordion.Panel>
+                                </Accordion.Item>
+                              </Accordion>
+                            )}
+                            {item?.OrderDetails?.map((detail, index) => (
+                              <DishOrderDetailCard key={index} orderDetails={detail} noText />
+                            ))}
+                          </SimpleGrid>
+                        </ScrollArea>
+
+                        <Group mt="xs">
+                          <Button
+                            color={colors.main_app_color}
+                            radius="md"
+                            style={{ flex: 1 }}
+                            onClick={() => {
+                              openKitchen()
+                              setOrderId(item.id)
+                            }}>
+                            Marcar como preparado
+                          </Button>
+                        </Group>
+                      </Stack>
+                    </Paper>
+                  </Grid.Col>
+                )
+              })}
+
+              <Grid.Col>
+                <Flex justify="end">
+                  <Pagination
+                    total={totalPageCount}
+                    page={page}
+                    limit={limit}
+                    defaultValue={page}
+                    onChange={onPaginationChange}
+                    color={colors.main_app_color}
+                    size="md"
+                    withEdges
+                  />
+                </Flex>
+              </Grid.Col>
+
+              <ConfirmationModal
+                opened={openedKitchen}
+                close={closeKitchen}
+                title="¿Estás seguro de realizar esta acción?"
+                description="El pedido ya no se mostrará en esta pantalla"
+                onConfirm={() => dispatch(updateOrderStatus(orderId))}
+              />
+            </Grid>
+          )
         ) : (
-          <Box>
-            <Flex direction="column" align="center">
-              <Lottie isClickToPauseDisabled={true} options={defaultOptions} height={440} width={440} />
-            </Flex>
+          <Box className="h-[calc(100vh-200px)] w-full flex justify-center items-center">
+            <Lottie isClickToPauseDisabled={true} options={defaultOptions} height={480} width={480} />
           </Box>
         )}
       </Group>

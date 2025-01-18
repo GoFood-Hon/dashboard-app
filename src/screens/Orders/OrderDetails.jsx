@@ -12,7 +12,6 @@ import {
   Title,
   Button,
   Loader,
-  Modal,
   Avatar,
   ScrollArea,
   Checkbox,
@@ -23,7 +22,7 @@ import {
 } from "@mantine/core"
 import React, { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
-import { getFormattedHNL } from "../../utils"
+import { calculateTimeDifference, getFormattedHNL } from "../../utils"
 import {
   APP_ROLES,
   orderDeliveryTypes,
@@ -64,6 +63,7 @@ import { IconMotorbike } from "@tabler/icons-react"
 import { IconCar } from "@tabler/icons-react"
 import { IconToolsKitchen3 } from "@tabler/icons-react"
 import ModalLayout from "./ModalLayout"
+import { IconStopwatch } from "@tabler/icons-react"
 
 export const OrderDetails = () => {
   const { orderId } = useParams()
@@ -208,7 +208,7 @@ export const OrderDetails = () => {
                         direction="column"
                         justify="space-between"
                         style={{
-                          backgroundColor: "rgba(0, 0, 0, 0.6)",
+                          backgroundColor: "rgba(0, 0, 0, 0.7)",
                           height: "100%",
                           borderRadius: "inherit"
                         }}>
@@ -218,21 +218,35 @@ export const OrderDetails = () => {
                           </Text>
                           <Text c="white">{orderDetails?.Sucursal?.city + ", " + orderDetails?.Sucursal?.state}</Text>
                         </Flex>
-                        <Flex align="center" gap={5}>
-                          {orderDetails?.serviceType === "delivery" ? (
-                            <IconMotorbike size="1.4rem" />
-                          ) : orderDetails?.serviceType === "onSite" ? (
-                            <IconToolsKitchen3 size="1.4rem" />
-                          ) : (
-                            <IconCar size="1.4rem" />
+                        <Flex justify="space-between">
+                          <Flex align="center" gap={2}>
+                            {orderDetails?.serviceType === "delivery" ? (
+                              <IconMotorbike size={20} />
+                            ) : orderDetails?.serviceType === "onSite" ? (
+                              <IconToolsKitchen3 size={20} />
+                            ) : (
+                              <IconCar size={20} />
+                            )}
+                            <Text ta="end" size="sm" fw={700}>
+                              {orderDetails?.serviceType === "delivery"
+                                ? "Pedido a domicilio"
+                                : orderDetails?.serviceType === "omSite"
+                                  ? "Pedido para comer en sitio"
+                                  : "Pedido para llevar"}
+                            </Text>
+                          </Flex>
+                          {orderDetails?.sentToKitchenTimestamp && (
+                            <Flex align="center" gap={2}>
+                              <IconStopwatch size={20} />
+                              <Text size="sm" fw={700}>
+                                Preparado en{" "}
+                                {calculateTimeDifference(
+                                  orderDetails?.sentToKitchenTimestamp,
+                                  orderDetails?.finishedCookingTimestamp
+                                )}
+                              </Text>
+                            </Flex>
                           )}
-                          <Title ta="end" order={isSmallScreen ? 6 : 5}>
-                            {orderDetails?.serviceType === "delivery"
-                              ? "Pedido a domicilio"
-                              : orderDetails?.serviceType === "omSite"
-                                ? "Pedido para comer en sitio"
-                                : "Pedido para llevar"}
-                          </Title>
                         </Flex>
                       </Flex>
                     </BackgroundImage>
@@ -398,9 +412,7 @@ export const OrderDetails = () => {
                                 fullWidth
                                 onClick={() => {
                                   open()
-                                  if (!drivers || drivers.length === 0) {
-                                    dispatch(fetchDrivers(orderDetails?.sucursalId))
-                                  }
+                                  dispatch(fetchDrivers(orderDetails?.sucursalId))
                                 }}
                                 color={colors.main_app_color}
                                 radius="md"
@@ -458,7 +470,7 @@ export const OrderDetails = () => {
             title="Lista de repartidores disponibles">
             <Stack gap={5}>
               {loadingDrivers ? (
-                Array.from({ length: 5 }).map((_, index) => <Skeleton key={index} radius="md" h={70} />)
+                Array.from({ length: 4 }).map((_, index) => <Skeleton key={index} radius="md" h={70} />)
               ) : drivers && drivers.length > 0 ? (
                 drivers.map((driverItem) => (
                   <Card key={driverItem.driverId} radius="md">
@@ -495,15 +507,17 @@ export const OrderDetails = () => {
               )}
 
               <Button
+                style={{ display: loadingDrivers ? "none" : "block" }}
                 disabled={!driver}
                 color={colors.main_app_color}
                 loading={updatingOrderStatus}
                 fullWidth
-                onClick={() =>
+                onClick={() => {
                   dispatch(assignDriver({ driverId: driver, suborderId: orderId })).then((response) => {
                     response.payload && close()
                   })
-                }>
+                  setDriver(null)
+                }}>
                 Seleccionar
               </Button>
             </Stack>
@@ -518,12 +532,10 @@ export const OrderDetails = () => {
             <Paper withBorder radius="md" p="sm">
               <Group>
                 <Flex align="center">
-                  <Text fz="sm">
-                    {orderDetails?.Order?.User?.name + ' comentó:'}
-                  </Text>
+                  <Text fz="sm">{orderDetails?.Order?.User?.name + " comentó:"}</Text>
                 </Flex>
               </Group>
-              <Text c='dimmed' pt="xs" size="sm">
+              <Text c="dimmed" pt="xs" size="sm">
                 {orderDetails?.note}
               </Text>
             </Paper>

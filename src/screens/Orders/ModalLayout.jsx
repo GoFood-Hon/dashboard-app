@@ -1,4 +1,4 @@
-import { Modal } from "@mantine/core"
+import { Modal, ScrollArea } from "@mantine/core"
 
 const ModalLayout = ({ opened, onClose, children, title, setDriver }) => {
   return (
@@ -8,6 +8,7 @@ const ModalLayout = ({ opened, onClose, children, title, setDriver }) => {
         onClose={() => {
           onClose()
         }}
+        scrollAreaComponent={ScrollArea.Autosize}
         title={title}
         centered
         radius="md">

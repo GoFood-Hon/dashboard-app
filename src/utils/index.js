@@ -2,6 +2,11 @@ import { format, formatDistanceToNow, parseISO } from "date-fns"
 import { es } from "date-fns/locale"
 import { hondurasDepartments } from "./constants"
 import dayjs from "dayjs"
+import timezone from 'dayjs/plugin/timezone';
+import utc from 'dayjs/plugin/utc';
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 export function getFormattedHNL(amount) {
   return new Intl.NumberFormat("en-US", {
@@ -19,33 +24,31 @@ export const formatDay = (day) => {
     friday: "Viernes",
     saturday: "Sábado",
     sunday: "Domingo"
-  };
-  return daysInSpanish[day];
-};
+  }
+  return daysInSpanish[day]
+}
 
 export function dateTimeConverter(timestamptz) {
-  const timeZone = 'America/Tegucigalpa' // Zona horaria de Honduras
+  const timeZone = "America/Tegucigalpa" // Zona horaria de Honduras
   const options = {
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric',
-    timeZone,
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+    timeZone
   }
 
   const date = new Date(timestamptz)
-  const formattedDate = date.toLocaleDateString('es', options)
+  const formattedDate = date.toLocaleDateString("es", options)
 
   const hour = date.getHours()
   const minute = date.getMinutes()
-  const amPm = hour >= 12 ? 'p. m.' : 'a. m.'
+  const amPm = hour >= 12 ? "p. m." : "a. m."
   const hour12 = hour % 12 || 12
 
-  return `${formattedDate} a ${hour12 !== 1 ? 'las' : 'la'} ${hour12}:${
-    minute < 10 ? '0' : ''
-  }${minute} ${amPm}`
+  return `${formattedDate} a ${hour12 !== 1 ? "las" : "la"} ${hour12}:${minute < 10 ? "0" : ""}${minute} ${amPm}`
 }
 
-export const formatTime = (time) => dayjs(time, "HH:mm:ss").format("hh:mm A");
+export const formatTime = (time) => dayjs.utc(time).tz("America/Tegucigalpa").format("DD/MM/YYYY hh:mm A")
 
 export function bytesToMB(bytes) {
   const megabytes = bytes / (1024 * 1024)
@@ -101,3 +104,32 @@ export function convertToDecimal(priceString) {
 }
 
 export const capitalizeFirstLetter = (str) => str.charAt(0).toUpperCase() + str.slice(1)
+
+export const calculateTimeDifference = (sentToKitchenTimestamp, finishedCookingTimestamp) => {
+  // Convierte los timestamps a objetos dayjs
+  const start = dayjs(sentToKitchenTimestamp)
+  const end = dayjs(finishedCookingTimestamp)
+
+  // Calcula la diferencia total en segundos
+  const durationInSeconds = end.diff(start, "second")
+
+  // Calcula las horas, minutos y segundos
+  const hours = Math.floor(durationInSeconds / 3600)
+  const minutes = Math.floor((durationInSeconds % 3600) / 60)
+  const seconds = durationInSeconds % 60
+
+  // Formatea la salida en el formato deseado
+  let result = ""
+  if (hours > 0) {
+    result += `${hours} hora${hours > 1 ? "s" : ""} `
+  }
+  if (minutes > 0) {
+    result += `${minutes} minuto${minutes > 1 ? "s" : ""} `
+  }
+  if (seconds > 0 || result === "") {
+    // Si hay segundos o si no hay horas/minutos
+    result += `${seconds} segundo${seconds > 1 ? "s" : ""}`
+  }
+
+  return result.trim()
+}

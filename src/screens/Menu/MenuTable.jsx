@@ -646,10 +646,8 @@ export default function MenuTable({ items, screenType, totalItems, currentPage, 
           </Flex>
         </>
       ) : (
-        <Box>
-          <Flex direction="column" align="center">
-            <Lottie options={defaultOptions} height={440} width={440} isClickToPauseDisabled={true} />
-          </Flex>
+        <Box className="h-[calc(100vh-200px)] w-full flex justify-center items-center">
+          <Lottie isClickToPauseDisabled={true} options={defaultOptions} height={480} width={480} />
         </Box>
       )}
     </>
