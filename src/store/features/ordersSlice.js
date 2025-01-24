@@ -325,12 +325,12 @@ const ordersSlice = createSlice({
         state.updatingOrderStatus = true
       })
       .addCase(updateOrderStatus.fulfilled, (state, action) => {
-        const { id, status } = action.payload
+        const { id, status, sentToKitchenTimestamp, finishedCookingTimestamp } = action.payload
         const currentPageOrders = state.ordersPerPage[state.currentPage]
         const index = currentPageOrders.findIndex((order) => order?.id === id)
 
         if (index !== -1) {
-          currentPageOrders[index] = { ...currentPageOrders[index], status }
+          currentPageOrders[index] = { ...currentPageOrders[index], status, sentToKitchenTimestamp, finishedCookingTimestamp }
         }
         const updatedOrders = currentPageOrders.filter((order) => order.id !== id)
         state.ordersPerPage[state.currentPage] = updatedOrders

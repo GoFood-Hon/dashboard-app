@@ -1,5 +1,4 @@
 import React, { useState } from "react"
-import LoadingCircle from "../../components/LoadingCircle"
 import { Link, useNavigate } from "react-router-dom"
 import { useForm } from "react-hook-form"
 import { emailRules, passwordRules } from "../../utils/inputRules"
@@ -9,7 +8,8 @@ import authApi from "../../api/authApi"
 import { useDispatch } from "react-redux"
 import { setUser } from "../../store/features/userSlice"
 import { AUTH_NAVIGATION_ROUTES } from "../../routes"
-import { LoaderComponent } from "../../components/LoaderComponent"
+import { Anchor, Button, Checkbox, Flex, Group } from "@mantine/core"
+import { colors } from "../../theme/colors"
 
 export default function Login() {
   const dispatch = useDispatch()
@@ -51,21 +51,9 @@ export default function Login() {
 
   return (
     <>
-      <div className="w-full">
-        <div className="mb-5">
-          <p className="text-sm text-gray-500 pb-2">PANEL GOFOOD</p>
-          <h1 className="text-3xl font-bold text-zinc-800 dark:text-white">Inicio de sesión</h1>
-        </div>
-        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col">
-          <InputField
-            label="Correo"
-            name="email"
-            type="email"
-            register={register}
-            rules={emailRules}
-            errors={errors}
-            placeholder="Ingrese su correo"
-          />
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <Flex direction="column" gap="md">
+          <InputField label="Correo" name="email" type="email" register={register} rules={emailRules} errors={errors} />
           <InputField
             label="Contraseña"
             name="password"
@@ -73,26 +61,20 @@ export default function Login() {
             rules={passwordRules}
             register={register}
             errors={errors}
-            placeholder="Ingrese su contraseña"
           />
-          <Link
-            to={AUTH_NAVIGATION_ROUTES.ForgetPassword.path}
-            className="mb-3 mt-3 hover:underline hover:cursor-pointer text-sm text-secondary_text">
-            ¿Olvidaste tu contraseña?
-          </Link>
-          {isLoading ? (
-            <LoaderComponent width={'full'} size={28} margin />
-          ) : (
-            <input
-              value={"Iniciar sesión"}
-              type="submit"
-              className={
-                "bg-main_app_color text-white flex h-10 w-full items-center justify-center space-x-3 rounded-md text-sm shadow-sm transition-all duration-700 focus:outline-none my-3 dark:bg-slate-900 cursor-pointer"
-              }
-            />
-          )}
-        </form>
-      </div>
+          <Group justify="space-between" mt="md">
+            <Checkbox style={{ visibility: "hidden" }} color={colors.main_app_color} label="Recuérdame" />
+            <Link
+              className="text-sm text-gray-400 hover:underline"
+              to={AUTH_NAVIGATION_ROUTES.ForgetPassword.path}>
+              ¿Olvidaste tu contraseña?
+            </Link>
+          </Group>
+          <Button type="submit" loading={isLoading} fullWidth color={colors.main_app_color}>
+            Iniciar sesión
+          </Button>
+        </Flex>
+      </form>
     </>
   )
 }

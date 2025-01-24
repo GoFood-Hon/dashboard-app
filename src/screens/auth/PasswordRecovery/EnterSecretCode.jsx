@@ -2,8 +2,10 @@ import React from "react"
 import InputField from "../../../components/Form/InputField"
 import { inputRequired } from "../../../utils/inputRules"
 import { useForm } from "react-hook-form"
+import { Button, Stack, Text } from "@mantine/core"
+import { colors } from "../../../theme/colors"
 
-export default function EnterSecretCode({ onSubmit }) {
+export default function EnterSecretCode({ onSubmit, isLoading }) {
   const {
     register,
     handleSubmit,
@@ -11,13 +13,13 @@ export default function EnterSecretCode({ onSubmit }) {
   } = useForm()
 
   return (
-    <div>
-      <p className="text-sm dark:text-gray-300 pb-5 mt-2 text-center">
-        Por favor ingrese el código enviado a su correo, valido por 10 minutos.
-      </p>
+    <Stack>
+      <Text size="sm" className="text-center">
+        Por favor ingrese el código enviado a su correo, válido por 10 minutos
+      </Text>
 
-      <div className="flex flex-col">
-        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col">
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <Stack>
           <InputField
             errors={errors}
             label="Código"
@@ -26,15 +28,11 @@ export default function EnterSecretCode({ onSubmit }) {
             register={register}
             placeholder="Ingrese el código secreto"
           />
-          <input
-            value={"Enviar"}
-            type="submit"
-            className={
-              "bg-primary_button text-white flex h-10 w-full items-center justify-center space-x-3 rounded-md text-sm shadow-sm transition-all duration-700 focus:outline-none my-3 dark:bg-slate-900"
-            }
-          />
-        </form>
-      </div>
-    </div>
+          <Button type="submit" loading={isLoading} fullWidth color={colors.main_app_color}>
+            Validar código
+          </Button>
+        </Stack>
+      </form>
+    </Stack>
   )
 }

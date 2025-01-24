@@ -39,7 +39,6 @@ import { IconPrinter } from "@tabler/icons-react"
 import { createRoot } from "react-dom/client"
 import { SearchComponent } from "../components/SearchComponent"
 import classes from "../screens/Orders/BadgeCard.module.css"
-import { IconClock2 } from "@tabler/icons-react"
 import { IconFlame } from "@tabler/icons-react"
 import { IconClock } from "@tabler/icons-react"
 import { DishOrderDetailCard } from "./Orders/DishOrderDetailCard"
@@ -47,9 +46,9 @@ import ConfirmationModal from "./ConfirmationModal"
 import { useStopwatch } from "react-timer-hook"
 import { IconStopwatch } from "@tabler/icons-react"
 import dayjs from "dayjs"
-import { useEffect } from "react"
 import { useDispatch } from "react-redux"
 import { updateOrderStatus } from "../store/features/ordersSlice"
+import { useTimer } from "react-timer-hook"
 
 const CardsViewLayout = ({
   title,
@@ -89,23 +88,38 @@ const CardsViewLayout = ({
   const isSmallScreen = useMediaQuery("(max-width: 430px)")
   const { colorScheme } = useMantineColorScheme()
   const [orderId, setOrderId] = useState(null)
+  const [isDisabled, setIsDisabled] = useState(true)
+
+  const handleExpire = () => {
+    setIsDisabled(false)
+  }
 
   const OrderStopwatch = ({ sentToKitchenTimestamp }) => {
     const stopwatchOffset = new Date()
     const elapsedSeconds = dayjs().diff(dayjs(sentToKitchenTimestamp), "second")
     stopwatchOffset.setSeconds(stopwatchOffset.getSeconds() + elapsedSeconds)
 
-    const { seconds, minutes, hours, days } = useStopwatch({
+    const { seconds, minutes, hours } = useStopwatch({
       autoStart: true,
       offsetTimestamp: stopwatchOffset
     })
 
     return (
-      <Text size="sm">
-        {String(days).padStart(2, "0")}:{String(hours).padStart(2, "0")}:{String(minutes).padStart(2, "0")}:
-        {String(seconds).padStart(2, "0")}
+      <Text size="md" fw={700}>
+        {String(hours).padStart(2, "0")}:{String(minutes).padStart(2, "0")}:{String(seconds).padStart(2, "0")}
       </Text>
     )
+  }
+
+  const Countdown = ({ scheduledDate, onExpire }) => {
+    const targetDate = new Date(scheduledDate)
+
+    const { seconds, minutes, hours, days } = useTimer({
+      expiryTimestamp: targetDate,
+      onExpire
+    })
+
+    return `Disponible dentro de ${String(days).padStart(2, "0")}d:${String(hours).padStart(2, "0")}h:${String(minutes).padStart(2, "0")}m:${String(seconds).padStart(2, "0")}s`
   }
 
   const handlePrint = (value) => {
@@ -328,10 +342,12 @@ const CardsViewLayout = ({
                   <Grid.Col span={{ base: 12, md: 6, lg: 4 }} key={key}>
                     <Paper withBorder radius="md" p="md" className={classes.card}>
                       <Stack gap="xs" style={{ position: "relative" }}>
-                        <Flex align="start" gap={2} style={{ position: "absolute", top: 3, right: 3 }}>
-                          <IconStopwatch size={18} />
-                          <OrderStopwatch sentToKitchenTimestamp={item.sentToKitchenTimestamp} />
-                        </Flex>
+                        {item.sentToKitchenTimestamp && (
+                          <Flex align="start" gap={2} style={{ position: "absolute", top: 3, right: 3 }}>
+                            <IconStopwatch size={24} />
+                            <OrderStopwatch sentToKitchenTimestamp={item.sentToKitchenTimestamp} />
+                          </Flex>
+                        )}
 
                         <Flex align="center" gap="xs">
                           <Flex direction="column" gap={5}>
@@ -383,6 +399,7 @@ const CardsViewLayout = ({
 
                         <Group mt="xs">
                           <Button
+                            //disabled={isDisabled}
                             color={colors.main_app_color}
                             radius="md"
                             style={{ flex: 1 }}
@@ -390,6 +407,11 @@ const CardsViewLayout = ({
                               openKitchen()
                               setOrderId(item.id)
                             }}>
+                            {/* {!item.scheduledDate && isDisabled ? (
+                              <Countdown scheduledDate={"2025-01-19T09:53:00Z"} onExpire={handleExpire} />
+                            ) : (
+                              "Marcar como preparado"
+                            )} */}
                             Marcar como preparado
                           </Button>
                         </Group>

@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import toast from "react-hot-toast"
 import authApi from "../../../api/authApi"
 import EnterEmail from "./EnterEmail"
@@ -7,79 +7,135 @@ import SuccessScreen from "./SuccessScreen"
 import EnterNewPassword from "./EnterNewPassword"
 import EnterSecretCode from "./EnterSecretCode"
 import { AUTH_NAVIGATION_ROUTES } from "../../../routes"
+import { Flex, Group, Stack, Text } from "@mantine/core"
+import { showNotification } from "@mantine/notifications"
 
 export default function ForgetPassword() {
+  const navigate = useNavigate()
   const [token, setToken] = useState(null)
   const [step, setStep] = useState("enterEmail")
+  const [isLoading, setIsLoading] = useState(false)
 
   const handleEmailSubmit = async ({ email }) => {
+    setIsLoading(true)
     try {
       const res = await authApi.forgotPassword({ email })
       if (res.error) {
-        toast.error("Hubo un error! ", res?.error?.message)
+        showNotification({
+          title: "Error",
+          message: res?.error?.message,
+          color: "red"
+        })
       }
       if (res.status === "success") {
-        toast.success("Token enviado con éxito!")
+        showNotification({
+          title: "Correo enviado",
+          message: `Se envió un código de verificación a ${email}`,
+          color: "green"
+        })
         setStep("enterSecretCode")
       }
     } catch (err) {
       toast.error("Se ha encontrado un error en su solicitud: ", err)
+      showNotification({
+        title: "Error",
+        message: `Se ha encontrado un error en su solicitud`,
+        color: "red"
+      })
       return false
     }
+    setIsLoading(false)
   }
 
   async function handleCodeSubmit({ token }) {
+    setIsLoading(true)
     try {
       const res = await authApi.verifyOTP({ token })
       if (res.error) {
-        toast.error("Código Inválido")
+        showNotification({
+          title: "Error",
+          message: `El código ingresado no es válido`,
+          color: "red"
+        })
         return
       }
       if (res.status === "success") {
         setToken(token)
-        toast.success("Código válido. Ingrese nueva contraseña")
+        showNotification({
+          title: "Código verificado",
+          message: `Ahora puede restablecer su contraseña`,
+          color: "green"
+        })
         setStep("enterNewPassword")
       }
     } catch (err) {
-      toast.error("Se ha encontrado un error en su solicitud: ", err)
+      showNotification({
+        title: "Error",
+        message: `Se ha encontrado un error en su solicitud`,
+        color: "red"
+      })
       return false
     }
+    setIsLoading(false)
   }
 
   async function handlePasswordSubmit({ password, passwordConfirm }) {
+    setIsLoading(true)
     try {
       const res = await authApi.resetPassword({ password, passwordConfirm, token })
       if (res.error) {
-        toast.error("Hubo un error! ", res?.error?.message)
+        showNotification({
+          title: "Error",
+          message: res?.error?.message,
+          color: "red"
+        })
         return
       }
 
       if (res.status === "success") {
-        toast.success("Contraseña restablecida")
+        showNotification({
+          title: "Contraseña restablecida",
+          message: `Será redirigido al inicio de sesión en 5 segundos`,
+          color: "green"
+        })
         setStep("success")
+
+        setTimeout(() => {
+          navigate("/login") 
+        }, 5000)
       }
     } catch (err) {
-      toast.error("Se ha encontrado un error en su solicitud: ", err)
+      showNotification({
+        title: "Error",
+        message: `Se ha encontrado un error en su solicitud`,
+        color: "red"
+      })
       return false
+    } finally {
+      setIsLoading(false)
     }
   }
 
   return (
     <>
-      <div className="w-full">
-        <div className=" flex flex-col items-center">
-          <h1 className="md:text-3xl text-center text-2xl font-bold text-zinc-800 dark:text-white file">Recuperar contraseña!</h1>
-          {step === "enterEmail" && <EnterEmail onSubmit={handleEmailSubmit} />}
-          {step === "enterSecretCode" && <EnterSecretCode onSubmit={handleCodeSubmit} />}
-          {step === "enterNewPassword" && <EnterNewPassword onSubmit={handlePasswordSubmit} />}
-          {step === "success" && <SuccessScreen />}
-          <Link
-            to={AUTH_NAVIGATION_ROUTES.Login.path}
-            className="text-center items-center justify-center w-full text-primary_text cursor-pointer dark:text-dark_secondary_text hover:underline font-md">
-            Iniciar sesión
-          </Link>
-        </div>
-      </div>
+      <Stack>
+        {!step === "success" && (
+          <Text fw={700} size="sm" ta="center" tt="uppercase" c="dimmed" fs="italic">
+            Recuperar contraseña
+          </Text>
+        )}
+        {step === "enterEmail" && <EnterEmail onSubmit={handleEmailSubmit} isLoading={isLoading} />}
+        {step === "enterSecretCode" && <EnterSecretCode onSubmit={handleCodeSubmit} isLoading={isLoading} />}
+        {step === "enterNewPassword" && <EnterNewPassword onSubmit={handlePasswordSubmit} isLoading={isLoading} />}
+        {step === "success" && <SuccessScreen />}
+        {step === "enterEmail" && (
+          <Group justify="center">
+            <Link className="text-sm text-gray-400 hover:underline" to={AUTH_NAVIGATION_ROUTES.Login.path}>
+              Volver al inicio de sesión
+            </Link>
+          </Group>
+        )}
+      </Stack>
     </>
   )
 }
