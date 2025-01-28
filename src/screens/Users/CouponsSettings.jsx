@@ -32,7 +32,6 @@ export default function CouponsSettings() {
                 <Select
                   data={["Cupón", "Promoción"]}
                   allowDeselect={false}
-                  size="md"
                   value={promotionType}
                   onChange={setPromotionType}
                 />

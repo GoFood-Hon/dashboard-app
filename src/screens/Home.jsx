@@ -7,10 +7,10 @@ import { PopularFoodChart } from "./Dashboards/PopularFoodChart"
 
 function Home() {
   return (
-    <Stack gap="md">
+    <Stack gap="xs">
       <Title order={2}>Dashboard</Title>
       <DashboardScreen />
-      <Grid gutter='sm'>
+      <Grid gutter='xs'>
         <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
           <OrderAmountChart />
         </Grid.Col>

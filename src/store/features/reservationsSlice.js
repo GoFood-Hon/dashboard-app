@@ -82,7 +82,6 @@ export const addCommentsToReservation = createAsyncThunk(
       const state = getState()
       const name = state.user.value.name
       const response = await reservationsApi.addCommentsToReservations(reservationId, params)
-      console.log(response)
       showNotification({
         title: "Creación exitosa",
         message: "El comentario se agregó correctamente",

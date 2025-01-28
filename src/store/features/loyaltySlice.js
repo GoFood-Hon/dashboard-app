@@ -153,7 +153,6 @@ export const updateLoyaltyProgramStatus = createAsyncThunk(
   async ({ id, params }, { rejectWithValue }) => {
     try {
       const response = await loyaltyApi.updateLoyaltyProgram(id, params)
-      console.log(response)
 
       if (response.error) {
         showNotification({

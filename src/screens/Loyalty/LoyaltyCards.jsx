@@ -1,5 +1,4 @@
-import { Button, CloseButton, Flex, Grid, Group, Modal, Paper, Select, SimpleGrid, Stack, Text } from "@mantine/core"
-import Lottie from "react-lottie"
+import { Button, Flex, Grid, Modal, Paper, Select, SimpleGrid, Stack, Text } from "@mantine/core"
 import animationData from "../../assets/animation/CouponsAnimation.json"
 import { IconCircleDashedPlus } from "@tabler/icons-react"
 import { useDisclosure } from "@mantine/hooks"
@@ -7,8 +6,6 @@ import InputField from "../../components/Form/InputField"
 import { Controller } from "react-hook-form"
 import { loyaltyCardsDiscountType } from "../../utils/constants"
 import InputCheckbox from "../../components/Form/InputCheckbox"
-import { getFormattedHNL } from "../../utils"
-import { IconStarFilled } from "@tabler/icons-react"
 import { useState } from "react"
 import { colors } from "../../theme/colors"
 import ConfirmationModal from "../ConfirmationModal"
@@ -23,7 +20,7 @@ const LoyaltyCards = ({ register, setValue, control, errors, watch }) => {
   const user = useSelector((state) => state.user.value)
   const dispatch = useDispatch()
   const [opened, { open, close }] = useDisclosure(false)
-  const isRewardADiscountInPurchase = watch("isRewardADiscountInPurchase")
+  const isRewardADiscountInPurchase = watch("isRewardADiscountInPurchase", false)
   const type = watch("type", "porcentaje")
   const [openedDelete, { close: closeDelete, open: openDelete }] = useDisclosure(false)
   const [index, setIndex] = useState(null)

@@ -22,7 +22,6 @@ export const EditUserScreen = () => {
       try {
         const response = await authApi.getUserDetails(userId)
         const userDetailsData = response?.data
-        console.log(userDetailsData)
         setUserDetails(userDetailsData)
       } catch (error) {
         toast.error("Hubo un error obteniendo los detalles del usuario")

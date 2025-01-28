@@ -109,7 +109,7 @@ const RewardsTracking = () => {
   const handleSearch = async () => {
     setIsLoading(true)
     const response = await loyaltyApi.getUserLoyaltyCards(params)
-    console.log(response.data)
+
     setUserData(response.data)
     setIsLoading(false)
   }

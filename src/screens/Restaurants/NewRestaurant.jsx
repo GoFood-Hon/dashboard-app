@@ -58,8 +58,6 @@ export const NewRestaurant = () => {
       formDataObject[key] = value
     })
 
-    console.log(formDataObject)
-
     const formDataImage = new FormData()
     formDataImage.append("files", data.files[0])
 

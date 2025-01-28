@@ -53,7 +53,6 @@ export const fetchOrderDetails = createAsyncThunk("orders/fetchOrderDetails", as
 export const updateOrderStatus = createAsyncThunk("orders/updateOrderStatus", async (id, { rejectWithValue }) => {
   try {
     const response = await orderApi.updateOrderStatus(id)
-    console.log(response)
     if (response.error) {
       showNotification({
         title: "Error",
@@ -274,7 +273,7 @@ const ordersSlice = createSlice({
       }
     },
     setOrderStatus: (state, action) => {
-      const { id, status } = action.payload
+      const { id, status, sentToKitchenTimestamp, finishedCookingTimestamp } = action.payload
       const currentPageOrders = state.ordersPerPage[state.currentPage]
       const index = currentPageOrders.findIndex((order) => order?.id === id)
 
@@ -283,7 +282,7 @@ const ordersSlice = createSlice({
       }
 
       if (state.orderDetails && state.orderDetails.id === id) {
-        state.orderDetails = { ...state.orderDetails, status }
+        state.orderDetails = { ...state.orderDetails, status, sentToKitchenTimestamp, finishedCookingTimestamp }
       }
     }
   },
@@ -325,17 +324,16 @@ const ordersSlice = createSlice({
         state.updatingOrderStatus = true
       })
       .addCase(updateOrderStatus.fulfilled, (state, action) => {
-        const { id, status, sentToKitchenTimestamp, finishedCookingTimestamp } = action.payload
+        const { id, status } = action.payload
         const currentPageOrders = state.ordersPerPage[state.currentPage]
         const index = currentPageOrders.findIndex((order) => order?.id === id)
 
         if (index !== -1) {
-          currentPageOrders[index] = { ...currentPageOrders[index], status, sentToKitchenTimestamp, finishedCookingTimestamp }
+          currentPageOrders[index] = { ...currentPageOrders[index], status }
         }
         const updatedOrders = currentPageOrders.filter((order) => order.id !== id)
         state.ordersPerPage[state.currentPage] = updatedOrders
 
-        //state.orderDetails.status = status
         state.updatingOrderStatus = false
       })
       .addCase(updateOrderStatus.rejected, (state, action) => {

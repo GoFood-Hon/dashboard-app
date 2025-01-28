@@ -145,28 +145,8 @@ export const NAVIGATION_ROUTES_RES_ADMIN = {
           path: "/menu/platillos/nuevoPlatillo"
         }
       }
-      /*   Complements: {
-        label: "Complementos",
-        icon: "menu",
-        path: "/menu/complementos",
-        ComplementDetails: {
-          label: "Detalles del complemento",
-          path: "/menu/complementos/:complementId"
-        },
-        NewComplement: {
-          path: "/menu/complementos/nuevoComplemento"
-        }
-      } */
     }
   },
-  // TODO: Transactions never defined
-
-  // Transactions: {
-  //   label: "Transacciones",
-  //   path: "/transacciones",
-  //   icon: "invoice"
-  // },
-
   Branches: {
     label: "Sucursales",
     path: "/sucursales",
@@ -270,7 +250,11 @@ export const NAVIGATION_ROUTES_RES_ADMIN_TWO = [
     links: [
       {
         label: "Promociones",
-        link: "/configuraciones/promociones"
+        link: "/configuraciones/lista-de-promociones"
+      },
+      {
+        label: "Cupones",
+        link: "/configuraciones/lista-de-cupones"
       },
       {
         label: "Bancos",
@@ -521,8 +505,30 @@ export const SETTING_NAVIGATION_ROUTES = {
   Promotions: {
     type: "button",
     label: "Promociones",
-    path: "/configuraciones/promociones",
-    icon: "label"
+    path: "/configuraciones/lista-de-promociones",
+    icon: "label",
+    newPromotion: {
+      label: "Nueva Promoción",
+      path: "/configuraciones/lista-de-promociones/nueva-promocion",
+    },
+    editPromotion: {
+      label: "Editar Promoción",
+      path: "/configuraciones/lista-de-promociones/:promotionId",
+    }
+  },
+  Coupons: {
+    type: "button",
+    label: "Cupones",
+    path: "/configuraciones/lista-de-cupones",
+    icon: "label",
+    newCoupon: {
+      label: "Nuevo cupón",
+      path: "/configuraciones/lista-de-cupones/nuevo-cupon",
+    },
+    editCoupon: {
+      label: "Editar cupón",
+      path: "/configuraciones/lista-de-cupones/:couponId",
+    }
   },
 
   Billing: {

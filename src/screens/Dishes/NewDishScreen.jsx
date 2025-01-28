@@ -14,7 +14,6 @@ export default function NewDish() {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const user = useSelector((state) => state.user.value)
-  const [isDataCleared, setIsDataCleared] = useState(false)
   const [additional, setAdditional] = useState([])
   const isLoading = useSelector((state) => state.dishes.creatingDish)
 
@@ -39,7 +38,6 @@ export default function NewDish() {
           errors={errors}
           setValue={setValue}
           control={control}
-          isDataCleared={isDataCleared}
         />
       )
     },

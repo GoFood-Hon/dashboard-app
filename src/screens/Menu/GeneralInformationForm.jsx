@@ -5,7 +5,7 @@ import { IconPhoto } from "@tabler/icons-react"
 import InputField from "../../components/Form/InputField"
 import InputTextAreaField from "../../components/Form/InputTextAreaField"
 
-export default function GeneralInformationForm({ register, errors, setValue, isDataCleared, image }) {
+export default function GeneralInformationForm({ register, errors, setValue, image }) {
   const [images, setImages] = useState([])
 
   const handleDrop = (acceptedFiles) => {

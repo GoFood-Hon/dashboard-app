@@ -65,6 +65,12 @@ import { LoyaltyProgram } from "./screens/Loyalty/LoyaltyProgram"
 import { LoyaltyProgramsList } from "./screens/Loyalty/LoyaltyProgramsList"
 import RewardsTracking from "./screens/Loyalty/RewardsTracking"
 import OrdersForKitchen from "./screens/Orders/OrdersForKitchen"
+import PromotionsList from "./screens/Promotions/PromotionsList"
+import { NewPromotion } from "./screens/Promotions/NewPromotion"
+import { EditPromotion } from "./screens/Promotions/EditPromotion"
+import CouponsList from "./screens/Coupons/CouponsList"
+import { NewCoupon } from "./screens/Coupons/NewCoupon"
+import { EditCoupon } from "./screens/Coupons/EditCoupons"
 
 function App() {
   const userRole = useSelector((state) => state.user.value.role)
@@ -156,7 +162,11 @@ function App() {
 
             <Route path={SETTING_NAVIGATION_ROUTES.Business_btn.path} element={<BusinessSettings />} />
 
-            <Route path={SETTING_NAVIGATION_ROUTES.Promotions.path} element={<CouponsSettings />} />
+            <Route path={SETTING_NAVIGATION_ROUTES.Promotions.path} element={<PromotionsList />} />
+
+            <Route path={SETTING_NAVIGATION_ROUTES.Promotions.newPromotion.path} element={<NewPromotion />} />
+
+            <Route path={SETTING_NAVIGATION_ROUTES.Promotions.editPromotion.path} element={<EditPromotion />} />
 
             <Route path={SETTING_NAVIGATION_ROUTES.Bank.path} element={<BankSettings />} />
 
@@ -167,6 +177,12 @@ function App() {
             <Route path={NAVIGATION_ROUTES_RES_ADMIN.Loyalty.path} element={<LoyaltyProgram />} />
 
             <Route path={NAVIGATION_ROUTES_RES_ADMIN.Loyalty.RewardsTracking.path} element={<RewardsTracking />} />
+
+            <Route path={SETTING_NAVIGATION_ROUTES.Coupons.path} element={<CouponsList />} />
+            
+            <Route path={SETTING_NAVIGATION_ROUTES.Coupons.newCoupon.path} element={<NewCoupon />} />
+            
+            <Route path={SETTING_NAVIGATION_ROUTES.Coupons.editCoupon.path} element={<EditCoupon />} />
           </>
         )
       case APP_ROLES.branchAdmin:

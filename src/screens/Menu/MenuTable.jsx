@@ -1,14 +1,12 @@
 import { useState } from "react"
 import {
   Table,
-  Checkbox,
   ScrollArea,
   Group,
   Avatar,
   ActionIcon,
   Pagination,
   Switch,
-  createTheme,
   MantineProvider,
   rem,
   Flex,
@@ -19,14 +17,18 @@ import {
 import { IconEye, IconCheck, IconX } from "@tabler/icons-react"
 import { colors } from "../../theme/colors"
 import { useNavigate } from "react-router-dom"
-import { NAVIGATION_ROUTES_KITCHEN, NAVIGATION_ROUTES_RES_ADMIN, NAVIGATION_ROUTES_SUPER_ADMIN } from "../../routes"
+import {
+  NAVIGATION_ROUTES_KITCHEN,
+  NAVIGATION_ROUTES_RES_ADMIN,
+  NAVIGATION_ROUTES_SUPER_ADMIN,
+  SETTING_NAVIGATION_ROUTES
+} from "../../routes"
 import dayjs from "dayjs"
 import relativeTime from "dayjs/plugin/relativeTime"
 import "dayjs/locale/es"
-import { useDebouncedCallback } from "@mantine/hooks"
-import { useDispatch, useSelector } from "react-redux"
+import { useDispatch } from "react-redux"
 import { TableSkeleton } from "../../components/Skeletons/TableSkeleton"
-import { fetchAdminUsers, updateOtherUserStatus, updateUserStatus } from "../../store/features/userSlice"
+import { updateOtherUserStatus, updateUserStatus } from "../../store/features/userSlice"
 import { getFormattedHNL } from "../../utils"
 import customParseFormat from "dayjs/plugin/customParseFormat"
 import utc from "dayjs/plugin/utc"
@@ -36,7 +38,10 @@ import { updatePlanStatus } from "../../store/features/plansSlice"
 import { updateCollectionStatus } from "../../store/features/collectionsSlice"
 import Lottie from "react-lottie"
 import animationData from "../../assets/animation/NothingFoundAnimation.json"
-import { render } from "react-dom"
+import { theme } from "../../utils/constants"
+import { setSelectedPromotion, updateOfferStatus } from "../../store/features/promotionsSlice"
+import { IconTrash } from "@tabler/icons-react"
+import { setSelectedCoupon, updateStatus } from "../../store/features/couponsSlice"
 
 dayjs.extend(utc)
 dayjs.extend(timezone)
@@ -44,14 +49,9 @@ dayjs.extend(customParseFormat)
 dayjs.extend(relativeTime)
 dayjs.locale("es")
 
-export default function MenuTable({ items, screenType, totalItems, currentPage, setPage, loadingData }) {
-  const [itemsSelected, setItemsSelected] = useState([])
-  const [search, setSearch] = useState("")
+export default function MenuTable({ items, screenType, totalItems, currentPage, setPage, loadingData, deleteAction }) {
   const navigate = useNavigate()
-  const [loading, setLoading] = useState(false)
-  const [searchResults, setSearchResults] = useState([])
   const dispatch = useDispatch()
-  const userData = useSelector((state) => state.user)
   const defaultOptions = {
     loop: true,
     autoplay: true,
@@ -59,43 +59,6 @@ export default function MenuTable({ items, screenType, totalItems, currentPage, 
     rendererSettings: {
       preserveAspectRatio: "xMidYMid slice"
     }
-  }
-
-  const getSearchResults = async (query, searchField) => {
-    try {
-      const limit = 10
-      const page = 1
-      const search_field = searchField
-      const search = query
-
-      dispatch(fetchAdminUsers({ limit, page, order: "DESC", search_field, search }))
-
-      if (userData.error) {
-        return []
-      } else {
-        setLoading(false)
-        return userData.data
-      }
-    } catch (error) {
-      return []
-    }
-  }
-
-  const handleSearch = useDebouncedCallback(async (query) => {
-    setSearchResults(await getSearchResults(query, "name"))
-  }, 500)
-
-  const handleChange = (event) => {
-    setLoading(true)
-    setSearch(event.currentTarget.value)
-    handleSearch(event.currentTarget.value)
-  }
-
-  const handleSelectChange = (id) => {
-    setItemsSelected((prevState) => {
-      const newSelection = prevState.includes(id) ? prevState.filter((item) => item !== id) : [...prevState, id]
-      return newSelection
-    })
   }
 
   const handleClick = (id) => {
@@ -108,23 +71,13 @@ export default function MenuTable({ items, screenType, totalItems, currentPage, 
       orderHistoryScreen: NAVIGATION_ROUTES_KITCHEN.Orders.path,
       reservationsScreen: NAVIGATION_ROUTES_RES_ADMIN.Reservations.path,
       collectionsScreen: NAVIGATION_ROUTES_SUPER_ADMIN.Collections.path,
-      loyaltyProgramsScreen: NAVIGATION_ROUTES_RES_ADMIN.Loyalty.path
+      loyaltyProgramsScreen: NAVIGATION_ROUTES_RES_ADMIN.Loyalty.path,
+      promotionsScreen: SETTING_NAVIGATION_ROUTES.Promotions.path,
+      couponsScreen: SETTING_NAVIGATION_ROUTES.Coupons.path
     }
 
     navigate(`${routes[screenType]}/${id}`)
   }
-
-  const toggleRow = (id) => {
-    setItemsSelected((current) => (current.includes(id) ? current.filter((item) => item !== id) : [...current, id]))
-  }
-
-  const toggleAll = () => {
-    setItemsSelected((current) => (current.length === items.length ? [] : items.map((item) => item.id)))
-  }
-
-  const theme = createTheme({
-    cursorType: "pointer"
-  })
 
   const columns = {
     menuScreen: [
@@ -579,6 +532,150 @@ export default function MenuTable({ items, screenType, totalItems, currentPage, 
           </ActionIcon>
         )
       }
+    ],
+    promotionsScreen: [
+      {
+        label: "Nombre",
+        accessor: "title",
+        render: (title, item) => (
+          <div className="flex items-center gap-2">
+            <Avatar size={30} src={item?.images?.[0]?.location} radius={26} />
+            {title}
+          </div>
+        )
+      },
+      { label: "Compra mínima", accessor: "minPurchase", render: (minPurchase) => getFormattedHNL(minPurchase) },
+      {
+        label: "Tipo de descuento",
+        accessor: "category",
+        render: (category) => (category === "fijo" ? "Monto fijo" : "Porcentaje")
+      },
+      { label: "Fecha de creación", accessor: "createdAt" },
+      {
+        label: "Estado",
+        accessor: "available",
+        render: (available, item) => (
+          <MantineProvider theme={theme}>
+            <Switch
+              checked={available}
+              onChange={() => dispatch(updateOfferStatus({ promotionId: item.id, params: { isActive: !item.available } }))}
+              color={colors.main_app_color}
+              size="sm"
+              thumbIcon={
+                available ? (
+                  <IconCheck style={{ width: rem(12), height: rem(12) }} stroke={3} color={colors.main_app_color} />
+                ) : (
+                  <IconX style={{ width: rem(12), height: rem(12) }} stroke={3} color={colors.main_app_color} />
+                )
+              }
+            />
+          </MantineProvider>
+        )
+      },
+      {
+        label: "Acciones",
+        accessor: "id",
+        center: true,
+        render: (id) => (
+          <Flex align="center" justify="center" gap={2}>
+            <ActionIcon
+              className="transition ease-in-out duration-200"
+              variant="subtle"
+              size="lg"
+              onClick={() => {
+                handleClick(id)
+                dispatch(setSelectedPromotion(id))
+              }}
+              color="dimmed"
+              radius="xl">
+              <IconEye />
+            </ActionIcon>
+            <ActionIcon
+              className="transition ease-in-out duration-200"
+              variant="subtle"
+              size="lg"
+              onClick={() => deleteAction(id)}
+              color={colors.main_app_color}
+              radius="xl">
+              <IconTrash />
+            </ActionIcon>
+          </Flex>
+        )
+      }
+    ],
+    couponsScreen: [
+      {
+        label: "Nombre",
+        accessor: "title",
+        render: (title, item) => (
+          <div className="flex items-center gap-2">
+            <Avatar size={30} src={item?.images?.[0]?.location} radius={26} />
+            {title}
+          </div>
+        )
+      },
+      {
+        label: "Tipo de descuento",
+        accessor: "category",
+        render: (category) => (category === "fijo" ? "Monto fijo" : "Porcentaje")
+      },
+      {
+        label: "Tipo de cupón",
+        accessor: "couponType",
+        render: (type) => (type === "fecha" ? "Fecha de vigencia" : "Cantidad de usos")
+      },
+      { label: "Fecha de creación", accessor: "createdAt" },
+      {
+        label: "Estado",
+        accessor: "isActive",
+        render: (isActive, item) => (
+          <MantineProvider theme={theme}>
+            <Switch
+              checked={isActive}
+              onChange={() => dispatch(updateStatus({ couponId: item.id, params: { isActive: !item.isActive } }))}
+              color={colors.main_app_color}
+              size="sm"
+              thumbIcon={
+                isActive ? (
+                  <IconCheck style={{ width: rem(12), height: rem(12) }} stroke={3} color={colors.main_app_color} />
+                ) : (
+                  <IconX style={{ width: rem(12), height: rem(12) }} stroke={3} color={colors.main_app_color} />
+                )
+              }
+            />
+          </MantineProvider>
+        )
+      },
+      {
+        label: "Acciones",
+        accessor: "id",
+        center: true,
+        render: (id) => (
+          <Flex align="center" justify="center" gap={2}>
+            <ActionIcon
+              className="transition ease-in-out duration-200"
+              variant="subtle"
+              size="lg"
+              onClick={() => {
+                handleClick(id)
+                dispatch(setSelectedCoupon(id))
+              }}
+              color="dimmed"
+              radius="xl">
+              <IconEye />
+            </ActionIcon>
+            <ActionIcon
+              className="transition ease-in-out duration-200"
+              variant="subtle"
+              size="lg"
+              onClick={() => deleteAction(id)}
+              color={colors.main_app_color}
+              radius="xl">
+              <IconTrash />
+            </ActionIcon>
+          </Flex>
+        )
+      }
     ]
   }
 
@@ -592,7 +689,7 @@ export default function MenuTable({ items, screenType, totalItems, currentPage, 
         <>
           <Paper withBorder p="md" radius="md">
             <ScrollArea>
-              <Table miw={800} verticalSpacing="sm">
+              <Table miw={800} verticalSpacing="sm" highlightOnHover>
                 <Table.Thead>
                   <Table.Tr>
                     {currentColumns.map((column) => (
@@ -604,7 +701,6 @@ export default function MenuTable({ items, screenType, totalItems, currentPage, 
                 </Table.Thead>
                 <Table.Tbody>
                   {items.map((item) => {
-                    const selected = itemsSelected.includes(item.id)
                     return (
                       <Table.Tr key={item.id}>
                         {currentColumns.map((column) => (

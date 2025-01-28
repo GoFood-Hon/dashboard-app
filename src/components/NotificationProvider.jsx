@@ -35,6 +35,7 @@ export const NotificationProvider = ({ children }) => {
       } catch (error) {
         console.error("Error al despachar la acción setNewOrder:", error)
       }
+      console.log(order)
     }
 
     const handleOrderReady = (order) => {
@@ -47,27 +48,29 @@ export const NotificationProvider = ({ children }) => {
         color: "green"
       })
       dispatch(setOrderStatus(order))
+      console.log(order)
     }
 
     const handleOrderUpdate = (order) => {
       playSound()
       user.role === USER_ROLES.kitchen
-        ? notifications.show({
-            title: "Nueva orden",
-            message: "Se agregó un nuevo pedido a la lista de pedidos en curso",
-            autoClose: false,
-            withCloseButton: true,
-            color: "green"
-          })
-        : notifications.show({
-            title: "Orden confirmada",
-            message: `El administrador de ${user.role === USER_ROLES.administrator ? "restaurante" : "sucursal"} confirmó la orden`,
-            autoClose: false,
-            withCloseButton: true,
-            color: "green"
-          })
+      ? notifications.show({
+        title: "Nueva orden",
+        message: "Se agregó un nuevo pedido a la lista de pedidos en curso",
+        autoClose: false,
+        withCloseButton: true,
+        color: "green"
+      })
+      : notifications.show({
+        title: "Orden confirmada",
+        message: `El administrador de ${user.role === USER_ROLES.administrator ? "restaurante" : "sucursal"} confirmó la orden`,
+        autoClose: false,
+        withCloseButton: true,
+        color: "green"
+      })
       user.role === USER_ROLES.kitchen && dispatch(setNewOrder(order))
       dispatch(setOrderStatus(order))
+      console.log(order)
     }
 
     const handleDriverAssigned = (order) => {

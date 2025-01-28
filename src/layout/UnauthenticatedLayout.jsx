@@ -57,9 +57,8 @@ export default function UnauthenticatedLayout() {
           p={30}
           radius="md"
           style={{
-            minWidth: "550px",
+            minWidth: isSmallScreen ? "400px" : "550px",
             minHeight: "450px", 
-            width: "40vw", 
             height: "100%", 
             maxWidth: "600px",
             maxHeight: "80vh" 

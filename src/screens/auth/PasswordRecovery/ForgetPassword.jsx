@@ -57,7 +57,6 @@ export default function ForgetPassword() {
           message: `El código ingresado no es válido`,
           color: "red"
         })
-        return
       }
       if (res.status === "success") {
         setToken(token)
@@ -68,6 +67,7 @@ export default function ForgetPassword() {
         })
         setStep("enterNewPassword")
       }
+      setIsLoading(false)
     } catch (err) {
       showNotification({
         title: "Error",
@@ -95,14 +95,15 @@ export default function ForgetPassword() {
       if (res.status === "success") {
         showNotification({
           title: "Contraseña restablecida",
-          message: `Será redirigido al inicio de sesión en 5 segundos`,
-          color: "green"
+          message: `Será redirigido al inicio de sesión en 10 segundos`,
+          color: "green",
+          autoClose: 5000
         })
         setStep("success")
 
         setTimeout(() => {
           navigate("/login") 
-        }, 5000)
+        }, 10000)
       }
     } catch (err) {
       showNotification({
@@ -130,7 +131,7 @@ export default function ForgetPassword() {
         {step === "success" && <SuccessScreen />}
         {step === "enterEmail" && (
           <Group justify="center">
-            <Link className="text-sm text-gray-400 hover:underline" to={AUTH_NAVIGATION_ROUTES.Login.path}>
+            <Link className="text-sm text-gray-300 hover:underline" to={AUTH_NAVIGATION_ROUTES.Login.path}>
               Volver al inicio de sesión
             </Link>
           </Group>

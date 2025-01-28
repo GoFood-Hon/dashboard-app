@@ -5,6 +5,7 @@ import { Text } from "@mantine/core"
 
 export default function SuccessScreen() {
   const defaultOptions = {
+    loop: false,
     autoplay: true,
     animationData: passwordRecovered
   }

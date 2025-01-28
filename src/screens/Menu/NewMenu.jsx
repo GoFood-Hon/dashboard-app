@@ -39,8 +39,6 @@ export default function NewMenu() {
     resolver: yupResolver(newMenuValidation)
   })
 
-  const [isDataCleared, setIsDataCleared] = useState(false)
-
   const accordionStructure = [
     {
       title: "Información general",
@@ -51,7 +49,6 @@ export default function NewMenu() {
           errors={errors}
           setValue={setValue}
           control={control}
-          isDataCleared={isDataCleared}
         />
       )
     },
@@ -64,7 +61,6 @@ export default function NewMenu() {
         <ComplementsForm
           setValue={setValue}
           moreData={hasMore}
-          isDataCleared={isDataCleared}
           defaultMessage="Los platillos seleccionados aparecerán aquí"
           itemsAvailableLabel="Platillos disponibles"
           data={dishes}
@@ -80,7 +76,6 @@ export default function NewMenu() {
       if (response.payload) {
         reset()
         navigate(NAVIGATION_ROUTES_RES_ADMIN.Menu.path)
-        setIsDataCleared(true)
       }
     })
   }

@@ -23,7 +23,6 @@ export default function Menu() {
   }
 
   useEffect(() => {
-    console.log(menusPerPage[page])
     if (!menusPerPage[page]) {
       dispatch(fetchMenus({ restaurantId: user.restaurantId, limit, page, order: "DESC" }))
     }

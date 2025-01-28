@@ -117,6 +117,9 @@ export default function AccountSettings() {
                     <Grid.Col span={{ base: 12, md: 12 }}>
                       <InputField label="Numero de teléfono" name="phoneNumber" register={register} errors={errors} />
                     </Grid.Col>
+                    <Grid.Col span={{ base: 12 }}>
+                      <InputField label="Contraseña actual" name="password" register={register} errors={errors} type="password" />
+                    </Grid.Col>
                     <Grid.Col span={{ base: 12, md: 6 }}>
                       <InputField label="Nueva contraseña" name="password" register={register} errors={errors} type="password" />
                     </Grid.Col>

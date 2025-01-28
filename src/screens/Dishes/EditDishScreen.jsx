@@ -1,10 +1,7 @@
-import { Accordion } from "@mantine/core"
 import React, { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 import GeneralInformationForm from "./GeneralInformationForm"
-import PaymentForm from "./PaymentForm"
 import { useDispatch } from "react-redux"
-import PreparationForm from "./PreparationForm"
 import { updateDish } from "../../store/features/dishesSlice"
 import { convertToDecimal } from "../../utils"
 import dishesApi from "../../api/dishesApi"
@@ -18,7 +15,6 @@ export default function EditDishScreen() {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const { dishId } = useParams()
-  const [isDataCleared, setIsDataCleared] = useState(false)
   const [dishDetails, setDishDetails] = useState({})
   const [additional, setAdditional] = useState([])
   const isLoading = useSelector((state) => state.dishes.updatingDish)
@@ -71,7 +67,6 @@ export default function EditDishScreen() {
           setValue={setValue}
           control={control}
           image={imageLocation}
-          isDataCleared={isDataCleared}
           data={dishDetails}
         />
       )

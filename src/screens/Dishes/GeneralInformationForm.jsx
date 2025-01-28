@@ -1,4 +1,4 @@
-import { Grid, Image, Text, rem, Paper, Stack, MultiSelect, Flex, Select } from "@mantine/core"
+import { Grid, Image, Text, rem, Paper, MultiSelect, Flex, Select } from "@mantine/core"
 import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone"
 import { IconPhoto } from "@tabler/icons-react"
 import React, { useEffect, useState } from "react"
@@ -8,14 +8,13 @@ import InputCheckbox from "../../components/Form/InputCheckbox"
 import { useDispatch, useSelector } from "react-redux"
 import {
   fetchDishesCategories,
-  selectAllDishesCategories,
   selectAllDishesCategoriesStatus
 } from "../../store/features/categorySlice"
 import { fetchAllDishesTags } from "../../store/features/kitchenAndTagsSlice"
 import { Controller } from "react-hook-form"
 import { preparationTime } from "../../utils/constants"
 
-export default function GeneralInformationForm({ register, errors, setValue, isDataCleared, image, data, control }) {
+export default function GeneralInformationForm({ register, errors, setValue, image, data, control }) {
   const dispatch = useDispatch()
   const user = useSelector((state) => state.user.value)
   const tags = useSelector((state) => state.kitchenAndTags.dishTags)

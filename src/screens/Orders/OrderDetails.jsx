@@ -235,7 +235,7 @@ export const OrderDetails = () => {
                                   : "Pedido para llevar"}
                             </Text>
                           </Flex>
-                          {orderDetails?.sentToKitchenTimestamp && (
+                          {orderDetails?.sentToKitchenTimestamp && orderDetails?.finishedCookingTimestamp && (
                             <Flex align="center" gap={2}>
                               <IconStopwatch size={20} />
                               <Text size="sm" fw={700}>
@@ -477,7 +477,7 @@ export const OrderDetails = () => {
                     <Flex align="center" justify="space-between">
                       <Flex align="center" gap="xs">
                         <Avatar
-                          src={driverItem?.AdminUser?.photo}
+                          src={driverItem?.AdminUser?.images?.[0]?.location}
                           alt="it's me"
                           name={driverItem?.AdminUser?.name
                             ?.split(" ")

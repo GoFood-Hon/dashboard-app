@@ -240,7 +240,6 @@ export const PromotionForm = ({ offerData }) => {
           <Select
             data={["En todos los platillos", "Seleccionar platillos"]}
             allowDeselect={false}
-            size="md"
             value={availabilityDiscount}
             onChange={setAvailabilityDiscount}
           />
@@ -253,7 +252,6 @@ export const PromotionForm = ({ offerData }) => {
                 placeholder="Seleccione los platillos"
                 value={dishesAdded}
                 onChange={setDishesAdded}
-                size="md"
                 data={dishes.map((item) => ({ label: item.name, value: item.id }))}
               />
             </div>
@@ -265,7 +263,6 @@ export const PromotionForm = ({ offerData }) => {
             <Select
               data={["Fijo", "Porcentual"]}
               allowDeselect={false}
-              size="md"
               value={discountType}
               onChange={setDiscountType}
             />
@@ -280,14 +277,13 @@ export const PromotionForm = ({ offerData }) => {
             <>
               <span className="text-sm font-bold leading-snug">Tipo de descuento</span>
               <div className="mt-1">
-                <Select data={discountPercentage} allowDeselect={false} size="md" value={discount} onChange={setDiscount} />
+                <Select data={discountPercentage} allowDeselect={false} value={discount} onChange={setDiscount} />
               </div>
             </>
           ) : null}
         </Grid.Col>
         <Grid.Col span={{ sm: 12, md: 6 }}>
           <DatePickerInput
-            size="md"
             value={dateRange.initialDate}
             label="Fecha inicial"
             placeholder="Seleccionar fecha"
@@ -298,7 +294,6 @@ export const PromotionForm = ({ offerData }) => {
         </Grid.Col>
         <Grid.Col span={{ sm: 12, md: 6 }}>
           <DatePickerInput
-            size="md"
             value={dateRange.endDate}
             label="Fecha final"
             placeholder="Seleccionar fecha"

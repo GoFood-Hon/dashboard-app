@@ -19,7 +19,8 @@ const TableViewLayout = ({
   onSearch,
   value,
   searchAction,
-  noSearch
+  noSearch,
+  deleteAction
 }) => {
   const isSmallScreen = useMediaQuery("(max-width: 430px)")
 
@@ -54,6 +55,7 @@ const TableViewLayout = ({
         currentPage={page}
         loadingData={loading}
         setPage={setPage}
+        deleteAction={deleteAction}
       />
     </Stack>
   )

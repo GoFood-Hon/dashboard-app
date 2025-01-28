@@ -63,8 +63,8 @@ export const fetchNoPaginatedRestaurants = createAsyncThunk(
 
     try {
       const response = await restaurantsApi.getAllRestaurantsNoPagination({
-        order: 'DESC',
-        orderBy: 'created_at'
+        order: "DESC",
+        orderBy: "created_at"
       })
       return response.data
     } catch (error) {
@@ -396,10 +396,10 @@ export const restaurantsSlice = createSlice({
         const currentPageRestaurants = state.restaurantsPerPage[state.currentPage]
         const index = currentPageRestaurants.findIndex((restaurant) => restaurant?.id == id)
 
-        state.updatingRestaurant = false
-        if (index !== -1) {
+        if (state.restaurantsPerPage.length !== 0 && index !== -1) {
           currentPageRestaurants[index] = action.payload
         }
+        state.updatingRestaurant = false
       })
       .addCase(updateRestaurantData.rejected, (state) => {
         state.updatingRestaurant = false
@@ -410,13 +410,11 @@ export const restaurantsSlice = createSlice({
       .addCase(createRestaurant.fulfilled, (state, action) => {
         const newRestaurant = action.payload
 
-        // Insertamos el nuevo restaurante al comienzo  de la primera página
         if (!state.restaurantsPerPage[1]) {
           state.restaurantsPerPage[1] = []
         }
         state.restaurantsPerPage[1].unshift(newRestaurant)
 
-        // Pasamos el último objeto de cada página a la primera posición de la página siguiente
         for (let i = 1; i <= state.totalPagesCount; i++) {
           if (state.restaurantsPerPage[i]?.length > state.itemsPerPage) {
             const lastItem = state.restaurantsPerPage[i].pop()
@@ -428,7 +426,6 @@ export const restaurantsSlice = createSlice({
           }
         }
 
-        // Eliminamos del estado las páginas no consecutivas
         const consecutivePages = [1]
         for (let i = 2; i <= state.totalPagesCount; i++) {
           if (state.restaurantsPerPage[i]) {
@@ -440,7 +437,6 @@ export const restaurantsSlice = createSlice({
           }
         }
 
-        // Actualizamos el conteo de restaurantes para que se  ajuste a la cantidad de páginas a mostrar
         state.totalRestaurants += 1
         state.totalPagesCount = Math.ceil(state.totalRestaurants / state.itemsPerPage)
         state.creatingRestaurant = false
@@ -451,7 +447,8 @@ export const restaurantsSlice = createSlice({
   }
 })
 
-export const { setRestaurants, setRestaurantData, setPage, setFilters, setLoading, setImageUrl, setSearchData } = restaurantsSlice.actions
+export const { setRestaurants, setRestaurantData, setPage, setFilters, setLoading, setImageUrl, setSearchData } =
+  restaurantsSlice.actions
 
 export const selectAllRestaurants = (state) => state.restaurants.restaurants
 

@@ -55,7 +55,7 @@ export const ReservationDetails = () => {
   const [cancelComment, setCancelComment] = useState("")
 
   useEffect(() => {
-    console.log(reservationDetails)
+    
     dispatch(fetchReservationDetails(reservationId))
   }, [dispatch, reservationId])
 

@@ -8,8 +8,9 @@ import authApi from "../../api/authApi"
 import { useDispatch } from "react-redux"
 import { setUser } from "../../store/features/userSlice"
 import { AUTH_NAVIGATION_ROUTES } from "../../routes"
-import { Anchor, Button, Checkbox, Flex, Group } from "@mantine/core"
+import { Button, Checkbox, Flex, Group } from "@mantine/core"
 import { colors } from "../../theme/colors"
+import { showNotification } from "@mantine/notifications"
 
 export default function Login() {
   const dispatch = useDispatch()
@@ -30,7 +31,11 @@ export default function Login() {
 
       if (res.status === "fail") {
         setIsLoading(false)
-        toast.error(res.message)
+        showNotification({
+          title: "Error",
+          message: res?.message,
+          color: "red"
+        })
         return
       }
       const userData = res?.data?.user
@@ -64,9 +69,7 @@ export default function Login() {
           />
           <Group justify="space-between" mt="md">
             <Checkbox style={{ visibility: "hidden" }} color={colors.main_app_color} label="Recuérdame" />
-            <Link
-              className="text-sm text-gray-400 hover:underline"
-              to={AUTH_NAVIGATION_ROUTES.ForgetPassword.path}>
+            <Link className="text-sm text-gray-300 hover:underline" to={AUTH_NAVIGATION_ROUTES.ForgetPassword.path}>
               ¿Olvidaste tu contraseña?
             </Link>
           </Group>

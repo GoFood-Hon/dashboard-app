@@ -1,4 +1,4 @@
-import { Alert, Checkbox, CloseButton, Flex, Group, MantineProvider, Paper, Stack, Text, Tooltip } from "@mantine/core"
+import { Checkbox, CloseButton, Flex, Group, MantineProvider, Paper, Stack, Text, Tooltip } from "@mantine/core"
 import { IconStarFilled } from "@tabler/icons-react"
 import Lottie from "react-lottie"
 import { colors } from "../../theme/colors"
@@ -25,14 +25,6 @@ const LoyaltyCardView = ({
   checked
 }) => {
   const [opened, { close, open }] = useDisclosure(false)
-  const handleCheckboxClick = () => {
-    if (checked) {
-      setShowAlert(true)
-    } else {
-      setShowAlert(false)
-      open()
-    }
-  }
   
   return (
     <>

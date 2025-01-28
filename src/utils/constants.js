@@ -215,6 +215,39 @@ export const loyaltyCardsDiscountType = [
   }
 ]
 
+export const promotionsDiscountType = [
+  {
+    value: "porcentual",
+    label: "Descuento porcentual"
+  },
+  {
+    value: "fijo",
+    label: "Descuento fijo"
+  }
+]
+
+export const discountAppliedTo = [
+  {
+    value: "all",
+    label: "Todos los platillos"
+  },
+  {
+    value: "some",
+    label: "Platillos seleccionados"
+  }
+]
+
+export const couponsTypes = [
+  {
+    value: "fecha",
+    label: "Por fecha"
+  },
+  {
+    value: "cantidad",
+    label: "Por cantidad de usos"
+  }
+]
+
 export const daysOfWeek = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"]
 
 export const daysOfWeekEn = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
