@@ -23,7 +23,6 @@ import LoyaltyCardView from "../../components/Loyalty/LoyaltyCardView"
 import animationData from "../../assets/animation/CouponsAnimation.json"
 import { useDispatch } from "react-redux"
 import { getUserLoyaltyCards, setFilterValue, setClientIdentity, setCardCode } from "../../store/features/loyaltySlice"
-import { useEffect } from "react"
 
 const RewardsTracking = () => {
   const dispatch = useDispatch()
@@ -40,20 +39,16 @@ const RewardsTracking = () => {
     }
   }
 
-  const handleGetLoyaltyCards = () => {
+  const handleGetLoyaltyCards = (filter) => {
     dispatch(
       getUserLoyaltyCards({
         identityNumber: clientIdentity,
         restaurantId: user.restaurantId,
         ...(cardCode && { loyaltyCardCode: cardCode }),
-        ...(filterValue !== "Todas" ? { isRedeemed: filterValue === "Reclamadas" } : {})
+        ...(filter !== "Todas" ? { isRedeemed: filter === "Reclamadas" } : {})
       })
     )
   }
-
-  useEffect(() => {
-    handleGetLoyaltyCards()
-  }, [filterValue])
 
   return (
     <Stack gap="sm">
@@ -68,18 +63,22 @@ const RewardsTracking = () => {
           <Flex align="center" gap={5} style={{ width: "100%" }}>
             <Input
               placeholder="Ingresa el número de identidad (Requerido)"
-              type="number"
               value={clientIdentity}
-              onChange={(event) => {
-                const value = event.currentTarget.value
-                if (value.length <= 13) {
-                  dispatch(setClientIdentity(value))
-                }
-              }}
+              onChange={(event) => dispatch(setClientIdentity(event.currentTarget.value))}
+              rightSectionPointerEvents="all"
               style={{ flex: 1 }}
+              maxLength={13}
+              minLength={13}
               classNames={{
                 input: "focus:border-gray-600"
               }}
+              rightSection={
+                <CloseButton
+                  aria-label="Clear input"
+                  onClick={() => dispatch(setClientIdentity(""))}
+                  style={{ display: clientIdentity ? undefined : "none" }}
+                />
+              }
             />
             <Input
               placeholder="Ingresa el código de la tarjeta (Opcional)"
@@ -92,9 +91,16 @@ const RewardsTracking = () => {
               classNames={{
                 input: "focus:border-gray-600"
               }}
+              rightSection={
+                <CloseButton
+                  aria-label="Clear input"
+                  onClick={() => dispatch(setCardCode(""))}
+                  style={{ display: cardCode ? undefined : "none" }}
+                />
+              }
             />
             <Button
-              onClick={handleGetLoyaltyCards}
+              onClick={() => handleGetLoyaltyCards("Todas")}
               color={colors.main_app_color}
               disabled={clientIdentity && clientIdentity.length >= 13 ? false : true}>
               Buscar
@@ -166,19 +172,19 @@ const RewardsTracking = () => {
                 <Title order={4} tt="uppercase">
                   Listado de tarjetas
                 </Title>
-                {!cardCode && (
-                  <SegmentedControl
-                    value={filterValue}
-                    withItemsBorders={false}
-                    fullWidth
-                    onChange={(value) => {
-                      dispatch(setFilterValue(value))
-                    }}
-                    color={colors.main_app_color}
-                    radius="md"
-                    data={["Todas", "Reclamadas", "No reclamadas"]}
-                  />
-                )}
+                <SegmentedControl
+                  value={filterValue}
+                  withItemsBorders={false}
+                  disabled={cardCode}
+                  fullWidth
+                  onChange={(value) => {
+                    handleGetLoyaltyCards(value)
+                    dispatch(setFilterValue(value))
+                  }}
+                  color={colors.main_app_color}
+                  radius="md"
+                  data={["Todas", "Reclamadas", "No reclamadas"]}
+                />
               </Flex>
               {loadingUserCards ? (
                 <Box className="h-[calc(100vh-390px)] w-full flex justify-center items-center">
