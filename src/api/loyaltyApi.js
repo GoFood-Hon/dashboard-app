@@ -51,11 +51,23 @@ const loyaltyApi = {
   deleteCardReward: (loyaltyProgramId, id) => axiosClient.delete(`api/v1/loyalty-program/${loyaltyProgramId}/card/${id}`),
 
   //Rewards Tracking endpoints
-  getUserLoyaltyCards: ({ identityNumber, restaurantId, loyaltyCardCode }) =>
-    axiosClient.get(
-      `api/v1/loyalty-program/user-loyalty-cards?identityNumber=${identityNumber}&restaurantId=${restaurantId}&loyaltyCardCode=${loyaltyCardCode}`
-    ),
-    
+  getUserLoyaltyCards: ({ restaurantId, page, limit, identityNumber, loyaltyCardCode, isRedeemed }) => {
+    const params = {
+      restaurantId,
+      page,
+      limit,
+      identityNumber,
+      loyaltyCardCode,
+      isRedeemed
+    }
+
+    const validParams = Object.fromEntries(Object.entries(params).filter(([_, value]) => value !== undefined && value))
+
+    const queryString = new URLSearchParams(validParams).toString()
+    const url = `api/v1/loyalty-program/user-loyalty-cards${queryString ? `?${queryString}` : ""}`
+    return axiosClient.get(url)
+  },
+
   markLoyaltyCardAsRedeemed: (loyaltyCardId) => axiosClient.patch(`api/v1/loyalty-program/redeem-loyalty-card/${loyaltyCardId}`)
 }
 

@@ -149,7 +149,7 @@ export default function BusinessSettings() {
             <BackButton title="Información del restaurante" />
           </Flex>
         </Group>
-        <Stack gap="md">
+        <Stack gap="xs">
           <SettingsCard title="Banner" iconName="building">
             <RestaurantBanner
               register={register}

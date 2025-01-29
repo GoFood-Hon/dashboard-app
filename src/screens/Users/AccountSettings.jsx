@@ -102,7 +102,7 @@ export default function AccountSettings() {
             <BackButton title="Configurar cuenta" />
           </Flex>
         </Group>
-        <Stack gap="md">
+        <Stack gap="xs">
           <SettingsCard title="Información general" iconName="user">
             <Grid>
               <Grid.Col span={{ base: 12, md: 8, lg: 8 }}>

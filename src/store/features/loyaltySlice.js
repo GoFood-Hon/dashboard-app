@@ -188,6 +188,42 @@ export const deleteLoyaltyCardWithReward = createAsyncThunk(
   }
 )
 
+export const getUserLoyaltyCards = createAsyncThunk(
+  "loyalty/getUserLoyaltyCards",
+  async ({ restaurantId, page, limit, identityNumber, loyaltyCardCode, isRedeemed }, { rejectWithValue }) => {
+    try {
+      const response = await loyaltyApi.getUserLoyaltyCards({
+        restaurantId,
+        page,
+        limit,
+        identityNumber,
+        loyaltyCardCode,
+        isRedeemed
+      })
+
+      if (response.error) {
+        showNotification({
+          title: "Error",
+          message: response.message,
+          color: "red"
+        })
+        return rejectWithValue(response.error)
+      }
+
+      return response.data
+    } catch (error) {
+      const errorMessage = error.response?.data?.message || "Ocurrió un error inesperado."
+      showNotification({
+        title: "Error",
+        message: errorMessage,
+        color: "red"
+      })
+
+      return rejectWithValue(errorMessage)
+    }
+  }
+)
+
 // Slice
 const loyaltySlice = createSlice({
   name: "loyalty",
@@ -207,7 +243,16 @@ const loyaltySlice = createSlice({
     error: null,
 
     // Buscador de programas de lealtad
-    searchData: null
+    searchData: null,
+
+    //Loyalty Tracking variables
+    clientIdentity: null,
+    cardCode: null,
+    userRewardData: null,
+    loadingUserData: false,
+    loadingUserCards: false,
+    filterValue: "Todas",
+    prefetchUser: null
   },
   reducers: {
     resetError(state) {
@@ -246,6 +291,15 @@ const loyaltySlice = createSlice({
     },
     setSearchData: (state, action) => {
       state.searchData = action.payload
+    },
+    setClientIdentity: (state, action) => {
+      state.clientIdentity = action.payload
+    },
+    setCardCode: (state, action) => {
+      state.cardCode = action.payload
+    },
+    setFilterValue: (state, action) => {
+      state.filterValue = action.payload
     }
   },
   extraReducers: (builder) => {
@@ -374,10 +428,49 @@ const loyaltySlice = createSlice({
         state.loading = false
         state.error = action.payload
       })
+      .addCase(getUserLoyaltyCards.pending, (state) => {
+        if (state.prefetchUser) {
+          state.loadingUserCards = true
+        } else {
+          state.loadingUserData = true
+        }
+      })
+      .addCase(getUserLoyaltyCards.fulfilled, (state, action) => {
+        const { user, loyaltyCards } = action.payload
+
+        if (state.prefetchUser === user.identityNumber) {
+          state.userRewardData = {
+            ...state.userRewardData,
+            loyaltyCards: loyaltyCards ?? []
+          }
+        } else {
+          state.userRewardData = action.payload
+        }
+
+        state.prefetchUser = user.identityNumber
+
+        state.loadingUserData = false
+        state.loadingUserCards = false
+      })
+      .addCase(getUserLoyaltyCards.rejected, (state, action) => {
+        state.loadingUserData = false
+        state.loadingUserCards = false
+        state.error = action.payload
+      })
   }
 })
 
-export const { resetError, setPage, updateLoyaltyCards, removeLoyaltyCard, addCards, clearDeletedCards, setSearchData } =
-  loyaltySlice.actions
+export const {
+  resetError,
+  setPage,
+  updateLoyaltyCards,
+  removeLoyaltyCard,
+  addCards,
+  clearDeletedCards,
+  setSearchData,
+  setClientIdentity,
+  setCardCode,
+  setFilterValue
+} = loyaltySlice.actions
 
 export default loyaltySlice.reducer

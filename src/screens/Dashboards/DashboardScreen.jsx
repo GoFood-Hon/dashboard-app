@@ -110,7 +110,7 @@ export const DashboardScreen = () => {
 
   return (
     <div>
-      <SimpleGrid spacing="sm" cols={{ base: 1, xs: 2, md: 4 }}>
+      <SimpleGrid spacing="xs" cols={{ base: 1, xs: 2, md: 4 }}>
         {stats}
       </SimpleGrid>
     </div>
