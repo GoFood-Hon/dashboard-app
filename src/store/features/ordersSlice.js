@@ -190,6 +190,50 @@ export const markOrderDelivered = createAsyncThunk("orders/markOrderDelivered", 
   }
 })
 
+export const getOrdersHistoryRestaurant = createAsyncThunk(
+  "orders/getOrdersHistoryRestaurant",
+  async ({ restaurantId, startDate, endDate }, { rejectWithValue }) => {
+    try {
+      const response = await orderApi.getOrdersHistoryRestaurant({ restaurantId, startDate, endDate })
+      if (response.error) {
+        showNotification({
+          title: "Error",
+          message: response.message,
+          color: "red"
+        })
+
+        return rejectWithValue(response.message)
+      }
+
+      return response.data
+    } catch (error) {
+      return rejectWithValue(error.response?.data || error.message)
+    }
+  }
+)
+
+export const getOrdersHistorySucursal = createAsyncThunk(
+  "orders/getOrdersHistorySucursal",
+  async ({ sucursalId, startDate, endDate }, { rejectWithValue }) => {
+    try {
+      const response = await orderApi.getOrdersHistorySucursal({ sucursalId, startDate, endDate })
+      if (response.error) {
+        showNotification({
+          title: "Error",
+          message: response.message,
+          color: "red"
+        })
+
+        return rejectWithValue(response.message)
+      }
+
+      return response.data
+    } catch (error) {
+      return rejectWithValue(error.response?.data || error.message)
+    }
+  }
+)
+
 // Slice de órdenes
 const ordersSlice = createSlice({
   name: "orders",
@@ -218,7 +262,12 @@ const ordersSlice = createSlice({
     updatingDriver: false,
     drivers: [],
     status: "idle",
-    error: null
+    error: null,
+
+    //Purchase history data
+    purchaseHistoryData: [],
+    dateRange: [],
+    loadingHistory: false
   },
   reducers: {
     setCurrentPage: (state, action) => {
@@ -284,6 +333,9 @@ const ordersSlice = createSlice({
       if (state.orderDetails && state.orderDetails.id === id) {
         state.orderDetails = { ...state.orderDetails, status, sentToKitchenTimestamp, finishedCookingTimestamp }
       }
+    },
+    setDateRange: (state, action) => {
+      state.dateRange = action.payload
     }
   },
   extraReducers: (builder) => {
@@ -452,9 +504,33 @@ const ordersSlice = createSlice({
         state.updatingOrderStatus = false
         state.error = action.payload
       })
+
+      .addCase(getOrdersHistoryRestaurant.pending, (state) => {
+        state.loadingHistory = true
+      })
+      .addCase(getOrdersHistoryRestaurant.fulfilled, (state, action) => {
+        state.purchaseHistoryData = action.payload
+        state.loadingHistory = false
+      })
+      .addCase(getOrdersHistoryRestaurant.rejected, (state, action) => {
+        state.loadingHistory = false
+        state.error = action.payload
+      })
+
+      .addCase(getOrdersHistorySucursal.pending, (state) => {
+        state.loadingHistory = true
+      })
+      .addCase(getOrdersHistorySucursal.fulfilled, (state, action) => {
+        state.purchaseHistoryData = action.payload
+        state.loadingHistory = false
+      })
+      .addCase(getOrdersHistorySucursal.rejected, (state, action) => {
+        state.loadingHistory = false
+        state.error = action.payload
+      })
   }
 })
 
-export const { setCurrentPage, setTotalOrders, setNewOrder, setOrderStatus } = ordersSlice.actions
+export const { setCurrentPage, setTotalOrders, setNewOrder, setOrderStatus, setDateRange } = ordersSlice.actions
 
 export default ordersSlice.reducer

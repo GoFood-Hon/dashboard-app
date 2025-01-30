@@ -119,6 +119,10 @@ export const NAVIGATION_ROUTES_RES_ADMIN = {
     OrderDetails: {
       label: "Detalles del pedido",
       path: "/pedidos/:orderId"
+    },
+    OrderPurchasesHistory: {
+      label: "Historial de compras del pedido",
+      path: "/pedidos/historial-compras"
     }
   },
   Menu: {
@@ -194,7 +198,21 @@ export const NAVIGATION_ROUTES_RES_ADMIN = {
 
 export const NAVIGATION_ROUTES_RES_ADMIN_TWO = [
   { label: "Inicio", icon: IconHome, link: "/" },
-  { label: "Pedidos", icon: IconBox, link: "/pedidos" },
+  {
+    label: "Pedidos",
+    icon: IconBox,
+    initiallyOpened: false,
+    links: [
+      {
+        label: "Lista de pedidos",
+        link: "/pedidos"
+      },
+      {
+        label: "Historial de compras",
+        link: "/pedidos/historial-compras"
+      }
+    ]
+  },
   {
     label: "Menú",
     icon: IconToolsKitchen,
@@ -281,6 +299,10 @@ export const NAVIGATION_ROUTES_BRANCH_ADMIN = {
     OrderDetails: {
       label: "Detalles del pedido",
       path: "/pedidos/:orderId"
+    },
+    OrderPurchasesHistory: {
+      label: "Historial de compras del pedido",
+      path: "/pedidos/historial-compras"
     }
   },
   Menu: {
@@ -336,7 +358,21 @@ export const NAVIGATION_ROUTES_BRANCH_ADMIN = {
 
 export const NAVIGATION_ROUTES_BRANCH_ADMIN_TWO = [
   { label: "Inicio", icon: IconHome, link: "/" },
-  { label: "Pedidos", icon: IconBox, link: "/pedidos" },
+  {
+    label: "Pedidos",
+    icon: IconBox,
+    initiallyOpened: false,
+    links: [
+      {
+        label: "Lista de pedidos",
+        link: "/pedidos"
+      },
+      {
+        label: "Historial de compras",
+        link: "/pedidos/historial-compras"
+      }
+    ]
+  },
   {
     label: "Menú",
     icon: IconToolsKitchen,
@@ -509,11 +545,11 @@ export const SETTING_NAVIGATION_ROUTES = {
     icon: "label",
     newPromotion: {
       label: "Nueva Promoción",
-      path: "/configuraciones/lista-de-promociones/nueva-promocion",
+      path: "/configuraciones/lista-de-promociones/nueva-promocion"
     },
     editPromotion: {
       label: "Editar Promoción",
-      path: "/configuraciones/lista-de-promociones/:promotionId",
+      path: "/configuraciones/lista-de-promociones/:promotionId"
     }
   },
   Coupons: {
@@ -523,11 +559,11 @@ export const SETTING_NAVIGATION_ROUTES = {
     icon: "label",
     newCoupon: {
       label: "Nuevo cupón",
-      path: "/configuraciones/lista-de-cupones/nuevo-cupon",
+      path: "/configuraciones/lista-de-cupones/nuevo-cupon"
     },
     editCoupon: {
       label: "Editar cupón",
-      path: "/configuraciones/lista-de-cupones/:couponId",
+      path: "/configuraciones/lista-de-cupones/:couponId"
     }
   },
 

@@ -20,6 +20,7 @@ import { useNavigate } from "react-router-dom"
 import {
   NAVIGATION_ROUTES_KITCHEN,
   NAVIGATION_ROUTES_RES_ADMIN,
+  NAVIGATION_ROUTES_RES_ADMIN_TWO,
   NAVIGATION_ROUTES_SUPER_ADMIN,
   SETTING_NAVIGATION_ROUTES
 } from "../../routes"
@@ -73,7 +74,8 @@ export default function MenuTable({ items, screenType, totalItems, currentPage, 
       collectionsScreen: NAVIGATION_ROUTES_SUPER_ADMIN.Collections.path,
       loyaltyProgramsScreen: NAVIGATION_ROUTES_RES_ADMIN.Loyalty.path,
       promotionsScreen: SETTING_NAVIGATION_ROUTES.Promotions.path,
-      couponsScreen: SETTING_NAVIGATION_ROUTES.Coupons.path
+      couponsScreen: SETTING_NAVIGATION_ROUTES.Coupons.path,
+      purchasesHistoryScreen: NAVIGATION_ROUTES_RES_ADMIN.Pedidos.OrderPurchasesHistory.path,
     }
 
     navigate(`${routes[screenType]}/${id}`)
@@ -676,6 +678,28 @@ export default function MenuTable({ items, screenType, totalItems, currentPage, 
           </Flex>
         )
       }
+    ],
+    purchasesHistoryScreen: [
+      {
+        label: "Nombre",
+        accessor: "name",
+        render: (name, item) => (
+          <div className="flex items-center gap-2">
+            <Avatar size={30} src={item?.photo} radius={26} />
+            {name}
+          </div>
+        )
+      },
+      {
+        label: "Identidad",
+        accessor: "identityNumber"
+      },
+      {
+        label: "Correo",
+        accessor: "email"
+      },
+      { label: "Teléfono", accessor: "phoneNumber" },
+      { label: "Pedidos realizados", accessor: "orderCount", center: true }
     ]
   }
 
@@ -727,19 +751,21 @@ export default function MenuTable({ items, screenType, totalItems, currentPage, 
               </Table>
             </ScrollArea>
           </Paper>
-          <Flex align="center" justify="end">
-            <Group>
-              <Pagination
-                total={totalItems}
-                page={currentPage}
-                onChange={(page) => setPage(page)}
-                color={colors.main_app_color}
-                defaultValue={currentPage}
-                size="md"
-                withEdges
-              />
-            </Group>
-          </Flex>
+          {totalItems && (
+            <Flex align="center" justify="end">
+              <Group>
+                <Pagination
+                  total={totalItems}
+                  page={currentPage}
+                  onChange={(page) => setPage(page)}
+                  color={colors.main_app_color}
+                  defaultValue={currentPage}
+                  size="md"
+                  withEdges
+                />
+              </Group>
+            </Flex>
+          )}
         </>
       ) : (
         <Box className="h-[calc(100vh-200px)] w-full flex justify-center items-center">

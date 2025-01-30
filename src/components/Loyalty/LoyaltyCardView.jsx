@@ -6,8 +6,11 @@ import { getFormattedHNL } from "../../utils"
 import { theme } from "../../utils/constants"
 import { useDisclosure } from "@mantine/hooks"
 import ConfirmationModal from "../../screens/ConfirmationModal"
+import { useDispatch } from "react-redux"
+import { markCardAsRedeemed } from "../../store/features/loyaltySlice"
 
 const LoyaltyCardView = ({
+  id,
   key,
   user,
   options,
@@ -25,6 +28,7 @@ const LoyaltyCardView = ({
   checked
 }) => {
   const [opened, { close, open }] = useDisclosure(false)
+  const dispatch = useDispatch()
   
   return (
     <>
@@ -61,7 +65,7 @@ const LoyaltyCardView = ({
                 }}
                 value={checked}
                 checked={checked}
-                color={colors.main_app_color}
+                color={colors.main_app_color} 
                 onClick={() => !checked && open()}
               />
             </Tooltip>
@@ -142,7 +146,7 @@ const LoyaltyCardView = ({
         close={close}
         title="¿Estás seguro que deseas marcar como reclamada?"
         description="Una vez realizada esta acción, no se podrá deshacer."
-        onConfirm={() => alert("Tarjeta marcada como reclamada")}
+        onConfirm={() => dispatch(markCardAsRedeemed(id))}
       />
     </>
   )

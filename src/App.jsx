@@ -5,7 +5,8 @@ import {
   NAVIGATION_ROUTES_SUPER_ADMIN,
   SETTING_NAVIGATION_ROUTES,
   NAVIGATION_ROUTES_KITCHEN,
-  NAVIGATION_ROUTES_CASHIER
+  NAVIGATION_ROUTES_CASHIER,
+  NAVIGATION_ROUTES_RES_ADMIN_TWO
 } from "./routes"
 import { Route, RouterProvider, createBrowserRouter, createRoutesFromElements } from "react-router-dom"
 import AuthLayout from "./layout/AuthLayout"
@@ -71,6 +72,7 @@ import { EditPromotion } from "./screens/Promotions/EditPromotion"
 import CouponsList from "./screens/Coupons/CouponsList"
 import { NewCoupon } from "./screens/Coupons/NewCoupon"
 import { EditCoupon } from "./screens/Coupons/EditCoupons"
+import PurchasesHistory from "./screens/PurchasesHistory/PurchasesHistory"
 
 function App() {
   const userRole = useSelector((state) => state.user.value.role)
@@ -183,6 +185,8 @@ function App() {
             <Route path={SETTING_NAVIGATION_ROUTES.Coupons.newCoupon.path} element={<NewCoupon />} />
             
             <Route path={SETTING_NAVIGATION_ROUTES.Coupons.editCoupon.path} element={<EditCoupon />} />
+
+            <Route path={NAVIGATION_ROUTES_RES_ADMIN.Pedidos.OrderPurchasesHistory.path} element={<PurchasesHistory />} />
           </>
         )
       case APP_ROLES.branchAdmin:
@@ -209,6 +213,8 @@ function App() {
             <Route path={NAVIGATION_ROUTES_BRANCH_ADMIN.Password.path} element={<PasswordSettings />} />
 
             <Route path={NAVIGATION_ROUTES_BRANCH_ADMIN.Menu.MenuDetails.path} element={<EditMenuScreen />} />
+
+            <Route path={NAVIGATION_ROUTES_BRANCH_ADMIN.Pedidos.OrderPurchasesHistory.path} element={<PurchasesHistory />} />
           </>
         )
       case APP_ROLES.cashierUser:

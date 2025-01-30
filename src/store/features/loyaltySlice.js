@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit"
 import loyaltyApi from "../../api/loyaltyApi"
-import { ITEMS_PER_PAGE } from "../../utils/paginationConfig"
+import { ITEMS_PER_PAGE, ITEMS_PER_PAGE_CARDS } from "../../utils/paginationConfig"
 import { showNotification } from "@mantine/notifications"
 
 // Async thunks para interactuar con los endpoints
@@ -210,7 +210,7 @@ export const getUserLoyaltyCards = createAsyncThunk(
         return rejectWithValue(response.error)
       }
 
-      return response.data
+      return { data: response.data, results: response.results, page }
     } catch (error) {
       const errorMessage = error.response?.data?.message || "Ocurrió un error inesperado."
       showNotification({
@@ -220,6 +220,26 @@ export const getUserLoyaltyCards = createAsyncThunk(
       })
 
       return rejectWithValue(errorMessage)
+    }
+  }
+)
+
+export const markCardAsRedeemed = createAsyncThunk(
+  "loyalty/markCardAsRedeemed",
+  async (loyaltyCardId, { rejectWithValue }) => {
+    try {
+      const response = await loyaltyApi.markLoyaltyCardAsRedeemed(loyaltyCardId)
+      if (response.error) {
+        showNotification({
+          title: "Error",
+          message: response.message,
+          color: "red"
+        })
+        return rejectWithValue(response.error)
+      }
+      return id
+    } catch (error) {
+      return rejectWithValue(error.response.data)
     }
   }
 )
@@ -248,7 +268,12 @@ const loyaltySlice = createSlice({
     //Loyalty Tracking variables
     clientIdentity: null,
     cardCode: null,
-    userRewardData: null,
+    userRewardData: [],
+    userRewardsPerPage: [],
+    itemsRewardsPerPage: ITEMS_PER_PAGE_CARDS,
+    totalRewards: 0,
+    totalRewardsPageCount: 0,
+    currentRewardPage: 1,
     loadingUserData: false,
     loadingUserCards: false,
     filterValue: "Todas",
@@ -300,6 +325,9 @@ const loyaltySlice = createSlice({
     },
     setFilterValue: (state, action) => {
       state.filterValue = action.payload
+    },
+    setCurrentRewardPage: (state, action) => {
+      state.currentRewardPage = action.payload
     }
   },
   extraReducers: (builder) => {
@@ -436,25 +464,43 @@ const loyaltySlice = createSlice({
         }
       })
       .addCase(getUserLoyaltyCards.fulfilled, (state, action) => {
-        const { user, loyaltyCards } = action.payload
+        const { data, results, page } = action.payload
 
-        if (state.prefetchUser === user.identityNumber) {
-          state.userRewardData = {
-            ...state.userRewardData,
-            loyaltyCards: loyaltyCards ?? []
-          }
+        if (state.prefetchUser === data.user.identityNumber) {
+          state.userRewardsPerPage[page] = data.loyaltyCards
         } else {
-          state.userRewardData = action.payload
+          state.userRewardData = data.user
+          state.userRewardsPerPage[page] = data.loyaltyCards
         }
 
-        state.prefetchUser = user.identityNumber
+        state.prefetchUser = data.user.identityNumber
 
         state.loadingUserData = false
         state.loadingUserCards = false
+        state.currentRewardPage = page
+        state.totalRewards = results
+        state.totalRewardsPageCount = Math.ceil(results / action.meta.arg.limit)
       })
       .addCase(getUserLoyaltyCards.rejected, (state, action) => {
         state.loadingUserData = false
         state.loadingUserCards = false
+        state.error = action.payload
+      })
+      .addCase(markCardAsRedeemed.pending, (state) => {
+        state.loading = true
+      })
+      .addCase(markCardAsRedeemed.fulfilled, (state, action) => {
+        const { id, isRedeemed } = action.payload
+        const currentCardsPage = state.userRewardsPerPage[state.currentRewardPage]
+        const index = currentCardsPage.find((card) => card.id === id)
+
+        if (index !== -1) {
+          currentCardsPage[index] = { ...currentCardsPage[index], isRedeemed }
+        }
+        state.loading = false
+      })
+      .addCase(markCardAsRedeemed.rejected, (state, action) => {
+        state.loading = false
         state.error = action.payload
       })
   }
@@ -470,7 +516,8 @@ export const {
   setSearchData,
   setClientIdentity,
   setCardCode,
-  setFilterValue
+  setFilterValue,
+  setCurrentRewardPage
 } = loyaltySlice.actions
 
 export default loyaltySlice.reducer

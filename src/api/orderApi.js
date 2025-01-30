@@ -75,7 +75,39 @@ const orderApi = {
   assignDriver: (params) => axiosClient.patch("api/v1/order/assign-driver", params),
 
   // Mark order as delivered (Admin sucursal, admin restaurant)
-  markOrderDelivered: (id) => axiosClient.patch(`api/v1/order/mark-order-as-delivered/${id}`)
+  markOrderDelivered: (id) => axiosClient.patch(`api/v1/order/mark-order-as-delivered/${id}`),
+
+  //Get orders history by restaurant
+  getOrdersHistoryRestaurant: ({ restaurantId, endDate, startDate } = {}) => {
+    const params = {
+      restaurantId,
+      endDate,
+      startDate
+    }
+
+    const validParams = Object.fromEntries(Object.entries(params).filter(([_, value]) => value !== undefined && value !== ""))
+
+    const queryString = new URLSearchParams(validParams).toString()
+    const url = `api/v1/restaurant/orders-history${queryString ? `?${queryString}` : ""}`
+
+    return axiosClient.get(url)
+  },
+
+  //Get orders history by sucursal
+  getOrdersHistorySucursal: ({ sucursalId, endDate, startDate } = {}) => {
+    const params = {
+      sucursalId,
+      endDate,
+      startDate
+    }
+
+    const validParams = Object.fromEntries(Object.entries(params).filter(([_, value]) => value !== undefined && value !== ""))
+
+    const queryString = new URLSearchParams(validParams).toString()
+    const url = `api/v1/sucursal/orders-history${queryString ? `?${queryString}` : ""}`
+
+    return axiosClient.get(url)
+  },
 }
 
 export default orderApi

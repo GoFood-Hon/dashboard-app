@@ -1,6 +1,5 @@
 import BackButton from "../Dishes/components/BackButton"
 import {
-  Avatar,
   Box,
   Button,
   CloseButton,
@@ -9,7 +8,7 @@ import {
   Group,
   Input,
   Loader,
-  Paper,
+  Pagination,
   SegmentedControl,
   SimpleGrid,
   Stack,
@@ -18,18 +17,36 @@ import {
 } from "@mantine/core"
 import { colors } from "../../theme/colors"
 import { useSelector } from "react-redux"
-import { IconAt, IconPhoneCall, IconMapPin, IconExclamationCircleFilled, IconCircleCheckFilled } from "@tabler/icons-react"
 import LoyaltyCardView from "../../components/Loyalty/LoyaltyCardView"
 import animationData from "../../assets/animation/CouponsAnimation.json"
 import { useDispatch } from "react-redux"
-import { getUserLoyaltyCards, setFilterValue, setClientIdentity, setCardCode } from "../../store/features/loyaltySlice"
+import {
+  getUserLoyaltyCards,
+  setFilterValue,
+  setClientIdentity,
+  setCardCode,
+  setCurrentRewardPage
+} from "../../store/features/loyaltySlice"
+import UserInfoLoyalty from "../../components/UserInfoLoyalty/UserInfoLoyalty"
 
 const RewardsTracking = () => {
   const dispatch = useDispatch()
   const user = useSelector((state) => state.user.value)
-  const { clientIdentity, cardCode, userRewardData, loadingUserData, loadingUserCards, filterValue } = useSelector(
-    (state) => state.loyalty
-  )
+  const {
+    clientIdentity,
+    cardCode,
+    userRewardData,
+    loadingUserData,
+    loadingUserCards,
+    filterValue,
+    userRewardsPerPage,
+    itemsRewardsPerPage,
+    totalRewards,
+    totalRewardsPageCount,
+    currentRewardPage
+  } = useSelector((state) => state.loyalty)
+  const rewardCardsList = userRewardsPerPage[currentRewardPage] || []
+
   const defaultOptions = {
     loop: true,
     autoplay: true,
@@ -39,12 +56,14 @@ const RewardsTracking = () => {
     }
   }
 
-  const handleGetLoyaltyCards = (filter) => {
+  const handleGetLoyaltyCards = (filter, page = 1, code = cardCode) => {
     dispatch(
       getUserLoyaltyCards({
-        identityNumber: clientIdentity,
         restaurantId: user.restaurantId,
-        ...(cardCode && { loyaltyCardCode: cardCode }),
+        page,
+        limit: itemsRewardsPerPage,
+        identityNumber: clientIdentity,
+        ...(code && { loyaltyCardCode: code }),
         ...(filter !== "Todas" ? { isRedeemed: filter === "Reclamadas" } : {})
       })
     )
@@ -74,7 +93,6 @@ const RewardsTracking = () => {
               }}
               rightSection={
                 <CloseButton
-                  aria-label="Clear input"
                   onClick={() => dispatch(setClientIdentity(""))}
                   style={{ display: clientIdentity ? undefined : "none" }}
                 />
@@ -93,8 +111,11 @@ const RewardsTracking = () => {
               }}
               rightSection={
                 <CloseButton
-                  aria-label="Clear input"
-                  onClick={() => dispatch(setCardCode(""))}
+                  onClick={() => {
+                    dispatch(setCardCode(""))
+                    handleGetLoyaltyCards("Todas", 1, null)
+                    dispatch(setFilterValue("Todas"))
+                  }}
                   style={{ display: cardCode ? undefined : "none" }}
                 />
               }
@@ -114,59 +135,19 @@ const RewardsTracking = () => {
         <Box className="h-[calc(100vh-220px)] w-full flex justify-center items-center">
           <Loader color={colors.main_app_color} />
         </Box>
-      ) : userRewardData?.user ? (
+      ) : userRewardData.length !== 0 ? (
         <>
-          <Paper radius="md" withBorder p="xs">
-            <Flex align="center" justify="space-between">
-              <Flex gap={10} align="center">
-                <Avatar
-                  src={
-                    userRewardData?.user?.photo ||
-                    "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-1.png"
-                  }
-                  size={80}
-                  radius="md"
-                />
-                <Flex direction="column">
-                  <Text fz="lg" fw={500}>
-                    {userRewardData?.user?.name}
-                  </Text>
-
-                  <Group wrap="nowrap" gap={10} mt={3}>
-                    <IconAt stroke={1.5} size={18} />
-                    <Text fz="sm" c="dimmed">
-                      {userRewardData?.user?.email}
-                    </Text>
-                  </Group>
-
-                  <Group wrap="nowrap" gap={10} mt={5}>
-                    <IconPhoneCall stroke={1.5} size={18} />
-                    <Text fz="sm" c="dimmed">
-                      {userRewardData?.user?.phoneNumber}
-                    </Text>
-                  </Group>
-
-                  <Group wrap="nowrap" gap={10} mt={5}>
-                    <IconMapPin stroke={1.5} size={18} />
-                    <Text fz="sm" c="dimmed">
-                      {userRewardData?.user?.UserAddresses[0]?.address ?? "Sin dirección"}
-                    </Text>
-                  </Group>
-                </Flex>
-              </Flex>
-              <Flex align="center" gap={4}>
-                {userRewardData?.user?.isVerified ? (
-                  <IconCircleCheckFilled size={24} />
-                ) : (
-                  <IconExclamationCircleFilled size={30} />
-                )}
-                <Text c="dimmed">{userRewardData?.user?.isVerified ? "Cliente verificado" : "Cliente no verificado"}</Text>
-              </Flex>
-            </Flex>
-          </Paper>
+          <UserInfoLoyalty
+            photo={userRewardData?.photo}
+            name={userRewardData?.name}
+            email={userRewardData?.email}
+            phone={userRewardData?.phoneNumber}
+            address={userRewardData?.UserAddresses[0]?.address}
+            isVerified={userRewardData?.isVerified}
+          />
 
           {/* Loyalty cards */}
-          {userRewardData?.loyaltyCards ? (
+          {rewardCardsList ? (
             <>
               <Flex align="center" justify="space-between">
                 <Title order={4} tt="uppercase">
@@ -190,10 +171,11 @@ const RewardsTracking = () => {
                 <Box className="h-[calc(100vh-390px)] w-full flex justify-center items-center">
                   <Loader color={colors.main_app_color} />
                 </Box>
-              ) : userRewardData?.loyaltyCards?.length > 0 ? (
-                <SimpleGrid cols={{ base: 1, sm: 2, lg: 3 }}>
-                  {userRewardData.loyaltyCards.map((card, index) => (
+              ) : rewardCardsList?.length > 0 ? (
+                <SimpleGrid spacing="sm" cols={{ base: 1, sm: 2, lg: 3 }}>
+                  {rewardCardsList?.map((card, index) => (
                     <LoyaltyCardView
+                      id={card.id}
                       key={index}
                       user={user}
                       options={defaultOptions}
@@ -221,6 +203,24 @@ const RewardsTracking = () => {
                   </Text>
                 </Box>
               )}
+              {totalRewardsPageCount > 10 && (
+                <Flex align="center" justify="end">
+                  <Group>
+                    <Pagination
+                      total={totalRewardsPageCount}
+                      page={currentRewardPage}
+                      onChange={(page) => {
+                        handleGetLoyaltyCards(filterValue, page)
+                        dispatch(setCurrentRewardPage(page))
+                      }}
+                      color={colors.main_app_color}
+                      defaultValue={currentRewardPage}
+                      size="md"
+                      withEdges
+                    />
+                  </Group>
+                </Flex>
+              )}
             </>
           ) : (
             <Box className="h-[calc(100vh-340px)] w-full flex justify-center items-center">
@@ -231,7 +231,7 @@ const RewardsTracking = () => {
       ) : (
         <Box className="h-[calc(100vh-220px)] w-full flex justify-center items-center">
           <Text c="dimmed">
-            {userRewardData?.user?.identityNumber ? "No se encontró ningún cliente" : "La información del cliente aparecerá aquí"}
+            {userRewardData?.identityNumber ? "No se encontró ningún cliente" : "La información del cliente aparecerá aquí"}
           </Text>
         </Box>
       )}

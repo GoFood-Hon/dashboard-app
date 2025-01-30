@@ -61,7 +61,7 @@ const loyaltyApi = {
       isRedeemed
     }
 
-    const validParams = Object.fromEntries(Object.entries(params).filter(([_, value]) => value !== undefined && value))
+    const validParams = Object.fromEntries(Object.entries(params).filter(([_, value]) => value !== undefined))
 
     const queryString = new URLSearchParams(validParams).toString()
     const url = `api/v1/loyalty-program/user-loyalty-cards${queryString ? `?${queryString}` : ""}`
