@@ -1,4 +1,4 @@
-import { Button, Flex, Group, Skeleton, Stack, Text, Title } from "@mantine/core"
+import { Button, Flex, Group, Skeleton, Stack, Text } from "@mantine/core"
 import MenuTable from "./Menu/MenuTable"
 import { colors } from "../theme/colors"
 import BackButton from "../screens/Dishes/components/BackButton"
@@ -36,7 +36,7 @@ const TableViewLayout = ({
           {loading ? (
             <Skeleton height={15} mt={6} width="12%" radius="md" />
           ) : (
-            <Flex align="center" gap="xs" style={{display: totalItems > 0 ? 'flex' : 'none'}}>
+            <Flex align="center" gap="xs" style={{ display: totalItems > 0 ? "flex" : "none" }}>
               <Flex style={{ display: `${isSmallScreen ? "none" : ""}` }} align="center" gap={5}>
                 <Text fw={700}>
                   {page === 1 ? 1 : (page - 1) * limit + 1}-{page === 1 ? limit : Math.min(page * limit, totalElements)}
