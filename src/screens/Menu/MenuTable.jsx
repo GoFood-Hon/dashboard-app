@@ -1,4 +1,3 @@
-import { useState } from "react"
 import {
   Table,
   ScrollArea,
@@ -12,7 +11,8 @@ import {
   Flex,
   Badge,
   Box,
-  Paper
+  Paper,
+  Text
 } from "@mantine/core"
 import { IconEye, IconCheck, IconX } from "@tabler/icons-react"
 import { colors } from "../../theme/colors"
@@ -20,7 +20,6 @@ import { useNavigate } from "react-router-dom"
 import {
   NAVIGATION_ROUTES_KITCHEN,
   NAVIGATION_ROUTES_RES_ADMIN,
-  NAVIGATION_ROUTES_RES_ADMIN_TWO,
   NAVIGATION_ROUTES_SUPER_ADMIN,
   SETTING_NAVIGATION_ROUTES
 } from "../../routes"
@@ -30,7 +29,7 @@ import "dayjs/locale/es"
 import { useDispatch } from "react-redux"
 import { TableSkeleton } from "../../components/Skeletons/TableSkeleton"
 import { updateOtherUserStatus, updateUserStatus } from "../../store/features/userSlice"
-import { getFormattedHNL } from "../../utils"
+import { formatTime, getFormattedHNL } from "../../utils"
 import customParseFormat from "dayjs/plugin/customParseFormat"
 import utc from "dayjs/plugin/utc"
 import timezone from "dayjs/plugin/timezone"
@@ -43,6 +42,8 @@ import { theme } from "../../utils/constants"
 import { setSelectedPromotion, updateOfferStatus } from "../../store/features/promotionsSlice"
 import { IconTrash } from "@tabler/icons-react"
 import { setSelectedCoupon, updateStatus } from "../../store/features/couponsSlice"
+import { formatDate } from "date-fns"
+import { IconClock } from "@tabler/icons-react"
 
 dayjs.extend(utc)
 dayjs.extend(timezone)
@@ -75,7 +76,7 @@ export default function MenuTable({ items, screenType, totalItems, currentPage, 
       loyaltyProgramsScreen: NAVIGATION_ROUTES_RES_ADMIN.Loyalty.path,
       promotionsScreen: SETTING_NAVIGATION_ROUTES.Promotions.path,
       couponsScreen: SETTING_NAVIGATION_ROUTES.Coupons.path,
-      purchasesHistoryScreen: NAVIGATION_ROUTES_RES_ADMIN.Pedidos.OrderPurchasesHistory.path,
+      purchasesHistoryScreen: NAVIGATION_ROUTES_RES_ADMIN.Pedidos.OrderPurchasesHistory.path
     }
 
     navigate(`${routes[screenType]}/${id}`)
@@ -264,7 +265,17 @@ export default function MenuTable({ items, screenType, totalItems, currentPage, 
     ordersScreen: [
       { label: "Usuario", accessor: "user" },
       { label: "Teléfono", accessor: "phone" },
-      { label: "Fecha", accessor: "paidDate" },
+      { label: "Fecha y hora", accessor: "orderDate" },
+      {
+        label: "Tiempo de preparación",
+        accessor: "cookingTime",
+        render: (cookingTime) => (
+          <Flex align="center" gap={5}>
+            <IconClock size={18} />
+            <Text size="sm">{cookingTime}</Text>
+          </Flex>
+        )
+      },
       {
         label: "Tipo de servicio",
         accessor: "serviceType",
@@ -735,6 +746,8 @@ export default function MenuTable({ items, screenType, totalItems, currentPage, 
                             key={column.accessor}>
                             {column.accessor === "createdAt" || column.accessor === "updatedAt" || column.accessor === "paidDate"
                               ? dayjs(item[column.accessor]).fromNow()
+                              : column.accessor === "orderDate"
+                              ? formatTime(item[column.accessor])
                               : column.accessor === "reservationDate"
                                 ? dayjs(item[column.accessor])
                                     .tz("America/Tegucigalpa")

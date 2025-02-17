@@ -3,6 +3,7 @@ import { useSelector } from "react-redux"
 import { fetchAllOrders, setCurrentPage } from "../../store/features/ordersSlice"
 import { useDispatch } from "react-redux"
 import TableViewLayout from "../TableViewLayout"
+import { formatTimeDifference } from "../../utils"
 
 export default function OrdersScreen() {
   const dispatch = useDispatch()
@@ -33,7 +34,16 @@ export default function OrdersScreen() {
         limit={limit}
         totalElements={totalOrders}
         items={ordersList.map((order) => {
-          return { ...order, user: order?.Order?.User?.name, phone: order?.Order?.User?.phoneNumber }
+          return {
+            ...order,
+            user: order?.Order?.User?.name,
+            phone: order?.Order?.User?.phoneNumber,
+            cookingTime:
+              order?.finishedCookingTimestamp !== null && order?.sentToKitchenTimestamp !== null
+                ? formatTimeDifference(order?.sentToKitchenTimestamp, order?.finishedCookingTimestamp)
+                : "No disponible",
+            orderDate: order?.paidDate
+          }
         })}
         tableStructure="ordersScreen"
         totalItems={totalPageCount}

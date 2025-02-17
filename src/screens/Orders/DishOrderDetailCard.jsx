@@ -1,5 +1,6 @@
 import { Accordion, Box, Divider, Flex, Group, Image, List, Text } from "@mantine/core"
 import { useState } from "react"
+import { getFormattedHNL } from "../../utils"
 
 export const DishOrderDetailCard = ({ orderDetails, noText }) => {
   const [expanded, setExpanded] = useState(false)
@@ -11,8 +12,8 @@ export const DishOrderDetailCard = ({ orderDetails, noText }) => {
           <Flex justify={"space-between"} align={"center"}>
             <Group>
               <Image
-                h={noText ? "58px" : "64px"}
                 w={noText ? "58px" : "64px"}
+                h={noText ? "58px" : "64px"}
                 radius="sm"
                 fit="contain"
                 src={orderDetails?.Dish?.images?.[0]?.location}
@@ -20,13 +21,16 @@ export const DishOrderDetailCard = ({ orderDetails, noText }) => {
               />
               <Box>
                 <Text size="sm" tt="uppercase" fw={700}>
-                  {orderDetails?.Dish?.name}
+                  {orderDetails?.Dish?.name} ({getFormattedHNL(orderDetails?.price)})
                 </Text>
                 <Text c="dimmed" size="sm">
                   Incluye bebida: {orderDetails?.includesDrink ? "Si" : "No"}
                 </Text>
                 <Text c="dimmed" size="sm">
                   Cantidad: {orderDetails?.quantity}
+                </Text>
+                <Text c="dimmed" size="sm">
+                  Subtotal: {getFormattedHNL(orderDetails?.subtotal)}
                 </Text>
               </Box>
             </Group>

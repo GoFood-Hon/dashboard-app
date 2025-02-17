@@ -29,6 +29,7 @@ import {
   orderStates,
   orderStatusValues,
   PRIMARY_COL_HEIGHT,
+  SCROLL_VIEW_HEIGHT,
   SECONDARY_COL_HEIGHT,
   theme
 } from "../../utils/constants"
@@ -49,21 +50,16 @@ import {
   fetchDrivers
 } from "../../store/features/ordersSlice"
 import { useDisclosure, useMediaQuery } from "@mantine/hooks"
-import { IconHelmet } from "@tabler/icons-react"
-import { IconUser } from "@tabler/icons-react"
 import { IconShoppingCart } from "@tabler/icons-react"
-import { IconMail } from "@tabler/icons-react"
-import { IconPhone } from "@tabler/icons-react"
-import { IconMapPin } from "@tabler/icons-react"
 import { IconReceipt } from "@tabler/icons-react"
 import { IconBrandRedux } from "@tabler/icons-react"
-import { IconId } from "@tabler/icons-react"
 import ConfirmationModal from "../ConfirmationModal"
 import { IconMotorbike } from "@tabler/icons-react"
 import { IconCar } from "@tabler/icons-react"
 import { IconToolsKitchen3 } from "@tabler/icons-react"
 import ModalLayout from "./ModalLayout"
 import { IconStopwatch } from "@tabler/icons-react"
+import UserData from "../../components/UserData/UserData"
 
 export const OrderDetails = () => {
   const { orderId } = useParams()
@@ -75,7 +71,7 @@ export const OrderDetails = () => {
   const [opened, { open, close }] = useDisclosure(false)
   const [openedModal, { open: openModal, close: closeModal }] = useDisclosure(false)
   const [openedComments, { open: openModalComment, close: closeModalComment }] = useDisclosure(false)
-  const isSmallScreen = useMediaQuery("(max-width: 760px)")
+  const isSmallScreen = useMediaQuery("(max-width: 767px)")
   const getInitialStep = () => {
     const serviceSteps = orderStates[orderDetails?.serviceType] || []
     const matchingStep = serviceSteps.find((step) => step.value === orderDetails.status)
@@ -84,77 +80,13 @@ export const OrderDetails = () => {
   const [active, setActive] = useState(getInitialStep)
 
   useEffect(() => {
+    console.log(orderDetails)
     setActive(getInitialStep())
   }, [orderDetails])
 
   useEffect(() => {
     dispatch(fetchOrderDetails(orderId))
   }, [])
-
-  const UserData = ({ title, photo, name, email, phoneNumber, address, bikeId }) => (
-    <Stack h="100%" gap="xs">
-      <Flex align="center" gap={5}>
-        {title.includes("repartidor") ? <IconHelmet size="1.1rem" /> : <IconUser size="1.1rem" />}
-        <Title order={isSmallScreen ? 6 : 5}>{title}</Title>
-      </Flex>
-      <Divider my={2} />
-      {name ? (
-        <>
-          <Flex align="center" gap="sm">
-            <Avatar
-              src={photo}
-              alt="it's me"
-              name={name
-                ?.split(" ")
-                .filter((_, i, arr) => i === 0 || i === arr.length - 1)
-                .map((word) => word.charAt(0))
-                .join("")
-                .toUpperCase()}
-            />
-            <Text c="dimmed" size="sm">
-              {name}
-            </Text>
-          </Flex>
-          <Flex align="center" gap="xs" ml={5}>
-            <IconMail size="1.1rem" />
-            <Text c="dimmed" size={isSmallScreen ? "xs" : "sm"}>
-              {email}
-            </Text>
-          </Flex>
-          <Flex align="center" gap="xs" ml={5}>
-            <IconPhone size="1.1rem" />
-            <Text c="dimmed" size={isSmallScreen ? "xs" : "sm"}>
-              {phoneNumber}
-            </Text>
-          </Flex>
-          <Flex align="center" gap="xs" ml={5}>
-            {bikeId ? <IconId size="1.1rem" style={{ flexShrink: 0 }} /> : <IconMapPin size="1.1rem" style={{ flexShrink: 0 }} />}
-            <Text c="dimmed" size={isSmallScreen ? "xs" : "sm"} style={{ wordBreak: "break-word" }}>
-              {bikeId
-                ? bikeId
-                : orderDetails?.serviceType === "delivery"
-                  ? address || "No se proporcionó"
-                  : "La dirección no es requerida"}
-            </Text>
-          </Flex>
-        </>
-      ) : (
-        <Flex direction="column" justify="center" align="center" style={{ flexGrow: 1 }} gap="sm">
-          {updatingDriver ? (
-            <Loader color={colors.main_app_color} />
-          ) : (
-            <Text size={isSmallScreen ? "xs" : "sm"} c="dimmed">
-              {orderDetails?.serviceType === "delivery"
-                ? orderDetails?.status === "canceled"
-                  ? "No fue posible asignar un repartidor"
-                  : "No se ha asignado un repartidor"
-                : "No aplica para este pedido"}
-            </Text>
-          )}
-        </Flex>
-      )}
-    </Stack>
-  )
 
   return (
     <>
@@ -230,7 +162,7 @@ export const OrderDetails = () => {
                             <Text ta="end" size="sm" fw={700}>
                               {orderDetails?.serviceType === "delivery"
                                 ? "Pedido a domicilio"
-                                : orderDetails?.serviceType === "omSite"
+                                : orderDetails?.serviceType === "onSite"
                                   ? "Pedido para comer en sitio"
                                   : "Pedido para llevar"}
                             </Text>
@@ -266,8 +198,8 @@ export const OrderDetails = () => {
                       </Button>
                     </Flex>
                   </Flex>
-                  <ScrollArea h={"280px"}>
-                    <SimpleGrid spacing={4}>
+                  <ScrollArea h={SCROLL_VIEW_HEIGHT}>
+                    <SimpleGrid spacing="xs">
                       {orderDetails?.OrderDetails?.map((item, index) => (
                         <DishOrderDetailCard key={index} orderDetails={item} />
                       ))}
@@ -285,19 +217,31 @@ export const OrderDetails = () => {
                       email={orderDetails?.Order?.User?.email}
                       phoneNumber={orderDetails?.Order?.User?.phoneNumber}
                       address={orderDetails?.userAddress?.address}
+                      isSmallScreen={isSmallScreen}
+                      orderDetails={orderDetails}
                     />
                   </Paper>
                 </Grid.Col>
                 <Grid.Col span={{ base: 12, md: 6 }}>
                   <Paper withBorder radius="md" h={SECONDARY_COL_HEIGHT} p="md">
-                    <UserData
-                      title="Datos del repartidor"
-                      photo={orderDetails?.driver?.AdminUser?.images?.[0]?.location}
-                      name={orderDetails?.driver?.AdminUser?.name}
-                      email={orderDetails?.driver?.AdminUser?.email}
-                      phoneNumber={orderDetails?.driver?.AdminUser?.phoneNumber}
-                      bikeId={orderDetails?.driver?.motorcycleId}
-                    />
+                    {user?.role !== "kitchen" ? (
+                      <UserData
+                        title="Datos del repartidor"
+                        photo={orderDetails?.driver?.AdminUser?.images?.[0]?.location}
+                        name={orderDetails?.driver?.AdminUser?.name}
+                        email={orderDetails?.driver?.AdminUser?.email}
+                        phoneNumber={orderDetails?.driver?.AdminUser?.phoneNumber}
+                        bikeId={orderDetails?.driver?.motorcycleId}
+                        isSmallScreen={isSmallScreen}
+                        updatingDriver={updatingDriver}
+                        orderDetails={orderDetails}
+                      />
+                    ) : (
+                      <UserData
+                        title="Método de servicios"
+                        tableNumber={orderDetails?.tableNumber}
+                      />
+                    )}
                   </Paper>
                 </Grid.Col>
                 <Grid.Col span={{ base: 12, md: 6 }}>

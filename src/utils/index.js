@@ -2,11 +2,11 @@ import { format, formatDistanceToNow, parseISO } from "date-fns"
 import { es } from "date-fns/locale"
 import { hondurasDepartments } from "./constants"
 import dayjs from "dayjs"
-import timezone from 'dayjs/plugin/timezone';
-import utc from 'dayjs/plugin/utc';
+import timezone from "dayjs/plugin/timezone"
+import utc from "dayjs/plugin/utc"
 
-dayjs.extend(utc);
-dayjs.extend(timezone);
+dayjs.extend(utc)
+dayjs.extend(timezone)
 
 export function getFormattedHNL(amount) {
   return new Intl.NumberFormat("en-US", {
@@ -99,26 +99,21 @@ export function getDepartmentNameById(id) {
  * @returns {float} 23.00
  */
 export function convertToDecimal(priceString) {
-  // Convert the string to a decimal number with two decimal places
   return parseFloat(priceString).toFixed(2)
 }
 
 export const capitalizeFirstLetter = (str) => str.charAt(0).toUpperCase() + str.slice(1)
 
 export const calculateTimeDifference = (sentToKitchenTimestamp, finishedCookingTimestamp) => {
-  // Convierte los timestamps a objetos dayjs
   const start = dayjs(sentToKitchenTimestamp)
   const end = dayjs(finishedCookingTimestamp)
 
-  // Calcula la diferencia total en segundos
   const durationInSeconds = end.diff(start, "second")
 
-  // Calcula las horas, minutos y segundos
   const hours = Math.floor(durationInSeconds / 3600)
   const minutes = Math.floor((durationInSeconds % 3600) / 60)
   const seconds = durationInSeconds % 60
 
-  // Formatea la salida en el formato deseado
   let result = ""
   if (hours > 0) {
     result += `${hours} hora${hours > 1 ? "s" : ""} `
@@ -127,9 +122,25 @@ export const calculateTimeDifference = (sentToKitchenTimestamp, finishedCookingT
     result += `${minutes} minuto${minutes > 1 ? "s" : ""} `
   }
   if (seconds > 0 || result === "") {
-    // Si hay segundos o si no hay horas/minutos
     result += `${seconds} segundo${seconds > 1 ? "s" : ""}`
   }
 
   return result.trim()
+}
+
+export const formatTimeDifference = (sentToKitchenTimestamp, finishedCookingTimestamp) => {
+  const start = dayjs(sentToKitchenTimestamp)
+  const end = dayjs(finishedCookingTimestamp)
+
+  const durationInSeconds = end.diff(start, "second")
+
+  const hours = Math.floor(durationInSeconds / 3600)
+  const minutes = Math.floor((durationInSeconds % 3600) / 60)
+  const seconds = durationInSeconds % 60
+
+  const formattedTime = [String(hours).padStart(2, "0"), String(minutes).padStart(2, "0"), String(seconds).padStart(2, "0")].join(
+    ":"
+  )
+
+  return formattedTime
 }

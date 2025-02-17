@@ -30,7 +30,7 @@ import { colors } from "../theme/colors"
 import { formatTime, getFormattedHNL } from "../utils"
 import Lottie from "react-lottie"
 import animationData from "../assets/animation/NothingFoundAnimation.json"
-import { APP_ROLES } from "../utils/constants"
+import { APP_ROLES, KITCHEN_SCROLL_VIEW_HEIGHT } from "../utils/constants"
 import { useDisclosure, useMediaQuery } from "@mantine/hooks"
 import { IconQrcode } from "@tabler/icons-react"
 import { QRCodeCanvas } from "qrcode.react"
@@ -363,6 +363,18 @@ const CardsViewLayout = ({
                               </Text>
                               <Text size="sm">{item?.id}</Text>
                             </Flex>
+                            <Flex direction="column">
+                              <Text c="dimmed" size="sm">
+                                Tipo de pedido:
+                              </Text>
+                              <Text size="sm" tt='uppercase'>
+                                {item?.serviceType === "delivery"
+                                  ? "A domicilio"
+                                  : item?.serviceType === "onSite"
+                                    ? "Comer en restaurante"
+                                    : "Para llevar"}
+                              </Text>
+                            </Flex>
                           </Flex>
                         </Flex>
 
@@ -379,8 +391,8 @@ const CardsViewLayout = ({
 
                         <Divider my={1} />
 
-                        <ScrollArea h={"280px"}>
-                          <SimpleGrid spacing={4} pb={1}>
+                        <ScrollArea h={KITCHEN_SCROLL_VIEW_HEIGHT}>
+                          <SimpleGrid spacing={8} pb={1}>
                             {item.note && (
                               <Accordion variant="separated" radius="md">
                                 <Accordion.Item value="order-note">
@@ -421,7 +433,7 @@ const CardsViewLayout = ({
                 )
               })}
 
-              <Grid.Col>
+              <Grid.Col className={`${totalPageCount === 1 ? "hidden" : ""}`}>
                 <Flex justify="end">
                   <Pagination
                     total={totalPageCount}
