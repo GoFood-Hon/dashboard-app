@@ -1,5 +1,6 @@
 import { Avatar, Divider, Flex, Loader, Stack, Title, Text } from "@mantine/core"
 import { IconHelmet, IconUser, IconMail, IconPhone, IconId, IconMapPin } from "@tabler/icons-react"
+import { colors } from "../../theme/colors"
 
 const UserData = ({
   title,

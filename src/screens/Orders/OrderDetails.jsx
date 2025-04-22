@@ -114,6 +114,7 @@ export const OrderDetails = () => {
                   {orderStates[orderDetails?.serviceType]?.map((item, index) => (
                     <Stepper.Step
                       key={index}
+                      allowStepSelect={false}
                       icon={<item.icon size="1.2rem" />}
                       label={`Paso ${index + 1}`}
                       description={item.label}
