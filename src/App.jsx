@@ -22,7 +22,6 @@ import Users from "./screens/Users/Users"
 import Logout from "./screens/Logout"
 import Dishes from "./screens/Dishes/DishesScreen"
 import NewDish from "./screens/Dishes/NewDishScreen"
-import DishDetails from "./screens/Dishes/DishDetails"
 import NewMenu from "./screens/Menu/NewMenu"
 import NewBranch from "./screens/Branches/NewBranch"
 import NewUser from "./screens/Users/NewUser"
@@ -30,11 +29,9 @@ import GeneralSettings from "./screens/Users/GeneralSettings"
 import AccountSettings from "./screens/Users/AccountSettings"
 import PasswordSettings from "./screens/Users/PasswordSettings"
 import BusinessSettings from "./screens/Users/BusinessSettings"
-import CouponsSettings from "./screens/Users/CouponsSettings"
 import BankSettings from "./screens/Users/BankSettings"
 import PlanSettings from "./screens/Users/PlanSettings"
 import AdministrativeSettings from "./screens/Users/AdministrativeSettings"
-import MenuDetails from "./screens/Menu/MenuDetails"
 import { OrderDetails } from "./screens/Orders/OrderDetails"
 import RestaurantsScreen from "./screens/Restaurants/RestaurantsScreen"
 import PrivateRoute from "./layout/PrivateRoute"
@@ -73,6 +70,7 @@ import CouponsList from "./screens/Coupons/CouponsList"
 import { NewCoupon } from "./screens/Coupons/NewCoupon"
 import { EditCoupon } from "./screens/Coupons/EditCoupons"
 import PurchasesHistory from "./screens/PurchasesHistory/PurchasesHistory"
+import Reviews from "./screens/Reviews/Reviews"
 
 function App() {
   const userRole = useSelector((state) => state.user.value.role)
@@ -181,12 +179,14 @@ function App() {
             <Route path={NAVIGATION_ROUTES_RES_ADMIN.Loyalty.RewardsTracking.path} element={<RewardsTracking />} />
 
             <Route path={SETTING_NAVIGATION_ROUTES.Coupons.path} element={<CouponsList />} />
-            
+
             <Route path={SETTING_NAVIGATION_ROUTES.Coupons.newCoupon.path} element={<NewCoupon />} />
-            
+
             <Route path={SETTING_NAVIGATION_ROUTES.Coupons.editCoupon.path} element={<EditCoupon />} />
 
             <Route path={NAVIGATION_ROUTES_RES_ADMIN.Pedidos.OrderPurchasesHistory.path} element={<PurchasesHistory />} />
+
+            <Route path={NAVIGATION_ROUTES_RES_ADMIN.Reviews.path} element={<Reviews />} />
           </>
         )
       case APP_ROLES.branchAdmin:
@@ -215,6 +215,8 @@ function App() {
             <Route path={NAVIGATION_ROUTES_BRANCH_ADMIN.Menu.MenuDetails.path} element={<EditMenuScreen />} />
 
             <Route path={NAVIGATION_ROUTES_BRANCH_ADMIN.Pedidos.OrderPurchasesHistory.path} element={<PurchasesHistory />} />
+
+            <Route path={NAVIGATION_ROUTES_BRANCH_ADMIN.Reviews.path} element={<Reviews />} />
           </>
         )
       case APP_ROLES.cashierUser:

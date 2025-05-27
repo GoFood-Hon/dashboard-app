@@ -280,3 +280,22 @@ export const KITCHEN_SCROLL_VIEW_HEIGHT = `calc(${PRIMARY_COL_HEIGHT} - 43vh)`
 export const theme = createTheme({
   cursorType: "pointer"
 })
+
+export const statistictsExample = {
+  sells: {
+    amount: 15662.82,
+    percentage: 12
+  },
+  orders: {
+    quantity: 65,
+    percentage: 10
+  },
+  tickets: {
+    quantity: 30,
+    percentage: -5
+  },
+  users: {
+    quantity: 200,
+    percentage: -10
+  }
+}

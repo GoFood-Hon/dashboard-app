@@ -1,5 +1,4 @@
-import React, { useState } from "react"
-import { Accordion, Flex, Paper, Button, Stack } from "@mantine/core"
+import { Accordion, Stack } from "@mantine/core"
 import BackButton from "../Dishes/components/BackButton"
 import { CreateTags } from "./CreateTags"
 import { CreateKitchenTypes } from "./CreateKitchenTypes"
@@ -35,7 +34,7 @@ export const KitchenTypesAndTags = () => {
   ))
 
   return (
-    <Stack gap='xs'>
+    <Stack gap="xs">
       <BackButton title="Especialidad de cocina / Tags" />
       <Accordion radius="md" variant="separated" multiple defaultValue={["Lista de Tags", "Lista de especialidades"]}>
         {items}

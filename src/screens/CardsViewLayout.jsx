@@ -47,8 +47,9 @@ import { useStopwatch } from "react-timer-hook"
 import { IconStopwatch } from "@tabler/icons-react"
 import dayjs from "dayjs"
 import { useDispatch } from "react-redux"
-import { updateOrderStatus } from "../store/features/ordersSlice"
+import { cancelOrder, updateOrderStatus } from "../store/features/ordersSlice"
 import { useTimer } from "react-timer-hook"
+import { useSelector } from "react-redux"
 
 const CardsViewLayout = ({
   title,
@@ -73,7 +74,9 @@ const CardsViewLayout = ({
   const dispatch = useDispatch()
   const [opened, { open, close }] = useDisclosure(false)
   const [openedKitchen, { close: closeKitchen, open: openKitchen }] = useDisclosure(false)
+  const [openedKitchenCancel, { close: closeKitchenCancel, open: openKitchenCancel }] = useDisclosure(false)
   const [branchData, setBranchData] = useState(null)
+  const { updatingOrderStatus, cancelOrderStatus } = useSelector((state) => state.orders)
   const theme = createTheme({
     cursorType: "pointer"
   })
@@ -229,9 +232,10 @@ const CardsViewLayout = ({
           </Flex>
         </Group>
       )}
-      {elementsList.length > 0 && !kitchenView && (
+      {(value !== null || elementsList.length > 0) && !kitchenView && (
         <SearchComponent onSearch={onSearch} elementName={elementsName} value={value} searchAction={searchAction} />
       )}
+
       <Group grow>
         {loadingElements ? (
           <Box className="h-[calc(100vh-220px)] w-full flex justify-center items-center">
@@ -367,7 +371,7 @@ const CardsViewLayout = ({
                               <Text c="dimmed" size="sm">
                                 Tipo de pedido:
                               </Text>
-                              <Text size="sm" tt='uppercase'>
+                              <Text size="sm" tt="uppercase">
                                 {item?.serviceType === "delivery"
                                   ? "A domicilio"
                                   : item?.serviceType === "onSite"
@@ -409,12 +413,25 @@ const CardsViewLayout = ({
                           </SimpleGrid>
                         </ScrollArea>
 
-                        <Group mt="xs">
+                        <Flex mt="xs" justify="space-between" gap={5} align="center" w="100%">
+                          <Button
+                            loading={cancelOrderStatus}
+                            color={colors.main_app_color}
+                            variant="outline"
+                            onClick={() => {
+                              openKitchenCancel()
+                              setOrderId(item.id)
+                            }}
+                            radius="md"
+                            size={isSmallScreen ? "xs" : "sm"}>
+                            Cancelar
+                          </Button>
                           <Button
                             //disabled={isDisabled}
-                            color={colors.main_app_color}
-                            radius="md"
                             style={{ flex: 1 }}
+                            color={colors.main_app_color}
+                            loading={updatingOrderStatus}
+                            radius="md"
                             onClick={() => {
                               openKitchen()
                               setOrderId(item.id)
@@ -426,7 +443,7 @@ const CardsViewLayout = ({
                             )} */}
                             Marcar como preparado
                           </Button>
-                        </Group>
+                        </Flex>
                       </Stack>
                     </Paper>
                   </Grid.Col>
@@ -454,6 +471,14 @@ const CardsViewLayout = ({
                 title="¿Estás seguro de realizar esta acción?"
                 description="El pedido ya no se mostrará en esta pantalla"
                 onConfirm={() => dispatch(updateOrderStatus(orderId))}
+              />
+
+              <ConfirmationModal
+                opened={openedKitchenCancel}
+                close={closeKitchenCancel}
+                title="¿Estás seguro de cancelar este pedido?"
+                description="El pedido ya no se mostrará en esta pantalla"
+                onConfirm={() => dispatch(cancelOrder(orderId))}
               />
             </Grid>
           )

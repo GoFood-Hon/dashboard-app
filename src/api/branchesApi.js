@@ -1,4 +1,5 @@
 import axiosClient from "./axiosClient"
+
 const branchesApi = {
   getAllBranches: () => {
     const url = "api/v1/sucursal/"

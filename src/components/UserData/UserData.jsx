@@ -1,9 +1,10 @@
 import { Avatar, Divider, Flex, Loader, Stack, Title, Text } from "@mantine/core"
-import { IconHelmet, IconUser, IconMail, IconPhone, IconId, IconMapPin } from "@tabler/icons-react"
+import { IconMail, IconPhone, IconId, IconMapPin } from "@tabler/icons-react"
 import { colors } from "../../theme/colors"
 
 const UserData = ({
   title,
+  icon,
   photo,
   name,
   email,
@@ -13,12 +14,13 @@ const UserData = ({
   isSmallScreen,
   updatingDriver,
   orderDetails,
-  tableNumber
+  tableNumberAndText,
+  noIcons
 }) => {
   return (
     <Stack h="100%" gap="xs">
       <Flex align="center" gap={5}>
-        {title.includes("repartidor") ? <IconHelmet size="1.1rem" /> : <IconUser size="1.1rem" />}
+        {icon}
         <Title order={isSmallScreen ? 6 : 5}>{title}</Title>
       </Flex>
       <Divider my={2} />
@@ -40,33 +42,33 @@ const UserData = ({
             </Text>
           </Flex>
           <Flex align="center" gap="xs" ml={5}>
-            <IconMail size="1.1rem" />
+            {noIcons ?? <IconMail size="1.1rem" />}
             <Text c="dimmed" size={isSmallScreen ? "xs" : "sm"}>
               {email}
             </Text>
           </Flex>
           <Flex align="center" gap="xs" ml={5}>
-            <IconPhone size="1.1rem" />
+            {noIcons ?? <IconPhone size="1.1rem" />}
             <Text c="dimmed" size={isSmallScreen ? "xs" : "sm"}>
               {phoneNumber}
             </Text>
           </Flex>
           <Flex align="center" gap="xs" ml={5}>
-            {bikeId ? <IconId size="1.1rem" style={{ flexShrink: 0 }} /> : <IconMapPin size="1.1rem" style={{ flexShrink: 0 }} />}
+            {bikeId ? noIcons ?? <IconId size="1.1rem" style={{ flexShrink: 0 }} /> : noIcons ?? <IconMapPin size="1.1rem" style={{ flexShrink: 0 }} />}
             <Text c="dimmed" size={isSmallScreen ? "xs" : "sm"} style={{ wordBreak: "break-word" }}>
               {bikeId
                 ? bikeId
                 : orderDetails?.serviceType === "delivery"
-                  ? address || "No se proporcionó"
+                  ? address
                   : "La dirección no es requerida"}
             </Text>
           </Flex>
         </>
       ) : (
         <Flex direction="column" justify="center" align="center" style={{ flexGrow: 1 }} gap="sm">
-          {tableNumber ? (
+          {tableNumberAndText ? (
             <Text size={isSmallScreen ? "xs" : "sm"} c="dimmed">
-              {tableNumber ? `Pedido para la mesa #${tableNumber}` : "No se ha asignado una mesa"}
+              {tableNumberAndText ? tableNumberAndText : "No se ha asignado una mesa"}
             </Text>
           ) : updatingDriver ? (
             <Loader color={colors.main_app_color} />

@@ -1,5 +1,6 @@
 import { IconListDetails } from "@tabler/icons-react"
 import { IconCalendarDue } from "@tabler/icons-react"
+import { IconStar } from "@tabler/icons-react"
 import { IconHistory } from "@tabler/icons-react"
 import { IconAward } from "@tabler/icons-react"
 import { IconAdjustments } from "@tabler/icons-react"
@@ -193,6 +194,11 @@ export const NAVIGATION_ROUTES_RES_ADMIN = {
     EditLoyalty: {
       path: "/lista-de-colecciones/:collectionId"
     }
+  },
+  Reviews: {
+    label: "Reseñas",
+    path: "/reseñas",
+    icon: "star"
   }
 }
 
@@ -245,6 +251,7 @@ export const NAVIGATION_ROUTES_RES_ADMIN_TWO = [
     ]
   },
   { label: "Sucursales", icon: IconBuildingStore, link: "/sucursales" },
+  { label: "Reseñas", icon: IconStar, link: "/reseñas" },
   { label: "Usuarios", icon: IconUsers, link: "/usuarios" },
   {
     label: "Configuraciones",
@@ -353,6 +360,11 @@ export const NAVIGATION_ROUTES_BRANCH_ADMIN = {
     label: "Contraseña",
     icon: "eye",
     path: "/contraseña"
+  },
+  Reviews: {
+    label: "Reseñas",
+    icon: "star",
+    path: "/reseñas"
   }
 }
 
@@ -389,6 +401,7 @@ export const NAVIGATION_ROUTES_BRANCH_ADMIN_TWO = [
     ]
   },
   { label: "Reservaciones", icon: IconCalendarDue, link: "/lista-de-reservaciones" },
+  { label: "Reseñas", icon: IconStar, link: "/reseñas" },
   {
     label: "Cuenta",
     icon: IconSettings,

@@ -1,15 +1,8 @@
-import React, { useState } from "react"
-import { Accordion, Button, Flex, Paper } from "@mantine/core"
 import { useNavigate } from "react-router-dom"
 import { useForm } from "react-hook-form"
 import GeneralInformationForm from "./GeneralInformationForm"
-import SucursalSettings from "./SucursalSettings"
 import { NAVIGATION_ROUTES_RES_ADMIN } from "../../routes"
-import userApi from "../../api/userApi"
-import BackButton from "../Dishes/components/BackButton"
 import { USER_ROLES } from "../../utils/constants"
-import { showNotification } from "@mantine/notifications"
-import { colors } from "../../theme/colors"
 import FormLayout from "../../components/Form/FormLayout"
 import { useDispatch } from "react-redux"
 import { createUser } from "../../store/features/userSlice"
@@ -28,8 +21,6 @@ export default function NewUser() {
     watch,
     formState: { errors }
   } = useForm()
-
-  const [isDataCleared, setIsDataCleared] = useState(false)
 
   const onSubmit = async (data) => {
     const formData = {
@@ -68,15 +59,7 @@ export default function NewUser() {
       title: "Información general",
       requirement: "Obligatorio",
       form: (
-        <GeneralInformationForm
-          register={register}
-          errors={errors}
-          setValue={setValue}
-          control={control}
-          isDataCleared={isDataCleared}
-          watch={watch}
-          newUser
-        />
+        <GeneralInformationForm register={register} errors={errors} setValue={setValue} control={control} watch={watch} newUser />
       )
     }
   ]

@@ -35,9 +35,7 @@ import {
 } from "../../utils/constants"
 import { DishOrderDetailCard } from "./DishOrderDetailCard"
 import { useSelector } from "react-redux"
-import { IconCircleCheck } from "@tabler/icons-react"
 import { colors } from "../../theme/colors"
-import { IconCancel } from "@tabler/icons-react"
 import BackButton from "../Dishes/components/BackButton"
 import { useDispatch } from "react-redux"
 import {
@@ -50,16 +48,26 @@ import {
   fetchDrivers
 } from "../../store/features/ordersSlice"
 import { useDisclosure, useMediaQuery } from "@mantine/hooks"
-import { IconShoppingCart } from "@tabler/icons-react"
-import { IconReceipt } from "@tabler/icons-react"
-import { IconBrandRedux } from "@tabler/icons-react"
 import ConfirmationModal from "../ConfirmationModal"
-import { IconMotorbike } from "@tabler/icons-react"
-import { IconCar } from "@tabler/icons-react"
-import { IconToolsKitchen3 } from "@tabler/icons-react"
 import ModalLayout from "./ModalLayout"
-import { IconStopwatch } from "@tabler/icons-react"
 import UserData from "../../components/UserData/UserData"
+import {
+  IconCircleCheck,
+  IconCancel,
+  IconShoppingCart,
+  IconReceipt,
+  IconBrandRedux,
+  IconMotorbike,
+  IconCar,
+  IconToolsKitchen3,
+  IconStopwatch,
+  IconBox,
+  IconHelmet,
+  IconUser,
+  IconBorderCorners
+} from "@tabler/icons-react"
+import { IconTable } from "@tabler/icons-react"
+import dayjs from "dayjs"
 
 export const OrderDetails = () => {
   const { orderId } = useParams()
@@ -211,16 +219,34 @@ export const OrderDetails = () => {
               <Grid grow gutter="xs">
                 <Grid.Col span={{ base: 12, md: 6 }}>
                   <Paper withBorder radius="md" h={SECONDARY_COL_HEIGHT} p="md">
-                    <UserData
-                      title="Datos del cliente"
-                      photo={orderDetails?.Order?.User?.photo}
-                      name={orderDetails?.Order?.User?.name}
-                      email={orderDetails?.Order?.User?.email}
-                      phoneNumber={orderDetails?.Order?.User?.phoneNumber}
-                      address={orderDetails?.userAddress?.address}
-                      isSmallScreen={isSmallScreen}
-                      orderDetails={orderDetails}
-                    />
+                    {user?.role !== "kitchen" ? (
+                      <UserData
+                        title="Datos del cliente"
+                        icon={<IconUser size="1.1rem" />}
+                        photo={orderDetails?.Order?.User?.photo}
+                        name={orderDetails?.Order?.User?.name}
+                        email={orderDetails?.Order?.User?.email}
+                        phoneNumber={orderDetails?.Order?.User?.phoneNumber}
+                        address={orderDetails?.userAddress?.address}
+                        isSmallScreen={isSmallScreen}
+                        orderDetails={orderDetails}
+                      />
+                    ) : (
+                      <UserData
+                        title="Datos del pedido"
+                        icon={<IconBorderCorners size="1.1rem" />}
+                        photo={orderDetails?.Order?.User?.photo}
+                        name={orderDetails?.Order?.User?.name}
+                        email={orderId}
+                        phoneNumber={dayjs(orderDetails?.Order?.User?.created_at)
+                          .tz("America/Tegucigalpa")
+                          .format("D [de] MMMM [del] YYYY [a las] h:mm A")}
+                        address={orderDetails?.userAddress?.address}
+                        isSmallScreen={isSmallScreen}
+                        orderDetails={orderDetails}
+                        noIcons
+                      />
+                    )}
                   </Paper>
                 </Grid.Col>
                 <Grid.Col span={{ base: 12, md: 6 }}>
@@ -228,6 +254,7 @@ export const OrderDetails = () => {
                     {user?.role !== "kitchen" ? (
                       <UserData
                         title="Datos del repartidor"
+                        icon={<IconHelmet size="1.1rem" />}
                         photo={orderDetails?.driver?.AdminUser?.images?.[0]?.location}
                         name={orderDetails?.driver?.AdminUser?.name}
                         email={orderDetails?.driver?.AdminUser?.email}
@@ -240,100 +267,107 @@ export const OrderDetails = () => {
                     ) : (
                       <UserData
                         title="Método de servicios"
-                        tableNumber={orderDetails?.tableNumber}
+                        icon={<IconTable size="1.1rem" />}
+                        tableNumberAndText={
+                          orderDetails?.serviceType === "delivery"
+                            ? "Pedido a domicilio"
+                            : orderDetails?.serviceType === "onSite"
+                              ? orderDetails?.tableNumberAndText
+                              : "Pedido para llevar"
+                        }
                       />
                     )}
                   </Paper>
                 </Grid.Col>
                 <Grid.Col span={{ base: 12, md: 6 }}>
                   <Paper withBorder radius="md" h={SECONDARY_COL_HEIGHT} p="md">
-                    <Stack gap="xs">
-                      <Flex align="center" gap={5}>
-                        <IconReceipt size="1.1rem" />
-                        <Title order={isSmallScreen ? 6 : 5}>Datos de facturación</Title>
-                      </Flex>
-                      <Divider />
-                      <Grid>
-                        <Grid.Col span={6}>
-                          <Flex direction="column">
-                            <Stack gap="xs">
-                              <Text size={isSmallScreen ? "xs" : "sm"}>Subtotal</Text>
-                              <Text size={isSmallScreen ? "xs" : "sm"}>Descuento</Text>
-                              <Text size={isSmallScreen ? "xs" : "sm"}>Precio de envío</Text>
-                              <Text size={isSmallScreen ? "xs" : "sm"}>ISV ( 15% )</Text>
-                              <Space />
-                              <Text size={isSmallScreen ? "xs" : "sm"}>Total</Text>
-                            </Stack>
-                          </Flex>
-                        </Grid.Col>
-                        <Grid.Col span={6}>
-                          <Flex direction="column">
-                            <Stack gap="xs">
-                              <Text size={isSmallScreen ? "xs" : "sm"} c="dimmed">
-                                {getFormattedHNL(orderDetails?.subtotal)}
-                              </Text>
-                              <Text size={isSmallScreen ? "xs" : "sm"} c="dimmed">
-                                {getFormattedHNL(orderDetails?.discount)}
-                              </Text>
-                              <Text size={isSmallScreen ? "xs" : "sm"} c="dimmed">
-                                {orderDetails?.shippingPrice}
-                              </Text>
-                              <Text size={isSmallScreen ? "xs" : "sm"} c="dimmed">
-                                {getFormattedHNL(orderDetails?.isv)}
-                              </Text>
-                              <Divider />
-                              <Text size={isSmallScreen ? "xs" : "sm"} c="dimmed">
-                                {getFormattedHNL(orderDetails?.total)}
-                              </Text>
-                            </Stack>
-                          </Flex>
-                        </Grid.Col>
-                      </Grid>
-                    </Stack>
+                    {user?.role !== "kitchen" ? (
+                      <Stack gap="xs">
+                        <Flex align="center" gap={5}>
+                          <IconReceipt size="1.1rem" />
+                          <Title order={isSmallScreen ? 6 : 5}>Datos de facturación</Title>
+                        </Flex>
+                        <Divider />
+                        <Grid>
+                          <Grid.Col span={6}>
+                            <Flex direction="column">
+                              <Stack gap="xs">
+                                <Text size={isSmallScreen ? "xs" : "sm"}>Subtotal</Text>
+                                <Text size={isSmallScreen ? "xs" : "sm"}>Descuento</Text>
+                                <Text size={isSmallScreen ? "xs" : "sm"}>Precio de envío</Text>
+                                <Text size={isSmallScreen ? "xs" : "sm"}>ISV ( 15% )</Text>
+                                <Space />
+                                <Text size={isSmallScreen ? "xs" : "sm"}>Total</Text>
+                              </Stack>
+                            </Flex>
+                          </Grid.Col>
+                          <Grid.Col span={6}>
+                            <Flex direction="column">
+                              <Stack gap="xs">
+                                <Text size={isSmallScreen ? "xs" : "sm"} c="dimmed">
+                                  {getFormattedHNL(orderDetails?.subtotal)}
+                                </Text>
+                                <Text size={isSmallScreen ? "xs" : "sm"} c="dimmed">
+                                  {getFormattedHNL(orderDetails?.discount)}
+                                </Text>
+                                <Text size={isSmallScreen ? "xs" : "sm"} c="dimmed">
+                                  {orderDetails?.shippingPrice}
+                                </Text>
+                                <Text size={isSmallScreen ? "xs" : "sm"} c="dimmed">
+                                  {getFormattedHNL(orderDetails?.isv)}
+                                </Text>
+                                <Divider />
+                                <Text size={isSmallScreen ? "xs" : "sm"} c="dimmed">
+                                  {getFormattedHNL(orderDetails?.total)}
+                                </Text>
+                              </Stack>
+                            </Flex>
+                          </Grid.Col>
+                        </Grid>
+                      </Stack>
+                    ) : (
+                      <UserData
+                        title="Estado del pedido"
+                        icon={<IconBox size="1.1rem" />}
+                        tableNumberAndText={
+                          orderStates.delivery.find((state) => state.value === orderDetails?.status)?.label ?? "Sin confirmar"
+                        }
+                      />
+                    )}
                   </Paper>
                 </Grid.Col>
                 <Grid.Col span={{ base: 12, md: 6 }}>
                   <Paper withBorder radius="md" h={SECONDARY_COL_HEIGHT} p="md">
-                    <Stack gap="xs" h="100%">
-                      <Flex align="center" gap={5}>
-                        <IconBrandRedux size="1.1rem" />
-                        <Title order={isSmallScreen ? 6 : 5}>Acciones del pedido</Title>
-                      </Flex>
-                      <Divider />
-                      <Flex direction="column" justify="center" align="center" style={{ flexGrow: 1 }} gap="xs">
-                        <>
-                          {orderDetails?.status === orderStatusValues.onHold ? (
-                            user.role === APP_ROLES.branchAdmin ||
-                            user.role === APP_ROLES.cashierUser ||
-                            user.role === APP_ROLES.restaurantAdmin ? (
-                              <>
-                                <Button
-                                  fullWidth
-                                  loading={updatingOrderStatus}
-                                  color={colors.main_app_color}
-                                  onClick={() => dispatch(confirmOrder(orderId))}
-                                  radius="md"
-                                  size={isSmallScreen ? "xs" : "sm"}>
-                                  Confirmar pedido
-                                </Button>
-                                <Button
-                                  fullWidth
-                                  loading={cancelOrderStatus}
-                                  color={colors.main_app_color}
-                                  variant="outline"
-                                  onClick={() => dispatch(cancelOrder(orderId))}
-                                  radius="md"
-                                  size={isSmallScreen ? "xs" : "sm"}>
-                                  Cancelar pedido
-                                </Button>
-                              </>
-                            ) : (
-                              <Text size={isSmallScreen ? "xs" : "sm"} c="dimmed">
-                                El pedido ahora está en cocina
-                              </Text>
-                            )
-                          ) : orderDetails?.status === orderStatusValues.confirmed ? (
-                            user.role === APP_ROLES.kitchenUser ? (
+                    {user?.role !== "kitchen" ? (
+                      <Stack gap="xs" h="100%">
+                        <Flex align="center" gap={5}>
+                          <IconBrandRedux size="1.1rem" />
+                          <Title order={isSmallScreen ? 6 : 5}>Acciones del pedido</Title>
+                        </Flex>
+                        <Divider />
+                        <Flex direction="column" justify="center" align="center" style={{ flexGrow: 1 }} gap="xs">
+                          <>
+                            {orderDetails?.status === orderStatusValues.onHold ? (
+                              user.role === APP_ROLES.branchAdmin ||
+                              user.role === APP_ROLES.cashierUser ||
+                              user.role === APP_ROLES.restaurantAdmin ? (
+                                <>
+                                  <Button
+                                    fullWidth
+                                    loading={updatingOrderStatus}
+                                    color={colors.main_app_color}
+                                    onClick={() => dispatch(confirmOrder(orderId))}
+                                    radius="md"
+                                    size={isSmallScreen ? "xs" : "sm"}>
+                                    Confirmar pedido
+                                  </Button>
+                                </>
+                              ) : (
+                                <Text size={isSmallScreen ? "xs" : "sm"} c="dimmed">
+                                  El pedido ahora está en cocina
+                                </Text>
+                              )
+                            ) : orderDetails?.status === orderStatusValues.confirmed ? (
                               <Button
                                 fullWidth
                                 loading={updatingOrderStatus}
@@ -343,55 +377,77 @@ export const OrderDetails = () => {
                                 size={isSmallScreen ? "xs" : "sm"}>
                                 Marcar como preparado
                               </Button>
-                            ) : (
-                              <Text size={isSmallScreen ? "xs" : "sm"} c="dimmed">
-                                El pedido ahora está en cocina
-                              </Text>
-                            )
-                          ) : orderDetails?.serviceType === orderDeliveryTypes.delivery &&
-                            orderDetails?.status === orderStatusValues.ready ? (
-                            user.role === APP_ROLES.restaurantAdmin ||
-                            user.role === APP_ROLES.branchAdmin ||
-                            user.role === APP_ROLES.cashierUser ? (
-                              <Button
-                                fullWidth
-                                onClick={() => {
-                                  open()
-                                  dispatch(fetchDrivers(orderDetails?.sucursalId))
-                                }}
-                                color={colors.main_app_color}
-                                radius="md"
-                                size={isSmallScreen ? "xs" : "sm"}>
-                                Asignar repartidor
-                              </Button>
-                            ) : (
-                              <Text size={isSmallScreen ? "xs" : "sm"} c="dimmed">
-                                El pedido lo tiene el administrador
-                              </Text>
-                            )
-                          ) : orderDetails?.status === orderStatusValues.readyForCustomer ? (
-                            user.role === APP_ROLES.restaurantAdmin || user.role === APP_ROLES.branchAdmin ? (
-                              <Button
-                                fullWidth
-                                loading={updatingOrderStatus}
-                                color={colors.main_app_color}
-                                onClick={() => orderId && dispatch(markOrderDelivered(orderId))}
-                                radius="md">
-                                Marcar como entregado
-                              </Button>
+                            ) : orderDetails?.serviceType === orderDeliveryTypes.delivery &&
+                              orderDetails?.status === orderStatusValues.ready ? (
+                              user.role === APP_ROLES.restaurantAdmin ||
+                              user.role === APP_ROLES.branchAdmin ||
+                              user.role === APP_ROLES.cashierUser ? (
+                                <Button
+                                  fullWidth
+                                  onClick={() => {
+                                    open()
+                                    dispatch(fetchDrivers(orderDetails?.sucursalId))
+                                  }}
+                                  color={colors.main_app_color}
+                                  radius="md"
+                                  size={isSmallScreen ? "xs" : "sm"}>
+                                  Asignar repartidor
+                                </Button>
+                              ) : (
+                                <Text size={isSmallScreen ? "xs" : "sm"} c="dimmed">
+                                  El pedido lo tiene el administrador
+                                </Text>
+                              )
+                            ) : orderDetails?.status === orderStatusValues.readyForCustomer ? (
+                              user.role === APP_ROLES.restaurantAdmin || user.role === APP_ROLES.branchAdmin ? (
+                                <Button
+                                  fullWidth
+                                  loading={updatingOrderStatus}
+                                  color={colors.main_app_color}
+                                  onClick={() => orderId && dispatch(markOrderDelivered(orderId))}
+                                  radius="md">
+                                  Marcar como entregado
+                                </Button>
+                              ) : (
+                                <Text size={isSmallScreen ? "xs" : "sm"} c="dimmed">
+                                  No hay acciones pendientes
+                                </Text>
+                              )
                             ) : (
                               <Text size={isSmallScreen ? "xs" : "sm"} c="dimmed">
                                 No hay acciones pendientes
                               </Text>
-                            )
-                          ) : (
-                            <Text size={isSmallScreen ? "xs" : "sm"} c="dimmed">
-                              No hay acciones pendientes
-                            </Text>
-                          )}
-                        </>
-                      </Flex>
-                    </Stack>
+                            )}
+
+                            {orderDetails?.status !== orderStatusValues.delivered && (
+                              <Button
+                                fullWidth
+                                loading={cancelOrderStatus}
+                                color={colors.main_app_color}
+                                variant="outline"
+                                onClick={() => dispatch(cancelOrder(orderId))}
+                                radius="md"
+                                size={isSmallScreen ? "xs" : "sm"}>
+                                Cancelar pedido
+                              </Button>
+                            )}
+                          </>
+                        </Flex>
+                      </Stack>
+                    ) : (
+                      <UserData
+                        title="Tiempo de preparación"
+                        icon={<IconStopwatch size="1.1rem" />}
+                        tableNumberAndText={
+                          orderDetails?.finishedCookingTimestamp === null
+                            ? "El pedido no ha sido preparado"
+                            : calculateTimeDifference(
+                                orderDetails?.sentToKitchenTimestamp,
+                                orderDetails?.finishedCookingTimestamp
+                              )
+                        }
+                      />
+                    )}
                   </Paper>
                 </Grid.Col>
               </Grid>

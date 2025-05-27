@@ -9,18 +9,7 @@ import { useDispatch } from "react-redux"
 import { useSelector } from "react-redux"
 import { fetchNoPaginatedBranches } from "../../store/features/branchesSlice"
 
-export default function GeneralInformationForm({
-  register,
-  errors,
-  setValue,
-  isDataCleared,
-  control,
-  image,
-  data,
-  newUser,
-  watch,
-  edit
-}) {
+export default function GeneralInformationForm({ register, errors, setValue, control, image, newUser, watch, edit }) {
   const dispatch = useDispatch()
   const [images, setImages] = useState([])
   const [fileInformation, setFileInformation] = useState(null)
@@ -41,10 +30,6 @@ export default function GeneralInformationForm({
       setImages(acceptedFiles)
       setValue("files", acceptedFiles)
     }
-  }
-  const deleteImage = () => {
-    setFileInformation(null)
-    setImages([])
   }
 
   const handleSucursalIds = (selected) => {
@@ -96,12 +81,6 @@ export default function GeneralInformationForm({
   useEffect(() => {
     dispatch(fetchNoPaginatedBranches({ restaurantId: user.Restaurant.id }))
   }, [])
-
-  useEffect(() => {
-    if (isDataCleared) {
-      deleteImage()
-    }
-  }, [isDataCleared])
 
   const previews = images.map((file, index) => {
     const imageUrl = URL.createObjectURL(file)
@@ -182,7 +161,9 @@ export default function GeneralInformationForm({
 
             <Grid.Col span={{ base: 12 }}>
               <MultiSelect
-                label={(role || selectedRole) === "driver" ? "Sucursales asignadas (Obligatorio)" : 'Sucursal asignada (Obligatorio)'}
+                label={
+                  (role || selectedRole) === "driver" ? "Sucursales asignadas (Obligatorio)" : "Sucursal asignada (Obligatorio)"
+                }
                 data={branchesList?.map((item) => ({
                   value: item.id,
                   label: item.name

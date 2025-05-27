@@ -12,6 +12,7 @@ import { IconMoneybag } from "@tabler/icons-react"
 import { IconTicket } from "@tabler/icons-react"
 import { IconCube } from "@tabler/icons-react"
 import { IconUsersGroup } from "@tabler/icons-react"
+import { statistictsExample } from "../../utils/constants"
 
 export const DashboardScreen = () => {
   const [dailySales, setDailySales] = useState(0)
@@ -72,30 +73,53 @@ export const DashboardScreen = () => {
   }
 
   const data = [
-    { title: "Ventas", icon: IconCoin, value: getFormattedHNL(dailySales), diff: 34, text: "Ventas diarias totales" },
-    { title: "Pedidos", icon: IconCube, value: dailyOrders, diff: -13, text: "Total pedidos diarios" },
-    { title: "Tickets", icon: IconTicket, value: getFormattedHNL(dailyTicket), diff: 18, text: "Tickets según venta diaria" },
-    { title: "Usuarios", icon: IconUsersGroup, value: totalClients, diff: -30, text: "Total nuevos usuarios" }
+    {
+      title: "Ventas",
+      icon: IconCoin,
+      value: getFormattedHNL(statistictsExample.sells.amount),
+      diff: statistictsExample.sells.percentage,
+      text: "Ventas diarias totales"
+    },
+    {
+      title: "Pedidos",
+      icon: IconCube,
+      value: statistictsExample.orders.quantity,
+      diff: statistictsExample.orders.percentage,
+      text: "Total de pedidos diarios"
+    },
+    {
+      title: "Tickets",
+      icon: IconTicket,
+      value: statistictsExample.tickets.quantity,
+      diff: statistictsExample.tickets.percentage,
+      text: "Tickets según venta diaria"
+    },
+    {
+      title: "Usuarios",
+      icon: IconUsersGroup,
+      value: statistictsExample.users.quantity,
+      diff: statistictsExample.users.percentage,
+      text: "Total nuevos usuarios"
+    }
   ]
 
   const stats = data.map((stat) => {
     const DiffIcon = stat.diff > 0 ? IconArrowUpRight : IconArrowDownRight
 
     return (
-      <Stack gap="sm">
+      <Stack gap="sm" key={stat.title}>
         <Paper withBorder p="md" radius="md" key={stat.title}>
           <Group justify="space-between">
             <Text size="xs" c="dimmed" className={classes.title}>
               {stat.title}
             </Text>
-            {/* Renderizar el ícono como un componente JSX */}
             <stat.icon className={classes.icon} size="1.4rem" stroke={1.5} />
           </Group>
 
-          <Group align="flex-end" gap="xs" mt={25}>
+          <Group align="center" gap="xs" mt={25}>
             <Text className={classes.value}>{stat.value}</Text>
-            <Text c={stat.diff > 0 ? "teal" : "red"} fz="sm" fw={500} className={classes.diff}>
-              <span>{stat.diff}%</span>
+            <Text c={stat.diff > 0 ? "teal" : "red"} fw={500} className={classes.diff}>
+              {stat.diff}%
               <DiffIcon size="1rem" stroke={1.5} />
             </Text>
           </Group>
@@ -109,10 +133,8 @@ export const DashboardScreen = () => {
   })
 
   return (
-    <div>
-      <SimpleGrid spacing="xs" cols={{ base: 1, xs: 2, md: 4 }}>
-        {stats}
-      </SimpleGrid>
-    </div>
+    <SimpleGrid spacing="xs" cols={{ base: 1, xs: 2, md: 4 }}>
+      {stats}
+    </SimpleGrid>
   )
 }
