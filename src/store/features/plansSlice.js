@@ -154,6 +154,9 @@ const plansSlice = createSlice({
     },
     setSearchData: (state, action) => {
       state.searchData = action.payload
+    },
+    setCurrentPage: (state, action) => {
+      state.currentPage = action.payload
     }
   },
   extraReducers: (builder) => {
@@ -248,5 +251,5 @@ const plansSlice = createSlice({
   }
 })
 
-export const { clearSelectedPlans, setSearchData } = plansSlice.actions
+export const { clearSelectedPlans, setSearchData, setCurrentPage } = plansSlice.actions
 export default plansSlice.reducer

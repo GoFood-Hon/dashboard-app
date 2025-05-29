@@ -54,12 +54,12 @@ export default function RestaurantsScreen() {
 
   return (
     <CardsViewLayout
-      title="Restaurantes"
+      title="Comercios"
       page={page}
       limit={limit}
       totalPageCount={totalPageCount}
       totalElements={totalRestaurants}
-      elementsName="restaurantes"
+      elementsName="comercios"
       loadingElements={loadingRestaurants}
       elementsList={restaurantsList}
       onNewItemClick={handleNewItem}

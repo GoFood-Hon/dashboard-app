@@ -86,7 +86,7 @@ export const EditGeneralInformationForm = ({ register, errors, setValue, feature
   return (
     <Grid>
       <Grid.Col span={{ base: 12 }}>
-        <Paper withBorder radius="md" className="w-full h-full items-center justify-center flex  rounded-2xl p-4">
+        <Paper withBorder radius="md" p="md">
           <div className="flex flex-col w-full">
             <Grid>
               <Grid.Col span={{ base: 12, md: 12 }}>
@@ -99,14 +99,20 @@ export const EditGeneralInformationForm = ({ register, errors, setValue, feature
                 <InputField label="Impuestos" name="tax" register={register} errors={errors} />
               </Grid.Col>
               <Grid.Col span={{ base: 12, md: 6 }}>
-                <Select label="Tipo de pago" data={["MENSUAL", "ANUAL"]} value={paymentType} onChange={onChangePaymentType} />
+                <Select
+                  label="Tipo de pago"
+                  data={["MENSUAL", "ANUAL"]}
+                  allowDeselect={false}
+                  value={paymentType}
+                  onChange={onChangePaymentType}
+                />
               </Grid.Col>
               <Grid.Col span={{ base: 12, md: 6 }}>
                 <Select label="Moneda" data={["HNL"]} allowDeselect={false} value={currency} onChange={onChangeCurrency} />
               </Grid.Col>
               <Grid.Col span={{ sm: 12 }}>
                 <MultiSelect
-                  label="Características adicionales"
+                  label="Características disponibles"
                   value={dishesAdded}
                   onChange={onChangeDishesAdded}
                   data={[{ group: "Features", items: featuresList.map((item) => ({ value: item.id, label: item.name })) }]}

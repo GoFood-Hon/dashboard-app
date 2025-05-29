@@ -280,7 +280,7 @@ export default function MenuTable({ items, screenType, totalItems, currentPage, 
         label: "Tipo de servicio",
         accessor: "serviceType",
         render: (service) =>
-          service === "pickup" ? "Para llevar" : service === "onSite" ? "Comer en restaurante" : "A domicilio"
+          service === "pickup" ? "Para llevar" : service === "onSite" ? "Comer en sitio" : "A domicilio"
       },
       { label: "Total", accessor: "total", render: (total) => getFormattedHNL(total) },
       {

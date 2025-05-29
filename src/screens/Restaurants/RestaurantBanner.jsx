@@ -60,7 +60,7 @@ export const RestaurantBanner = ({ register, control, errors, setValue, isDataCl
                   Seleccione una imagen
                 </Text>
                 <Text className={`${image ? "hidden" : ""} text-center leading-10`} size="sm" c="dimmed" inline mt={7}>
-                  Haga clic o arrastre el banner del restaurante
+                  Haga clic o arrastre el banner del comercio
                 </Text>
                 {errors.files && (
                   <Text c={colors.main_app_color} size="xs" ta="center">

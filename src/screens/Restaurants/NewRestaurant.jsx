@@ -9,9 +9,8 @@ import { useDispatch } from "react-redux"
 import { useSelector } from "react-redux"
 import { RestaurantBanner } from "./RestaurantBanner"
 import FormLayout from "../../components/Form/FormLayout"
-import { yupResolver } from "@hookform/resolvers/yup"
-import * as yup from "yup"
-import { restaurantValidation } from "../../utils/inputRules"
+import { restaurantSchema } from "../../utils/validationSchemas"
+import { showNotification } from "@mantine/notifications"
 
 export const NewRestaurant = () => {
   const navigate = useNavigate()
@@ -25,53 +24,93 @@ export const NewRestaurant = () => {
     control,
     watch,
     formState: { errors }
-  } = useForm()
+  } = useForm({
+    defaultValues: {
+      bannerDishes: [],
+      files: [],
+      cuisineTypeId: ""
+    }
+  })
 
   const onSubmit = async (data) => {
-    const formData = new FormData()
+    const result = restaurantSchema.safeParse(data)
 
-    formData.append("name", data.name)
-    formData.append("email", data.email)
-    formData.append("phoneNumber", data.phoneNumber.startsWith("+504") ? data.phoneNumber : `+504${data.phoneNumber}`)
-    formData.append("socialReason", data.socialReason)
-    formData.append("rtn", data.rtn)
-    formData.append("billingAddress", data.billingAddress)
-    formData.append("cai", data.cai)
-    formData.append("shippingFree", data.shippingFree ?? true)
-    formData.append("cuisineTypeId", data.cuisineTypeId ?? "")
-    formData.append("clinpaysCommerceToken", data.clinpaysCommerceToken ?? null)
-    if (data.pricePerChair) {
-      formData.append("pricePerChair", data.pricePerChair)
-    }
-    if (data.hoursBeforeCancellation) {
-      formData.append("hoursBeforeCancellation", data.hoursBeforeCancellation)
-    }
-    if (data.hoursBeforeBooking) {
-      formData.append("hoursBeforeBooking", data.hoursBeforeBooking)
-    }
-    if (data.shippingFree !== null) {
-      formData.append("shippingPrice", convertToDecimal(data.shippingPrice))
-    }
-
-    const formDataObject = {}
-    formData.forEach((value, key) => {
-      formDataObject[key] = value
-    })
-
-    const formDataImage = new FormData()
-    formDataImage.append("files", data.files[0])
-
-    const formDataBanner = new FormData()
-    formDataBanner.append("files", data.bannerDishes[0])
-
-    dispatch(createRestaurant({ params: formData, imageParams: formDataImage, formDataBanner }))
-      .unwrap()
-      .then(() => {
-        navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Restaurants.path)
+    if (!result.success) {
+      const firstError = result.error.errors?.[0]
+      const errorMessage = firstError?.message || "Error de validación"
+      showNotification({
+        title: "Error",
+        message: errorMessage,
+        color: "red"
       })
-      .catch((error) => {
-        console.error("Error creating restaurant:", error)
+      return
+    }
+
+    const validatedData = result.data
+
+    try {
+      const formData = new FormData()
+      formData.append("name", validatedData.name)
+      formData.append("email", validatedData.email)
+      formData.append(
+        "phoneNumber",
+        validatedData.phoneNumber.startsWith("+504") ? validatedData.phoneNumber : `+504${validatedData.phoneNumber}`
+      )
+      formData.append("socialReason", validatedData.socialReason)
+      formData.append("rtn", validatedData.rtn)
+      formData.append("billingAddress", validatedData.billingAddress)
+      formData.append("cai", validatedData.cai)
+      formData.append("shippingFree", validatedData.shippingFree ?? true)
+      formData.append("cuisineTypeId", validatedData.cuisineTypeId ?? "")
+      formData.append("clinpaysCommerceToken", validatedData.clinpaysCommerceToken ?? "")
+
+      if (validatedData.pricePerChair) {
+        formData.append("pricePerChair", validatedData.pricePerChair)
+      }
+      if (validatedData.hoursBeforeCancellation) {
+        formData.append("hoursBeforeCancellation", validatedData.hoursBeforeCancellation)
+      }
+      if (validatedData.hoursBeforeBooking) {
+        formData.append("hoursBeforeBooking", validatedData.hoursBeforeBooking)
+      }
+
+      if (validatedData.shippingFree !== true && validatedData.shippingPrice) {
+        formData.append("shippingPrice", convertToDecimal(validatedData.shippingPrice))
+      }
+
+      const formDataImage = new FormData()
+      formDataImage.append("files", validatedData.files[0] || [])
+
+      const formDataBanner = new FormData()
+      formDataBanner.append("files", validatedData.bannerDishes[0] || [])
+
+      dispatch(
+        createRestaurant({
+          params: formData,
+          imageParams: formDataImage,
+          formDataBanner
+        })
+      )
+        .unwrap()
+        .then(() => {
+          navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Restaurants.path)
+        })
+        .catch((error) => {
+          console.error("Error creando restaurante:", error)
+          showNotification({
+            title: "Error",
+            message: "Hubo un problema al crear el restaurante",
+            color: "red"
+          })
+        })
+    } catch (err) {
+      console.error("Error inesperado:", err)
+      showNotification({
+        title: "Error",
+        message: "Ocurrió un error inesperado",
+        color: "red"
       })
+    }
   }
 
   const accordionStructure = [
@@ -96,7 +135,7 @@ export const NewRestaurant = () => {
     <>
       <form onSubmit={handleSubmit(onSubmit)}>
         <FormLayout
-          title="Nuevo restaurante"
+          title="Nuevo comercio"
           show
           accordionStructure={accordionStructure}
           accordionTitles={["Añadir banner", "Información general", "Datos de reservación"]}

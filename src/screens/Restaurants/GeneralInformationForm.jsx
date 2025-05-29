@@ -28,7 +28,7 @@ export const GeneralInformationForm = ({ register, control, errors, setValue, im
     }
   }
 
-  const previews = images.map((file, index) => {
+  const previews = images?.map((file, index) => {
     const imageUrl = URL.createObjectURL(file)
     return <Image key={index} radius="md" h={250} src={imageUrl} />
   })
@@ -39,7 +39,7 @@ export const GeneralInformationForm = ({ register, control, errors, setValue, im
         <Paper withBorder radius="md" p="xs">
           <Grid gutter="md">
             <Grid.Col span={{ base: 12, md: 6 }}>
-              <InputField label="Nombre del restaurante (Obligatorio)" name="name" register={register} errors={errors} />
+              <InputField label="Nombre del comercio (Obligatorio)" name="name" register={register} errors={errors} />
             </Grid.Col>
             <Grid.Col span={{ base: 12, md: 6 }}>
               <InputField label="Correo electrónico (Obligatorio)" name="email" register={register} errors={errors} />
@@ -77,7 +77,7 @@ export const GeneralInformationForm = ({ register, control, errors, setValue, im
                 render={({ field, fieldState }) => (
                   <Select
                     label="Especialidad de cocina (Obligatorio)"
-                    data={kitchenTypes.map((item) => ({
+                    data={kitchenTypes?.map((item) => ({
                       value: item.id,
                       label: item.name
                     }))}
@@ -95,7 +95,7 @@ export const GeneralInformationForm = ({ register, control, errors, setValue, im
               <InputField label="Clinpays Token (Obligatorio)" name="clinpaysCommerceToken" register={register} errors={errors} />
             </Grid.Col>
             <Grid.Col span={{ base: 12, md: 6 }}>
-              <InputCheckbox label="¿Cuenta con delivery gratis?" name="shippingFree" register={register} />
+              <InputCheckbox label="¿Cuenta con envío gratis?" name="shippingFree" register={register} />
             </Grid.Col>
 
             {isFreeDelivery ? null : (
@@ -125,7 +125,7 @@ export const GeneralInformationForm = ({ register, control, errors, setValue, im
                       Seleccione una imagen
                     </Text>
                     <Text className={`${image ? "hidden" : ""} text-center leading-10`} size="sm" c="dimmed" inline mt={7}>
-                      Haga clic o arrastre la imagen del restaurante
+                      Haga clic o arrastre la imagen del comercio
                     </Text>
                   </>
                 )}

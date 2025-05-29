@@ -122,13 +122,13 @@ export const createRestaurant = createAsyncThunk(
 
       showNotification({
         title: "Creación exitosa",
-        message: `Se creó el restaurante ${restaurantData.name}`,
+        message: `Se creó el comercio ${restaurantData.name}`,
         color: "green"
       })
 
       return { ...restaurantData, images }
     } catch (error) {
-      return rejectWithValue(error.response?.data || "Error al crear el restaurante")
+      return rejectWithValue(error.response?.data || "Error al crear el comercio")
     }
   }
 )
@@ -300,7 +300,7 @@ export const updateRestaurantData = createAsyncThunk(
 
       showNotification({
         title: "Actualización exitosa",
-        message: `El restaurante ${restaurantData.name} fue actualizado`,
+        message: `El comercio ${restaurantData.name} fue actualizado`,
         color: "green"
       })
 

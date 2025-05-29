@@ -22,14 +22,14 @@ export const NAVIGATION_ROUTES_SUPER_ADMIN = {
   },
 
   Restaurants: {
-    label: "Restaurantes",
-    path: "/restaurantes",
+    label: "Comercios",
+    path: "/comercios",
     icon: "branch",
     NewRestaurant: {
-      path: "/restaurantes/nuevoRestaurante"
+      path: "/comercios/nuevoComercio"
     },
     RestaurantDetails: {
-      path: "/restaurantes/:restaurantId"
+      path: "/comercios/:restaurantId"
     }
   },
 
@@ -86,13 +86,13 @@ export const NAVIGATION_ROUTES_SUPER_ADMIN = {
 export const NAVIGATION_ROUTES_SUPER_ADMIN_TWO = [
   { label: "Inicio", icon: IconHome, link: "/" },
   {
-    label: "Restaurantes",
+    label: "Comercios",
     icon: IconBuildingStore,
     initiallyOpened: false,
     links: [
       {
-        label: "Lista de restaurantes",
-        link: "/restaurantes"
+        label: "Lista de comercios",
+        link: "/comercios"
       },
       {
         label: "Especialidades de cocina y tags",

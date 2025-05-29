@@ -2,7 +2,7 @@ import React, { useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import { NAVIGATION_ROUTES_SUPER_ADMIN } from "../../routes"
 import { useDispatch, useSelector } from "react-redux"
-import { fetchAllPlans, setSearchData } from "../../store/features/plansSlice"
+import { fetchAllPlans, setSearchData, setCurrentPage } from "../../store/features/plansSlice"
 import TableViewLayout from "../TableViewLayout"
 
 export const Plans = () => {

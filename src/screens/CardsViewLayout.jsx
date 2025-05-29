@@ -102,14 +102,14 @@ const CardsViewLayout = ({
     const elapsedSeconds = dayjs().diff(dayjs(sentToKitchenTimestamp), "second")
     stopwatchOffset.setSeconds(stopwatchOffset.getSeconds() + elapsedSeconds)
 
-    const { seconds, minutes, hours } = useStopwatch({
+    const { days, seconds, minutes, hours } = useStopwatch({
       autoStart: true,
       offsetTimestamp: stopwatchOffset
     })
 
     return (
       <Text size="md" fw={700}>
-        {String(hours).padStart(2, "0")}:{String(minutes).padStart(2, "0")}:{String(seconds).padStart(2, "0")}
+        {String(days).padStart(2, "0")}:{String(hours).padStart(2, "0")}:{String(minutes).padStart(2, "0")}:{String(seconds).padStart(2, "0")}
       </Text>
     )
   }
@@ -371,11 +371,11 @@ const CardsViewLayout = ({
                               <Text c="dimmed" size="sm">
                                 Tipo de pedido:
                               </Text>
-                              <Text size="sm" tt="uppercase">
+                              <Text size="sm" >
                                 {item?.serviceType === "delivery"
                                   ? "A domicilio"
                                   : item?.serviceType === "onSite"
-                                    ? "Comer en restaurante"
+                                    ? "Comer en sitio"
                                     : "Para llevar"}
                               </Text>
                             </Flex>
