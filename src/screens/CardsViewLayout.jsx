@@ -415,7 +415,6 @@ const CardsViewLayout = ({
 
                         <Flex mt="xs" justify="space-between" gap={5} align="center" w="100%">
                           <Button
-                            loading={cancelOrderStatus}
                             color={colors.main_app_color}
                             variant="outline"
                             onClick={() => {

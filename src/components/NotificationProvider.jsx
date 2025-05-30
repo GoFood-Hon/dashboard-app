@@ -48,7 +48,6 @@ export const NotificationProvider = ({ children }) => {
         color: "green"
       })
       dispatch(setOrderStatus(order))
-      console.log(order)
     }
 
     const handleOrderUpdate = (order) => {
@@ -70,7 +69,6 @@ export const NotificationProvider = ({ children }) => {
       })
       user.role === USER_ROLES.kitchen && dispatch(setNewOrder(order))
       dispatch(setOrderStatus(order))
-      console.log(order)
     }
 
     const handleDriverAssigned = (order) => {

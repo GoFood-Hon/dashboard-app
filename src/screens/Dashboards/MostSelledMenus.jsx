@@ -23,9 +23,9 @@ export const MostSelledMenus = () => {
       <BarChart
         orientation="vertical"
         h={450}
-        data={data.map((item) => ({ name: item.menuName, ventas: item.totalQuantity }))}
+        data={data.map((item) => ({ name: item.menuName, "Unidades vendidas": item.totalQuantity }))}
         dataKey="name"
-        series={[{ name: "ventas", color: "gray.6" }]}
+        series={[{ name: "Unidades vendidas", color: "gray.6" }]}
         barProps={{ radius: 8 }}
         tickLine="none"
       />

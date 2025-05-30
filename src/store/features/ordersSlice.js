@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit"
 import orderApi from "../../api/orderApi"
-import { ITEMS_PER_PAGE } from "../../utils/paginationConfig"
+import { ITEMS_PER_PAGE, ITEMS_PER_PAGE_CARDS } from "../../utils/paginationConfig"
 import { showNotification } from "@mantine/notifications"
 
 export const fetchAllOrders = createAsyncThunk(
@@ -24,17 +24,17 @@ export const fetchAllOrders = createAsyncThunk(
 
 export const fetchOrdersForKitchen = createAsyncThunk(
   "orders/fetchOrdersForKitchen",
-  async ({ limit, page, search_field, search }, { rejectWithValue }) => {
+  async ({ limit, page, order, search_field, search, status }, { rejectWithValue }) => {
     try {
-      const response = await orderApi.getKitchenOrders({
+      const response = await orderApi.getAllOrders({
         limit,
         page,
-        order: "DESC",
+        order,
         search_field,
         search,
         status
       })
-      return { data: response.data, result: response.results, page }
+      return { data: response.data, result: response.result, page }
     } catch (error) {
       return rejectWithValue(error.response?.data || error.message)
     }
@@ -251,11 +251,12 @@ const ordersSlice = createSlice({
     cancelOrderStatus: false,
 
     //kitchen data
-    currentHistoryPage: 1,
-    totalHistoryPagesCount: 0,
-    totalHistoryOrders: 0,
-    ordersHistoryPerPage: [],
-    loadingHistory: false,
+    itemsForKitchenPerPage: ITEMS_PER_PAGE_CARDS,
+    currentOrdersForKitchenPage: 1,
+    totalOrdersForKitchenPagesCount: 0,
+    totalOrdersForKitchen: 0,
+    ordersForKitchenPerPage: [],
+    loadingOrdersForKitchen: false,
 
     //Drivers data
     loadingDrivers: false,
@@ -273,53 +274,54 @@ const ordersSlice = createSlice({
     setCurrentPage: (state, action) => {
       state.currentPage = action.payload
     },
+    setCurrentPageForKitchen: (state, action) => {
+      state.currentOrdersForKitchenPage = action.payload
+    },
     setTotalOrders: (state, action) => {
       state.totalOrders = action.payload
     },
     setNewOrder: (state, action) => {
-      if (state.ordersPerPage[1].length > 0) {
-        const newOrder = action.payload
-        const itemsPerPage = state.itemsPerPage
+      const newOrder = action.payload
+      const itemsPerPage = state.itemsForKitchenPerPage
+      const newOrdersPerPage = { ...state.ordersForKitchenPerPage }
 
-        const newOrdersPerPage = { ...state.ordersPerPage }
+      // Buscar la última página que tenga espacio
+      let lastPage = state.totalOrdersForKitchenPagesCount
 
-        if (!newOrdersPerPage[1]) {
-          newOrdersPerPage[1] = []
-        }
-
-        newOrdersPerPage[1] = [newOrder, ...newOrdersPerPage[1]]
-
-        for (let i = 1; i <= state.totalPagesCount; i++) {
-          if (newOrdersPerPage[i]?.length > itemsPerPage) {
-            const lastItem = newOrdersPerPage[i].pop()
-
-            if (!newOrdersPerPage[i + 1]) {
-              newOrdersPerPage[i + 1] = []
-            }
-
-            newOrdersPerPage[i + 1] = [lastItem, ...newOrdersPerPage[i + 1]]
-          } else {
-            break
-          }
-        }
-
-        const updatedTotalOrders = state.totalOrders + 1
-        const updatedTotalPagesCount = Math.ceil(updatedTotalOrders / itemsPerPage)
-
-        const validPages = new Set([...Array(updatedTotalPagesCount).keys()].map((i) => i + 1))
-        const newRestaurantsPerPage = { ...state.restaurantsPerPage }
-
-        for (const page in newRestaurantsPerPage) {
-          if (!validPages.has(Number(page))) {
-            delete newRestaurantsPerPage[page]
-          }
-        }
-
-        state.ordersPerPage = newOrdersPerPage
-        state.totalOrders = updatedTotalOrders
-        state.totalPagesCount = updatedTotalPagesCount
-        state.restaurantsPerPage = newRestaurantsPerPage
+      // Si la última página no existe, la creamos vacía
+      if (!newOrdersPerPage[lastPage]) {
+        newOrdersPerPage[lastPage] = []
       }
+
+      // Agregamos el pedido al final de la última página
+      newOrdersPerPage[lastPage].push(newOrder)
+
+      // Si la última página se excede, pasamos el último pedido a una nueva página
+      if (newOrdersPerPage[lastPage].length > itemsPerPage) {
+        const overflowOrder = newOrdersPerPage[lastPage].pop()
+        lastPage += 1
+        newOrdersPerPage[lastPage] = [overflowOrder]
+      }
+
+      // Actualizamos conteos
+      const updatedTotalOrders = state.totalOrdersForKitchen + 1
+      const updatedTotalPagesCount = Math.ceil(updatedTotalOrders / itemsPerPage)
+
+      // Limpiar páginas inválidas en restaurantsPerPage
+      const validPages = new Set([...Array(updatedTotalPagesCount).keys()].map((i) => i + 1))
+      const newRestaurantsPerPage = { ...state.restaurantsPerPage }
+
+      for (const page in newRestaurantsPerPage) {
+        if (!validPages.has(Number(page))) {
+          delete newRestaurantsPerPage[page]
+        }
+      }
+
+      // Guardamos el nuevo estado
+      state.ordersForKitchenPerPage = newOrdersPerPage
+      state.totalOrdersForKitchen = updatedTotalOrders
+      state.totalOrdersForKitchenPagesCount = updatedTotalPagesCount
+      state.restaurantsPerPage = newRestaurantsPerPage
     },
     setOrderStatus: (state, action) => {
       const { id, status, sentToKitchenTimestamp, finishedCookingTimestamp } = action.payload
@@ -376,15 +378,10 @@ const ordersSlice = createSlice({
         state.updatingOrderStatus = true
       })
       .addCase(updateOrderStatus.fulfilled, (state, action) => {
-        const { id, status } = action.payload
-        const currentPageOrders = state.ordersPerPage[state.currentPage]
-        const index = currentPageOrders.findIndex((order) => order?.id === id)
-
-        if (index !== -1) {
-          currentPageOrders[index] = { ...currentPageOrders[index], status }
-        }
-        const updatedOrders = currentPageOrders.filter((order) => order.id !== id)
-        state.ordersPerPage[state.currentPage] = updatedOrders
+        const { id } = action.payload
+        const currentPageOrdersForKitchen = state.ordersForKitchenPerPage[state.currentOrdersForKitchenPage]
+        const updatedOrders = currentPageOrdersForKitchen?.filter((order) => order.id !== id)
+        state.ordersForKitchenPerPage[state.currentOrdersForKitchenPage] = updatedOrders
 
         state.updatingOrderStatus = false
       })
@@ -436,18 +433,18 @@ const ordersSlice = createSlice({
 
       //Obtener las órdenes para las personas de cocina
       .addCase(fetchOrdersForKitchen.pending, (state) => {
-        state.loadingHistory = true
+        state.loadingOrdersForKitchen = true
       })
       .addCase(fetchOrdersForKitchen.fulfilled, (state, action) => {
         const { data, result, page } = action.payload
-        state.ordersHistoryPerPage[page] = data
-        state.loadingHistory = false
-        state.currentHistoryPage = page
-        state.totalHistoryOrders = result
-        state.totalHistoryPagesCount = Math.ceil(result / action.meta.arg.limit)
+        state.ordersForKitchenPerPage[page] = data
+        state.loadingOrdersForKitchen = false
+        state.currentOrdersForKitchenPage = page
+        state.totalOrdersForKitchen = result
+        state.totalOrdersForKitchenPagesCount = Math.ceil(result / action.meta.arg.limit)
       })
       .addCase(fetchOrdersForKitchen.rejected, (state, action) => {
-        state.loadingHistory = false
+        state.loadingOrdersForKitchen = false
         state.error = action.payload
       })
 

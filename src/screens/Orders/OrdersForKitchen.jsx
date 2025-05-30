@@ -1,22 +1,22 @@
 import { useDispatch, useSelector } from "react-redux"
 import { useEffect } from "react"
-import { fetchAllOrders } from "../../store/features/ordersSlice"
+import { fetchOrdersForKitchen } from "../../store/features/ordersSlice"
 import CardsViewLayout from "../CardsViewLayout"
 
 const OrdersForKitchen = () => {
   const dispatch = useDispatch()
   const user = useSelector((state) => state.user.value)
-  const limit = useSelector((state) => state.orders.itemsPerPage)
-  const page = useSelector((state) => state.orders.currentPage)
-  const ordersPerPage = useSelector((state) => state.orders.ordersPerPage)
-  const totalOrders = useSelector((state) => state.orders.totalOrders)
-  const totalPageCount = useSelector((state) => state.orders.totalPagesCount)
+  const limit = useSelector((state) => state.orders.itemsForKitchenPerPage)
+  const page = useSelector((state) => state.orders.currentOrdersForKitchenPage)
+  const ordersPerPage = useSelector((state) => state.orders.ordersForKitchenPerPage)
+  const totalOrders = useSelector((state) => state.orders.totalOrdersForKitchen)
+  const totalPageCount = useSelector((state) => state.orders.totalOrdersForKitchenPagesCount)
   const ordersList = ordersPerPage[page] || []
-  const loadingOrders = useSelector((state) => state.orders.loadingOrders)
+  const loadingOrders = useSelector((state) => state.orders.loadingOrdersForKitchen)
 
   useEffect(() => {
     if (!ordersPerPage[page]) {
-      dispatch(fetchAllOrders({ limit, page, order: "ASC", status: "confirmed" }))
+      dispatch(fetchOrdersForKitchen({ limit, page, order: "DESC", status: "confirmed" }))
     }
   }, [dispatch, limit, page, ordersPerPage, user.role])
 
@@ -30,7 +30,7 @@ const OrdersForKitchen = () => {
       elementsName="pedidos"
       loadingElements={loadingOrders}
       elementsList={ordersList}
-      onPaginationChange={(newPage) => dispatch(setCurrentPage(newPage))}
+      onPaginationChange={(newPage) => dispatch(setCurrentPageForKitchen(newPage))}
       user={user}
       kitchenView
     />
