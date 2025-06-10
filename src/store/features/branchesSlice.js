@@ -20,6 +20,7 @@ const initialState = {
   shippingRange: 0,
 
   //Buscar sucursal
+  searchField: "name",
   searchData: null
 }
 
@@ -223,6 +224,9 @@ export const branchesSlice = createSlice({
     },
     setSearchData: (state, action) => {
       state.searchData = action.payload
+    },
+    setSelectedSearchOption: (state, action) => {
+      state.searchField = action.payload
     }
   },
   extraReducers: (builder) => {
@@ -323,8 +327,17 @@ export const branchesSlice = createSlice({
   }
 })
 
-export const { setBranches, setError, setPage, setFilters, setBranchData, setImageUrl, setShippingRange, setSearchData } =
-  branchesSlice.actions
+export const {
+  setBranches,
+  setError,
+  setPage,
+  setFilters,
+  setBranchData,
+  setImageUrl,
+  setShippingRange,
+  setSearchData,
+  setSelectedSearchOption
+} = branchesSlice.actions
 
 export const setLoading = (state) => state.branches.loading
 

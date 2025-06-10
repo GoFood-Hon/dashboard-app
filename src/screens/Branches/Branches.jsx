@@ -1,9 +1,10 @@
 import React, { useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import { useDispatch, useSelector } from "react-redux"
-import { fetchBranches, setPage, setSearchData, updateBranchStatus } from "../../store/features/branchesSlice"
+import { fetchBranches, setPage, setSearchData, setSelectedSearchOption, updateBranchStatus } from "../../store/features/branchesSlice"
 import { NAVIGATION_ROUTES_RES_ADMIN } from "../../routes"
 import CardsViewLayout from "../../screens/CardsViewLayout"
+import { searchOptionsBranchs } from "../../utils/constants"
 
 export default function Branches() {
   const navigate = useNavigate()
@@ -17,6 +18,7 @@ export default function Branches() {
   const branchesList = branchesPerPage[page] || []
   const loadingBranches = useSelector((state) => state.branches.loadingBranches)
   const searchData = useSelector((state) => state.branches.searchData)
+  const searchField = useSelector((state) => state.branches.searchField)
 
   useEffect(() => {
     if (!branchesPerPage[page]) {
@@ -49,7 +51,7 @@ export default function Branches() {
   }
 
   const executeSearch = async (query) => {
-    dispatch(fetchBranches({ limit, page, order: "DESC", search_field: "name", search: query }))
+    dispatch(fetchBranches({ limit, page, order: "DESC", search_field: searchField, search: query }))
   }
 
   return (
@@ -71,6 +73,9 @@ export default function Branches() {
       onSearch={handleSearch}
       value={searchData}
       searchAction={executeSearch}
+      searchOptions={searchOptionsBranchs}
+      selectedOption={searchField}
+      setSelectedSearchOption={(value) => dispatch(setSelectedSearchOption(value))}
     />
   )
 }

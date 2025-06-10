@@ -2,8 +2,9 @@ import React, { useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import { NAVIGATION_ROUTES_SUPER_ADMIN } from "../../routes"
 import { useDispatch, useSelector } from "react-redux"
-import { fetchAllPlans, setSearchData, setCurrentPage } from "../../store/features/plansSlice"
+import { fetchAllPlans, setSearchData, setCurrentPage, setSelectedSearchOption } from "../../store/features/plansSlice"
 import TableViewLayout from "../TableViewLayout"
+import { searchOptionsPlans } from "../../utils/constants"
 
 export const Plans = () => {
   const navigate = useNavigate()
@@ -16,6 +17,7 @@ export const Plans = () => {
   const plans = plansByPage[page] || []
   const loadingPlans = useSelector((state) => state.plans.loadingPlans)
   const searchData = useSelector((state) => state.plans.searchData)
+  const searchField = useSelector((state) => state.plans.searchField)
 
   useEffect(() => {
     if (!plansByPage[page]) {
@@ -32,7 +34,7 @@ export const Plans = () => {
   }
 
   const executeSearch = async (query) => {
-    dispatch(fetchAllPlans({ limit, page, order: "DESC", search_field: "name", search: query }))
+    dispatch(fetchAllPlans({ limit, page, order: "DESC", search_field: searchField, search: query }))
   }
 
   return (
@@ -51,6 +53,9 @@ export const Plans = () => {
         onSearch={handleSearch}
         value={searchData}
         searchAction={executeSearch}
+        searchOptions={searchOptionsPlans}
+        selectedOption={searchField}
+        setSelectedSearchOption={(value) => dispatch(setSelectedSearchOption(value))}
       />
     </>
   )

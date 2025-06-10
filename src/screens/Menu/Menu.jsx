@@ -2,8 +2,9 @@ import React, { useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { useNavigate } from "react-router-dom"
 import { NAVIGATION_ROUTES_RES_ADMIN } from "../../routes"
-import { fetchMenus, setPage, setSearchData } from "../../store/features/menuSlice"
+import { fetchMenus, setPage, setSearchData, setSelectedSearchOption } from "../../store/features/menuSlice"
 import TableViewLayout from "../../screens/TableViewLayout"
+import { searchOptionsMenus } from "../../utils/constants"
 
 export default function Menu() {
   const navigate = useNavigate()
@@ -17,6 +18,7 @@ export default function Menu() {
   const menusList = menusPerPage[page] || []
   const loadingMenus = useSelector((state) => state.menus.loadingMenus)
   const searchData = useSelector((state) => state.menus.searchData)
+  const searchField = useSelector((state) => state.menus.searchField)
 
   const handleNewMenu = () => {
     navigate(NAVIGATION_ROUTES_RES_ADMIN.Menu.NewMenu.path)
@@ -33,7 +35,7 @@ export default function Menu() {
   }
 
   const executeSearch = async (query) => {
-    dispatch(fetchMenus({ restaurantId: user.restaurantId, limit, page, order: "DESC", search_field: "name", search: query }))
+    dispatch(fetchMenus({ restaurantId: user.restaurantId, limit, page, order: "DESC", search_field: searchField, search: query }))
   }
 
   return (
@@ -54,6 +56,9 @@ export default function Menu() {
         onSearch={handleSearch}
         value={searchData}
         searchAction={executeSearch}
+        searchOptions={searchOptionsMenus}
+        selectedOption={searchField}
+        setSelectedSearchOption={(value) => dispatch(setSelectedSearchOption(value))}
       />
     </>
   )

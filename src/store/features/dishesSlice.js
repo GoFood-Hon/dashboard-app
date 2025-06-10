@@ -26,6 +26,7 @@ const initialState = {
   },
 
   //Buscar platillos
+  searchField: "name",
   searchData: null
 }
 
@@ -329,6 +330,9 @@ export const dishesSlice = createSlice({
     },
     setSearchData: (state, action) => {
       state.searchData = action.payload
+    },
+    setSelectedSearchOption: (state, action) => {
+      state.searchField = action.payload
     }
   },
   extraReducers: (builder) => {
@@ -411,7 +415,8 @@ export const dishesSlice = createSlice({
   }
 })
 
-export const { setDishes, setError, setPage, setFilters, setTotalDishes, setSearchData } = dishesSlice.actions
+export const { setDishes, setError, setPage, setFilters, setTotalDishes, setSearchData, setSelectedSearchOption } =
+  dishesSlice.actions
 
 export const setLoading = (state) => state.dishes.loading
 

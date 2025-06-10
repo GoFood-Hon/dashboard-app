@@ -2,8 +2,14 @@ import React, { useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import { NAVIGATION_ROUTES_SUPER_ADMIN } from "../../routes"
 import { useDispatch, useSelector } from "react-redux"
-import { setCurrentPage, fetchAdminUsers, setSearchAdminUsersData } from "../../store/features/userSlice"
+import {
+  setCurrentPage,
+  fetchAdminUsers,
+  setSearchAdminUsersData,
+  setSelectedSearchOptionForAdminUsers
+} from "../../store/features/userSlice"
 import TableViewLayout from "../TableViewLayout"
+import { searchOptionsAdminUsers } from "../../utils/constants"
 
 export const AdminUserScreen = () => {
   const navigate = useNavigate()
@@ -16,6 +22,7 @@ export const AdminUserScreen = () => {
   const adminUsers = adminUsersByPage[page] || []
   const loadingUsers = useSelector((state) => state.user.loadingUsers)
   const searchData = useSelector((state) => state.user.searchAdminUsersData)
+  const searchFieldAdminUsers = useSelector((state) => state.user.searchFieldAdminUsers)
 
   const handleNewItem = () => {
     navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Users.NewUser.path)
@@ -32,7 +39,7 @@ export const AdminUserScreen = () => {
   }
 
   const executeSearch = async (query) => {
-    dispatch(fetchAdminUsers({ limit, page, order: "DESC", search_field: "name", search: query }))
+    dispatch(fetchAdminUsers({ limit, page, order: "DESC", search_field: searchFieldAdminUsers, search: query }))
   }
 
   return (
@@ -51,6 +58,9 @@ export const AdminUserScreen = () => {
         onSearch={handleSearch}
         value={searchData}
         searchAction={executeSearch}
+        searchOptions={searchOptionsAdminUsers}
+        selectedOption={searchFieldAdminUsers}
+        setSelectedSearchOption={(value) => dispatch(setSelectedSearchOptionForAdminUsers(value))}
       />
     </>
   )

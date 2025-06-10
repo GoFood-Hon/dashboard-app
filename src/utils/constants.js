@@ -3,8 +3,15 @@ import { NAVIGATION_ROUTES_BRANCH_ADMIN, NAVIGATION_ROUTES_KITCHEN } from "../ro
 import { IconToolsKitchen } from "@tabler/icons-react"
 import { IconUserPlus } from "@tabler/icons-react"
 import { IconHomeCheck } from "@tabler/icons-react"
-import { createTheme } from "@mantine/core"
+import { createTheme, NumberFormatter } from "@mantine/core"
 import { IconMotorbike } from "@tabler/icons-react"
+import { getFormattedHNL } from "."
+import { IconCoin } from "@tabler/icons-react"
+import { IconCube } from "@tabler/icons-react"
+import { IconCooker } from "@tabler/icons-react"
+import { IconCancel } from "@tabler/icons-react"
+import { IconTicket } from "@tabler/icons-react"
+import { IconUsersGroup } from "@tabler/icons-react"
 
 export const DEFAULT_DISCOUNT_PERCENTAGE = "5%"
 export const DEFAULT_COUPON_TYPE = "Por fecha"
@@ -299,3 +306,129 @@ export const statistictsExample = {
     percentage: -10
   }
 }
+
+//Search options for orders
+export const searchOptionsOrders = [
+  { value: "id", label: "ID" },
+  { value: "identityNumber", label: "Identidad del cliente" },
+  { value: "phoneNumber", label: "Teléfono del cliente" },
+  { value: "name", label: "Nombre del cliente" }
+]
+
+//Search options for menus
+export const searchOptionsMenus = [{ value: "name", label: "Nombre" }]
+
+//Search options for dishes
+export const searchOptionsDishes = [{ value: "name", label: "Nombre" }]
+
+//Search options for reservations
+export const searchOptionsReservations = [
+  { value: "id", label: "ID" },
+  { value: "phoneNumber", label: "Teléfono del cliente" },
+  { value: "identityNumber", label: "Identidad del cliente" }
+]
+
+//Search options for branchs
+export const searchOptionsBranchs = [
+  { value: "name", label: "Nombre" },
+  { value: "city", label: "Ciudad" },
+  { value: "state", label: "Departamento" }
+]
+
+//Search options for users
+export const searchOptionsUsers = [
+  { value: "name", label: "Nombre" },
+  { value: "email", label: "Correo electrónico" },
+  { value: "phoneNumber", label: "Teléfono" }
+  //{ value: "identityNumber", label: "Identidad" }
+]
+
+//Search options for shops
+export const searchOptionsShops = [
+  { value: "name", label: "Nombre" },
+  { value: "cuisineType", label: "Tipo de comercio" }
+]
+
+//Search options for collections
+export const searchOptionsCollections = [{ value: "name", label: "Nombre" }]
+
+//Search options for admin users
+export const searchOptionsAdminUsers = [
+  { value: "name", label: "Nombre" },
+  { value: "email", label: "Correo electrónico" },
+  { value: "phoneNumber", label: "Teléfono" },
+  { value: "identityNumber", label: "Identidad" }
+  //{ value: "restaurantName", label: "Nombre del comercio" }
+]
+
+//Search options for loyalty programs
+export const searchOptionsLoyaltyPrograms = [{ value: "title", label: "Nombre" }]
+
+//Search options for plans
+export const searchOptionsPlans = [{ value: "name", label: "Nombre" }]
+
+//Search options for promotions
+export const searchOptionsPromotions = [{ value: "title", label: "Nombre" }]
+
+//Search options for coupons
+export const searchOptionsCoupons = [{ value: "title", label: "Nombre" }]
+
+//Dashboard cards statistic data
+export const cardsDataStructure = (cardsStats) => [
+  {
+    title: "Ventas",
+    icon: IconCoin,
+    value: getFormattedHNL(cardsStats?.sales),
+    type: "currency",
+    text: "Monto total vendido"
+  },
+  {
+    title: "Pedidos",
+    icon: IconCube,
+    value: cardsStats?.orders,
+    type: "number",
+    text: "Total de pedidos"
+  },
+  {
+    title: "Preparación",
+    icon: IconCooker,
+    value: cardsStats?.avgCookingTime,
+    type: "time",
+    text: "Tiempo promedio de preparación de pedidos"
+  },
+  {
+    title: "Órdenes canceladas",
+    icon: IconCancel,
+    value: cardsStats?.canceledOrders,
+    type: "number",
+    text: "Total de órdenes canceladas"
+  }
+]
+
+//Dashboard cards statistic data for super admin
+export const cardsAdminDataStructure = (cardsStats) => [
+  {
+    title: "Ventas",
+    icon: IconCoin,
+    value: getFormattedHNL(cardsStats?.sales),
+    text: "Monto total vendido"
+  },
+  {
+    title: "Pedidos",
+    icon: IconCube,
+    value: cardsStats?.orders,
+    text: "Total de pedidos"
+  },
+  {
+    title: "Tickets",
+    icon: IconTicket,
+    value: getFormattedHNL(cardsStats?.avgSuborderTotal?.toFixed(2)),
+    text: "Promedio de ventas por ticket"
+  },
+  {
+    title: "Usuarios",
+    icon: IconUsersGroup,
+    value: cardsStats?.newUsers,
+    text: "Total de nuevos usuarios"
+  }
+]

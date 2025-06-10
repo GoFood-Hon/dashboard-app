@@ -24,7 +24,10 @@ const TableViewLayout = ({
   deleteAction,
   dates,
   setRange,
-  filterAction
+  filterAction,
+  searchOptions = [],
+  selectedOption,
+  setSelectedSearchOption
 }) => {
   const isSmallScreen = useMediaQuery("(max-width: 430px)")
 
@@ -54,7 +57,15 @@ const TableViewLayout = ({
         </Flex>
       </Group>
       {!noSearch && items && (
-        <SearchComponent onSearch={onSearch} elementName={title.toLowerCase()} value={value} searchAction={searchAction} />
+        <SearchComponent
+          onSearch={onSearch}
+          elementName={title.toLowerCase()}
+          value={value}
+          searchAction={searchAction}
+          searchOptions={searchOptions}
+          selectedOption={selectedOption}
+          setSelectedSearchOption={setSelectedSearchOption}
+        />
       )}
       {dates && items && (
         <Flex align="center" gap={5} style={{ width: "100%" }}>

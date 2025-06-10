@@ -165,7 +165,12 @@ const initialState = {
   loadingReservations: false,
   updatingReservation: false,
   reservationDetails: null,
-  error: null
+  error: null,
+
+  //Search data
+  searchField: "identityNumber",
+  searchData: null,
+  searchDishesData: null
 }
 
 const reservationsSlice = createSlice({
@@ -177,6 +182,12 @@ const reservationsSlice = createSlice({
     },
     setPage: (state, action) => {
       state.currentPage = action.payload
+    },
+    setSearchData: (state, action) => {
+      state.searchData = action.payload
+    },
+    setSelectedSearchOption: (state, action) => {
+      state.searchField = action.payload
     }
   },
   extraReducers: (builder) => {
@@ -288,6 +299,6 @@ const reservationsSlice = createSlice({
   }
 })
 
-export const { resetReservationDetails, setPage } = reservationsSlice.actions
+export const { resetReservationDetails, setPage, setSearchData, setSelectedSearchOption } = reservationsSlice.actions
 
 export default reservationsSlice.reducer

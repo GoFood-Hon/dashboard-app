@@ -45,11 +45,12 @@ const userApi = {
 
   updateUserRestaurant: (params, userId) => axiosClient.patch(`api/v1/users/update-user/${userId}`, params),
 
-  getAdminUsers: ({ limit, page, order, search_field, search } = {}) => {
+  getAdminUsers: ({ limit, page, order, orderBy, search_field, search } = {}) => {
     const params = {
       limit,
       page,
       order,
+      orderBy,
       search_field,
       search
     }

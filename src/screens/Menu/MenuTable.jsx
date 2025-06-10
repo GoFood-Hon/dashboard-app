@@ -12,7 +12,9 @@ import {
   Badge,
   Box,
   Paper,
-  Text
+  Text,
+  UnstyledButton,
+  Center
 } from "@mantine/core"
 import { IconEye, IconCheck, IconX } from "@tabler/icons-react"
 import { colors } from "../../theme/colors"
@@ -44,6 +46,7 @@ import { IconTrash } from "@tabler/icons-react"
 import { setSelectedCoupon, updateStatus } from "../../store/features/couponsSlice"
 import { formatDate } from "date-fns"
 import { IconClock } from "@tabler/icons-react"
+import { IconSelector } from "@tabler/icons-react"
 
 dayjs.extend(utc)
 dayjs.extend(timezone)
@@ -279,8 +282,7 @@ export default function MenuTable({ items, screenType, totalItems, currentPage, 
       {
         label: "Tipo de servicio",
         accessor: "serviceType",
-        render: (service) =>
-          service === "pickup" ? "Para llevar" : service === "onSite" ? "Comer en sitio" : "A domicilio"
+        render: (service) => (service === "pickup" ? "Para llevar" : service === "onSite" ? "Comer en sitio" : "A domicilio")
       },
       { label: "Total", accessor: "total", render: (total) => getFormattedHNL(total) },
       {
@@ -729,7 +731,16 @@ export default function MenuTable({ items, screenType, totalItems, currentPage, 
                   <Table.Tr>
                     {currentColumns.map((column) => (
                       <Table.Th style={{ textAlign: column.center ? "center" : "left" }} key={column.label}>
-                        {column.label}
+                        <UnstyledButton className="w-full">
+                          <Group justify="space-between">
+                            <Text fw={500} fz="sm">
+                              {column.label}
+                            </Text>
+                            <Center>
+                              <IconSelector size='1.1rem' className="hidden" />
+                            </Center>
+                          </Group>
+                        </UnstyledButton>
                       </Table.Th>
                     ))}
                   </Table.Tr>
@@ -747,14 +758,14 @@ export default function MenuTable({ items, screenType, totalItems, currentPage, 
                             {column.accessor === "createdAt" || column.accessor === "updatedAt" || column.accessor === "paidDate"
                               ? dayjs(item[column.accessor]).fromNow()
                               : column.accessor === "orderDate"
-                              ? formatTime(item[column.accessor])
-                              : column.accessor === "reservationDate"
-                                ? dayjs(item[column.accessor])
-                                    .tz("America/Tegucigalpa")
-                                    .format("D [de] MMMM [del] YYYY [a las] h:mm A")
-                                : column.render
-                                  ? column.render(item[column.accessor], item)
-                                  : item[column.accessor]}
+                                ? formatTime(item[column.accessor])
+                                : column.accessor === "reservationDate"
+                                  ? dayjs(item[column.accessor])
+                                      .tz("America/Tegucigalpa")
+                                      .format("D [de] MMMM [del] YYYY [a las] h:mm A")
+                                  : column.render
+                                    ? column.render(item[column.accessor], item)
+                                    : item[column.accessor]}
                           </Table.Td>
                         ))}
                       </Table.Tr>

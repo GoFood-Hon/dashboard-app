@@ -353,7 +353,8 @@ const collectionsSlice = createSlice({
     //Search collections
     searchData: null,
     searchDishesData: null,
-    searchRestaurantsData: null
+    searchRestaurantsData: null,
+    searchField: "name"
   },
   reducers: {
     setCurrentPage: (state, action) => {
@@ -382,6 +383,9 @@ const collectionsSlice = createSlice({
     },
     setSearchRestaurantsData: (state, action) => {
       state.searchRestaurantsData = action.payload
+    },
+    setSelectedSearchOption: (state, action) => {
+      state.searchField = action.payload
     }
   },
   extraReducers: (builder) => {
@@ -619,7 +623,8 @@ export const {
   setElementsCount,
   setSearchData,
   setSearchDishesData,
-  setSearchRestaurantsData
+  setSearchRestaurantsData,
+  setSelectedSearchOption
 } = collectionsSlice.actions
 
 export default collectionsSlice.reducer

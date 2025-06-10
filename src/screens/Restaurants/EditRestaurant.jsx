@@ -17,6 +17,8 @@ import { updateRestaurantData } from "../../store/features/restaurantSlice"
 import { RestaurantBanner } from "./RestaurantBanner"
 import { restaurantValidation } from "../../utils/inputRules"
 import FormLayout from "../../components/Form/FormLayout"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { restaurantSchema } from "../../utils/validationSchemas"
 
 export const EditRestaurant = () => {
   const { restaurantId } = useParams()
@@ -56,7 +58,7 @@ export const EditRestaurant = () => {
     reset,
     watch,
     formState: { errors }
-  } = useForm({ defaultValues: restaurantDetails || {} })
+  } = useForm({ resolver: zodResolver(restaurantSchema), defaultValues: restaurantDetails || {} })
 
   const imageLocation = watch("images[0].location")
   const bannerLocation = watch("bannerDishes[0].location")

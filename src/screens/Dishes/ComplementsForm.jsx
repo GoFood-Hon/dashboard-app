@@ -151,6 +151,7 @@ export default function ComplementsForm({
               elementName={"platillos"}
               value={searchDishesData}
               searchAction={executeSearch}
+              noSelect
             />
             {dishesLoading ? (
               <div className="h-[calc(100vh-350px)] w-full flex justify-center items-center">

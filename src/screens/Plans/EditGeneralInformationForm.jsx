@@ -41,23 +41,26 @@ export const EditGeneralInformationForm = ({ register, errors, setValue, feature
   }, [])
 
   const RenderInputs = () => {
-    const inputs = planData?.PlanFeatures?.filter((feature) => dishesAdded?.includes(feature.id))
+    const inputs = featuresList?.filter((feature) => dishesAdded?.includes(feature.id) && feature.type === "amount")
+
+    const getQuantity = (featureId) => {
+      const found = planData?.PlanFeatures?.find((f) => f.id === featureId)
+      return found?.PlanPlanFeatures?.quantity?.toString() || ""
+    }
 
     return (
       <>
-        {inputs?.map((input) =>
-          input.type === "amount" ? (
-            <Grid.Col key={input.id} span={{ base: 12, md: 6 }}>
-              <InputField
-                label={input.name}
-                name={input.featureCode}
-                register={register}
-                defaultValue={input.PlanPlanFeatures.quantity.toString()}
-                errors={errors}
-              />
-            </Grid.Col>
-          ) : null
-        )}
+        {inputs?.map((input) => (
+          <Grid.Col key={input.id} span={{ base: 12, md: 6 }}>
+            <InputField
+              label={input.name}
+              name={input.featureCode}
+              register={register}
+              defaultValue={getQuantity(input.id)}
+              errors={errors}
+            />
+          </Grid.Col>
+        ))}
       </>
     )
   }
@@ -108,7 +111,7 @@ export const EditGeneralInformationForm = ({ register, errors, setValue, feature
                 />
               </Grid.Col>
               <Grid.Col span={{ base: 12, md: 6 }}>
-                <Select label="Moneda" data={["HNL"]} allowDeselect={false} value={currency} onChange={onChangeCurrency} />
+                <Select label="Moneda" data={["HNL", "USD"]} allowDeselect={false} value={currency} onChange={onChangeCurrency} />
               </Grid.Col>
               <Grid.Col span={{ sm: 12 }}>
                 <MultiSelect

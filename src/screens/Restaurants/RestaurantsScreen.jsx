@@ -1,9 +1,16 @@
 import { useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import { useDispatch, useSelector } from "react-redux"
-import { fetchRestaurants, setPage, setSearchData, updateRestaurantStatus } from "../../store/features/restaurantSlice"
+import {
+  fetchRestaurants,
+  setPage,
+  setSearchData,
+  setSelectedSearchOption,
+  updateRestaurantStatus
+} from "../../store/features/restaurantSlice"
 import { NAVIGATION_ROUTES_SUPER_ADMIN } from "../../routes"
 import CardsViewLayout from "../CardsViewLayout"
+import { searchOptionsShops } from "../../utils/constants"
 
 export default function RestaurantsScreen() {
   const navigate = useNavigate()
@@ -17,13 +24,14 @@ export default function RestaurantsScreen() {
   const restaurantsList = restaurantsPerPage[page] || []
   const loadingRestaurants = useSelector((state) => state.restaurants.loadingRestaurants)
   const searchData = useSelector((state) => state.restaurants.searchData)
+  const searchField = useSelector((state) => state.restaurants.searchField)
 
   useEffect(() => {
     if (!restaurantsPerPage[page]) {
       dispatch(fetchRestaurants({ limit, page, order: "DESC" }))
     }
   }, [dispatch, limit, page, restaurantsPerPage, loadingRestaurants])
-  
+
   const onChangePagination = (newPage) => {
     dispatch(setPage(newPage))
   }
@@ -49,7 +57,7 @@ export default function RestaurantsScreen() {
   }
 
   const executeSearch = async (query) => {
-    dispatch(fetchRestaurants({ limit, page, order: "DESC", search_field: "name", search: query }))
+    dispatch(fetchRestaurants({ limit, page, order: "DESC", search_field: searchField, search: query }))
   }
 
   return (
@@ -71,6 +79,9 @@ export default function RestaurantsScreen() {
       onSearch={handleSearch}
       value={searchData}
       searchAction={executeSearch}
+      searchOptions={searchOptionsShops}
+      selectedOption={searchField}
+      setSelectedSearchOption={(value) => dispatch(setSelectedSearchOption(value))}
     />
   )
 }

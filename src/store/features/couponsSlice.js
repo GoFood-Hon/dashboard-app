@@ -165,6 +165,7 @@ const couponsSlice = createSlice({
     deletingCoupons: false,
     totalItems: 0,
     searchData: null,
+    searchField: "title",
     error: null,
     selectedCoupon: null
   },
@@ -245,6 +246,9 @@ const couponsSlice = createSlice({
         // Ajustar totalCoupons
         state.totalCoupons -= 1
       }
+    },
+    setSelectedSearchOption: (state, action) => {
+      state.searchField = action.payload
     }
   },
   extraReducers: (builder) => {
@@ -358,6 +362,6 @@ const couponsSlice = createSlice({
   }
 })
 
-export const { setPage, setSearchData, setSelectedCoupon, handleDeleteCoupon } = couponsSlice.actions
+export const { setPage, setSearchData, setSelectedCoupon, handleDeleteCoupon, setSelectedSearchOption } = couponsSlice.actions
 
 export default couponsSlice.reducer

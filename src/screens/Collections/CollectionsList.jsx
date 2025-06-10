@@ -3,17 +3,13 @@ import { useNavigate } from "react-router-dom"
 import { NAVIGATION_ROUTES_SUPER_ADMIN } from "../../routes"
 import { useDispatch, useSelector } from "react-redux"
 import { setCurrentPage } from "../../store/features/userSlice"
-import { fetchCollections, setSearchData } from "../../store/features/collectionsSlice"
+import { fetchCollections, setSearchData, setSelectedSearchOption } from "../../store/features/collectionsSlice"
 import TableViewLayout from "../TableViewLayout"
+import { searchOptionsCollections } from "../../utils/constants"
 
 export const CollectionsList = () => {
   const navigate = useNavigate()
   const dispatch = useDispatch()
-
-  const handleNewItem = () => {
-    navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Collections.NewCollection.path)
-  }
-
   const limit = useSelector((state) => state.collections.itemsPerPage)
   const page = useSelector((state) => state.collections.currentPage)
   const collectionsPerPage = useSelector((state) => state.collections.collectionsPerPage)
@@ -22,6 +18,7 @@ export const CollectionsList = () => {
   const collectionsList = collectionsPerPage[page] || []
   const loadingCollections = useSelector((state) => state.collections.loadingCollections)
   const searchData = useSelector((state) => state.collections.searchData)
+  const searchField = useSelector((state) => state.collections.searchField)
 
   useEffect(() => {
     if (!collectionsPerPage[page]) {
@@ -29,12 +26,16 @@ export const CollectionsList = () => {
     }
   }, [dispatch, limit, page, collectionsPerPage, loadingCollections])
 
+  const handleNewItem = () => {
+    navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Collections.NewCollection.path)
+  }
+
   const handleSearch = (query) => {
     dispatch(setSearchData(query))
   }
 
   const executeSearch = async (query) => {
-    dispatch(fetchCollections({ limit, page, order: "DESC", search_field: "name", search: query }))
+    dispatch(fetchCollections({ limit, page, order: "DESC", search_field: searchField, search: query }))
   }
 
   return (
@@ -53,6 +54,9 @@ export const CollectionsList = () => {
         onSearch={handleSearch}
         value={searchData}
         searchAction={executeSearch}
+        searchOptions={searchOptionsCollections}
+        selectedOption={searchField}
+        setSelectedSearchOption={(value) => dispatch(setSelectedSearchOption(value))}
       />
     </>
   )

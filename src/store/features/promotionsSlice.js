@@ -222,6 +222,7 @@ const promotionsSlice = createSlice({
     deletingPromotions: false,
     totalItems: 0,
     searchData: null,
+    searchField: "title",
     error: null,
     selectedPromotion: null,
     dishesList: []
@@ -305,6 +306,9 @@ const promotionsSlice = createSlice({
         // Ajustar totalPromotions
         state.totalPromotions -= 1
       }
+    },
+    setSelectedSearchOption: (state, action) => {
+      state.searchField = action.payload
     }
   },
   extraReducers: (builder) => {
@@ -426,6 +430,7 @@ const promotionsSlice = createSlice({
   }
 })
 
-export const { setPage, setSearchData, setSelectedPromotion, handleDeletePromotion } = promotionsSlice.actions
+export const { setPage, setSearchData, setSelectedPromotion, handleDeletePromotion, setSelectedSearchOption } =
+  promotionsSlice.actions
 
 export default promotionsSlice.reducer

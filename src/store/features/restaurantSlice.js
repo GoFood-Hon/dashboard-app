@@ -24,7 +24,8 @@ const initialState = {
   },
 
   //Search params
-  searchData: null
+  searchData: null,
+  searchField: "name"
 }
 
 export const fetchRestaurants = createAsyncThunk(
@@ -345,6 +346,9 @@ export const restaurantsSlice = createSlice({
     },
     setSearchData: (state, action) => {
       state.searchData = action.payload
+    },
+    setSelectedSearchOption: (state, action) => {
+      state.searchField = action.payload
     }
   },
   extraReducers: (builder) => {
@@ -447,8 +451,16 @@ export const restaurantsSlice = createSlice({
   }
 })
 
-export const { setRestaurants, setRestaurantData, setPage, setFilters, setLoading, setImageUrl, setSearchData } =
-  restaurantsSlice.actions
+export const {
+  setRestaurants,
+  setRestaurantData,
+  setPage,
+  setFilters,
+  setLoading,
+  setImageUrl,
+  setSearchData,
+  setSelectedSearchOption
+} = restaurantsSlice.actions
 
 export const selectAllRestaurants = (state) => state.restaurants.restaurants
 

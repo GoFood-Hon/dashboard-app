@@ -1,9 +1,10 @@
 import React, { useEffect } from "react"
 import { useSelector } from "react-redux"
-import { fetchAllOrders, setCurrentPage } from "../../store/features/ordersSlice"
+import { fetchAllOrders, setCurrentPage, setSelectedSearchOption } from "../../store/features/ordersSlice"
 import { useDispatch } from "react-redux"
 import TableViewLayout from "../TableViewLayout"
 import { formatTimeDifference } from "../../utils"
+import { searchOptionsOrders } from "../../utils/constants"
 
 export default function OrdersScreen() {
   const dispatch = useDispatch()
@@ -15,14 +16,11 @@ export default function OrdersScreen() {
   const totalPageCount = useSelector((state) => state.orders.totalPagesCount)
   const ordersList = ordersPerPage[page] || []
   const loadingOrders = useSelector((state) => state.orders.loadingOrders)
+  const searchField = useSelector((state) => state.orders.searchField)
 
   useEffect(() => {
     if (!ordersPerPage[page]) {
-      if (user.role === "kitchen") {
-        dispatch(fetchAllOrders({ limit, page, order: "DESC", status: "confirmed" }))
-      } else {
-        dispatch(fetchAllOrders({ limit, page, order: "DESC" }))
-      }
+      dispatch(fetchAllOrders({ limit, page, order: "DESC", searchField: searchField }))
     }
   }, [dispatch, limit, page, ordersPerPage, user.role])
 
@@ -49,7 +47,9 @@ export default function OrdersScreen() {
         totalItems={totalPageCount}
         loading={loadingOrders}
         setPage={(newPage) => dispatch(setCurrentPage(newPage))}
-        noSearch
+        searchOptions={searchOptionsOrders}
+        selectedOption={searchField}
+        setSelectedSearchOption={(value) => dispatch(setSelectedSearchOption(value))}
       />
     </>
   )

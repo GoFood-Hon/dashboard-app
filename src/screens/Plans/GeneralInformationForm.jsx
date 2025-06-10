@@ -3,7 +3,7 @@ import { Grid, MultiSelect, Paper, Select } from "@mantine/core"
 import toast from "react-hot-toast"
 import InputField from "../../components/Form/InputField"
 import plansApi from "../../api/plansApi"
-import { DEFAULT_CURRENCY, DEFAULT_PAYMENT_TYPE } from "../../utils/constants"
+import { DEFAULT_CURRENCY } from "../../utils/constants"
 
 export const GeneralInformationForm = ({ register, errors, setValue, featuresList, setFeaturesList }) => {
   const [paymentType, setPaymentType] = useState()
@@ -86,7 +86,7 @@ export const GeneralInformationForm = ({ register, errors, setValue, featuresLis
                 />
               </Grid.Col>
               <Grid.Col span={{ base: 12, md: 6 }}>
-                <Select label="Moneda" data={["HNL"]} allowDeselect={false} value={currency} onChange={onChangeCurrency} />
+                <Select label="Moneda" data={["HNL", "USD"]} allowDeselect={false} value={currency} onChange={onChangeCurrency} />
               </Grid.Col>
               <Grid.Col span={{ sm: 12 }}>
                 <MultiSelect

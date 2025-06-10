@@ -64,7 +64,7 @@ export const NAVIGATION_ROUTES_SUPER_ADMIN = {
     path: "/miCuenta"
   },
   KitchenTypesAndTags: {
-    path: "/tipos-cocina-tags"
+    path: "/tipos-comercio-categorias"
   },
   Collections: {
     path: "/lista-de-colecciones",
@@ -95,8 +95,8 @@ export const NAVIGATION_ROUTES_SUPER_ADMIN_TWO = [
         link: "/comercios"
       },
       {
-        label: "Especialidades de cocina y tags",
-        link: "/tipos-cocina-tags"
+        label: "Tipos de comercio y categorías",
+        link: "/tipos-comercio-categorias"
       }
     ]
   },
@@ -259,7 +259,7 @@ export const NAVIGATION_ROUTES_RES_ADMIN_TWO = [
     initiallyOpened: false,
     links: [
       {
-        label: "Datos del restaurante",
+        label: "Datos del comercio",
         link: "/configuraciones/general"
       },
       {
@@ -281,10 +281,10 @@ export const NAVIGATION_ROUTES_RES_ADMIN_TWO = [
         label: "Cupones",
         link: "/configuraciones/lista-de-cupones"
       },
-      {
-        label: "Bancos",
-        link: "/configuraciones/bancos"
-      },
+      // {
+      //   label: "Bancos",
+      //   link: "/configuraciones/bancos"
+      // },
       {
         label: "Administrar plan",
         link: "/configuraciones/plan"

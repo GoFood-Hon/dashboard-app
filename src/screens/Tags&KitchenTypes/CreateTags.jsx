@@ -36,7 +36,7 @@ export const CreateTags = () => {
         <Grid.Col span={12}>
           <Flex align="flex-start" style={{ width: "100%" }}>
             <Input
-              placeholder="Ingresa el nombre del tag"
+              placeholder="Ingresa el nombre de la categoría"
               value={value}
               onChange={(event) => setValue(event.currentTarget.value)}
               rightSectionPointerEvents="all"

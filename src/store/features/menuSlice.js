@@ -34,6 +34,7 @@ const initialState = {
   isLoading: false, // Nuevo estado de carga
 
   //Buscar menus
+  searchField: "name",
   searchData: null,
   searchDishesData: null
 }
@@ -365,6 +366,9 @@ export const menusSlice = createSlice({
     },
     setSearchDishesData: (state, action) => {
       state.searchDishesData = action.payload
+    },
+    setSelectedSearchOption: (state, action) => {
+      state.searchField = action.payload
     }
   },
 
@@ -473,7 +477,8 @@ export const {
   setCurrentDishPage,
   setDishesAddedToMenuCount,
   setSearchData,
-  setSearchDishesData
+  setSearchDishesData,
+  setSelectedSearchOption
 } = menusSlice.actions
 
 export const selectAllMenus = (state) => state.menus.menus

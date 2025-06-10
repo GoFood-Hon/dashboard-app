@@ -7,6 +7,7 @@ import { deleteOffer, getPromotionByRestaurant, setPage, setSearchData } from ".
 import { useState } from "react"
 import ConfirmationModal from "../ConfirmationModal"
 import { useDisclosure } from "@mantine/hooks"
+import { searchOptionsPromotions } from "../../utils/constants"
 
 export default function PromotionsList() {
   const navigate = useNavigate()
@@ -19,6 +20,7 @@ export default function PromotionsList() {
   const promotionsList = promotionsPerPage[page] || []
   const loadingPromotions = useSelector((state) => state.promotions.loadingPromotions)
   const searchData = useSelector((state) => state.promotions.searchData)
+  const searchField = useSelector((state) => state.promotions.searchField)
   const [promotionToDelete, setPromotionToDelete] = useState(null)
   const [opened, { close, open }] = useDisclosure(false)
 
@@ -37,7 +39,7 @@ export default function PromotionsList() {
   }
 
   const executeSearch = async (query) => {
-    dispatch(getPromotionByRestaurant({ limit, page, order: "DESC", search_field: "title", search: query }))
+    dispatch(getPromotionByRestaurant({ limit, page, order: "DESC", search_field: searchField, search: query }))
   }
 
   return (
@@ -60,6 +62,9 @@ export default function PromotionsList() {
           open()
           setPromotionToDelete(id)
         }}
+        searchOptions={searchOptionsPromotions}
+        selectedOption={searchField}
+        setSelectedSearchOption={(value) => dispatch(setSelectedSearchOption(value))}
       />
 
       <ConfirmationModal

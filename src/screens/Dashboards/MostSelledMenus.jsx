@@ -10,6 +10,8 @@ const data = [
 ]
 
 export const MostSelledMenus = () => {
+  const isEmpty = Array.isArray(data) && data.length === 0
+  
   return (
     <Paper
       withBorder
@@ -17,7 +19,7 @@ export const MostSelledMenus = () => {
       radius="md"
       className="w-full bg-white rounded-2xl shadow border border-blue-100 flex flex-col p-2 mr-6">
       <div className="flex flex-row justify-between items-center p-2">
-        <h2 className="text-white-200 text-xl font-semibold">Top 5 de menús más vendidos</h2>
+        <h2 className="text-white-200 text-xl font-semibold">Menús más vendidos</h2>
       </div>
       <Divider my="md" />
       <BarChart

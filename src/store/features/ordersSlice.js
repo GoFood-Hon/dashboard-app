@@ -249,6 +249,8 @@ const ordersSlice = createSlice({
     loadingOrders: false,
     updatingOrderStatus: false,
     cancelOrderStatus: false,
+    searchField: 'name',
+    searchValue: null,
 
     //kitchen data
     itemsForKitchenPerPage: ITEMS_PER_PAGE_CARDS,
@@ -338,6 +340,9 @@ const ordersSlice = createSlice({
     },
     setDateRange: (state, action) => {
       state.dateRange = action.payload
+    },
+    setSelectedSearchOption: (state, action) => {
+      state.searchField = action.payload
     }
   },
   extraReducers: (builder) => {
@@ -528,6 +533,6 @@ const ordersSlice = createSlice({
   }
 })
 
-export const { setCurrentPage, setTotalOrders, setNewOrder, setOrderStatus, setDateRange } = ordersSlice.actions
+export const { setCurrentPage, setTotalOrders, setNewOrder, setOrderStatus, setDateRange, setSelectedSearchOption } = ordersSlice.actions
 
 export default ordersSlice.reducer

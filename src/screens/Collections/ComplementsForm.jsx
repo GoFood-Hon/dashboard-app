@@ -198,6 +198,7 @@ export default function ComplementsForm({ setValue, isDataCleared, defaultMessag
               elementName={collectionType === "dishes" ? "platillos" : "restaurantes"}
               value={collectionType === "dishes" ? searchDishesData : searchRestaurantsData}
               searchAction={executeSearch}
+              noSelect
             />
             {(collectionType === "dishes" ? dishesLoading : restaurantsLoading) ? (
               <div className="h-[calc(100vh-350px)] w-full flex justify-center items-center">

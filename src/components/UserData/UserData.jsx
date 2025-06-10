@@ -1,6 +1,7 @@
 import { Avatar, Divider, Flex, Loader, Stack, Title, Text } from "@mantine/core"
 import { IconMail, IconPhone, IconId, IconMapPin } from "@tabler/icons-react"
 import { colors } from "../../theme/colors"
+import { IconMotorbike } from "@tabler/icons-react"
 
 const UserData = ({
   title,
@@ -8,6 +9,7 @@ const UserData = ({
   photo,
   name,
   email,
+  userId,
   phoneNumber,
   address,
   bikeId,
@@ -17,6 +19,8 @@ const UserData = ({
   tableNumberAndText,
   noIcons
 }) => {
+
+  console.log(userId)
   return (
     <Stack h="100%" gap="xs">
       <Flex align="center" gap={5}>
@@ -48,13 +52,19 @@ const UserData = ({
             </Text>
           </Flex>
           <Flex align="center" gap="xs" ml={5}>
+            {noIcons ?? <IconId size="1.1rem" />}
+            <Text c="dimmed" size={isSmallScreen ? "xs" : "sm"}>
+              {userId}
+            </Text>
+          </Flex>
+          <Flex align="center" gap="xs" ml={5}>
             {noIcons ?? <IconPhone size="1.1rem" />}
             <Text c="dimmed" size={isSmallScreen ? "xs" : "sm"}>
               {phoneNumber}
             </Text>
           </Flex>
           <Flex align="center" gap="xs" ml={5}>
-            {bikeId ? noIcons ?? <IconId size="1.1rem" style={{ flexShrink: 0 }} /> : noIcons ?? <IconMapPin size="1.1rem" style={{ flexShrink: 0 }} />}
+            {bikeId ? noIcons ?? <IconMotorbike size="1.1rem" style={{ flexShrink: 0 }} /> : noIcons ?? <IconMapPin size="1.1rem" style={{ flexShrink: 0 }} />}
             <Text c="dimmed" size={isSmallScreen ? "xs" : "sm"} style={{ wordBreak: "break-word" }}>
               {bikeId
                 ? bikeId

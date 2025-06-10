@@ -1,38 +1,152 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit"
 import statsApi from "../../api/statsApi"
 
-export const fetchDishSalesStats = createAsyncThunk("statistics/dishSalesStats", async (_, { rejectWithValue }) => {
-  try {
-    const response = await statsApi.getAllRestaurantsNoPagination()
-    return response.data
-  } catch (error) {
-    return rejectWithValue(error.response.data || "Error fetching dish sales stats")
+export const mainCardsStats = createAsyncThunk(
+  "statistics/mainCardsStats",
+  async ({ restaurantId, startDate, endDate }, { rejectWithValue }) => {
+    try {
+      const response = await statsApi.getMainCardsStats({ restaurantId, startDate, endDate })
+      return response.data
+    } catch (error) {
+      return rejectWithValue(error.response.data || "Error fetching main cards stats")
+    }
   }
-})
+)
 
-// Slice
+export const mainAdminCardsStats = createAsyncThunk(
+  "statistics/mainAdminCardsStats",
+  async ({ startDate, endDate }, { rejectWithValue }) => {
+    try {
+      const response = await statsApi.getMainAdminCardsStats({ startDate, endDate })
+      return response.data
+    } catch (error) {
+      return rejectWithValue(error.response.data || "Error fetching main admin cards stats")
+    }
+  }
+)
+
+export const getOrdersData = createAsyncThunk(
+  "statistics/ordersData",
+  async ({ restaurantId, sucursalId, startDate, endDate, type }, { rejectWithValue }) => {
+    try {
+      const response = await statsApi.getSellsAndOrdersData({ restaurantId, sucursalId, startDate, endDate, type })
+      return response.data
+    } catch (error) {
+      return rejectWithValue(error.response.data || "Error fetching sells data")
+    }
+  }
+)
+
+export const getSellsData = createAsyncThunk(
+  "statistics/sellsData",
+  async ({ restaurantId, sucursalId, startDate, endDate, type }, { rejectWithValue }) => {
+    try {
+      const response = await statsApi.getSellsAndOrdersData({ restaurantId, sucursalId, startDate, endDate, type })
+      return response.data
+    } catch (error) {
+      return rejectWithValue(error.response.data || "Error fetching sells data")
+    }
+  }
+)
+
+export const getMostSelledProducts = createAsyncThunk(
+  "statistics/getMostSelledProducts",
+  async ({ restaurantId, startDate, endDate }, { rejectWithValue }) => {
+    try {
+      const response = await statsApi.getMostSelledProducts({ restaurantId, startDate, endDate })
+      return response.data
+    } catch (error) {
+      return rejectWithValue(error.response.data || "Error fetching most selled products")
+    }
+  }
+)
+
 const statsSlice = createSlice({
   name: "statistics",
   initialState: {
-    salesStats: [],
-    loadingsalesstats: false,
+    cardsStats: [],
+    sellsData: [],
+    ordersData: [],
+    mostSelledProducts: [],
+    loadingStats: false,
+    startDate: null,
+    endDate: null,
+    selectedFilter: "Esta semana",
+    showDatePickers: false,
     error: null
   },
-  reducers: {},
+  reducers: {
+    setDateRange: (state, action) => {
+      const { startDate, endDate } = action.payload
+      state.startDate = startDate
+      state.endDate = endDate
+    },
+    setSelectedFilter: (state, action) => {
+      state.selectedFilter = action.payload
+    },
+    setShowDatePickers: (state, action) => {
+      state.showDatePickers = action.payload
+    }
+  },
   extraReducers: (builder) => {
     builder
-      .addCase(fetchDishSalesStats.pending, (state) => {
-        state.loadingsalesstats = true
+      .addCase(mainCardsStats.pending, (state) => {
+        state.loadingStats = true
       })
-      .addCase(fetchDishSalesStats.fulfilled, (state, action) => {
-        state.salesStats = action.payload
-        state.loadingsalesstats = false
+      .addCase(mainCardsStats.fulfilled, (state, action) => {
+        state.cardsStats = action.payload
+        state.loadingStats = false
       })
-      .addCase(fetchDishSalesStats.rejected, (state, action) => {
+      .addCase(mainCardsStats.rejected, (state, action) => {
         state.error = action.payload
-        state.loadingsalesstats = false
+        state.loadingStats = false
+      })
+      .addCase(mainAdminCardsStats.pending, (state) => {
+        state.loadingStats = true
+      })
+      .addCase(mainAdminCardsStats.fulfilled, (state, action) => {
+        state.cardsStats = action.payload
+        state.loadingStats = false
+      })
+      .addCase(mainAdminCardsStats.rejected, (state, action) => {
+        state.error = action.payload
+        state.loadingStats = false
+      })
+      .addCase(getOrdersData.pending, (state) => {
+        state.loadingStats = true
+      })
+      .addCase(getOrdersData.fulfilled, (state, action) => {
+        state.ordersData = action.payload
+        state.loadingStats = false
+      })
+      .addCase(getOrdersData.rejected, (state, action) => {
+        state.error = action.payload
+        state.loadingStats = false
+      })
+      .addCase(getSellsData.pending, (state) => {
+        state.loadingStats = true
+      })
+      .addCase(getSellsData.fulfilled, (state, action) => {
+        state.sellsData = action.payload
+        state.loadingStats = false
+      })
+      .addCase(getSellsData.rejected, (state, action) => {
+        state.error = action.payload
+        state.loadingStats = false
+      })
+      .addCase(getMostSelledProducts.pending, (state) => {
+        state.loadingStats = true
+      })
+      .addCase(getMostSelledProducts.fulfilled, (state, action) => {
+        state.mostSelledProducts = action.payload
+        state.loadingStats = false
+      })
+      .addCase(getMostSelledProducts.rejected, (state, action) => {
+        state.error = action.payload
+        state.loadingStats = false
       })
   }
 })
 
+export const { setDateRange, setSelectedFilter, setShowDatePickers } = statsSlice.actions
 export default statsSlice.reducer

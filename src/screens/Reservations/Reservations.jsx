@@ -1,12 +1,18 @@
 import React, { useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import { fetchReservationByBranch, fetchReservationByRestaurant, setPage } from "../../store/features/reservationsSlice"
+import {
+  fetchReservationByBranch,
+  fetchReservationByRestaurant,
+  setPage,
+  setSearchData,
+  setSelectedSearchOption
+} from "../../store/features/reservationsSlice"
 import TableViewLayout from "../TableViewLayout"
+import { searchOptionsReservations } from "../../utils/constants"
 
 export const Reservations = () => {
   const dispatch = useDispatch()
   const user = useSelector((state) => state.user.value)
-
   const limit = useSelector((state) => state.reservations.itemsPerPage)
   const page = useSelector((state) => state.reservations.currentPage)
   const reservationsPerPage = useSelector((state) => state.reservations.reservationsPerPage)
@@ -14,6 +20,8 @@ export const Reservations = () => {
   const totalPageCount = useSelector((state) => state.reservations.totalPagesCount)
   const reservationsList = reservationsPerPage[page] || []
   const loadingReservations = useSelector((state) => state.reservations.loadingReservations)
+  const searchData = useSelector((state) => state.reservations.searchData)
+  const searchField = useSelector((state) => state.reservations.searchField)
 
   useEffect(() => {
     if (!reservationsPerPage[page]) {
@@ -22,6 +30,37 @@ export const Reservations = () => {
         : dispatch(fetchReservationByBranch({ branchId: user?.sucursalId, limit, page, order: "DESC" }))
     }
   }, [dispatch, limit, page, reservationsPerPage])
+
+  const handleSearch = (query) => {
+    dispatch(setSearchData(query))
+  }
+
+  const executeSearch = async (query) => {
+    user?.role === "admin-restaurant"
+      ? dispatch(
+          fetchReservationByRestaurant({
+            restaurantId: user?.restaurantId,
+            limit,
+            page,
+            order: "DESC",
+            search_field: searchField,
+            search: query
+          })
+        )
+      : dispatch(
+          fetchReservationByBranch({
+            branchId: user?.sucursalId,
+            limit,
+            page,
+            order: "DESC",
+            search_field: searchField,
+            search: query
+          })
+        )
+    dispatch(
+      fetchMenus({ restaurantId: user.restaurantId, limit, page, order: "DESC", search_field: searchField, search: query })
+    )
+  }
 
   return (
     <>
@@ -38,7 +77,12 @@ export const Reservations = () => {
         totalItems={totalPageCount}
         loading={loadingReservations}
         setPage={(newPage) => dispatch(setPage(newPage))}
-        noSearch
+        onSearch={handleSearch}
+        value={searchData}
+        searchAction={executeSearch}
+        searchOptions={searchOptionsReservations}
+        selectedOption={searchField}
+        setSelectedSearchOption={(value) => dispatch(setSelectedSearchOption(value))}
       />
     </>
   )

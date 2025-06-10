@@ -88,7 +88,6 @@ export const OrderDetails = () => {
   const [active, setActive] = useState(getInitialStep)
 
   useEffect(() => {
-    console.log(orderDetails)
     setActive(getInitialStep())
   }, [orderDetails])
 
@@ -107,7 +106,7 @@ export const OrderDetails = () => {
           <Stack gap="xs">
             <Group>
               <Flex align="center" justify="space-between">
-                <BackButton title="Vista detallada del pedido" show />
+                <BackButton title={`Pedido: ${orderId}`} show />
               </Flex>
             </Group>
             <Paper withBorder p="md" radius="md" bg={orderDetails?.status === "canceled" ? "red" : ""}>
@@ -149,7 +148,7 @@ export const OrderDetails = () => {
                         direction="column"
                         justify="space-between"
                         style={{
-                          backgroundColor: "rgba(0, 0, 0, 0.7)",
+                          backgroundColor: "rgba(0, 0, 0, 0.45)",
                           height: "100%",
                           borderRadius: "inherit"
                         }}>
@@ -160,15 +159,15 @@ export const OrderDetails = () => {
                           <Text c="white">{orderDetails?.Sucursal?.city + ", " + orderDetails?.Sucursal?.state}</Text>
                         </Flex>
                         <Flex justify="space-between">
-                          <Flex align="center" gap={2}>
+                          <Flex c='white' align="center" gap={2}>
                             {orderDetails?.serviceType === "delivery" ? (
-                              <IconMotorbike size={20} />
+                              <IconMotorbike size="1.1rem" />
                             ) : orderDetails?.serviceType === "onSite" ? (
-                              <IconToolsKitchen3 size={20} />
+                              <IconToolsKitchen3 size="1.1rem" />
                             ) : (
-                              <IconCar size={20} />
+                              <IconCar size="1.1rem" />
                             )}
-                            <Text ta="end" size="sm" fw={700}>
+                            <Text c='white' ta="end" size="sm" fw={700}>
                               {orderDetails?.serviceType === "delivery"
                                 ? "Pedido a domicilio"
                                 : orderDetails?.serviceType === "onSite"
@@ -177,9 +176,9 @@ export const OrderDetails = () => {
                             </Text>
                           </Flex>
                           {orderDetails?.sentToKitchenTimestamp && orderDetails?.finishedCookingTimestamp && (
-                            <Flex align="center" gap={2}>
+                            <Flex c='white' align="center" gap={2}>
                               <IconStopwatch size={20} />
-                              <Text size="sm" fw={700}>
+                              <Text c='white' size="sm" fw={700}>
                                 Preparado en{" "}
                                 {calculateTimeDifference(
                                   orderDetails?.sentToKitchenTimestamp,
@@ -226,6 +225,7 @@ export const OrderDetails = () => {
                         photo={orderDetails?.Order?.User?.photo}
                         name={orderDetails?.Order?.User?.name}
                         email={orderDetails?.Order?.User?.email}
+                        userId={orderDetails?.Order?.User?.identityNumber}
                         phoneNumber={orderDetails?.Order?.User?.phoneNumber}
                         address={orderDetails?.userAddress?.address}
                         isSmallScreen={isSmallScreen}
@@ -258,6 +258,7 @@ export const OrderDetails = () => {
                         photo={orderDetails?.driver?.AdminUser?.images?.[0]?.location}
                         name={orderDetails?.driver?.AdminUser?.name}
                         email={orderDetails?.driver?.AdminUser?.email}
+                        userId={orderDetails?.driver?.nationalIdentityNumber}
                         phoneNumber={orderDetails?.driver?.AdminUser?.phoneNumber}
                         bikeId={orderDetails?.driver?.motorcycleId}
                         isSmallScreen={isSmallScreen}

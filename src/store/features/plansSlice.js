@@ -142,7 +142,8 @@ const initialState = {
   error: null,
 
   //Buscar planes
-  searchData: null
+  searchData: null,
+  searchField: "name"
 }
 
 const plansSlice = createSlice({
@@ -157,6 +158,9 @@ const plansSlice = createSlice({
     },
     setCurrentPage: (state, action) => {
       state.currentPage = action.payload
+    },
+    setSelectedSearchOption: (state, action) => {
+      state.searchField = action.payload
     }
   },
   extraReducers: (builder) => {
@@ -251,5 +255,5 @@ const plansSlice = createSlice({
   }
 })
 
-export const { clearSelectedPlans, setSearchData, setCurrentPage } = plansSlice.actions
+export const { clearSelectedPlans, setSearchData, setCurrentPage, setSelectedSearchOption } = plansSlice.actions
 export default plansSlice.reducer

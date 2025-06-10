@@ -264,6 +264,7 @@ const loyaltySlice = createSlice({
 
     // Buscador de programas de lealtad
     searchData: null,
+    searchField: "title",
 
     //Loyalty Tracking variables
     clientIdentity: null,
@@ -328,6 +329,9 @@ const loyaltySlice = createSlice({
     },
     setCurrentRewardPage: (state, action) => {
       state.currentRewardPage = action.payload
+    },
+    setSelectedSearchOption: (state, action) => {
+      state.searchField = action.payload
     }
   },
   extraReducers: (builder) => {
@@ -517,7 +521,8 @@ export const {
   setClientIdentity,
   setCardCode,
   setFilterValue,
-  setCurrentRewardPage
+  setCurrentRewardPage,
+  setSelectedSearchOption
 } = loyaltySlice.actions
 
 export default loyaltySlice.reducer

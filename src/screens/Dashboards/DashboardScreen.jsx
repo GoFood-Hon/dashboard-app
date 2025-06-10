@@ -1,111 +1,12 @@
-import { Grid, Stack } from "@mantine/core"
-import React, { useEffect, useState } from "react"
-
-import reportsApi from "../../api/reportsApi"
-import toast from "react-hot-toast"
-import { Icon } from "../../components/Icon"
-import { getFormattedHNL } from "../../utils"
+import { Skeleton, Stack, NumberFormatter } from "@mantine/core"
 import { Group, Paper, SimpleGrid, Text } from "@mantine/core"
-import { IconUserPlus, IconDiscount2, IconReceipt2, IconCoin, IconArrowUpRight, IconArrowDownRight } from "@tabler/icons-react"
 import classes from "../../assets/css/StatsGrid.module.css"
-import { IconMoneybag } from "@tabler/icons-react"
-import { IconTicket } from "@tabler/icons-react"
-import { IconCube } from "@tabler/icons-react"
-import { IconUsersGroup } from "@tabler/icons-react"
-import { statistictsExample } from "../../utils/constants"
+import { cardsAdminDataStructure, cardsDataStructure } from "../../utils/constants"
 
-export const DashboardScreen = () => {
-  const [dailySales, setDailySales] = useState(0)
-  const [dailyOrders, setDailyOrders] = useState(0)
-  const [dailyTicket, setDailyTicket] = useState(0)
-  const [totalClients, setTotalClients] = useState(0)
-
-  useEffect(() => {
-    const getDailySales = async () => {
-      try {
-        const currentDate = new Date()
-
-        const response = await reportsApi.getDailySales(currentDate.toLocaleDateString(), currentDate.toLocaleDateString())
-
-        setDailySales(response?.data?.total_ventas || 0)
-      } catch (error) {
-        toast.error(`Hubo un error.  ${error}`, {
-          duration: 7000
-        })
-      }
-    }
-
-    const getNewUsers = async () => {
-      try {
-        const response = await reportsApi.getUsersCount()
-
-        setTotalClients(response?.results || 0)
-      } catch (error) {
-        toast.error(`Error. Por favor intente de nuevo. ${error}`, {
-          duration: 7000
-        })
-      }
-    }
-
-    const getAverageTicketDailyData = async () => {
-      try {
-        const response = await reportsApi.getAverageTicketDaily()
-        // TODO: Fix this response
-        setDailyOrders(response?.data?.total || 0)
-        setDailyTicket(response?.data?.total || 0)
-      } catch (error) {
-        toast.error(`Error. Por favor intente de nuevo. ${error}`, {
-          duration: 7000
-        })
-      }
-    }
-
-    //getAverageTicketDailyData()
-    //getDailySales()
-    //getNewUsers()
-  }, [])
-
-  const icons = {
-    user: IconUserPlus,
-    discount: IconDiscount2,
-    receipt: IconReceipt2,
-    coin: IconCoin
-  }
-
-  const data = [
-    {
-      title: "Ventas",
-      icon: IconCoin,
-      value: getFormattedHNL(statistictsExample.sells.amount),
-      diff: statistictsExample.sells.percentage,
-      text: "Ventas diarias totales"
-    },
-    {
-      title: "Pedidos",
-      icon: IconCube,
-      value: statistictsExample.orders.quantity,
-      diff: statistictsExample.orders.percentage,
-      text: "Total de pedidos diarios"
-    },
-    {
-      title: "Tickets",
-      icon: IconTicket,
-      value: statistictsExample.tickets.quantity,
-      diff: statistictsExample.tickets.percentage,
-      text: "Tickets según venta diaria"
-    },
-    {
-      title: "Usuarios",
-      icon: IconUsersGroup,
-      value: statistictsExample.users.quantity,
-      diff: statistictsExample.users.percentage,
-      text: "Total nuevos usuarios"
-    }
-  ]
+export const DashboardScreen = ({ userRole, cardsStats, loadingStats }) => {
+  const data = userRole === "superadmin" ? cardsAdminDataStructure(cardsStats) : cardsDataStructure(cardsStats)
 
   const stats = data.map((stat) => {
-    const DiffIcon = stat.diff > 0 ? IconArrowUpRight : IconArrowDownRight
-
     return (
       <Stack gap="sm" key={stat.title}>
         <Paper withBorder p="md" radius="md" key={stat.title}>
@@ -116,15 +17,28 @@ export const DashboardScreen = () => {
             <stat.icon className={classes.icon} size="1.4rem" stroke={1.5} />
           </Group>
 
-          <Group align="center" gap="xs" mt={25}>
-            <Text className={classes.value}>{stat.value}</Text>
-            <Text c={stat.diff > 0 ? "teal" : "red"} fw={500} className={classes.diff}>
-              {stat.diff}%
-              <DiffIcon size="1rem" stroke={1.5} />
-            </Text>
+          <Group align="flex-end" gap="xs" mt={20}>
+            {loadingStats ? (
+              <Skeleton height={25} w={200} mt="xs" />
+            ) : stat.type === "time" ? (
+              <Text fz="h3" fw={700} className={classes.value}>
+                <NumberFormatter
+                  value={stat.value || 0}
+                  suffix=" minutos"
+                  decimalScale={0}
+                  thousandSeparator="."
+                  decimalSeparator=","
+                  className={classes.value}
+                />
+              </Text>
+            ) : (
+              <Text fz="h3" fw={700} className={classes.value}>
+                {stat.value}
+              </Text>
+            )}
           </Group>
 
-          <Text fz="sm" c="dimmed" mt={7}>
+          <Text fz="sm" c="dimmed">
             {stat.text}
           </Text>
         </Paper>

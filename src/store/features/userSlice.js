@@ -80,6 +80,7 @@ export const createAdminUser = createAsyncThunk(
   async ({ params, formDataImage }, { rejectWithValue }) => {
     try {
       const response = await authApi.createNewAdmin(params)
+      console.log(response)
       const userData = response.data.data
 
       if (response.error) {
@@ -98,16 +99,16 @@ export const createAdminUser = createAsyncThunk(
         const imageResponse = await userApi.addImage(userData.id, formDataImage)
         images = imageResponse.data
 
-        if (imageResponse.error) {
-          showNotification({
-            title: "Error",
-            message: imageResponse.message,
-            color: "red",
-            duration: 7000
-          })
+        // if (imageResponse.error) {
+        //   showNotification({
+        //     title: "Error",
+        //     message: imageResponse.message,
+        //     color: "red",
+        //     duration: 7000
+        //   })
 
-          return rejectWithValue(imageResponse.message)
-        }
+        //   return rejectWithValue(imageResponse.message)
+        // }
       }
 
       showNotification({
@@ -397,7 +398,9 @@ const initialState = {
 
   //Buscador de usuarios
   searchAdminUsersData: null,
-  searchUsersData: null
+  searchUsersData: null,
+  searchFieldUsers: "name",
+  searchFieldAdminUsers: "name"
 }
 
 // Slice de usuarios
@@ -425,7 +428,13 @@ export const userSlice = createSlice({
     },
     setSearchUsersData: (state, action) => {
       state.searchUsersData = action.payload
-    }
+    },
+    setSelectedSearchOptionForUsers: (state, action) => {
+      state.searchFieldUsers = action.payload
+    },
+    setSelectedSearchOptionForAdminUsers: (state, action) => {
+      state.searchFieldAdminUsers = action.payload
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -617,7 +626,9 @@ export const {
   setTotalAdminUsers,
   setUserRole,
   setSearchAdminUsersData,
-  setSearchUsersData
+  setSearchUsersData,
+  setSelectedSearchOptionForUsers,
+  setSelectedSearchOptionForAdminUsers
 } = userSlice.actions
 
 export default userSlice.reducer

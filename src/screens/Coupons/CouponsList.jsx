@@ -6,7 +6,8 @@ import TableViewLayout from "../TableViewLayout"
 import { useState } from "react"
 import ConfirmationModal from "../ConfirmationModal"
 import { useDisclosure } from "@mantine/hooks"
-import { deleteCoupon, getCoupons, setPage, setSearchData } from "../../store/features/couponsSlice"
+import { deleteCoupon, getCoupons, setPage, setSearchData, setSelectedSearchOption } from "../../store/features/couponsSlice"
+import { searchOptionsCoupons } from "../../utils/constants"
 
 export default function CouponsList() {
   const navigate = useNavigate()
@@ -19,6 +20,7 @@ export default function CouponsList() {
   const couponsList = couponsPerPage[page] || []
   const loadingCoupons = useSelector((state) => state.coupons.loadingCoupons)
   const searchData = useSelector((state) => state.coupons.searchData)
+  const searchField = useSelector((state) => state.coupons.searchField)
   const [couponToDelete, setCouponToDelete] = useState(null)
   const [opened, { close, open }] = useDisclosure(false)
 
@@ -37,7 +39,7 @@ export default function CouponsList() {
   }
 
   const executeSearch = async (query) => {
-    dispatch(getCoupons({ limit, page, order: "DESC", search_field: "title", search: query }))
+    dispatch(getCoupons({ limit, page, order: "DESC", search_field: searchField, search: query }))
   }
 
   return (
@@ -60,6 +62,9 @@ export default function CouponsList() {
           open()
           setCouponToDelete(id)
         }}
+        searchOptions={searchOptionsCoupons}
+        selectedOption={searchField}
+        setSelectedSearchOption={(value) => dispatch(setSelectedSearchOption(value))}
       />
 
       <ConfirmationModal

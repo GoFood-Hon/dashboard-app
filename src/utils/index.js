@@ -144,3 +144,29 @@ export const formatTimeDifference = (sentToKitchenTimestamp, finishedCookingTime
 
   return formattedTime
 }
+
+const capitalize = (str) => str.charAt(0).toUpperCase() + str.slice(1)
+
+export const transformOrdersData = (data) => {
+  return data.map((item) => {
+    const formattedDate = dayjs(item.date).format("MMMM D")
+    return {
+      date: capitalize(formattedDate),
+      "A domicilio": item.delivery,
+      "Para llevar": item.pickup,
+      "Comer en restaurante": item.onSite
+    }
+  })
+}
+
+export const transformSellsData = (data) => {
+  return data.map((item) => {
+    const formattedDate = dayjs(item.date).format("MMMM D")
+    return {
+      date: capitalize(formattedDate),
+      "A domicilio": item.delivery,
+      "Para llevar": item.pickup,
+      "Comer en restaurante": item.onSite
+    }
+  })
+}

@@ -11,6 +11,7 @@ import { RestaurantBanner } from "./RestaurantBanner"
 import FormLayout from "../../components/Form/FormLayout"
 import { restaurantSchema } from "../../utils/validationSchemas"
 import { showNotification } from "@mantine/notifications"
+import { zodResolver } from "@hookform/resolvers/zod"
 
 export const NewRestaurant = () => {
   const navigate = useNavigate()
@@ -25,6 +26,7 @@ export const NewRestaurant = () => {
     watch,
     formState: { errors }
   } = useForm({
+    resolver: zodResolver(restaurantSchema),
     defaultValues: {
       bannerDishes: [],
       files: [],
@@ -33,19 +35,6 @@ export const NewRestaurant = () => {
   })
 
   const onSubmit = async (data) => {
-    const result = restaurantSchema.safeParse(data)
-
-    if (!result.success) {
-      const firstError = result.error.errors?.[0]
-      const errorMessage = firstError?.message || "Error de validación"
-      showNotification({
-        title: "Error",
-        message: errorMessage,
-        color: "red"
-      })
-      return
-    }
-
     const validatedData = result.data
 
     try {

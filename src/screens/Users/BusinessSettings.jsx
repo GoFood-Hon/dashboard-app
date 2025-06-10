@@ -146,7 +146,7 @@ export default function BusinessSettings() {
       <form onSubmit={handleSubmit(onSubmit)}>
         <Group grow mb="xs">
           <Flex align="center" justify="space-between">
-            <BackButton title="Información del restaurante" />
+            <BackButton title="Información del comercio" />
           </Flex>
         </Group>
         <Stack gap="xs">
@@ -168,6 +168,7 @@ export default function BusinessSettings() {
               control={control}
               image={imageLocation}
               watch={watch}
+              blocked
             />
           </SettingsCard>
           <SettingsCard title="Datos de reservación" iconName="building">

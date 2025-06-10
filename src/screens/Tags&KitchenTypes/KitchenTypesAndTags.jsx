@@ -6,13 +6,11 @@ import { CreateKitchenTypes } from "./CreateKitchenTypes"
 export const KitchenTypesAndTags = () => {
   const accordionStructure = [
     {
-      title: "Lista de especialidades",
-      requirement: "Opcional",
+      title: "Lista de tipos de comercio",
       form: <CreateKitchenTypes />
     },
     {
-      title: "Lista de Tags",
-      requirement: "Opcional",
+      title: "Lista de categorías",
       form: <CreateTags />
     }
   ]
@@ -26,7 +24,7 @@ export const KitchenTypesAndTags = () => {
             {key + 1}
           </div>
           <span className="text-base font-bold  leading-normal ml-4">{item.title}</span>
-          <span className="text-base font-normal ml-1">({item?.requirement})</span>
+          <span className={`text-base font-normal ml-1 ${item?.requirement ?? 'invisible'}`}>({item?.requirement})</span>
         </div>
       </Accordion.Control>
       <Accordion.Panel>{item.form}</Accordion.Panel>
@@ -35,8 +33,8 @@ export const KitchenTypesAndTags = () => {
 
   return (
     <Stack gap="xs">
-      <BackButton title="Especialidad de cocina / Tags" />
-      <Accordion radius="md" variant="separated" multiple defaultValue={["Lista de Tags", "Lista de especialidades"]}>
+      <BackButton title="Tipos de comercios / Categorías" />
+      <Accordion radius="md" variant="separated" multiple defaultValue={["Lista de categorías", "Lista de tipos de comercio"]}>
         {items}
       </Accordion>
     </Stack>

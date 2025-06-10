@@ -69,7 +69,10 @@ const CardsViewLayout = ({
   onSearch,
   value,
   searchAction,
-  kitchenView
+  kitchenView,
+  searchOptions = [],
+  selectedOption,
+  setSelectedSearchOption
 }) => {
   const dispatch = useDispatch()
   const [opened, { open, close }] = useDisclosure(false)
@@ -109,7 +112,8 @@ const CardsViewLayout = ({
 
     return (
       <Text size="md" fw={700}>
-        {String(days).padStart(2, "0")}:{String(hours).padStart(2, "0")}:{String(minutes).padStart(2, "0")}:{String(seconds).padStart(2, "0")}
+        {String(days).padStart(2, "0")}:{String(hours).padStart(2, "0")}:{String(minutes).padStart(2, "0")}:
+        {String(seconds).padStart(2, "0")}
       </Text>
     )
   }
@@ -233,7 +237,15 @@ const CardsViewLayout = ({
         </Group>
       )}
       {(value !== null || elementsList.length > 0) && !kitchenView && (
-        <SearchComponent onSearch={onSearch} elementName={elementsName} value={value} searchAction={searchAction} />
+        <SearchComponent
+          onSearch={onSearch}
+          elementName={elementsName}
+          value={value}
+          searchAction={searchAction}
+          searchOptions={searchOptions}
+          selectedOption={selectedOption}
+          setSelectedSearchOption={setSelectedSearchOption}
+        />
       )}
 
       <Group grow>
@@ -311,7 +323,7 @@ const CardsViewLayout = ({
                     </Group>
 
                     <Text size="sm" c="dimmed" h={50}>
-                      {elementsName === "restaurantes"
+                      {elementsName === "comercios"
                         ? item?.socialReason
                         : elementsName === "sucursales"
                           ? item?.city + ", " + item?.state
@@ -371,7 +383,7 @@ const CardsViewLayout = ({
                               <Text c="dimmed" size="sm">
                                 Tipo de pedido:
                               </Text>
-                              <Text size="sm" >
+                              <Text size="sm">
                                 {item?.serviceType === "delivery"
                                   ? "A domicilio"
                                   : item?.serviceType === "onSite"

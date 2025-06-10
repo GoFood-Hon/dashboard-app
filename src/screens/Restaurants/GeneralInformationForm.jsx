@@ -9,7 +9,7 @@ import InputCheckbox from "../../components/Form/InputCheckbox"
 import { fetchAllKitchenTypes } from "../../store/features/kitchenAndTagsSlice"
 import { colors } from "../../theme/colors"
 
-export const GeneralInformationForm = ({ register, control, errors, setValue, image, watch }) => {
+export const GeneralInformationForm = ({ register, control, errors, setValue, image, watch, blocked }) => {
   const dispatch = useDispatch()
   const kitchenTypes = useSelector((state) => state.kitchenAndTags.kitchenTypes)
   const [images, setImages] = useState([])
@@ -76,7 +76,7 @@ export const GeneralInformationForm = ({ register, control, errors, setValue, im
                 control={control}
                 render={({ field, fieldState }) => (
                   <Select
-                    label="Especialidad de cocina (Obligatorio)"
+                    label="Tipo de comercio (Obligatorio)"
                     data={kitchenTypes?.map((item) => ({
                       value: item.id,
                       label: item.name
@@ -92,7 +92,7 @@ export const GeneralInformationForm = ({ register, control, errors, setValue, im
               />
             </Grid.Col>
             <Grid.Col span={{ base: 12 }}>
-              <InputField label="Clinpays Token (Obligatorio)" name="clinpaysCommerceToken" register={register} errors={errors} />
+              <InputField label="Clinpays Token (Obligatorio)" name="clinpaysCommerceToken" register={register} errors={errors} disabled={blocked} />
             </Grid.Col>
             <Grid.Col span={{ base: 12, md: 6 }}>
               <InputCheckbox label="¿Cuenta con envío gratis?" name="shippingFree" register={register} />
