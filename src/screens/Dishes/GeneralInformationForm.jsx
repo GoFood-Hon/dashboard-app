@@ -67,7 +67,7 @@ export default function GeneralInformationForm({ register, errors, setValue, ima
             </Grid.Col>
             <Grid.Col span={{ base: 12 }}>
               <MultiSelect
-                label="Lista de tags (Obligatorio)"
+                label="Lista de categorías (Obligatorio)"
                 data={tags?.map((item) => ({
                   value: item.id,
                   label: item.name
@@ -76,7 +76,7 @@ export default function GeneralInformationForm({ register, errors, setValue, ima
                 maxValues={10}
                 hidePickedOptions
                 onChange={handleTagsChange}
-                nothingFoundMessage="No se encontraron tags"
+                nothingFoundMessage="No se encontraron categorías"
                 value={selectedTags}
                 clearable
               />

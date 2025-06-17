@@ -37,7 +37,7 @@ export const CreateKitchenTypes = () => {
         <Grid.Col span={12}>
           <Flex align="flex-start" style={{ width: "100%" }}>
             <Input
-              placeholder="Ingresa el nombre de la tipo de comercio"
+              placeholder="Ingresa el nombre de la tipo de establecimiento"
               value={value}
               onChange={(event) => setValue(event.currentTarget.value)}
               rightSectionPointerEvents="all"

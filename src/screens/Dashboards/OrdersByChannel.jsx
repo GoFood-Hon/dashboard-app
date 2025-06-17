@@ -5,7 +5,7 @@ import { transformOrdersData } from "../../utils"
 
 export const OrdersByChannel = ({ data, loading }) => {
   const isEmpty = Array.isArray(data) && data.length === 0
-  const formattedData = transformOrdersData(data)
+  const formattedData = transformOrdersData(data ?? [])
 
   return (
     <Paper

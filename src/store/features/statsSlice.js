@@ -61,6 +61,18 @@ export const getMostSelledProducts = createAsyncThunk(
   }
 )
 
+export const getMostSelledMenus = createAsyncThunk(
+  "statistics/getMostSelledMenus",
+  async ({ restaurantId, startDate, endDate }, { rejectWithValue }) => {
+    try {
+      const response = await statsApi.getMostSelledMenus({ restaurantId, startDate, endDate })
+      return response.data
+    } catch (error) {
+      return rejectWithValue(error.response.data || "Error fetching most selled menus")
+    }
+  }
+)
+
 const statsSlice = createSlice({
   name: "statistics",
   initialState: {
@@ -68,6 +80,7 @@ const statsSlice = createSlice({
     sellsData: [],
     ordersData: [],
     mostSelledProducts: [],
+    mostSelledMenus: [],
     loadingStats: false,
     startDate: null,
     endDate: null,
@@ -142,6 +155,17 @@ const statsSlice = createSlice({
         state.loadingStats = false
       })
       .addCase(getMostSelledProducts.rejected, (state, action) => {
+        state.error = action.payload
+        state.loadingStats = false
+      })
+      .addCase(getMostSelledMenus.pending, (state) => {
+        state.loadingStats = true
+      })
+      .addCase(getMostSelledMenus.fulfilled, (state, action) => {
+        state.mostSelledMenus = action.payload
+        state.loadingStats = false
+      })
+      .addCase(getMostSelledMenus.rejected, (state, action) => {
         state.error = action.payload
         state.loadingStats = false
       })

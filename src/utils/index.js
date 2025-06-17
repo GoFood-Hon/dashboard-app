@@ -159,7 +159,7 @@ export const transformOrdersData = (data) => {
   })
 }
 
-export const transformSellsData = (data) => {
+export const transformSellsData = (data = []) => {
   return data.map((item) => {
     const formattedDate = dayjs(item.date).format("MMMM D")
     return {

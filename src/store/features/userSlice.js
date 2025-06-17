@@ -99,16 +99,16 @@ export const createAdminUser = createAsyncThunk(
         const imageResponse = await userApi.addImage(userData.id, formDataImage)
         images = imageResponse.data
 
-        // if (imageResponse.error) {
-        //   showNotification({
-        //     title: "Error",
-        //     message: imageResponse.message,
-        //     color: "red",
-        //     duration: 7000
-        //   })
+        if (imageResponse.error) {
+          showNotification({
+            title: "Error",
+            message: imageResponse.message,
+            color: "red",
+            duration: 7000
+          })
 
-        //   return rejectWithValue(imageResponse.message)
-        // }
+          return rejectWithValue(imageResponse.message)
+        }
       }
 
       showNotification({
@@ -135,6 +135,7 @@ export const createAdminUser = createAsyncThunk(
 export const createUser = createAsyncThunk("user/createUser", async ({ params, imageParams }, { rejectWithValue }) => {
   try {
     const response = await userApi.createUser(params)
+    console.log(response)
 
     if (!response || response.error) {
       showNotification({
@@ -152,6 +153,7 @@ export const createUser = createAsyncThunk("user/createUser", async ({ params, i
     if (imageParams) {
       try {
         const imageResponse = await userApi.addImage(userData.id, imageParams)
+        console.log(imageResponse)
 
         if (!imageResponse || imageResponse.error) {
           showNotification({
@@ -184,6 +186,7 @@ export const createUser = createAsyncThunk("user/createUser", async ({ params, i
       duration: 5000
     })
 
+    console.log(userData)
     return userData
   } catch (error) {
     showNotification({

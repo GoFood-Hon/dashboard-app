@@ -6,7 +6,7 @@ import { CreateKitchenTypes } from "./CreateKitchenTypes"
 export const KitchenTypesAndTags = () => {
   const accordionStructure = [
     {
-      title: "Lista de tipos de comercio",
+      title: "Lista de tipos de establecimientos",
       form: <CreateKitchenTypes />
     },
     {
@@ -33,8 +33,8 @@ export const KitchenTypesAndTags = () => {
 
   return (
     <Stack gap="xs">
-      <BackButton title="Tipos de comercios / Categorías" />
-      <Accordion radius="md" variant="separated" multiple defaultValue={["Lista de categorías", "Lista de tipos de comercio"]}>
+      <BackButton title="Tipos de establecimientos / Categorías" />
+      <Accordion radius="md" variant="separated" multiple defaultValue={["Lista de categorías", "Lista de tipos de establecimientos"]}>
         {items}
       </Accordion>
     </Stack>

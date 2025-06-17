@@ -15,7 +15,6 @@ import { PlanForm } from "../Users/PlanForm"
 import { useDispatch } from "react-redux"
 import { updateRestaurantData } from "../../store/features/restaurantSlice"
 import { RestaurantBanner } from "./RestaurantBanner"
-import { restaurantValidation } from "../../utils/inputRules"
 import FormLayout from "../../components/Form/FormLayout"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { restaurantSchema } from "../../utils/validationSchemas"
@@ -25,14 +24,9 @@ export const EditRestaurant = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const [restaurantDetails, setRestaurantDetails] = useState({})
-  const user = useSelector((state) => state.user.value)
   const [planCancelled, setPlanCancelled] = useState(false)
   const [newPlan, setNewPlan] = useState({})
   const isLoading = useSelector((state) => state.restaurants.updatingRestaurant)
-  const page = useSelector((state) => state.restaurants.currentPage)
-  const restaurantsPerPage = useSelector((state) => state.restaurants.restaurantsPerPage)
-  const restaurantsList = restaurantsPerPage[page] || []
-  const restaurantToEdit = restaurantsList[restaurantsList.findIndex((restaurant) => restaurant?.id === restaurantId)]
 
   useEffect(() => {
     ;(async () => {

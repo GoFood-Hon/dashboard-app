@@ -346,7 +346,7 @@ export const searchOptionsUsers = [
 //Search options for shops
 export const searchOptionsShops = [
   { value: "name", label: "Nombre" },
-  { value: "cuisineType", label: "Tipo de comercio" }
+  { value: "cuisineType", label: "Tipo de establecimiento" }
 ]
 
 //Search options for collections
@@ -357,7 +357,7 @@ export const searchOptionsAdminUsers = [
   { value: "name", label: "Nombre" },
   { value: "email", label: "Correo electrónico" },
   { value: "phoneNumber", label: "Teléfono" },
-  { value: "identityNumber", label: "Identidad" }
+  //{ value: "identityNumber", label: "Identidad" }
   //{ value: "restaurantName", label: "Nombre del comercio" }
 ]
 

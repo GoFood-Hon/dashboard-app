@@ -64,7 +64,7 @@ export const NAVIGATION_ROUTES_SUPER_ADMIN = {
     path: "/miCuenta"
   },
   KitchenTypesAndTags: {
-    path: "/tipos-comercio-categorias"
+    path: "/tipos-establecimientos-categorias"
   },
   Collections: {
     path: "/lista-de-colecciones",
@@ -95,8 +95,8 @@ export const NAVIGATION_ROUTES_SUPER_ADMIN_TWO = [
         link: "/comercios"
       },
       {
-        label: "Tipos de comercio y categorías",
-        link: "/tipos-comercio-categorias"
+        label: "Tipos de establecimientos y categorías",
+        link: "/tipos-establecimientos-categorias"
       }
     ]
   },

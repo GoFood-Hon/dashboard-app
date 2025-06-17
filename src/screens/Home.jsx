@@ -6,10 +6,11 @@ import { OrdersByChannel } from "./Dashboards/OrdersByChannel"
 import { SellsByChannel } from "./Dashboards/SellsByChannel"
 import { MostSelledMenus } from "./Dashboards/MostSelledMenus"
 import { colors } from "../theme/colors"
-import { useState, useEffect, useRef } from "react"
+import { useEffect, useRef } from "react"
 import { IconFilter } from "@tabler/icons-react"
 import { useDispatch, useSelector } from "react-redux"
 import {
+  getMostSelledMenus,
   getMostSelledProducts,
   getOrdersData,
   getSellsData,
@@ -40,7 +41,8 @@ function Home() {
     startDate,
     endDate,
     selectedFilter,
-    showDatePickers
+    showDatePickers,
+    mostSelledMenus
   } = useSelector((state) => state.stats)
 
   const user = useSelector((state) => state.user.value)
@@ -51,6 +53,8 @@ function Home() {
       dispatch(mainAdminCardsStats({ startDate: start, endDate: end }))
       dispatch(getSellsData({ startDate: start, endDate: end, type: "ventas" }))
       dispatch(getOrdersData({ startDate: start, endDate: end, type: "cantidad" }))
+      dispatch(getMostSelledProducts({ startDate: start, endDate: end }))
+      dispatch(getMostSelledMenus({ startDate: start, endDate: end }))
     } else {
       const payload = {
         restaurantId: user.restaurantId,
@@ -61,10 +65,10 @@ function Home() {
       dispatch(getSellsData({ ...payload, type: "ventas" }))
       dispatch(getOrdersData({ ...payload, type: "cantidad" }))
       dispatch(getMostSelledProducts(payload))
+      dispatch(getMostSelledMenus(payload))
     }
   }
 
-  // Solo establecer rango y filtro si no estaban definidos
   useEffect(() => {
     if (!startDate || !endDate || !selectedFilter) {
       const today = dayjs()
@@ -202,7 +206,7 @@ function Home() {
           <SellsByChannel data={sellsData} loading={loadingStats} />
         </Grid.Col>
         <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
-          <MostSelledMenus />
+          <MostSelledMenus data={mostSelledMenus} loading={loadingStats} />
         </Grid.Col>
         <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
           <MostSelledDishes data={mostSelledProducts} loading={loadingStats} />

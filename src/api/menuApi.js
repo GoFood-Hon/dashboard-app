@@ -1,8 +1,6 @@
 import axiosClient from "./axiosClient"
 
 const menuApi = {
-  // getMenuByRestaurant: ({ restaurantId }) => axiosClient.get(`api/v1/restaurant/${restaurantId}/categories`),
-
   getAllMenus: ({ limit, page, order, search, search_field } = {}) => {
     const params = {
       limit,
@@ -59,8 +57,6 @@ const menuApi = {
   addDishesToMenu: (menuId, params) => axiosClient.put(`api/v1/restaurant/categories/${menuId}/dishes`, params),
 
   updateMenu: (params, menuId) => axiosClient.patch(`api/v1/restaurant/categories/${menuId}`, params),
-
-  //updateDishesToMenu: (dishId, params) => axiosClient.patch(`api/v1/dish/${dishId}/category`, params),
 
   getMenuDetails: ({ menuId }) => axiosClient.get(`api/v1/restaurant/categories/${menuId}/dishes`)
 }

@@ -76,7 +76,7 @@ export const GeneralInformationForm = ({ register, control, errors, setValue, im
                 control={control}
                 render={({ field, fieldState }) => (
                   <Select
-                    label="Tipo de comercio (Obligatorio)"
+                    label="Tipo de establecimiento (Obligatorio)"
                     data={kitchenTypes?.map((item) => ({
                       value: item.id,
                       label: item.name

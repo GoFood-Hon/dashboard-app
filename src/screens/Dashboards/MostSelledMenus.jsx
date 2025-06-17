@@ -1,17 +1,10 @@
-import { Divider, Paper } from "@mantine/core"
+import { Divider, Group, Loader, Paper, Text } from "@mantine/core"
 import { BarChart } from "@mantine/charts"
+import { colors } from "../../theme/colors"
 
-const data = [
-  { menuName: "Menú Ejecutivo", totalQuantity: 120 },
-  { menuName: "Desayuno Clásico", totalQuantity: 95 },
-  { menuName: "Combo Familiar", totalQuantity: 80 },
-  { menuName: "Cena Romántica", totalQuantity: 60 },
-  { menuName: "Menú Infantil", totalQuantity: 45 }
-]
-
-export const MostSelledMenus = () => {
+export const MostSelledMenus = ({ data, loading }) => {
   const isEmpty = Array.isArray(data) && data.length === 0
-  
+
   return (
     <Paper
       withBorder
@@ -22,15 +15,24 @@ export const MostSelledMenus = () => {
         <h2 className="text-white-200 text-xl font-semibold">Menús más vendidos</h2>
       </div>
       <Divider my="md" />
-      <BarChart
-        orientation="vertical"
-        h={450}
-        data={data.map((item) => ({ name: item.menuName, "Unidades vendidas": item.totalQuantity }))}
-        dataKey="name"
-        series={[{ name: "Unidades vendidas", color: "gray.6" }]}
-        barProps={{ radius: 8 }}
-        tickLine="none"
-      />
+      {loading ? (
+        <Group h={450} justify="center" align="center" className="w-full">
+          <Loader color={colors.main_app_color} />
+        </Group>
+      ) : isEmpty ? (
+        <Group h={450} justify="center" align="center" className="w-full">
+          <Text c="dimmed">No hay datos para mostrar</Text>
+        </Group>
+      ) : (
+        <BarChart
+          h={450}
+          data={data.map((item) => ({ name: item.name, "Unidades vendidas": item.totalQuantity }))}
+          dataKey="name"
+          series={[{ name: "Unidades vendidas", color: "gray.6" }]}
+          barProps={{ radius: 8 }}
+          tickLine="none"
+        />
+      )}
     </Paper>
   )
 }
