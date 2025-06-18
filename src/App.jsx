@@ -52,7 +52,6 @@ import { EditRestaurant } from "./screens/Restaurants/EditRestaurant"
 import { EditBranch } from "./screens/Branches/EditBranch"
 import { EditAdminUser } from "./screens/Users/EditAdminUser"
 import { EditPlan } from "./screens/Plans/EditPlan"
-import { KitchenTypesAndTags } from "./screens/Tags&KitchenTypes/kitchenTypesAndTags"
 import { EditUserScreen } from "./screens/Users/EditUserScreen"
 import { Reservations } from "./screens/Reservations/Reservations"
 import { ReservationDetails } from "./screens/Reservations/ReservationDetails"
@@ -71,6 +70,7 @@ import { NewCoupon } from "./screens/Coupons/NewCoupon"
 import { EditCoupon } from "./screens/Coupons/EditCoupons"
 import PurchasesHistory from "./screens/PurchasesHistory/PurchasesHistory"
 import Reviews from "./screens/Reviews/Reviews"
+import { KitchenTypesAndTags } from "./screens/TagsAndKitchenTypes/KitchenTypesAndTags"
 
 function App() {
   const userRole = useSelector((state) => state.user.value.role)
