@@ -1,4 +1,4 @@
-import { Divider, Group, Loader, Paper, Text } from "@mantine/core"
+import { Divider, Group, Loader, Paper, Text, Box } from "@mantine/core"
 import { BarChart } from "@mantine/charts"
 import { colors } from "../../theme/colors"
 
