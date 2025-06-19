@@ -35,7 +35,7 @@ export const NewRestaurant = () => {
   })
 
   const onSubmit = async (data) => {
-    const validatedData = result.data
+    const validatedData = data
 
     try {
       const formData = new FormData()
