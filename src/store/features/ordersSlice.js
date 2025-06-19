@@ -249,7 +249,8 @@ const ordersSlice = createSlice({
     loadingOrders: false,
     updatingOrderStatus: false,
     cancelOrderStatus: false,
-    searchField: 'name',
+    searchField: "name",
+    searchData: null,
     searchValue: null,
 
     //kitchen data
@@ -343,6 +344,9 @@ const ordersSlice = createSlice({
     },
     setSelectedSearchOption: (state, action) => {
       state.searchField = action.payload
+    },
+    setSearchData: (state, action) => {
+      state.searchData = action.payload
     }
   },
   extraReducers: (builder) => {
@@ -533,6 +537,14 @@ const ordersSlice = createSlice({
   }
 })
 
-export const { setCurrentPage, setTotalOrders, setNewOrder, setOrderStatus, setDateRange, setSelectedSearchOption } = ordersSlice.actions
+export const {
+  setCurrentPage,
+  setTotalOrders,
+  setNewOrder,
+  setOrderStatus,
+  setDateRange,
+  setSelectedSearchOption,
+  setSearchData
+} = ordersSlice.actions
 
 export default ordersSlice.reducer

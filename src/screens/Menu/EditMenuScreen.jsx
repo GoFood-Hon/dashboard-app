@@ -52,7 +52,8 @@ export default function EditMenuScreen() {
     const fetchMenu = async () => {
       try {
         const response = await menuApi.getMenuDetails({ menuId })
-        const menuDetails = response?.data
+        console.log(response)
+        const menuDetails = response?.data[0]
         setMenuDetails(menuDetails)
       } catch (error) {
         showNotification({

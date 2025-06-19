@@ -1,6 +1,6 @@
 import React, { useEffect } from "react"
 import { useSelector } from "react-redux"
-import { fetchAllOrders, setCurrentPage, setSelectedSearchOption } from "../../store/features/ordersSlice"
+import { fetchAllOrders, setCurrentPage, setSelectedSearchOption, setSearchData } from "../../store/features/ordersSlice"
 import { useDispatch } from "react-redux"
 import TableViewLayout from "../TableViewLayout"
 import { formatTimeDifference } from "../../utils"
@@ -8,7 +8,6 @@ import { searchOptionsOrders } from "../../utils/constants"
 
 export default function OrdersScreen() {
   const dispatch = useDispatch()
-  const user = useSelector((state) => state.user.value)
   const limit = useSelector((state) => state.orders.itemsPerPage)
   const page = useSelector((state) => state.orders.currentPage)
   const ordersPerPage = useSelector((state) => state.orders.ordersPerPage)
@@ -16,13 +15,24 @@ export default function OrdersScreen() {
   const totalPageCount = useSelector((state) => state.orders.totalPagesCount)
   const ordersList = ordersPerPage[page] || []
   const loadingOrders = useSelector((state) => state.orders.loadingOrders)
+  const searchData = useSelector((state) => state.orders.searchData)
   const searchField = useSelector((state) => state.orders.searchField)
 
   useEffect(() => {
     if (!ordersPerPage[page]) {
-      dispatch(fetchAllOrders({ limit, page, order: "DESC", searchField: searchField }))
+      dispatch(fetchAllOrders({ limit, page, order: "DESC" }))
     }
-  }, [dispatch, limit, page, ordersPerPage, user.role])
+  }, [dispatch, limit, page])
+
+  const handleSearch = (query) => {
+    dispatch(setSearchData(query))
+  }
+
+  const executeSearch = async (query) => {
+    dispatch(
+      fetchAllOrders({ limit, page, order: "DESC", search_field: searchField, search: query })
+    )
+  }
 
   return (
     <>
@@ -47,6 +57,9 @@ export default function OrdersScreen() {
         totalItems={totalPageCount}
         loading={loadingOrders}
         setPage={(newPage) => dispatch(setCurrentPage(newPage))}
+        onSearch={handleSearch}
+        value={searchData}
+        searchAction={executeSearch}
         searchOptions={searchOptionsOrders}
         selectedOption={searchField}
         setSelectedSearchOption={(value) => dispatch(setSelectedSearchOption(value))}
