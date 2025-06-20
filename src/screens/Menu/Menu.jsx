@@ -35,7 +35,8 @@ export default function Menu() {
   }
 
   const executeSearch = async (query) => {
-    dispatch(fetchMenus({ restaurantId: user.restaurantId, limit, page, order: "DESC", search_field: searchField, search: query }))
+    dispatch(setPage(1))
+    dispatch(fetchMenus({ restaurantId: user.restaurantId, limit, page: 1, order: "DESC", search_field: searchField, search: query }))
   }
 
   return (

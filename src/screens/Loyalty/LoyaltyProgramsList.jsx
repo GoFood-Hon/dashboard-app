@@ -27,7 +27,8 @@ export const LoyaltyProgramsList = () => {
   }
 
   const executeSearch = async (query) => {
-    dispatch(fetchAllLoyaltyPrograms({ limit, page, order: "DESC", search_field: searchField, search: query }))
+    dispatch(setPage(1))
+    dispatch(fetchAllLoyaltyPrograms({ limit, page: 1, order: "DESC", search_field: searchField, search: query }))
   }
 
   return (

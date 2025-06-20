@@ -29,8 +29,9 @@ export default function OrdersScreen() {
   }
 
   const executeSearch = async (query) => {
+    dispatch(setCurrentPage(1))
     dispatch(
-      fetchAllOrders({ limit, page, order: "DESC", search_field: searchField, search: query })
+      fetchAllOrders({ limit, page: 1, order: "DESC", search_field: searchField, search: query })
     )
   }
 

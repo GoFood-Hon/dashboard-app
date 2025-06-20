@@ -35,7 +35,8 @@ export const CollectionsList = () => {
   }
 
   const executeSearch = async (query) => {
-    dispatch(fetchCollections({ limit, page, order: "DESC", search_field: searchField, search: query }))
+    dispatch(setCurrentPage(1))
+    dispatch(fetchCollections({ limit, page: 1, order: "DESC", search_field: searchField, search: query }))
   }
 
   return (

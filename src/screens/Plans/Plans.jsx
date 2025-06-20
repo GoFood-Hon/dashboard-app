@@ -34,7 +34,8 @@ export const Plans = () => {
   }
 
   const executeSearch = async (query) => {
-    dispatch(fetchAllPlans({ limit, page, order: "DESC", search_field: searchField, search: query }))
+    dispatch(setCurrentPage(1))
+    dispatch(fetchAllPlans({ limit, page: 1, order: "DESC", search_field: searchField, search: query }))
   }
 
   return (

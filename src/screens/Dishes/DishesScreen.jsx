@@ -67,7 +67,8 @@ export default function Dishes() {
   }
 
   const executeSearch = async (query) => {
-    dispatch(getAllDishes({ limit, restaurantId: user.restaurantId, page, order: "DESC", search_field: searchField, search: query }))
+    dispatch(setPage(1))
+    dispatch(getAllDishes({ limit, restaurantId: user.restaurantId, page: 1, order: "DESC", search_field: searchField, search: query }))
   }
 
   return (

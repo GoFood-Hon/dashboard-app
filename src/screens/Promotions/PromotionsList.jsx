@@ -39,7 +39,8 @@ export default function PromotionsList() {
   }
 
   const executeSearch = async (query) => {
-    dispatch(getPromotionByRestaurant({ limit, page, order: "DESC", search_field: searchField, search: query }))
+    dispatch(setPage(1))
+    dispatch(getPromotionByRestaurant({ limit, page: 1, order: "DESC", search_field: searchField, search: query }))
   }
 
   return (

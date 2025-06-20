@@ -36,12 +36,13 @@ export const Reservations = () => {
   }
 
   const executeSearch = async (query) => {
+    dispatch(setPage(1))
     user?.role === "admin-restaurant"
       ? dispatch(
           fetchReservationByRestaurant({
             restaurantId: user?.restaurantId,
             limit,
-            page,
+            page: 1,
             order: "DESC",
             search_field: searchField,
             search: query
@@ -51,7 +52,7 @@ export const Reservations = () => {
           fetchReservationByBranch({
             branchId: user?.sucursalId,
             limit,
-            page,
+            page: 1,
             order: "DESC",
             search_field: searchField,
             search: query

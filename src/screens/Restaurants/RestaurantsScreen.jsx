@@ -57,7 +57,8 @@ export default function RestaurantsScreen() {
   }
 
   const executeSearch = async (query) => {
-    dispatch(fetchRestaurants({ limit, page, order: "DESC", search_field: searchField, search: query }))
+    dispatch(setPage(1))
+    dispatch(fetchRestaurants({ limit, page: 1, order: "DESC", search_field: searchField, search: query }))
   }
 
   return (

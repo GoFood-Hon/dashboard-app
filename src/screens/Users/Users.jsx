@@ -41,7 +41,17 @@ export default function Users() {
   }
 
   const executeSearch = async (query) => {
-    dispatch(fetchUsers({ restaurantId: user.restaurantId, limit, page, order: "DESC", search_field: searchFieldUsers, search: query }))
+    dispatch(setCurrentUserPage(1))
+    dispatch(
+      fetchUsers({
+        restaurantId: user.restaurantId,
+        limit,
+        page: 1,
+        order: "DESC",
+        search_field: searchFieldUsers,
+        search: query
+      })
+    )
   }
 
   return (

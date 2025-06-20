@@ -39,7 +39,8 @@ export const AdminUserScreen = () => {
   }
 
   const executeSearch = async (query) => {
-    dispatch(fetchAdminUsers({ limit, page, order: "DESC", search_field: searchFieldAdminUsers, search: query }))
+    dispatch(setCurrentPage(1))
+    dispatch(fetchAdminUsers({ limit, page: 1, order: "DESC", search_field: searchFieldAdminUsers, search: query }))
   }
 
   return (

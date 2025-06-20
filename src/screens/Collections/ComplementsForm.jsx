@@ -168,19 +168,21 @@ export default function ComplementsForm({ setValue, isDataCleared, defaultMessag
 
   const executeSearch = async (query) => {
     if (collectionType === "dishes") {
+      dispatch(setCurrentDishPage(1))
       dispatch(
         fetchDishesForCollections({
           limit: dishesPerPage,
-          page: currentDishPage,
+          page: 1,
           search_field: "name",
           search: query
         })
       )
     } else {
+      dispatch(setCurrentRestaurantPage(1))
       dispatch(
         fetchRestaurantsForCollections({
           limit: restaurantsPerPage,
-          page: currentRestaurantPage,
+          page: 1,
           search_field: "name",
           search: query
         })
