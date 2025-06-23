@@ -56,7 +56,6 @@ export const EditRestaurant = () => {
 
   const imageLocation = watch("images[0].location")
   const bannerLocation = watch("bannerDishes[0].location")
-  const [isDataCleared, setIsDataCleared] = useState(false)
 
   const onSubmit = async (data) => {
     try {
@@ -203,7 +202,6 @@ export const EditRestaurant = () => {
           setValue={setValue}
           control={control}
           image={bannerLocation}
-          isDataCleared={isDataCleared}
           watch={watch}
         />
       )
@@ -218,7 +216,6 @@ export const EditRestaurant = () => {
           setValue={setValue}
           control={control}
           image={imageLocation}
-          isDataCleared={isDataCleared}
           watch={watch}
         />
       )
@@ -226,15 +223,7 @@ export const EditRestaurant = () => {
     {
       title: "Datos de reservación",
       requirement: "Opcional",
-      form: (
-        <BookingInformation
-          register={register}
-          errors={errors}
-          setValue={setValue}
-          control={control}
-          isDataCleared={isDataCleared}
-        />
-      )
+      form: <BookingInformation register={register} errors={errors} setValue={setValue} control={control} />
     },
     {
       title: "Selección del plan",

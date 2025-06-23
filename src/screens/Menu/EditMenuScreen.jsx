@@ -95,7 +95,7 @@ export default function EditMenuScreen() {
         <ComplementsForm
           setValue={setValue}
           moreData={hasMore}
-          selectedDishes={menuDetails?.Dishes}
+          selectedDishes={menuDetails?.dishes}
           isDataCleared={isDataCleared}
           defaultMessage="Los platillos seleccionados aparecerán aquí"
           itemsAvailableLabel="Platillos disponibles"

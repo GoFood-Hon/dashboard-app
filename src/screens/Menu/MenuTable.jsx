@@ -501,7 +501,7 @@ export default function MenuTable({ items, screenType, totalItems, currentPage, 
           </div>
         )
       },
-      { label: "Contiene", accessor: "type", render: (type) => (type === "restaurants" ? "Restaurantes" : "Platillos") },
+      { label: "Contiene", accessor: "type", render: (type) => (type === "restaurants" ? "Comercios" : "Platillos") },
       {
         label: "Cantidad",
         accessor: "dishes",

@@ -1,4 +1,4 @@
-import { Grid, Input } from "@mantine/core"
+import { Grid } from "@mantine/core"
 import InputField from "../../components/Form/InputField"
 
 const BookingInformation = ({ register, errors }) => {

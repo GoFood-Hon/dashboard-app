@@ -1,16 +1,14 @@
 import React, { useEffect, useState } from "react"
-import { Checkbox, CloseIcon, Container, Flex, Grid, Group, Paper, Text, rem, Image, Select } from "@mantine/core"
+import { Flex, Paper, Text, rem, Image } from "@mantine/core"
 import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone"
 import { IconPhoto } from "@tabler/icons-react"
-import { bytesToMB } from "../../utils"
-import { useDispatch, useSelector } from "react-redux"
+import { useDispatch } from "react-redux"
 import { fetchAllKitchenTypes } from "../../store/features/kitchenAndTagsSlice"
 import { colors } from "../../theme/colors"
 
-export const RestaurantBanner = ({ register, control, errors, setValue, isDataCleared, image, watch }) => {
+export const RestaurantBanner = ({ errors, setValue, image }) => {
   const dispatch = useDispatch()
   const [images, setImages] = useState([])
-  const [fileInformation, setFileInformation] = useState(null)
 
   useEffect(() => {
     dispatch(fetchAllKitchenTypes())
@@ -18,25 +16,12 @@ export const RestaurantBanner = ({ register, control, errors, setValue, isDataCl
 
   const handleDrop = (acceptedFiles) => {
     if (acceptedFiles.length > 0) {
-      const [file] = acceptedFiles
-      setFileInformation(file)
       setImages(acceptedFiles)
       setValue("bannerDishes", acceptedFiles)
     }
   }
 
-  const deleteImage = () => {
-    setFileInformation(null)
-    setImages([])
-  }
-
-  useEffect(() => {
-    if (isDataCleared) {
-      deleteImage()
-    }
-  }, [isDataCleared])
-
-  const previews = images.map((file, index) => {
+  const previews = images.map((file) => {
     const imageUrl = URL.createObjectURL(file)
     return <Image radius="md" h={250} src={imageUrl} />
   })
@@ -62,11 +47,14 @@ export const RestaurantBanner = ({ register, control, errors, setValue, isDataCl
                 <Text className={`${image ? "hidden" : ""} text-center leading-10`} size="sm" c="dimmed" inline mt={7}>
                   Haga clic o arrastre el banner del comercio
                 </Text>
-                {errors.files && (
-                  <Text c={colors.main_app_color} size="xs" ta="center">
-                    Banner es requerido
-                  </Text>
-                )}
+                <Text
+                  className={`${errors.bannerDishes ? "visible" : "hidden"}`}
+                  c={colors.main_app_color}
+                  size="xs"
+                  ta="center"
+                  mt="lg">
+                  {errors?.bannerDishes?.message}
+                </Text>
               </>
             )}
           </Flex>

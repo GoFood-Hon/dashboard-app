@@ -132,7 +132,7 @@ export const GeneralInformationForm = ({ register, control, errors, setValue, im
               </Flex>
               {errors.files && (
                 <Text c={colors.main_app_color} size="xs" ta='center'>
-                  Imagen es requerida
+                  {errors?.files?.message}
                 </Text>
               )}
             </Dropzone>

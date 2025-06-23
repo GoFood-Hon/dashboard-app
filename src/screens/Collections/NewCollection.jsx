@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
-import { Accordion } from "@mantine/core"
 import { useForm } from "react-hook-form"
 import { useDispatch, useSelector } from "react-redux"
 import GeneralInformationForm from "./GeneralInformationForm"
 import ComplementsForm from "./ComplementsForm"
 import { NAVIGATION_ROUTES_SUPER_ADMIN } from "../../routes"
-import { colors } from "../../theme/colors"
 import {
   createCollection,
   fetchDishesForCollections,
@@ -76,7 +74,7 @@ export default function NewCollection() {
       )
     },
     {
-      title: `Lista de ${collectionType === "dishes" ? "platillos" : "restaurantes"}`,
+      title: `Lista de ${collectionType === "dishes" ? "platillos" : "comercios"}`,
       requirement: "Obligatorio",
       form: (
         <ComplementsForm
@@ -111,7 +109,7 @@ export default function NewCollection() {
           title="Nueva colección"
           show
           accordionStructure={accordionStructure}
-          accordionTitles={["Información general", "Lista de platillos", "Lista de restaurantes"]}
+          accordionTitles={["Información general", "Lista de platillos", "Lista de comercios"]}
           navigate={() => navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Collections.path)}
           isLoading={creatingCollection}
         />

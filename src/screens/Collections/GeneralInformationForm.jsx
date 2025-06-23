@@ -45,9 +45,9 @@ export default function GeneralInformationForm({ register, errors, setValue, isD
               disabled={edit}
               name="type"
               label="Contenido de la colección"
-              data={["Restaurantes", "Platillos"]}
+              data={["Comercios", "Platillos"]}
               defaultValue={"Platillos"}
-              value={collectionType === "dishes" ? "Platillos" : "Restaurantes"}
+              value={collectionType === "dishes" ? "Platillos" : "Comercios"}
               allowDeselect={false}
               maxDropdownHeight={200}
               onChange={handleCollectionType}

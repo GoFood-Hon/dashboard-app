@@ -197,7 +197,7 @@ export default function ComplementsForm({ setValue, isDataCleared, defaultMessag
           <Stack gap="sm">
             <SearchComponent
               onSearch={handleSearch}
-              elementName={collectionType === "dishes" ? "platillos" : "restaurantes"}
+              elementName={collectionType === "dishes" ? "platillos" : "comercios"}
               value={collectionType === "dishes" ? searchDishesData : searchRestaurantsData}
               searchAction={executeSearch}
               noSelect
@@ -222,7 +222,7 @@ export default function ComplementsForm({ setValue, isDataCleared, defaultMessag
                   ) : (
                     <Grid.Col span={2}>
                       <Text size="sm" c="dimmed" inline mt={50} className="text-center leading-10">
-                        No hay {collectionType === "dishes" ? "platillos" : "restaurantes"} para mostrar
+                        No hay {collectionType === "dishes" ? "platillos" : "comercios"} para mostrar
                       </Text>
                     </Grid.Col>
                   )}
