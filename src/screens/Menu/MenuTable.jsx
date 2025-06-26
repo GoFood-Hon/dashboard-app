@@ -44,7 +44,6 @@ import { theme } from "../../utils/constants"
 import { setSelectedPromotion, updateOfferStatus } from "../../store/features/promotionsSlice"
 import { IconTrash } from "@tabler/icons-react"
 import { setSelectedCoupon, updateStatus } from "../../store/features/couponsSlice"
-import { formatDate } from "date-fns"
 import { IconClock } from "@tabler/icons-react"
 import { IconSelector } from "@tabler/icons-react"
 
@@ -54,7 +53,17 @@ dayjs.extend(customParseFormat)
 dayjs.extend(relativeTime)
 dayjs.locale("es")
 
-export default function MenuTable({ items, screenType, totalItems, currentPage, setPage, loadingData, deleteAction }) {
+export default function MenuTable({
+  totalElements,
+  limit,
+  items,
+  screenType,
+  totalItems,
+  currentPage,
+  setPage,
+  loadingData,
+  deleteAction
+}) {
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const defaultOptions = {
@@ -737,7 +746,7 @@ export default function MenuTable({ items, screenType, totalItems, currentPage, 
                               {column.label}
                             </Text>
                             <Center>
-                              <IconSelector size='1.1rem' className="hidden" />
+                              <IconSelector size="1.1rem" className="hidden" />
                             </Center>
                           </Group>
                         </UnstyledButton>
@@ -775,7 +784,7 @@ export default function MenuTable({ items, screenType, totalItems, currentPage, 
               </Table>
             </ScrollArea>
           </Paper>
-          {totalItems && (
+          {totalElements > limit && (
             <Flex align="center" justify="end">
               <Group>
                 <Pagination

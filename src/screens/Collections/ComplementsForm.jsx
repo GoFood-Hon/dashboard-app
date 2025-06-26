@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { Grid, Image, Text, ScrollArea, Paper, Group, Button, Loader, Box, CloseButton, Stack } from "@mantine/core"
+import { Grid, Image, Text, ScrollArea, Paper, Group, Button, Loader, Box, CloseButton, Stack, Flex } from "@mantine/core"
 import { useSelector } from "react-redux"
 import { SortableList } from "../Dishes/components"
 import { useDispatch } from "react-redux"
@@ -14,22 +14,33 @@ import {
 } from "../../store/features/collectionsSlice"
 import { colors } from "../../theme/colors"
 import { SearchComponent } from "../../components/SearchComponent"
+import { IconCircleCheckFilled } from "@tabler/icons-react"
 
-const AvailableComplementsCard = ({ item, onItemClick }) => {
+const AvailableComplementsCard = ({ item, onItemClick, isSelected }) => {
   const { images, name } = item
   const handleItemClick = () => {
     onItemClick(item)
   }
 
   return (
-    <Paper withBorder radius="md" onClick={handleItemClick}>
-      <Group p="xs">
-        <Image w={35} h={35} src={images?.[0]?.location} radius="md" />
-        <Box w={215}>
-          <Text truncate="end" fz="sm" fw={500}>
-            {name}
-          </Text>
-        </Box>
+    <Paper
+      withBorder
+      radius="md"
+      onClick={handleItemClick}
+      style={{
+        cursor: "pointer",
+        borderColor: isSelected ? "grey" : undefined
+      }}>
+      <Group p="xs" position="apart">
+        <Group>
+          <Image w={35} h={35} src={images?.[0]?.location} radius="md" />
+          <Flex justify="space-between" gap='xs' align="center">
+            <Text truncate="end" fz="sm" fw={500}>
+              {name}
+            </Text>
+            {isSelected && <IconCircleCheckFilled size={18} />}
+          </Flex>
+        </Group>
       </Group>
     </Paper>
   )
@@ -64,7 +75,7 @@ const ComplementCard = ({ item, handleRemoveComplement }) => {
   )
 }
 
-export default function ComplementsForm({ setValue, isDataCleared, defaultMessage, moreData, data, name, selectedDishes }) {
+export default function ComplementsForm({ setValue, defaultMessage, moreData, data, name, selectedDishes }) {
   const [addedComplements, setAddedComplements] = useState([])
   const [extras, setExtras] = useState([])
   const [deletedElements, setDeletedElements] = useState([])
@@ -154,10 +165,6 @@ export default function ComplementsForm({ setValue, isDataCleared, defaultMessag
     updateComplementsValue(updatedAddedComplements)
   }
 
-  useEffect(() => {
-    setAddedComplements([])
-  }, [isDataCleared])
-
   const handleSearch = (query) => {
     if (collectionType === "dishes") {
       dispatch(setSearchDishesData(query))
@@ -190,6 +197,26 @@ export default function ComplementsForm({ setValue, isDataCleared, defaultMessag
     }
   }
 
+  const fetchMoreElements = () => {
+    if (collectionType === "dishes") {
+      dispatch(setCurrentDishPage(currentDishPage + 1))
+      dispatch(
+        fetchDishesForCollections({
+          limit: dishesPerPage,
+          page: currentDishPage + 1
+        })
+      )
+    } else {
+      dispatch(setCurrentRestaurantPage(currentRestaurantPage + 1))
+      dispatch(
+        fetchRestaurantsForCollections({
+          limit: restaurantsPerPage,
+          page: currentRestaurantPage + 1
+        })
+      )
+    }
+  }
+
   return (
     <Grid>
       <Grid.Col span={{ base: 12, md: 7 }}>
@@ -203,42 +230,40 @@ export default function ComplementsForm({ setValue, isDataCleared, defaultMessag
               noSelect
             />
             {(collectionType === "dishes" ? dishesLoading : restaurantsLoading) ? (
-              <div className="h-[calc(100vh-350px)] w-full flex justify-center items-center">
+              <div className="h-[calc(100vh-645px)] w-full flex justify-center items-center">
                 <Loader color={colors.main_app_color} />
               </div>
             ) : (
-              <ScrollArea h={350} scrollbars='y'>
-                <Grid columns={2} grow gutter="xs">
+              <ScrollArea h={400} scrollbars="y">
+                <Grid columns={12} gutter="xs">
                   {extras.length > 0 ? (
                     extras.map((item, key) => (
-                      <Grid.Col span={{ base: 2, md: 1 }} key={key} style={{ cursor: "pointer" }}>
+                      <Grid.Col key={key} span={{ base: 12, md: 6 }} style={{ cursor: "pointer" }}>
                         <AvailableComplementsCard
                           item={item}
                           onItemClick={handleComplementClick}
                           handleRemoveComplement={handleRemoveComplement}
+                          isSelected={addedComplements.some((complement) => complement.id === item.id)}
                         />
                       </Grid.Col>
                     ))
                   ) : (
-                    <Grid.Col span={2}>
-                      <Text size="sm" c="dimmed" inline mt={50} className="text-center leading-10">
-                        No hay {collectionType === "dishes" ? "platillos" : "comercios"} para mostrar
-                      </Text>
-                    </Grid.Col>
+                    <Flex justify="center" align="center" h={350} w="100%">
+                      <Text c="dimmed">No hay {collectionType === "dishes" ? "platillos" : "comercios"} para mostrar</Text>
+                    </Flex>
                   )}
+
                   {moreData && (
-                    <div className="w-full flex justify-center mt-4">
-                      <Button
-                        loading={collectionType === "dishes" ? updatingDishes : updatingRestaurants}
-                        color={colors.main_app_color}
-                        onClick={() => {
-                          collectionType === "dishes"
-                            ? dispatch(setCurrentDishPage(currentDishPage + 1))
-                            : dispatch(setCurrentRestaurantPage(currentRestaurantPage + 1))
-                        }}>
-                        Cargar más
-                      </Button>
-                    </div>
+                    <Grid.Col span={12}>
+                      <Flex justify="center" mt="xs">
+                        <Button
+                          loading={collectionType === "dishes" ? updatingDishes : updatingRestaurants}
+                          color={colors.main_app_color}
+                          onClick={() => fetchMoreElements()}>
+                          Cargar más
+                        </Button>
+                      </Flex>
+                    </Grid.Col>
                   )}
                 </Grid>
               </ScrollArea>
@@ -249,7 +274,7 @@ export default function ComplementsForm({ setValue, isDataCleared, defaultMessag
       <Grid.Col span={{ base: 12, md: 5 }}>
         <Paper withBorder p="md" radius="md" className="w-full h-full">
           {addedComplements.length > 0 ? (
-            <ScrollArea w={"100%"} h={350}>
+            <ScrollArea w={"100%"} h={435}>
               <SortableList
                 items={addedComplements}
                 onChange={setAddedComplements}

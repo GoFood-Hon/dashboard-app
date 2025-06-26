@@ -3,6 +3,25 @@ import couponApi from "../../api/couponApi"
 import { showNotification } from "@mantine/notifications"
 import { ITEMS_PER_PAGE } from "../../utils/paginationConfig"
 
+const initialState = {
+  coupons: [],
+  loading: false,
+  itemsPerPage: ITEMS_PER_PAGE,
+  couponsPerPage: [],
+  totalCoupons: 0,
+  totalPagesCount: 0,
+  currentPage: 1,
+  loadingCoupons: false,
+  creatingCoupons: false,
+  updatingCoupons: false,
+  deletingCoupons: false,
+  totalItems: 0,
+  searchData: null,
+  searchField: "title",
+  error: null,
+  selectedCoupon: null
+}
+
 export const getCoupons = createAsyncThunk(
   "coupons/getCoupons",
   async ({ limit, page, order, search, search_field }, { rejectWithValue }) => {
@@ -151,24 +170,7 @@ export const updateCoupon = createAsyncThunk(
 
 const couponsSlice = createSlice({
   name: "coupons",
-  initialState: {
-    coupons: [],
-    loading: false,
-    itemsPerPage: ITEMS_PER_PAGE,
-    couponsPerPage: [],
-    totalCoupons: 0,
-    totalPagesCount: 0,
-    currentPage: 1,
-    loadingCoupons: false,
-    creatingCoupons: false,
-    updatingCoupons: false,
-    deletingCoupons: false,
-    totalItems: 0,
-    searchData: null,
-    searchField: "title",
-    error: null,
-    selectedCoupon: null
-  },
+  initialState,
   reducers: {
     setPage: (state, action) => {
       state.currentPage = action.payload

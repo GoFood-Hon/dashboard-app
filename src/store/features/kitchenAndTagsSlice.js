@@ -2,7 +2,12 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit"
 import { showNotification } from "@mantine/notifications"
 import kitchenAndTagsApi from "../../api/kitchenAndTagsApi"
 
-// Thunks para los tipos de cocina (Cuisine Types)
+const initialState = {
+  kitchenTypes: [],
+  dishTags: [],
+  loading: false,
+  error: null
+}
 
 // Obtener todos los tipos de cocina
 export const fetchAllKitchenTypes = createAsyncThunk("kitchenAndTags/fetchAllKitchenTypes", async (_, { rejectWithValue }) => {
@@ -110,12 +115,7 @@ export const deleteDishesTag = createAsyncThunk("kitchenAndTags/deleteDishesTag"
 // Slice
 const kitchenAndTagsSlice = createSlice({
   name: "kitchenAndTags",
-  initialState: {
-    kitchenTypes: [],
-    dishTags: [],
-    loading: false,
-    error: null
-  },
+  initialState,
   reducers: {},
   extraReducers: (builder) => {
     // Thunks para los tipos de cocina

@@ -4,6 +4,37 @@ import { showNotification } from "@mantine/notifications"
 import { ITEMS_PER_PAGE } from "../../utils/paginationConfig"
 import authApi from "../../api/authApi"
 
+const initialState = {
+  value: {},
+  //Estado de usuarios administradores
+  currentPage: 1,
+  totalAdminUsers: 0,
+  itemsPerPage: ITEMS_PER_PAGE,
+  totalPagesCount: 0,
+  adminUsersByPage: [],
+  loadingUsers: false,
+  updatingUser: false,
+  creatingUser: false,
+
+  //Estado de los demás usuarios
+  currentUserPage: 1,
+  totalUsers: 0,
+  totalUserPagesCount: 0,
+  usersByPage: [],
+  loadingOtherUsers: false,
+  updatingOtherUser: false,
+  creatingOtherUser: false,
+  error: null,
+
+  userRole: null,
+
+  //Buscador de usuarios
+  searchAdminUsersData: null,
+  searchUsersData: null,
+  searchFieldUsers: "name",
+  searchFieldAdminUsers: "name"
+}
+
 export const fetchAdminUsers = createAsyncThunk(
   "user/fetchAdminUsers",
   async ({ limit, page, search_field, search }, { rejectWithValue }) => {
@@ -375,37 +406,6 @@ export const updateOtherUserStatus = createAsyncThunk(
   }
 )
 
-const initialState = {
-  value: {},
-  //Estado de usuarios administradores
-  currentPage: 1,
-  totalAdminUsers: 0,
-  itemsPerPage: ITEMS_PER_PAGE,
-  totalPagesCount: 0,
-  adminUsersByPage: [],
-  loadingUsers: false,
-  updatingUser: false,
-  creatingUser: false,
-
-  //Estado de los demás usuarios
-  currentUserPage: 1,
-  totalUsers: 0,
-  totalUserPagesCount: 0,
-  usersByPage: [],
-  loadingOtherUsers: false,
-  updatingOtherUser: false,
-  creatingOtherUser: false,
-  error: null,
-
-  userRole: null,
-
-  //Buscador de usuarios
-  searchAdminUsersData: null,
-  searchUsersData: null,
-  searchFieldUsers: "name",
-  searchFieldAdminUsers: "name"
-}
-
 // Slice de usuarios
 export const userSlice = createSlice({
   name: "user",
@@ -437,7 +437,7 @@ export const userSlice = createSlice({
     },
     setSelectedSearchOptionForAdminUsers: (state, action) => {
       state.searchFieldAdminUsers = action.payload
-    },
+    }
   },
   extraReducers: (builder) => {
     builder

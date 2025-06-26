@@ -41,7 +41,7 @@ export const PlanForm = ({
                 <IconCircleCheckFilled style={{ width: rem(28), height: rem(28) }} stroke={1.5} />
               </ThemeIcon>
               <Text c="dimmed" size="sm" fw={500}>
-                Usted seleccionó el PLAN {newPlan?.name?.replace("Plan", "").toUpperCase()} para este restaurante
+                Usted seleccionó el PLAN {newPlan?.name?.replace("Plan", "").toUpperCase()} para este comercio
               </Text>
             </Flex>
             <Button variant="outline" onClick={() => setNewPlan({})} color={colors.main_app_color}>

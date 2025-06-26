@@ -16,7 +16,8 @@ const initialState = {
   loadingMenus: false,
   creatingMenus: false,
   updatingMenus: false,
-  //DISHES STATE
+
+  //Dishes state
   dishes: [],
   currentDishPage: 1,
   dishesPerPage: ITEMS_PER_PAGE,
@@ -31,9 +32,9 @@ const initialState = {
     dateSort: null
   },
   dishesAddedToMenu: 0,
-  isLoading: false, // Nuevo estado de carga
+  isLoading: false,
 
-  //Buscar menus
+  //Search menus
   searchField: "name",
   searchData: null,
   searchDishesData: null

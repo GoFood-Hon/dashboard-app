@@ -159,7 +159,7 @@ export const OrderDetails = () => {
                           <Text c="white">{orderDetails?.Sucursal?.city + ", " + orderDetails?.Sucursal?.state}</Text>
                         </Flex>
                         <Flex justify="space-between">
-                          <Flex c='white' align="center" gap={2}>
+                          <Flex c="white" align="center" gap={2}>
                             {orderDetails?.serviceType === "delivery" ? (
                               <IconMotorbike size="1.1rem" />
                             ) : orderDetails?.serviceType === "onSite" ? (
@@ -167,7 +167,7 @@ export const OrderDetails = () => {
                             ) : (
                               <IconCar size="1.1rem" />
                             )}
-                            <Text c='white' ta="end" size="sm" fw={700}>
+                            <Text c="white" ta="end" size="sm" fw={700}>
                               {orderDetails?.serviceType === "delivery"
                                 ? "Pedido a domicilio"
                                 : orderDetails?.serviceType === "onSite"
@@ -176,9 +176,9 @@ export const OrderDetails = () => {
                             </Text>
                           </Flex>
                           {orderDetails?.sentToKitchenTimestamp && orderDetails?.finishedCookingTimestamp && (
-                            <Flex c='white' align="center" gap={2}>
+                            <Flex c="white" align="center" gap={2}>
                               <IconStopwatch size={20} />
-                              <Text c='white' size="sm" fw={700}>
+                              <Text c="white" size="sm" fw={700}>
                                 Preparado en{" "}
                                 {calculateTimeDifference(
                                   orderDetails?.sentToKitchenTimestamp,
@@ -289,42 +289,62 @@ export const OrderDetails = () => {
                           <Title order={isSmallScreen ? 6 : 5}>Datos de facturación</Title>
                         </Flex>
                         <Divider />
-                        <Grid>
-                          <Grid.Col span={6}>
-                            <Flex direction="column">
-                              <Stack gap="xs">
-                                <Text size={isSmallScreen ? "xs" : "sm"}>Subtotal</Text>
-                                <Text size={isSmallScreen ? "xs" : "sm"}>Descuento</Text>
-                                <Text size={isSmallScreen ? "xs" : "sm"}>Precio de envío</Text>
-                                <Text size={isSmallScreen ? "xs" : "sm"}>ISV ( 15% )</Text>
-                                <Space />
-                                <Text size={isSmallScreen ? "xs" : "sm"}>Total</Text>
-                              </Stack>
-                            </Flex>
-                          </Grid.Col>
-                          <Grid.Col span={6}>
-                            <Flex direction="column">
-                              <Stack gap="xs">
-                                <Text size={isSmallScreen ? "xs" : "sm"} c="dimmed">
-                                  {getFormattedHNL(orderDetails?.subtotal)}
-                                </Text>
-                                <Text size={isSmallScreen ? "xs" : "sm"} c="dimmed">
-                                  {getFormattedHNL(orderDetails?.discount)}
-                                </Text>
-                                <Text size={isSmallScreen ? "xs" : "sm"} c="dimmed">
-                                  {orderDetails?.shippingPrice}
-                                </Text>
-                                <Text size={isSmallScreen ? "xs" : "sm"} c="dimmed">
-                                  {getFormattedHNL(orderDetails?.isv)}
-                                </Text>
-                                <Divider />
-                                <Text size={isSmallScreen ? "xs" : "sm"} c="dimmed">
-                                  {getFormattedHNL(orderDetails?.total)}
-                                </Text>
-                              </Stack>
-                            </Flex>
-                          </Grid.Col>
-                        </Grid>
+                        <Stack justify="space-between">
+                          <Grid>
+                            <Grid.Col span={6}>
+                              <Flex direction="column">
+                                <Stack gap="xs">
+                                  <Text size={isSmallScreen ? "xs" : "sm"}>Subtotal</Text>
+                                  <Text size={isSmallScreen ? "xs" : "sm"}>Descuento</Text>
+                                  <Text size={isSmallScreen ? "xs" : "sm"}>Precio de envío</Text>
+                                  <Text size={isSmallScreen ? "xs" : "sm"}>ISV ( 15% )</Text>
+                                  <Space />
+                                  <Text size={isSmallScreen ? "xs" : "sm"}>Total</Text>
+                                </Stack>
+                              </Flex>
+                            </Grid.Col>
+                            <Grid.Col span={6}>
+                              <Flex direction="column">
+                                <Stack gap="xs">
+                                  <Text size={isSmallScreen ? "xs" : "sm"} c="dimmed">
+                                    {getFormattedHNL(orderDetails?.subtotal)}
+                                  </Text>
+                                  <Text size={isSmallScreen ? "xs" : "sm"} c="dimmed">
+                                    {getFormattedHNL(orderDetails?.discount)}
+                                  </Text>
+                                  <Text size={isSmallScreen ? "xs" : "sm"} c="dimmed">
+                                    {orderDetails?.shippingPrice}
+                                  </Text>
+                                  <Text size={isSmallScreen ? "xs" : "sm"} c="dimmed">
+                                    {getFormattedHNL(orderDetails?.isv)}
+                                  </Text>
+                                  <Divider />
+                                  <Text size={isSmallScreen ? "xs" : "sm"} c="dimmed">
+                                    {getFormattedHNL(orderDetails?.total)}
+                                  </Text>
+                                </Stack>
+                              </Flex>
+                            </Grid.Col>
+                          </Grid>
+                          <Grid bg="gray" p="xs" mt="xs">
+                            <Grid.Col span={6}>
+                              <Flex direction="column">
+                                <Stack gap="xs">
+                                  <Text size={isSmallScreen ? "xs" : "sm"}>Propina</Text>
+                                </Stack>
+                              </Flex>
+                            </Grid.Col>
+                            <Grid.Col span={6}>
+                              <Flex direction="column">
+                                <Stack gap="xs">
+                                  <Text size={isSmallScreen ? "xs" : "sm"} >
+                                    {getFormattedHNL(orderDetails?.tip)}
+                                  </Text>
+                                </Stack>
+                              </Flex>
+                            </Grid.Col>
+                          </Grid>
+                        </Stack>
                       </Stack>
                     ) : (
                       <UserData

@@ -11,8 +11,8 @@ import kitchenAndTagsReducer from "./features/kitchenAndTagsSlice"
 import reservationsReducer from "./features/reservationsSlice"
 import collectionsReducer from "./features/collectionsSlice"
 import ordersReducer from "./features/ordersSlice"
-import authReducer from  "./features/authSlice"
-import loyaltyReducer from './features/loyaltySlice'
+import authReducer from "./features/authSlice"
+import loyaltyReducer from "./features/loyaltySlice"
 import promotionsReducer from "./features/promotionsSlice"
 import couponsReducer from "./features/couponsSlice"
 import statsReducer from "./features/statsSlice"
@@ -39,8 +39,9 @@ const appReducer = combineReducers({
 
 const rootReducer = (state, action) => {
   if (action.type === "auth/logout") {
-    state = undefined
+    return appReducer(undefined, action)
   }
+
   return appReducer(state, action)
 }
 

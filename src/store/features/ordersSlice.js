@@ -3,6 +3,43 @@ import orderApi from "../../api/orderApi"
 import { ITEMS_PER_PAGE, ITEMS_PER_PAGE_CARDS } from "../../utils/paginationConfig"
 import { showNotification } from "@mantine/notifications"
 
+const initialState = {
+  orders: [],
+  itemsPerPage: ITEMS_PER_PAGE,
+  currentPage: 1,
+  totalPagesCount: 0,
+  totalOrders: 0,
+  ordersPerPage: [],
+  orderDetails: null,
+  loadingDetails: false,
+  loadingOrders: false,
+  updatingOrderStatus: false,
+  cancelOrderStatus: false,
+  searchField: "name",
+  searchData: null,
+  searchValue: null,
+
+  //kitchen data
+  itemsForKitchenPerPage: ITEMS_PER_PAGE_CARDS,
+  currentOrdersForKitchenPage: 1,
+  totalOrdersForKitchenPagesCount: 0,
+  totalOrdersForKitchen: 0,
+  ordersForKitchenPerPage: [],
+  loadingOrdersForKitchen: false,
+
+  //Drivers data
+  loadingDrivers: false,
+  updatingDriver: false,
+  drivers: [],
+  status: "idle",
+  error: null,
+
+  //Purchase history data
+  purchaseHistoryData: [],
+  dateRange: [],
+  loadingHistory: false
+}
+
 export const fetchAllOrders = createAsyncThunk(
   "orders/fetchAllOrders",
   async ({ limit, page, order, search_field, search, status }, { rejectWithValue }) => {
@@ -237,42 +274,7 @@ export const getOrdersHistorySucursal = createAsyncThunk(
 // Slice de órdenes
 const ordersSlice = createSlice({
   name: "orders",
-  initialState: {
-    orders: [],
-    itemsPerPage: ITEMS_PER_PAGE,
-    currentPage: 1,
-    totalPagesCount: 0,
-    totalOrders: 0,
-    ordersPerPage: [],
-    orderDetails: null,
-    loadingDetails: false,
-    loadingOrders: false,
-    updatingOrderStatus: false,
-    cancelOrderStatus: false,
-    searchField: "name",
-    searchData: null,
-    searchValue: null,
-
-    //kitchen data
-    itemsForKitchenPerPage: ITEMS_PER_PAGE_CARDS,
-    currentOrdersForKitchenPage: 1,
-    totalOrdersForKitchenPagesCount: 0,
-    totalOrdersForKitchen: 0,
-    ordersForKitchenPerPage: [],
-    loadingOrdersForKitchen: false,
-
-    //Drivers data
-    loadingDrivers: false,
-    updatingDriver: false,
-    drivers: [],
-    status: "idle",
-    error: null,
-
-    //Purchase history data
-    purchaseHistoryData: [],
-    dateRange: [],
-    loadingHistory: false
-  },
+  initialState,
   reducers: {
     setCurrentPage: (state, action) => {
       state.currentPage = action.payload

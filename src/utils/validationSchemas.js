@@ -14,6 +14,10 @@ export const restaurantSchema = z
     clinpaysCommerceToken: z.string().min(1, "El token de comercio de Clinpays es requerido"),
     files: z.array(z.instanceof(File)).min(1, "La imagen del comercio es requerida"),
     shippingFree: z.boolean().nullable().optional(),
+    whatsapp: z.string().optional().nullable(),
+    facebook: z.string().url('Debes ingresar una URL válida').optional().nullable(),
+    instagram: z.string().url('Debes ingresar una URL válida').optional().nullable(),
+    website: z.string().url('Debes ingresar una URL válida').optional().nullable(),
 
     // Campos de reservación de mesa
     pricePerChair: z.union([z.string(), z.null()]).optional(),

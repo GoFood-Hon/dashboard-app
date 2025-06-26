@@ -2,14 +2,12 @@ import React, { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 import { useDispatch, useSelector } from "react-redux"
 import { useNavigate, useParams } from "react-router-dom"
-import { Accordion } from "@mantine/core"
 import GeneralInformationForm from "./GeneralInformationForm"
 import ComplementsForm from "../Dishes/ComplementsForm"
 import { getAllDishes, updateMenu } from "../../store/features/menuSlice"
 import menuApi from "../../api/menuApi"
 import { NAVIGATION_ROUTES_RES_ADMIN } from "../../routes"
 import { showNotification } from "@mantine/notifications"
-import { colors } from "../../theme/colors"
 import FormLayout from "../../components/Form/FormLayout"
 
 export default function EditMenuScreen() {
@@ -18,12 +16,11 @@ export default function EditMenuScreen() {
   const navigate = useNavigate()
   const user = useSelector((state) => state.user.value)
   const [menuDetails, setMenuDetails] = useState({})
-  const [isDataCleared, setIsDataCleared] = useState(false)
   const isLoading = useSelector((state) => state.menus.updatingMenus)
   const { dishes, currentDishPage, hasMore, dishesPerPage } = useSelector((state) => state.menus)
 
   useEffect(() => {
-    if (currentDishPage === 1 || dishes.length === 0 || currentDishPage > 1) {
+    if (dishes.length === 0) {
       dispatch(
         getAllDishes({
           limit: dishesPerPage,
@@ -32,7 +29,7 @@ export default function EditMenuScreen() {
         })
       )
     }
-  }, [dispatch, currentDishPage, dishesPerPage, user.restaurantId])
+  }, [])
 
   const {
     register,
@@ -84,7 +81,6 @@ export default function EditMenuScreen() {
           setValue={setValue}
           control={control}
           image={imageLocation}
-          isDataCleared={isDataCleared}
         />
       )
     },
@@ -96,7 +92,6 @@ export default function EditMenuScreen() {
           setValue={setValue}
           moreData={hasMore}
           selectedDishes={menuDetails?.dishes}
-          isDataCleared={isDataCleared}
           defaultMessage="Los platillos seleccionados aparecerán aquí"
           itemsAvailableLabel="Platillos disponibles"
           data={dishes}

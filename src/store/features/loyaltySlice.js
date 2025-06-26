@@ -3,6 +3,40 @@ import loyaltyApi from "../../api/loyaltyApi"
 import { ITEMS_PER_PAGE, ITEMS_PER_PAGE_CARDS } from "../../utils/paginationConfig"
 import { showNotification } from "@mantine/notifications"
 
+const initialState = {
+  programs: [],
+  itemsPerPage: ITEMS_PER_PAGE,
+  loyaltyCards: [],
+  deletedCards: [],
+  programsPerPage: [],
+  totalPrograms: 0,
+  totalPagesCount: 0,
+  currentPage: 1,
+  loadingPrograms: false,
+  creatingPrograms: false,
+  updatingPrograms: false,
+  loading: false,
+  error: null,
+
+  // Buscador de programas de lealtad
+  searchData: null,
+  searchField: "title",
+
+  //Loyalty Tracking variables
+  clientIdentity: null,
+  cardCode: null,
+  userRewardData: [],
+  userRewardsPerPage: [],
+  itemsRewardsPerPage: ITEMS_PER_PAGE_CARDS,
+  totalRewards: 0,
+  totalRewardsPageCount: 0,
+  currentRewardPage: 1,
+  loadingUserData: false,
+  loadingUserCards: false,
+  filterValue: "Todas",
+  prefetchUser: null
+}
+
 // Async thunks para interactuar con los endpoints
 export const fetchLoyaltyProgramsByRestaurant = createAsyncThunk(
   "loyalty/fetchLoyaltyProgramsByRestaurant",
@@ -224,62 +258,27 @@ export const getUserLoyaltyCards = createAsyncThunk(
   }
 )
 
-export const markCardAsRedeemed = createAsyncThunk(
-  "loyalty/markCardAsRedeemed",
-  async (loyaltyCardId, { rejectWithValue }) => {
-    try {
-      const response = await loyaltyApi.markLoyaltyCardAsRedeemed(loyaltyCardId)
-      if (response.error) {
-        showNotification({
-          title: "Error",
-          message: response.message,
-          color: "red"
-        })
-        return rejectWithValue(response.error)
-      }
-      return id
-    } catch (error) {
-      return rejectWithValue(error.response.data)
+export const markCardAsRedeemed = createAsyncThunk("loyalty/markCardAsRedeemed", async (loyaltyCardId, { rejectWithValue }) => {
+  try {
+    const response = await loyaltyApi.markLoyaltyCardAsRedeemed(loyaltyCardId)
+    if (response.error) {
+      showNotification({
+        title: "Error",
+        message: response.message,
+        color: "red"
+      })
+      return rejectWithValue(response.error)
     }
+    return id
+  } catch (error) {
+    return rejectWithValue(error.response.data)
   }
-)
+})
 
 // Slice
 const loyaltySlice = createSlice({
   name: "loyalty",
-  initialState: {
-    programs: [],
-    itemsPerPage: ITEMS_PER_PAGE,
-    loyaltyCards: [],
-    deletedCards: [],
-    programsPerPage: [],
-    totalPrograms: 0,
-    totalPagesCount: 0,
-    currentPage: 1,
-    loadingPrograms: false,
-    creatingPrograms: false,
-    updatingPrograms: false,
-    loading: false,
-    error: null,
-
-    // Buscador de programas de lealtad
-    searchData: null,
-    searchField: "title",
-
-    //Loyalty Tracking variables
-    clientIdentity: null,
-    cardCode: null,
-    userRewardData: [],
-    userRewardsPerPage: [],
-    itemsRewardsPerPage: ITEMS_PER_PAGE_CARDS,
-    totalRewards: 0,
-    totalRewardsPageCount: 0,
-    currentRewardPage: 1,
-    loadingUserData: false,
-    loadingUserCards: false,
-    filterValue: "Todas",
-    prefetchUser: null
-  },
+  initialState,
   reducers: {
     resetError(state) {
       state.error = null

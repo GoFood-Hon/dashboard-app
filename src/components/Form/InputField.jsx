@@ -1,5 +1,5 @@
 import React from "react"
-import { Grid, Input, PasswordInput } from "@mantine/core"
+import { Grid, Input, PasswordInput, TextInput } from "@mantine/core"
 
 export default function InputField({
   label,
@@ -12,7 +12,8 @@ export default function InputField({
   value,
   onChange,
   defaultValue,
-  disabled
+  disabled,
+  required
 }) {
   return (
     <React.Fragment>
@@ -31,7 +32,7 @@ export default function InputField({
                 {...register(name, rules)}
               />
             ) : (
-              <Input
+              <TextInput
                 disabled={disabled}
                 classNames={{
                   input: errors[name] ? "border-red-500" : "focus:border-gray-600"
@@ -42,6 +43,8 @@ export default function InputField({
                 onChange={onChange}
                 placeholder={placeholder}
                 {...register(name, rules)}
+                required={required}
+                withAsterisk
               />
             )}
           </Input.Wrapper>

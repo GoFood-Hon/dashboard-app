@@ -34,19 +34,18 @@ export default function PurchasesHistory() {
   }
 
   return (
-    <>
-      <TableViewLayout
-        title="Historial de compras"
-        items={purchaseHistoryData}
-        tableStructure="purchasesHistoryScreen"
-        loading={loadingHistory}
-        noSearch
-        dates
-        filterData
-        value={dateRange.map((date) => (date ? new Date(date) : null))}
-        setRange={handleDateChange}
-        filterAction={handleFilterSearch}
-      />
-    </>
+    <TableViewLayout
+      title="Historial de compras"
+      items={purchaseHistoryData}
+      tableStructure="purchasesHistoryScreen"
+      loading={loadingHistory}
+      noSearch
+      dates
+      filterData
+      value={dateRange.map((date) => (date ? new Date(date) : null))}
+      setRange={handleDateChange}
+      filterAction={handleFilterSearch}
+      noCounts
+    />
   )
 }

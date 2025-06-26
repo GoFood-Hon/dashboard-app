@@ -14,10 +14,10 @@ export default function NewMenu() {
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const user = useSelector((state) => state.user.value)
-  const { dishes, currentDishPage, hasMore, dishesLoading, dishesPerPage, creatingMenus } = useSelector((state) => state.menus)
+  const { dishes, currentDishPage, hasMore, dishesPerPage, creatingMenus } = useSelector((state) => state.menus)
 
   useEffect(() => {
-    if (currentDishPage === 1 || dishes.length === 0 || currentDishPage > 1) {
+    if (dishes.length === 0) {
       dispatch(
         getAllDishes({
           limit: dishesPerPage,
@@ -26,7 +26,7 @@ export default function NewMenu() {
         })
       )
     }
-  }, [dispatch, currentDishPage, dishesPerPage, user.restaurantId])
+  }, [dispatch, currentDishPage])
 
   const {
     register,
@@ -43,21 +43,12 @@ export default function NewMenu() {
     {
       title: "Información general",
       requirement: "Obligatorio",
-      form: (
-        <GeneralInformationForm
-          register={register}
-          errors={errors}
-          setValue={setValue}
-          control={control}
-        />
-      )
+      form: <GeneralInformationForm register={register} errors={errors} setValue={setValue} control={control} />
     },
     {
       title: "Platillos",
       requirement: "Obligatorio",
-      form: dishesLoading ? (
-        <div>Cargando platillos...</div>
-      ) : (
+      form: (
         <ComplementsForm
           setValue={setValue}
           moreData={hasMore}

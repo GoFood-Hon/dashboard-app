@@ -28,7 +28,7 @@ const FormLayout = ({
           </ThemeIcon>
           <Flex>
             <Text fw={700}>
-              {item.title} <Text span>({item?.requirement})</Text>
+              {item.title}
             </Text>
           </Flex>
         </Flex>

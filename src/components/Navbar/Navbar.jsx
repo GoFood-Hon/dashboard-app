@@ -6,6 +6,7 @@ import { AUTH_NAVIGATION_ROUTES } from "../../routes"
 import { IconLogout } from "@tabler/icons-react"
 import { colors } from "../../theme/colors"
 import { useDispatch } from "react-redux"
+import { logoutAction } from "../../store/features/authSlice"
 
 export function Navbar({ data }) {
   const navigate = useNavigate()
@@ -15,7 +16,7 @@ export function Navbar({ data }) {
   const logout = () => {
     localStorage.removeItem("token")
     localStorage.removeItem("setUserRole")
-    dispatch({ type: "auth/logout" });
+    dispatch(logoutAction());
     navigate(AUTH_NAVIGATION_ROUTES.Login.path)
   }
 

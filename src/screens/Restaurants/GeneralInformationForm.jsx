@@ -39,10 +39,10 @@ export const GeneralInformationForm = ({ register, control, errors, setValue, im
         <Paper withBorder radius="md" p="xs">
           <Grid gutter="md">
             <Grid.Col span={{ base: 12, md: 6 }}>
-              <InputField label="Nombre del comercio (Obligatorio)" name="name" register={register} errors={errors} />
+              <InputField required label="Nombre del comercio (Obligatorio)" name="name" register={register} errors={errors} />
             </Grid.Col>
             <Grid.Col span={{ base: 12, md: 6 }}>
-              <InputField label="Correo electrónico (Obligatorio)" name="email" register={register} errors={errors} />
+              <InputField required label="Correo electrónico (Obligatorio)" name="email" register={register} errors={errors} />
             </Grid.Col>
             <Grid.Col span={{ base: 12, md: 6 }}>
               <InputField
@@ -100,7 +100,7 @@ export const GeneralInformationForm = ({ register, control, errors, setValue, im
 
             {isFreeDelivery ? null : (
               <Grid.Col span={{ base: 12, md: 6 }}>
-                <InputField label="Precio del envío por kilómetro" name="shippingPrice" register={register} errors={errors} />
+                <InputField label="Precio del envío por kilómetro (Obligatorio)" name="shippingPrice" register={register} errors={errors} />
               </Grid.Col>
             )}
           </Grid>

@@ -1,6 +1,21 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit"
 import statsApi from "../../api/statsApi"
 
+const initialState = {
+  cardsStats: [],
+  sellsData: [],
+  ordersData: [],
+  mostSelledProducts: [],
+  mostSelledMenus: [],
+  loadingStats: false,
+  startDate: null,
+  endDate: null,
+  selectedFilter: "Esta semana",
+  showDatePickers: false,
+  error: null,
+  hasFetchedStats: false
+}
+
 export const mainCardsStats = createAsyncThunk(
   "statistics/mainCardsStats",
   async ({ restaurantId, startDate, endDate }, { rejectWithValue }) => {
@@ -75,19 +90,7 @@ export const getMostSelledMenus = createAsyncThunk(
 
 const statsSlice = createSlice({
   name: "statistics",
-  initialState: {
-    cardsStats: [],
-    sellsData: [],
-    ordersData: [],
-    mostSelledProducts: [],
-    mostSelledMenus: [],
-    loadingStats: false,
-    startDate: null,
-    endDate: null,
-    selectedFilter: "Esta semana",
-    showDatePickers: false,
-    error: null
-  },
+  initialState,
   reducers: {
     setDateRange: (state, action) => {
       const { startDate, endDate } = action.payload
@@ -99,6 +102,9 @@ const statsSlice = createSlice({
     },
     setShowDatePickers: (state, action) => {
       state.showDatePickers = action.payload
+    },
+    setHasFetchedStats: (state, action) => {
+      state.hasFetchedStats = action.payload
     }
   },
   extraReducers: (builder) => {
@@ -172,5 +178,5 @@ const statsSlice = createSlice({
   }
 })
 
-export const { setDateRange, setSelectedFilter, setShowDatePickers } = statsSlice.actions
+export const { setDateRange, setSelectedFilter, setShowDatePickers, setHasFetchedStats } = statsSlice.actions
 export default statsSlice.reducer

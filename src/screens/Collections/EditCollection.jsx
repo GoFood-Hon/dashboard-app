@@ -68,7 +68,7 @@ export default function EditCollection() {
   }, [collectionId, reset])
 
   useEffect(() => {
-    if (currentDishPage === 1 || dishes.length === 0 || currentDishPage > 1) {
+    if (dishes.length === 0) {
       dispatch(
         fetchDishesForCollections({
           limit: dishesPerPage,
@@ -76,7 +76,7 @@ export default function EditCollection() {
         })
       )
     }
-    if (currentRestaurantPage === 1 || restaurants.length === 0 || currentRestaurantPage > 1) {
+    if (restaurants.length === 0) {
       dispatch(
         fetchRestaurantsForCollections({
           limit: restaurantsPerPage,
@@ -84,9 +84,7 @@ export default function EditCollection() {
         })
       )
     }
-  }, [dispatch, currentDishPage, dishesPerPage, currentRestaurantPage, restaurantsPerPage])
-
-  const [isDataCleared, setIsDataCleared] = useState(false)
+  }, [])
 
   const accordionStructure = [
     {
@@ -99,7 +97,6 @@ export default function EditCollection() {
           setValue={setValue}
           image={bannerLocation}
           control={control}
-          isDataCleared={isDataCleared}
           watch={watch}
           edit
         />
@@ -112,7 +109,6 @@ export default function EditCollection() {
         <ComplementsForm
           setValue={setValue}
           moreData={collectionType === "dishes" ? hasMoreDishes : hasMoreRestaurants}
-          isDataCleared={isDataCleared}
           selectedDishes={Array.isArray(elements.dishes) && elements.dishes.length > 0 ? elements.dishes : elements.restaurants}
           defaultMessage={
             collectionType === "dishes"

@@ -15,7 +15,6 @@ import FormLayout from "../../components/Form/FormLayout"
 export default function NewCollection() {
   const navigate = useNavigate()
   const dispatch = useDispatch()
-  const [isDataCleared, setIsDataCleared] = useState(false)
   const {
     dishes,
     currentDishPage,
@@ -40,7 +39,7 @@ export default function NewCollection() {
   } = useForm({})
 
   useEffect(() => {
-    if (currentDishPage === 1 || dishes.length === 0 || currentDishPage > 1) {
+    if (dishes.length === 0) {
       dispatch(
         fetchDishesForCollections({
           limit: dishesPerPage,
@@ -48,7 +47,7 @@ export default function NewCollection() {
         })
       )
     }
-    if (currentRestaurantPage === 1 || restaurants.length === 0 || currentRestaurantPage > 1) {
+    if (restaurants.length === 0) {
       dispatch(
         fetchRestaurantsForCollections({
           limit: restaurantsPerPage,
@@ -56,7 +55,7 @@ export default function NewCollection() {
         })
       )
     }
-  }, [dispatch, currentDishPage, dishesPerPage, currentRestaurantPage, restaurantsPerPage])
+  }, [])
 
   const accordionStructure = [
     {
@@ -68,7 +67,6 @@ export default function NewCollection() {
           errors={errors}
           setValue={setValue}
           control={control}
-          isDataCleared={isDataCleared}
           watch={watch}
         />
       )
@@ -80,7 +78,6 @@ export default function NewCollection() {
         <ComplementsForm
           setValue={setValue}
           moreData={collectionType === "dishes" ? hasMoreDishes : hasMoreRestaurants}
-          isDataCleared={isDataCleared}
           defaultMessage="Por favor añada elementos a esta colección"
           data={collectionType === "dishes" ? dishes : restaurants}
           name={collectionType === "dishes" ? "dishes" : "restaurants"}
@@ -97,7 +94,6 @@ export default function NewCollection() {
       if (response.payload) {
         reset()
         navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Collections.path)
-        setIsDataCleared(true)
       }
     })
   }

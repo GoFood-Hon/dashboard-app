@@ -27,7 +27,8 @@ const TableViewLayout = ({
   filterAction,
   searchOptions = [],
   selectedOption,
-  setSelectedSearchOption
+  setSelectedSearchOption,
+  noCounts
 }) => {
   const isSmallScreen = useMediaQuery("(max-width: 430px)")
 
@@ -39,20 +40,22 @@ const TableViewLayout = ({
           {loading ? (
             <Skeleton height={15} mt={6} width="12%" radius="md" />
           ) : (
-            <Flex align="center" gap="xs" style={{ display: totalItems > 0 ? "flex" : "none" }}>
-              <Flex style={{ display: `${isSmallScreen ? "none" : ""}` }} align="center" gap={5}>
-                <Text fw={700}>
-                  {page === 1 ? 1 : (page - 1) * limit + 1}-{page === 1 ? limit : Math.min(page * limit, totalElements)}
-                </Text>
-                <Text>de</Text>
-                <Text fw={700}>
-                  {totalElements} {title.split(" ") !== 1 ? title.split(" ")[0].toLowerCase() : title.toLowerCase()}
-                </Text>
+            !noCounts && (
+              <Flex align="center" gap="xs">
+                <Flex style={{ display: `${isSmallScreen ? "none" : ""}` }} align="center" gap={5}>
+                  <Text fw={700}>
+                    {page === 1 ? 1 : (page - 1) * limit + 1}-{page === 1 ? limit : Math.min(page * limit, totalElements)}
+                  </Text>
+                  <Text>de</Text>
+                  <Text fw={700}>
+                    {totalElements} {title.split(" ") !== 1 ? title.split(" ")[0].toLowerCase() : title.toLowerCase()}
+                  </Text>
+                </Flex>
+                <Button style={{ display: onNewItemClick ?? "none" }} color={colors.main_app_color} onClick={onNewItemClick}>
+                  Nuevo
+                </Button>
               </Flex>
-              <Button style={{ display: onNewItemClick ?? "none" }} color={colors.main_app_color} onClick={onNewItemClick}>
-                Nuevo
-              </Button>
-            </Flex>
+            )
           )}
         </Flex>
       </Group>
@@ -83,6 +86,8 @@ const TableViewLayout = ({
         </Flex>
       )}
       <MenuTable
+        totalElements={totalElements}
+        limit={limit}
         items={items}
         screenType={tableStructure}
         totalItems={totalItems}

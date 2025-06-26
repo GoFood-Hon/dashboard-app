@@ -1,11 +1,71 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit"
 import plansApi from "../../api/plansApi"
-import { ITEMS_PER_PAGE } from "../../utils/paginationConfig"
+import { ITEMS_PER_PAGE, ITEMS_PER_PAGE_CARDS } from "../../utils/paginationConfig"
 import { showNotification } from "@mantine/notifications"
+
+const initialState = {
+  value: {},
+  currentPage: 1,
+  itemsPerPage: ITEMS_PER_PAGE,
+  totalPlans: 0,
+  totalPagesCount: 0,
+  plansByPage: [],
+  loadingPlans: false,
+  creatingPlan: false,
+  updatingPlan: false,
+  error: null,
+
+  //Plans view for SelectPlan component
+  currentPageSelectPlan: 1,
+  itemsPerPageSelectPlan: ITEMS_PER_PAGE_CARDS,
+  totalPlansSelectPlan: 0,
+  totalPagesCountSelectPlan: 0,
+  plansByPageSelectPlan: [],
+  loadingPlansSelectPlan: false,
+
+  //Buscar planes
+  searchData: null,
+  searchField: "name"
+}
 
 // Thunk para obtener todos los planes
 export const fetchAllPlans = createAsyncThunk(
   "plans/fetchAll",
+  async ({ limit, page, search_field, search }, { rejectWithValue }) => {
+    try {
+      const response = await plansApi.getAllPlans({
+        limit,
+        page,
+        order: "DESC",
+        search_field,
+        search
+      })
+
+      if (response.error) {
+        showNotification({
+          title: "Error",
+          message: response.message,
+          color: "red",
+          duration: 7000
+        })
+        return rejectWithValue(response.error)
+      }
+
+      return { data: response.data, results: response.results, page }
+    } catch (error) {
+      showNotification({
+        title: "Error",
+        message: error.message || error,
+        color: "red",
+        duration: 7000
+      })
+      return rejectWithValue(error.message)
+    }
+  }
+)
+
+export const fetchAllPlansSelectPlan = createAsyncThunk(
+  "plans/fetchAllSelectPlan",
   async ({ limit, page, search_field, search }, { rejectWithValue }) => {
     try {
       const response = await plansApi.getAllPlans({
@@ -129,23 +189,6 @@ export const updatePlanStatus = createAsyncThunk("plans/updatePlanStatus", async
   }
 })
 
-const initialState = {
-  value: {},
-  currentPage: 1,
-  itemsPerPage: ITEMS_PER_PAGE,
-  totalPlans: 0,
-  totalPagesCount: 0,
-  plansByPage: [],
-  loadingPlans: false,
-  creatingPlan: false,
-  updatingPlan: false,
-  error: null,
-
-  //Buscar planes
-  searchData: null,
-  searchField: "name"
-}
-
 const plansSlice = createSlice({
   name: "plans",
   initialState,
@@ -158,6 +201,9 @@ const plansSlice = createSlice({
     },
     setCurrentPage: (state, action) => {
       state.currentPage = action.payload
+    },
+    setCurrentPageSelectPlan: (state, action) => {
+      state.currentPageSelectPlan = action.payload
     },
     setSelectedSearchOption: (state, action) => {
       state.searchField = action.payload
@@ -178,6 +224,21 @@ const plansSlice = createSlice({
       })
       .addCase(fetchAllPlans.rejected, (state, action) => {
         state.loadingPlans = false
+        state.error = action.payload
+      })
+      .addCase(fetchAllPlansSelectPlan.pending, (state) => {
+        state.loadingPlansSelectPlan = true
+      })
+      .addCase(fetchAllPlansSelectPlan.fulfilled, (state, action) => {
+        const { data, results, page } = action.payload
+        state.plansByPageSelectPlan[page] = data
+        state.currentPageSelectPlan = page
+        state.totalPlansSelectPlan = results
+        state.totalPagesCountSelectPlan = Math.ceil(results / action.meta.arg.limit)
+        state.loadingPlansSelectPlan = false
+      })
+      .addCase(fetchAllPlansSelectPlan.rejected, (state, action) => {
+        state.loadingPlansSelectPlan = false
         state.error = action.payload
       })
       .addCase(createPlan.pending, (state) => {
@@ -255,5 +316,6 @@ const plansSlice = createSlice({
   }
 })
 
-export const { clearSelectedPlans, setSearchData, setCurrentPage, setSelectedSearchOption } = plansSlice.actions
+export const { clearSelectedPlans, setSearchData, setCurrentPage, setCurrentPageSelectPlan, setSelectedSearchOption } =
+  plansSlice.actions
 export default plansSlice.reducer

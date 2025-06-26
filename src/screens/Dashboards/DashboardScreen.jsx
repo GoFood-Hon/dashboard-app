@@ -33,7 +33,7 @@ export const DashboardScreen = ({ userRole, cardsStats, loadingStats }) => {
               </Text>
             ) : (
               <Text fz="h3" fw={700} className={classes.value}>
-                {stat.value}
+                {stat.value || 0}
               </Text>
             )}
           </Group>

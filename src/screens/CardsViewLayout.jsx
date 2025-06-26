@@ -336,20 +336,22 @@ const CardsViewLayout = ({
                   </Card>
                 </Grid.Col>
               ))}
-              <Grid.Col>
-                <Flex justify="end">
-                  <Pagination
-                    total={totalPageCount}
-                    page={page}
-                    limit={limit}
-                    defaultValue={page}
-                    onChange={onPaginationChange}
-                    color={colors.main_app_color}
-                    size="md"
-                    withEdges
-                  />
-                </Flex>
-              </Grid.Col>
+              {totalElements > limit && (
+                <Grid.Col>
+                  <Flex justify="end">
+                    <Pagination
+                      total={totalPageCount}
+                      page={page}
+                      limit={limit}
+                      defaultValue={page}
+                      onChange={onPaginationChange}
+                      color={colors.main_app_color}
+                      size="md"
+                      withEdges
+                    />
+                  </Flex>
+                </Grid.Col>
+              )}
             </Grid>
           ) : (
             <Grid gutter="sm">
@@ -461,20 +463,22 @@ const CardsViewLayout = ({
                 )
               })}
 
-              <Grid.Col className={`${totalPageCount === 1 ? "hidden" : ""}`}>
-                <Flex justify="end">
-                  <Pagination
-                    total={totalPageCount}
-                    page={page}
-                    limit={limit}
-                    defaultValue={page}
-                    onChange={onPaginationChange}
-                    color={colors.main_app_color}
-                    size="md"
-                    withEdges
-                  />
-                </Flex>
-              </Grid.Col>
+              {totalElements > limit && (
+                <Grid.Col className={`${totalPageCount === 1 ? "hidden" : ""}`}>
+                  <Flex justify="end">
+                    <Pagination
+                      total={totalPageCount}
+                      page={page}
+                      limit={limit}
+                      defaultValue={page}
+                      onChange={onPaginationChange}
+                      color={colors.main_app_color}
+                      size="md"
+                      withEdges
+                    />
+                  </Flex>
+                </Grid.Col>
+              )}
 
               <ConfirmationModal
                 opened={openedKitchen}

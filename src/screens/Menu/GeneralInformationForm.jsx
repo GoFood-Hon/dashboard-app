@@ -69,7 +69,7 @@ export default function GeneralInformationForm({ register, errors, setValue, ima
               </Flex>
             </Dropzone>
           </Flex>
-          {errors.files && <p className="text-red-500 text-center w-full">* Imagen es requerida.</p>}
+          {errors.files && <p className="text-red-500 text-center w-full">Imagen es requerida.</p>}
         </Paper>
       </Grid.Col>
     </Grid>

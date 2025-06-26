@@ -26,13 +26,14 @@ const plansApi = {
   updateFeatureToPlan: (params) => axiosClient.patch(`api/v1/plan/plan-feature`, params),
 
   // Get all plans
-  getAllPlans: ({ limit, page, order, search_field, search } = {}) => {
+  getAllPlans: ({ limit, page, order, search_field, search, status } = {}) => {
     const params = {
       limit,
       page,
       order,
       search_field,
-      search
+      search,
+      status
     }
 
     // Filtrar valores no definidos o vacíos (más robusto)

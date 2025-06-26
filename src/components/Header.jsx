@@ -26,18 +26,6 @@ export default function Header() {
         })
       )
     }
-    // TODO: 2nd - add branch to fetch data
-    /*  else if (
-      user.role === APP_ROLES.branchAdmin ||
-      user.role === APP_ROLES.kitchenUser ||
-      user.role === APP_ROLES.cashierUser
-    ) {
-      dispatch(
-        fetchBranchData({
-          branchId: user?.sucursalId
-        })
-      )
-    } */
   }, [])
 
   useEffect(() => {

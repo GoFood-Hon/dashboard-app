@@ -8,6 +8,7 @@ import { useState } from "react"
 import ConfirmationModal from "../ConfirmationModal"
 import { useDisclosure } from "@mantine/hooks"
 import { searchOptionsPromotions } from "../../utils/constants"
+import { NoPermissionsAnimation } from "../../components/Plans/NoPermissionsAnimation"
 
 export default function PromotionsList() {
   const navigate = useNavigate()
@@ -23,6 +24,10 @@ export default function PromotionsList() {
   const searchField = useSelector((state) => state.promotions.searchField)
   const [promotionToDelete, setPromotionToDelete] = useState(null)
   const [opened, { close, open }] = useDisclosure(false)
+  const user = useSelector((state) => state.user.value)
+  const havePromotionsModule = !!user?.Restaurant?.Subscription?.Plan?.PlanFeatures?.some(
+    (feature) => feature.featureCode === "promotions-module"
+  )
 
   const handleNewPromotion = () => {
     navigate(SETTING_NAVIGATION_ROUTES.Promotions.newPromotion.path)
@@ -43,7 +48,7 @@ export default function PromotionsList() {
     dispatch(getPromotionByRestaurant({ limit, page: 1, order: "DESC", search_field: searchField, search: query }))
   }
 
-  return (
+  return havePromotionsModule ? (
     <>
       <TableViewLayout
         title="Promociones"
@@ -76,5 +81,7 @@ export default function PromotionsList() {
         onConfirm={() => dispatch(deleteOffer(promotionToDelete))}
       />
     </>
+  ) : (
+    <NoPermissionsAnimation moduleName='promociones' />
   )
 }

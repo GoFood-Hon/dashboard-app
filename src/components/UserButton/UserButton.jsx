@@ -1,20 +1,23 @@
 import { Avatar, Flex, Menu, Text, rem, useMantineColorScheme } from "@mantine/core"
 import { colors } from "../../theme/colors"
-import { IconSettings } from "@tabler/icons-react"
 import { useState } from "react"
 import { IconLogout } from "@tabler/icons-react"
 import { IconSun } from "@tabler/icons-react"
 import { AUTH_NAVIGATION_ROUTES } from "../../routes"
 import { useNavigate } from "react-router-dom"
 import { IconMoon } from "@tabler/icons-react"
+import { logoutAction } from "../../store/features/authSlice"
+import { useDispatch } from "react-redux"
 
 export function UserButton({ image, name, email, role }) {
-  const [opened, setOpened] = useState(false)
   const navigate = useNavigate()
+  const dispatch = useDispatch()
+  const [opened, setOpened] = useState(false)
   const { colorScheme, setColorScheme } = useMantineColorScheme()
   const logout = () => {
     localStorage.removeItem("token")
     localStorage.removeItem("setUserRole")
+    dispatch(logoutAction())
     navigate(AUTH_NAVIGATION_ROUTES.Login.path)
   }
 
@@ -65,7 +68,6 @@ export function UserButton({ image, name, email, role }) {
                       ? "Administrador principal"
                       : "Motorista"}
           </Menu.Label>
-          {/* <Menu.Item leftSection={<IconSettings style={{ width: rem(14), height: rem(14) }} />}>Cuenta</Menu.Item> */}
           <Menu.Item
             leftSection={
               colorScheme === "dark" ? (

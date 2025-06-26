@@ -18,6 +18,7 @@ import { RestaurantBanner } from "./RestaurantBanner"
 import FormLayout from "../../components/Form/FormLayout"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { restaurantSchema } from "../../utils/validationSchemas"
+import { SocialMediaInformation } from "./SocialMediaInformation"
 
 export const EditRestaurant = () => {
   const { restaurantId } = useParams()
@@ -52,7 +53,7 @@ export const EditRestaurant = () => {
     reset,
     watch,
     formState: { errors }
-  } = useForm({ resolver: zodResolver(restaurantSchema), defaultValues: restaurantDetails || {} })
+  } = useForm({ defaultValues: restaurantDetails || {} })
 
   const imageLocation = watch("images[0].location")
   const bannerLocation = watch("bannerDishes[0].location")
@@ -81,6 +82,18 @@ export const EditRestaurant = () => {
       }
       if (data.shippingFree !== null) {
         formData.append("shippingPrice", convertToDecimal(data.shippingPrice))
+      }
+      if (data.whatsapp) {
+        formData.append("whatsapp", data.whatsapp)
+      }
+      if (data.facebook) {
+        formData.append("facebook", data.facebook)
+      }
+      if (data.instagram) {
+        formData.append("instagram", data.instagram)
+      }
+      if (data.website) {
+        formData.append("website", data.website)
       }
 
       let formDataImage = null
@@ -226,6 +239,11 @@ export const EditRestaurant = () => {
       form: <BookingInformation register={register} errors={errors} setValue={setValue} control={control} />
     },
     {
+      title: "Redes sociales",
+      requirement: "Opcional",
+      form: <SocialMediaInformation register={register} errors={errors} setValue={setValue} control={control} />
+    },
+    {
       title: "Selección del plan",
       requirement: "Opcional",
       form: (
@@ -258,7 +276,13 @@ export const EditRestaurant = () => {
           title={restaurantDetails?.name}
           show
           accordionStructure={filteredAccordionStructure}
-          accordionTitles={["Añadir banner", "Información general", "Datos de reservación", "Selección del plan"]}
+          accordionTitles={[
+            "Añadir banner",
+            "Información general",
+            "Datos de reservación",
+            "Redes sociales",
+            "Selección del plan"
+          ]}
           navigate={() => navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Restaurants.path)}
           isLoading={isLoading}
           update

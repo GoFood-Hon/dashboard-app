@@ -3,6 +3,26 @@ import promotionApi from "../../api/promotionApi"
 import { ITEMS_PER_PAGE } from "../../utils/paginationConfig"
 import { showNotification } from "@mantine/notifications"
 
+const initialState = {
+  promotions: [],
+  loading: false,
+  itemsPerPage: ITEMS_PER_PAGE,
+  promotionsPerPage: [],
+  totalPromotions: 0,
+  totalPagesCount: 0,
+  currentPage: 1,
+  loadingPromotions: false,
+  creatingPromotions: false,
+  updatingPromotions: false,
+  deletingPromotions: false,
+  totalItems: 0,
+  searchData: null,
+  searchField: "title",
+  error: null,
+  selectedPromotion: null,
+  dishesList: []
+}
+
 export const getPromotionByRestaurant = createAsyncThunk(
   "promotions/getPromotionByRestaurant",
   async ({ limit, page, order, search, search_field }, { rejectWithValue }) => {
@@ -208,25 +228,7 @@ export const getAllDishesList = createAsyncThunk("promotions/getAllDishesList", 
 
 const promotionsSlice = createSlice({
   name: "promotions",
-  initialState: {
-    promotions: [],
-    loading: false,
-    itemsPerPage: ITEMS_PER_PAGE,
-    promotionsPerPage: [],
-    totalPromotions: 0,
-    totalPagesCount: 0,
-    currentPage: 1,
-    loadingPromotions: false,
-    creatingPromotions: false,
-    updatingPromotions: false,
-    deletingPromotions: false,
-    totalItems: 0,
-    searchData: null,
-    searchField: "title",
-    error: null,
-    selectedPromotion: null,
-    dishesList: []
-  },
+  initialState,
   reducers: {
     setPage: (state, action) => {
       state.currentPage = action.payload

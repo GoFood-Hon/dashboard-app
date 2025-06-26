@@ -5,11 +5,11 @@ const BookingInformation = ({ register, errors }) => {
   return (
     <Grid grow>
       <Grid.Col span={{ base: 12, md: 6, lg: 3 }}>
-        <InputField label="Precio por silla" type="number" name="pricePerChair" register={register} errors={errors} />
+        <InputField label="Precio por silla (Opcional)" type="number" name="pricePerChair" register={register} errors={errors} />
       </Grid.Col>
       <Grid.Col span={{ base: 12, md: 6, lg: 3 }}>
         <InputField
-          label="Horas de anticipo para reservación"
+          label="Horas de anticipo para reservación (Opcional)"
           type="number"
           name="hoursBeforeCancellation"
           register={register}
@@ -18,7 +18,7 @@ const BookingInformation = ({ register, errors }) => {
       </Grid.Col>
       <Grid.Col span={{ base: 12, md: 6, lg: 3 }}>
         <InputField
-          label="Horas antes de la reservación para pagarla"
+          label="Horas antes de la reservación para pagarla (Opcional)"
           type="number"
           name="hoursBeforeBooking"
           register={register}

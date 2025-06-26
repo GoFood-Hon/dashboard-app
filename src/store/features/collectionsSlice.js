@@ -5,6 +5,48 @@ import { showNotification } from "@mantine/notifications"
 import dishesApi from "../../api/dishesApi"
 import restaurantsApi from "../../api/restaurantApi"
 
+const initialState = {
+  collectionDetails: null,
+  dishesList: [],
+  currentPage: 1,
+  collectionsPerPage: [],
+  totalCollections: 0,
+  totalPagesCount: 0,
+  loadingCollections: false,
+  creatingCollection: false,
+  updatingCollection: false,
+  fetchingDishes: false,
+  itemsPerPage: ITEMS_PER_PAGE,
+  status: "idle",
+  error: null,
+  collectionType: "dishes",
+
+  //Dishes store params
+  dishes: [],
+  currentDishPage: 1,
+  dishesPerPage: ITEMS_PER_PAGE_CARDS,
+  hasMoreDishes: true,
+  dishesLoading: false,
+  updatingDishes: false,
+
+  //Restaurants store params
+  restaurants: [],
+  currentRestaurantPage: 1,
+  restaurantsPerPage: ITEMS_PER_PAGE_CARDS,
+  hasMoreRestaurants: true,
+  restaurantsLoading: false,
+  updatingRestaurants: false,
+
+  //Elements count
+  elementsCount: 0,
+
+  //Search collections
+  searchData: null,
+  searchDishesData: null,
+  searchRestaurantsData: null,
+  searchField: "name"
+}
+
 export const fetchCollections = createAsyncThunk(
   "collections/fetchCollections",
   async ({ limit, page, search_field, search }, { rejectWithValue }) => {
@@ -315,47 +357,7 @@ export const deleteRestaurantFromCollection = createAsyncThunk(
 // Slice
 const collectionsSlice = createSlice({
   name: "collections",
-  initialState: {
-    collectionDetails: null,
-    dishesList: [],
-    currentPage: 1,
-    collectionsPerPage: [],
-    totalCollections: 0,
-    totalPagesCount: 0,
-    loadingCollections: false,
-    creatingCollection: false,
-    updatingCollection: false,
-    fetchingDishes: false,
-    itemsPerPage: ITEMS_PER_PAGE,
-    status: "idle",
-    error: null,
-    collectionType: "dishes",
-
-    //Dishes store params
-    dishes: [],
-    currentDishPage: 1,
-    dishesPerPage: ITEMS_PER_PAGE_CARDS,
-    hasMoreDishes: true,
-    dishesLoading: false,
-    updatingDishes: false,
-
-    //Restaurants store params
-    restaurants: [],
-    currentRestaurantPage: 1,
-    restaurantsPerPage: ITEMS_PER_PAGE_CARDS,
-    hasMoreRestaurants: true,
-    restaurantsLoading: false,
-    updatingRestaurants: false,
-
-    //Elements count
-    elementsCount: 0,
-
-    //Search collections
-    searchData: null,
-    searchDishesData: null,
-    searchRestaurantsData: null,
-    searchField: "name"
-  },
+  initialState,
   reducers: {
     setCurrentPage: (state, action) => {
       state.currentPage = action.payload

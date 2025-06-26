@@ -3,6 +3,23 @@ import reservationsApi from "../../api/reservationsApi"
 import { showNotification } from "@mantine/notifications"
 import { ITEMS_PER_PAGE } from "../../utils/paginationConfig"
 
+const initialState = {
+  itemsPerPage: ITEMS_PER_PAGE,
+  reservationsPerPage: [],
+  totalReservations: 0,
+  totalPagesCount: 0,
+  currentPage: 1,
+  loadingReservations: false,
+  updatingReservation: false,
+  reservationDetails: null,
+  error: null,
+
+  //Search data
+  searchField: "identityNumber",
+  searchData: null,
+  searchDishesData: null
+}
+
 // Thunk para obtener las reservas por sucursal
 export const fetchReservationByBranch = createAsyncThunk(
   "reservations/fetchByBranch",
@@ -155,23 +172,6 @@ export const approveReservation = createAsyncThunk(
     }
   }
 )
-
-const initialState = {
-  itemsPerPage: ITEMS_PER_PAGE,
-  reservationsPerPage: [],
-  totalReservations: 0,
-  totalPagesCount: 0,
-  currentPage: 1,
-  loadingReservations: false,
-  updatingReservation: false,
-  reservationDetails: null,
-  error: null,
-
-  //Search data
-  searchField: "identityNumber",
-  searchData: null,
-  searchDishesData: null
-}
 
 const reservationsSlice = createSlice({
   name: "reservations",

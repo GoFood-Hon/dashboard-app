@@ -357,8 +357,6 @@ export const searchOptionsAdminUsers = [
   { value: "name", label: "Nombre" },
   { value: "email", label: "Correo electrónico" },
   { value: "phoneNumber", label: "Teléfono" },
-  //{ value: "identityNumber", label: "Identidad" }
-  //{ value: "restaurantName", label: "Nombre del comercio" }
 ]
 
 //Search options for loyalty programs
@@ -394,7 +392,7 @@ export const cardsDataStructure = (cardsStats) => [
     icon: IconCooker,
     value: cardsStats?.avgCookingTime,
     type: "time",
-    text: "Tiempo promedio de preparación de pedidos"
+    text: "Promedio de preparación de pedidos"
   },
   {
     title: "Órdenes canceladas",

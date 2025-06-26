@@ -2,6 +2,15 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit"
 import { showNotification } from "@mantine/notifications"
 import reviewsApi from "../../api/reviewsApi"
 
+const initialState = {
+  reviews: [],
+  reviewDetails: {},
+  loadingReviews: false,
+  loadingReviewDetails: false,
+  updatingVisibility: false,
+  error: null
+}
+
 export const fetchAllReviews = createAsyncThunk("reviews/fetchAllReviews", async ({ restaurantId }, { rejectWithValue }) => {
   try {
     const response = await reviewsApi.getAllReviews(restaurantId)
@@ -11,7 +20,7 @@ export const fetchAllReviews = createAsyncThunk("reviews/fetchAllReviews", async
   }
 })
 
-export const fetchReviewById = createAsyncThunk("reviews/fetchReviewById", async ({reviewId}, { rejectWithValue }) => {
+export const fetchReviewById = createAsyncThunk("reviews/fetchReviewById", async ({ reviewId }, { rejectWithValue }) => {
   try {
     const response = await reviewsApi.getReviewById(reviewId)
     return response.data
@@ -36,14 +45,7 @@ export const updateReviewVisibility = createAsyncThunk(
 // Slice
 const reviewsSlice = createSlice({
   name: "reviews",
-  initialState: {
-    reviews: [],
-    reviewDetails: {},
-    loadingReviews: false,
-    loadingReviewDetails: false,
-    updatingVisibility: false,
-    error: null
-  },
+  initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder

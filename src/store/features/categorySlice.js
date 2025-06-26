@@ -2,6 +2,13 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 import dishesCategoriesApi from "../../api/dishesCategoriesApi.js"
 import toast from "react-hot-toast"
 
+const initialState = {
+  dishesCategories: [],
+  status: "idle",
+  loading: false,
+  error: null
+}
+
 export const fetchDishesCategories = createAsyncThunk(
   "dishesCategories/fetchDishesCategories",
   async (restaurantId, { dispatch }) => {
@@ -37,13 +44,6 @@ export const createDishCategory = createAsyncThunk("dishesCategories/createDishC
     throw error
   }
 })
-
-const initialState = {
-  dishesCategories: [],
-  status: "idle",
-  loading: false,
-  error: null
-}
 
 export const dishesCategoriesSlice = createSlice({
   name: "dishesCategories",

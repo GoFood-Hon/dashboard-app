@@ -15,6 +15,12 @@ import { GeneralInformationForm } from "../Restaurants/GeneralInformationForm"
 import BookingInformation from "../Restaurants/BookingInformation"
 import { showNotification } from "@mantine/notifications"
 import { setUser } from "../../store/features/userSlice"
+import { SocialMediaInformation } from "../Restaurants/SocialMediaInformation"
+import { IconBolt } from "@tabler/icons-react"
+import { IconPhoto } from "@tabler/icons-react"
+import { IconFileInfo } from "@tabler/icons-react"
+import { IconTable } from "@tabler/icons-react"
+import { IconSocial } from "@tabler/icons-react"
 
 export default function BusinessSettings() {
   const navigate = useNavigate()
@@ -74,6 +80,18 @@ export default function BusinessSettings() {
     if (data.shippingFree !== null) {
       formData.append("shippingPrice", convertToDecimal(data.shippingPrice))
     }
+    if (data.whatsapp) {
+      formData.append("whatsapp", data.whatsapp)
+    }
+    if (data.facebook) {
+      formData.append("facebook", data.facebook)
+    }
+    if (data.instagram) {
+      formData.append("instagram", data.instagram)
+    }
+    if (data.website) {
+      formData.append("website", data.website)
+    }
 
     let formDataImage = null
     if (data?.files?.[0]) {
@@ -99,7 +117,7 @@ export default function BusinessSettings() {
     } else {
       showNotification({
         title: "Actualización exitosa",
-        message: 'Los datos se actualizaron correctamente',
+        message: "Los datos se actualizaron correctamente",
         color: "green"
       })
     }
@@ -150,7 +168,7 @@ export default function BusinessSettings() {
           </Flex>
         </Group>
         <Stack gap="xs">
-          <SettingsCard title="Banner" iconName="building">
+          <SettingsCard title="Banner" icon={IconPhoto}>
             <RestaurantBanner
               register={register}
               errors={errors}
@@ -160,7 +178,7 @@ export default function BusinessSettings() {
               watch={watch}
             />
           </SettingsCard>
-          <SettingsCard title="Información general" iconName="building">
+          <SettingsCard title="Información general" icon={IconFileInfo}>
             <GeneralInformationForm
               register={register}
               errors={errors}
@@ -171,8 +189,11 @@ export default function BusinessSettings() {
               blocked
             />
           </SettingsCard>
-          <SettingsCard title="Datos de reservación" iconName="building">
+          <SettingsCard title="Datos de reservación" icon={IconTable}>
             <BookingInformation register={register} errors={errors} setValue={setValue} control={control} />
+          </SettingsCard>
+          <SettingsCard title="Redes sociales" icon={IconSocial}>
+            <SocialMediaInformation register={register} errors={errors} setValue={setValue} control={control} />
           </SettingsCard>
           <section>
             <Paper withBorder radius="md" p="md">

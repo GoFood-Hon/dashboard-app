@@ -17,6 +17,7 @@ import {
   mainAdminCardsStats,
   mainCardsStats,
   setDateRange,
+  setHasFetchedStats,
   setSelectedFilter,
   setShowDatePickers
 } from "../store/features/statsSlice"
@@ -42,11 +43,11 @@ function Home() {
     endDate,
     selectedFilter,
     showDatePickers,
-    mostSelledMenus
+    mostSelledMenus,
+    hasFetchedStats
   } = useSelector((state) => state.stats)
 
   const user = useSelector((state) => state.user.value)
-  const firstRender = useRef(true)
 
   const fetchStats = (start, end) => {
     if (user.role === "superadmin") {
@@ -80,15 +81,11 @@ function Home() {
   }, [])
 
   useEffect(() => {
-    if (firstRender.current) {
-      firstRender.current = false
-      return
-    }
-
-    if (startDate && endDate) {
+    if (!hasFetchedStats && startDate && endDate) {
       fetchStats(startDate, endDate)
+      dispatch(setHasFetchedStats(true))
     }
-  }, [startDate, endDate])
+  }, [startDate, endDate, hasFetchedStats])
 
   const parseLocalDate = (dateString) => {
     const [year, month, day] = dateString.split("-").map(Number)
@@ -96,6 +93,7 @@ function Home() {
   }
 
   const updateDateRange = (start, end) => {
+    dispatch(setHasFetchedStats(false))
     dispatch(
       setDateRange({
         startDate: start ? dayjs(start).tz().format("YYYY-MM-DD") : null,
@@ -105,6 +103,7 @@ function Home() {
   }
 
   const setFilter = (filterName, setDatesCallback) => {
+    dispatch(setHasFetchedStats(false))
     dispatch(setShowDatePickers(false))
     setDatesCallback()
     dispatch(setSelectedFilter(filterName))
@@ -155,6 +154,7 @@ function Home() {
                 maxDate={endDate ? parseLocalDate(endDate) : undefined}
                 w={229}
                 locale="es"
+                clearable
               />
               <DatePickerInput
                 placeholder="Seleccione fecha final"
@@ -163,6 +163,7 @@ function Home() {
                 minDate={startDate ? parseLocalDate(startDate) : undefined}
                 w={229}
                 locale="es"
+                clearable
               />
             </>
           )}

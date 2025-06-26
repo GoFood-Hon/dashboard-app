@@ -8,6 +8,7 @@ import ConfirmationModal from "../ConfirmationModal"
 import { useDisclosure } from "@mantine/hooks"
 import { deleteCoupon, getCoupons, setPage, setSearchData, setSelectedSearchOption } from "../../store/features/couponsSlice"
 import { searchOptionsCoupons } from "../../utils/constants"
+import { NoPermissionsAnimation } from "../../components/Plans/NoPermissionsAnimation"
 
 export default function CouponsList() {
   const navigate = useNavigate()
@@ -23,6 +24,10 @@ export default function CouponsList() {
   const searchField = useSelector((state) => state.coupons.searchField)
   const [couponToDelete, setCouponToDelete] = useState(null)
   const [opened, { close, open }] = useDisclosure(false)
+  const user = useSelector((state) => state.user.value)
+  const haveCouponsModule = !!user?.Restaurant?.Subscription?.Plan?.PlanFeatures?.some(
+    (feature) => feature.featureCode === "promotions-coupon"
+  )
 
   const handleNewCoupon = () => {
     navigate(SETTING_NAVIGATION_ROUTES.Coupons.newCoupon.path)
@@ -42,7 +47,7 @@ export default function CouponsList() {
     dispatch(getCoupons({ limit, page, order: "DESC", search_field: searchField, search: query }))
   }
 
-  return (
+  return haveCouponsModule ? (
     <>
       <TableViewLayout
         title="Cupones"
@@ -75,5 +80,7 @@ export default function CouponsList() {
         onConfirm={() => dispatch(deleteCoupon(couponToDelete))}
       />
     </>
+  ) : (
+    <NoPermissionsAnimation moduleName='cupones' />
   )
 }
