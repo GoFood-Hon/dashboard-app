@@ -1,17 +1,18 @@
 import React, { useEffect, useState } from "react"
-import { Accordion } from "@mantine/core"
 import { useForm } from "react-hook-form"
-import toast from "react-hot-toast"
 import plansApi from "../../api/plansApi"
 import { convertToDecimal } from "../../utils"
 import { useNavigate, useParams } from "react-router-dom"
 import { NAVIGATION_ROUTES_SUPER_ADMIN } from "../../routes"
-import { colors } from "../../theme/colors"
 import { EditGeneralInformationForm } from "./EditGeneralInformationForm"
 import { updatePlanData } from "../../store/features/plansSlice"
 import { useSelector } from "react-redux"
 import { useDispatch } from "react-redux"
 import FormLayout from "../../components/Form/FormLayout"
+import { Characteristics } from "./Characteristics"
+import { showNotification } from "@mantine/notifications"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { newPlanSchema } from "../../utils/validationSchemas"
 
 export const EditPlan = () => {
   const { planId } = useParams()
@@ -19,6 +20,7 @@ export const EditPlan = () => {
   const navigate = useNavigate()
   const [planDetails, setPlanDetails] = useState({})
   const isLoading = useSelector((state) => state.plans.updatingPlan)
+  const featuresList = useSelector((state) => state.plans.featuresList)
 
   useEffect(() => {
     ;(async () => {
@@ -26,7 +28,10 @@ export const EditPlan = () => {
         const response = await plansApi.getPlan(planId)
         setPlanDetails(response.data.plan)
       } catch (error) {
-        toast.error(`Fallo al obtener el plan. Por favor intente de nuevo. ${error}`, {
+        showNotification({
+          title: "Error",
+          message: "Fallo al obtener el plan. Por favor intente de nuevo.",
+          color: "red",
           duration: 7000
         })
       }
@@ -40,14 +45,11 @@ export const EditPlan = () => {
     reset,
     control,
     formState: { errors }
-  } = useForm({ defaultValues: planDetails || {} })
-
-  const [featuresList, setFeaturesList] = useState([])
+  } = useForm({ resolver: zodResolver(newPlanSchema), defaultValues: planDetails || {} })
 
   const accordionStructure = [
     {
       title: "Información general",
-      requirement: "Obligatorio",
       form: (
         <EditGeneralInformationForm
           data={planDetails}
@@ -55,8 +57,18 @@ export const EditPlan = () => {
           errors={errors}
           setValue={setValue}
           control={control}
-          featuresList={featuresList}
-          setFeaturesList={setFeaturesList}
+        />
+      )
+    },
+    {
+      title: "Características",
+      form: (
+        <Characteristics
+          register={register}
+          errors={errors}
+          control={control}
+          setValue={setValue}
+          defaultFeatures={planDetails.PlanFeatures}
         />
       )
     }
@@ -70,7 +82,14 @@ export const EditPlan = () => {
   }, [planDetails, reset])
 
   const onSubmit = async (data) => {
-    const planId = data.id
+    const features = featuresList.map((feature) => {
+      const input = data.features?.[feature.id] || {}
+
+      return {
+        id: feature.id,
+        ...(feature.type === "boolean" ? { available: Boolean(input.available) } : { quantity: parseInt(input.quantity) || 0 })
+      }
+    })
 
     const transformedData = {
       name: data.name,
@@ -78,19 +97,7 @@ export const EditPlan = () => {
       tax: convertToDecimal(data.tax),
       paymentType: data.paymentType,
       currency: data.currency,
-      features: data.PlanFeatures.filter((feature) => !data.featureIds || data.featureIds.includes(feature.id)).map((feature) => {
-        const featureObj = { id: feature.id }
-
-        if (feature.featureCode === "quantity-menu") {
-          featureObj.quantity = parseInt(data["quantity-menu"])
-        } else if (feature.featureCode === "quantity-sucursals") {
-          featureObj.quantity = parseInt(data["quantity-sucursals"])
-        } else {
-          featureObj.available = feature.PlanPlanFeatures.available
-        }
-
-        return featureObj
-      })
+      features
     }
 
     dispatch(updatePlanData({ id: planId, params: transformedData }))
@@ -109,7 +116,7 @@ export const EditPlan = () => {
         <FormLayout
           title={planDetails?.name}
           show
-          accordionTitles={["Información general"]}
+          accordionTitles={["Información general", "Características"]}
           accordionStructure={accordionStructure}
           navigate={() => navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Plans.path)}
           isLoading={isLoading}

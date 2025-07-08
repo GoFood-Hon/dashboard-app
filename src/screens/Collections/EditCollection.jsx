@@ -14,6 +14,8 @@ import collectionsApi from "../../api/collectionsApi"
 import ComplementsForm from "./ComplementsForm"
 import { useParams } from "react-router-dom"
 import FormLayout from "../../components/Form/FormLayout"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { editCollectionsSchema } from "../../utils/validationSchemas"
 
 export default function EditCollection() {
   const { collectionId } = useParams()
@@ -42,10 +44,12 @@ export default function EditCollection() {
     watch,
     formState: { errors }
   } = useForm({
-    defaultValues: elements || {}
+    defaultValues: elements || {},
+    resolver: zodResolver(editCollectionsSchema)
   })
 
   const bannerLocation = watch("banner[0].location")
+  console.log(errors)
 
   useEffect(() => {
     const fetchMenu = async () => {
@@ -103,7 +107,7 @@ export default function EditCollection() {
       )
     },
     {
-      title: `Lista de ${collectionType === "dishes" ? "platillos" : "restaurantes"}`,
+      title: `Lista de ${collectionType === "dishes" ? "productos" : "restaurantes"}`,
       requirement: "Obligatorio",
       form: (
         <ComplementsForm
@@ -112,12 +116,13 @@ export default function EditCollection() {
           selectedDishes={Array.isArray(elements.dishes) && elements.dishes.length > 0 ? elements.dishes : elements.restaurants}
           defaultMessage={
             collectionType === "dishes"
-              ? "Los platillos seleccionados se mostrarán aquí"
-              : "Los platillos restaurantes se mostrarán aquí"
+              ? "Los productos seleccionados se mostrarán aquí"
+              : "Los productos restaurantes se mostrarán aquí"
           }
-          itemsAvailableLabel="Platillos/Menús disponibles"
+          itemsAvailableLabel="Productos/Menús disponibles"
           data={collectionType === "dishes" ? dishes : restaurants}
           name={collectionType === "dishes" ? "dishes" : "restaurants"}
+          errors={errors}
         />
       )
     }
@@ -150,7 +155,7 @@ export default function EditCollection() {
           title={elements.name}
           show
           accordionStructure={accordionStructure}
-          accordionTitles={["Información general", "Lista de platillos", "Lista de restaurantes"]}
+          accordionTitles={["Información general", "Lista de productos", "Lista de restaurantes"]}
           navigate={() => navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Collections.path)}
           isLoading={updatingCollection}
           update

@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 import { useDispatch, useSelector } from "react-redux"
-import { useLocation, useNavigate, useParams } from "react-router-dom"
-import { Accordion, Button, Flex, Paper } from "@mantine/core"
+import { useNavigate, useParams } from "react-router-dom"
 import GeneralInformationForm from "./GeneralInformationForm"
 import LocationForm from "./LocationForm"
 import { TimeForm } from "./TimeForm"
@@ -11,7 +10,8 @@ import branchesApi from "../../api/branchesApi"
 import { NAVIGATION_ROUTES_RES_ADMIN } from "../../routes"
 import { setShippingRange, updateBranches } from "../../store/features/branchesSlice"
 import FormLayout from "../../components/Form/FormLayout"
-import { updateRestaurantData } from "../../store/features/restaurantSlice"
+import { editBranchSchema } from "../../utils/validationSchemas"
+import { zodResolver } from "@hookform/resolvers/zod"
 
 export const EditBranch = () => {
   const { branchId } = useParams()
@@ -25,15 +25,6 @@ export const EditBranch = () => {
     setTableOfficeModified(true)
   }
   const [details, setDetails] = useState({})
-  const [marker, setMarker] = useState({
-    longitude: -88.025,
-    latitude: 15.50417
-  })
-  const [viewState, setViewState] = React.useState({
-    longitude: -88.025,
-    latitude: 15.50417,
-    zoom: 12.2
-  })
 
   const {
     register,
@@ -44,13 +35,12 @@ export const EditBranch = () => {
     watch,
     formState: { errors }
   } = useForm({
+    resolver: zodResolver(editBranchSchema),
     defaultValues: details || {}
   })
   const navigate = useNavigate()
   const imageLocation = watch("images[0].location")
   dispatch(setShippingRange(watch("maxDistanceShipping") || 0))
-
-  const [isDataCleared, setIsDataCleared] = useState(false)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -85,7 +75,6 @@ export const EditBranch = () => {
           setValue={setValue}
           control={control}
           image={imageLocation}
-          isDataCleared={isDataCleared}
           itemDetails={details}
           watch={watch}
         />
@@ -94,16 +83,7 @@ export const EditBranch = () => {
     {
       title: "Ubicación",
       requirement: "Obligatorio",
-      form: (
-        <LocationForm
-          register={register}
-          errors={errors}
-          setValue={setValue}
-          control={control}
-          isDataCleared={isDataCleared}
-          itemDetails={details}
-        />
-      )
+      form: <LocationForm register={register} errors={errors} setValue={setValue} control={control} itemDetails={details} />
     },
     {
       title: "Horario",
@@ -142,8 +122,7 @@ export const EditBranch = () => {
     }
 
     let formDataImage = null
-
-    if (data?.files?.[0] && data.files[0] instanceof File) {
+    if (data?.files?.[0]) {
       formDataImage = new FormData()
       formDataImage.append("files", data.files[0])
     }

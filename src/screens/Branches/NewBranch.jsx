@@ -1,20 +1,17 @@
 import React, { useState } from "react"
-import { Accordion } from "@mantine/core"
 import { useNavigate } from "react-router-dom"
-import { yupResolver } from "@hookform/resolvers/yup"
 import { useForm } from "react-hook-form"
-import { newBranchValidation } from "../../utils/inputRules"
 import { NAVIGATION_ROUTES_RES_ADMIN } from "../../routes"
 import GeneralInformationForm from "./GeneralInformationForm"
 import LocationForm from "./LocationForm"
 import { TimeForm } from "./TimeForm"
-import branchesApi from "../../api/branchesApi"
 import { getDepartmentNameById } from "../../utils"
-import { showNotification } from "@mantine/notifications"
 import { useDispatch } from "react-redux"
 import { createBranch, setShippingRange } from "../../store/features/branchesSlice"
 import FormLayout from "../../components/Form/FormLayout"
 import { useSelector } from "react-redux"
+import { newBranchSchema } from "../../utils/validationSchemas"
+import { zodResolver } from "@hookform/resolvers/zod"
 
 export default function NewBranch() {
   const dispatch = useDispatch()
@@ -32,13 +29,9 @@ export default function NewBranch() {
     reset,
     watch,
     formState: { errors }
-  } = useForm({
-    resolver: yupResolver(newBranchValidation)
-  })
+  } = useForm({ resolver: zodResolver(newBranchSchema) })
 
   dispatch(setShippingRange(watch("maxDistanceShipping") || 0))
-
-  const [isDataCleared, setIsDataCleared] = useState(false)
 
   const handleScheduleChange = (newSchedule) => {
     setWorkSchedule(newSchedule)
@@ -47,34 +40,14 @@ export default function NewBranch() {
   const accordionStructure = [
     {
       title: "Información general",
-      requirement: "Obligatorio",
-      form: (
-        <GeneralInformationForm
-          register={register}
-          errors={errors}
-          setValue={setValue}
-          control={control}
-          isDataCleared={isDataCleared}
-        />
-      )
+      form: <GeneralInformationForm register={register} errors={errors} setValue={setValue} control={control} watch={watch} />
     },
     {
       title: "Ubicación",
-      requirement: "Obligatorio",
-      form: (
-        <LocationForm
-          register={register}
-          errors={errors}
-          setValue={setValue}
-          control={control}
-          isDataCleared={isDataCleared}
-          newBranch
-        />
-      )
+      form: <LocationForm register={register} errors={errors} setValue={setValue} control={control} newBranch />
     },
     {
       title: "Horario",
-      requirement: "Obligatorio",
       form: (
         <TimeForm
           schedule={workSchedule}
@@ -105,12 +78,8 @@ export default function NewBranch() {
       schedules: !isAlwaysOpen ? Object.values(daysData) : null
     }
 
-    let formDataImage = null
-
-    if (data?.files?.[0] && data.files[0] instanceof File) {
-      formDataImage = new FormData()
-      formDataImage.append("files", data.files[0])
-    }
+    const formDataImage = new FormData()
+    formDataImage.append("files", data.files[0] || [])
 
     dispatch(createBranch({ formData, formDataImage }))
       .unwrap()

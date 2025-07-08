@@ -14,6 +14,8 @@ const initialState = {
   creatingPlan: false,
   updatingPlan: false,
   error: null,
+  featuresList: [],
+  loadingFeatures: false,
 
   //Plans view for SelectPlan component
   currentPageSelectPlan: 1,
@@ -66,14 +68,15 @@ export const fetchAllPlans = createAsyncThunk(
 
 export const fetchAllPlansSelectPlan = createAsyncThunk(
   "plans/fetchAllSelectPlan",
-  async ({ limit, page, search_field, search }, { rejectWithValue }) => {
+  async ({ limit, page, search_field, search, isActive }, { rejectWithValue }) => {
     try {
       const response = await plansApi.getAllPlans({
         limit,
         page,
         order: "DESC",
         search_field,
-        search
+        search,
+        isActive
       })
 
       if (response.error) {
@@ -186,6 +189,30 @@ export const updatePlanStatus = createAsyncThunk("plans/updatePlanStatus", async
     })
 
     throw error
+  }
+})
+
+export const getPlansFeatures = createAsyncThunk("plans/getPlansFeatures", async (_, { rejectWithValue }) => {
+  try {
+    const response = await plansApi.getFeatures()
+    if (response.error) {
+      showNotification({
+        title: "Error",
+        message: response.message,
+        color: "red",
+        duration: 7000
+      })
+      return rejectWithValue(response.error)
+    }
+    return response.data
+  } catch (error) {
+    showNotification({
+      title: "Error",
+      message: error.message || error,
+      color: "red",
+      duration: 7000
+    })
+    return rejectWithValue(error.message)
   }
 })
 
@@ -311,6 +338,17 @@ const plansSlice = createSlice({
       })
       .addCase(updatePlanData.rejected, (state, action) => {
         state.updatingPlan = false
+        state.error = action.payload
+      })
+      .addCase(getPlansFeatures.pending, (state) => {
+        state.loadingFeatures = true
+      })
+      .addCase(getPlansFeatures.fulfilled, (state, action) => {
+        state.featuresList = action.payload
+        state.loadingFeatures = false
+      })
+      .addCase(getPlansFeatures.rejected, (state, action) => {
+        state.loadingFeatures = false
         state.error = action.payload
       })
   }

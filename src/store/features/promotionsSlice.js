@@ -49,7 +49,7 @@ export const createOffer = createAsyncThunk(
   async ({ params, imageParams, dishes }, { rejectWithValue }) => {
     try {
       const response = await promotionApi.createOffer(params)
-      const promotionsData = response.data
+      let promotionsData = response.data
 
       if (response.error) {
         showNotification({
@@ -75,6 +75,8 @@ export const createOffer = createAsyncThunk(
 
           return rejectWithValue(imageResponse.message)
         }
+
+        promotionsData = { ...promotionsData, images: imageResponse.data.images }
       }
 
       if (dishes.length !== 0) {
@@ -87,15 +89,17 @@ export const createOffer = createAsyncThunk(
             color: "red"
           })
         }
+
+        promotionsData = { ...promotionsData, Dishes: dishesAddedResponse.data }
       }
 
       showNotification({
         title: "Creación exitosa",
-        message: `La promoción ${promotionsData.title} fue creada`,
+        message: `La promoción ha sido creada`,
         color: "green"
       })
 
-      return { ...promotionsData, images, Dishes: dishes || [] }
+      return promotionsData
     } catch (error) {
       return rejectWithValue(error.response.data)
     }
@@ -177,7 +181,7 @@ export const updateOffer = createAsyncThunk(
 
       showNotification({
         title: "Actualización exitosa",
-        message: `La promoción ${promotionsData.title} fue actualizada`,
+        message: `La promoción fue actualizada`,
         color: "green"
       })
 

@@ -17,8 +17,8 @@ import { updateRestaurantData } from "../../store/features/restaurantSlice"
 import { RestaurantBanner } from "./RestaurantBanner"
 import FormLayout from "../../components/Form/FormLayout"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { restaurantSchema } from "../../utils/validationSchemas"
 import { SocialMediaInformation } from "./SocialMediaInformation"
+import { editRestaurantSchema } from "../../utils/validationSchemas"
 
 export const EditRestaurant = () => {
   const { restaurantId } = useParams()
@@ -53,7 +53,10 @@ export const EditRestaurant = () => {
     reset,
     watch,
     formState: { errors }
-  } = useForm({ defaultValues: restaurantDetails || {} })
+  } = useForm({
+    resolver: zodResolver(editRestaurantSchema),
+    defaultValues: restaurantDetails || {}
+  })
 
   const imageLocation = watch("images[0].location")
   const bannerLocation = watch("bannerDishes[0].location")
@@ -84,7 +87,7 @@ export const EditRestaurant = () => {
         formData.append("shippingPrice", convertToDecimal(data.shippingPrice))
       }
       if (data.whatsapp) {
-        formData.append("whatsapp", data.whatsapp)
+        formData.append("whatsapp", data.whatsapp.startsWith("+504") ? data.whatsapp : `+504${data.whatsapp}`)
       }
       if (data.facebook) {
         formData.append("facebook", data.facebook)
@@ -118,7 +121,7 @@ export const EditRestaurant = () => {
           console.error("Error updating restaurant:", error)
         })
 
-      if (planCancelled && Object.keys(newPlan).length > 0) {
+      if (planCancelled) {
         try {
           const cancelPlanResponse = await plansApi.cancelPlan({ restaurantId })
 
@@ -129,30 +132,6 @@ export const EditRestaurant = () => {
               color: "red",
               duration: 5000
             })
-          } else {
-            // Asignar el nuevo plan solo si la cancelación fue exitosa
-            try {
-              const assignPlanResponse = await plansApi.assignPlan({
-                restaurantId,
-                planId: newPlan?.id // Asumiendo que `planId` está en los datos de `data`
-              })
-
-              if (assignPlanResponse.error) {
-                showNotification({
-                  title: "Error",
-                  message: assignPlanResponse.message,
-                  color: "red",
-                  duration: 5000
-                })
-              }
-            } catch (error) {
-              showNotification({
-                title: "Error",
-                message: `Error al actualizar: ${error}`,
-                color: "red",
-                duration: 5000
-              })
-            }
           }
         } catch (error) {
           showNotification({
@@ -162,12 +141,12 @@ export const EditRestaurant = () => {
             duration: 7000
           })
         }
-      } else if (!planCancelled && Object.keys(newPlan).length > 0) {
-        // Asignar el nuevo plan solo si la cancelación fue exitosa
+      }
+      if (Object.keys(newPlan).length > 0) {
         try {
           const assignPlanResponse = await plansApi.assignPlan({
             restaurantId,
-            planId: newPlan?.id // Asumiendo que `planId` está en los datos de `data`
+            planId: newPlan?.id
           })
 
           if (assignPlanResponse.error) {
@@ -199,8 +178,15 @@ export const EditRestaurant = () => {
 
   useEffect(() => {
     if (Object.keys(restaurantDetails).length > 0) {
-      reset(restaurantDetails)
+      const transformedDetails = {
+        ...restaurantDetails,
+        cuisineTypeId: restaurantDetails.cuisineTypeId ?? "",
+        shippingPrice: restaurantDetails.shippingPrice ?? ""
+      }
+
+      reset(transformedDetails)
     }
+
     window.scrollTo(0, 0)
   }, [restaurantDetails, reset])
 

@@ -18,21 +18,15 @@ import {
   Card,
   MantineProvider,
   BackgroundImage,
-  Skeleton
+  Skeleton,
+  CopyButton,
+  Tooltip,
+  ActionIcon
 } from "@mantine/core"
 import React, { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import { calculateTimeDifference, getFormattedHNL } from "../../utils"
-import {
-  APP_ROLES,
-  orderDeliveryTypes,
-  orderStates,
-  orderStatusValues,
-  PRIMARY_COL_HEIGHT,
-  SCROLL_VIEW_HEIGHT,
-  SECONDARY_COL_HEIGHT,
-  theme
-} from "../../utils/constants"
+import { APP_ROLES, orderDeliveryTypes, orderStates, orderStatusValues, SECONDARY_COL_HEIGHT, theme } from "../../utils/constants"
 import { DishOrderDetailCard } from "./DishOrderDetailCard"
 import { useSelector } from "react-redux"
 import { colors } from "../../theme/colors"
@@ -68,6 +62,8 @@ import {
 } from "@tabler/icons-react"
 import { IconTable } from "@tabler/icons-react"
 import dayjs from "dayjs"
+import { IconCheck } from "@tabler/icons-react"
+import { IconCopy } from "@tabler/icons-react"
 
 export const OrderDetails = () => {
   const { orderId } = useParams()
@@ -105,8 +101,17 @@ export const OrderDetails = () => {
         <>
           <Stack gap="xs">
             <Group>
-              <Flex align="center" justify="space-between">
-                <BackButton title={`Pedido: ${orderId}`} show />
+              <Flex align="center" justify="space-between" gap="xs">
+                <BackButton title={orderId} show />
+                <CopyButton value={orderId} timeout={2000}>
+                  {({ copied, copy }) => (
+                    <Tooltip label={copied ? "Copiado" : "Copiar"} withArrow position="right">
+                      <ActionIcon color={copied ? "teal" : "gray"} variant="subtle" onClick={copy}>
+                        {copied ? <IconCheck size={16} /> : <IconCopy size={16} />}
+                      </ActionIcon>
+                    </Tooltip>
+                  )}
+                </CopyButton>
               </Flex>
             </Group>
             <Paper withBorder p="md" radius="md" bg={orderDetails?.status === "canceled" ? "red" : ""}>
@@ -125,6 +130,7 @@ export const OrderDetails = () => {
                       icon={<item.icon size="1.2rem" />}
                       label={`Paso ${index + 1}`}
                       description={item.label}
+                      loading={index === active}
                     />
                   ))}
                 </Stepper>
@@ -139,7 +145,7 @@ export const OrderDetails = () => {
             </Paper>
 
             <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="xs">
-              <Paper withBorder radius="md" h={PRIMARY_COL_HEIGHT} p="md">
+              <Paper withBorder radius="md" style={{ height: "77vh", display: "flex", flexDirection: "column" }} p="md">
                 <Stack gap="xs">
                   <Group grow>
                     <BackgroundImage h={150} src={orderDetails?.Sucursal?.images?.[0]?.location} radius="md">
@@ -206,7 +212,7 @@ export const OrderDetails = () => {
                       </Button>
                     </Flex>
                   </Flex>
-                  <ScrollArea h={SCROLL_VIEW_HEIGHT}>
+                  <ScrollArea style={{ maxHeight: "calc(77vh - 230px)" }}>
                     <SimpleGrid spacing="xs">
                       {orderDetails?.OrderDetails?.map((item, index) => (
                         <DishOrderDetailCard key={index} orderDetails={item} />
@@ -283,69 +289,58 @@ export const OrderDetails = () => {
                 <Grid.Col span={{ base: 12, md: 6 }}>
                   <Paper withBorder radius="md" h={SECONDARY_COL_HEIGHT} p="md">
                     {user?.role !== "kitchen" ? (
-                      <Stack gap="xs">
-                        <Flex align="center" gap={5}>
-                          <IconReceipt size="1.1rem" />
-                          <Title order={isSmallScreen ? 6 : 5}>Datos de facturación</Title>
-                        </Flex>
-                        <Divider />
-                        <Stack justify="space-between">
+                      <Flex direction="column" h="100%">
+                        <Stack gap="xs">
+                          <Flex align="center" gap={5}>
+                            <IconReceipt size="1.1rem" />
+                            <Title order={isSmallScreen ? 6 : 5}>Datos de facturación</Title>
+                          </Flex>
+                          <Divider />
                           <Grid>
                             <Grid.Col span={6}>
-                              <Flex direction="column">
-                                <Stack gap="xs">
-                                  <Text size={isSmallScreen ? "xs" : "sm"}>Subtotal</Text>
-                                  <Text size={isSmallScreen ? "xs" : "sm"}>Descuento</Text>
-                                  <Text size={isSmallScreen ? "xs" : "sm"}>Precio de envío</Text>
-                                  <Text size={isSmallScreen ? "xs" : "sm"}>ISV ( 15% )</Text>
-                                  <Space />
-                                  <Text size={isSmallScreen ? "xs" : "sm"}>Total</Text>
-                                </Stack>
-                              </Flex>
+                              <Stack gap="xs">
+                                <Text size={isSmallScreen ? "xs" : "sm"}>Subtotal</Text>
+                                <Text size={isSmallScreen ? "xs" : "sm"}>Descuento</Text>
+                                <Text size={isSmallScreen ? "xs" : "sm"}>Precio de envío</Text>
+                                <Text size={isSmallScreen ? "xs" : "sm"}>ISV ( 15% )</Text>
+                                <Space />
+                                <Text size={isSmallScreen ? "xs" : "sm"}>Total</Text>
+                              </Stack>
                             </Grid.Col>
                             <Grid.Col span={6}>
-                              <Flex direction="column">
-                                <Stack gap="xs">
-                                  <Text size={isSmallScreen ? "xs" : "sm"} c="dimmed">
-                                    {getFormattedHNL(orderDetails?.subtotal)}
-                                  </Text>
-                                  <Text size={isSmallScreen ? "xs" : "sm"} c="dimmed">
-                                    {getFormattedHNL(orderDetails?.discount)}
-                                  </Text>
-                                  <Text size={isSmallScreen ? "xs" : "sm"} c="dimmed">
-                                    {orderDetails?.shippingPrice}
-                                  </Text>
-                                  <Text size={isSmallScreen ? "xs" : "sm"} c="dimmed">
-                                    {getFormattedHNL(orderDetails?.isv)}
-                                  </Text>
-                                  <Divider />
-                                  <Text size={isSmallScreen ? "xs" : "sm"} c="dimmed">
-                                    {getFormattedHNL(orderDetails?.total)}
-                                  </Text>
-                                </Stack>
-                              </Flex>
-                            </Grid.Col>
-                          </Grid>
-                          <Grid bg="gray" p="xs" mt="xs">
-                            <Grid.Col span={6}>
-                              <Flex direction="column">
-                                <Stack gap="xs">
-                                  <Text size={isSmallScreen ? "xs" : "sm"}>Propina</Text>
-                                </Stack>
-                              </Flex>
-                            </Grid.Col>
-                            <Grid.Col span={6}>
-                              <Flex direction="column">
-                                <Stack gap="xs">
-                                  <Text size={isSmallScreen ? "xs" : "sm"} >
-                                    {getFormattedHNL(orderDetails?.tip)}
-                                  </Text>
-                                </Stack>
-                              </Flex>
+                              <Stack gap="xs">
+                                <Text size={isSmallScreen ? "xs" : "sm"} c="dimmed">
+                                  {getFormattedHNL(orderDetails?.subtotal)}
+                                </Text>
+                                <Text size={isSmallScreen ? "xs" : "sm"} c="dimmed">
+                                  {getFormattedHNL(orderDetails?.discount)}
+                                </Text>
+                                <Text size={isSmallScreen ? "xs" : "sm"} c="dimmed">
+                                  {getFormattedHNL(orderDetails?.shippingPrice)}
+                                </Text>
+                                <Text size={isSmallScreen ? "xs" : "sm"} c="dimmed">
+                                  {getFormattedHNL(orderDetails?.isv)}
+                                </Text>
+                                <Divider />
+                                <Text size={isSmallScreen ? "xs" : "sm"} c="dimmed">
+                                  {getFormattedHNL(orderDetails?.total)}
+                                </Text>
+                              </Stack>
                             </Grid.Col>
                           </Grid>
                         </Stack>
-                      </Stack>
+
+                        <Card withBorder radius="md" mt="auto" py="xs">
+                          <Grid py={1}>
+                            <Grid.Col span={6}>
+                              <Text size={isSmallScreen ? "xs" : "sm"}>Propina</Text>
+                            </Grid.Col>
+                            <Grid.Col span={6}>
+                              <Text size={isSmallScreen ? "xs" : "sm"}>{getFormattedHNL(orderDetails?.tip)}</Text>
+                            </Grid.Col>
+                          </Grid>
+                        </Card>
+                      </Flex>
                     ) : (
                       <UserData
                         title="Estado del pedido"
@@ -440,18 +435,20 @@ export const OrderDetails = () => {
                               </Text>
                             )}
 
-                            {orderDetails?.status !== orderStatusValues.delivered && (
-                              <Button
-                                fullWidth
-                                loading={cancelOrderStatus}
-                                color={colors.main_app_color}
-                                variant="outline"
-                                onClick={() => dispatch(cancelOrder(orderId))}
-                                radius="md"
-                                size={isSmallScreen ? "xs" : "sm"}>
-                                Cancelar pedido
-                              </Button>
-                            )}
+                            {orderDetails?.status !== orderStatusValues.delivered &&
+                              orderDetails?.status !== orderStatusValues.onDelivery &&
+                              orderDetails?.status !== orderStatusValues.canceled && (
+                                <Button
+                                  fullWidth
+                                  loading={cancelOrderStatus}
+                                  color={colors.main_app_color}
+                                  variant="outline"
+                                  onClick={() => dispatch(cancelOrder(orderId))}
+                                  radius="md"
+                                  size={isSmallScreen ? "xs" : "sm"}>
+                                  Cancelar pedido
+                                </Button>
+                              )}
                           </>
                         </Flex>
                       </Stack>
@@ -479,7 +476,7 @@ export const OrderDetails = () => {
             opened={openedModal}
             close={closeModal}
             title="¿Estás seguro que deseas actualiza?"
-            description="El tag se quitará de todos los platillos a los que esté asociado"
+            description="La categoría se quitará de todos los productos a los que esté asociado"
             onConfirm={() => handleDeleteTag(tagId)}
           />
 

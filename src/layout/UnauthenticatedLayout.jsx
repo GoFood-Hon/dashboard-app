@@ -18,7 +18,7 @@ export default function UnauthenticatedLayout() {
     autoplay: true,
     animationData: loginAnimation
   }
-  const isSmallScreen = useMediaQuery("(max-width: 760px)")
+  const isSmallScreen = useMediaQuery("(max-width: 480px)")
   const { colorScheme } = useMantineColorScheme()
 
   useEffect(() => {
@@ -56,14 +56,16 @@ export default function UnauthenticatedLayout() {
           py={50}
           p={30}
           radius="md"
-          style={{
-            minWidth: isSmallScreen ? "400px" : "550px",
-            minHeight: "450px", 
-            height: "100%", 
-            maxWidth: "600px",
-            maxHeight: "80vh" 
-          }}>
-          <Flex h="100%" direction='column' justify="space-between">
+          style={
+            !isSmallScreen && {
+              minWidth: "500px",
+              minHeight: "450px",
+              height: "100%",
+              maxWidth: "600px",
+              maxHeight: "80vh"
+            }
+          }>
+          <Flex h="100%" direction="column" justify="space-between">
             <Group justify="center" position="center">
               <Image src={logoImage} alt="logo" h={28} />
             </Group>

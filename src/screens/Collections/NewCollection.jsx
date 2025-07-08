@@ -11,6 +11,8 @@ import {
   fetchRestaurantsForCollections
 } from "../../store/features/collectionsSlice"
 import FormLayout from "../../components/Form/FormLayout"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { collectionsSchema } from "../../utils/validationSchemas"
 
 export default function NewCollection() {
   const navigate = useNavigate()
@@ -36,7 +38,7 @@ export default function NewCollection() {
     reset,
     watch,
     formState: { errors }
-  } = useForm({})
+  } = useForm({ resolver: zodResolver(collectionsSchema) })
 
   useEffect(() => {
     if (dishes.length === 0) {
@@ -61,26 +63,19 @@ export default function NewCollection() {
     {
       title: "Información general",
       requirement: "Obligatorio",
-      form: (
-        <GeneralInformationForm
-          register={register}
-          errors={errors}
-          setValue={setValue}
-          control={control}
-          watch={watch}
-        />
-      )
+      form: <GeneralInformationForm register={register} errors={errors} setValue={setValue} control={control} watch={watch} />
     },
     {
-      title: `Lista de ${collectionType === "dishes" ? "platillos" : "comercios"}`,
+      title: `Lista de ${collectionType === "dishes" ? "productos" : "comercios"}`,
       requirement: "Obligatorio",
       form: (
         <ComplementsForm
           setValue={setValue}
           moreData={collectionType === "dishes" ? hasMoreDishes : hasMoreRestaurants}
-          defaultMessage="Por favor añada elementos a esta colección"
+          defaultMessage={`Los ${collectionType === "dishes" ? "productos" : "comercios"} seleccionados se mostrarán aquí`}
           data={collectionType === "dishes" ? dishes : restaurants}
           name={collectionType === "dishes" ? "dishes" : "restaurants"}
+          errors={errors}
         />
       )
     }
@@ -105,7 +100,7 @@ export default function NewCollection() {
           title="Nueva colección"
           show
           accordionStructure={accordionStructure}
-          accordionTitles={["Información general", "Lista de platillos", "Lista de comercios"]}
+          accordionTitles={["Información general", "Lista de productos", "Lista de comercios"]}
           navigate={() => navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Collections.path)}
           isLoading={creatingCollection}
         />

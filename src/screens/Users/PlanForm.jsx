@@ -56,7 +56,7 @@ export const PlanForm = ({
       {restaurantDetails?.Subscription && !planCancelled ? (
         <PlanInfoCard data={restaurantDetails?.Subscription} onCancelPlan={handlePlanCancel} />
       ) : Object.keys(newPlan).length === 0 ? (
-        <SelectPlan restaurantId={restaurantId} onSelected={handleSelectNewPlan} />
+        <SelectPlan restaurantId={restaurantId} onSelected={handleSelectNewPlan} currentPlan={restaurantDetails?.Subscription?.Plan?.id} />
       ) : null}
     </section>
   </>

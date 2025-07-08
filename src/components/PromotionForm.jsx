@@ -33,7 +33,7 @@ export const PromotionForm = ({ offerData }) => {
   const initialStartDate = offerData?.startDate ? new Date(offerData.startDate) : null
   const initialEndDate = offerData?.endDate ? new Date(offerData.endDate) : null
 
-  const [availabilityDiscount, setAvailabilityDiscount] = useState("En todos los platillos")
+  const [availabilityDiscount, setAvailabilityDiscount] = useState("En todos los productos")
   const [dishesAdded, setDishesAdded] = useState([])
   const [discountType, setDiscountType] = useState(
     offerData?.category ? capitalizeFirstLetter(offerData.category) : DEFAULT_CATEGORY
@@ -92,7 +92,7 @@ export const PromotionForm = ({ offerData }) => {
     formData.append("endDate", data.endDate)
 
     formData.append("minPurchase", convertToDecimal(data.minPurchase))
-    formData.append("allDishes", availabilityDiscount === "En todos los platillos")
+    formData.append("allDishes", availabilityDiscount === "En todos los productos")
 
     formData.append("restaurantId", user.restaurantId)
 
@@ -126,12 +126,12 @@ export const PromotionForm = ({ offerData }) => {
         throw new Error(`Fallo al subir la imagen. Por favor intente de nuevo. ${addImageResponse.message}`)
       }
 
-      if (availabilityDiscount === "Seleccionar platillos") {
+      if (availabilityDiscount === "Seleccionar productos") {
         const dishesFormData = buildDishesFormData(dishesAdded)
         const res = await promotionApi.addDishesToOffer(dishesFormData, response.data.id)
 
         if (res.error) {
-          throw new Error(`Fallo al agregar los platillos a la promoción. Por favor intente de nuevo. ${response.message}`)
+          throw new Error(`Fallo al agregar los productos a la promoción. Por favor intente de nuevo. ${response.message}`)
         }
       }
 
@@ -238,18 +238,18 @@ export const PromotionForm = ({ offerData }) => {
         <Grid.Col mt={20} span={{ sm: 12 }}>
           <span className="text-sm font-bold leading-snug">Disponibilidad de la promoción</span>
           <Select
-            data={["En todos los platillos", "Seleccionar platillos"]}
+            data={["En todos los productos", "Seleccionar productos"]}
             allowDeselect={false}
             value={availabilityDiscount}
             onChange={setAvailabilityDiscount}
           />
         </Grid.Col>
-        {availabilityDiscount === "Seleccionar platillos" ? (
+        {availabilityDiscount === "Seleccionar productos" ? (
           <Grid.Col span={{ sm: 12 }}>
-            <span className="text-sm font-bold leading-snug">Platillos disponibles</span>
+            <span className="text-sm font-bold leading-snug">Productos disponibles</span>
             <div className="mt-1">
               <MultiSelect
-                placeholder="Seleccione los platillos"
+                placeholder="Seleccione los productos"
                 value={dishesAdded}
                 onChange={setDishesAdded}
                 data={dishes.map((item) => ({ label: item.name, value: item.id }))}

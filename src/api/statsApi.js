@@ -80,7 +80,23 @@ const statsApi = {
     const url = `api/v1/stats/top-restaurant-categories${queryString ? `?${queryString}` : ""}`
 
     return axiosClient.get(url)
+  },
+
+  getTopShops: ({ startDate, endDate }) => {
+    const params = {
+      startDate,
+      endDate
+    }
+  
+    const validParams = Object.fromEntries(Object.entries(params).filter(([_, value]) => value !== undefined && value))
+  
+    const queryString = new URLSearchParams(validParams).toString()
+  
+    const url = `api/v1/stats/top-selling-restaurants-by-range${queryString ? `?${queryString}` : ""}`
+  
+    return axiosClient.get(url)
   }
 }
+
 
 export default statsApi

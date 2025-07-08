@@ -6,6 +6,8 @@ import { useSelector } from "react-redux"
 import { updateOffer } from "../../store/features/promotionsSlice"
 import { useDispatch } from "react-redux"
 import { useNavigate } from "react-router-dom"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { editPromotionSchema } from "../../utils/validationSchemas"
 
 export const EditPromotion = () => {
   const dispatch = useDispatch()
@@ -20,6 +22,7 @@ export const EditPromotion = () => {
     watch,
     formState: { errors }
   } = useForm({
+    resolver: zodResolver(editPromotionSchema),
     defaultValues: {
       ...selectedPromotion,
       allDishes: selectedPromotion?.allDishes === true ? "all" : "some",
@@ -50,13 +53,25 @@ export const EditPromotion = () => {
     }
   ]
 
+  const formatDishes = (dishes) => {
+    if (Array.isArray(dishes) && dishes.every((item) => typeof item === "object" && item !== null && "id" in item)) {
+      return dishes.map((item) => item.id)
+    }
+    return dishes
+  }
+
   const onSubmit = (data) => {
     const formData = new FormData()
+
     formData.append("title", data.title)
     formData.append("minPurchase", data.minPurchase.includes(".00") ? data.minPurchase : data.minPurchase.concat(".00"))
-    data.category === "porcentual"
-      ? formData.append("percentage", data.percentage)
-      : formData.append("amount", data.amount.includes(".00") ? data.amount : data.amount.concat(".00"))
+
+    if (data.category === "porcentual") {
+      formData.append("percentage", data.percentage)
+    } else {
+      formData.append("amount", data.amount.includes(".00") ? data.amount : data.amount.concat(".00"))
+    }
+
     formData.append("startDate", data.startDate)
     formData.append("endDate", data.endDate)
 
@@ -66,12 +81,14 @@ export const EditPromotion = () => {
       formDataImage.append("files", data.files[0])
     }
 
+    const formattedDishes = data.allDishes === "some" ? formatDishes(data.Dishes) : []
+
     dispatch(
       updateOffer({
         promotionId: selectedPromotion.id,
         params: formData,
         imageParams: formDataImage,
-        dishes: data?.allDishes === "some" ? data?.Dishes : []
+        dishes: formattedDishes
       })
     )
       .unwrap()

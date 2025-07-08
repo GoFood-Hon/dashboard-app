@@ -1,17 +1,14 @@
 import React from "react"
-import { Checkbox, Group } from "@mantine/core"
+import { Checkbox, Group, MantineProvider } from "@mantine/core"
 import { colors } from "../../theme/colors"
+import { theme } from "../../utils/constants"
 
-export default function InputCheckbox({ label, name, register }) {
+export default function InputCheckbox({ label, name, register, labelPosition = "left" }) {
   return (
     <Group>
-      <Checkbox
-        {...register(name)}
-        mt={"md"}
-        labelPosition="left"
-        label={label}
-        color={colors.main_app_color}
-      />
+      <MantineProvider theme={theme}>
+        <Checkbox {...register(name)} mt={"md"} labelPosition={labelPosition} label={label} color={colors.main_app_color} />
+      </MantineProvider>
     </Group>
   )
 }

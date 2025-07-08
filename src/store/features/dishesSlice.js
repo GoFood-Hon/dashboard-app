@@ -25,7 +25,7 @@ const initialState = {
     dateSort: null
   },
 
-  //Buscar platillos
+  //Buscar productos
   searchField: "name",
   searchData: null
 }
@@ -185,6 +185,7 @@ const createDishFormData = (data, restaurantId, additionals) => {
   const dishData = {
     name: data.name,
     description: data.description,
+    tags: data.tags,
     price: convertToDecimal(data.price),
     isActive: data.isActive || false,
     includesDrink: data.includesDrink,
@@ -206,13 +207,10 @@ const uploadDishImage = async (dishId, file) => {
 
 const handleErrorOnCreateDish = (error, dispatch) => {
   dispatch(setError("Error creating dish"))
-  toast.error(`Fallo al crear el platillo. Por favor intente de nuevo!!. ${error}`, {
+  toast.error(`Fallo al crear el producto. Por favor intente de nuevo!!. ${error}`, {
     duration: 7000
   })
 }
-/*
- * UPDATE DISHES
- */
 
 export const updateDish = createAsyncThunk(
   "dishes/updateDish",

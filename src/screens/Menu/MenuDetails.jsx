@@ -77,7 +77,7 @@ export default function MenuDetails() {
           </section>
           <section className="px-20">
             <div className="pt-8">
-              <span>Platillos ({menuDetails?.Dishes?.length ?? 0}) </span>
+              <span>Productos ({menuDetails?.Dishes?.length ?? 0}) </span>
               <Stack gap="xs" mt="xs">
                 {menuDetails?.Dishes?.map((item) => (
                   <Paper withBorder radius="md">

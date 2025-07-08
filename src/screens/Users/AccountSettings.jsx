@@ -1,26 +1,26 @@
 import React, { useState } from "react"
-import { Group, Text, rem, Grid, Paper, Flex, Button, Image, Stack } from "@mantine/core"
+import { Group, Grid, Paper, Flex, Button, Stack } from "@mantine/core"
 import SettingsCard from "../../components/SettingsCard"
 import authApi from "../../api/authApi"
 import InputField from "../../components/Form/InputField"
 import { useForm } from "react-hook-form"
-import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone"
-import { IconPhoto } from "@tabler/icons-react"
 import { useDispatch } from "react-redux"
-import toast from "react-hot-toast"
 import BackButton from "../Dishes/components/BackButton"
 import { colors } from "../../theme/colors"
 import { setUser } from "../../store/features/userSlice"
 import { useSelector } from "react-redux"
 import { showNotification } from "@mantine/notifications"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { profileSchema } from "../../utils/validationSchemas"
+import { useDisclosure } from "@mantine/hooks"
+import { ImageDropzone } from "../../components/ImageDropzone"
+import { IconSettings } from "@tabler/icons-react"
 
 export default function AccountSettings() {
   const [isLoading, setIsLoading] = useState(false)
   const dispatch = useDispatch()
   const user = useSelector((state) => state.user.value)
-  const [userData, setUserData] = useState({})
-  const [images, setImages] = useState([])
-  const [fileInformation, setFileInformation] = useState(null)
+  const [visible, { toggle }] = useDisclosure(false)
 
   const {
     register,
@@ -29,53 +29,92 @@ export default function AccountSettings() {
     formState: { errors },
     watch
   } = useForm({
+    resolver: zodResolver(profileSchema),
     defaultValues: user
   })
 
   const image = watch("images.[0].location")
 
-  const previews = images.map((file, index) => {
-    const imageUrl = URL.createObjectURL(file)
-    return <Image radius="md" h={250} src={imageUrl} />
-  })
-
   const handleDrop = (acceptedFiles) => {
     if (acceptedFiles.length > 0) {
-      const [file] = acceptedFiles
-      setFileInformation(file)
-      setImages(acceptedFiles)
       setValue("files", acceptedFiles)
     }
   }
 
   const onSubmit = async (data) => {
     setIsLoading(true)
+
     try {
       const formData = new FormData()
-
       formData.append("name", data.name)
       formData.append("email", data.email)
       formData.append("phoneNumber", data.phoneNumber.startsWith("+504") ? data.phoneNumber : `+504${data.phoneNumber}`)
-      let formDataImage = null
-      if (data?.files?.[0]) {
-        formDataImage = new FormData()
-        formDataImage.append("files", data.files[0])
-      }
 
       const response = await authApi.updateUser(formData)
-      dispatch(setUser({ ...user, name: data.name, email: data.email, phoneNumber: data.phoneNumber }))
 
       if (response.error) {
-        toast.error(`Fallo al actualizar la información del perfil. Por favor intente de nuevo. ${response.message}`, {
-          duration: 7000
+        showNotification({
+          title: "Error",
+          message: response.message,
+          color: "red"
         })
       } else {
+        dispatch(
+          setUser({
+            ...user,
+            name: data.name,
+            email: data.email,
+            phoneNumber: data.phoneNumber
+          })
+        )
+
         if (data?.files?.[0]) {
           const formDataImage = new FormData()
-          formDataImage.append("files", data?.files?.[0])
+          formDataImage.append("files", data.files[0])
+
           const imageResponse = await authApi.addImage(formDataImage)
 
+          if (imageResponse.error) {
+            showNotification({
+              title: "Error",
+              message: imageResponse.message,
+              color: "red"
+            })
+            setIsLoading(false)
+            return
+          }
+
           dispatch(setUser({ ...user, images: imageResponse?.data }))
+        }
+
+        if (data.currentPassword || data.newPassword || data.newPasswordConfirm) {
+          try {
+            const response = await authApi.changePassword({
+              currentPassword: data.currentPassword,
+              newPassword: data.newPassword,
+              newPasswordConfirm: data.newPasswordConfirm
+            })
+
+            if (response.error) {
+              showNotification({
+                title: "Error",
+                message: response.message,
+                color: "red"
+              })
+              setIsLoading(false)
+              return
+            }
+
+            setValue("currentPassword", "")
+            setValue("newPassword", "")
+            setValue("newPasswordConfirm", "")
+          } catch (error) {
+            showNotification({
+              title: "Error",
+              message: "No se pudo actualizar la contraseña. Verifique los datos",
+              color: "red"
+            })
+          }
         }
 
         showNotification({
@@ -84,11 +123,14 @@ export default function AccountSettings() {
           color: "green"
         })
       }
+
       setIsLoading(false)
       return response.data
     } catch (error) {
-      toast.error("Fallo al actualizar usuario. Por favor intente de nuevo.", {
-        duration: 7000
+      showNotification({
+        title: "Error",
+        message: "Fallo al actualizar usuario, por favor intente de nuevo",
+        color: "red"
       })
       setIsLoading(false)
     }
@@ -97,13 +139,13 @@ export default function AccountSettings() {
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <Group grow mb='xs'>
+        <Group grow mb="xs">
           <Flex align="center" justify="space-between">
             <BackButton title="Configurar cuenta" />
           </Flex>
         </Group>
         <Stack gap="xs">
-          <SettingsCard title="Información general" iconName="user">
+          <SettingsCard title="Información general" icon={IconSettings}>
             <Grid>
               <Grid.Col span={{ base: 12, md: 8, lg: 8 }}>
                 <Paper withBorder p="lg" radius="md">
@@ -118,56 +160,53 @@ export default function AccountSettings() {
                       <InputField label="Numero de teléfono" name="phoneNumber" register={register} errors={errors} />
                     </Grid.Col>
                     <Grid.Col span={{ base: 12 }}>
-                      <InputField label="Contraseña actual" name="password" register={register} errors={errors} type="password" />
-                    </Grid.Col>
-                    <Grid.Col span={{ base: 12, md: 6 }}>
-                      <InputField label="Nueva contraseña" name="password" register={register} errors={errors} type="password" />
-                    </Grid.Col>
-                    <Grid.Col span={{ base: 12, md: 6 }}>
                       <InputField
-                        label="Vuelva a ingresar la contraseña"
-                        name="passwordConfirm"
+                        label="Contraseña actual"
+                        name="currentPassword"
                         register={register}
                         errors={errors}
                         type="password"
+                        visible={visible}
+                        onToggleVisibility={toggle}
+                      />
+                    </Grid.Col>
+                    <Grid.Col span={{ base: 12, md: 6 }}>
+                      <InputField
+                        label="Nueva contraseña"
+                        name="newPassword"
+                        register={register}
+                        errors={errors}
+                        type="password"
+                        visible={visible}
+                        onToggleVisibility={toggle}
+                        newPassword
+                        watch={watch}
+                      />
+                    </Grid.Col>
+                    <Grid.Col span={{ base: 12, md: 6 }}>
+                      <InputField
+                        label="Confirme su contraseña"
+                        name="newPasswordConfirm"
+                        register={register}
+                        errors={errors}
+                        type="password"
+                        visible={visible}
+                        onToggleVisibility={toggle}
+                        newPassword
+                        watch={watch}
                       />
                     </Grid.Col>
                   </Grid>
                 </Paper>
               </Grid.Col>
               <Grid.Col span={{ base: 12, md: 4, lg: 4 }}>
-                <Paper withBorder radius="md" h="100%">
-                  <Flex align="center" h="100%" justify="center">
-                    <Dropzone onDrop={handleDrop} accept={IMAGE_MIME_TYPE} h={220} style={{ cursor: "pointer" }}>
-                      <Flex direction="column" justify="center" align="center" h={220}>
-                        {previews.length > 0 ? (
-                          previews
-                        ) : (
-                          <>
-                            <Image radius="md" h={250} src={image} />
-                            <IconPhoto
-                              className={`${image ? "hidden" : ""}`}
-                              style={{ width: rem(52), height: rem(52), color: "var(--mantine-color-dimmed)" }}
-                              stroke={1.5}
-                            />
-                            <Text className={`${image ? "hidden" : ""} text-center`} size="xl" inline>
-                              Seleccione una imagen
-                            </Text>
-                            <Text
-                              className={`${image ? "hidden" : ""} text-center leading-10`}
-                              size="sm"
-                              c="dimmed"
-                              inline
-                              mt={7}>
-                              Haga clic o arrastre la imagen del usuario
-                            </Text>
-                          </>
-                        )}
-                      </Flex>
-                    </Dropzone>
-                  </Flex>
-                  {errors.files && <p className="text-red-500 text-center w-full">* Imagen es requerida.</p>}
-                </Paper>
+                <ImageDropzone
+                  image={image}
+                  images={watch("files")}
+                  onDrop={handleDrop}
+                  error={errors?.files?.message}
+                  title="del usuario"
+                />
               </Grid.Col>
             </Grid>
           </SettingsCard>

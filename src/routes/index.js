@@ -139,15 +139,15 @@ export const NAVIGATION_ROUTES_RES_ADMIN = {
     },
     submenu: {
       Dishes: {
-        label: "Platillos",
+        label: "Productos",
         icon: "menu",
-        path: "/menu/platillos",
+        path: "/menu/productos",
         DishDetails: {
-          label: "Detalles del platillo",
-          path: "/menu/platillos/:dishId"
+          label: "Detalles del producto",
+          path: "/menu/productos/:dishId"
         },
         NewDish: {
-          path: "/menu/platillos/nuevoPlatillo"
+          path: "/menu/productos/nuevoProducto"
         }
       }
     }
@@ -229,8 +229,8 @@ export const NAVIGATION_ROUTES_RES_ADMIN_TWO = [
         link: "/menu"
       },
       {
-        label: "Platillos",
-        link: "/menu/platillos"
+        label: "Productos",
+        link: "/menu/productos"
       }
     ]
   },
@@ -325,12 +325,12 @@ export const NAVIGATION_ROUTES_BRANCH_ADMIN = {
     }
   },
   Dishes: {
-    label: "Platillos",
+    label: "Productos",
     icon: "chefHat",
-    path: "menu/platillos",
+    path: "menu/productos",
     DishDetails: {
-      label: "Detalles del platillo",
-      path: "menu/platillos/:dishId"
+      label: "Detalles del producto",
+      path: "menu/productos/:dishId"
     }
   },
   Reservations: {
@@ -395,8 +395,8 @@ export const NAVIGATION_ROUTES_BRANCH_ADMIN_TWO = [
         link: "/menu"
       },
       {
-        label: "Platillos",
-        link: "/menu/platillos"
+        label: "Productos",
+        link: "/menu/productos"
       }
     ]
   },
@@ -437,12 +437,12 @@ export const NAVIGATION_ROUTES_CASHIER = {
     }
   },
   Dishes: {
-    label: "Platillos",
+    label: "Productos",
     icon: "chefHat",
-    path: "menu/platillos",
+    path: "menu/productos",
     DishDetails: {
-      label: "Detalles del platillo",
-      path: "menu/platillos/:dishId"
+      label: "Detalles del producto",
+      path: "menu/productos/:dishId"
     }
   },
   Account: {
@@ -465,8 +465,8 @@ export const NAVIGATION_ROUTES_CASHIER_TWO = [
         link: "/menu"
       },
       {
-        label: "Platillos",
-        link: "/menu/platillos"
+        label: "Productos",
+        link: "/menu/productos"
       }
     ]
   },

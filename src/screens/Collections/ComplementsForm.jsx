@@ -34,7 +34,7 @@ const AvailableComplementsCard = ({ item, onItemClick, isSelected }) => {
       <Group p="xs" position="apart">
         <Group>
           <Image w={35} h={35} src={images?.[0]?.location} radius="md" />
-          <Flex justify="space-between" gap='xs' align="center">
+          <Flex justify="space-between" gap="xs" align="center">
             <Text truncate="end" fz="sm" fw={500}>
               {name}
             </Text>
@@ -75,7 +75,7 @@ const ComplementCard = ({ item, handleRemoveComplement }) => {
   )
 }
 
-export default function ComplementsForm({ setValue, defaultMessage, moreData, data, name, selectedDishes }) {
+export default function ComplementsForm({ setValue, defaultMessage, moreData, data, name, selectedDishes, errors }) {
   const [addedComplements, setAddedComplements] = useState([])
   const [extras, setExtras] = useState([])
   const [deletedElements, setDeletedElements] = useState([])
@@ -224,7 +224,7 @@ export default function ComplementsForm({ setValue, defaultMessage, moreData, da
           <Stack gap="sm">
             <SearchComponent
               onSearch={handleSearch}
-              elementName={collectionType === "dishes" ? "platillos" : "comercios"}
+              elementName={collectionType === "dishes" ? "productos" : "comercios"}
               value={collectionType === "dishes" ? searchDishesData : searchRestaurantsData}
               searchAction={executeSearch}
               noSelect
@@ -249,7 +249,7 @@ export default function ComplementsForm({ setValue, defaultMessage, moreData, da
                     ))
                   ) : (
                     <Flex justify="center" align="center" h={350} w="100%">
-                      <Text c="dimmed">No hay {collectionType === "dishes" ? "platillos" : "comercios"} para mostrar</Text>
+                      <Text c="dimmed">No hay {collectionType === "dishes" ? "productos" : "comercios"} para mostrar</Text>
                     </Flex>
                   )}
 
@@ -286,9 +286,16 @@ export default function ComplementsForm({ setValue, defaultMessage, moreData, da
               />
             </ScrollArea>
           ) : (
-            <Text c="dimmed" className="flex flex-col w-full h-full text-xl justify-center item-center text-center">
-              {defaultMessage}
-            </Text>
+            <>
+              <Text c="dimmed" className="flex flex-col w-full h-full text-xl justify-center item-center text-center">
+                {defaultMessage}
+                {errors?.[name]?.message && (
+                  <Text c="var(--mantine-color-error)" size="xs" mt="xs" className="text-center">
+                    {errors[name].message}
+                  </Text>
+                )}
+              </Text>
+            </>
           )}
         </Paper>
       </Grid.Col>

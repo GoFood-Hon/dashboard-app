@@ -6,6 +6,8 @@ import { useSelector } from "react-redux"
 import { createOffer } from "../../store/features/promotionsSlice"
 import { useDispatch } from "react-redux"
 import { useNavigate } from "react-router-dom"
+import { newPromotionSchema } from "../../utils/validationSchemas"
+import { zodResolver } from "@hookform/resolvers/zod"
 
 export const NewPromotion = () => {
   const dispatch = useDispatch()
@@ -20,10 +22,12 @@ export const NewPromotion = () => {
     control,
     watch
   } = useForm({
+    resolver: zodResolver(newPromotionSchema),
     defaultValues: {
       allDishes: "all",
       category: "porcentual",
       percentage: "5",
+      Dishes: [],
       startDate: new Date(),
       endDate: new Date()
     }
@@ -53,7 +57,7 @@ export const NewPromotion = () => {
     formDataImage.append("files", data.files[0])
 
 
-    dispatch(createOffer({ params: formData, imageParams: formDataImage, dishes: data.allDishes === "some" ? data?.dishes : [] }))
+    dispatch(createOffer({ params: formData, imageParams: formDataImage, dishes: data?.allDishes === "some" ? data?.Dishes : [] }))
       .unwrap()
       .then(() => {
         navigate(SETTING_NAVIGATION_ROUTES.Promotions.path)

@@ -9,10 +9,10 @@ import { useDispatch } from "react-redux"
 import { useSelector } from "react-redux"
 import { RestaurantBanner } from "./RestaurantBanner"
 import FormLayout from "../../components/Form/FormLayout"
-import { restaurantSchema } from "../../utils/validationSchemas"
 import { showNotification } from "@mantine/notifications"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { SocialMediaInformation } from "./SocialMediaInformation"
+import { newRestaurantSchema } from "../../utils/validationSchemas"
 
 export const NewRestaurant = () => {
   const navigate = useNavigate()
@@ -27,7 +27,7 @@ export const NewRestaurant = () => {
     watch,
     formState: { errors }
   } = useForm({
-    resolver: zodResolver(restaurantSchema),
+    resolver: zodResolver(newRestaurantSchema),
     defaultValues: {
       bannerDishes: [],
       files: [],
@@ -36,48 +36,50 @@ export const NewRestaurant = () => {
   })
 
   const onSubmit = async (data) => {
-    const validatedData = data
-
     try {
       const formData = new FormData()
-      formData.append("name", validatedData.name)
-      formData.append("email", validatedData.email)
-      formData.append(
-        "phoneNumber",
-        validatedData.phoneNumber.startsWith("+504") ? validatedData.phoneNumber : `+504${validatedData.phoneNumber}`
-      )
-      formData.append("socialReason", validatedData.socialReason)
-      formData.append("rtn", validatedData.rtn)
-      formData.append("billingAddress", validatedData.billingAddress)
-      formData.append("cai", validatedData.cai)
-      formData.append("shippingFree", validatedData.shippingFree ?? true)
-      formData.append("cuisineTypeId", validatedData.cuisineTypeId ?? "")
-      formData.append("clinpaysCommerceToken", validatedData.clinpaysCommerceToken ?? "")
+      formData.append("name", data.name)
+      formData.append("email", data.email)
+      formData.append("phoneNumber", data.phoneNumber.startsWith("+504") ? data.phoneNumber : `+504${data.phoneNumber}`)
+      formData.append("socialReason", data.socialReason)
+      formData.append("rtn", data.rtn)
+      formData.append("billingAddress", data.billingAddress)
+      formData.append("cai", data.cai)
+      formData.append("shippingFree", data.shippingFree ?? true)
+      formData.append("cuisineTypeId", data.cuisineTypeId ?? "")
+      formData.append("clinpaysCommerceToken", data.clinpaysCommerceToken ?? "")
 
-      if (validatedData.pricePerChair) {
-        formData.append("pricePerChair", validatedData.pricePerChair)
+      if (data.pricePerChair) {
+        formData.append("pricePerChair", data.pricePerChair)
       }
-      if (validatedData.hoursBeforeCancellation) {
-        formData.append("hoursBeforeCancellation", validatedData.hoursBeforeCancellation)
+      if (data.hoursBeforeCancellation) {
+        formData.append("hoursBeforeCancellation", data.hoursBeforeCancellation)
       }
-      if (validatedData.hoursBeforeBooking) {
-        formData.append("hoursBeforeBooking", validatedData.hoursBeforeBooking)
+      if (data.hoursBeforeBooking) {
+        formData.append("hoursBeforeBooking", data.hoursBeforeBooking)
       }
 
-      if (validatedData.shippingFree !== true && validatedData.shippingPrice) {
-        formData.append("shippingPrice", convertToDecimal(validatedData.shippingPrice))
+      if (data.shippingFree !== true && data.shippingPrice) {
+        formData.append("shippingPrice", convertToDecimal(data.shippingPrice))
       }
-
-      formData.append("whatsapp", data.whatsapp ?? null)
-      formData.append("facebook", data.facebook ?? null)
-      formData.append("instagram", data.instagram ?? null)
-      formData.append("website", data.website ?? null)
+      if (data.whatsapp) {
+        formData.append("whatsapp", data.whatsapp.startsWith("+504") ? data.whatsapp : `+504${data.whatsapp}`)
+      }
+      if (data.facebook) {
+        formData.append("facebook", data.facebook)
+      }
+      if (data.instagram) {
+        formData.append("instagram", data.instagram)
+      }
+      if (data.website) {
+        formData.append("website", data.website)
+      }
 
       const formDataImage = new FormData()
-      formDataImage.append("files", validatedData.files[0] || [])
+      formDataImage.append("files", data.files[0] || [])
 
       const formDataBanner = new FormData()
-      formDataBanner.append("files", validatedData.bannerDishes[0] || [])
+      formDataBanner.append("files", data.bannerDishes[0] || [])
 
       dispatch(
         createRestaurant({
@@ -91,7 +93,6 @@ export const NewRestaurant = () => {
           navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Restaurants.path)
         })
         .catch((error) => {
-          console.error("Error creando restaurante:", error)
           showNotification({
             title: "Error",
             message: "Hubo un problema al crear el restaurante",
@@ -99,7 +100,6 @@ export const NewRestaurant = () => {
           })
         })
     } catch (err) {
-      console.error("Error inesperado:", err)
       showNotification({
         title: "Error",
         message: "Ocurrió un error inesperado",

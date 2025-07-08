@@ -2,13 +2,13 @@ import React, { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { useForm } from "react-hook-form"
 import { useDispatch, useSelector } from "react-redux"
-import { yupResolver } from "@hookform/resolvers/yup"
 import GeneralInformationForm from "./GeneralInformationForm"
 import ComplementsForm from "../Dishes/ComplementsForm"
-import { newMenuValidation } from "../../utils/inputRules"
 import { createMenu, getAllDishes } from "../../store/features/menuSlice"
 import { NAVIGATION_ROUTES_RES_ADMIN } from "../../routes"
 import FormLayout from "../../components/Form/FormLayout"
+import { newMenuSchema } from "../../utils/validationSchemas"
+import { zodResolver } from "@hookform/resolvers/zod"
 
 export default function NewMenu() {
   const navigate = useNavigate()
@@ -34,28 +34,30 @@ export default function NewMenu() {
     setValue,
     control,
     reset,
+    watch,
     formState: { errors }
   } = useForm({
-    resolver: yupResolver(newMenuValidation)
+    resolver: zodResolver(newMenuSchema)
   })
 
   const accordionStructure = [
     {
       title: "Información general",
       requirement: "Obligatorio",
-      form: <GeneralInformationForm register={register} errors={errors} setValue={setValue} control={control} />
+      form: <GeneralInformationForm register={register} errors={errors} setValue={setValue} control={control} watch={watch} />
     },
     {
-      title: "Platillos",
+      title: "Productos",
       requirement: "Obligatorio",
       form: (
         <ComplementsForm
           setValue={setValue}
           moreData={hasMore}
-          defaultMessage="Los platillos seleccionados aparecerán aquí"
-          itemsAvailableLabel="Platillos disponibles"
+          defaultMessage="Los productos seleccionados aparecerán aquí"
+          itemsAvailableLabel="Productos disponibles"
           data={dishes}
           name={"dishes"}
+          errors={errors}
         />
       )
     }
@@ -77,7 +79,7 @@ export default function NewMenu() {
         <FormLayout
           title="Nuevo menú"
           show
-          accordionTitles={["Información general", "Platillos"]}
+          accordionTitles={["Información general", "Productos"]}
           accordionStructure={accordionStructure}
           navigate={() => navigate(NAVIGATION_ROUTES_RES_ADMIN.Menu.path)}
           isLoading={creatingMenus}

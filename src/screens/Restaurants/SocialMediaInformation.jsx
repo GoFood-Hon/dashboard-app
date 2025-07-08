@@ -5,7 +5,7 @@ export const SocialMediaInformation = ({ register, errors }) => {
   return (
     <Grid gutter="md">
       <Grid.Col span={{ base: 12, sm: 6, md: 6, lg: 3 }}>
-        <InputField label="WhatsApp (Opcional)" type="number" name="whatsapp" register={register} errors={errors} />
+        <InputField label="WhatsApp (Opcional)" type="text" name="whatsapp" register={register} errors={errors} />
       </Grid.Col>
       <Grid.Col span={{ base: 12, sm: 6, md: 6, lg: 3 }}>
         <InputField label="Facebook (Opcional)" type="text" name="facebook" register={register} errors={errors} />

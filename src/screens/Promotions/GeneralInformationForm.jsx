@@ -1,14 +1,13 @@
-import React, { useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import { Flex, Grid, MultiSelect, Paper, Select, Text, rem, Image } from "@mantine/core"
+import { Grid, MultiSelect, Paper, Select } from "@mantine/core"
 import { DatePickerInput } from "@mantine/dates"
-import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone"
-import { IconPhoto } from "@tabler/icons-react"
 import { discountAppliedTo, promotionsDiscountType } from "../../utils/constants"
-import { colors } from "../../theme/colors"
 import InputField from "../../components/Form/InputField"
 import { Controller } from "react-hook-form"
 import { getAllDishesList } from "../../store/features/promotionsSlice"
+import { ImageDropzone } from "../../components/ImageDropzone"
+import dayjs from "dayjs"
 
 export const GeneralInformationForm = ({ register, errors, setValue, control, image, offersData, watch, update }) => {
   const allDishes = watch("allDishes")
@@ -20,8 +19,7 @@ export const GeneralInformationForm = ({ register, errors, setValue, control, im
   const dishes = useSelector((state) => state.promotions.dishesList)
   const user = useSelector((state) => state.user.value)
   const dispatch = useDispatch()
-  const [images, setImages] = useState([])
-  const [selectedDishes, setselectedDishes] = useState([])
+  const [selectedDishes, setSelectedDishes] = useState([])
   const initialStartDate = offersData?.startDate ? new Date(offersData.startDate) : null
   const initialEndDate = offersData?.endDate ? new Date(offersData.endDate) : null
   const [dateRange, setDateRange] = useState({
@@ -39,29 +37,23 @@ export const GeneralInformationForm = ({ register, errors, setValue, control, im
 
   useEffect(() => {
     const initialDishes = dishesAlreadySelected?.map((dish) => dish.id)
-    setselectedDishes(initialDishes || [])
+    setSelectedDishes(initialDishes || [])
   }, [offersData])
 
   useEffect(() => {
     dispatch(getAllDishesList(user.restaurantId))
   }, [allDishes])
-
+  
   const handleDishesChange = (selected) => {
-    setselectedDishes(selected)
+    setSelectedDishes(selected)
     setValue("Dishes", selected)
   }
 
   const handleDrop = (acceptedFiles) => {
     if (acceptedFiles.length > 0) {
-      setImages(acceptedFiles)
       setValue("files", acceptedFiles)
     }
   }
-
-  const previews = images.map((file, index) => {
-    const imageUrl = URL.createObjectURL(file)
-    return <Image key={index} radius="md" h={250} src={imageUrl} />
-  })
 
   return (
     <Grid>
@@ -130,6 +122,7 @@ export const GeneralInformationForm = ({ register, errors, setValue, control, im
                 placeholder="Seleccionar fecha"
                 popoverProps={{ withinPortal: false }}
                 onChange={(val) => handleDateChange(val, "initialDate")}
+                minDate={dayjs().startOf("day").toDate()}
               />
             </Grid.Col>
             <Grid.Col span={{ base: 12, md: 6 }}>
@@ -166,7 +159,7 @@ export const GeneralInformationForm = ({ register, errors, setValue, control, im
             {allDishes === "some" && (
               <Grid.Col span={{ base: 12 }}>
                 <MultiSelect
-                  label="Platillos disponibles"
+                  label={`Productos ${update ? "seleccionados" : "disponibles"}`}
                   data={dishes?.map((item) => ({
                     value: item.id,
                     label: item.name
@@ -175,9 +168,10 @@ export const GeneralInformationForm = ({ register, errors, setValue, control, im
                   maxValues={10}
                   hidePickedOptions
                   onChange={handleDishesChange}
-                  nothingFoundMessage="No se encontraron platillos"
+                  nothingFoundMessage="No se encontraron productos"
                   value={selectedDishes}
                   clearable
+                  error={errors?.Dishes && errors?.Dishes?.message}
                 />
               </Grid.Col>
             )}
@@ -185,37 +179,13 @@ export const GeneralInformationForm = ({ register, errors, setValue, control, im
         </Paper>
       </Grid.Col>
       <Grid.Col order={{ base: 1, sm: 1, md: 2 }} span={{ base: 12, md: 4, lg: 4 }}>
-        <Paper withBorder radius="md" h="100%">
-          <Flex align="center" h="100%" justify="center">
-            <Dropzone onDrop={handleDrop} accept={IMAGE_MIME_TYPE} h={220} style={{ cursor: "pointer" }}>
-              <Flex direction="column" justify="center" align="center" h={220}>
-                {previews.length > 0 ? (
-                  previews
-                ) : (
-                  <>
-                    <Image radius="md" h={250} src={image} />
-                    <IconPhoto
-                      className={`${image ? "hidden" : ""}`}
-                      style={{ width: rem(52), height: rem(52), color: "var(--mantine-color-dimmed)" }}
-                      stroke={1.5}
-                    />
-                    <Text className={`${image ? "hidden" : ""} text-center`} size="xl" inline>
-                      Seleccione una imagen
-                    </Text>
-                    <Text className={`${image ? "hidden" : ""} text-center leading-10`} size="sm" c="dimmed" inline mt={7}>
-                      Haga clic o arrastre la imagen de la promoción
-                    </Text>
-                  </>
-                )}
-              </Flex>
-              {errors.files && (
-                <Text c={colors.main_app_color} size="xs" ta="center">
-                  Imagen es requerida
-                </Text>
-              )}
-            </Dropzone>
-          </Flex>
-        </Paper>
+        <ImageDropzone
+          image={image}
+          images={watch("files")}
+          onDrop={handleDrop}
+          error={errors?.files?.message}
+          title="de la promoción"
+        />
       </Grid.Col>
     </Grid>
   )

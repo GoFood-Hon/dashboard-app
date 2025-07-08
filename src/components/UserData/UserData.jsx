@@ -20,7 +20,6 @@ const UserData = ({
   noIcons
 }) => {
 
-  console.log(userId)
   return (
     <Stack h="100%" gap="xs">
       <Flex align="center" gap={5}>

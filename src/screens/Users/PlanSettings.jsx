@@ -15,7 +15,6 @@ import classes from "./CreditCard.module.css"
 import { PlanInfoCard } from "../../components/Plans/PlanInfoCard"
 import { SelectPlan } from "./SelectPlan"
 import BackButton from "../Dishes/components/BackButton"
-import { CreditCard } from "../Plans/CreditCard"
 
 export default function PlanSettings() {
   const user = useSelector((state) => state.user.value)
@@ -111,19 +110,13 @@ export default function PlanSettings() {
         <Tabs.Panel value="paymentMethod" pt="sm">
           <Stack gap="sm">
             <SettingsCard title="Tarjeta actual" iconName="creditCard">
-              {/* {creditCard ? (
+              {creditCard ? (
                 <div className="flex justify-center items-center">
                   <CreditCardInfo data={creditCard} />
                 </div>
               ) : (
                 <div className="flex flex-row justify-center items-center p-10 text-gray-400">Sin tarjeta disponible</div>
-              )} */}
-              {/* <CreditCard
-                number="1234567812345678"
-                holder="Victor Reyes"
-                expires="12/26"
-                brandLogo="https://upload.wikimedia.org/wikipedia/commons/0/04/Visa.svg"
-              /> */}
+              )}
             </SettingsCard>
             <SettingsCard title="Agregar tarjeta de crédito" iconName="creditCard">
               <form onSubmit={handleSubmit(onSubmit)}>
@@ -184,53 +177,53 @@ const CreditCardInfo = ({ data }) => {
   const expMonth = validThru?.substring(0, 2)
   const expYear = validThru?.substring(2)
   return (
-    // <div className=" w-2/4 shadow-xl border-2 rounded-lg p-4 m-10">
-    //   <div className="flex items-center justify-between mb-4">
-    //     <h2 className="text-lg font-semibold">Tarjeta actual</h2>
-    //     <span>
-    //       <i className="fas fa-credit-card mr-1"></i>
-    //       {brand}
-    //     </span>
-    //   </div>
-    //   <div className="flex items-center justify-between mb-4">
-    //     <div className="flex items-center">
-    //       <i className="fas fa-lock mr-1 "></i>
-    //       <span>{safeIdentifier}</span>
-    //     </div>
-    //     <div>
-    //       {expMonth}/{expYear}
-    //     </div>
-    //   </div>
-    // </div>
-    <Card className={classes.card} radius="md" withBorder>
-      {/* Ícono de fondo */}
-      <IconCreditCard className={classes.iconBackground} />
+    <div className=" w-2/4 shadow-xl border-2 rounded-lg p-4 m-10">
+      <div className="flex items-center justify-between mb-4">
+        <h2 className="text-lg font-semibold">Tarjeta actual</h2>
+        <span>
+          <i className="fas fa-credit-card mr-1"></i>
+          {brand}
+        </span>
+      </div>
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center">
+          <i className="fas fa-lock mr-1 "></i>
+          <span>{safeIdentifier}</span>
+        </div>
+        <div>
+          {expMonth}/{expYear}
+        </div>
+      </div>
+    </div>
+    // <Card className={classes.card} radius="md" withBorder>
+    //   {/* Ícono de fondo */}
+    //   <IconCreditCard className={classes.iconBackground} />
 
-      <Stack spacing="md" h="100%" justify="space-between">
-        {/* Chip */}
-        <div className={classes.chip}></div>
+    //   <Stack spacing="md" h="100%" justify="space-between">
+    //     {/* Chip */}
+    //     <div className={classes.chip}></div>
 
-        {/* Número de la tarjeta */}
-        <Text className={classes.cardNumber}>{"1458 8756 8441 7711" || "#### #### #### ####"}</Text>
+    //     {/* Número de la tarjeta */}
+    //     <Text className={classes.cardNumber}>{"1458 8756 8441 7711" || "#### #### #### ####"}</Text>
 
-        <Group position="apart" spacing="xs">
-          {/* Nombre del titular */}
-          <Stack spacing={0}>
-            <Text size="xs" transform="uppercase">
-              Titular
-            </Text>
-            <Text className={classes.cardDetails}>{"Victor Alfonso Reyes Gudiel" || "Nombre Apellido"}</Text>
-          </Stack>
+    //     <Group position="apart" spacing="xs">
+    //       {/* Nombre del titular */}
+    //       <Stack spacing={0}>
+    //         <Text size="xs" transform="uppercase">
+    //           Titular
+    //         </Text>
+    //         <Text className={classes.cardDetails}>{"Victor Alfonso Reyes Gudiel" || "Nombre Apellido"}</Text>
+    //       </Stack>
 
-          {/* Fecha de expiración */}
-          <Stack spacing={0}>
-            <Text size="xs" transform="uppercase">
-              Vence
-            </Text>
-            <Text className={classes.cardDetails}>{"11/27" || "MM/AA"}</Text>
-          </Stack>
-        </Group>
-      </Stack>
-    </Card>
+    //       {/* Fecha de expiración */}
+    //       <Stack spacing={0}>
+    //         <Text size="xs" transform="uppercase">
+    //           Vence
+    //         </Text>
+    //         <Text className={classes.cardDetails}>{"11/27" || "MM/AA"}</Text>
+    //       </Stack>
+    //     </Group>
+    //   </Stack>
+    // </Card>
   )
 }

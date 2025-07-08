@@ -176,7 +176,7 @@ export const EditAdditionalForm = ({ additional, setAdditional, dishDetails }) =
 
       <Grid.Col span={{ base: 12, md: 5 }}>
         <Paper withBorder radius="md" className="w-full h-full p-6 rounded-lg ">
-          <span className="text-sm font-semibold">Adicionales del platillo:</span>
+          <span className="text-sm font-semibold">Adicionales del producto:</span>
           <ScrollArea w={"100%"} h={360}>
             <ul>
               {additional?.length > 0 ? (

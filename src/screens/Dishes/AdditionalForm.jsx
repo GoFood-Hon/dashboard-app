@@ -10,7 +10,9 @@ import {
   Paper,
   Text,
   CloseButton,
-  Stack
+  Stack,
+  Group,
+  Flex
 } from "@mantine/core"
 import toast from "react-hot-toast"
 import { colors } from "../../theme/colors"
@@ -175,40 +177,43 @@ export const AdditionalForm = ({ additional, setAdditional }) => {
       </Grid.Col>
 
       <Grid.Col span={{ base: 12, md: 5 }}>
-        <Paper withBorder radius="md" h="100%" p="md">
-          <span className="text-sm font-semibold">Adicionales del platillo:</span>
-          <ScrollArea w={"100%"} h={360}>
-            <Stack gap='xs'>
-              {additional.length > 0 ? (
-                additional?.map((category, index) => (
-                  <Paper key={index} withBorder radius="md" h="100%" p="md">
-                    <article className="w-full">
-                      <div className="flex items-center justify-between mb-1">
-                        <h3 className="font-bold text-md">
-                          {category.name} {category.requiredMinimum ? `(min: ${category.requiredMinimum})` : null}:
-                        </h3>
+        <Paper withBorder radius="md" p="md" h="100%">
+          {additional.length > 0 ? (
+            <ScrollArea w="100%" h={435}>
+              <Stack gap="xs">
+                {additional.map((category, index) => (
+                  <Paper key={index} withBorder radius="md" p="md">
+                    <Stack gap={5}>
+                      <Group justify="space-between" mb="xs">
+                        <Text fw={600} size="md">
+                          {category.name} {category.requiredMinimum ? `(min: ${category.requiredMinimum})` : null}
+                        </Text>
                         <CloseButton onClick={() => handleDeleteAdditional(index)} />
-                      </div>
+                      </Group>
 
-                      <ul className="space-y-2">
-                        {category?.additionalsDetails?.map((item, i) => (
-                          <li key={i} className="flex flex-row gap-1 items-center">
-                            <span>{item.name}</span>
-                            <IconArrowNarrowRight />
-                            <Text c="dimmed" fs="italic">
-                              {item.price == "0.00" ? "Gratis" : getFormattedHNL(item.price)}
+                      <Stack gap={5} component="ul">
+                        {category.additionalsDetails.map((item, i) => (
+                          <Group key={i} component="li" gap={5}>
+                            <Text size="sm">{item.name}</Text>
+                            <IconArrowNarrowRight size={16} />
+                            <Text size="sm" c="dimmed" italic>
+                              {item.price === "0.00" ? "Gratis" : getFormattedHNL(item.price)}
                             </Text>
-                          </li>
+                          </Group>
                         ))}
-                      </ul>
-                    </article>
+                      </Stack>
+                    </Stack>
                   </Paper>
-                ))
-              ) : (
-                <Text c="dimmed">Los adicionales se mostrarán aquí</Text>
-              )}
-            </Stack>
-          </ScrollArea>
+                ))}
+              </Stack>
+            </ScrollArea>
+          ) : (
+            <Flex direction="column" justify="center" align="center" h="100%" w="100%" mih={435} p="md">
+              <Text c="dimmed" ta="center">
+                Los adicionales se mostrarán aquí
+              </Text>
+            </Flex>
+          )}
         </Paper>
       </Grid.Col>
     </Grid>

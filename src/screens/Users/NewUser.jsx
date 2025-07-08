@@ -7,6 +7,8 @@ import FormLayout from "../../components/Form/FormLayout"
 import { useDispatch } from "react-redux"
 import { createUser } from "../../store/features/userSlice"
 import { useSelector } from "react-redux"
+import { newUserSchema } from "../../utils/validationSchemas"
+import { zodResolver } from "@hookform/resolvers/zod"
 
 export default function NewUser() {
   const navigate = useNavigate()
@@ -20,7 +22,7 @@ export default function NewUser() {
     reset,
     watch,
     formState: { errors }
-  } = useForm()
+  } = useForm({ defaultValues: { role: '', sucursalIds: [] }, resolver: zodResolver(newUserSchema) })
 
   const onSubmit = async (data) => {
     const formData = {

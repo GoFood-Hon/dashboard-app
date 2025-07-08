@@ -73,12 +73,12 @@ export default function Dishes() {
 
   return (
     <CardsViewLayout
-      title="Platillos"
+      title="Productos"
       page={page}
       limit={limit}
       totalPageCount={totalPageCount}
       totalElements={totalDishes}
-      elementsName="platillos"
+      elementsName="productos"
       loadingElements={loadingDishes}
       elementsList={dishesList}
       onNewItemClick={handleNewItem}

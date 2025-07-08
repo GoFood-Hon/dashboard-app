@@ -10,7 +10,7 @@ const kitchenAndTagsApi = {
 
   deleteKitchenType: (id) => axiosClient.delete(`api/v1/cuisine-type/${id}`),
 
-  //Endpoints para los tags de los platillos
+  //Endpoints para los tags de los productos
   getAllDishesTags: () => axiosClient.get("api/v1/tag"),
 
   createDishesTag: (params) => axiosClient.post("api/v1/tag", params),

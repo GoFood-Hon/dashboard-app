@@ -12,8 +12,8 @@ export const CreateKitchenTypes = () => {
   const dispatch = useDispatch()
   const [value, setValue] = useState("")
   const [opened, { close, open }] = useDisclosure(false)
-  const kitchenTypes = useSelector((state) => state.kitchenAndTags.kitchenTypes)
   const [kitchenId, setKitchenId] = useState(0)
+  const { kitchenTypes, loadingKitchenTypes } = useSelector((state) => state.kitchenAndTags)
 
   useEffect(() => {
     dispatch(fetchAllKitchenTypes())
@@ -50,7 +50,12 @@ export const CreateKitchenTypes = () => {
               }
               style={{ flex: 1 }}
             />
-            <Button color={colors.main_app_color} onClick={handleCreateKitchenType} style={{ marginLeft: "8px" }}>
+            <Button
+              loading={loadingKitchenTypes}
+              disabled={value.trim() === ""}
+              color={colors.main_app_color}
+              onClick={handleCreateKitchenType}
+              style={{ marginLeft: "8px" }}>
               Crear
             </Button>
           </Flex>
@@ -58,7 +63,7 @@ export const CreateKitchenTypes = () => {
       </Grid>
       <Space h={20} />
       {kitchenTypes && kitchenTypes.length > 0 ? (
-        <SimpleGrid spacing='xs' cols={{ base: 2, sm: 3, md: 4, lg: 5 }}>
+        <SimpleGrid spacing="xs" cols={{ base: 2, sm: 3, md: 4, lg: 5 }}>
           {kitchenTypes.map((type) => (
             <Paper radius="md" withBorder key={type.id} className={classes.item} style={{ position: "relative" }}>
               <CloseButton
@@ -79,7 +84,7 @@ export const CreateKitchenTypes = () => {
         </SimpleGrid>
       ) : (
         <Text c="dimmed" ta="center" size="sm">
-          Las especialidades de cocina creadas se mostrarán aquí
+          Los tipos de establecimiento creados se mostrarán aquí
         </Text>
       )}
 
@@ -87,7 +92,7 @@ export const CreateKitchenTypes = () => {
         opened={opened}
         close={close}
         title="¿Estás seguro que deseas eliminar?"
-        description="Se quitará la especialidad de todos los restaurantes a los que esté asociado"
+        description="Se quitará este tipo a todos los comercios a los que esté asociado"
         onConfirm={() => handleDeleteKitchenType(kitchenId)}
       />
     </Paper>

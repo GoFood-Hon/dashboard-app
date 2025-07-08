@@ -10,6 +10,8 @@ import { NAVIGATION_ROUTES_RES_ADMIN } from "../../routes"
 import { AdditionalForm } from "./AdditionalForm"
 import FormLayout from "../../components/Form/FormLayout"
 import { useSelector } from "react-redux"
+import { editDishSchema } from "../../utils/validationSchemas"
+import { zodResolver } from "@hookform/resolvers/zod"
 
 export default function EditDishScreen() {
   const dispatch = useDispatch()
@@ -28,6 +30,7 @@ export default function EditDishScreen() {
     watch,
     formState: { errors }
   } = useForm({
+    resolver: zodResolver(editDishSchema),
     defaultValues: dishDetails || {}
   })
 
@@ -68,6 +71,7 @@ export default function EditDishScreen() {
           control={control}
           image={imageLocation}
           data={dishDetails}
+          watch={watch}
         />
       )
     },

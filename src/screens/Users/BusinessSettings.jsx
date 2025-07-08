@@ -16,11 +16,12 @@ import BookingInformation from "../Restaurants/BookingInformation"
 import { showNotification } from "@mantine/notifications"
 import { setUser } from "../../store/features/userSlice"
 import { SocialMediaInformation } from "../Restaurants/SocialMediaInformation"
-import { IconBolt } from "@tabler/icons-react"
 import { IconPhoto } from "@tabler/icons-react"
 import { IconFileInfo } from "@tabler/icons-react"
 import { IconTable } from "@tabler/icons-react"
 import { IconSocial } from "@tabler/icons-react"
+import { editRestaurantSchema } from "../../utils/validationSchemas"
+import { zodResolver } from "@hookform/resolvers/zod"
 
 export default function BusinessSettings() {
   const navigate = useNavigate()
@@ -36,6 +37,7 @@ export default function BusinessSettings() {
     watch,
     formState: { errors }
   } = useForm({
+    resolver: zodResolver(editRestaurantSchema),
     defaultValues: async () => {
       try {
         const response = await restaurantsApi.getRestaurant(user?.restaurantId)

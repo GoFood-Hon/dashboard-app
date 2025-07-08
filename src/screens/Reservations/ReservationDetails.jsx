@@ -55,7 +55,6 @@ export const ReservationDetails = () => {
   const [cancelComment, setCancelComment] = useState("")
 
   useEffect(() => {
-    
     dispatch(fetchReservationDetails(reservationId))
   }, [dispatch, reservationId])
 
@@ -83,14 +82,14 @@ export const ReservationDetails = () => {
   }
 
   return (
-    <>
-      <section className="flex items-center justify-between w-full mb-3">
-        <div className="flex flex-row justify-between items-center">
-          <BackButton title={"Detalles de la reservación"} show />
-        </div>
-      </section>
+    <Stack gap="xs">
+      <Group>
+        <Flex align="center" justify="space-between" gap="xs">
+          <BackButton title='Detalles de reservación' show />
+        </Flex>
+      </Group>
 
-      <Grid>
+      <Grid gutter="sm">
         <Grid.Col span={{ base: 12, lg: 8 }}>
           <Card withBorder radius="md" p="md" className={classes.card} mih={310}>
             <Stack>
@@ -214,10 +213,10 @@ export const ReservationDetails = () => {
               </Button>
             </Flex>
           </Card>
-          <Space h="md" />
+          <Space h="sm" />
           {reservationDetails?.ReservationComments?.map((comment) =>
             comment?.AdminUser ? (
-              <Paper key={comment?.id} withBorder radius="md" mb="xs" className={classes.comment}>
+              <Paper key={comment?.id} withBorder radius="md" mb="sm" className={classes.comment}>
                 <Group justify="flex-end" gap="xs">
                   <Box>
                     <Text fz="sm" ta="end">
@@ -331,6 +330,6 @@ export const ReservationDetails = () => {
           </Button>
         </Group>
       </Modal>
-    </>
+    </Stack>
   )
 }

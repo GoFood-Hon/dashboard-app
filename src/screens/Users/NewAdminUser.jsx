@@ -1,14 +1,14 @@
 import React from "react"
 import { useNavigate } from "react-router-dom"
 import { useForm } from "react-hook-form"
-import { yupResolver } from "@hookform/resolvers/yup"
 import { AdminInformationForm } from "./AdminInformationForm"
 import { NAVIGATION_ROUTES_SUPER_ADMIN } from "../../routes"
-import { newAdminValidationSchema } from "../../utils/inputRules"
 import { useDispatch } from "react-redux"
 import { createAdminUser } from "../../store/features/userSlice"
 import { useSelector } from "react-redux"
 import FormLayout from "../../components/Form/FormLayout"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { newAdminUserSchema } from "../../utils/validationSchemas"
 
 export const NewAdminUser = () => {
   const navigate = useNavigate()
@@ -20,14 +20,15 @@ export const NewAdminUser = () => {
     handleSubmit,
     setValue,
     control,
+    watch,
     formState: { errors }
-  } = useForm({ resolver: yupResolver(newAdminValidationSchema) })
+  } = useForm({ resolver: zodResolver(newAdminUserSchema) })
 
   const accordionStructure = [
     {
       title: "Información general",
       requirement: "Obligatorio",
-      form: <AdminInformationForm register={register} errors={errors} setValue={setValue} control={control} />
+      form: <AdminInformationForm register={register} errors={errors} setValue={setValue} control={control} watch={watch} />
     }
   ]
 
@@ -37,7 +38,7 @@ export const NewAdminUser = () => {
     formData.append("email", data.email)
     formData.append("phoneNumber", data.phoneNumber.startsWith("+504") ? data.phoneNumber : `+504${data.phoneNumber}`)
     formData.append("password", data.password)
-    formData.append("restaurantId", data.restaurantId)
+    formData.append("restaurantId", data.restaurantId || "")
 
     let formDataImage = null
     if (data?.files?.[0]) {

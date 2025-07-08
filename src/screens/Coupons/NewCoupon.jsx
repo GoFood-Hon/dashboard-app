@@ -73,7 +73,7 @@ export const NewCoupon = () => {
           show
           accordionTitles={["Información general"]}
           accordionStructure={accordionStructure}
-          navigate={() => navigate(SETTING_NAVIGATION_ROUTES.Promotions.path)}
+          navigate={() => navigate(SETTING_NAVIGATION_ROUTES.Coupons.path)}
           isLoading={creatingCoupons}
         />
       </form>

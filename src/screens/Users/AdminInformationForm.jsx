@@ -1,38 +1,28 @@
-import { Flex, Grid, Image, Paper, Text, rem } from "@mantine/core"
-import React, { useEffect, useState } from "react"
+import { useEffect } from "react"
+import { Grid, Paper } from "@mantine/core"
 import InputField from "../../components/Form/InputField"
 import InputSearchCombobox from "../../components/Form/InputSearchCombobox"
 import { colors } from "../../theme/colors"
-import { IconPhoto } from "@tabler/icons-react"
-import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone"
 import { useSelector } from "react-redux"
 import { useDispatch } from "react-redux"
 import { fetchNoPaginatedRestaurants } from "../../store/features/restaurantSlice"
+import { ImageDropzone } from "../../components/ImageDropzone"
+import { useDisclosure } from "@mantine/hooks"
 
-export const AdminInformationForm = ({ register, errors, setValue, image }) => {
+export const AdminInformationForm = ({ register, errors, setValue, image, watch }) => {
   const dispatch = useDispatch()
-  const {loadingRestaurants, restaurants} = useSelector((state) => state.restaurants)
+  const { loadingRestaurants, restaurants } = useSelector((state) => state.restaurants)
+  const [visible, { toggle }] = useDisclosure(false)
 
   useEffect(() => {
     dispatch(fetchNoPaginatedRestaurants())
   }, [dispatch])
 
-  const [images, setImages] = useState([])
-  const [fileInformation, setFileInformation] = useState(null)
-
   const handleDrop = (acceptedFiles) => {
     if (acceptedFiles.length > 0) {
-      const [file] = acceptedFiles
-      setFileInformation(file)
-      setImages(acceptedFiles)
       setValue("files", acceptedFiles)
     }
   }
-
-  const previews = images.map((file, index) => {
-    const imageUrl = URL.createObjectURL(file)
-    return <Image radius="md" h={250} src={imageUrl} />
-  })
 
   return (
     <Grid>
@@ -43,11 +33,11 @@ export const AdminInformationForm = ({ register, errors, setValue, image }) => {
               <InputField label="Nombre" name="name" register={register} errors={errors} />
             </Grid.Col>
             <Grid.Col span={{ base: 12, md: 6 }}>
-              <InputField label="Email" name="email" register={register} errors={errors} />
+              <InputField label="Correo" name="email" register={register} errors={errors} />
             </Grid.Col>
             <Grid.Col span={{ base: 12, md: 12 }}>
               <InputField
-                label="Numero de teléfono"
+                label="Número de teléfono"
                 name="phoneNumber"
                 register={register}
                 errors={errors}
@@ -61,8 +51,11 @@ export const AdminInformationForm = ({ register, errors, setValue, image }) => {
                 name="password"
                 register={register}
                 errors={errors}
-                className="text-black"
                 type="password"
+                visible={visible}
+                onToggleVisibility={toggle}
+                newPassword
+                watch={watch}
               />
             </Grid.Col>
             <Grid.Col span={{ base: 12, md: 6 }}>
@@ -71,15 +64,18 @@ export const AdminInformationForm = ({ register, errors, setValue, image }) => {
                 name="passwordConfirm"
                 register={register}
                 errors={errors}
-                className="text-black"
                 type="password"
+                visible={visible}
+                onToggleVisibility={toggle}
+                newPassword
+                watch={watch}
               />
             </Grid.Col>
             <Grid.Col span={{ base: 12 }}>
               <InputSearchCombobox
-                label="Asignar restaurante"
+                label="Asignar comercio"
                 name={"restaurantId"}
-                emptyMessage="No se encontró ningún restaurante"
+                emptyMessage="No se encontró ningún comercio"
                 items={restaurants}
                 status={loadingRestaurants}
                 register={register}
@@ -92,32 +88,13 @@ export const AdminInformationForm = ({ register, errors, setValue, image }) => {
         </Paper>
       </Grid.Col>
       <Grid.Col span={{ base: 12, md: 4, lg: 4 }}>
-        <Paper withBorder radius="md" h="100%">
-          <Flex align="center" h="100%" justify="center">
-            <Dropzone onDrop={handleDrop} accept={IMAGE_MIME_TYPE} h={220} style={{ cursor: "pointer" }}>
-              <Flex direction="column" justify="center" align="center" h={220}>
-                {previews.length > 0 ? (
-                  previews
-                ) : (
-                  <>
-                    <IconPhoto
-                      className={`${image ? "hidden" : ""}`}
-                      style={{ width: rem(52), height: rem(52), color: "var(--mantine-color-dimmed)" }}
-                      stroke={1.5}
-                    />
-                    <Text className={`${image ? "hidden" : ""} text-center`} size="xl" inline>
-                      Seleccione una imagen
-                    </Text>
-                    <Text className={`${image ? "hidden" : ""} text-center leading-10`} size="sm" c="dimmed" inline mt={7}>
-                      Haga clic o arrastre la imagen del usuario
-                    </Text>
-                  </>
-                )}
-              </Flex>
-            </Dropzone>
-          </Flex>
-          {errors.files && <p className="text-red-500 text-center w-full">* Imagen es requerida.</p>}
-        </Paper>
+        <ImageDropzone
+          image={image}
+          images={watch("files")}
+          onDrop={handleDrop}
+          error={errors?.files?.message}
+          title="del usuario"
+        />
       </Grid.Col>
     </Grid>
   )

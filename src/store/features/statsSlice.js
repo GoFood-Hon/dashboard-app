@@ -7,6 +7,7 @@ const initialState = {
   ordersData: [],
   mostSelledProducts: [],
   mostSelledMenus: [],
+  topShops: [],
   loadingStats: false,
   startDate: null,
   endDate: null,
@@ -87,6 +88,15 @@ export const getMostSelledMenus = createAsyncThunk(
     }
   }
 )
+
+export const getTopShops = createAsyncThunk("statistics/getTopShops", async ({ startDate, endDate }, { rejectWithValue }) => {
+  try {
+    const response = await statsApi.getTopShops({ startDate, endDate })
+    return response.data
+  } catch (error) {
+    return rejectWithValue(error.response.data || "Error fetching top shops stats")
+  }
+})
 
 const statsSlice = createSlice({
   name: "statistics",
@@ -172,6 +182,17 @@ const statsSlice = createSlice({
         state.loadingStats = false
       })
       .addCase(getMostSelledMenus.rejected, (state, action) => {
+        state.error = action.payload
+        state.loadingStats = false
+      })
+      .addCase(getTopShops.pending, (state) => {
+        state.loadingStats = true
+      })
+      .addCase(getTopShops.fulfilled, (state, action) => {
+        state.topShops = action.payload
+        state.loadingStats = false
+      })
+      .addCase(getTopShops.rejected, (state, action) => {
         state.error = action.payload
         state.loadingStats = false
       })

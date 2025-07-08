@@ -74,7 +74,7 @@ const ComplementCard = ({ item, handleRemoveComplement }) => {
   )
 }
 
-export default function ComplementsForm({ setValue, defaultMessage, moreData, data, name, selectedDishes }) {
+export default function ComplementsForm({ setValue, defaultMessage, moreData, data, name, selectedDishes, errors }) {
   const [addedComplements, setAddedComplements] = useState([])
   const [extras, setExtras] = useState([])
   const dispatch = useDispatch()
@@ -153,7 +153,7 @@ export default function ComplementsForm({ setValue, defaultMessage, moreData, da
           <Stack gap="sm">
             <SearchComponent
               onSearch={handleSearch}
-              elementName={"platillos"}
+              elementName={"productos"}
               value={searchDishesData}
               searchAction={executeSearch}
               noSelect
@@ -185,7 +185,7 @@ export default function ComplementsForm({ setValue, defaultMessage, moreData, da
                   </Stack>
                 ) : (
                   <Flex justify="center" align="center" h={350} w="100%">
-                    <Text c="dimmed">No hay platillos para mostrar</Text>
+                    <Text c="dimmed">No hay productos para mostrar</Text>
                   </Flex>
                 )}
               </ScrollArea>
@@ -210,6 +210,11 @@ export default function ComplementsForm({ setValue, defaultMessage, moreData, da
           ) : (
             <Text c="dimmed" className="flex flex-col w-full h-full text-md justify-center item-center text-center">
               {defaultMessage}
+              {errors?.dishes?.message && (
+                <Text c="var(--mantine-color-error)" size="xs" mt="xs" className="text-center">
+                  {errors.dishes.message}
+                </Text>
+              )}
             </Text>
           )}
         </Paper>

@@ -1,18 +1,15 @@
-import React, { useEffect, useState } from "react"
-import { Flex, Grid, Paper, Text, rem, Image, Select } from "@mantine/core"
-import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone"
-import { IconPhoto } from "@tabler/icons-react"
+import { useEffect } from "react"
+import { Grid, Paper, Select } from "@mantine/core"
 import InputField from "../../components/Form/InputField"
 import { useDispatch, useSelector } from "react-redux"
 import { Controller } from "react-hook-form"
 import InputCheckbox from "../../components/Form/InputCheckbox"
 import { fetchAllKitchenTypes } from "../../store/features/kitchenAndTagsSlice"
-import { colors } from "../../theme/colors"
+import { ImageDropzone } from "../../components/ImageDropzone"
 
 export const GeneralInformationForm = ({ register, control, errors, setValue, image, watch, blocked }) => {
   const dispatch = useDispatch()
   const kitchenTypes = useSelector((state) => state.kitchenAndTags.kitchenTypes)
-  const [images, setImages] = useState([])
 
   const isFreeDelivery = watch("shippingFree", true)
 
@@ -22,16 +19,9 @@ export const GeneralInformationForm = ({ register, control, errors, setValue, im
 
   const handleDrop = (acceptedFiles) => {
     if (acceptedFiles.length > 0) {
-      const [file] = acceptedFiles
-      setImages(acceptedFiles)
       setValue("files", acceptedFiles)
     }
   }
-
-  const previews = images?.map((file, index) => {
-    const imageUrl = URL.createObjectURL(file)
-    return <Image key={index} radius="md" h={250} src={imageUrl} />
-  })
 
   return (
     <Grid>
@@ -39,10 +29,10 @@ export const GeneralInformationForm = ({ register, control, errors, setValue, im
         <Paper withBorder radius="md" p="xs">
           <Grid gutter="md">
             <Grid.Col span={{ base: 12, md: 6 }}>
-              <InputField required label="Nombre del comercio (Obligatorio)" name="name" register={register} errors={errors} />
+              <InputField label="Nombre del comercio (Obligatorio)" name="name" register={register} errors={errors} />
             </Grid.Col>
             <Grid.Col span={{ base: 12, md: 6 }}>
-              <InputField required label="Correo electrónico (Obligatorio)" name="email" register={register} errors={errors} />
+              <InputField label="Correo electrónico (Obligatorio)" name="email" register={register} errors={errors} />
             </Grid.Col>
             <Grid.Col span={{ base: 12, md: 6 }}>
               <InputField
@@ -83,8 +73,8 @@ export const GeneralInformationForm = ({ register, control, errors, setValue, im
                     }))}
                     allowDeselect={false}
                     maxDropdownHeight={200}
-                    value={field.value}
-                    onChange={field.onChange}
+                    value={field.value ?? ""}
+                    onChange={(val) => field.onChange(val ?? "")}
                     error={fieldState.error ? fieldState.error.message : null}
                     searchable
                   />
@@ -92,7 +82,13 @@ export const GeneralInformationForm = ({ register, control, errors, setValue, im
               />
             </Grid.Col>
             <Grid.Col span={{ base: 12 }}>
-              <InputField label="Clinpays Token (Obligatorio)" name="clinpaysCommerceToken" register={register} errors={errors} disabled={blocked} />
+              <InputField
+                label="Clinpays Token (Obligatorio)"
+                name="clinpaysCommerceToken"
+                register={register}
+                errors={errors}
+                disabled={blocked}
+              />
             </Grid.Col>
             <Grid.Col span={{ base: 12, md: 6 }}>
               <InputCheckbox label="¿Cuenta con envío gratis?" name="shippingFree" register={register} />
@@ -100,44 +96,25 @@ export const GeneralInformationForm = ({ register, control, errors, setValue, im
 
             {isFreeDelivery ? null : (
               <Grid.Col span={{ base: 12, md: 6 }}>
-                <InputField label="Precio del envío por kilómetro (Obligatorio)" name="shippingPrice" register={register} errors={errors} />
+                <InputField
+                  label="Precio del envío por kilómetro (Obligatorio)"
+                  name="shippingPrice"
+                  register={register}
+                  errors={errors}
+                />
               </Grid.Col>
             )}
           </Grid>
         </Paper>
       </Grid.Col>
       <Grid.Col order={{ base: 1, sm: 1, md: 2 }} span={{ base: 12, md: 4, lg: 4 }}>
-        <Paper withBorder radius="md" h="100%">
-          <Flex align="center" h="100%" justify="center">
-            <Dropzone onDrop={handleDrop} accept={IMAGE_MIME_TYPE} h={220} style={{ cursor: "pointer" }}>
-              <Flex direction="column" justify="center" align="center" h={220}>
-                {previews.length > 0 ? (
-                  previews
-                ) : (
-                  <>
-                    <Image radius="md" h={250} src={image} />
-                    <IconPhoto
-                      className={`${image ? "hidden" : ""}`}
-                      style={{ width: rem(52), height: rem(52), color: "var(--mantine-color-dimmed)" }}
-                      stroke={1.5}
-                    />
-                    <Text className={`${image ? "hidden" : ""} text-center`} size="xl" inline>
-                      Seleccione una imagen
-                    </Text>
-                    <Text className={`${image ? "hidden" : ""} text-center leading-10`} size="sm" c="dimmed" inline mt={7}>
-                      Haga clic o arrastre la imagen del comercio
-                    </Text>
-                  </>
-                )}
-              </Flex>
-              {errors.files && (
-                <Text c={colors.main_app_color} size="xs" ta='center'>
-                  {errors?.files?.message}
-                </Text>
-              )}
-            </Dropzone>
-          </Flex>
-        </Paper>
+        <ImageDropzone
+          image={image}
+          images={watch("files")}
+          onDrop={handleDrop}
+          error={errors?.files?.message}
+          title="del comercio"
+        />
       </Grid.Col>
     </Grid>
   )

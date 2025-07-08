@@ -1,23 +1,19 @@
-import React, { useEffect, useState } from "react"
-import { Checkbox, Flex, Image, Grid, Group, Paper, Text, rem } from "@mantine/core"
-import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone"
-import { IconPhoto } from "@tabler/icons-react"
+import { useEffect } from "react"
+import { Grid, Group, Paper, Text } from "@mantine/core"
 import { useDispatch, useSelector } from "react-redux"
 import InputTextAreaField from "../../components/Form/InputTextAreaField"
 import InputField from "../../components/Form/InputField"
 import { fetchDishesCategories, selectAllDishesCategoriesStatus } from "../../store/features/categorySlice"
-import { colors } from "../../theme/colors"
+import { ImageDropzone } from "../../components/ImageDropzone"
+import InputCheckbox from "../../components/Form/InputCheckbox"
 
-export default function GeneralInformationForm({ register, errors, setValue, isDataCleared, itemDetails, image }) {
+export default function GeneralInformationForm({ register, errors, setValue, image, watch }) {
   const dispatch = useDispatch()
   const user = useSelector((state) => state.user.value)
   const status = useSelector(selectAllDishesCategoriesStatus)
 
-  const [images, setImages] = useState([])
-
   const handleDrop = (acceptedFiles) => {
     if (acceptedFiles.length > 0) {
-      setImages(acceptedFiles)
       setValue("files", acceptedFiles)
     }
   }
@@ -27,11 +23,6 @@ export default function GeneralInformationForm({ register, errors, setValue, isD
       dispatch(fetchDishesCategories(user.restaurantId))
     }
   }, [])
-
-  const previews = images.map((file, index) => {
-    const imageUrl = URL.createObjectURL(file)
-    return <Image radius="md" h={220} src={imageUrl} />
-  })
 
   return (
     <Grid>
@@ -60,68 +51,27 @@ export default function GeneralInformationForm({ register, errors, setValue, isD
               <InputTextAreaField label="Nota (Opcional)" name="note" register={register} errors={errors} />
             </Grid.Col>
             <Grid.Col span={{ base: 12 }}>
-              <Text mb="sm">Marca las opciones disponibles para esta sucursal:</Text>
+              <Text size="sm">
+                Marca las opciones disponibles para esta sucursal:
+              </Text>
               <Group>
-                <Checkbox
-                  {...register("delivery")}
-                  name="delivery"
-                  label={"Servicio a domicilio"}
-                  color={colors.main_app_color}
-                />
-                <Checkbox {...register("pickup")} name="pickup" label={"Recoger en tienda"} color={colors.main_app_color} />
-                <Checkbox {...register("onSite")} name="onSite" label={"Comer en sitio"} color={colors.main_app_color} />
-                <Checkbox
-                  {...register("allowTableBooking")}
-                  name="allowTableBooking"
-                  label={"Permite reservaciones"}
-                  color={colors.main_app_color}
-                />
+                <InputCheckbox label="Servicio a domicilio" name="delivery" register={register} labelPosition="right" />
+                <InputCheckbox label="Recoger en tienda" name="pickup" register={register} labelPosition="right" />
+                <InputCheckbox label="Comer en sitio" name="onSite" register={register} labelPosition="right" />
+                <InputCheckbox label="Permite reservaciones" name="allowTableBooking" register={register} labelPosition="right" />
               </Group>
             </Grid.Col>
           </Grid>
         </Paper>
       </Grid.Col>
       <Grid.Col span={{ base: 12, md: 4, lg: 4 }}>
-        <Paper withBorder radius="md" h="100%" style={{ overflow: "hidden" }}>
-          <Flex align="center" h="100%" justify="center">
-            <Dropzone onDrop={handleDrop} accept={IMAGE_MIME_TYPE} h={220} style={{ cursor: "pointer" }}>
-              <Flex direction="column" justify="center" align="center" h={220}>
-                {previews.length > 0 ? (
-                  previews
-                ) : (
-                  <>
-                    <Image
-                      radius="md"
-                      h={220}
-                      src={image}
-                      style={{
-                        maxWidth: "100%",
-                        maxHeight: "100%",
-                        objectFit: "contain"
-                      }}
-                    />
-                    <IconPhoto
-                      className={`${image ? "hidden" : ""}`}
-                      style={{
-                        width: rem(52),
-                        height: rem(52),
-                        color: "var(--mantine-color-dimmed)"
-                      }}
-                      stroke={1.5}
-                    />
-                    <Text className={`${image ? "hidden" : ""} text-center`} size="xl" inline>
-                      Seleccione una imagen
-                    </Text>
-                    <Text className={`${image ? "hidden" : ""} text-center leading-10`} size="sm" c="dimmed" inline mt={7}>
-                      Haga clic o arrastre la imagen de la sucursal
-                    </Text>
-                  </>
-                )}
-              </Flex>
-            </Dropzone>
-          </Flex>
-          {errors.files && <p className="text-red-500 text-center w-full">* Imagen es requerida.</p>}
-        </Paper>
+        <ImageDropzone
+          image={image}
+          images={watch("files")}
+          onDrop={handleDrop}
+          error={errors?.files?.message}
+          title="de la sucursal"
+        />
       </Grid.Col>
     </Grid>
   )

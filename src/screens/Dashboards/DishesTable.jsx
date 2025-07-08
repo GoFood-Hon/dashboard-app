@@ -17,7 +17,7 @@ export const formatters = [
 ]
 
 const transformData = (data) => {
-  const result = [["ID", "Nombre del platillo", "Descripción", "Precio", "Rating", "Cantidad total"]]
+  const result = [["ID", "Nombre del producto", "Descripción", "Precio", "Rating", "Cantidad total"]]
 
   data?.forEach((item) => {
     const precio = parseFloat(item.price)

@@ -36,7 +36,7 @@ export const orderStatusValues = {
   driverAssigned: "ready-to-pick-up",
   onDelivery: " on-delivery",
   delivered: "delivered",
-
+  canceled: "canceled",
   readyForCustomer: "ready-for-customer"
 }
 
@@ -65,8 +65,8 @@ export const branchWelcomeCards = [
     link: NAVIGATION_ROUTES_BRANCH_ADMIN.Menu.path
   },
   {
-    title: "Ver platillos",
-    description: "Explora y gestiona tus platillos",
+    title: "Ver productos",
+    description: "Explora y gestiona tus productos",
     link: NAVIGATION_ROUTES_BRANCH_ADMIN.Dishes.path
   },
   {
@@ -123,7 +123,7 @@ export const userTypes = [
 export const collectionTypes = [
   {
     value: "dishes",
-    label: "Platillos"
+    label: "Productos"
   },
   {
     value: "restaurants",
@@ -194,6 +194,10 @@ export const menuType = [
 
 export const preparationTime = [
   {
+    value: "1-4",
+    label: "Entrega inmediata"
+  },
+  {
     value: "5-9",
     label: "De 5 a 9 minutos"
   },
@@ -209,6 +213,12 @@ export const preparationTime = [
     value: "+30",
     label: "Más de 30 minutos"
   }
+]
+
+export const taxesValues = [
+  { value: "0.00", label: "Ninguno" },
+  { value: "0.15", label: "15%" },
+  { value: "0.18", label: "18%" }
 ]
 
 export const loyaltyCardsDiscountType = [
@@ -236,11 +246,11 @@ export const promotionsDiscountType = [
 export const discountAppliedTo = [
   {
     value: "all",
-    label: "Todos los platillos"
+    label: "Todos los productos"
   },
   {
     value: "some",
-    label: "Platillos seleccionados"
+    label: "Productos seleccionados"
   }
 ]
 
@@ -346,7 +356,7 @@ export const searchOptionsUsers = [
 //Search options for shops
 export const searchOptionsShops = [
   { value: "name", label: "Nombre" },
-  { value: "cuisineType", label: "Tipo de establecimiento" }
+  { value: "cuisineType", label: "Tipo de comercio" }
 ]
 
 //Search options for collections
@@ -356,7 +366,7 @@ export const searchOptionsCollections = [{ value: "name", label: "Nombre" }]
 export const searchOptionsAdminUsers = [
   { value: "name", label: "Nombre" },
   { value: "email", label: "Correo electrónico" },
-  { value: "phoneNumber", label: "Teléfono" },
+  { value: "phoneNumber", label: "Teléfono" }
 ]
 
 //Search options for loyalty programs

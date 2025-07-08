@@ -2,13 +2,13 @@ import React, { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { useForm } from "react-hook-form"
 import { useDispatch, useSelector } from "react-redux"
-import { yupResolver } from "@hookform/resolvers/yup"
 import GeneralInformationForm from "./GeneralInformationForm"
 import { createDish } from "../../store/features/dishesSlice"
-import { newItemValidationSchema } from "../../utils/inputRules"
 import { NAVIGATION_ROUTES_RES_ADMIN } from "../../routes"
 import { AdditionalForm } from "./AdditionalForm"
 import FormLayout from "../../components/Form/FormLayout"
+import { newDishSchema } from "../../utils/validationSchemas"
+import { zodResolver } from "@hookform/resolvers/zod"
 
 export default function NewDish() {
   const dispatch = useDispatch()
@@ -23,9 +23,10 @@ export default function NewDish() {
     setValue,
     control,
     reset,
+    watch,
     formState: { errors }
   } = useForm({
-    resolver: yupResolver(newItemValidationSchema)
+    resolver: zodResolver(newDishSchema)
   })
 
   const accordionStructure = [
@@ -38,6 +39,8 @@ export default function NewDish() {
           errors={errors}
           setValue={setValue}
           control={control}
+          reset={reset}
+          watch={watch}
         />
       )
     },
@@ -62,7 +65,7 @@ export default function NewDish() {
     <>
       <form onSubmit={handleSubmit(onSubmit)}>
         <FormLayout
-          title="Nuevo platillo"
+          title="Nuevo producto"
           show
           accordionTitles={["Información general", "Pagos", "Preparación", "Adicionales"]}
           accordionStructure={accordionStructure}

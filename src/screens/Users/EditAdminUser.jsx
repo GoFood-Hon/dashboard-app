@@ -7,6 +7,8 @@ import authApi from "../../api/authApi"
 import { updateUserData } from "../../store/features/userSlice"
 import { useSelector, useDispatch } from "react-redux"
 import FormLayout from "../../components/Form/FormLayout"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { editAdminUserSchema } from "../../utils/validationSchemas"
 
 export const EditAdminUser = () => {
   const { adminId } = useParams()
@@ -34,7 +36,7 @@ export const EditAdminUser = () => {
     reset,
     watch,
     formState: { errors }
-  } = useForm({ defaultValues: details })
+  } = useForm({ resolver: zodResolver(editAdminUserSchema), defaultValues: details })
 
   const imageLocation = watch("images[0].location")
 
@@ -51,7 +53,7 @@ export const EditAdminUser = () => {
     formData.append("email", data.email)
     formData.append("phoneNumber", data.phoneNumber.startsWith("+504") ? data.phoneNumber : `+504${data.phoneNumber}`)
 
-    formData.append("restaurantId", data.restaurantId)
+    formData.append("restaurantId", data.restaurantId ?? "")
 
     let formDataImage = null
     if (data?.files?.[0]) {
@@ -79,6 +81,7 @@ export const EditAdminUser = () => {
           setValue={setValue}
           control={control}
           image={imageLocation}
+          watch={watch}
         />
       )
     }

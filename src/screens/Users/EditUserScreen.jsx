@@ -13,6 +13,7 @@ import { useDispatch } from "react-redux"
 
 export const EditUserScreen = () => {
   const { userId } = useParams()
+  const navigate = useNavigate()
   const dispatch = useDispatch()
   const [userDetails, setUserDetails] = useState({})
   const isLoading = useSelector((state) => state.user.updatingOtherUser)
@@ -49,10 +50,6 @@ export const EditUserScreen = () => {
   })
   const imageUrl = watch("images[0].location")
 
-  const navigate = useNavigate()
-
-  const [isDataCleared, setIsDataCleared] = useState(false)
-
   const accordionStructure = [
     {
       title: "Información general",
@@ -64,7 +61,6 @@ export const EditUserScreen = () => {
           errors={errors}
           setValue={setValue}
           control={control}
-          isDataCleared={isDataCleared}
           data={userDetails}
           image={imageUrl}
           edit

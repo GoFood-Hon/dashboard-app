@@ -107,7 +107,7 @@ export default function MenuTable({
         )
       },
       { label: "Creado", accessor: "createdAt" },
-      { label: "N° de platillos", accessor: "dishesCount", center: true },
+      { label: "N° de productos", accessor: "dishesCount", center: true },
       {
         label: "Estado",
         accessor: "isActive",
@@ -510,7 +510,7 @@ export default function MenuTable({
           </div>
         )
       },
-      { label: "Contiene", accessor: "type", render: (type) => (type === "restaurants" ? "Comercios" : "Platillos") },
+      { label: "Contiene", accessor: "type", render: (type) => (type === "restaurants" ? "Comercios" : "Productos") },
       {
         label: "Cantidad",
         accessor: "dishes",

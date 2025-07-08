@@ -85,6 +85,7 @@ export const createBranch = createAsyncThunk(
       if (formDataImage) {
         const imageResponse = await branchesApi.addImage(branchData.id, formDataImage)
         images = imageResponse.data.images
+        console.log(imageResponse)
 
         if (imageResponse.error) {
           showNotification({
@@ -143,6 +144,7 @@ export const updateBranches = createAsyncThunk(
       } else {
         if (formDataImage) {
           const imageResponse = await branchesApi.addImage(formData.id, formDataImage)
+          console.log(imageResponse)
 
           branchUpdated = { ...branchUpdated, images: imageResponse.data.images }
         }

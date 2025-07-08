@@ -13,7 +13,7 @@ export default function ComplementSettings({ setValue }) {
   return (
     <div className="w-full h-full flex flex-col bg-white rounded-2xl border border-blue-100 p-4">
       <span className="text-sky-950 text-sm font-bold leading-snug">
-        Disponibilidad en platillos<span className="text-sky-950 text-sm font-normal">( Opcional )</span>
+        Disponibilidad en productos<span className="text-sky-950 text-sm font-normal">( Opcional )</span>
       </span>
       <div className="flex flex-col gap-2 pt-4">
         <Radio
@@ -25,14 +25,14 @@ export default function ComplementSettings({ setValue }) {
         />
         <Radio
           value="choose"
-          label="Elige los platillos"
+          label="Elige los productos"
           color={colors.primary_text}
           checked={selectedOption === "choose"}
           onChange={() => handleRadioChange("choose")}
         />
         <Radio
           value="default"
-          label="Por defecto en todos los platillos"
+          label="Por defecto en todos los productos"
           color={colors.primary_text}
           checked={selectedOption === "default"}
           onChange={() => handleRadioChange("default")}

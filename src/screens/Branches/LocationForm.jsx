@@ -52,7 +52,7 @@ export default function LocationForm({ register, errors, setValue, itemDetails, 
     <Grid>
       <Grid.Col span={{ base: 12 }}>
         <Paper withBorder radius="md" p="md">
-          <Stack gap='xs'>
+          <Stack gap="xs">
             <InputTextAreaField label="Dirección exacta (Obligatorio)" name="address" register={register} errors={errors} />
             <InputSearchCombobox
               label="Departamento (Obligatorio)"
@@ -63,7 +63,7 @@ export default function LocationForm({ register, errors, setValue, itemDetails, 
               errors={errors}
               setValue={setValue}
             />
-            <InputField label="Ciudad" name="city" register={register} errors={errors} />
+            <InputField label="Ciudad (Obligatorio)" name="city" register={register} errors={errors} />
             <Stack>
               <Paper>
                 <Text fw={700}>Ubicación en mapa (Obligatorio)</Text>
@@ -139,8 +139,20 @@ export default function LocationForm({ register, errors, setValue, itemDetails, 
                   )}
                 </Paper>
                 <SimpleGrid mt="sm" cols={{ base: 1, sm: 2 }}>
-                  <TextInput disabled label="Longitud" value={lng} placeholder="Disabled input" />
-                  <TextInput disabled label="Latitud" value={lat} placeholder="Disabled input" />
+                  <TextInput
+                    disabled
+                    label="Longitud (Obligatorio)"
+                    value={lng}
+                    placeholder="Disabled input"
+                    error={errors?.geolocation?.message}
+                  />
+                  <TextInput
+                    disabled
+                    label="Latitud (Obligatorio)"
+                    value={lat}
+                    placeholder="Disabled input"
+                    error={errors?.geolocation?.message}
+                  />
                 </SimpleGrid>
               </Paper>
             </Stack>

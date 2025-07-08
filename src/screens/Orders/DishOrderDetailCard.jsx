@@ -40,7 +40,7 @@ export const DishOrderDetailCard = ({ orderDetails, noText }) => {
           </Flex>
         </Accordion.Control>
         <Accordion.Panel>
-          <Divider mb="xs" label="Extras y comentarios del platillo" labelPosition="center" />
+          <Divider mb="xs" label="Extras y comentarios del producto" labelPosition="center" />
           <Flex justify={"space-between"} align={"center"}>
             <Flex direction="column">
               <Text fw={700}>Complementos y extras:</Text>
@@ -51,7 +51,7 @@ export const DishOrderDetailCard = ({ orderDetails, noText }) => {
                   ))
                 ) : (
                   <Text c="dimmed" size="sm">
-                    No se especificaron complementos o extras para este platillo
+                    No se especificaron complementos o extras para este producto
                   </Text>
                 )}
               </List>

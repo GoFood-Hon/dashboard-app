@@ -1,8 +1,9 @@
 import { Divider, Group, Loader, Paper, Text } from "@mantine/core"
 import { BarChart } from "@mantine/charts"
 import { colors } from "../../theme/colors"
+import { getFormattedHNL } from "../../utils"
 
-export const MostSelledMenus = ({ data, loading }) => {
+export const TopShops = ({ data, loading }) => {
   const isEmpty = Array.isArray(data) && data.length === 0
 
   return (
@@ -10,9 +11,9 @@ export const MostSelledMenus = ({ data, loading }) => {
       withBorder
       p="md"
       radius="md"
-      className="w-full bg-white rounded-2xl shadow border border-blue-100 flex flex-col p-2 mr-6">
+      className="w-full bg-white rounded-2xl shadow border border-blue-100 flex flex-col p-2 mr-6 overflow-hidden">
       <div className="flex flex-row justify-between items-center p-2">
-        <h2 className="text-white-200 text-xl font-semibold">Menús más vendidos</h2>
+        <h2 className="text-white-200 text-xl font-semibold">Comercios líderes en ventas</h2>
       </div>
       <Divider my="md" />
       {loading ? (
@@ -26,11 +27,14 @@ export const MostSelledMenus = ({ data, loading }) => {
       ) : (
         <BarChart
           h={450}
-          data={data.map((item) => ({ name: item.name, "Unidades vendidas": item.totalQuantity }))}
+          data={data.map((item) => ({ name: item.name, "Total vendido": item.total }))}
           dataKey="name"
-          series={[{ name: "Unidades vendidas", color: "gray.6" }]}
+          series={[{ name: "Total vendido", color: "gray.6" }]}
           barProps={{ radius: 8 }}
           tickLine="none"
+          valueFormatter={(value) => getFormattedHNL(value)}
+          margin={{ top: 20, right: 20, bottom: 30, left: 20 }}
+          withYAxis={false}
         />
       )}
     </Paper>

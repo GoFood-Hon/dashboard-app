@@ -9,6 +9,8 @@ import menuApi from "../../api/menuApi"
 import { NAVIGATION_ROUTES_RES_ADMIN } from "../../routes"
 import { showNotification } from "@mantine/notifications"
 import FormLayout from "../../components/Form/FormLayout"
+import { editMenuSchema } from "../../utils/validationSchemas"
+import { zodResolver } from "@hookform/resolvers/zod"
 
 export default function EditMenuScreen() {
   const { menuId } = useParams()
@@ -40,6 +42,7 @@ export default function EditMenuScreen() {
     watch,
     formState: { errors }
   } = useForm({
+    resolver: zodResolver(editMenuSchema),
     defaultValues: menuDetails || {}
   })
 
@@ -81,21 +84,23 @@ export default function EditMenuScreen() {
           setValue={setValue}
           control={control}
           image={imageLocation}
+          watch={watch}
         />
       )
     },
     {
-      title: "Platillos",
+      title: "Productos",
       requirement: "Obligatorio",
       form: (
         <ComplementsForm
           setValue={setValue}
           moreData={hasMore}
           selectedDishes={menuDetails?.dishes}
-          defaultMessage="Los platillos seleccionados aparecerán aquí"
-          itemsAvailableLabel="Platillos disponibles"
+          defaultMessage="Los productos seleccionados aparecerán aquí"
+          itemsAvailableLabel="Productos disponibles"
           data={dishes}
           name={"dishes"}
+          errors={errors}
         />
       )
     }
@@ -115,7 +120,7 @@ export default function EditMenuScreen() {
         <FormLayout
           title={menuDetails?.name}
           show
-          accordionTitles={["Información general", "Platillos"]}
+          accordionTitles={["Información general", "Productos"]}
           accordionStructure={accordionStructure}
           navigate={() => navigate(NAVIGATION_ROUTES_RES_ADMIN.Menu.path)}
           isLoading={isLoading}

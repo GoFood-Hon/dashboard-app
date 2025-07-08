@@ -285,7 +285,7 @@ const CardsViewLayout = ({
                         <Image
                           src={item?.images[0]?.location}
                           h={160}
-                          fit={elementsName === "platillos" ? "contain" : "cover"}
+                          fit={elementsName === "productos" ? "contain" : "cover"}
                           alt={item?.name || "Imagen"}
                         />
                       ) : (

@@ -161,45 +161,45 @@ export const createMenu = createAsyncThunk("menus/createMenu", async ({ data, re
       })
 
       return rejectWithValue(response.error)
-    } else {
-      const dishId = response.data.id
-      const addImageResponse = await uploadMenuImage(dishId, data?.files?.[0])
+    }
 
-      if (addImageResponse.error) {
-        showNotification({
-          title: "Error",
-          message: addImageResponse.message,
-          color: "red",
-          duration: 7000
-        })
+    const dishId = response.data.id
+    const addImageResponse = await uploadMenuImage(dishId, data?.files?.[0])
 
-        return rejectWithValue(addImageResponse.error)
-      }
-
-      menuData = { ...menuData, images: addImageResponse.data.images }
-
-      const addComplementsResponse = await addComplements(dishId, data?.dishes)
-
-      if (addComplementsResponse.error) {
-        showNotification({
-          title: "Error",
-          message: addComplementsResponse.message,
-          color: "red",
-          duration: 7000
-        })
-
-        return rejectWithValue(addComplementsResponse.error)
-      }
-
+    if (addImageResponse.error) {
       showNotification({
-        title: "Creación exitosa",
-        message: "El menú fue creado correctamente",
-        color: "green",
+        title: "Error",
+        message: addImageResponse.message,
+        color: "red",
         duration: 7000
       })
 
-      return { ...menuData, Dishes: state.menus.dishesAddedToMenu }
+      return rejectWithValue(addImageResponse.error)
     }
+
+    menuData = { ...menuData, images: addImageResponse.data.images }
+
+    const addComplementsResponse = await addComplements(dishId, data?.dishes)
+
+    if (addComplementsResponse.error) {
+      showNotification({
+        title: "Error",
+        message: addComplementsResponse.message,
+        color: "red",
+        duration: 7000
+      })
+
+      return rejectWithValue(addComplementsResponse.error)
+    }
+
+    showNotification({
+      title: "Creación exitosa",
+      message: "El menú fue creado correctamente",
+      color: "green",
+      duration: 7000
+    })
+
+    return { ...menuData, Dishes: state.menus.dishesAddedToMenu }
   } catch (error) {
     toast.error("Fallo al actualizar el menu. Por favor intente de nuevo.", {
       duration: 7000
@@ -267,8 +267,9 @@ export const updateMenu = createAsyncThunk(
         menuData = { ...menuData, images: imageResponse.data.images }
       }
 
-      if (data.dishes) {
+      if (Array.isArray(data.dishes) && data.dishes.length > 0 && data.dishes.every((dish) => typeof dish === "string")) {
         const complementsResponse = await updateComplements(data.id, data.dishes)
+
         if (complementsResponse.error) {
           showNotification({
             title: "Error",

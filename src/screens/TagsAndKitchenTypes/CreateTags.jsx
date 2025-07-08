@@ -10,9 +10,9 @@ import ConfirmationModal from "../ConfirmationModal"
 export const CreateTags = () => {
   const dispatch = useDispatch()
   const [value, setValue] = useState("")
-  const tags = useSelector((state) => state.kitchenAndTags.dishTags)
   const [opened, { close, open }] = useDisclosure(false)
   const [tagId, setTagId] = useState(0)
+  const { dishTags, loadingTags } = useSelector((state) => state.kitchenAndTags)
 
   useEffect(() => {
     dispatch(fetchAllDishesTags())
@@ -49,7 +49,12 @@ export const CreateTags = () => {
               }
               style={{ flex: 1 }}
             />
-            <Button color={colors.main_app_color} onClick={handleCreateTag} style={{ marginLeft: "8px" }}>
+            <Button
+              loading={loadingTags}
+              disabled={value.trim() === ""}
+              color={colors.main_app_color}
+              onClick={handleCreateTag}
+              style={{ marginLeft: "8px" }}>
               Crear
             </Button>
           </Flex>
@@ -57,10 +62,15 @@ export const CreateTags = () => {
       </Grid>
       <Space h={20} />
       <Group grow>
-        <Flex direction="row" wrap="wrap" gap="sm" justify={tags && tags.length > 0 ? "flex-start" : "center"} align="center">
+        <Flex
+          direction="row"
+          wrap="wrap"
+          gap="sm"
+          justify={dishTags && dishTags.length > 0 ? "flex-start" : "center"}
+          align="center">
           <Pill.Group>
-            {tags && tags.length > 0 ? (
-              tags.map((tag) => (
+            {dishTags && dishTags.length > 0 ? (
+              dishTags.map((tag) => (
                 <Pill
                   className={classes.tag}
                   size="md"
@@ -75,7 +85,7 @@ export const CreateTags = () => {
               ))
             ) : (
               <Text color="dimmed" size="sm" align="center">
-                Los tags creados se mostrarán aquí
+                Las categorías creadas se mostrarán aquí
               </Text>
             )}
           </Pill.Group>
@@ -86,7 +96,7 @@ export const CreateTags = () => {
         opened={opened}
         close={close}
         title="¿Estás seguro que deseas eliminar?"
-        description="El tag se quitará de todos los platillos a los que esté asociado"
+        description="La categoría se quitará de todos los productos a los que esté asociado"
         onConfirm={() => handleDeleteTag(tagId)}
       />
     </Paper>
