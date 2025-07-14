@@ -5,7 +5,7 @@ import { NAVIGATION_ROUTES_RES_ADMIN } from "../../routes"
 import GeneralInformationForm from "./GeneralInformationForm"
 import LocationForm from "./LocationForm"
 import { TimeForm } from "./TimeForm"
-import { getDepartmentNameById } from "../../utils"
+import { getDepartmentNameById, onError } from "../../utils"
 import { useDispatch } from "react-redux"
 import { createBranch, setShippingRange } from "../../store/features/branchesSlice"
 import FormLayout from "../../components/Form/FormLayout"
@@ -93,7 +93,7 @@ export default function NewBranch() {
 
   return (
     <>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form onSubmit={handleSubmit(onSubmit, onError)}>
         <FormLayout
           title="Nueva sucursal"
           show

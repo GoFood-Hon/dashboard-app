@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react"
-import { Tabs, Card, Text, Group, Divider, Stack, Flex } from "@mantine/core"
+import { Card, Text, Group, Stack, Flex, Paper, ThemeIcon, SimpleGrid, Grid, Button, Center, Image } from "@mantine/core"
 import SettingsCard from "../../components/SettingsCard"
 import { useSelector } from "react-redux"
 import { useForm } from "react-hook-form"
-import Button from "../../components/Button"
 import InputField from "../../components/Form/InputField"
 import { useNavigate } from "react-router-dom"
 import { SETTING_NAVIGATION_ROUTES } from "../../routes"
@@ -12,31 +11,25 @@ import toast from "react-hot-toast"
 import { colors } from "../../theme/colors"
 import { IconCreditCard } from "@tabler/icons-react"
 import classes from "./CreditCard.module.css"
-import { PlanInfoCard } from "../../components/Plans/PlanInfoCard"
-import { SelectPlan } from "./SelectPlan"
 import BackButton from "../Dishes/components/BackButton"
+import classesTwo from "./CardGradient.module.css"
+import { getFormattedHNL } from "../../utils"
+import { IconCircleCheckFilled } from "@tabler/icons-react"
+import { IconCircleXFilled } from "@tabler/icons-react"
+import { IconCarambola } from "@tabler/icons-react"
+import { cardLogos } from "../../utils/constants"
 
 export default function PlanSettings() {
   const user = useSelector((state) => state.user.value)
   const planData = user?.Restaurant?.Subscription?.Plan
   const navigate = useNavigate()
   const [creditCard, setCreditCard] = useState()
-  const [planCancelled, setPlanCancelled] = useState(false)
-  const [newPlan, setNewPlan] = useState({})
 
   const {
     register,
     handleSubmit,
     formState: { errors }
   } = useForm()
-
-  const handlePlanCancel = (cancelled) => {
-    setPlanCancelled(cancelled)
-  }
-
-  const handleSelectNewPlan = (planId) => {
-    setNewPlan(planId)
-  }
 
   const onSubmit = async (data) => {
     try {
@@ -88,63 +81,64 @@ export default function PlanSettings() {
     <Stack gap="xs">
       <Group grow>
         <Flex align="center" justify="space-between">
-          <BackButton title="Plan" />
+          <BackButton title="Administración de plan y tarjeta" />
         </Flex>
       </Group>
-      <Tabs defaultValue="payments" color={colors.main_app_color}>
-        <Tabs.List>
-          <Tabs.Tab value="payments">Plan activo</Tabs.Tab>
-          <Tabs.Tab value="paymentMethod">Método de pago</Tabs.Tab>
-        </Tabs.List>
-        <Tabs.Panel value="payments" pt="sm">
-          {planData && planData.name ? (
-            <SettingsCard title="Plan actual" iconName="creditCard">
-              <PlanDetailsCard plan={planData} />
-            </SettingsCard>
-          ) : (
-            <SettingsCard title="Plan actual" iconName="creditCard">
-              <p className="p-10 text-center font-semibold text-gray-400">Sin plan activo</p>
-            </SettingsCard>
-          )}
-        </Tabs.Panel>
-        <Tabs.Panel value="paymentMethod" pt="sm">
-          <Stack gap="sm">
-            <SettingsCard title="Tarjeta actual" iconName="creditCard">
+      <Stack gap="sm">
+        {planData && planData.name ? (
+          <SettingsCard title="Plan actual" icon={IconCarambola}>
+            <PlanDetailsCard plan={planData} />
+          </SettingsCard>
+        ) : (
+          <SettingsCard title="Plan actual" icon={IconCarambola}>
+            <Flex justify="center" align="center" h="100%" mih={150}>
+              <Text ta="center" fw={600} c="dimmed" px="md">
+                Este comercio no tiene un plan activo
+              </Text>
+            </Flex>
+          </SettingsCard>
+        )}
+        <SettingsCard title="Información de la tarjeta" icon={IconCreditCard}>
+          <Grid>
+            <Grid.Col span={{ base: 12, md: 6 }} order={{ base: 1, md: 2 }}>
               {creditCard ? (
-                <div className="flex justify-center items-center">
+                <Center h="100%">
                   <CreditCardInfo data={creditCard} />
-                </div>
+                </Center>
               ) : (
-                <div className="flex flex-row justify-center items-center p-10 text-gray-400">Sin tarjeta disponible</div>
+                <Center h="100%" p="xl">
+                  <Text c="gray" fw={500}>
+                    Sin tarjeta disponible
+                  </Text>
+                </Center>
               )}
-            </SettingsCard>
-            <SettingsCard title="Agregar tarjeta de crédito" iconName="creditCard">
-              <form onSubmit={handleSubmit(onSubmit)}>
-                <div className="flex flex-col w-full py-2">
-                  <InputField label="Número de tarjeta" name="cardNumber" register={register} errors={errors} />
-                </div>
-                <div className="flex flex-col w-full py-2">
-                  <InputField label="Fecha de expiración" name="expirationDate" register={register} errors={errors} />
-                </div>
-                <div className="flex flex-col w-full py-2">
-                  <InputField label="CVV" name="cvv" register={register} errors={errors} />
-                </div>
-                <div className="w-full flex flex-row gap-2">
-                  <Button
-                    text={"Descartar"}
-                    className={"text-xs border border-red-400 text-red-400 "}
-                    onClick={() => navigate(SETTING_NAVIGATION_ROUTES.General.path)}
-                  />
-                  <Button
-                    text={"Guardar"}
-                    className="flex h-10 items-center justify-center px-4 rounded-md shadow-sm transition-all duration-700 focus:outline-none text-xs bg-sky-950 text-slate-50"
-                  />
-                </div>
-              </form>
-            </SettingsCard>
-          </Stack>
-        </Tabs.Panel>
-      </Tabs>
+            </Grid.Col>
+
+            <Grid.Col span={{ base: 12, md: 6 }} order={{ base: 2, md: 1 }}>
+              <Paper withBorder radius="md" h="100%" p="md">
+                <form onSubmit={handleSubmit(onSubmit)}>
+                  <Stack>
+                    <InputField label="Número de tarjeta (Obligatorio)" name="cardNumber" register={register} errors={errors} />
+                    <InputField
+                      label="Fecha de expiración (Obligatorio)"
+                      name="expirationDate"
+                      register={register}
+                      errors={errors}
+                    />
+                    <InputField label="CVV (Obligatorio)" name="cvv" register={register} errors={errors} />
+
+                    <Flex justify="end" gap="xs">
+                      <Button color={colors.main_app_color} type="submit">
+                        Actualizar tarjeta
+                      </Button>
+                    </Flex>
+                  </Stack>
+                </form>
+              </Paper>
+            </Grid.Col>
+          </Grid>
+        </SettingsCard>
+      </Stack>
     </Stack>
   )
 }
@@ -153,22 +147,57 @@ const PlanDetailsCard = ({ plan }) => {
   const { name, price, tax, currency, paymentType, PlanFeatures } = plan
 
   return (
-    <div className="border rounded-lg  p-4  m-4">
-      <h1 className="text-lg font-semibold mb-2">{name}</h1>
-      <p>
-        <span className="font-semibold">Precio:</span> {currency} {price}{" "}
-        {paymentType.toLowerCase() === "mensual" ? "mensuales" : "anuales"} (Tasa de interés: {tax}%)
-      </p>
-      <h2 className="text-md font-semibold mt-4 mb-2">Características:</h2>
-      <ul className="list-disc pl-6">
-        {PlanFeatures.map((feature) => (
-          <li key={feature.id}>
-            {feature.name}: {feature.PlanPlanFeatures.quan}{" "}
-            {feature.type === "amount" ? "" : feature.PlanPlanFeatures.avai ? "Incluídas" : "No incluídas"}
-          </li>
-        ))}
-      </ul>
-    </div>
+    <Paper withBorder radius="md" className={classesTwo.card} w="100%">
+      <Flex gap="xl" align="stretch" wrap="wrap" w="100%">
+        <Flex direction="column" w={{ base: "100%", md: "30%" }} h="100%" justify="space-between">
+          <Stack gap="sm">
+            <Text size="xl" fw={700}>
+              {name.toUpperCase()}
+            </Text>
+            <Text>
+              Precio: {price !== "0.00" ? getFormattedHNL(price) : "Gratuito"}{" "}
+              {price !== "0.00" ? (paymentType.toLowerCase() === "mensual" ? "mensuales" : "anuales") : ""}
+            </Text>
+            <Text>Impuesto: {tax !== "0.00" ? `${tax}%` : "Ninguno"}</Text>
+            <Text>Moneda: {currency}</Text>
+          </Stack>
+        </Flex>
+
+        <Flex direction="column" w={{ base: "100%", md: "65%" }} h="100%">
+          <SimpleGrid cols={{ base: 1, md: 2 }} spacing="sm" verticalSpacing="xs">
+            {PlanFeatures?.slice()
+              .sort((a, b) => {
+                if (a.type === "amount" && b.type === "boolean") return -1
+                if (a.type === "boolean" && b.type === "amount") return 1
+                return a.name.localeCompare(b.name)
+              })
+              .map((feature, index) => {
+                const planData = feature.PlanPlanFeatures
+                const isActive = planData?.avai || (planData?.quan ?? 0) > 0
+
+                return (
+                  <Flex key={index} align="center" gap="xs">
+                    <ThemeIcon color={isActive ? "green" : "gray"} variant="transparent" radius="xl">
+                      {isActive ? <IconCircleCheckFilled /> : <IconCircleXFilled color={colors.main_app_color} />}
+                    </ThemeIcon>
+
+                    <Flex gap={5}>
+                      <Text fw={600} size="sm">
+                        {feature.name}:
+                      </Text>
+                      {feature.type === "amount" && typeof planData?.quan === "number" ? (
+                        <Text size="sm">{planData.quan}</Text>
+                      ) : (
+                        <Text size="sm">{planData?.avai ? "Habilitado" : "Deshabilitado"}</Text>
+                      )}
+                    </Flex>
+                  </Flex>
+                )
+              })}
+          </SimpleGrid>
+        </Flex>
+      </Flex>
+    </Paper>
   )
 }
 
@@ -176,54 +205,44 @@ const CreditCardInfo = ({ data }) => {
   const { brand, safeIdentifier, validThru } = data
   const expMonth = validThru?.substring(0, 2)
   const expYear = validThru?.substring(2)
+
+  const logoSrc = cardLogos[brand?.toLowerCase()]
+
   return (
-    <div className=" w-2/4 shadow-xl border-2 rounded-lg p-4 m-10">
-      <div className="flex items-center justify-between mb-4">
-        <h2 className="text-lg font-semibold">Tarjeta actual</h2>
-        <span>
-          <i className="fas fa-credit-card mr-1"></i>
-          {brand}
-        </span>
-      </div>
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center">
-          <i className="fas fa-lock mr-1 "></i>
-          <span>{safeIdentifier}</span>
-        </div>
-        <div>
-          {expMonth}/{expYear}
-        </div>
-      </div>
-    </div>
-    // <Card className={classes.card} radius="md" withBorder>
-    //   {/* Ícono de fondo */}
-    //   <IconCreditCard className={classes.iconBackground} />
+    <Card className={classes.card} radius="md" withBorder>
+      <IconCreditCard className={classes.iconBackground} />
 
-    //   <Stack spacing="md" h="100%" justify="space-between">
-    //     {/* Chip */}
-    //     <div className={classes.chip}></div>
+      <Stack spacing="md" h="100%" justify="space-between">
+        {logoSrc ? (
+          <div className={classes.chip}>
+            <Image src={logoSrc} alt={brand} h={28} fit="contain" />
+          </div>
+        ) : (
+          <div className={classes.chip}></div>
+        )}
 
-    //     {/* Número de la tarjeta */}
-    //     <Text className={classes.cardNumber}>{"1458 8756 8441 7711" || "#### #### #### ####"}</Text>
+        <Text className={classes.cardNumber}>{safeIdentifier}</Text>
 
-    //     <Group position="apart" spacing="xs">
-    //       {/* Nombre del titular */}
-    //       <Stack spacing={0}>
-    //         <Text size="xs" transform="uppercase">
-    //           Titular
-    //         </Text>
-    //         <Text className={classes.cardDetails}>{"Victor Alfonso Reyes Gudiel" || "Nombre Apellido"}</Text>
-    //       </Stack>
+        <Flex justify="space-between" w="100%">
+          <Stack spacing={0}>
+            <Text size="xs" tt="uppercase" className="invisible">
+              Titular
+            </Text>
+            <Text fw={700} className={classes.cardDetails}>
+              {brand}
+            </Text>
+          </Stack>
 
-    //       {/* Fecha de expiración */}
-    //       <Stack spacing={0}>
-    //         <Text size="xs" transform="uppercase">
-    //           Vence
-    //         </Text>
-    //         <Text className={classes.cardDetails}>{"11/27" || "MM/AA"}</Text>
-    //       </Stack>
-    //     </Group>
-    //   </Stack>
-    // </Card>
+          <Stack spacing={0} align="end">
+            <Text size="xs" tt="uppercase">
+              Vence
+            </Text>
+            <Text fw={700} className={classes.cardDetails}>
+              {expMonth}/{expYear}
+            </Text>
+          </Stack>
+        </Flex>
+      </Stack>
+    </Card>
   )
 }

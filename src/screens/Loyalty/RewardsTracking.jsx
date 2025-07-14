@@ -28,6 +28,7 @@ import {
   setCurrentRewardPage
 } from "../../store/features/loyaltySlice"
 import UserInfoLoyalty from "../../components/UserInfoLoyalty/UserInfoLoyalty"
+import { NoPermissionsAnimation } from "../../components/Plans/NoPermissionsAnimation"
 
 const RewardsTracking = () => {
   const dispatch = useDispatch()
@@ -46,6 +47,9 @@ const RewardsTracking = () => {
     currentRewardPage
   } = useSelector((state) => state.loyalty)
   const rewardCardsList = userRewardsPerPage[currentRewardPage] || []
+  const haveLoyaltyProgramModule = !!user?.Restaurant?.Subscription?.Plan?.PlanFeatures?.some(
+    (feature) => feature.featureCode === "loyalty-module" && feature.PlanPlanFeatures?.avai === true
+  )
 
   const defaultOptions = {
     loop: true,
@@ -69,7 +73,7 @@ const RewardsTracking = () => {
     )
   }
 
-  return (
+  return haveLoyaltyProgramModule ? (
     <Stack gap="sm">
       <Group grow>
         <Flex align="center" justify="space-between">
@@ -236,6 +240,8 @@ const RewardsTracking = () => {
         </Box>
       )}
     </Stack>
+  ) : (
+    <NoPermissionsAnimation moduleName="lealtad" />
   )
 }
 

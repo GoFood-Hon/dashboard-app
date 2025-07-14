@@ -147,26 +147,27 @@ export const formatTimeDifference = (sentToKitchenTimestamp, finishedCookingTime
 
 const capitalize = (str) => str.charAt(0).toUpperCase() + str.slice(1)
 
-export const transformOrdersData = (data) => {
+export const transformChartsData = (data, allowOnSite) => {
   return data.map((item) => {
     const formattedDate = dayjs(item.date).format("MMMM D")
+
     return {
       date: capitalize(formattedDate),
       "A domicilio": item.delivery,
       "Para llevar": item.pickup,
-      "Comer en restaurante": item.onSite
+      ...(allowOnSite && { "Venta en mesa": item.onSite })
     }
   })
 }
 
-export const transformSellsData = (data = []) => {
-  return data.map((item) => {
-    const formattedDate = dayjs(item.date).format("MMMM D")
-    return {
-      date: capitalize(formattedDate),
-      "A domicilio": item.delivery,
-      "Para llevar": item.pickup,
-      "Comer en restaurante": item.onSite
-    }
-  })
+export const onError = (errors) => {
+  const firstErrorKey = Object.keys(errors)[0]
+  const firstErrorElement = document.querySelector(`[name="${firstErrorKey}"]`)
+
+  if (firstErrorElement) {
+    firstErrorElement.scrollIntoView({ behavior: "smooth", block: "center" })
+    firstErrorElement.focus()
+  } else {
+    window.scrollTo({ top: 0, behavior: "smooth" })
+  }
 }

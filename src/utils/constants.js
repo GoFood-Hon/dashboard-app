@@ -388,7 +388,7 @@ export const cardsDataStructure = (cardsStats) => [
     icon: IconCoin,
     value: getFormattedHNL(cardsStats?.sales),
     type: "currency",
-    text: "Monto total vendido"
+    text: "Total de ventas"
   },
   {
     title: "Pedidos",
@@ -402,14 +402,14 @@ export const cardsDataStructure = (cardsStats) => [
     icon: IconCooker,
     value: cardsStats?.avgCookingTime,
     type: "time",
-    text: "Promedio de preparación de pedidos"
+    text: "Preparación de pedidos"
   },
   {
     title: "Órdenes canceladas",
     icon: IconCancel,
     value: cardsStats?.canceledOrders,
     type: "number",
-    text: "Total de órdenes canceladas"
+    text: "Total de cancelaciones"
   }
 ]
 
@@ -419,7 +419,7 @@ export const cardsAdminDataStructure = (cardsStats) => [
     title: "Ventas",
     icon: IconCoin,
     value: getFormattedHNL(cardsStats?.sales),
-    text: "Monto total vendido"
+    text: "Total de ventas"
   },
   {
     title: "Pedidos",
@@ -440,3 +440,9 @@ export const cardsAdminDataStructure = (cardsStats) => [
     text: "Total de nuevos usuarios"
   }
 ]
+
+export const cardLogos = {
+  visa: "https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg",
+  mastercard: "https://upload.wikimedia.org/wikipedia/commons/0/04/Mastercard-logo.png",
+  americanexpress: "https://upload.wikimedia.org/wikipedia/commons/3/30/American_Express_logo_%282018%29.svg"
+}

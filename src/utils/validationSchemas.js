@@ -51,7 +51,6 @@ export const newRestaurantSchema = z
       .nullable()
       .refine((val) => !val || z.string().url().safeParse(val).success, { message: "Debes ingresar una URL válida" }),
 
-    // Campos de reservación de mesa
     pricePerChair: z.union([z.string(), z.null()]).optional(),
     hoursBeforeCancellation: z.union([z.string(), z.null()]).optional(),
     hoursBeforeBooking: z.union([z.string(), z.null()]).optional(),
@@ -59,7 +58,6 @@ export const newRestaurantSchema = z
     shippingPrice: z.string().optional()
   })
   .superRefine((data, ctx) => {
-    // Validación condicional de envío
     if (data.shippingFree === false && (!data.shippingPrice || data.shippingPrice.trim() === "")) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
@@ -127,7 +125,12 @@ export const editRestaurantSchema = z
     rtn: z.string().min(1, "El RTN es requerido").max(14, "El RTN debe tener máximo 14 caracteres"),
     cai: z.string().min(1, "El CAI es requerido"),
     billingAddress: z.string().min(1, "La dirección de facturación es requerida"),
-    cuisineTypeId: z.string().min(1, "El tipo de establecimiento es requerido"),
+    cuisineTypeId: z
+      .string()
+      .nullable()
+      .refine((val) => typeof val === "string" && val.trim() !== "", {
+        message: "El tipo de establecimiento es requerido"
+      }),
     clinpaysCommerceToken: z.string().min(1, "El token de comercio de Clinpays es requerido"),
 
     files: z
@@ -198,7 +201,7 @@ export const editRestaurantSchema = z
       .transform((val) => (val != null ? String(val) : val))
       .optional(),
 
-    shippingPrice: z.string().optional()
+    shippingPrice: z.string().nullable().optional()
   })
   .superRefine((data, ctx) => {
     if (data.shippingFree === false && (!data.shippingPrice || data.shippingPrice.trim() === "")) {
@@ -652,10 +655,10 @@ export const newBranchSchema = z.object({
   address: z.string().min(1, "La dirección es requerida"),
   name: z.string().min(1, "El nombre es requerido"),
 
-  delivery: z.boolean(),
-  pickup: z.boolean(),
-  onSite: z.boolean(),
-  allowTableBooking: z.boolean(),
+  delivery: z.boolean().default(false),
+  pickup: z.boolean().default(false),
+  onSite: z.boolean().default(false),
+  allowTableBooking: z.boolean().default(false),
 
   maxDistanceShipping: z
     .string()
@@ -711,10 +714,10 @@ export const editBranchSchema = z.object({
   address: z.string().min(1, "La dirección es requerida"),
   name: z.string().min(1, "El nombre es requerido"),
 
-  delivery: z.boolean(),
-  pickup: z.boolean(),
-  onSite: z.boolean(),
-  allowTableBooking: z.boolean(),
+  delivery: z.boolean().default(false),
+  pickup: z.boolean().default(false),
+  onSite: z.boolean().default(false),
+  allowTableBooking: z.boolean().default(false),
 
   maxDistanceShipping: z
     .union([z.string(), z.number()])
@@ -935,8 +938,8 @@ export const editPromotionSchema = z
     category: z.enum(["fijo", "porcentual"], {
       required_error: "El tipo de descuento es requerido"
     }),
-    percentage: z.string().optional(),
-    amount: z.string().optional(),
+    percentage: z.string().nullable().optional(),
+    amount: z.string().nullable().optional(),
     startDate: z.preprocess(
       (val) => (typeof val === "string" || val instanceof Date ? new Date(val) : val),
       z.date({ required_error: "La fecha de inicio es requerida" })
@@ -961,7 +964,10 @@ export const editPromotionSchema = z
       )
       .default([]),
     files: z
-      .array(z.any()) 
+      .array(z.instanceof(File), {
+        invalid_type_error: "Debes subir una imagen válida",
+        required_error: "La imagen de la promoción es requerida"
+      })
       .min(1, "La imagen de la promoción es requerida")
       .optional()
   })
@@ -998,5 +1004,159 @@ export const editPromotionSchema = z
         code: z.ZodIssueCode.custom,
         message: "No debes seleccionar platillos si el descuento aplica a todos"
       })
+    }
+  })
+
+export const newCouponSchema = z
+  .object({
+    couponType: z.enum(["fecha", "cantidad"], {
+      required_error: "El tipo de cupón es requerido"
+    }),
+    category: z.enum(["fijo", "porcentual"], {
+      required_error: "El tipo de descuento es requerido"
+    }),
+    percentage: z.string().nullable().optional(),
+    amount: z.string().nullable().optional(),
+    timesToUse: z.string().optional().nullable(),
+    startDate: z
+      .preprocess((val) => (typeof val === "string" || val instanceof Date ? new Date(val) : val), z.date().optional())
+      .nullable(),
+    endDate: z
+      .preprocess((val) => (typeof val === "string" || val instanceof Date ? new Date(val) : val), z.date().optional())
+      .nullable(),
+    title: z.string().min(1, "El título es requerido").max(100, "El título no debe superar los 100 caracteres"),
+    files: z
+      .array(z.instanceof(File), {
+        invalid_type_error: "Debes subir una imagen válida",
+        required_error: "La imagen del cupón es requerida"
+      })
+      .min(1, "La imagen del cupón es requerida")
+  })
+  .superRefine((data, ctx) => {
+    if (data.category === "porcentual" && !data.percentage) {
+      ctx.addIssue({
+        path: ["percentage"],
+        code: z.ZodIssueCode.custom,
+        message: "El porcentaje es requerido"
+      })
+    }
+
+    if (data.category === "fijo" && !data.amount) {
+      ctx.addIssue({
+        path: ["amount"],
+        code: z.ZodIssueCode.custom,
+        message: "El monto es requerido"
+      })
+    }
+
+    if (data.couponType === "fecha") {
+      if (!data.startDate) {
+        ctx.addIssue({
+          path: ["startDate"],
+          code: z.ZodIssueCode.custom,
+          message: "La fecha de inicio es requerida"
+        })
+      }
+      if (!data.endDate) {
+        ctx.addIssue({
+          path: ["endDate"],
+          code: z.ZodIssueCode.custom,
+          message: "La fecha de finalización es requerida"
+        })
+      }
+    }
+
+    if (data.couponType === "cantidad") {
+      if (!data.timesToUse || data.timesToUse.trim() === "") {
+        ctx.addIssue({
+          path: ["timesToUse"],
+          code: z.ZodIssueCode.custom,
+          message: "La cantidad de usos es requerida"
+        })
+      } else if (!/^\d+$/.test(data.timesToUse)) {
+        ctx.addIssue({
+          path: ["timesToUse"],
+          code: z.ZodIssueCode.custom,
+          message: "Debe ser un número entero"
+        })
+      }
+    }
+  })
+
+export const editCouponSchema = z
+  .object({
+    couponType: z.enum(["fecha", "cantidad"], {
+      required_error: "El tipo de cupón es requerido"
+    }),
+    category: z.enum(["fijo", "porcentual"], {
+      required_error: "El tipo de descuento es requerido"
+    }),
+    percentage: z.string().nullable().optional(),
+    amount: z.string().nullable().optional(),
+    timesToUse: z.preprocess((val) => {
+      if (typeof val === "string") {
+        const trimmed = val.trim()
+        return trimmed === "" ? undefined : parseInt(trimmed, 10)
+      }
+      if (typeof val === "number") return val
+      return undefined
+    }, z.number().int().positive().optional().nullable()),
+    startDate: z
+      .preprocess((val) => (typeof val === "string" || val instanceof Date ? new Date(val) : val), z.date().optional())
+      .nullable(),
+    endDate: z
+      .preprocess((val) => (typeof val === "string" || val instanceof Date ? new Date(val) : val), z.date().optional())
+      .nullable(),
+    title: z.string().min(1, "El título es requerido").max(100, "El título no debe superar los 100 caracteres"),
+    files: z
+      .array(z.instanceof(File), {
+        invalid_type_error: "Debes subir una imagen válida",
+        required_error: "La imagen del cupón es requerida"
+      })
+      .min(1, "La imagen del cupón es requerida")
+      .optional()
+  })
+  .superRefine((data, ctx) => {
+    if (data.category === "porcentual" && !data.percentage) {
+      ctx.addIssue({
+        path: ["percentage"],
+        code: z.ZodIssueCode.custom,
+        message: "El porcentaje es requerido"
+      })
+    }
+
+    if (data.category === "fijo" && !data.amount) {
+      ctx.addIssue({
+        path: ["amount"],
+        code: z.ZodIssueCode.custom,
+        message: "El monto es requerido"
+      })
+    }
+
+    if (data.couponType === "fecha") {
+      if (!data.startDate) {
+        ctx.addIssue({
+          path: ["startDate"],
+          code: z.ZodIssueCode.custom,
+          message: "La fecha de inicio es requerida"
+        })
+      }
+      if (!data.endDate) {
+        ctx.addIssue({
+          path: ["endDate"],
+          code: z.ZodIssueCode.custom,
+          message: "La fecha de finalización es requerida"
+        })
+      }
+    }
+
+    if (data.couponType === "cantidad") {
+      if (data.timesToUse === undefined || data.timesToUse === null) {
+        ctx.addIssue({
+          path: ["timesToUse"],
+          code: z.ZodIssueCode.custom,
+          message: "La cantidad de usos es requerida"
+        })
+      }
     }
   })

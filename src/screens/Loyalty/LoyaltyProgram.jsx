@@ -11,12 +11,16 @@ import FormLayout from "../../components/Form/FormLayout"
 import { GeneralInformationForm } from "./GeneralInformationForm"
 import LoyaltyCards from "./LoyaltyCards"
 import { useParams } from "react-router-dom"
+import { NoPermissionsAnimation } from "../../components/Plans/NoPermissionsAnimation"
 
 export const LoyaltyProgram = () => {
   const { loyaltyId } = useParams()
   const dispatch = useDispatch()
   const user = useSelector((state) => state.user.value)
   const { programs, updatingPrograms, creatingPrograms } = useSelector((state) => state.loyalty)
+  const haveLoyaltyProgramModule = !!user?.Restaurant?.Subscription?.Plan?.PlanFeatures?.some(
+    (feature) => feature.featureCode === "loyalty-module" && feature.PlanPlanFeatures?.avai === true
+  )
 
   const {
     register,
@@ -78,23 +82,23 @@ export const LoyaltyProgram = () => {
     }
   }
 
-  return (
-    <>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <FormLayout
-          data={{ id: programs?.id, isActive: programs?.isActive }}
-          title={"Datos del programa"}
-          show={user.role === "superadmin"}
-          accordionTitles={["Información general", "Tarjetas de descuento"]}
-          accordionStructure={accordionStructure}
-          statusButton={user.role !== "superadmin"}
-          navigate={() => navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Plans.path)}
-          isLoading={programs && Object.keys(programs).length !== 0 ? updatingPrograms : creatingPrograms}
-          update={programs && Object.keys(programs).length !== 0}
-          noDiscard
-          noButtons={user.role === "superadmin"}
-        />
-      </form>
-    </>
+  return haveLoyaltyProgramModule ? (
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <FormLayout
+        data={{ id: programs?.id, isActive: programs?.isActive }}
+        title={"Datos del programa"}
+        show={user.role === "superadmin"}
+        accordionTitles={["Información general", "Tarjetas de descuento"]}
+        accordionStructure={accordionStructure}
+        statusButton={user.role !== "superadmin"}
+        navigate={() => navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Plans.path)}
+        isLoading={programs && Object.keys(programs).length !== 0 ? updatingPrograms : creatingPrograms}
+        update={programs && Object.keys(programs).length !== 0}
+        noDiscard
+        noButtons={user.role === "superadmin"}
+      />
+    </form>
+  ) : (
+    <NoPermissionsAnimation moduleName='lealtad' />
   )
 }

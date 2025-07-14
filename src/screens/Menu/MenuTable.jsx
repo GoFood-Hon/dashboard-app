@@ -62,7 +62,8 @@ export default function MenuTable({
   currentPage,
   setPage,
   loadingData,
-  deleteAction
+  deleteAction,
+  openModal
 }) {
   const navigate = useNavigate()
   const dispatch = useDispatch()
@@ -82,13 +83,14 @@ export default function MenuTable({
       ordersScreen: NAVIGATION_ROUTES_RES_ADMIN.Pedidos.path,
       adminUserScreen: NAVIGATION_ROUTES_SUPER_ADMIN.Users.path,
       planScreen: NAVIGATION_ROUTES_SUPER_ADMIN.Plans.path,
-      orderHistoryScreen: NAVIGATION_ROUTES_KITCHEN.Orders.path,
+      orderHistoryScreen: NAVIGATION_ROUTES_KITCHEN.OrderHistory.path,
       reservationsScreen: NAVIGATION_ROUTES_RES_ADMIN.Reservations.path,
       collectionsScreen: NAVIGATION_ROUTES_SUPER_ADMIN.Collections.path,
       loyaltyProgramsScreen: NAVIGATION_ROUTES_RES_ADMIN.Loyalty.path,
       promotionsScreen: SETTING_NAVIGATION_ROUTES.Promotions.path,
       couponsScreen: SETTING_NAVIGATION_ROUTES.Coupons.path,
-      purchasesHistoryScreen: NAVIGATION_ROUTES_RES_ADMIN.Pedidos.OrderPurchasesHistory.path
+      purchasesHistoryScreen: NAVIGATION_ROUTES_RES_ADMIN.Pedidos.OrderPurchasesHistory.path,
+      reviewsScreen: NAVIGATION_ROUTES_RES_ADMIN.Reviews.path
     }
 
     navigate(`${routes[screenType]}/${id}`)
@@ -410,12 +412,65 @@ export default function MenuTable({
       }
     ],
     orderHistoryScreen: [
-      { label: "Costo de envío", accessor: "shippingPrice" },
-      { label: "Descuento", accessor: "discount" },
-      { label: "Subtotal", accessor: "subtotal" },
-      { label: "ISV", accessor: "isv" },
-      { label: "Total", accessor: "total" },
-      { label: "Fecha de pago", accessor: "paidDate" },
+      { label: "Usuario", accessor: "user" },
+      { label: "Teléfono", accessor: "phone" },
+      { label: "Fecha y hora", accessor: "orderDate" },
+      {
+        label: "Tiempo de preparación",
+        accessor: "cookingTime",
+        render: (cookingTime) => (
+          <Flex align="center" gap={5}>
+            <IconClock size={18} />
+            <Text size="sm">{cookingTime}</Text>
+          </Flex>
+        )
+      },
+      {
+        label: "Tipo de servicio",
+        accessor: "serviceType",
+        render: (service) => (service === "pickup" ? "Para llevar" : service === "onSite" ? "Comer en sitio" : "A domicilio")
+      },
+      { label: "Total", accessor: "total", render: (total) => getFormattedHNL(total) },
+      {
+        label: "Estado",
+        accessor: "status",
+        center: true,
+        render: (status) => (
+          <Badge
+            size="lg"
+            w={180}
+            tt="capitalize"
+            color={
+              status === "pending" ||
+              status === "on-hold" ||
+              status === "confirmed" ||
+              status === "ready" ||
+              status === "ready-to-pick-up" ||
+              status === "ready-for-customer" ||
+              status === "on-delivery"
+                ? "rgba(153, 135, 0, 1)"
+                : status === "canceled"
+                  ? colors.main_app_color
+                  : "rgba(0, 94, 2, 1)"
+            }>
+            {status === "pending"
+              ? "Pendiente"
+              : status === "canceled"
+                ? "Cancelado"
+                : status === "on-hold"
+                  ? "En espera"
+                  : status === "confirmed"
+                    ? "Confirmado"
+                    : status === "ready-to-pick-up"
+                      ? "Esperando repartidor"
+                      : status === "ready" || status === "ready-for-customer"
+                        ? "Preparado"
+                        : status === "on-delivery"
+                          ? "En camino"
+                          : "Completado"}
+          </Badge>
+        )
+      },
       {
         label: "Acciones",
         accessor: "id",
@@ -722,6 +777,42 @@ export default function MenuTable({
       },
       { label: "Teléfono", accessor: "phoneNumber" },
       { label: "Pedidos realizados", accessor: "orderCount", center: true }
+    ],
+    reviewsScreen: [
+      {
+        label: "Nombre",
+        accessor: "name",
+        render: (name, item) => (
+          <div className="flex items-center gap-2">
+            <Avatar size={30} src={item?.photo} radius={26} />
+            {name}
+          </div>
+        )
+      },
+      {
+        label: "Correo",
+        accessor: "email"
+      },
+      { label: "Teléfono", accessor: "phoneNumber" },
+      { label: "Fecha de creación", accessor: "createdAt" },
+      {
+        label: "Acciones",
+        accessor: "id",
+        center: true,
+        render: (id) => (
+          <ActionIcon
+            className="transition ease-in-out duration-200"
+            variant="subtle"
+            size="lg"
+            onClick={() => {
+              openModal(id)
+            }}
+            color="dimmed"
+            radius="xl">
+            <IconEye color={colors.main_app_color} />
+          </ActionIcon>
+        )
+      }
     ]
   }
 
@@ -741,14 +832,14 @@ export default function MenuTable({
                     {currentColumns.map((column) => (
                       <Table.Th style={{ textAlign: column.center ? "center" : "left" }} key={column.label}>
                         <UnstyledButton className="w-full">
-                          <Group justify="space-between">
+                          <Flex justify={column.center ? "center" : "start"} align="center" className="w-full" gap="xs">
                             <Text fw={500} fz="sm">
                               {column.label}
                             </Text>
                             <Center>
                               <IconSelector size="1.1rem" className="hidden" />
                             </Center>
-                          </Group>
+                          </Flex>
                         </UnstyledButton>
                       </Table.Th>
                     ))}

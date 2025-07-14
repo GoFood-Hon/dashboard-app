@@ -26,7 +26,7 @@ export default function PromotionsList() {
   const [opened, { close, open }] = useDisclosure(false)
   const user = useSelector((state) => state.user.value)
   const havePromotionsModule = !!user?.Restaurant?.Subscription?.Plan?.PlanFeatures?.some(
-    (feature) => feature.featureCode === "promotions-module"
+    (feature) => feature.featureCode === "promotions-module" && feature.PlanPlanFeatures?.avai === true
   )
 
   const handleNewPromotion = () => {

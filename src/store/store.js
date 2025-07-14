@@ -16,6 +16,7 @@ import loyaltyReducer from "./features/loyaltySlice"
 import promotionsReducer from "./features/promotionsSlice"
 import couponsReducer from "./features/couponsSlice"
 import statsReducer from "./features/statsSlice"
+import reviewsReducer from "./features/reviewsSlice"
 
 const appReducer = combineReducers({
   user: userReducer,
@@ -34,7 +35,8 @@ const appReducer = combineReducers({
   loyalty: loyaltyReducer,
   promotions: promotionsReducer,
   coupons: couponsReducer,
-  stats: statsReducer
+  stats: statsReducer,
+  reviews: reviewsReducer
 })
 
 const rootReducer = (state, action) => {

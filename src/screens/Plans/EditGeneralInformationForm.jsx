@@ -5,12 +5,15 @@ import { DEFAULT_CURRENCY, DEFAULT_PAYMENT_TYPE, taxesValues } from "../../utils
 import { Controller } from "react-hook-form"
 
 export const EditGeneralInformationForm = ({ register, errors, setValue, data, control }) => {
-  const [paymentType, setPaymentType] = useState(DEFAULT_PAYMENT_TYPE)
-  const [currency, setCurrency] = useState(DEFAULT_CURRENCY)
+  const [paymentType, setPaymentType] = useState(null)
+  const [currency, setCurrency] = useState(null)
 
   useEffect(() => {
     if (data?.paymentType) {
       setPaymentType(data.paymentType)
+    }
+    if (data?.paymentType) {
+      setCurrency(data.currency)
     }
   }, [data?.paymentType])
 

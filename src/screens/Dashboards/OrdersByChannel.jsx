@@ -1,11 +1,18 @@
 import { Divider, Group, Loader, Paper, Text } from "@mantine/core"
 import { AreaChart } from "@mantine/charts"
 import { colors } from "../../theme/colors"
-import { transformOrdersData } from "../../utils"
+import { transformChartsData } from "../../utils"
+import { useSelector } from "react-redux"
 
 export const OrdersByChannel = ({ data, loading }) => {
+  const user = useSelector((state) => state.user.value)
+  const haveOnSiteModule =
+    user?.role === "superadmin" ||
+    !!user?.Restaurant?.Subscription?.Plan?.PlanFeatures?.some(
+      (feature) => feature.featureCode === "on-site-service-module" && feature.PlanPlanFeatures?.avai === true
+    )
   const isEmpty = Array.isArray(data) && data.length === 0
-  const formattedData = transformOrdersData(data ?? [])
+  const formattedData = transformChartsData(data ?? [], haveOnSiteModule)
 
   return (
     <Paper
@@ -30,13 +37,13 @@ export const OrdersByChannel = ({ data, loading }) => {
           h={450}
           data={formattedData}
           dataKey="date"
-          type="stacked"
+          type="default"
           withLegend
           legendProps={{ verticalAlign: "top" }}
           series={[
             { name: "A domicilio", color: "indigo.6" },
             { name: "Para llevar", color: "teal.6" },
-            { name: "Comer en sitio", color: "orange.6" }
+            ...(haveOnSiteModule ? [{ name: "Venta en mesa", color: "orange.6" }] : [])
           ]}
         />
       )}

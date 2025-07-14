@@ -1,11 +1,19 @@
 import { Divider, Group, Loader, Paper, Text } from "@mantine/core"
 import { AreaChart } from "@mantine/charts"
-import { getFormattedHNL, transformSellsData } from "../../utils"
+import { getFormattedHNL, transformChartsData } from "../../utils"
 import { colors } from "../../theme/colors"
+import { useSelector } from "react-redux"
 
 export const SellsByChannel = ({ data, loading }) => {
+  const user = useSelector((state) => state.user.value)
+  const haveOnSiteModule =
+    user?.role === "superadmin" ||
+    !!user?.Restaurant?.Subscription?.Plan?.PlanFeatures?.some(
+      (feature) => feature.featureCode === "on-site-service-module" && feature.PlanPlanFeatures?.avai === true
+    )
   const isEmpty = Array.isArray(data) && data.length === 0
-  const formattedData = transformSellsData(data)
+  const formattedData = transformChartsData(data ?? [], haveOnSiteModule)
+
   return (
     <Paper
       withBorder
@@ -30,13 +38,13 @@ export const SellsByChannel = ({ data, loading }) => {
           h={450}
           data={formattedData}
           dataKey="date"
-          type="stacked"
+          type="default"
           withLegend
           legendProps={{ verticalAlign: "top" }}
           series={[
             { name: "A domicilio", color: "red.6" },
             { name: "Para llevar", color: "pink.6" },
-            { name: "Comer en sitio", color: "blue.6" }
+            ...(haveOnSiteModule ? [{ name: "Venta en mesa", color: "blue.6" }] : [])
           ]}
           valueFormatter={(value) => getFormattedHNL(value)}
           margin={{ top: 20, right: 20, bottom: 30, left: 20 }}

@@ -19,10 +19,8 @@ export function SelectPlan({ onSelected, currentPlan }) {
   const plans = plansByPage[page] || []
 
   useEffect(() => {
-    if (!plansByPage[page]) {
-      dispatch(fetchAllPlansSelectPlan({ limit, page, order: "DESC", isActive: true }))
-    }
-  }, [dispatch, limit, page, plansByPage])
+    dispatch(fetchAllPlansSelectPlan({ limit, page, order: "DESC", isActive: true }))
+  }, [dispatch, limit, page])
 
   const onSubmit = async (planId) => {
     onSelected(planId)
@@ -34,7 +32,7 @@ export function SelectPlan({ onSelected, currentPlan }) {
       key={plan.id}
       p="md"
       radius="md"
-      h={420}
+      h={480}
       className={classes.card}
       style={{ display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
       <Stack spacing="xs">
@@ -49,10 +47,13 @@ export function SelectPlan({ onSelected, currentPlan }) {
         <Divider />
         <Flex direction="column" justify={"space-between"} gap="xs">
           <Text c="dimmed" size="sm" fw={700}>
-            Tipo de pago: {plan.paymentType}
+            Valor: {plan?.price != 0 ? getFormattedHNL(plan?.price) : "Gratuito"}
           </Text>
           <Text c="dimmed" size="sm" fw={700}>
-            Valor: {plan?.price != 0 ? getFormattedHNL(plan?.price) : "Gratuito"}
+            Impuesto: {plan?.tax !== "0.00" ? `${plan?.tax}%` : "Ninguno"}
+          </Text>
+          <Text c="dimmed" size="sm" fw={700}>
+            Tipo de pago: {plan.paymentType}
           </Text>
         </Flex>
         <Stack gap="xs">
@@ -121,7 +122,7 @@ export function SelectPlan({ onSelected, currentPlan }) {
             <Pagination
               total={totalPagesCount}
               page={page}
-              onChange={(page) => setCurrentPageSelectPlan(page)}
+              onChange={(page) => dispatch(setCurrentPageSelectPlan(page))}
               color={colors.main_app_color}
               defaultValue={page}
               size="md"

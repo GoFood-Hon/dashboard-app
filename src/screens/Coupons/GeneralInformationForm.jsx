@@ -5,6 +5,7 @@ import { couponsTypes, promotionsDiscountType } from "../../utils/constants"
 import InputField from "../../components/Form/InputField"
 import { Controller } from "react-hook-form"
 import { ImageDropzone } from "../../components/ImageDropzone"
+import dayjs from "dayjs"
 
 export const GeneralInformationForm = ({ register, errors, setValue, control, image, offersData, watch, update }) => {
   const couponType = watch("couponType")
@@ -120,6 +121,7 @@ export const GeneralInformationForm = ({ register, errors, setValue, control, im
                     placeholder="Seleccionar fecha"
                     popoverProps={{ withinPortal: false }}
                     onChange={(val) => handleDateChange(val, "initialDate")}
+                    minDate={dayjs().startOf("day").toDate()}
                   />
                 </Grid.Col>
                 <Grid.Col span={{ base: 12, md: 6 }}>
@@ -130,6 +132,7 @@ export const GeneralInformationForm = ({ register, errors, setValue, control, im
                     placeholder="Seleccionar fecha"
                     popoverProps={{ withinPortal: false }}
                     onChange={(val) => handleDateChange(val, "endDate")}
+                    minDate={dayjs().startOf("day").toDate()}
                   />
                 </Grid.Col>
               </>

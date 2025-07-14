@@ -79,7 +79,7 @@ const CardsViewLayout = ({
   const [openedKitchen, { close: closeKitchen, open: openKitchen }] = useDisclosure(false)
   const [openedKitchenCancel, { close: closeKitchenCancel, open: openKitchenCancel }] = useDisclosure(false)
   const [branchData, setBranchData] = useState(null)
-  const { updatingOrderStatus, cancelOrderStatus } = useSelector((state) => state.orders)
+  const { updatingOrderStatus } = useSelector((state) => state.orders)
   const theme = createTheme({
     cursorType: "pointer"
   })
@@ -94,11 +94,6 @@ const CardsViewLayout = ({
   const isSmallScreen = useMediaQuery("(max-width: 430px)")
   const { colorScheme } = useMantineColorScheme()
   const [orderId, setOrderId] = useState(null)
-  const [isDisabled, setIsDisabled] = useState(true)
-
-  const handleExpire = () => {
-    setIsDisabled(false)
-  }
 
   const OrderStopwatch = ({ sentToKitchenTimestamp }) => {
     const stopwatchOffset = new Date()
@@ -236,17 +231,15 @@ const CardsViewLayout = ({
           </Flex>
         </Group>
       )}
-      {(value !== null || elementsList.length > 0) && !kitchenView && (
-        <SearchComponent
-          onSearch={onSearch}
-          elementName={elementsName}
-          value={value}
-          searchAction={searchAction}
-          searchOptions={searchOptions}
-          selectedOption={selectedOption}
-          setSelectedSearchOption={setSelectedSearchOption}
-        />
-      )}
+      <SearchComponent
+        onSearch={onSearch}
+        elementName={elementsName}
+        value={value}
+        searchAction={searchAction}
+        searchOptions={searchOptions}
+        selectedOption={selectedOption}
+        setSelectedSearchOption={setSelectedSearchOption}
+      />
 
       <Group grow>
         {loadingElements ? (

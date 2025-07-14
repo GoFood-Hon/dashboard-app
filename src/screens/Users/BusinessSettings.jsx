@@ -2,7 +2,7 @@ import React, { useState } from "react"
 import { Flex, Group, Paper, Button, Stack } from "@mantine/core"
 import SettingsCard from "../../components/SettingsCard"
 import { useForm } from "react-hook-form"
-import { convertToDecimal } from "../../utils"
+import { convertToDecimal, onError } from "../../utils"
 import toast from "react-hot-toast"
 import { NAVIGATION_ROUTES_SUPER_ADMIN } from "../../routes"
 import { useNavigate } from "react-router-dom"
@@ -28,6 +28,9 @@ export default function BusinessSettings() {
   const dispatch = useDispatch()
   const user = useSelector((state) => state.user.value)
   const [isLoading, setIsLoading] = useState(false)
+  const haveReservationsModule = !!user?.Restaurant?.Subscription?.Plan?.PlanFeatures?.some(
+    (feature) => feature.featureCode === "reservations-module" && feature.PlanPlanFeatures?.avai === true
+  )
 
   const {
     register,
@@ -163,7 +166,7 @@ export default function BusinessSettings() {
 
   return (
     <>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form onSubmit={handleSubmit(onSubmit, onError)}>
         <Group grow mb="xs">
           <Flex align="center" justify="space-between">
             <BackButton title="Información del comercio" />
@@ -191,9 +194,11 @@ export default function BusinessSettings() {
               blocked
             />
           </SettingsCard>
-          <SettingsCard title="Datos de reservación" icon={IconTable}>
-            <BookingInformation register={register} errors={errors} setValue={setValue} control={control} />
-          </SettingsCard>
+          {haveReservationsModule && (
+            <SettingsCard title="Datos de reservación" icon={IconTable}>
+              <BookingInformation register={register} errors={errors} setValue={setValue} control={control} />
+            </SettingsCard>
+          )}
           <SettingsCard title="Redes sociales" icon={IconSocial}>
             <SocialMediaInformation register={register} errors={errors} setValue={setValue} control={control} />
           </SettingsCard>

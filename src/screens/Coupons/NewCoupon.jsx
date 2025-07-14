@@ -6,6 +6,8 @@ import { useSelector } from "react-redux"
 import { useDispatch } from "react-redux"
 import { useNavigate } from "react-router-dom"
 import { createCoupon } from "../../store/features/couponsSlice"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { newCouponSchema } from "../../utils/validationSchemas"
 
 export const NewCoupon = () => {
   const dispatch = useDispatch()
@@ -20,6 +22,7 @@ export const NewCoupon = () => {
     control,
     watch
   } = useForm({
+    resolver: zodResolver(newCouponSchema),
     defaultValues: {
       couponType: "fecha",
       category: "porcentual",

@@ -1,9 +1,11 @@
 import { Accordion, Box, Divider, Flex, Group, Image, List, Text } from "@mantine/core"
 import { useState } from "react"
 import { getFormattedHNL } from "../../utils"
+import { useMediaQuery } from "@mantine/hooks"
 
 export const DishOrderDetailCard = ({ orderDetails, noText }) => {
   const [expanded, setExpanded] = useState(false)
+  const isSmallScreen = useMediaQuery('(min-width: 768px)')
 
   return (
     <Accordion variant="separated" radius="md">
@@ -34,9 +36,11 @@ export const DishOrderDetailCard = ({ orderDetails, noText }) => {
                 </Text>
               </Box>
             </Group>
-            <Text style={{ display: noText ? "none" : "block" }} size="sm" mr={5}>
-              {expanded ? "Ocultar" : "Mostrar"} detalles
-            </Text>
+            {isSmallScreen && (
+              <Text style={{ display: noText ? "none" : "block" }} size="sm" mr={5}>
+                {expanded ? "Ocultar" : "Mostrar"} detalles
+              </Text>
+            )}
           </Flex>
         </Accordion.Control>
         <Accordion.Panel>

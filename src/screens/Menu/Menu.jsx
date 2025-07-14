@@ -28,7 +28,7 @@ export default function Menu() {
     if (!menusPerPage[page]) {
       dispatch(fetchMenus({ restaurantId: user.restaurantId, limit, page, order: "DESC" }))
     }
-  }, [dispatch, limit, page, menusPerPage])
+  }, [dispatch, limit, page])
 
   const handleSearch = (query) => {
     dispatch(setSearchData(query))
@@ -36,31 +36,31 @@ export default function Menu() {
 
   const executeSearch = async (query) => {
     dispatch(setPage(1))
-    dispatch(fetchMenus({ restaurantId: user.restaurantId, limit, page: 1, order: "DESC", search_field: searchField, search: query }))
+    dispatch(
+      fetchMenus({ restaurantId: user.restaurantId, limit, page: 1, order: "DESC", search_field: searchField, search: query })
+    )
   }
 
   return (
-    <>
-      <TableViewLayout
-        title="Menús"
-        page={page}
-        limit={limit}
-        totalElements={totalMenus}
-        onNewItemClick={handleNewMenu}
-        items={menusList.map((menu) => {
-          return { ...menu, dishesCount: menu?.Dishes?.length || menu?.Dishes }
-        })}
-        tableStructure="menuScreen"
-        totalItems={totalPageCount}
-        loading={loadingMenus}
-        setPage={(newPage) => dispatch(setPage(newPage))}
-        onSearch={handleSearch}
-        value={searchData}
-        searchAction={executeSearch}
-        searchOptions={searchOptionsMenus}
-        selectedOption={searchField}
-        setSelectedSearchOption={(value) => dispatch(setSelectedSearchOption(value))}
-      />
-    </>
+    <TableViewLayout
+      title="Menús"
+      page={page}
+      limit={limit}
+      totalElements={totalMenus}
+      onNewItemClick={handleNewMenu}
+      items={menusList.map((menu) => {
+        return { ...menu, dishesCount: menu?.Dishes?.length || menu?.Dishes }
+      })}
+      tableStructure="menuScreen"
+      totalItems={totalPageCount}
+      loading={loadingMenus}
+      setPage={(newPage) => dispatch(setPage(newPage))}
+      onSearch={handleSearch}
+      value={searchData}
+      searchAction={executeSearch}
+      searchOptions={searchOptionsMenus}
+      selectedOption={searchField}
+      setSelectedSearchOption={(value) => dispatch(setSelectedSearchOption(value))}
+    />
   )
 }

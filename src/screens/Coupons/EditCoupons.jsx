@@ -6,6 +6,8 @@ import { useSelector } from "react-redux"
 import { useDispatch } from "react-redux"
 import { useNavigate } from "react-router-dom"
 import { updateCoupon } from "../../store/features/couponsSlice"
+import { editCouponSchema } from "../../utils/validationSchemas"
+import { zodResolver } from "@hookform/resolvers/zod"
 
 export const EditCoupon = () => {
   const dispatch = useDispatch()
@@ -20,6 +22,7 @@ export const EditCoupon = () => {
     watch,
     formState: { errors }
   } = useForm({
+    resolver: zodResolver(editCouponSchema),
     defaultValues: {
       ...selectedCoupon,
       couponType: selectedCoupon?.couponType || "fecha",
@@ -27,6 +30,8 @@ export const EditCoupon = () => {
       percentage: selectedCoupon?.percentage?.toString() || "5"
     }
   })
+
+  console.log(errors)
 
   const imageLocation = watch("images[0].location")
 

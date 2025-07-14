@@ -29,11 +29,11 @@ export default function Login() {
     try {
       const res = await authApi.login({ email, password })
 
-      if (res.status === "fail") {
+      if (res.status === "fail" || res?.data?.user?.role === "driver") {
         setIsLoading(false)
         showNotification({
           title: "Error",
-          message: res?.message,
+          message: "Usuario o contraseña incorrecta",
           color: "red"
         })
         return
@@ -55,29 +55,27 @@ export default function Login() {
   }
 
   return (
-    <>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <Flex direction="column" gap="md">
-          <InputField label="Correo" name="email" type="email" register={register} rules={emailRules} errors={errors} />
-          <InputField
-            label="Contraseña"
-            name="password"
-            type="password"
-            rules={passwordRules}
-            register={register}
-            errors={errors}
-          />
-          <Group justify="space-between" mt="md">
-            <Checkbox style={{ visibility: "hidden" }} color={colors.main_app_color} label="Recuérdame" />
-            <Link className="text-sm text-gray-300 hover:underline" to={AUTH_NAVIGATION_ROUTES.ForgetPassword.path}>
-              ¿Olvidaste tu contraseña?
-            </Link>
-          </Group>
-          <Button type="submit" loading={isLoading} fullWidth color={colors.main_app_color}>
-            Iniciar sesión
-          </Button>
-        </Flex>
-      </form>
-    </>
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <Flex direction="column" gap="md">
+        <InputField label="Correo" name="email" type="email" register={register} rules={emailRules} errors={errors} />
+        <InputField
+          label="Contraseña"
+          name="password"
+          type="password"
+          rules={passwordRules}
+          register={register}
+          errors={errors}
+        />
+        <Group justify="space-between" mt="md">
+          <Checkbox style={{ visibility: "hidden" }} color={colors.main_app_color} label="Recuérdame" />
+          <Link className="text-sm text-gray-300 hover:underline" to={AUTH_NAVIGATION_ROUTES.ForgetPassword.path}>
+            ¿Olvidaste tu contraseña?
+          </Link>
+        </Group>
+        <Button type="submit" loading={isLoading} fullWidth color={colors.main_app_color}>
+          Iniciar sesión
+        </Button>
+      </Flex>
+    </form>
   )
 }

@@ -9,6 +9,7 @@ import {
 } from "../../store/features/reservationsSlice"
 import TableViewLayout from "../TableViewLayout"
 import { searchOptionsReservations } from "../../utils/constants"
+import { NoPermissionsAnimation } from "../../components/Plans/NoPermissionsAnimation"
 
 export const Reservations = () => {
   const dispatch = useDispatch()
@@ -22,6 +23,9 @@ export const Reservations = () => {
   const loadingReservations = useSelector((state) => state.reservations.loadingReservations)
   const searchData = useSelector((state) => state.reservations.searchData)
   const searchField = useSelector((state) => state.reservations.searchField)
+  const haveReservationsModule = !!user?.Restaurant?.Subscription?.Plan?.PlanFeatures?.some(
+    (feature) => feature.featureCode === "reservations-module" && feature.PlanPlanFeatures?.avai === true
+  )
 
   useEffect(() => {
     if (!reservationsPerPage[page]) {
@@ -63,7 +67,7 @@ export const Reservations = () => {
     )
   }
 
-  return (
+  return haveReservationsModule ? (
     <>
       <TableViewLayout
         title="Reservaciones"
@@ -86,5 +90,7 @@ export const Reservations = () => {
         setSelectedSearchOption={(value) => dispatch(setSelectedSearchOption(value))}
       />
     </>
+  ) : (
+    <NoPermissionsAnimation moduleName="reservaciones" />
   )
 }

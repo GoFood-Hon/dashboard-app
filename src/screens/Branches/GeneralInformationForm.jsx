@@ -11,6 +11,12 @@ export default function GeneralInformationForm({ register, errors, setValue, ima
   const dispatch = useDispatch()
   const user = useSelector((state) => state.user.value)
   const status = useSelector(selectAllDishesCategoriesStatus)
+  const haveReservationsModule = !!user?.Restaurant?.Subscription?.Plan?.PlanFeatures?.some(
+    (feature) => feature.featureCode === "reservations-module" && feature.PlanPlanFeatures?.avai === true
+  )
+  const haveOnSiteModule = !!user?.Restaurant?.Subscription?.Plan?.PlanFeatures?.some(
+    (feature) => feature.featureCode === "on-site-service-module" && feature.PlanPlanFeatures?.avai === true
+  )
 
   const handleDrop = (acceptedFiles) => {
     if (acceptedFiles.length > 0) {
@@ -51,14 +57,21 @@ export default function GeneralInformationForm({ register, errors, setValue, ima
               <InputTextAreaField label="Nota (Opcional)" name="note" register={register} errors={errors} />
             </Grid.Col>
             <Grid.Col span={{ base: 12 }}>
-              <Text size="sm">
-                Marca las opciones disponibles para esta sucursal:
-              </Text>
+              <Text size="sm">Marca las opciones disponibles para esta sucursal:</Text>
               <Group>
                 <InputCheckbox label="Servicio a domicilio" name="delivery" register={register} labelPosition="right" />
                 <InputCheckbox label="Recoger en tienda" name="pickup" register={register} labelPosition="right" />
-                <InputCheckbox label="Comer en sitio" name="onSite" register={register} labelPosition="right" />
-                <InputCheckbox label="Permite reservaciones" name="allowTableBooking" register={register} labelPosition="right" />
+                {haveOnSiteModule && (
+                  <InputCheckbox label="Venta en mesa" name="onSite" register={register} labelPosition="right" />
+                )}
+                {haveReservationsModule && (
+                  <InputCheckbox
+                    label="Permite reservaciones"
+                    name="allowTableBooking"
+                    register={register}
+                    labelPosition="right"
+                  />
+                )}
               </Group>
             </Grid.Col>
           </Grid>

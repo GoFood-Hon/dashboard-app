@@ -23,62 +23,62 @@ export const NAVIGATION_ROUTES_SUPER_ADMIN = {
 
   Restaurants: {
     label: "Comercios",
-    path: "/comercios",
+    path: "/shops",
     icon: "branch",
     NewRestaurant: {
-      path: "/comercios/nuevoComercio"
+      path: "/shops/new-shop"
     },
     RestaurantDetails: {
-      path: "/comercios/:restaurantId"
+      path: "/shops/:restaurantId"
     }
   },
 
   Users: {
     label: "Administradores",
-    path: "/administradores",
+    path: "/administrators",
     icon: "users",
     NewUser: {
-      path: "/administradores/nuevoAdministrador"
+      path: "/administrators/new-admin"
     },
     UserDetails: {
-      path: "/administradores/:adminId"
+      path: "/administrators/:adminId"
     }
   },
 
   Plans: {
     label: "Planes",
-    path: "/planes",
+    path: "/plans",
     icon: "creditCard",
     NewPlan: {
       label: "Nuevo Plan",
-      path: "/planes/nuevoPlan"
+      path: "/plans/new-plan"
     },
     PlanDetails: {
       label: "Detalles del Plan",
-      path: "/planes/:planId"
+      path: "/plans/:planId"
     }
   },
   Account: {
     label: "Cuenta",
     icon: "users",
-    path: "/miCuenta"
+    path: "/my-account"
   },
   KitchenTypesAndTags: {
-    path: "/tipos-establecimientos-categorias"
+    path: "/shop-types-and-categories"
   },
   Collections: {
-    path: "/lista-de-colecciones",
+    path: "/collections",
     NewCollection: {
-      path: "/lista-de-colecciones/nueva-coleccion"
+      path: "/collections/new-collection"
     },
     EditCollection: {
-      path: "/lista-de-colecciones/:collectionId"
+      path: "/collections/:collectionId"
     }
   },
   Loyalty: {
-    path: "/programas-de-lealtad",
+    path: "/loyalty-programs",
     EditLoyalty: {
-      path: "/programas-de-lealtad/:loyaltyId"
+      path: "/loyalty-programs/:loyaltyId"
     }
   }
 }
@@ -92,19 +92,19 @@ export const NAVIGATION_ROUTES_SUPER_ADMIN_TWO = [
     links: [
       {
         label: "Lista de comercios",
-        link: "/comercios"
+        link: "/shops"
       },
       {
         label: "Tipos de establecimientos y categorías",
-        link: "/tipos-establecimientos-categorias"
+        link: "/shop-types-and-categories"
       }
     ]
   },
-  { label: "Colecciones", icon: IconListDetails, link: "/lista-de-colecciones" },
-  { label: "Administradores", icon: IconUsers, link: "/administradores" },
-  { label: "Programas de lealtad", icon: IconAward, link: "/programas-de-lealtad" },
-  { label: "Planes", icon: IconCreditCard, link: "/planes" },
-  { label: "Cuenta", icon: IconSettings, link: "/miCuenta" }
+  { label: "Colecciones", icon: IconListDetails, link: "/collections" },
+  { label: "Administradores", icon: IconUsers, link: "/administrators" },
+  { label: "Programas de lealtad", icon: IconAward, link: "/loyalty-programs" },
+  { label: "Planes", icon: IconCreditCard, link: "/plans" },
+  { label: "Cuenta", icon: IconSettings, link: "/my-account" }
 ]
 
 export const NAVIGATION_ROUTES_RES_ADMIN = {
@@ -115,89 +115,89 @@ export const NAVIGATION_ROUTES_RES_ADMIN = {
   },
   Pedidos: {
     label: "Pedidos",
-    path: "/pedidos",
+    path: "/orders",
     icon: "shoppingCart",
     OrderDetails: {
       label: "Detalles del pedido",
-      path: "/pedidos/:orderId"
+      path: "/orders/:orderId"
     },
     OrderPurchasesHistory: {
       label: "Historial de compras del pedido",
-      path: "/pedidos/historial-compras"
+      path: "/orders/purchase-history"
     }
   },
   Menu: {
     label: "Menú",
     icon: "menu",
-    path: "/menu",
+    path: "/menus",
     MenuDetails: {
       label: "Detalles del menu",
-      path: "/menu/:menuId"
+      path: "/menus/:menuId"
     },
     NewMenu: {
-      path: "/menu/nuevoMenu"
+      path: "/menus/new-menu"
     },
     submenu: {
       Dishes: {
         label: "Productos",
         icon: "menu",
-        path: "/menu/productos",
+        path: "/menus/products",
         DishDetails: {
           label: "Detalles del producto",
-          path: "/menu/productos/:dishId"
+          path: "/menus/products/:dishId"
         },
         NewDish: {
-          path: "/menu/productos/nuevoProducto"
+          path: "/menus/products/new-product"
         }
       }
     }
   },
   Branches: {
     label: "Sucursales",
-    path: "/sucursales",
+    path: "/branches",
     icon: "branch",
     NewBranch: {
-      path: "/sucursales/nuevaSucursal"
+      path: "/branches/new-branch"
     },
     BranchDetail: {
-      path: "/sucursales/:branchId"
+      path: "/branches/:branchId"
     }
   },
   Reservations: {
-    path: "/lista-de-reservaciones",
+    path: "/reservations",
     ReservationDetails: {
-      path: "/lista-de-reservaciones/:reservationId"
+      path: "/reservations/:reservationId"
     }
   },
   Users: {
     label: "Usuarios",
-    path: "/usuarios",
+    path: "/users",
     icon: "users",
     UserDetails: {
       label: "Detalles de usuario",
-      path: "/usuarios/:userId"
+      path: "/users/:userId"
     },
     NewUser: {
-      path: "/usuarios/nuevoUsuario"
+      path: "/users/new-user"
     }
   },
   Settings: {
     label: "Configuraciones",
     icon: "setting",
-    path: "/configuraciones/"
+    path: "/settings/"
   },
   Loyalty: {
-    path: "/programas-de-lealtad",
+    path: "/loyalty-program",
     RewardsTracking: {
-      path: "/seguimiento-de-recompensas"
+      path: "/rewards-tracking"
     },
     EditLoyalty: {
-      path: "/lista-de-colecciones/:collectionId"
+      path: "/collections/:collectionId"
     }
   },
   Reviews: {
     label: "Reseñas",
-    path: "/reseñas",
+    path: "/reviews",
     icon: "star"
   }
 }
@@ -211,11 +211,11 @@ export const NAVIGATION_ROUTES_RES_ADMIN_TWO = [
     links: [
       {
         label: "Lista de pedidos",
-        link: "/pedidos"
+        link: "/orders"
       },
       {
         label: "Historial de compras",
-        link: "/pedidos/historial-compras"
+        link: "/orders/purchase-history"
       }
     ]
   },
@@ -226,15 +226,15 @@ export const NAVIGATION_ROUTES_RES_ADMIN_TWO = [
     links: [
       {
         label: "Lista de menús",
-        link: "/menu"
+        link: "/menus"
       },
       {
         label: "Productos",
-        link: "/menu/productos"
+        link: "/menus/products"
       }
     ]
   },
-  { label: "Reservaciones", icon: IconCalendarDue, link: "/lista-de-reservaciones" },
+  { label: "Reservaciones", icon: IconCalendarDue, link: "/reservations" },
   {
     label: "Programa de lealtad",
     icon: IconAward,
@@ -242,17 +242,17 @@ export const NAVIGATION_ROUTES_RES_ADMIN_TWO = [
     links: [
       {
         label: "Datos del programa",
-        link: "/programas-de-lealtad"
+        link: "/loyalty-program"
       },
       {
         label: "Seguimiento de recompensas",
-        link: "/seguimiento-de-recompensas"
+        link: "/rewards-tracking"
       }
     ]
   },
-  { label: "Sucursales", icon: IconBuildingStore, link: "/sucursales" },
-  { label: "Reseñas", icon: IconStar, link: "/reseñas" },
-  { label: "Usuarios", icon: IconUsers, link: "/usuarios" },
+  { label: "Sucursales", icon: IconBuildingStore, link: "/branches" },
+  { label: "Reseñas", icon: IconStar, link: "/reviews" },
+  { label: "Usuarios", icon: IconUsers, link: "/users" },
   {
     label: "Configuraciones",
     icon: IconSettings,
@@ -260,11 +260,11 @@ export const NAVIGATION_ROUTES_RES_ADMIN_TWO = [
     links: [
       {
         label: "Datos del comercio",
-        link: "/configuraciones/general"
+        link: "/settings/shop-information"
       },
       {
         label: "Cuenta",
-        link: "/configuraciones/cuenta"
+        link: "/settings/my-account"
       }
     ]
   },
@@ -275,19 +275,19 @@ export const NAVIGATION_ROUTES_RES_ADMIN_TWO = [
     links: [
       {
         label: "Promociones",
-        link: "/configuraciones/lista-de-promociones"
+        link: "/settings/promotions"
       },
       {
         label: "Cupones",
-        link: "/configuraciones/lista-de-cupones"
+        link: "/settings/coupons"
       },
       // {
       //   label: "Bancos",
-      //   link: "/configuraciones/bancos"
+      //   link: "/settings/bancos"
       // },
       {
         label: "Administrar plan",
-        link: "/configuraciones/plan"
+        link: "/settings/plan-administration"
       }
     ]
   }
@@ -301,60 +301,60 @@ export const NAVIGATION_ROUTES_BRANCH_ADMIN = {
   },
   Pedidos: {
     label: "Pedidos",
-    path: "/pedidos",
+    path: "/orders",
     icon: "shoppingCart",
     OrderDetails: {
       label: "Detalles del pedido",
-      path: "/pedidos/:orderId"
+      path: "/orders/:orderId"
     },
     OrderPurchasesHistory: {
       label: "Historial de compras del pedido",
-      path: "/pedidos/historial-compras"
+      path: "/orders/purchase-history"
     }
   },
   Menu: {
     label: "Menú",
     icon: "menu",
-    path: "/menu",
+    path: "/menus",
     MenuDetails: {
       label: "Detalles del menu",
-      path: "/menu/:menuId"
+      path: "/menus/:menuId"
     },
     NewMenu: {
-      path: "/menu/nuevoMenu"
+      path: "/menus/new-menu"
     }
   },
   Dishes: {
     label: "Productos",
     icon: "chefHat",
-    path: "menu/productos",
+    path: "menus/products",
     DishDetails: {
       label: "Detalles del producto",
-      path: "menu/productos/:dishId"
+      path: "menus/products/:dishId"
     }
   },
   Reservations: {
-    path: "/lista-de-reservaciones",
+    path: "/reservations",
     ReservationDetails: {
-      path: "/lista-de-reservaciones/:reservationId"
+      path: "/reservations/:reservationId"
     }
   },
   Complements: {
     label: "Complementos",
     icon: "menu",
-    path: "/menu/complementos",
+    path: "/menus/complementos",
     ComplementDetails: {
       label: "Detalles del complemento",
-      path: "/menu/complementos/:complementId"
+      path: "/menus/complementos/:complementId"
     },
     NewComplement: {
-      path: "/menu/complementos/nuevoComplemento"
+      path: "/menus/complementos/nuevoComplemento"
     }
   },
   Account: {
     label: "Cuenta",
     icon: "users",
-    path: "/miCuenta"
+    path: "/my-account"
   },
   Password: {
     label: "Contraseña",
@@ -364,7 +364,7 @@ export const NAVIGATION_ROUTES_BRANCH_ADMIN = {
   Reviews: {
     label: "Reseñas",
     icon: "star",
-    path: "/reseñas"
+    path: "/reviews"
   }
 }
 
@@ -377,11 +377,11 @@ export const NAVIGATION_ROUTES_BRANCH_ADMIN_TWO = [
     links: [
       {
         label: "Lista de pedidos",
-        link: "/pedidos"
+        link: "/orders"
       },
       {
         label: "Historial de compras",
-        link: "/pedidos/historial-compras"
+        link: "/orders/purchase-history"
       }
     ]
   },
@@ -392,20 +392,20 @@ export const NAVIGATION_ROUTES_BRANCH_ADMIN_TWO = [
     links: [
       {
         label: "Lista de menús",
-        link: "/menu"
+        link: "/menus"
       },
       {
         label: "Productos",
-        link: "/menu/productos"
+        link: "/menus/products"
       }
     ]
   },
-  { label: "Reservaciones", icon: IconCalendarDue, link: "/lista-de-reservaciones" },
-  { label: "Reseñas", icon: IconStar, link: "/reseñas" },
+  { label: "Reservaciones", icon: IconCalendarDue, link: "/reservations" },
+  { label: "Reseñas", icon: IconStar, link: "/reviews" },
   {
     label: "Cuenta",
     icon: IconSettings,
-    link: "/miCuenta"
+    link: "/my-account"
   }
 ]
 
@@ -417,44 +417,44 @@ export const NAVIGATION_ROUTES_CASHIER = {
   },
   Pedidos: {
     label: "Pedidos",
-    path: "/pedidos",
+    path: "/orders",
     icon: "shoppingCart",
     OrderDetails: {
       label: "Detalles del pedido",
-      path: "/pedidos/:orderId"
+      path: "/orders/:orderId"
     }
   },
   Menu: {
     label: "Menú",
     icon: "menu",
-    path: "/menu",
+    path: "/menus",
     MenuDetails: {
       label: "Detalles del menu",
-      path: "/menu/:menuId"
+      path: "/menus/:menuId"
     },
     NewMenu: {
-      path: "/menu/nuevoMenu"
+      path: "/menus/new-menu"
     }
   },
   Dishes: {
     label: "Productos",
     icon: "chefHat",
-    path: "menu/productos",
+    path: "menus/products",
     DishDetails: {
       label: "Detalles del producto",
-      path: "menu/productos/:dishId"
+      path: "menus/products/:dishId"
     }
   },
   Account: {
     label: "Cuenta",
     icon: "users",
-    path: "/miCuenta"
+    path: "/my-account"
   }
 }
 
 export const NAVIGATION_ROUTES_CASHIER_TWO = [
   { label: "Inicio", icon: IconHome, link: "/" },
-  { label: "Pedidos", icon: IconBox, link: "/pedidos" },
+  { label: "Pedidos", icon: IconBox, link: "/orders" },
   {
     label: "Menús",
     icon: IconToolsKitchen,
@@ -462,18 +462,18 @@ export const NAVIGATION_ROUTES_CASHIER_TWO = [
     links: [
       {
         label: "Lista de menús",
-        link: "/menu"
+        link: "/menus"
       },
       {
         label: "Productos",
-        link: "/menu/productos"
+        link: "/menus/products"
       }
     ]
   },
   {
     label: "Cuenta",
     icon: IconSettings,
-    link: "/miCuenta"
+    link: "/my-account"
   }
 ]
 
@@ -485,26 +485,26 @@ export const NAVIGATION_ROUTES_KITCHEN = {
   },
   Orders: {
     label: "Pedidos",
-    path: "/pedidos",
+    path: "/active-orders",
     icon: "shoppingCart",
     OrderDetails: {
       label: "Detalles del pedido",
-      path: "/pedidos/:orderId"
+      path: "/orders-history/:orderId"
     }
   },
   OrderHistory: {
     label: "Historial",
-    path: "/historialDelPedido",
+    path: "/orders-history",
     icon: "invoice",
     OrderHistoryDetails: {
       label: "Detalles del historial del pedido",
-      path: "/pedidos/:orderId"
+      path: "/orders-history/:orderId"
     }
   },
   Account: {
     label: "Cuenta",
     icon: "users",
-    path: "/miCuenta"
+    path: "/my-account"
   },
   Password: {
     label: "Contraseña",
@@ -515,16 +515,16 @@ export const NAVIGATION_ROUTES_KITCHEN = {
 
 export const NAVIGATION_ROUTES_KITCHEN_TWO = [
   { label: "Inicio", icon: IconHome, link: "/" },
-  { label: "Pedidos activos", icon: IconBox, link: "/pedidos" },
-  { label: "Historial de pedidos", icon: IconHistory, link: "/historialDelPedido" },
-  { label: "Cuenta", icon: IconSettings, link: "/miCuenta" }
+  { label: "Pedidos activos", icon: IconBox, link: "/active-orders" },
+  { label: "Historial de pedidos", icon: IconHistory, link: "/orders-history" },
+  { label: "Cuenta", icon: IconSettings, link: "/my-account" }
 ]
 
 export const SETTING_NAVIGATION_ROUTES = {
   General: {
     type: "button",
     label: "General",
-    path: "/configuraciones/general",
+    path: "/settings/shop-information",
     icon: "configuration"
   },
   Profile: {
@@ -533,13 +533,13 @@ export const SETTING_NAVIGATION_ROUTES = {
   Cuenta: {
     type: "button",
     label: "Cuenta",
-    path: "/configuraciones/cuenta",
+    path: "/settings/my-account",
     icon: "user"
   },
   Password: {
     type: "button",
     label: "Contraseña",
-    path: "/configuraciones/contraseña",
+    path: "/settings/contraseña",
     icon: "password"
   },
   Business: {
@@ -548,35 +548,35 @@ export const SETTING_NAVIGATION_ROUTES = {
   Business_btn: {
     type: "button",
     label: "Negocios",
-    path: "/configuraciones/negocios",
+    path: "/settings/negocios",
     icon: "building"
   },
   Promotions: {
     type: "button",
     label: "Promociones",
-    path: "/configuraciones/lista-de-promociones",
+    path: "/settings/promotions",
     icon: "label",
     newPromotion: {
       label: "Nueva Promoción",
-      path: "/configuraciones/lista-de-promociones/nueva-promocion"
+      path: "/settings/promotions/new-promotion"
     },
     editPromotion: {
       label: "Editar Promoción",
-      path: "/configuraciones/lista-de-promociones/:promotionId"
+      path: "/settings/promotions/:promotionId"
     }
   },
   Coupons: {
     type: "button",
     label: "Cupones",
-    path: "/configuraciones/lista-de-cupones",
+    path: "/settings/coupons",
     icon: "label",
     newCoupon: {
       label: "Nuevo cupón",
-      path: "/configuraciones/lista-de-cupones/nuevo-cupon"
+      path: "/settings/coupons/new-coupon"
     },
     editCoupon: {
       label: "Editar cupón",
-      path: "/configuraciones/lista-de-cupones/:couponId"
+      path: "/settings/coupons/:couponId"
     }
   },
 
@@ -586,13 +586,13 @@ export const SETTING_NAVIGATION_ROUTES = {
   Bank: {
     type: "button",
     label: "Bancos",
-    path: "/configuraciones/bancos",
+    path: "/settings/bancos",
     icon: "bank"
   },
   Plan: {
     type: "button",
     label: "Plan",
-    path: "/configuraciones/plan",
+    path: "/settings/plan-administration",
     icon: "creditCard"
   },
 
@@ -602,7 +602,7 @@ export const SETTING_NAVIGATION_ROUTES = {
   Administrative: {
     type: "button",
     label: "Administrable",
-    path: "/configuraciones/administrable",
+    path: "/settings/administrable",
     icon: "vrDesign"
   }
 }
@@ -610,18 +610,18 @@ export const SETTING_NAVIGATION_ROUTES = {
 export const AUTH_NAVIGATION_ROUTES = {
   Login: {
     label: "Login",
-    path: "/iniciarSesión"
+    path: "/sign-in"
   },
   Register: {
     label: "Register",
-    path: "/Registrarse"
+    path: "/register"
   },
   ForgetPassword: {
     label: "Forget Password",
-    path: "/olvideMiContraseña"
+    path: "/forgot-password"
   },
   Logout: {
     label: "Logout",
-    path: "/CerrarSesión"
+    path: "/sign-out"
   }
 }

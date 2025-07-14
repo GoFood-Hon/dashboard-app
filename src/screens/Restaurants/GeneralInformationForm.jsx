@@ -90,7 +90,7 @@ export const GeneralInformationForm = ({ register, control, errors, setValue, im
                 disabled={blocked}
               />
             </Grid.Col>
-            <Grid.Col span={{ base: 12, md: 6 }}>
+            <Grid.Col span={{ base: 12, md: 6 }} className="mt-4">
               <InputCheckbox label="¿Cuenta con envío gratis?" name="shippingFree" register={register} />
             </Grid.Col>
 

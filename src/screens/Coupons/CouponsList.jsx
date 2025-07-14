@@ -26,8 +26,9 @@ export default function CouponsList() {
   const [opened, { close, open }] = useDisclosure(false)
   const user = useSelector((state) => state.user.value)
   const haveCouponsModule = !!user?.Restaurant?.Subscription?.Plan?.PlanFeatures?.some(
-    (feature) => feature.featureCode === "promotions-coupon"
+    (feature) => feature.featureCode === "promotions-coupon" && feature.PlanPlanFeatures?.avai === true
   )
+  console.log(user?.Restaurant?.Subscription?.Plan?.PlanFeatures)
 
   const handleNewCoupon = () => {
     navigate(SETTING_NAVIGATION_ROUTES.Coupons.newCoupon.path)
@@ -81,6 +82,6 @@ export default function CouponsList() {
       />
     </>
   ) : (
-    <NoPermissionsAnimation moduleName='cupones' />
+    <NoPermissionsAnimation moduleName="cupones" />
   )
 }

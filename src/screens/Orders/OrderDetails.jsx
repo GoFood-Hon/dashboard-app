@@ -21,7 +21,8 @@ import {
   Skeleton,
   CopyButton,
   Tooltip,
-  ActionIcon
+  ActionIcon,
+  rem
 } from "@mantine/core"
 import React, { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
@@ -75,7 +76,7 @@ export const OrderDetails = () => {
   const [opened, { open, close }] = useDisclosure(false)
   const [openedModal, { open: openModal, close: closeModal }] = useDisclosure(false)
   const [openedComments, { open: openModalComment, close: closeModalComment }] = useDisclosure(false)
-  const isSmallScreen = useMediaQuery("(max-width: 767px)")
+  const isSmallScreen = useMediaQuery("(max-width: 768px)")
   const getInitialStep = () => {
     const serviceSteps = orderStates[orderDetails?.serviceType] || []
     const matchingStep = serviceSteps.find((step) => step.value === orderDetails.status)
@@ -116,24 +117,58 @@ export const OrderDetails = () => {
             </Group>
             <Paper withBorder p="md" radius="md" bg={orderDetails?.status === "canceled" ? "red" : ""}>
               {orderDetails?.status !== "canceled" ? (
-                <Stepper
-                  active={active}
-                  color={colors.main_app_color}
-                  size={isSmallScreen ? "xs" : "sm"}
-                  onStepClick={setActive}
-                  allowNextStepsSelect={false}
-                  completedIcon={<IconCircleCheck size="1.8rem" />}>
-                  {orderStates[orderDetails?.serviceType]?.map((item, index) => (
-                    <Stepper.Step
-                      key={index}
-                      allowStepSelect={false}
-                      icon={<item.icon size="1.2rem" />}
-                      label={`Paso ${index + 1}`}
-                      description={item.label}
-                      loading={index === active}
-                    />
-                  ))}
-                </Stepper>
+                isSmallScreen ? (
+                  <ScrollArea>
+                    <Stepper
+                      active={active}
+                      onStepClick={setActive}
+                      allowNextStepsSelect={false}
+                      color={colors.main_app_color}
+                      size="xs"
+                      completedIcon={<IconCircleCheck size="1.8rem" />}
+                      orientation="horizontal"
+                      style={{
+                        display: "flex",
+                        gap: rem(24),
+                        minWidth: "max-content",
+                        paddingBottom: rem(8)
+                      }}>
+                      {orderStates[orderDetails?.serviceType]?.map((item, index) => (
+                        <Stepper.Step
+                          key={index}
+                          allowStepSelect={false}
+                          icon={<item.icon size="1.2rem" />}
+                          label={`Paso ${index + 1}`}
+                          description={item.label}
+                          loading={index === active}
+                          style={{
+                            scrollSnapAlign: "center",
+                            flex: "0 0 auto"
+                          }}
+                        />
+                      ))}
+                    </Stepper>
+                  </ScrollArea>
+                ) : (
+                  <Stepper
+                    active={active}
+                    color={colors.main_app_color}
+                    size="sm"
+                    onStepClick={setActive}
+                    allowNextStepsSelect={false}
+                    completedIcon={<IconCircleCheck size="1.8rem" />}>
+                    {orderStates[orderDetails?.serviceType]?.map((item, index) => (
+                      <Stepper.Step
+                        key={index}
+                        allowStepSelect={false}
+                        icon={<item.icon size="1.2rem" />}
+                        label={`Paso ${index + 1}`}
+                        description={item.label}
+                        loading={index === active}
+                      />
+                    ))}
+                  </Stepper>
+                )
               ) : (
                 <Flex align="center" justify="center" gap="xs">
                   <IconCancel color="white" size={40} />
@@ -153,6 +188,7 @@ export const OrderDetails = () => {
                         p="md"
                         direction="column"
                         justify="space-between"
+                        gap={isSmallScreen && 3}
                         style={{
                           backgroundColor: "rgba(0, 0, 0, 0.45)",
                           height: "100%",
@@ -164,7 +200,7 @@ export const OrderDetails = () => {
                           </Text>
                           <Text c="white">{orderDetails?.Sucursal?.city + ", " + orderDetails?.Sucursal?.state}</Text>
                         </Flex>
-                        <Flex justify="space-between">
+                        <Flex direction={isSmallScreen ? 'column' : 'row'} gap={isSmallScreen && 3} justify="space-between">
                           <Flex c="white" align="center" gap={2}>
                             {orderDetails?.serviceType === "delivery" ? (
                               <IconMotorbike size="1.1rem" />
@@ -429,11 +465,12 @@ export const OrderDetails = () => {
                                   No hay acciones pendientes
                                 </Text>
                               )
-                            ) : (
+                            ) : orderDetails?.status === orderStatusValues.delivered ||
+                              orderDetails?.status === orderStatusValues.canceled ? (
                               <Text size={isSmallScreen ? "xs" : "sm"} c="dimmed">
                                 No hay acciones pendientes
                               </Text>
-                            )}
+                            ) : null}
 
                             {orderDetails?.status !== orderStatusValues.delivered &&
                               orderDetails?.status !== orderStatusValues.onDelivery &&

@@ -28,7 +28,8 @@ const TableViewLayout = ({
   searchOptions = [],
   selectedOption,
   setSelectedSearchOption,
-  noCounts
+  noCounts,
+  openModal
 }) => {
   const isSmallScreen = useMediaQuery("(max-width: 430px)")
 
@@ -95,6 +96,7 @@ const TableViewLayout = ({
         loadingData={loading}
         setPage={setPage}
         deleteAction={deleteAction}
+        openModal={openModal}
       />
     </Stack>
   )

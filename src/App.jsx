@@ -250,7 +250,7 @@ function App() {
 
             <Route path={NAVIGATION_ROUTES_KITCHEN.OrderHistory.path} element={<OrderHistory />} />
 
-            <Route path={NAVIGATION_ROUTES_KITCHEN.Orders.OrderDetails.path} element={<OrderDetails />} />
+            <Route path={NAVIGATION_ROUTES_KITCHEN.OrderHistory.OrderHistoryDetails.path} element={<OrderDetails />} />
 
             <Route path={NAVIGATION_ROUTES_KITCHEN.Account.path} element={<AccountSettings />} />
 
@@ -293,11 +293,7 @@ function App() {
       </>
     )
   )
-  return (
-    <NotificationProvider>
-      <RouterProvider router={router} />
-    </NotificationProvider>
-  )
+  return <RouterProvider router={router} />
 }
 
 export default App

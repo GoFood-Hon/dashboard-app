@@ -4,7 +4,7 @@ import { useNavigate, useParams } from "react-router-dom"
 import { GeneralInformationForm } from "./GeneralInformationForm"
 import restaurantsApi from "../../api/restaurantApi"
 import { NAVIGATION_ROUTES_SUPER_ADMIN } from "../../routes"
-import { convertToDecimal } from "../../utils"
+import { convertToDecimal, onError } from "../../utils"
 import { showNotification } from "@mantine/notifications"
 import { useSelector } from "react-redux"
 import { colors } from "../../theme/colors"
@@ -256,24 +256,16 @@ export const EditRestaurant = () => {
   })
 
   return (
-    <>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <FormLayout
-          title={restaurantDetails?.name}
-          show
-          accordionStructure={filteredAccordionStructure}
-          accordionTitles={[
-            "Añadir banner",
-            "Información general",
-            "Datos de reservación",
-            "Redes sociales",
-            "Selección del plan"
-          ]}
-          navigate={() => navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Restaurants.path)}
-          isLoading={isLoading}
-          update
-        />
-      </form>
-    </>
+    <form onSubmit={handleSubmit(onSubmit, onError)}>
+      <FormLayout
+        title={restaurantDetails?.name}
+        show
+        accordionStructure={filteredAccordionStructure}
+        accordionTitles={["Añadir banner", "Información general", "Datos de reservación", "Redes sociales", "Selección del plan"]}
+        navigate={() => navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Restaurants.path)}
+        isLoading={isLoading}
+        update
+      />
+    </form>
   )
 }

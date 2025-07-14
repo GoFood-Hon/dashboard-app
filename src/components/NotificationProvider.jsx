@@ -5,11 +5,14 @@ import { USER_ROLES } from "../utils/constants"
 import { useSelector, useDispatch } from "react-redux"
 import { setNewOrder, setOrderStatus } from "../store/features/ordersSlice"
 import notificationSound from "../assets/sound/notificationSound.wav"
+import { useNavigate } from "react-router-dom"
+import { Button, Flex, Text } from "@mantine/core"
 
 export const NotificationProvider = ({ children }) => {
   const user = useSelector((state) => state.user.value)
   const orderSocket = useSocket()
   const dispatch = useDispatch()
+  const navigate = useNavigate()
 
   useEffect(() => {
     if (!orderSocket) return
@@ -24,10 +27,33 @@ export const NotificationProvider = ({ children }) => {
     const handleNewOrder = (order) => {
       playSound()
       notifications.show({
+        id: order.id,
         title: "Nueva orden",
-        message: `El usuario ${order?.Order?.User?.name} hizo un pedido ${order?.serviceType === "delivery" ? "a domicilio" : order?.serviceType === "onSite" ? "para comer en restaurante" : "para llevar"}`,
+        message: (
+          <Flex direction="row" align="center" justify="space-between">
+            <Text size="sm">
+              El usuario {order?.Order?.User?.name} hizo un pedido{" "}
+              {order?.serviceType === "delivery"
+                ? "a domicilio"
+                : order?.serviceType === "onSite"
+                  ? "para comer en restaurante"
+                  : "para llevar"}
+            </Text>
+            <Button
+              size="xs"
+              variant="light"
+              w="120px"
+              color="green"
+              onClick={() => {
+                navigate(`/orders/${order.id}`)
+                notifications.hide(order.id)
+              }}>
+              Ver pedido
+            </Button>
+          </Flex>
+        ),
         autoClose: false,
-        withCloseButton: true,
+        withCloseButton: false,
         color: "green"
       })
       try {
@@ -35,16 +61,31 @@ export const NotificationProvider = ({ children }) => {
       } catch (error) {
         console.error("Error al despachar la acción setNewOrder:", error)
       }
-      console.log(order)
     }
 
     const handleOrderReady = (order) => {
       playSound()
       notifications.show({
-        title: "Orden preparada",
-        message: "El pedido se marcó como preparado desde cocina",
+        id: order.id,
+        title: "Nueva orden",
+        message: (
+          <Flex direction="row" align="center" justify="space-between">
+            <Text size="sm">El pedido se marcó como preparado desde cocina</Text>
+            <Button
+              size="xs"
+              variant="light"
+              w="120px"
+              color="green"
+              onClick={() => {
+                navigate(`/orders/${order.id}`)
+                notifications.hide(order.id)
+              }}>
+              Ver pedido
+            </Button>
+          </Flex>
+        ),
         autoClose: false,
-        withCloseButton: true,
+        withCloseButton: false,
         color: "green"
       })
       dispatch(setOrderStatus(order))
@@ -53,20 +94,20 @@ export const NotificationProvider = ({ children }) => {
     const handleOrderUpdate = (order) => {
       playSound()
       user.role === USER_ROLES.kitchen
-      ? notifications.show({
-        title: "Nueva orden",
-        message: "Se agregó un nuevo pedido a la lista de pedidos en curso",
-        autoClose: false,
-        withCloseButton: true,
-        color: "green"
-      })
-      : notifications.show({
-        title: "Orden confirmada",
-        message: `El administrador de ${user.role === USER_ROLES.administrator ? "restaurante" : "sucursal"} confirmó la orden`,
-        autoClose: false,
-        withCloseButton: true,
-        color: "green"
-      })
+        ? notifications.show({
+            title: "Nueva orden",
+            message: "Se agregó un nuevo pedido a la lista de pedidos en curso",
+            autoClose: true,
+            withCloseButton: true,
+            color: "green"
+          })
+        : notifications.show({
+            title: "Orden confirmada",
+            message: `El administrador de ${user.role === USER_ROLES.administrator ? "restaurante" : "sucursal"} confirmó la orden`,
+            autoClose: false,
+            withCloseButton: true,
+            color: "green"
+          })
       user.role === USER_ROLES.kitchen && dispatch(setNewOrder(order))
       dispatch(setOrderStatus(order))
     }
@@ -76,7 +117,7 @@ export const NotificationProvider = ({ children }) => {
       notifications.show({
         title: "Conductor asignado",
         message: "Se asignó un conductor a la orden",
-        autoClose: false,
+        autoClose: true,
         withCloseButton: true,
         color: "green"
       })
@@ -86,10 +127,26 @@ export const NotificationProvider = ({ children }) => {
     const handleOrderPickedUp = (order) => {
       playSound()
       notifications.show({
-        title: "Orden en camino",
-        message: "El repartidor recogió el pedido y va en camino a entregarlo",
+        id: order.id,
+        title: "Nueva orden",
+        message: (
+          <Flex direction="row" align="center" justify="space-between">
+            <Text size="sm">El repartidor recogió el pedido y va en camino a entregarlo</Text>
+            <Button
+              size="xs"
+              variant="light"
+              w="120px"
+              color="green"
+              onClick={() => {
+                navigate(`/orders/${order.id}`)
+                notifications.hide(order.id)
+              }}>
+              Ver pedido
+            </Button>
+          </Flex>
+        ),
         autoClose: false,
-        withCloseButton: true,
+        withCloseButton: false,
         color: "green"
       })
       dispatch(setOrderStatus(order))
@@ -98,10 +155,26 @@ export const NotificationProvider = ({ children }) => {
     const handleOrderDelivered = (order) => {
       playSound()
       notifications.show({
-        title: "Orden entregada",
-        message: "El repartidor marcó el pedido como entregado",
+        id: order.id,
+        title: "Nueva orden",
+        message: (
+          <Flex direction="row" align="center" justify="space-between">
+            <Text size="sm">El repartidor marcó el pedido como entregado</Text>
+            <Button
+              size="xs"
+              variant="light"
+              w="120px"
+              color="green"
+              onClick={() => {
+                navigate(`/orders/${order.id}`)
+                notifications.hide(order.id)
+              }}>
+              Ver pedido
+            </Button>
+          </Flex>
+        ),
         autoClose: false,
-        withCloseButton: true,
+        withCloseButton: false,
         color: "green"
       })
       dispatch(setOrderStatus(order))

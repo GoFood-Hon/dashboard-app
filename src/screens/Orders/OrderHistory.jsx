@@ -45,7 +45,7 @@ export const OrderHistory = () => {
             orderDate: order?.paidDate
           }
         })}
-        tableStructure="ordersScreen"
+        tableStructure="orderHistoryScreen"
         totalItems={totalPageCount}
         loading={loadingOrders}
         setPage={(newPage) => dispatch(setCurrentPage(newPage))}
