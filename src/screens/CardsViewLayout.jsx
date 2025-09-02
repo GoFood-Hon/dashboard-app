@@ -231,15 +231,17 @@ const CardsViewLayout = ({
           </Flex>
         </Group>
       )}
-      <SearchComponent
-        onSearch={onSearch}
-        elementName={elementsName}
-        value={value}
-        searchAction={searchAction}
-        searchOptions={searchOptions}
-        selectedOption={selectedOption}
-        setSelectedSearchOption={setSelectedSearchOption}
-      />
+      {user.role !== "kitchen" && (
+        <SearchComponent
+          onSearch={onSearch}
+          elementName={elementsName}
+          value={value}
+          searchAction={searchAction}
+          searchOptions={searchOptions}
+          selectedOption={selectedOption}
+          setSelectedSearchOption={setSelectedSearchOption}
+        />
+      )}
 
       <Group grow>
         {loadingElements ? (
@@ -280,6 +282,7 @@ const CardsViewLayout = ({
                           h={160}
                           fit={elementsName === "productos" ? "contain" : "cover"}
                           alt={item?.name || "Imagen"}
+                          fallbackSrc="https://thumb.ac-illust.com/b1/b170870007dfa419295d949814474ab2_t.jpeg"
                         />
                       ) : (
                         <Image src="default-image-url.jpg" h={200} fit="cover" alt="Imagen no disponible" />
@@ -382,7 +385,7 @@ const CardsViewLayout = ({
                                 {item?.serviceType === "delivery"
                                   ? "A domicilio"
                                   : item?.serviceType === "onSite"
-                                    ? "Comer en sitio"
+                                    ? "Venta en mesa"
                                     : "Para llevar"}
                               </Text>
                             </Flex>

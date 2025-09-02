@@ -32,7 +32,7 @@ export function UserButton({ image, name, email, role }) {
           {name}
         </Text>
 
-        <Text color="dimmed" size="sm">
+        <Text color="dimmed" size="sm" ta='right'>
           {email}
         </Text>
       </div>

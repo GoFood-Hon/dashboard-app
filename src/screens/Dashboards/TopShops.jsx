@@ -3,9 +3,7 @@ import { BarChart } from "@mantine/charts"
 import { colors } from "../../theme/colors"
 import { getFormattedHNL } from "../../utils"
 
-export const TopShops = ({ data, loading }) => {
-  const isEmpty = Array.isArray(data) && data.length === 0
-
+export const TopShops = ({ data = [], loading }) => {
   return (
     <Paper
       withBorder
@@ -20,14 +18,14 @@ export const TopShops = ({ data, loading }) => {
         <Group h={450} justify="center" align="center" className="w-full">
           <Loader color={colors.main_app_color} />
         </Group>
-      ) : isEmpty ? (
+      ) : !Array.isArray(data) || data.length === 0 ? (
         <Group h={450} justify="center" align="center" className="w-full">
           <Text c="dimmed">No hay datos para mostrar</Text>
         </Group>
       ) : (
         <BarChart
           h={450}
-          data={data.map((item) => ({ name: item.name, "Total vendido": item.total }))}
+          data={(Array.isArray(data) ? data : []).map((item) => ({ name: item.name, "Total vendido": item.total }))}
           dataKey="name"
           series={[{ name: "Total vendido", color: "gray.6" }]}
           barProps={{ radius: 8 }}

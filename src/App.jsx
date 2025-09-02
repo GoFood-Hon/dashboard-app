@@ -6,7 +6,6 @@ import {
   SETTING_NAVIGATION_ROUTES,
   NAVIGATION_ROUTES_KITCHEN,
   NAVIGATION_ROUTES_CASHIER,
-  NAVIGATION_ROUTES_RES_ADMIN_TWO
 } from "./routes"
 import { Route, RouterProvider, createBrowserRouter, createRoutesFromElements } from "react-router-dom"
 import AuthLayout from "./layout/AuthLayout"
@@ -45,7 +44,6 @@ import { NotFound } from "./screens/NotFound"
 import { WelcomeScreen } from "./screens/Welcome/WelcomeScreen"
 import { NewPlan } from "./screens/Plans/NewPlan"
 import { OrderHistory } from "./screens/Orders/OrderHistory"
-import { NotificationProvider } from "./components/NotificationProvider"
 import EditMenuScreen from "./screens/Menu/EditMenuScreen"
 import EditDishScreen from "./screens/Dishes/EditDishScreen"
 import { EditRestaurant } from "./screens/Restaurants/EditRestaurant"
@@ -208,6 +206,10 @@ function App() {
 
             <Route path={NAVIGATION_ROUTES_BRANCH_ADMIN.Reservations.ReservationDetails.path} element={<ReservationDetails />} />
 
+            <Route path={NAVIGATION_ROUTES_BRANCH_ADMIN.Loyalty.path} element={<LoyaltyProgram />} />
+
+            <Route path={NAVIGATION_ROUTES_BRANCH_ADMIN.Loyalty.RewardsTracking.path} element={<RewardsTracking />} />
+
             <Route path={NAVIGATION_ROUTES_BRANCH_ADMIN.Account.path} element={<AccountSettings />} />
 
             <Route path={NAVIGATION_ROUTES_BRANCH_ADMIN.Password.path} element={<PasswordSettings />} />
@@ -233,6 +235,14 @@ function App() {
             <Route path={NAVIGATION_ROUTES_CASHIER.Dishes.path} element={<Dishes />} />
 
             <Route path={NAVIGATION_ROUTES_CASHIER.Dishes.DishDetails.path} element={<EditDishScreen />} />
+
+            <Route path={NAVIGATION_ROUTES_CASHIER.Reservations.path} element={<Reservations />} />
+
+            <Route path={NAVIGATION_ROUTES_CASHIER.Reservations.ReservationDetails.path} element={<ReservationDetails />} />
+
+            <Route path={NAVIGATION_ROUTES_CASHIER.Loyalty.path} element={<LoyaltyProgram />} />
+
+            <Route path={NAVIGATION_ROUTES_CASHIER.Loyalty.RewardsTracking.path} element={<RewardsTracking />} />
 
             <Route path={NAVIGATION_ROUTES_CASHIER.Account.path} element={<AccountSettings />} />
 

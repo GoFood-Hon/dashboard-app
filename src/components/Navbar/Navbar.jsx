@@ -16,6 +16,7 @@ export function Navbar({ data }) {
   const logout = () => {
     localStorage.removeItem("token")
     localStorage.removeItem("setUserRole")
+    localStorage.removeItem("hideSubscriptionAlert")
     dispatch(logoutAction());
     navigate(AUTH_NAVIGATION_ROUTES.Login.path)
   }

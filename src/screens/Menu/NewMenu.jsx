@@ -43,12 +43,10 @@ export default function NewMenu() {
   const accordionStructure = [
     {
       title: "Información general",
-      requirement: "Obligatorio",
       form: <GeneralInformationForm register={register} errors={errors} setValue={setValue} control={control} watch={watch} />
     },
     {
       title: "Productos",
-      requirement: "Obligatorio",
       form: (
         <ComplementsForm
           setValue={setValue}

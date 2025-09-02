@@ -17,10 +17,12 @@ export const LoyaltyProgram = () => {
   const { loyaltyId } = useParams()
   const dispatch = useDispatch()
   const user = useSelector((state) => state.user.value)
-  const { programs, updatingPrograms, creatingPrograms } = useSelector((state) => state.loyalty)
-  const haveLoyaltyProgramModule = !!user?.Restaurant?.Subscription?.Plan?.PlanFeatures?.some(
-    (feature) => feature.featureCode === "loyalty-module" && feature.PlanPlanFeatures?.avai === true
-  )
+  const { programs, updatingPrograms, updatingProgramStatus, creatingPrograms } = useSelector((state) => state.loyalty)
+  const haveLoyaltyProgramModule =
+    user?.role === "superadmin" ||
+    !!user?.Restaurant?.Subscription?.Plan?.PlanFeatures?.some(
+      (feature) => feature.featureCode === "loyalty-module" && feature.PlanPlanFeatures?.avai === true
+    )
 
   const {
     register,
@@ -93,12 +95,13 @@ export const LoyaltyProgram = () => {
         statusButton={user.role !== "superadmin"}
         navigate={() => navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Plans.path)}
         isLoading={programs && Object.keys(programs).length !== 0 ? updatingPrograms : creatingPrograms}
+        isLoadingStatus={updatingProgramStatus}
         update={programs && Object.keys(programs).length !== 0}
         noDiscard
         noButtons={user.role === "superadmin"}
       />
     </form>
   ) : (
-    <NoPermissionsAnimation moduleName='lealtad' />
+    <NoPermissionsAnimation moduleName="lealtad" />
   )
 }

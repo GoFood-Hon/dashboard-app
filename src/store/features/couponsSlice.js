@@ -331,10 +331,12 @@ const couponsSlice = createSlice({
       .addCase(updateStatus.fulfilled, (state, action) => {
         const { id, isActive } = action.payload
         const currentPageCoupons = state.couponsPerPage[state.currentPage]
-        const index = currentPageCoupons.findIndex((coupon) => coupon?.id === id)
+        if (currentPageCoupons && currentPageCoupons.length > 0) {
+          const index = currentPageCoupons.findIndex((coupon) => coupon?.id === id)
 
-        if (index !== -1) {
-          currentPageCoupons[index] = { ...currentPageCoupons[index], isActive }
+          if (index !== -1) {
+            currentPageCoupons[index] = { ...currentPageCoupons[index], isActive }
+          }
         }
         state.updatingCoupons = false
       })
@@ -348,10 +350,12 @@ const couponsSlice = createSlice({
       .addCase(updateCoupon.fulfilled, (state, action) => {
         const { id } = action.payload
         const currentPageCoupons = state.couponsPerPage[state.currentPage]
-        const index = currentPageCoupons.findIndex((coupon) => coupon?.id == id)
+        if (currentPageCoupons && currentPageCoupons.length > 0) {
+          const index = currentPageCoupons.findIndex((coupon) => coupon?.id == id)
 
-        if (state.couponsPerPage.length !== 0 && index !== -1) {
-          currentPageCoupons[index] = action.payload
+          if (state.couponsPerPage.length !== 0 && index !== -1) {
+            currentPageCoupons[index] = action.payload
+          }
         }
 
         state.selectedCoupon = action.payload

@@ -15,6 +15,7 @@ const initialState = {
   loadingPrograms: false,
   creatingPrograms: false,
   updatingPrograms: false,
+  updatingProgramStatus: false,
   loading: false,
   error: null,
 
@@ -79,6 +80,15 @@ export const createLoyaltyProgram = createAsyncThunk(
       const { loyaltyCards } = state.loyalty
       const response = await loyaltyApi.createLoyaltyProgram(params)
       let loyaltyProgram = response.data
+
+      if (response.error) {
+        showNotification({
+          title: "Error",
+          message: response.message,
+          color: "red"
+        })
+        return rejectWithValue(response.error)
+      }
 
       if (Array.isArray(loyaltyCards) && loyaltyCards.length) {
         try {
@@ -377,7 +387,10 @@ const loyaltySlice = createSlice({
       .addCase(createLoyaltyProgram.fulfilled, (state, action) => {
         state.creatingPrograms = false
         state.programs = action.payload
-        state.programs.LoyaltyCards = state.loyaltyCards
+
+        if (state.loyaltyCards.length > 0) {
+          state.programs.LoyaltyCards = state.loyaltyCards
+        }
       })
       .addCase(createLoyaltyProgram.rejected, (state, action) => {
         state.creatingPrograms = false
@@ -415,7 +428,7 @@ const loyaltySlice = createSlice({
 
       // Update Loyalty Program Status
       .addCase(updateLoyaltyProgramStatus.pending, (state) => {
-        state.updatingPrograms = true
+        state.updatingProgramStatus = true
       })
       .addCase(updateLoyaltyProgramStatus.fulfilled, (state, action) => {
         const { isActive } = action.payload
@@ -423,10 +436,10 @@ const loyaltySlice = createSlice({
           ...state.programs,
           isActive
         }
-        state.updatingPrograms = false
+        state.updatingProgramStatus = false
       })
       .addCase(updateLoyaltyProgramStatus.rejected, (state, action) => {
-        state.updatingPrograms = false
+        state.updatingProgramStatus = false
         state.error = action.payload
       })
 

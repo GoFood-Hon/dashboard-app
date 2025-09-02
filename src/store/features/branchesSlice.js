@@ -263,10 +263,12 @@ export const branchesSlice = createSlice({
       .addCase(updateBranchStatus.fulfilled, (state, action) => {
         const { id, isActive } = action.payload
         const currentPageBranches = state.branchesPerPage[state.currentPage]
-        const index = currentPageBranches.findIndex((branch) => branch?.id === id)
+        if (currentPageBranches && currentPageBranches.length > 0) {
+          const index = currentPageBranches.findIndex((branch) => branch?.id === id)
 
-        if (index !== -1) {
-          currentPageBranches[index] = { ...currentPageBranches[index], isActive }
+          if (index !== -1) {
+            currentPageBranches[index] = { ...currentPageBranches[index], isActive }
+          }
         }
       })
       .addCase(updateBranches.pending, (state) => {
@@ -275,10 +277,12 @@ export const branchesSlice = createSlice({
       .addCase(updateBranches.fulfilled, (state, action) => {
         const { id } = action.payload
         const currentPageBranches = state.branchesPerPage[state.currentPage]
-        const index = currentPageBranches.findIndex((branch) => branch?.id === id)
+        if (currentPageBranches && currentPageBranches.length > 0) {
+          const index = currentPageBranches.findIndex((branch) => branch?.id === id)
 
-        if (index !== -1) {
-          currentPageBranches[index] = action.payload
+          if (index !== -1) {
+            currentPageBranches[index] = action.payload
+          }
         }
         state.updatingBranches = false
       })

@@ -2,9 +2,7 @@ import { Divider, Group, Loader, Paper, Text } from "@mantine/core"
 import { BarChart } from "@mantine/charts"
 import { colors } from "../../theme/colors"
 
-export const MostSelledDishes = ({ data, loading }) => {
-  const isEmpty = Array.isArray(data) && data.length === 0
-
+export const MostSelledDishes = ({ data = [], loading }) => {
   return (
     <Paper
       withBorder
@@ -19,14 +17,17 @@ export const MostSelledDishes = ({ data, loading }) => {
         <Group h={450} justify="center" align="center" className="w-full">
           <Loader color={colors.main_app_color} />
         </Group>
-      ) : isEmpty ? (
+      ) : !Array.isArray(data) || data.length === 0 ? (
         <Group h={450} justify="center" align="center" className="w-full">
           <Text c="dimmed">No hay datos para mostrar</Text>
         </Group>
       ) : (
         <BarChart
           h={450}
-          data={data.map((d) => ({ name: d.dishName, "Unidades vendidas": d.totalQuantity }))}
+          data={(Array.isArray(data) ? data : []).map((d) => ({
+            name: d.dishName,
+            "Unidades vendidas": d.totalQuantity
+          }))}
           dataKey="name"
           series={[{ name: "Unidades vendidas", color: "red.6" }]}
           barProps={{ radius: 10, width: 20 }}

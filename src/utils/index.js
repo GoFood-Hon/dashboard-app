@@ -4,6 +4,7 @@ import { hondurasDepartments } from "./constants"
 import dayjs from "dayjs"
 import timezone from "dayjs/plugin/timezone"
 import utc from "dayjs/plugin/utc"
+import { NAVIGATION_ROUTES_SUPER_ADMIN_TWO } from "../routes"
 
 dayjs.extend(utc)
 dayjs.extend(timezone)
@@ -29,7 +30,7 @@ export const formatDay = (day) => {
 }
 
 export function dateTimeConverter(timestamptz) {
-  const timeZone = "America/Tegucigalpa" // Zona horaria de Honduras
+  const timeZone = "America/Tegucigalpa"
   const options = {
     day: "numeric",
     month: "long",
@@ -134,15 +135,22 @@ export const formatTimeDifference = (sentToKitchenTimestamp, finishedCookingTime
 
   const durationInSeconds = end.diff(start, "second")
 
-  const hours = Math.floor(durationInSeconds / 3600)
+  const days = Math.floor(durationInSeconds / 86400)
+  const hours = Math.floor((durationInSeconds % 86400) / 3600)
   const minutes = Math.floor((durationInSeconds % 3600) / 60)
   const seconds = durationInSeconds % 60
 
-  const formattedTime = [String(hours).padStart(2, "0"), String(minutes).padStart(2, "0"), String(seconds).padStart(2, "0")].join(
-    ":"
-  )
+  const parts = []
 
-  return formattedTime
+  if (days > 0) {
+    parts.push(String(days).padStart(2, "0"))
+  }
+
+  parts.push(String(hours).padStart(2, "0"))
+  parts.push(String(minutes).padStart(2, "0"))
+  parts.push(String(seconds).padStart(2, "0"))
+
+  return parts.join(":")
 }
 
 const capitalize = (str) => str.charAt(0).toUpperCase() + str.slice(1)

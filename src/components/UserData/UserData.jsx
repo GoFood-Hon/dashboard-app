@@ -47,19 +47,19 @@ const UserData = ({
           <Flex align="center" gap="xs" ml={5}>
             {noIcons ?? <IconMail size="1.1rem" />}
             <Text c="dimmed" size={isSmallScreen ? "xs" : "sm"}>
-              {email}
+              {email || 'No se proporcionó'}
             </Text>
           </Flex>
           <Flex align="center" gap="xs" ml={5}>
             {noIcons ?? <IconId size="1.1rem" />}
             <Text c="dimmed" size={isSmallScreen ? "xs" : "sm"}>
-              {userId}
+              {userId || 'No se proporcionó'}
             </Text>
           </Flex>
           <Flex align="center" gap="xs" ml={5}>
             {noIcons ?? <IconPhone size="1.1rem" />}
             <Text c="dimmed" size={isSmallScreen ? "xs" : "sm"}>
-              {phoneNumber}
+              {phoneNumber || 'No se proporcionó'}
             </Text>
           </Flex>
           <Flex align="center" gap="xs" ml={5}>
@@ -68,7 +68,7 @@ const UserData = ({
               {bikeId
                 ? bikeId
                 : orderDetails?.serviceType === "delivery"
-                  ? address
+                  ? address || 'No se proporcionó'
                   : "La dirección no es requerida"}
             </Text>
           </Flex>

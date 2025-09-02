@@ -37,6 +37,7 @@ export const SellsByChannel = ({ data, loading }) => {
         <AreaChart
           h={450}
           data={formattedData}
+          className="pl-10"
           dataKey="date"
           type="default"
           withLegend

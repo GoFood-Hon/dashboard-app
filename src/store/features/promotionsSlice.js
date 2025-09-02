@@ -382,10 +382,12 @@ const promotionsSlice = createSlice({
       .addCase(updateOffer.fulfilled, (state, action) => {
         const { id } = action.payload
         const currentPagePromotions = state.promotionsPerPage[state.currentPage]
-        const index = currentPagePromotions.findIndex((promotion) => promotion?.id == id)
+        if (currentPagePromotions && currentPagePromotions.length > 0) {
+          const index = currentPagePromotions.findIndex((promotion) => promotion?.id == id)
 
-        if (state.promotionsPerPage.length !== 0 && index !== -1) {
-          currentPagePromotions[index] = action.payload
+          if (state.promotionsPerPage.length !== 0 && index !== -1) {
+            currentPagePromotions[index] = action.payload
+          }
         }
 
         state.selectedPromotion = action.payload
@@ -401,10 +403,12 @@ const promotionsSlice = createSlice({
       .addCase(updateOfferStatus.fulfilled, (state, action) => {
         const { id, available } = action.payload
         const currentPagePromotions = state.promotionsPerPage[state.currentPage]
-        const index = currentPagePromotions.findIndex((promotion) => promotion?.id === id)
+        if (currentPagePromotions && currentPagePromotions.length > 0) {
+          const index = currentPagePromotions.findIndex((promotion) => promotion?.id === id)
 
-        if (index !== -1) {
-          currentPagePromotions[index] = { ...currentPagePromotions[index], available }
+          if (index !== -1) {
+            currentPagePromotions[index] = { ...currentPagePromotions[index], available }
+          }
         }
         state.updatingPromotions = false
       })

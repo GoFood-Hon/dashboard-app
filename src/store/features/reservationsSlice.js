@@ -10,9 +10,13 @@ const initialState = {
   totalPagesCount: 0,
   currentPage: 1,
   loadingReservations: false,
-  updatingReservation: false,
+  loadingReservationsDetails: false,
+  addingComment: false,
+  cancellingReservation: false,
+  approvingReservation: false,
   reservationDetails: null,
   error: null,
+  reservationComment: "",
 
   //Search data
   searchField: "identityNumber",
@@ -33,6 +37,17 @@ export const fetchReservationByBranch = createAsyncThunk(
         search,
         search_field
       })
+
+      if (response.error) {
+        showNotification({
+          title: "Error",
+          message: response.error,
+          color: "red",
+          duration: 7000
+        })
+        return rejectWithValue(response.error)
+      }
+
       return { data: response.data, results: response.results, page }
     } catch (error) {
       showNotification({
@@ -59,6 +74,17 @@ export const fetchReservationByRestaurant = createAsyncThunk(
         search,
         search_field
       })
+
+      if (response.error) {
+        showNotification({
+          title: "Error",
+          message: response.error,
+          color: "red",
+          duration: 7000
+        })
+        return rejectWithValue(response.error)
+      }
+
       return { data: response.data, results: response.results, page }
     } catch (error) {
       showNotification({
@@ -78,6 +104,17 @@ export const fetchReservationDetails = createAsyncThunk(
   async (reservationId, { rejectWithValue }) => {
     try {
       const response = await reservationsApi.getReservationDetails(reservationId)
+
+      if (response.error) {
+        showNotification({
+          title: "Error",
+          message: response.error,
+          color: "red",
+          duration: 7000
+        })
+        return rejectWithValue(response.error)
+      }
+
       return response.data
     } catch (error) {
       showNotification({
@@ -97,8 +134,19 @@ export const addCommentsToReservation = createAsyncThunk(
   async ({ reservationId, params }, { rejectWithValue, getState }) => {
     try {
       const state = getState()
-      const name = state.user.value.name
+      const { name, images } = state.user.value
       const response = await reservationsApi.addCommentsToReservations(reservationId, params)
+
+      if (response.error) {
+        showNotification({
+          title: "Error",
+          message: response.error,
+          color: "red",
+          duration: 7000
+        })
+        return rejectWithValue(response.error)
+      }
+
       showNotification({
         title: "Creación exitosa",
         message: "El comentario se agregó correctamente",
@@ -108,7 +156,8 @@ export const addCommentsToReservation = createAsyncThunk(
       return {
         ...response.data,
         AdminUser: {
-          name
+          name,
+          images
         }
       }
     } catch (error) {
@@ -129,6 +178,17 @@ export const cancelReservation = createAsyncThunk(
   async ({ reservationId, params }, { rejectWithValue }) => {
     try {
       const response = await reservationsApi.cancelReservation(reservationId, params)
+
+      if (response.error) {
+        showNotification({
+          title: "Error",
+          message: response.error,
+          color: "red",
+          duration: 7000
+        })
+        return rejectWithValue(response.error)
+      }
+
       showNotification({
         title: "Cancelación exitosa",
         message: "La reservación se canceló correctamente",
@@ -154,6 +214,17 @@ export const approveReservation = createAsyncThunk(
   async ({ reservationId, revisedBy }, { rejectWithValue }) => {
     try {
       const response = await reservationsApi.approveReservation(reservationId, revisedBy)
+
+      if (response.error) {
+        showNotification({
+          title: "Error",
+          message: response.error,
+          color: "red",
+          duration: 7000
+        })
+        return rejectWithValue(response.error)
+      }
+
       showNotification({
         title: "Aprobación exitosa",
         message: "La reservación se aprobó correctamente",
@@ -188,6 +259,35 @@ const reservationsSlice = createSlice({
     },
     setSelectedSearchOption: (state, action) => {
       state.searchField = action.payload
+    },
+    setReservationComment: (state, action) => {
+      state.reservationComment = action.payload
+    },
+    setNewReservation: (state, action) => {
+      const newReservation = action.payload
+      const itemsPerPage = state.itemsPerPage
+      const newReservationsPerPage = { ...state.reservationsPerPage }
+
+      let lastPage = state.totalPagesCount
+
+      if (!newReservationsPerPage[lastPage]) {
+        newReservationsPerPage[lastPage] = []
+      }
+
+      newReservationsPerPage[lastPage].unshift(newReservation)
+
+      if (newReservationsPerPage[lastPage].length > itemsPerPage) {
+        const overflowOrder = newReservationsPerPage[lastPage].pop()
+        lastPage += 1
+        newReservationsPerPage[lastPage] = [overflowOrder]
+      }
+
+      const updatedTotalReservations = state.totalReservations + 1
+      const updatedTotalPagesCount = Math.ceil(updatedTotalReservations / itemsPerPage)
+
+      state.reservationsPerPage = newReservationsPerPage
+      state.totalReservations = updatedTotalReservations
+      state.totalPagesCount = updatedTotalPagesCount
     }
   },
   extraReducers: (builder) => {
@@ -197,10 +297,10 @@ const reservationsSlice = createSlice({
         state.loadingReservations = true
       })
       .addCase(fetchReservationByBranch.fulfilled, (state, action) => {
+        state.loadingReservations = false
         const { data, results, page } = action.payload
         state.reservationsPerPage[page] = data
 
-        state.loadingReservations = false
         state.currentPage = page
         state.totalReservations = results
         state.totalPagesCount = Math.ceil(results / action.meta.arg.limit)
@@ -215,10 +315,10 @@ const reservationsSlice = createSlice({
         state.loadingReservations = true
       })
       .addCase(fetchReservationByRestaurant.fulfilled, (state, action) => {
+        state.loadingReservations = false
         const { data, results, page } = action.payload
         state.reservationsPerPage[page] = data
 
-        state.loadingReservations = false
         state.currentPage = page
         state.totalReservations = results
         state.totalPagesCount = Math.ceil(results / action.meta.arg.limit)
@@ -230,75 +330,86 @@ const reservationsSlice = createSlice({
 
       // Obtener detalles de una reserva
       .addCase(fetchReservationDetails.pending, (state) => {
-        state.loadingReservations = true
+        state.loadingReservationsDetails = true
       })
       .addCase(fetchReservationDetails.fulfilled, (state, action) => {
-        state.loadingReservations = false
+        state.loadingReservationsDetails = false
         state.reservationDetails = action.payload
       })
       .addCase(fetchReservationDetails.rejected, (state, action) => {
-        state.loadingReservations = false
+        state.loadingReservationsDetails = false
         state.error = action.payload
       })
 
       // Agregar comentarios a una reserva
       .addCase(addCommentsToReservation.pending, (state) => {
-        state.updatingReservation = true
+        state.addingComment = true
       })
       .addCase(addCommentsToReservation.fulfilled, (state, action) => {
-        state.updatingReservation = false
+        state.addingComment = false
         if (state.reservationDetails) {
           state.reservationDetails.ReservationComments.unshift(action.payload)
         }
       })
       .addCase(addCommentsToReservation.rejected, (state, action) => {
-        state.updatingReservation = false
+        state.addingComment = false
         state.error = action.payload
       })
 
       // Cancelar una reserva
       .addCase(cancelReservation.pending, (state) => {
-        state.updatingReservation = true
+        state.cancellingReservation = true
       })
       .addCase(cancelReservation.fulfilled, (state, action) => {
         const { id, status, ReservationComments } = action.payload
         const currentPageReservations = state.reservationsPerPage[state.currentPage]
-        const index = currentPageReservations.findIndex((reservation) => reservation?.id === id)
+        if (currentPageReservations && currentPageReservations.length > 0) {
+          const index = currentPageReservations.findIndex((reservation) => reservation?.id === id)
 
-        if (index !== -1) {
-          currentPageReservations[index] = { ...currentPageReservations[index], status }
+          if (index !== -1) {
+            currentPageReservations[index] = { ...currentPageReservations[index], status }
+          }
         }
         state.reservationDetails.status = status
         state.reservationDetails.ReservationComments = ReservationComments
-        state.updatingReservation = false
+        state.cancellingReservation = false
       })
       .addCase(cancelReservation.rejected, (state, action) => {
-        state.updatingReservation = false
+        state.cancellingReservation = false
         state.error = action.payload
       })
 
       // Aprobar una reserva
       .addCase(approveReservation.pending, (state) => {
-        state.updatingReservation = true
+        state.approvingReservation = true
       })
       .addCase(approveReservation.fulfilled, (state, action) => {
         const { id, status } = action.payload
         const currentPageReservations = state.reservationsPerPage[state.currentPage]
-        const index = currentPageReservations.findIndex((reservation) => reservation?.id === id)
+        if (currentPageReservations && currentPageReservations.length > 0) {
+          const index = currentPageReservations.findIndex((reservation) => reservation?.id === id)
 
-        if (index !== -1) {
-          currentPageReservations[index] = { ...currentPageReservations[index], status }
+          if (index !== -1) {
+            currentPageReservations[index] = { ...currentPageReservations[index], status }
+          }
         }
         state.reservationDetails.status = status
-        state.updatingReservation = false
+        state.approvingReservation = false
       })
       .addCase(approveReservation.rejected, (state, action) => {
-        state.updatingReservation = false
+        state.approvingReservation = false
         state.error = action.payload
       })
   }
 })
 
-export const { resetReservationDetails, setPage, setSearchData, setSelectedSearchOption } = reservationsSlice.actions
+export const {
+  resetReservationDetails,
+  setPage,
+  setSearchData,
+  setSelectedSearchOption,
+  setReservationComment,
+  setNewReservation
+} = reservationsSlice.actions
 
 export default reservationsSlice.reducer

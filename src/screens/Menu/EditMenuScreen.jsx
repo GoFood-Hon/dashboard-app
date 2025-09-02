@@ -68,7 +68,7 @@ export default function EditMenuScreen() {
   }, [menuId, reset])
 
   useEffect(() => {
-    if (Object.keys(menuDetails).length > 0) {
+    if (menuDetails && Object.keys(menuDetails).length > 0) {
       reset(menuDetails)
     }
   }, [menuDetails, reset])

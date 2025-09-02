@@ -538,10 +538,12 @@ const collectionsSlice = createSlice({
       .addCase(updateCollection.fulfilled, (state, action) => {
         const { id } = action.payload
         const currentPageCollections = state.collectionsPerPage[state.currentPage]
-        const index = currentPageCollections.findIndex((collection) => collection?.id == id)
+        if (currentPageCollections && currentPageCollections.length > 0) {
+          const index = currentPageCollections.findIndex((collection) => collection?.id == id)
 
-        if (index !== -1) {
-          currentPageCollections[index] = action.payload
+          if (index !== -1) {
+            currentPageCollections[index] = action.payload
+          }
         }
         state.updatingCollection = false
       })
@@ -554,10 +556,12 @@ const collectionsSlice = createSlice({
       .addCase(updateCollectionStatus.fulfilled, (state, action) => {
         const { id, isActive } = action.payload
         const currentPageCollections = state.collectionsPerPage[state.currentPage]
-        const index = currentPageCollections.findIndex((collection) => collection?.id === id)
+        if (currentPageCollections && currentPageCollections.length > 0) {
+          const index = currentPageCollections.findIndex((collection) => collection?.id === id)
 
-        if (index !== -1) {
-          currentPageCollections[index] = { ...currentPageCollections[index], isActive }
+          if (index !== -1) {
+            currentPageCollections[index] = { ...currentPageCollections[index], isActive }
+          }
         }
       })
 

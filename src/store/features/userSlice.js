@@ -117,7 +117,7 @@ export const createAdminUser = createAsyncThunk(
       if (response.error) {
         showNotification({
           title: "Error",
-          message: response.message,
+          message: response?.error?.details?.errors[0]?.message ?? response.message,
           color: "red",
           duration: 7000
         })
@@ -170,7 +170,7 @@ export const createUser = createAsyncThunk("user/createUser", async ({ params, i
     if (!response || response.error) {
       showNotification({
         title: "Error",
-        message: response?.message || "Error al crear el usuario.",
+        message: response?.error?.details?.errors[0]?.message || response?.message,
         color: "red",
         duration: 7000
       })
@@ -237,7 +237,7 @@ export const updateUserData = createAsyncThunk(
       if (response.error) {
         showNotification({
           title: "Error",
-          message: response.message,
+          message: response?.error?.details?.errors[0]?.message ?? response.message,
           color: "red",
           duration: 7000
         })
@@ -555,10 +555,12 @@ export const userSlice = createSlice({
       .addCase(updateUserStatus.fulfilled, (state, action) => {
         const { id, active } = action.payload
         const currentPageUsers = state.adminUsersByPage[state.currentPage]
-        const index = currentPageUsers.findIndex((user) => user?.id === id)
+        if (currentPageUsers && currentPageUsers.length > 0) {
+          const index = currentPageUsers.findIndex((user) => user?.id === id)
 
-        if (index !== -1) {
-          currentPageUsers[index] = { ...currentPageUsers[index], active }
+          if (index !== -1) {
+            currentPageUsers[index] = { ...currentPageUsers[index], active }
+          }
         }
       })
       .addCase(updateUserStatus.rejected, (state, action) => {
@@ -568,10 +570,12 @@ export const userSlice = createSlice({
       .addCase(updateOtherUserStatus.fulfilled, (state, action) => {
         const { id, active } = action.payload
         const currentPageOtherUsers = state.usersByPage[state.currentUserPage]
-        const index = currentPageOtherUsers.findIndex((user) => user?.id === id)
+        if (currentPageOtherUsers && currentPageOtherUsers.length > 0) {
+          const index = currentPageOtherUsers.findIndex((user) => user?.id === id)
 
-        if (index !== -1) {
-          currentPageOtherUsers[index] = { ...currentPageOtherUsers[index], active }
+          if (index !== -1) {
+            currentPageOtherUsers[index] = { ...currentPageOtherUsers[index], active }
+          }
         }
       })
       .addCase(updateUserData.pending, (state) => {
@@ -580,16 +584,18 @@ export const userSlice = createSlice({
       .addCase(updateUserData.fulfilled, (state, action) => {
         const { id, name, email, phoneNumber, images } = action.payload
         const currentPageUsers = state.adminUsersByPage[state.currentPage]
-        const index = currentPageUsers.findIndex((user) => user?.id == id)
-        state.updatingUser = false
+        if (currentPageUsers && currentPageUsers.length > 0) {
+          const index = currentPageUsers.findIndex((user) => user?.id == id)
+          state.updatingUser = false
 
-        if (index !== -1) {
-          currentPageUsers[index] = {
-            ...currentPageUsers[index],
-            name,
-            email,
-            phoneNumber,
-            images: images
+          if (index !== -1) {
+            currentPageUsers[index] = {
+              ...currentPageUsers[index],
+              name,
+              email,
+              phoneNumber,
+              images: images
+            }
           }
         }
       })
@@ -603,12 +609,14 @@ export const userSlice = createSlice({
       .addCase(updateUser.fulfilled, (state, action) => {
         const { id, AdminUser } = action.payload
         const currentPageUsers = state.usersByPage[state.currentUserPage]
-        const index = currentPageUsers.findIndex((user) => user?.id == (id || AdminUser.id))
+        if (currentPageUsers && currentPageUsers.length > 0) {
+          const index = currentPageUsers.findIndex((user) => user?.id == (id || AdminUser.id))
 
-        if (index !== -1 && AdminUser) {
-          currentPageUsers[index] = action.payload.AdminUser
-        } else {
-          currentPageUsers[index] = action.payload
+          if (index !== -1 && AdminUser) {
+            currentPageUsers[index] = action.payload.AdminUser
+          } else {
+            currentPageUsers[index] = action.payload
+          }
         }
         state.updatingOtherUser = false
       })

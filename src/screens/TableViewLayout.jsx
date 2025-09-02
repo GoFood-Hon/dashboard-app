@@ -52,7 +52,11 @@ const TableViewLayout = ({
                     {totalElements} {title.split(" ") !== 1 ? title.split(" ")[0].toLowerCase() : title.toLowerCase()}
                   </Text>
                 </Flex>
-                <Button style={{ display: onNewItemClick ?? "none" }} color={colors.main_app_color} onClick={onNewItemClick}>
+                <Button
+                  //className={`${onNewItemClick ? "visible" : "invisible"}`}
+                  style={{ display: onNewItemClick ?? "none" }}
+                  color={colors.main_app_color}
+                  onClick={onNewItemClick}>
                   Nuevo
                 </Button>
               </Flex>
@@ -76,7 +80,7 @@ const TableViewLayout = ({
           <DatePickerInput
             type="range"
             locale="es"
-            placeholder="Seleccione el rango de fechas del historial"
+            placeholder="Seleccione un rango de fechas"
             value={value}
             onChange={setRange}
             style={{ flexGrow: 1 }}

@@ -214,7 +214,7 @@ export const NAVIGATION_ROUTES_RES_ADMIN_TWO = [
         link: "/orders"
       },
       {
-        label: "Historial de compras",
+        label: "Historial de clientes",
         link: "/orders/purchase-history"
       }
     ]
@@ -322,6 +322,20 @@ export const NAVIGATION_ROUTES_BRANCH_ADMIN = {
     },
     NewMenu: {
       path: "/menus/new-menu"
+    },
+    submenu: {
+      Dishes: {
+        label: "Productos",
+        icon: "menu",
+        path: "/menus/products",
+        DishDetails: {
+          label: "Detalles del producto",
+          path: "/menus/products/:dishId"
+        },
+        NewDish: {
+          path: "/menus/products/new-product"
+        }
+      }
     }
   },
   Dishes: {
@@ -337,6 +351,15 @@ export const NAVIGATION_ROUTES_BRANCH_ADMIN = {
     path: "/reservations",
     ReservationDetails: {
       path: "/reservations/:reservationId"
+    }
+  },
+  Loyalty: {
+    path: "/loyalty-program",
+    RewardsTracking: {
+      path: "/rewards-tracking"
+    },
+    EditLoyalty: {
+      path: "/collections/:collectionId"
     }
   },
   Complements: {
@@ -380,7 +403,7 @@ export const NAVIGATION_ROUTES_BRANCH_ADMIN_TWO = [
         link: "/orders"
       },
       {
-        label: "Historial de compras",
+        label: "Historial de clientes",
         link: "/orders/purchase-history"
       }
     ]
@@ -401,6 +424,21 @@ export const NAVIGATION_ROUTES_BRANCH_ADMIN_TWO = [
     ]
   },
   { label: "Reservaciones", icon: IconCalendarDue, link: "/reservations" },
+  {
+    label: "Programa de lealtad",
+    icon: IconAward,
+    initiallyOpened: false,
+    links: [
+      {
+        label: "Datos del programa",
+        link: "/loyalty-program"
+      },
+      {
+        label: "Seguimiento de recompensas",
+        link: "/rewards-tracking"
+      }
+    ]
+  },
   { label: "Reseñas", icon: IconStar, link: "/reviews" },
   {
     label: "Cuenta",
@@ -445,6 +483,21 @@ export const NAVIGATION_ROUTES_CASHIER = {
       path: "menus/products/:dishId"
     }
   },
+  Reservations: {
+    path: "/reservations",
+    ReservationDetails: {
+      path: "/reservations/:reservationId"
+    }
+  },
+  Loyalty: {
+    path: "/loyalty-program",
+    RewardsTracking: {
+      path: "/rewards-tracking"
+    },
+    EditLoyalty: {
+      path: "/collections/:collectionId"
+    }
+  },
   Account: {
     label: "Cuenta",
     icon: "users",
@@ -467,6 +520,22 @@ export const NAVIGATION_ROUTES_CASHIER_TWO = [
       {
         label: "Productos",
         link: "/menus/products"
+      }
+    ]
+  },
+  { label: "Reservaciones", icon: IconCalendarDue, link: "/reservations" },
+  {
+    label: "Programa de lealtad",
+    icon: IconAward,
+    initiallyOpened: false,
+    links: [
+      {
+        label: "Datos del programa",
+        link: "/loyalty-program"
+      },
+      {
+        label: "Seguimiento de recompensas",
+        link: "/rewards-tracking"
       }
     ]
   },

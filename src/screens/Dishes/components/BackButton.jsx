@@ -1,7 +1,6 @@
-import React from "react"
 import { useNavigate } from "react-router-dom"
 import { IconArrowNarrowLeft } from "@tabler/icons-react"
-import { Flex, Group, Title, Text, Box } from "@mantine/core"
+import { Flex, Group, Title, Text, Box, ActionIcon } from "@mantine/core"
 import { useMediaQuery } from "@mantine/hooks"
 
 export default function BackButton({ title, show }) {
@@ -11,7 +10,11 @@ export default function BackButton({ title, show }) {
   return (
     <Group>
       <Flex align="center" gap="xs">
-        {show && <IconArrowNarrowLeft onClick={() => navigate(-1)} style={{ cursor: "pointer" }} size="1.6rem" />}
+        {show && (
+          <ActionIcon variant="subtle" color="gray" onClick={() => navigate(-1)}>
+            <IconArrowNarrowLeft size="1.6rem" />
+          </ActionIcon>
+        )}
         {isVerySmallScreen ? (
           <Text size="xl" fw={600} truncate="end">
             {title}

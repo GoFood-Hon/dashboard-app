@@ -22,8 +22,6 @@ const initialState = {
     status: null,
     startPrice: null
   },
-
-  //Search params
   searchData: null,
   searchField: "name"
 }
@@ -84,7 +82,7 @@ export const createRestaurant = createAsyncThunk(
       if (response.error) {
         showNotification({
           title: "Error",
-          message: response.message,
+          message: response?.error?.details?.errors[0]?.message ?? response.message,
           color: "red"
         })
 
@@ -134,10 +132,6 @@ export const createRestaurant = createAsyncThunk(
   }
 )
 
-/*
- * GET RESTAURANT INDIVIDUAL
- */
-
 export const fetchRestaurantData = createAsyncThunk("restaurants/fetchRestaurantData", async ({ restaurantId }, { dispatch }) => {
   try {
     dispatch(setLoading(true))
@@ -168,10 +162,6 @@ export const fetchRestaurantData = createAsyncThunk("restaurants/fetchRestaurant
     throw error
   }
 })
-
-/*
- * UPDATE RES
- */
 
 const updateFormData = (data, propertyToUpdate) => {
   const formData = new FormData()
@@ -204,7 +194,7 @@ export const updateRestaurant = createAsyncThunk(
       if (response.error) {
         showNotification({
           title: "Error",
-          message: response.message,
+          message: response?.error?.details?.errors[0]?.message ?? response.message,
           color: "red",
           duration: 7000
         })
@@ -262,7 +252,7 @@ export const updateRestaurantData = createAsyncThunk(
       if (response.error) {
         showNotification({
           title: "Error",
-          message: response.message,
+          message: response?.error?.details?.errors[0]?.message ?? response.message,
           color: "red"
         })
 
@@ -383,10 +373,12 @@ export const restaurantsSlice = createSlice({
       .addCase(updateRestaurantStatus.fulfilled, (state, action) => {
         const { id, isActive } = action.payload
         const currentPageRestaurants = state.restaurantsPerPage[state.currentPage]
-        const index = currentPageRestaurants.findIndex((restaurant) => restaurant?.id === id)
+        if (currentPageRestaurants && currentPageRestaurants.length > 0) {
+          const index = currentPageRestaurants.findIndex((restaurant) => restaurant?.id === id)
 
-        if (index !== -1) {
-          currentPageRestaurants[index] = { ...currentPageRestaurants[index], isActive }
+          if (index !== -1) {
+            currentPageRestaurants[index] = { ...currentPageRestaurants[index], isActive }
+          }
         }
       })
       .addCase(updateRestaurantStatus.rejected, (state) => {
@@ -398,10 +390,12 @@ export const restaurantsSlice = createSlice({
       .addCase(updateRestaurantData.fulfilled, (state, action) => {
         const { id } = action.payload
         const currentPageRestaurants = state.restaurantsPerPage[state.currentPage]
-        const index = currentPageRestaurants.findIndex((restaurant) => restaurant?.id == id)
+        if (currentPageRestaurants && currentPageRestaurants.length > 0) {
+          const index = currentPageRestaurants.findIndex((restaurant) => restaurant?.id == id)
 
-        if (state.restaurantsPerPage.length !== 0 && index !== -1) {
-          currentPageRestaurants[index] = action.payload
+          if (state.restaurantsPerPage.length !== 0 && index !== -1) {
+            currentPageRestaurants[index] = action.payload
+          }
         }
         state.updatingRestaurant = false
       })

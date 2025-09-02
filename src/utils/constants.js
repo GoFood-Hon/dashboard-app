@@ -320,7 +320,7 @@ export const statistictsExample = {
 //Search options for orders
 export const searchOptionsOrders = [
   { value: "id", label: "ID" },
-  { value: "identityNumber", label: "Identidad del cliente" },
+  { value: "identityNumber", label: "DNI" },
   { value: "phoneNumber", label: "Teléfono del cliente" },
   { value: "name", label: "Nombre del cliente" }
 ]
@@ -335,7 +335,7 @@ export const searchOptionsDishes = [{ value: "name", label: "Nombre" }]
 export const searchOptionsReservations = [
   { value: "id", label: "ID" },
   { value: "phoneNumber", label: "Teléfono del cliente" },
-  { value: "identityNumber", label: "Identidad del cliente" }
+  { value: "identityNumber", label: "DNI" }
 ]
 
 //Search options for branchs

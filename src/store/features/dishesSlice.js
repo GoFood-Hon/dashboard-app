@@ -378,10 +378,12 @@ export const dishesSlice = createSlice({
       .addCase(updateDishStatus.fulfilled, (state, action) => {
         const { id, isActive } = action.payload
         const currentPageDishes = state.dishesPerPage[state.currentPage]
-        const index = currentPageDishes.findIndex((dish) => dish?.id === id)
+        if (currentPageDishes && currentPageDishes.length > 0) {
+          const index = currentPageDishes.findIndex((dish) => dish?.id === id)
 
-        if (index !== -1) {
-          currentPageDishes[index] = { ...currentPageDishes[index], isActive }
+          if (index !== -1) {
+            currentPageDishes[index] = { ...currentPageDishes[index], isActive }
+          }
         }
       })
       .addCase(updateDishStatus.rejected, (state, action) => {
@@ -393,14 +395,16 @@ export const dishesSlice = createSlice({
       .addCase(updateDish.fulfilled, (state, action) => {
         const { id, name, price, images } = action.payload
         const currentPageDishes = state.dishesPerPage[state.currentPage]
-        const index = currentPageDishes.findIndex((dish) => dish?.id === id)
+        if (currentPageDishes && currentPageDishes.length > 0) {
+          const index = currentPageDishes.findIndex((dish) => dish?.id === id)
 
-        if (index !== -1) {
-          currentPageDishes[index] = {
-            ...currentPageDishes[index],
-            name,
-            price,
-            images
+          if (index !== -1) {
+            currentPageDishes[index] = {
+              ...currentPageDishes[index],
+              name,
+              price,
+              images
+            }
           }
         }
 

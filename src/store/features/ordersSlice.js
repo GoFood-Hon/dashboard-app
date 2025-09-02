@@ -90,6 +90,7 @@ export const fetchOrderDetails = createAsyncThunk("orders/fetchOrderDetails", as
 export const updateOrderStatus = createAsyncThunk("orders/updateOrderStatus", async (id, { rejectWithValue }) => {
   try {
     const response = await orderApi.updateOrderStatus(id)
+
     if (response.error) {
       showNotification({
         title: "Error",
@@ -101,7 +102,7 @@ export const updateOrderStatus = createAsyncThunk("orders/updateOrderStatus", as
     }
 
     showNotification({
-      title: "Actualización exitosa",
+      title: "Orden actualizada",
       message: "El estado del pedido se actualizó correctamente",
       color: "green",
       duration: 7000
@@ -128,7 +129,7 @@ export const confirmOrder = createAsyncThunk("orders/confirmOrder", async (id, {
     }
 
     showNotification({
-      title: "Confirmaciòn exitosa",
+      title: "Orden actualizada",
       message: "El estado del pedido se marcó como confirmado",
       color: "green",
       duration: 7000
@@ -154,7 +155,7 @@ export const cancelOrder = createAsyncThunk("orders/cancelOrder", async (id, { r
     }
 
     showNotification({
-      title: "Actualización exitosa",
+      title: "Orden actualizada",
       message: "El pedido se marcó como cancelado",
       color: "green",
       duration: 7000
@@ -196,6 +197,13 @@ export const assignDriver = createAsyncThunk("orders/assignDriver", async (param
       return rejectWithValue(response.message)
     }
 
+    showNotification({
+      title: "Orden actualizada",
+      message: "Se asignó un repartidor para entregar el pedido",
+      color: "green",
+      duration: 7000
+    })
+
     return { ...response.data, status: "ready-to-pick-up" }
   } catch (error) {
     return rejectWithValue(error.response?.data || error.message)
@@ -216,7 +224,7 @@ export const markOrderDelivered = createAsyncThunk("orders/markOrderDelivered", 
     }
 
     showNotification({
-      title: "Actualización exitosa",
+      title: "Orden actualizada",
       message: "El pedido se marcó como entregado",
       color: "green",
       duration: 7000
@@ -290,43 +298,52 @@ const ordersSlice = createSlice({
       const itemsPerPage = state.itemsForKitchenPerPage
       const newOrdersPerPage = { ...state.ordersForKitchenPerPage }
 
-      // Buscar la última página que tenga espacio
       let lastPage = state.totalOrdersForKitchenPagesCount
 
-      // Si la última página no existe, la creamos vacía
       if (!newOrdersPerPage[lastPage]) {
         newOrdersPerPage[lastPage] = []
       }
 
-      // Agregamos el pedido al final de la última página
       newOrdersPerPage[lastPage].push(newOrder)
 
-      // Si la última página se excede, pasamos el último pedido a una nueva página
       if (newOrdersPerPage[lastPage].length > itemsPerPage) {
         const overflowOrder = newOrdersPerPage[lastPage].pop()
         lastPage += 1
         newOrdersPerPage[lastPage] = [overflowOrder]
       }
 
-      // Actualizamos conteos
       const updatedTotalOrders = state.totalOrdersForKitchen + 1
       const updatedTotalPagesCount = Math.ceil(updatedTotalOrders / itemsPerPage)
 
-      // Limpiar páginas inválidas en restaurantsPerPage
-      const validPages = new Set([...Array(updatedTotalPagesCount).keys()].map((i) => i + 1))
-      const newRestaurantsPerPage = { ...state.restaurantsPerPage }
-
-      for (const page in newRestaurantsPerPage) {
-        if (!validPages.has(Number(page))) {
-          delete newRestaurantsPerPage[page]
-        }
-      }
-
-      // Guardamos el nuevo estado
       state.ordersForKitchenPerPage = newOrdersPerPage
       state.totalOrdersForKitchen = updatedTotalOrders
       state.totalOrdersForKitchenPagesCount = updatedTotalPagesCount
-      state.restaurantsPerPage = newRestaurantsPerPage
+    },
+    setNewOrderForAdmins: (state, action) => {
+      const newOrder = action.payload
+      const itemsPerPage = state.itemsPerPage
+      const newOrdersPerPage = { ...state.ordersPerPage }
+
+      let lastPage = state.totalPagesCount
+
+      if (!newOrdersPerPage[lastPage]) {
+        newOrdersPerPage[lastPage] = []
+      }
+
+      newOrdersPerPage[lastPage].unshift(newOrder)
+
+      if (newOrdersPerPage[lastPage].length > itemsPerPage) {
+        const overflowOrder = newOrdersPerPage[lastPage].pop()
+        lastPage += 1
+        newOrdersPerPage[lastPage] = [overflowOrder]
+      }
+
+      const updatedTotalOrders = state.totalOrders + 1
+      const updatedTotalPagesCount = Math.ceil(updatedTotalOrders / itemsPerPage)
+
+      state.ordersPerPage = newOrdersPerPage
+      state.totalOrders = updatedTotalOrders
+      state.totalPagesCount = updatedTotalPagesCount
     },
     setOrderStatus: (state, action) => {
       const { id, status, sentToKitchenTimestamp, finishedCookingTimestamp } = action.payload
@@ -389,10 +406,24 @@ const ordersSlice = createSlice({
         state.updatingOrderStatus = true
       })
       .addCase(updateOrderStatus.fulfilled, (state, action) => {
-        const { id } = action.payload
-        const currentPageOrdersForKitchen = state.ordersForKitchenPerPage[state.currentOrdersForKitchenPage]
-        const updatedOrders = currentPageOrdersForKitchen?.filter((order) => order.id !== id)
-        state.ordersForKitchenPerPage[state.currentOrdersForKitchenPage] = updatedOrders
+        const { id, status } = action.payload
+
+        if (localStorage.getItem("setUserRole") !== "kitchen") {
+          const currentPageOrders = state.ordersPerPage[state.currentPage]
+          if (currentPageOrders && currentPageOrders.length > 0) {
+            const index = currentPageOrders.findIndex((order) => order?.id === id)
+
+            if (index !== -1) {
+              currentPageOrders[index] = { ...currentPageOrders[index], status }
+            }
+          }
+
+          state.orderDetails.status = status
+        } else {
+          const currentPageOrdersForKitchen = state.ordersForKitchenPerPage[state.currentOrdersForKitchenPage]
+          const updatedOrders = currentPageOrdersForKitchen?.filter((order) => order.id !== id)
+          state.ordersForKitchenPerPage[state.currentOrdersForKitchenPage] = updatedOrders
+        }
 
         state.updatingOrderStatus = false
       })
@@ -402,16 +433,18 @@ const ordersSlice = createSlice({
       })
 
       //Confirmar orden desde el rol de administrador de restaurante o de sucursal
-      .addCase(confirmOrder.pending, (state, action) => {
+      .addCase(confirmOrder.pending, (state) => {
         state.updatingOrderStatus = true
       })
       .addCase(confirmOrder.fulfilled, (state, action) => {
         const { id, status } = action.payload
         const currentPageOrders = state.ordersPerPage[state.currentPage]
-        const index = currentPageOrders.findIndex((order) => order?.id === id)
+        if (currentPageOrders && currentPageOrders.length > 0) {
+          const index = currentPageOrders.findIndex((order) => order?.id === id)
 
-        if (index !== -1) {
-          currentPageOrders[index] = { ...currentPageOrders[index], status }
+          if (index !== -1) {
+            currentPageOrders[index] = { ...currentPageOrders[index], status }
+          }
         }
 
         state.orderDetails.status = status
@@ -429,10 +462,12 @@ const ordersSlice = createSlice({
       .addCase(cancelOrder.fulfilled, (state, action) => {
         const { id, status } = action.payload
         const currentPageOrders = state.ordersPerPage[state.currentPage]
-        const index = currentPageOrders.findIndex((order) => order?.id === id)
+        if (currentPageOrders && currentPageOrders.length > 0) {
+          const index = currentPageOrders.findIndex((order) => order?.id === id)
 
-        if (index !== -1) {
-          currentPageOrders[index] = { ...currentPageOrders[index], status }
+          if (index !== -1) {
+            currentPageOrders[index] = { ...currentPageOrders[index], status }
+          }
         }
         state.orderDetails.status = status
         state.cancelOrderStatus = false
@@ -479,10 +514,12 @@ const ordersSlice = createSlice({
       .addCase(assignDriver.fulfilled, (state, action) => {
         const { id, status } = action.payload
         const currentPageOrders = state.ordersPerPage[state.currentPage]
-        const index = currentPageOrders.findIndex((order) => order?.id === id)
+        if (currentPageOrders && currentPageOrders.length > 0) {
+          const index = currentPageOrders.findIndex((order) => order?.id === id)
 
-        if (index !== -1) {
-          currentPageOrders[index] = { ...currentPageOrders[index], status }
+          if (index !== -1) {
+            currentPageOrders[index] = { ...currentPageOrders[index], status }
+          }
         }
         state.orderDetails.status = status
         state.orderDetails.driver = action.payload
@@ -500,10 +537,12 @@ const ordersSlice = createSlice({
       .addCase(markOrderDelivered.fulfilled, (state, action) => {
         const { id, status } = action.payload
         const currentPageOrders = state.ordersPerPage[state.currentPage]
-        const index = currentPageOrders.findIndex((order) => order?.id === id)
+        if (currentPageOrders && currentPageOrders.length > 0) {
+          const index = currentPageOrders.findIndex((order) => order?.id === id)
 
-        if (index !== -1) {
-          currentPageOrders[index] = { ...currentPageOrders[index], status }
+          if (index !== -1) {
+            currentPageOrders[index] = { ...currentPageOrders[index], status }
+          }
         }
         state.orderDetails.status = status
         state.updatingOrderStatus = false
@@ -543,6 +582,7 @@ export const {
   setCurrentPage,
   setTotalOrders,
   setNewOrder,
+  setNewOrderForAdmins,
   setOrderStatus,
   setDateRange,
   setSelectedSearchOption,

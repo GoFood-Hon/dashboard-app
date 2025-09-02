@@ -3,16 +3,18 @@ import { useSocket } from "../hooks/useOrderSocket"
 import { notifications } from "@mantine/notifications"
 import { USER_ROLES } from "../utils/constants"
 import { useSelector, useDispatch } from "react-redux"
-import { setNewOrder, setOrderStatus } from "../store/features/ordersSlice"
+import { setNewOrder, setNewOrderForAdmins, setOrderStatus } from "../store/features/ordersSlice"
 import notificationSound from "../assets/sound/notificationSound.wav"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useLocation } from "react-router-dom"
 import { Button, Flex, Text } from "@mantine/core"
+import { fetchReservationDetails, setNewReservation } from "../store/features/reservationsSlice"
 
 export const NotificationProvider = ({ children }) => {
   const user = useSelector((state) => state.user.value)
   const orderSocket = useSocket()
   const dispatch = useDispatch()
   const navigate = useNavigate()
+  const location = useLocation()
 
   useEffect(() => {
     if (!orderSocket) return
@@ -56,21 +58,18 @@ export const NotificationProvider = ({ children }) => {
         withCloseButton: false,
         color: "green"
       })
-      try {
-        dispatch(setNewOrder(order))
-      } catch (error) {
-        console.error("Error al despachar la acción setNewOrder:", error)
-      }
+      dispatch(setNewOrderForAdmins(order))
     }
 
     const handleOrderReady = (order) => {
+      if (user.role !== USER_ROLES.kitchen) return
       playSound()
       notifications.show({
         id: order.id,
-        title: "Nueva orden",
+        title: "Orden actualizada",
         message: (
           <Flex direction="row" align="center" justify="space-between">
-            <Text size="sm">El pedido se marcó como preparado desde cocina</Text>
+            <Text size="sm">El pedido se marcó como preparado</Text>
             <Button
               size="xs"
               variant="light"
@@ -102,7 +101,7 @@ export const NotificationProvider = ({ children }) => {
             color: "green"
           })
         : notifications.show({
-            title: "Orden confirmada",
+            title: "Orden actualizada",
             message: `El administrador de ${user.role === USER_ROLES.administrator ? "restaurante" : "sucursal"} confirmó la orden`,
             autoClose: false,
             withCloseButton: true,
@@ -112,111 +111,185 @@ export const NotificationProvider = ({ children }) => {
       dispatch(setOrderStatus(order))
     }
 
-    const handleDriverAssigned = (order) => {
-      playSound()
-      notifications.show({
-        title: "Conductor asignado",
-        message: "Se asignó un conductor a la orden",
-        autoClose: true,
-        withCloseButton: true,
-        color: "green"
-      })
-      dispatch(setOrderStatus(order))
-    }
+    // const handleDriverAssigned = (order) => {
+    //   playSound()
+    //   notifications.show({
+    //     title: "Orden actualizada",
+    //     message: "Se asignó un conductor a la orden",
+    //     autoClose: true,
+    //     withCloseButton: true,
+    //     color: "green"
+    //   })
+    //   dispatch(setOrderStatus(order))
+    // }
 
     const handleOrderPickedUp = (order) => {
+      const isCurrentOrderPage = location.pathname === `/orders/${order.id}`
+
       playSound()
-      notifications.show({
-        id: order.id,
-        title: "Nueva orden",
-        message: (
-          <Flex direction="row" align="center" justify="space-between">
-            <Text size="sm">El repartidor recogió el pedido y va en camino a entregarlo</Text>
-            <Button
-              size="xs"
-              variant="light"
-              w="120px"
-              color="green"
-              onClick={() => {
-                navigate(`/orders/${order.id}`)
-                notifications.hide(order.id)
-              }}>
-              Ver pedido
-            </Button>
-          </Flex>
-        ),
-        autoClose: false,
-        withCloseButton: false,
-        color: "green"
-      })
+      if (isCurrentOrderPage) {
+        notifications.show({
+          title: "Orden actualizada",
+          message: "El repartidor recogió el pedido y va en camino a entregarlo",
+          autoClose: false,
+          color: "green",
+          withCloseButton: true
+        })
+      } else {
+        notifications.show({
+          id: order.id,
+          title: "Orden actualizada",
+          message: (
+            <Flex direction="row" align="center" justify="space-between">
+              <Text size="sm">El repartidor recogió el pedido y va en camino a entregarlo</Text>
+              <Button
+                size="xs"
+                variant="light"
+                w="120px"
+                color="green"
+                onClick={() => {
+                  navigate(`/orders/${order.id}`)
+                  notifications.hide(order.id)
+                }}>
+                Ver pedido
+              </Button>
+            </Flex>
+          ),
+          autoClose: false,
+          withCloseButton: false,
+          color: "green"
+        })
+      }
       dispatch(setOrderStatus(order))
     }
 
     const handleOrderDelivered = (order) => {
+      const isCurrentOrderPage = location.pathname === `/orders/${order.id}`
       playSound()
-      notifications.show({
-        id: order.id,
-        title: "Nueva orden",
-        message: (
-          <Flex direction="row" align="center" justify="space-between">
-            <Text size="sm">El repartidor marcó el pedido como entregado</Text>
-            <Button
-              size="xs"
-              variant="light"
-              w="120px"
-              color="green"
-              onClick={() => {
-                navigate(`/orders/${order.id}`)
-                notifications.hide(order.id)
-              }}>
-              Ver pedido
-            </Button>
-          </Flex>
-        ),
-        autoClose: false,
-        withCloseButton: false,
-        color: "green"
-      })
+      if (isCurrentOrderPage) {
+        notifications.show({
+          title: "Orden actualizada",
+          message: "El repartidor marcó el pedido como entregado",
+          autoClose: false,
+          color: "green",
+          withCloseButton: true
+        })
+      } else {
+        notifications.show({
+          id: order.id,
+          title: "Orden actualizada",
+          message: (
+            <Flex direction="row" align="center" justify="space-between">
+              <Text size="sm">El repartidor marcó el pedido como entregado</Text>
+              <Button
+                size="xs"
+                variant="light"
+                w="120px"
+                color="green"
+                onClick={() => {
+                  navigate(`/orders/${order.id}`)
+                  notifications.hide(order.id)
+                }}>
+                Ver pedido
+              </Button>
+            </Flex>
+          ),
+          autoClose: false,
+          withCloseButton: false,
+          color: "green"
+        })
+      }
       dispatch(setOrderStatus(order))
     }
 
     const handleNewReservation = (reservation) => {
       playSound()
       notifications.show({
-        title: "Solicitud de reservación",
-        message: "Se ha creado una nueva solicitud de reservación",
+        id: reservation.id,
+        title: "Nueva reservación",
+        message: (
+          <Flex direction="row" align="center" justify="space-between">
+            <Text size="sm">Se ha creado una nueva solicitud de reservación</Text>
+            <Button
+              size="xs"
+              variant="light"
+              w="125px"
+              color="green"
+              onClick={() => {
+                navigate(`/reservations/${reservation.id}`)
+                notifications.hide(reservation.id)
+              }}>
+              Ver reservación
+            </Button>
+          </Flex>
+        ),
         autoClose: false,
-        withCloseButton: true,
+        withCloseButton: false,
         color: "green"
       })
+      dispatch(setNewReservation(reservation))
     }
 
     const handleReservationStatus = (reservation) => {
       playSound()
       notifications.show({
+        id: reservation.id,
         title: "Reservación actualizada",
-        message: "Se cambió el estado de la reservación",
+        message: (
+          <Flex direction="row" align="center" justify="space-between">
+            <Text size="sm">Se cambió el estado de la reservación</Text>
+            <Button
+              size="xs"
+              variant="light"
+              w="125px"
+              color="green"
+              onClick={() => {
+                navigate(`/reservations/${reservation.id}`)
+                notifications.hide(reservation.id)
+              }}>
+              Ver reservación
+            </Button>
+          </Flex>
+        ),
         autoClose: false,
-        withCloseButton: true,
+        withCloseButton: false,
         color: "green"
       })
     }
 
     const handleReservationNewComment = (reservation) => {
+      if (reservation?.comments[0]?.userType === "AdminUser") return
       playSound()
       notifications.show({
-        title: "Reservación actualizada",
-        message: "Se cambió el estado de la reservación",
+        id: reservation.id,
+        title: "Nuevo comentario",
+        message: (
+          <Flex direction="row" align="center" justify="space-between">
+            <Text size="sm">Se agregó un nuevo comentario a la reservación</Text>
+            <Button
+              size="xs"
+              variant="light"
+              w="125px"
+              color="green"
+              onClick={() => {
+                navigate(`/reservations/${reservation.id}`)
+                notifications.hide(reservation.id)
+              }}>
+              Ver reservación
+            </Button>
+          </Flex>
+        ),
         autoClose: false,
-        withCloseButton: true,
+        withCloseButton: false,
         color: "green"
       })
+      dispatch(fetchReservationDetails(reservation?.id))
     }
 
     //Orders sockets
     orderSocket.on("newOrder", handleNewOrder)
     orderSocket.on("orderReady", handleOrderReady)
-    orderSocket.on("orderDriverAssigned", handleDriverAssigned)
+    //orderSocket.on("orderDriverAssigned", handleDriverAssigned)
     orderSocket.on("orderPickedUp", handleOrderPickedUp)
     orderSocket.on("orderDelivered", handleOrderDelivered)
     orderSocket.on("orderUpdate", handleOrderUpdate)
@@ -229,7 +302,7 @@ export const NotificationProvider = ({ children }) => {
     return () => {
       orderSocket.off("newOrder", handleNewOrder)
       orderSocket.off("orderReady", handleOrderReady)
-      orderSocket.off("orderDriverAssigned", handleDriverAssigned)
+      //orderSocket.off("orderDriverAssigned", handleDriverAssigned)
       orderSocket.off("orderUpdate", handleOrderUpdate)
       orderSocket.off("orderPickedUp", handleOrderPickedUp)
       orderSocket.off("orderDelivered", handleOrderDelivered)

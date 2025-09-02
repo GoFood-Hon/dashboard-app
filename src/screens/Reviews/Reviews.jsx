@@ -21,6 +21,9 @@ export default function Reviews() {
 
   const [opened, { open, close }] = useDisclosure(false)
   const [selectedReview, setSelectedReview] = useState(null)
+  const reviewTotal = parseFloat(
+    ((selectedReview?.driverRating + selectedReview?.foodRating + selectedReview?.suborderRating) / 3).toFixed(1)
+  )
 
   const handleOpenModal = (reviewId) => {
     const review = reviewsList.find((r) => r.id === reviewId)
@@ -32,6 +35,7 @@ export default function Reviews() {
     if (!reviewsPerPage[page]) {
       dispatch(fetchAllReviews({ restaurantId: user.restaurantId, limit, page, order: "DESC" }))
     }
+    console.log(reviewsList)
   }, [dispatch, limit, page, reviewsPerPage, user.role])
 
   return (
@@ -60,9 +64,9 @@ export default function Reviews() {
         {selectedReview && (
           <Stack gap="xs">
             <Flex direction="row" gap="xs" align="center">
-              <Card bg="yellow" radius="md">
-                <Text size="50px" fw={900}>
-                  {((selectedReview?.driverRating + selectedReview?.foodRating + selectedReview?.suborderRating) / 3).toFixed(1)}
+              <Card bg={reviewTotal < 2.8 ? "red" : reviewTotal < 3.8 ? "yellow" : "green"} p="xs" radius="md">
+                <Text size="55px" fw={900}>
+                  {reviewTotal}
                 </Text>
               </Card>
               <Flex direction="column" gap={5}>
@@ -77,7 +81,7 @@ export default function Reviews() {
             <Flex align="center" gap={5}>
               <IconMotorbike />
               <Text size="sm">Repartidor:</Text>
-              <Rating defaultValue={selectedReview?.driverRating || 0} />
+              <Rating defaultValue={selectedReview?.driverRating || 0} readOnly/>
               <Text size="sm">({selectedReview?.driverRating || 0})</Text>
             </Flex>
             <Card radius="md">
@@ -86,7 +90,7 @@ export default function Reviews() {
             <Flex align="center" gap={5}>
               <IconBurger />
               <Text size="sm">Producto:</Text>
-              <Rating defaultValue={selectedReview?.foodRating || 0} />
+              <Rating defaultValue={selectedReview?.foodRating || 0} readOnly/>
               <Text size="sm">({selectedReview?.foodRating || 0})</Text>
             </Flex>
             <Card radius="md">
@@ -95,7 +99,7 @@ export default function Reviews() {
             <Flex align="center" gap={5}>
               <IconBox />
               <Text size="sm">Orden:</Text>
-              <Rating defaultValue={selectedReview?.suborderRating || 0} />
+              <Rating defaultValue={selectedReview?.suborderRating || 0} readOnly/>
               <Text size="sm">({selectedReview?.suborderRating || 0})</Text>
             </Flex>
             <Card radius="md">

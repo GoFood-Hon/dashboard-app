@@ -51,9 +51,6 @@ export default function NewUser() {
       .then(() => {
         navigate(NAVIGATION_ROUTES_RES_ADMIN.Users.path)
       })
-      .catch((error) => {
-        console.error("Error creating user:", error)
-      })
   }
 
   const accordionStructure = [

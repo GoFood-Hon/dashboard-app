@@ -35,7 +35,7 @@ export default function PurchasesHistory() {
 
   return (
     <TableViewLayout
-      title="Historial de compras"
+      title="Historial de clientes"
       items={purchaseHistoryData}
       tableStructure="purchasesHistoryScreen"
       loading={loadingHistory}

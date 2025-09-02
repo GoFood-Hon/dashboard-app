@@ -55,7 +55,7 @@ export default function AccountSettings() {
       if (response.error) {
         showNotification({
           title: "Error",
-          message: response.message,
+          message: response?.error?.details?.errors[0]?.message,
           color: "red"
         })
       } else {

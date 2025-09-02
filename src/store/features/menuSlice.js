@@ -445,10 +445,12 @@ export const menusSlice = createSlice({
       .addCase(updateMenuStatus.fulfilled, (state, action) => {
         const { id, isActive } = action.payload
         const currentPageMenus = state.menusPerPage[state.currentPage]
-        const index = currentPageMenus.findIndex((restaurant) => restaurant?.id === id)
+        if (currentPageMenus && currentPageMenus.length > 0) {
+          const index = currentPageMenus.findIndex((restaurant) => restaurant?.id === id)
 
-        if (index !== -1) {
-          currentPageMenus[index] = { ...currentPageMenus[index], isActive }
+          if (index !== -1) {
+            currentPageMenus[index] = { ...currentPageMenus[index], isActive }
+          }
         }
       })
       .addCase(updateMenu.pending, (state) => {
@@ -457,10 +459,12 @@ export const menusSlice = createSlice({
       .addCase(updateMenu.fulfilled, (state, action) => {
         const { id } = action.payload
         const currentPageMenus = state.menusPerPage[state.currentPage]
-        const index = currentPageMenus.findIndex((menu) => menu.id === id)
+        if (currentPageMenus && currentPageMenus.length > 0) {
+          const index = currentPageMenus.findIndex((menu) => menu.id === id)
 
-        if (index !== -1) {
-          currentPageMenus[index] = action.payload
+          if (index !== -1) {
+            currentPageMenus[index] = action.payload
+          }
         }
         state.updatingMenus = false
       })

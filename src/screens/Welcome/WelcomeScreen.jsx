@@ -6,7 +6,6 @@ import { APP_ROLES, branchWelcomeCards, kitchenWelcomeCards } from "../../utils/
 
 export const WelcomeScreen = () => {
   const user = useSelector((state) => state.user.value)
-
   const [welcomeCards, setWelcomeCards] = useState([])
 
   useEffect(() => {

@@ -29,26 +29,10 @@ const LoyaltyCardView = ({
 }) => {
   const [opened, { close, open }] = useDisclosure(false)
   const dispatch = useDispatch()
-  
+
   return (
     <>
-      <Paper mih={190} key={key} p="sm" radius="md" style={{ position: "relative", overflow: "hidden" }}>
-        {!tracking && (
-          <CloseButton
-            style={{
-              position: "absolute",
-              right: 8,
-              top: 8,
-              zIndex: 12,
-              display: user?.role === "superadmin" ? "none" : "block"
-            }}
-            onClick={() => {
-              openDelete()
-              setIndex(cardIndex)
-            }}
-          />
-        )}
-
+      <Paper mih={190} w='100%' key={key} p="sm" radius="md" style={{ position: "relative", overflow: "hidden" }}>
         {tracking && !isRewardADiscountInPurchase && (
           <MantineProvider theme={theme}>
             <Tooltip
@@ -65,7 +49,7 @@ const LoyaltyCardView = ({
                 }}
                 value={checked}
                 checked={checked}
-                color={colors.main_app_color} 
+                color={colors.main_app_color}
                 onClick={() => !checked && open()}
               />
             </Tooltip>
@@ -86,13 +70,23 @@ const LoyaltyCardView = ({
         </div>
 
         <div style={{ position: "relative", zIndex: 10 }}>
-          <Group justify="apart" grow>
+          <Group justify="apart" grow w='100%'>
             <Stack gap="xs">
-              <Flex align="center" gap={4}>
-                <IconStarFilled color={colors.yellow_logo} size="1rem" />
-                <Text c={colors.yellow_logo} tt="uppercase" fw={700} fz="xs">
-                  Tarjeta de {type === "fijo" ? "descuento fijo" : type === "porcentaje" ? "descuento porcentual" : "beneficio"}
-                </Text>
+              <Flex align='center' justify='space-between'>
+                <Flex align="center" gap={4}>
+                  <IconStarFilled color={colors.yellow_logo} size="1rem" />
+                  <Text c={colors.yellow_logo} tt="uppercase" fw={700} fz="xs">
+                    Tarjeta de {type === "fijo" ? "descuento fijo" : type === "porcentaje" ? "descuento porcentual" : "beneficio"}
+                  </Text>
+                  {!tracking && (
+                    <CloseButton
+                      onClick={() => {
+                        openDelete()
+                        setIndex(cardIndex)
+                      }}
+                    />
+                  )}
+                </Flex>
               </Flex>
               <Text fw={700} fz="sm">
                 Activación:{" "}

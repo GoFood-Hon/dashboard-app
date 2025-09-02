@@ -29,11 +29,20 @@ export default function Login() {
     try {
       const res = await authApi.login({ email, password })
 
+      if (res?.data?.user?.role === "driver") {
+        setIsLoading(false)
+        showNotification({
+          title: "Error",
+          message: "Los usuarios repartidores no tienen acceso a este sistema",
+          color: "red"
+        })
+        return
+      }
       if (res.status === "fail" || res?.data?.user?.role === "driver") {
         setIsLoading(false)
         showNotification({
           title: "Error",
-          message: "Usuario o contraseña incorrecta",
+          message: res.message,
           color: "red"
         })
         return

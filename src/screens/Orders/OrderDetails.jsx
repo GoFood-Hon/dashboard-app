@@ -213,7 +213,7 @@ export const OrderDetails = () => {
                               {orderDetails?.serviceType === "delivery"
                                 ? "Pedido a domicilio"
                                 : orderDetails?.serviceType === "onSite"
-                                  ? "Pedido para comer en sitio"
+                                  ? "Pedido para venta en mesa"
                                   : "Pedido para llevar"}
                             </Text>
                           </Flex>
@@ -451,7 +451,7 @@ export const OrderDetails = () => {
                                 </Text>
                               )
                             ) : orderDetails?.status === orderStatusValues.readyForCustomer ? (
-                              user.role === APP_ROLES.restaurantAdmin || user.role === APP_ROLES.branchAdmin ? (
+                              user.role === APP_ROLES.restaurantAdmin || user.role === APP_ROLES.branchAdmin || user.role === APP_ROLES.cashierUser ? (
                                 <Button
                                   fullWidth
                                   loading={updatingOrderStatus}

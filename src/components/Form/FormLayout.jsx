@@ -1,4 +1,4 @@
-import { Accordion, Button, Flex, Group, Stack, Paper, ThemeIcon, Text, Space } from "@mantine/core"
+import { Accordion, Button, Flex, Group, Stack, Paper, ThemeIcon, Text } from "@mantine/core"
 import React from "react"
 import BackButton from "../../screens/Dishes/components/BackButton"
 import { colors } from "../../theme/colors"
@@ -13,6 +13,7 @@ const FormLayout = ({
   update,
   navigate,
   isLoading,
+  isLoadingStatus,
   noDiscard,
   noButtons,
   statusButton,
@@ -27,9 +28,7 @@ const FormLayout = ({
             <Text fw={700}>{key + 1}</Text>
           </ThemeIcon>
           <Flex>
-            <Text fw={700}>
-              {item.title}
-            </Text>
+            <Text fw={700}>{item.title}</Text>
           </Flex>
         </Flex>
       </Accordion.Control>
@@ -45,6 +44,7 @@ const FormLayout = ({
           <Button
             style={{ display: statusButton ? "block" : "none" }}
             color={colors.main_app_color}
+            loading={isLoadingStatus}
             onClick={() => {
               dispatch(updateLoyaltyProgramStatus({ id: data?.id, params: { isActive: !data?.isActive } }))
             }}>

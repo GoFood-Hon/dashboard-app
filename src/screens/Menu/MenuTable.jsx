@@ -86,7 +86,7 @@ export default function MenuTable({
       orderHistoryScreen: NAVIGATION_ROUTES_KITCHEN.OrderHistory.path,
       reservationsScreen: NAVIGATION_ROUTES_RES_ADMIN.Reservations.path,
       collectionsScreen: NAVIGATION_ROUTES_SUPER_ADMIN.Collections.path,
-      loyaltyProgramsScreen: NAVIGATION_ROUTES_RES_ADMIN.Loyalty.path,
+      loyaltyProgramsScreen: NAVIGATION_ROUTES_SUPER_ADMIN.Loyalty.path,
       promotionsScreen: SETTING_NAVIGATION_ROUTES.Promotions.path,
       couponsScreen: SETTING_NAVIGATION_ROUTES.Coupons.path,
       purchasesHistoryScreen: NAVIGATION_ROUTES_RES_ADMIN.Pedidos.OrderPurchasesHistory.path,
@@ -293,7 +293,7 @@ export default function MenuTable({
       {
         label: "Tipo de servicio",
         accessor: "serviceType",
-        render: (service) => (service === "pickup" ? "Para llevar" : service === "onSite" ? "Comer en sitio" : "A domicilio")
+        render: (service) => (service === "pickup" ? "Para llevar" : service === "onSite" ? "Venta en mesa" : "A domicilio")
       },
       { label: "Total", accessor: "total", render: (total) => getFormattedHNL(total) },
       {
@@ -428,7 +428,7 @@ export default function MenuTable({
       {
         label: "Tipo de servicio",
         accessor: "serviceType",
-        render: (service) => (service === "pickup" ? "Para llevar" : service === "onSite" ? "Comer en sitio" : "A domicilio")
+        render: (service) => (service === "pickup" ? "Para llevar" : service === "onSite" ? "Venta en mesa" : "A domicilio")
       },
       { label: "Total", accessor: "total", render: (total) => getFormattedHNL(total) },
       {
@@ -784,7 +784,7 @@ export default function MenuTable({
         accessor: "name",
         render: (name, item) => (
           <div className="flex items-center gap-2">
-            <Avatar size={30} src={item?.photo} radius={26} />
+            <Avatar size={30} src={item?.User?.photo} radius={26} />
             {name}
           </div>
         )

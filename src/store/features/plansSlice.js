@@ -311,10 +311,12 @@ const plansSlice = createSlice({
       .addCase(updatePlanStatus.fulfilled, (state, action) => {
         const { id, isActive } = action.payload
         const currentPagePlans = state.plansByPage[state.currentPage]
-        const index = currentPagePlans.findIndex((plan) => plan?.id === id)
+        if (currentPagePlans && currentPagePlans.length > 0) {
+          const index = currentPagePlans.findIndex((plan) => plan?.id === id)
 
-        if (index !== -1) {
-          currentPagePlans[index] = { ...currentPagePlans[index], isActive }
+          if (index !== -1) {
+            currentPagePlans[index] = { ...currentPagePlans[index], isActive }
+          }
         }
       })
       .addCase(updatePlanData.pending, (state) => {
@@ -323,15 +325,17 @@ const plansSlice = createSlice({
       .addCase(updatePlanData.fulfilled, (state, action) => {
         const { id, name, paymentType, price, updatedAt } = action.payload
         const currentPagePlans = state.plansByPage[state.currentPage]
-        const index = currentPagePlans.findIndex((plan) => plan?.id == id)
+        if (currentPagePlans && currentPagePlans.length > 0) {
+          const index = currentPagePlans.findIndex((plan) => plan?.id == id)
 
-        if (index !== -1) {
-          currentPagePlans[index] = {
-            ...currentPagePlans[index],
-            name,
-            paymentType,
-            price,
-            updatedAt
+          if (index !== -1) {
+            currentPagePlans[index] = {
+              ...currentPagePlans[index],
+              name,
+              paymentType,
+              price,
+              updatedAt
+            }
           }
         }
         state.updatingPlan = false

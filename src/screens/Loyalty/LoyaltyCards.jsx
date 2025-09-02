@@ -64,7 +64,7 @@ const LoyaltyCards = ({ register, setValue, control, errors, watch }) => {
         if (duplicate) {
           errors.push("No pueden haber dos tarjetas con el mismo número de compras para iniciar recompensa")
         }
-      }s
+      }
 
       if (isRewardADiscountInPurchase) {
         if (type === "porcentaje") {
