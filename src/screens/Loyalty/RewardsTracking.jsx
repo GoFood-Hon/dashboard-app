@@ -193,6 +193,7 @@ const RewardsTracking = () => {
                       cardIndex={index}
                       tracking
                       checked={card?.isRedeemed}
+                      redeemedDate={card?.redeemedDate}
                     />
                   ))}
                 </SimpleGrid>

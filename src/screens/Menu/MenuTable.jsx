@@ -31,7 +31,7 @@ import "dayjs/locale/es"
 import { useDispatch } from "react-redux"
 import { TableSkeleton } from "../../components/Skeletons/TableSkeleton"
 import { updateOtherUserStatus, updateUserStatus } from "../../store/features/userSlice"
-import { formatTime, getFormattedHNL } from "../../utils"
+import { formatTime, getFormattedHNL, getFormattedUSD } from "../../utils"
 import customParseFormat from "dayjs/plugin/customParseFormat"
 import utc from "dayjs/plugin/utc"
 import timezone from "dayjs/plugin/timezone"
@@ -108,7 +108,7 @@ export default function MenuTable({
           </div>
         )
       },
-      { label: "Creado", accessor: "createdAt" },
+      { label: "Fecha y hora", accessor: "createdAt" },
       { label: "N° de productos", accessor: "dishesCount", center: true },
       {
         label: "Estado",
@@ -177,7 +177,7 @@ export default function MenuTable({
       },
       { label: "Correo", accessor: "email" },
       { label: "Teléfono", accessor: "phoneNumber" },
-      { label: "Fecha", accessor: "createdAt" },
+      { label: "Fecha y hora", accessor: "createdAt" },
       {
         label: "Estado",
         accessor: "active",
@@ -237,7 +237,7 @@ export default function MenuTable({
       { label: "Rol", accessor: "role" },
       { label: "Correo", accessor: "email" },
       { label: "Teléfono", accessor: "phoneNumber" },
-      { label: "Creado", accessor: "createdAt" },
+      { label: "Fecha y hora", accessor: "createdAt" },
       {
         label: "Estado",
         accessor: "active",
@@ -361,8 +361,8 @@ export default function MenuTable({
       },
       {
         label: "Precio",
-        render: (price) => {
-          return getFormattedHNL(price)
+        render: (price, item) => {
+          return item.currency === "USD" ? getFormattedUSD(price) : getFormattedHNL(price)
         },
         accessor: "price"
       },
@@ -492,7 +492,7 @@ export default function MenuTable({
       { label: "Sucursal", accessor: "name" },
       { label: "Creación", accessor: "createdAt" },
       { label: "Sillas reservadas", accessor: "chairs", center: true },
-      { label: "Fecha de reserva", accessor: "reservationDate" },
+      { label: "Fecha y hora", accessor: "reservationDate" },
       {
         label: "Pagado",
         accessor: "isPayed",
@@ -535,7 +535,7 @@ export default function MenuTable({
       { label: "Título", accessor: "title" },
       { label: "Restaurante", accessor: "restaurantName" },
       { label: "Cantidad máxima de compras", accessor: "maximumAmountOfPurchasesAllowed", center: true },
-      { label: "Fecha de creación", accessor: "createdAt" },
+      { label: "Fecha y hora", accessor: "createdAt" },
       { label: "Estado", accessor: "isActive", render: (active) => (active ? "Activo" : "Inactivo") },
       {
         label: "Acciones",
@@ -573,7 +573,7 @@ export default function MenuTable({
         render: (dishes, item) =>
           item.type === "restaurants" ? item.restaurants?.length || item.restaurants : dishes?.length || dishes
       },
-      { label: "Fecha de creación", accessor: "createdAt" },
+      { label: "Fecha y hora", accessor: "createdAt" },
       {
         label: "Estado",
         accessor: "isActive",
@@ -629,7 +629,7 @@ export default function MenuTable({
         accessor: "category",
         render: (category) => (category === "fijo" ? "Monto fijo" : "Porcentaje")
       },
-      { label: "Fecha de creación", accessor: "createdAt" },
+      { label: "Fecha y hora", accessor: "createdAt" },
       {
         label: "Estado",
         accessor: "available",
@@ -703,7 +703,7 @@ export default function MenuTable({
         accessor: "couponType",
         render: (type) => (type === "fecha" ? "Fecha de vigencia" : "Cantidad de usos")
       },
-      { label: "Fecha de creación", accessor: "createdAt" },
+      { label: "Fecha y hora", accessor: "createdAt" },
       {
         label: "Estado",
         accessor: "isActive",
@@ -794,7 +794,7 @@ export default function MenuTable({
         accessor: "email"
       },
       { label: "Teléfono", accessor: "phoneNumber" },
-      { label: "Fecha de creación", accessor: "createdAt" },
+      { label: "Fecha y hora", accessor: "createdAt" },
       {
         label: "Acciones",
         accessor: "id",
@@ -855,17 +855,15 @@ export default function MenuTable({
                               textAlign: column.center ? "center" : "left"
                             }}
                             key={column.accessor}>
-                            {column.accessor === "createdAt" || column.accessor === "updatedAt" || column.accessor === "paidDate"
-                              ? dayjs(item[column.accessor]).fromNow()
-                              : column.accessor === "orderDate"
-                                ? formatTime(item[column.accessor])
-                                : column.accessor === "reservationDate"
-                                  ? dayjs(item[column.accessor])
-                                      .tz("America/Tegucigalpa")
-                                      .format("D [de] MMMM [del] YYYY [a las] h:mm A")
-                                  : column.render
-                                    ? column.render(item[column.accessor], item)
-                                    : item[column.accessor]}
+                            {column.accessor === "createdAt" ||
+                            column.accessor === "updatedAt" ||
+                            column.accessor === "paidDate" ||
+                            column.accessor === "orderDate" ||
+                            column.accessor === "reservationDate"
+                              ? formatTime(item[column.accessor])
+                              : column.render
+                                ? column.render(item[column.accessor], item)
+                                : item[column.accessor]}
                           </Table.Td>
                         ))}
                       </Table.Tr>

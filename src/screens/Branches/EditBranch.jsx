@@ -12,6 +12,7 @@ import { setShippingRange, updateBranches } from "../../store/features/branchesS
 import FormLayout from "../../components/Form/FormLayout"
 import { editBranchSchema } from "../../utils/validationSchemas"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { LoadingPage } from "../../components/LoadingPage"
 
 export const EditBranch = () => {
   const { branchId } = useParams()
@@ -25,6 +26,7 @@ export const EditBranch = () => {
     setTableOfficeModified(true)
   }
   const [details, setDetails] = useState({})
+  const [loading, setLoading] = useState(false)
 
   const {
     register,
@@ -43,6 +45,7 @@ export const EditBranch = () => {
   dispatch(setShippingRange(watch("maxDistanceShipping") || 0))
 
   useEffect(() => {
+    setLoading(true)
     const fetchData = async () => {
       try {
         const response = await branchesApi.getBranch(branchId)
@@ -51,6 +54,8 @@ export const EditBranch = () => {
         setIsAlwaysOpen(response?.data?.alwaysOpen)
       } catch (error) {
         throw error
+      } finally {
+        setLoading(false)
       }
     }
 
@@ -139,17 +144,21 @@ export const EditBranch = () => {
 
   return (
     <>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <FormLayout
-          title={details?.name}
-          show
-          accordionTitles={["Información general", "Ubicación", "Horario"]}
-          accordionStructure={accordionStructure}
-          navigate={() => navigate(NAVIGATION_ROUTES_RES_ADMIN.Branches.path)}
-          isLoading={updatingBranches}
-          update
-        />
-      </form>
+      {loading ? (
+        <LoadingPage />
+      ) : (
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <FormLayout
+            title={details?.name}
+            show
+            accordionTitles={["Información general", "Ubicación", "Horario"]}
+            accordionStructure={accordionStructure}
+            navigate={() => navigate(NAVIGATION_ROUTES_RES_ADMIN.Branches.path)}
+            isLoading={updatingBranches}
+            update
+          />
+        </form>
+      )}
     </>
   )
 }

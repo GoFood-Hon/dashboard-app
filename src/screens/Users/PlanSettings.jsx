@@ -7,17 +7,17 @@ import InputField from "../../components/Form/InputField"
 import { useNavigate } from "react-router-dom"
 import { SETTING_NAVIGATION_ROUTES } from "../../routes"
 import plansApi from "../../api/plansApi"
-import toast from "react-hot-toast"
 import { colors } from "../../theme/colors"
 import { IconCreditCard } from "@tabler/icons-react"
 import classes from "./CreditCard.module.css"
 import BackButton from "../Dishes/components/BackButton"
 import classesTwo from "./CardGradient.module.css"
-import { getFormattedHNL } from "../../utils"
+import { getFormattedHNL, getFormattedUSD, toPercentage } from "../../utils"
 import { IconCircleCheckFilled } from "@tabler/icons-react"
 import { IconCircleXFilled } from "@tabler/icons-react"
 import { IconCarambola } from "@tabler/icons-react"
 import { cardLogos } from "../../utils/constants"
+import { showNotification } from "@mantine/notifications"
 
 export default function PlanSettings() {
   const user = useSelector((state) => state.user.value)
@@ -41,19 +41,28 @@ export default function PlanSettings() {
       const response = await plansApi.addCard(formData)
 
       if (response.error) {
-        toast.error(`Fallo al agregar el método de pago. Por favor intente de nuevo. ${response.message}`, {
-          duration: 7000
+        showNotification({
+          title: "Fallo al agregar la tarjeta",
+          message: response.message,
+          color: "red",
+          autoClose: 7000
         })
       } else {
         navigate(SETTING_NAVIGATION_ROUTES.General.path)
-        toast.success("Método agregado exitosamente", {
-          duration: 7000
+        showNotification({
+          title: "Tarjeta agregada",
+          message: "El método de pago ha sido agregado exitosamente",
+          color: "green",
+          autoClose: 7000
         })
       }
       return response.data
     } catch (error) {
-      toast.error(`Error. Por favor intente de nuevo. ${error}`, {
-        duration: 7000
+      showNotification({
+        title: "Fallo al agregar la tarjeta",
+        message: `Por favor intente de nuevo`,
+        color: "red",
+        autoClose: 7000
       })
     }
   }
@@ -65,13 +74,19 @@ export default function PlanSettings() {
         if (response.status === "success") {
           setCreditCard(response.data)
         } else {
-          toast.error("Hubo un problema obteniendo la información de la tarjeta", {
-            duration: 7000
+          showNotification({
+            title: "Fallo al obtener la información de la tarjeta",
+            message: response.message,
+            color: "red",
+            autoClose: 7000
           })
         }
       } catch (error) {
-        toast.error(`Error. Por favor intente de nuevo. ${error}`, {
-          duration: 7000
+        showNotification({
+          title: "Fallo al obtener la información de la tarjeta",
+          message: `Por favor intente de nuevo`,
+          color: "red",
+          autoClose: 7000
         })
       }
     })()
@@ -107,7 +122,7 @@ export default function PlanSettings() {
                 </Center>
               ) : (
                 <Center h="100%" p="xl">
-                  <Text c="gray" fw={500}>
+                  <Text c="dimmed" fw={600}>
                     Sin tarjeta disponible
                   </Text>
                 </Center>
@@ -155,10 +170,10 @@ const PlanDetailsCard = ({ plan }) => {
               {name.toUpperCase()}
             </Text>
             <Text>
-              Precio: {price !== "0.00" ? getFormattedHNL(price) : "Gratuito"}{" "}
+              Precio: {price !== "0.00" ? (currency === "USD" ? getFormattedUSD(price) : getFormattedHNL(price)) : "Gratuito"}{" "}
               {price !== "0.00" ? (paymentType.toLowerCase() === "mensual" ? "mensuales" : "anuales") : ""}
             </Text>
-            <Text>Impuesto: {tax !== "0.00" ? `${tax}%` : "Ninguno"}</Text>
+            <Text>Impuesto: {tax !== "0.00" ? toPercentage(tax) : "Ninguno"}</Text>
             <Text>Moneda: {currency}</Text>
           </Stack>
         </Flex>

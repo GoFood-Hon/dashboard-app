@@ -14,7 +14,8 @@ const initialState = {
   loadingReviews: false,
   loadingReviewDetails: false,
   updatingVisibility: false,
-  error: null
+  error: null,
+  rating: null,
 }
 
 export const fetchAllReviews = createAsyncThunk(
@@ -33,7 +34,7 @@ export const fetchAllReviews = createAsyncThunk(
         return rejectWithValue(response.error)
       }
 
-      return { data: response.data, results: response.results, page }
+      return { data: response.data, results: response.results, page, ratingAverage: response.restaurantRating }
     } catch (error) {
       return rejectWithValue(error.response?.data || "Error fetching reviews")
     }
@@ -77,10 +78,11 @@ const reviewsSlice = createSlice({
         state.loadingReviews = true
       })
       .addCase(fetchAllReviews.fulfilled, (state, action) => {
-        const { data, results, page } = action.payload
+        const { data, results, page, ratingAverage } = action.payload
         state.reviewsPerPage[page] = data
         state.loadingReviews = false
         state.currentPage = page
+        state.rating = ratingAverage
         state.totalReviews = results
         state.totalPagesCount = Math.ceil(results / action.meta.arg.limit)
       })

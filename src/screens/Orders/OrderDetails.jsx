@@ -11,7 +11,6 @@ import {
   Text,
   Title,
   Button,
-  Loader,
   Avatar,
   ScrollArea,
   Checkbox,
@@ -22,12 +21,21 @@ import {
   CopyButton,
   Tooltip,
   ActionIcon,
-  rem
+  rem,
+  Box
 } from "@mantine/core"
 import React, { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import { calculateTimeDifference, getFormattedHNL } from "../../utils"
-import { APP_ROLES, orderDeliveryTypes, orderStates, orderStatusValues, SECONDARY_COL_HEIGHT, theme } from "../../utils/constants"
+import {
+  APP_ROLES,
+  billsData,
+  orderDeliveryTypes,
+  orderStates,
+  orderStatusValues,
+  SECONDARY_COL_HEIGHT,
+  theme
+} from "../../utils/constants"
 import { DishOrderDetailCard } from "./DishOrderDetailCard"
 import { useSelector } from "react-redux"
 import { colors } from "../../theme/colors"
@@ -65,6 +73,7 @@ import { IconTable } from "@tabler/icons-react"
 import dayjs from "dayjs"
 import { IconCheck } from "@tabler/icons-react"
 import { IconCopy } from "@tabler/icons-react"
+import { LoadingPage } from "../../components/LoadingPage"
 
 export const OrderDetails = () => {
   const { orderId } = useParams()
@@ -76,7 +85,8 @@ export const OrderDetails = () => {
   const [opened, { open, close }] = useDisclosure(false)
   const [openedModal, { open: openModal, close: closeModal }] = useDisclosure(false)
   const [openedComments, { open: openModalComment, close: closeModalComment }] = useDisclosure(false)
-  const isSmallScreen = useMediaQuery("(max-width: 768px)")
+  const [openedBill, { open: openBillModal, close: closeBillModal }] = useDisclosure(false)
+  const isSmallScreen = useMediaQuery("(max-width: 1080px)")
   const getInitialStep = () => {
     const serviceSteps = orderStates[orderDetails?.serviceType] || []
     const matchingStep = serviceSteps.find((step) => step.value === orderDetails.status)
@@ -95,16 +105,14 @@ export const OrderDetails = () => {
   return (
     <>
       {loadingDetails ? (
-        <div className="h-[calc(100vh-150px)] w-full flex justify-center items-center">
-          <Loader color={colors.main_app_color} />
-        </div>
+        <LoadingPage />
       ) : (
         <>
           <Stack gap="xs">
             <Group>
               <Flex align="center" justify="space-between" gap="xs">
-                <BackButton title={orderId} show />
-                <CopyButton value={orderId} timeout={2000}>
+                <BackButton title={orderDetails?.orderId} show />
+                <CopyButton value={orderDetails?.orderId} timeout={2000}>
                   {({ copied, copy }) => (
                     <Tooltip label={copied ? "Copiado" : "Copiar"} withArrow position="right">
                       <ActionIcon color={copied ? "teal" : "gray"} variant="subtle" onClick={copy}>
@@ -179,7 +187,7 @@ export const OrderDetails = () => {
               )}
             </Paper>
 
-            <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="xs">
+            <SimpleGrid cols={{ base: 1, xl: 2 }} spacing="xs">
               <Paper withBorder radius="md" style={{ height: "77vh", display: "flex", flexDirection: "column" }} p="md">
                 <Stack gap="xs">
                   <Group grow>
@@ -200,7 +208,7 @@ export const OrderDetails = () => {
                           </Text>
                           <Text c="white">{orderDetails?.Sucursal?.city + ", " + orderDetails?.Sucursal?.state}</Text>
                         </Flex>
-                        <Flex direction={isSmallScreen ? 'column' : 'row'} gap={isSmallScreen && 3} justify="space-between">
+                        <Flex direction={isSmallScreen ? "column" : "row"} gap={isSmallScreen && 3} justify="space-between">
                           <Flex c="white" align="center" gap={2}>
                             {orderDetails?.serviceType === "delivery" ? (
                               <IconMotorbike size="1.1rem" />
@@ -260,40 +268,23 @@ export const OrderDetails = () => {
               <Grid grow gutter="xs">
                 <Grid.Col span={{ base: 12, md: 6 }}>
                   <Paper withBorder radius="md" h={SECONDARY_COL_HEIGHT} p="md">
-                    {user?.role !== "kitchen" ? (
-                      <UserData
-                        title="Datos del cliente"
-                        icon={<IconUser size="1.1rem" />}
-                        photo={orderDetails?.Order?.User?.photo}
-                        name={orderDetails?.Order?.User?.name}
-                        email={orderDetails?.Order?.User?.email}
-                        userId={orderDetails?.Order?.User?.identityNumber}
-                        phoneNumber={orderDetails?.Order?.User?.phoneNumber}
-                        address={orderDetails?.userAddress?.address}
-                        isSmallScreen={isSmallScreen}
-                        orderDetails={orderDetails}
-                      />
-                    ) : (
-                      <UserData
-                        title="Datos del pedido"
-                        icon={<IconBorderCorners size="1.1rem" />}
-                        photo={orderDetails?.Order?.User?.photo}
-                        name={orderDetails?.Order?.User?.name}
-                        email={orderId}
-                        phoneNumber={dayjs(orderDetails?.Order?.User?.created_at)
-                          .tz("America/Tegucigalpa")
-                          .format("D [de] MMMM [del] YYYY [a las] h:mm A")}
-                        address={orderDetails?.userAddress?.address}
-                        isSmallScreen={isSmallScreen}
-                        orderDetails={orderDetails}
-                        noIcons
-                      />
-                    )}
+                    <UserData
+                      title="Datos del cliente"
+                      icon={<IconUser size="1.1rem" />}
+                      photo={orderDetails?.Order?.User?.photo}
+                      name={orderDetails?.Order?.User?.name}
+                      email={orderDetails?.Order?.User?.email}
+                      userId={orderDetails?.Order?.User?.identityNumber}
+                      phoneNumber={orderDetails?.Order?.User?.phoneNumber}
+                      address={orderDetails?.userAddress?.address}
+                      isSmallScreen={isSmallScreen}
+                      orderDetails={orderDetails}
+                    />
                   </Paper>
                 </Grid.Col>
                 <Grid.Col span={{ base: 12, md: 6 }}>
                   <Paper withBorder radius="md" h={SECONDARY_COL_HEIGHT} p="md">
-                    {user?.role !== "kitchen" ? (
+                    {user?.role !== "kitchen" && orderDetails?.serviceType !== "onSite" ? (
                       <UserData
                         title="Datos del repartidor"
                         icon={<IconHelmet size="1.1rem" />}
@@ -315,7 +306,7 @@ export const OrderDetails = () => {
                           orderDetails?.serviceType === "delivery"
                             ? "Pedido a domicilio"
                             : orderDetails?.serviceType === "onSite"
-                              ? orderDetails?.tableNumberAndText
+                              ? `Servir pedido en mesa #${orderDetails?.tableNumber}`
                               : "Pedido para llevar"
                         }
                       />
@@ -366,16 +357,9 @@ export const OrderDetails = () => {
                           </Grid>
                         </Stack>
 
-                        <Card withBorder radius="md" mt="auto" py="xs">
-                          <Grid py={1}>
-                            <Grid.Col span={6}>
-                              <Text size={isSmallScreen ? "xs" : "sm"}>Propina</Text>
-                            </Grid.Col>
-                            <Grid.Col span={6}>
-                              <Text size={isSmallScreen ? "xs" : "sm"}>{getFormattedHNL(orderDetails?.tip)}</Text>
-                            </Grid.Col>
-                          </Grid>
-                        </Card>
+                        <Button mt="auto" py="xs" color={colors.main_app_color} onClick={() => openBillModal()}>
+                          Ver factura detallada
+                        </Button>
                       </Flex>
                     ) : (
                       <UserData
@@ -451,7 +435,9 @@ export const OrderDetails = () => {
                                 </Text>
                               )
                             ) : orderDetails?.status === orderStatusValues.readyForCustomer ? (
-                              user.role === APP_ROLES.restaurantAdmin || user.role === APP_ROLES.branchAdmin || user.role === APP_ROLES.cashierUser ? (
+                              user.role === APP_ROLES.restaurantAdmin ||
+                              user.role === APP_ROLES.branchAdmin ||
+                              user.role === APP_ROLES.cashierUser ? (
                                 <Button
                                   fullWidth
                                   loading={updatingOrderStatus}
@@ -594,6 +580,45 @@ export const OrderDetails = () => {
               <Text c="dimmed" pt="xs" size="sm">
                 {orderDetails?.note}
               </Text>
+            </Paper>
+          </ModalLayout>
+
+          <ModalLayout opened={openedBill} onClose={closeBillModal} title="Detalle de factura" size="lg">
+            <Paper p="md" withBorder radius="md">
+              <Stack>
+                <Box
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "1fr auto",
+                    rowGap: 8,
+                    columnGap: 16
+                  }}>
+                  {billsData(orderDetails).map(([label, value]) => (
+                    <React.Fragment key={label}>
+                      <Text size="sm">{label}</Text>
+                      <Text size="sm" c="dimmed" ta="left">
+                        {value}
+                      </Text>
+                    </React.Fragment>
+                  ))}
+                </Box>
+
+                <Card withBorder radius="md" p="xs">
+                  <Box
+                    style={{
+                      display: "grid",
+                      gridTemplateColumns: "1fr auto",
+                      alignItems: "center"
+                    }}>
+                    <Text size="sm" fw={600}>
+                      Total
+                    </Text>
+                    <Text size="sm" fw={600} ta="left">
+                      {getFormattedHNL(orderDetails?.total)}
+                    </Text>
+                  </Box>
+                </Card>
+              </Stack>
             </Paper>
           </ModalLayout>
         </>

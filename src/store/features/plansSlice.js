@@ -323,7 +323,7 @@ const plansSlice = createSlice({
         state.updatingPlan = true
       })
       .addCase(updatePlanData.fulfilled, (state, action) => {
-        const { id, name, paymentType, price, updatedAt } = action.payload
+        const { id, name, paymentType, price, updatedAt, currency } = action.payload
         const currentPagePlans = state.plansByPage[state.currentPage]
         if (currentPagePlans && currentPagePlans.length > 0) {
           const index = currentPagePlans.findIndex((plan) => plan?.id == id)
@@ -334,7 +334,8 @@ const plansSlice = createSlice({
               name,
               paymentType,
               price,
-              updatedAt
+              updatedAt,
+              currency
             }
           }
         }

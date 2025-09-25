@@ -34,7 +34,7 @@ import classes from "./Reservations.module.css"
 import { useDisclosure } from "@mantine/hooks"
 import { useState } from "react"
 import { IconChairDirector, IconCalendarStats, IconId, IconCreditCardFilled, IconPhone } from "@tabler/icons-react"
-import { dateTimeConverter, getFormattedHNL } from "../../utils"
+import { formatTime, getFormattedHNL } from "../../utils"
 import { showNotification } from "@mantine/notifications"
 import dayjs from "dayjs"
 import relativeTime from "dayjs/plugin/relativeTime"
@@ -121,13 +121,13 @@ export const ReservationDetails = () => {
                   </Flex>
                   <Flex align="center" gap={5}>
                     <IconCalendarStats size={25} />
-                    <Text size="sm">Fecha y hora de reserva: {dateTimeConverter(reservationDetails?.reservationDate)}</Text>
+                    <Text size="sm">Fecha y hora de reserva: {formatTime(reservationDetails?.reservationDate)}</Text>
                   </Flex>
                   <Flex align="center" gap={5}>
                     <IconCreditCardFilled size={25} />
                     <Text size="sm">
                       {reservationDetails?.isPayed
-                        ? `Se pagó el ${dateTimeConverter(reservationDetails?.paidDate)}`
+                        ? `Se pagó el ${formatTime(reservationDetails?.paidDate)}`
                         : "No se ha realizado el pago"}
                     </Text>
                   </Flex>
@@ -190,7 +190,10 @@ export const ReservationDetails = () => {
                     </Flex>
                     <Flex align="center" gap={5}>
                       <IconCalendarStats size={25} />
-                      <Text size="sm">Actualizado el {dateTimeConverter(reservationDetails?.updatedAt)}</Text>
+                      <Text size="sm">
+                        {reservationDetails?.createdAt === reservationDetails?.updatedAt ? "Creado" : "Actualizado"} el{" "}
+                        {formatTime(reservationDetails?.updatedAt)}
+                      </Text>
                     </Flex>
                     <Flex align="center" gap={5}>
                       <Avatar src={reservationDetails?.UserThatReserved?.photo} />

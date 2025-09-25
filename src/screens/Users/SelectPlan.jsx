@@ -1,5 +1,5 @@
 import React, { useEffect } from "react"
-import { getFormattedHNL } from "../../utils"
+import { getFormattedHNL, getFormattedUSD, toPercentage } from "../../utils"
 import { SimpleGrid, Card, Text, Group, Flex, ThemeIcon, rem, Divider, Stack, List, Button, Pagination } from "@mantine/core"
 import classes from "./ArticlesCardsGrid.module.css"
 import { IconCreditCard } from "@tabler/icons-react"
@@ -47,10 +47,15 @@ export function SelectPlan({ onSelected, currentPlan }) {
         <Divider />
         <Flex direction="column" justify={"space-between"} gap="xs">
           <Text c="dimmed" size="sm" fw={700}>
-            Valor: {plan?.price != 0 ? getFormattedHNL(plan?.price) : "Gratuito"}
+            Valor:{" "}
+            {plan?.price != 0
+              ? plan?.currency === "USD"
+                ? getFormattedUSD(plan?.price)
+                : getFormattedHNL(plan?.price)
+              : "Gratuito"}
           </Text>
           <Text c="dimmed" size="sm" fw={700}>
-            Impuesto: {plan?.tax !== "0.00" ? `${plan?.tax}%` : "Ninguno"}
+            Impuesto: {plan?.tax !== "0.00" ? toPercentage(plan?.tax) : "Ninguno"}
           </Text>
           <Text c="dimmed" size="sm" fw={700}>
             Tipo de pago: {plan.paymentType}
@@ -60,7 +65,7 @@ export function SelectPlan({ onSelected, currentPlan }) {
           <Text c="dimmed" size="sm" fw={700}>
             Características:
           </Text>
-          <List c="dimmed" fw={700} spacing="xs" size="sm" center>
+          <List c="dimmed" fw={700} spacing="" size="sm" center>
             {plan?.PlanFeatures?.slice()
               .sort((a, b) => {
                 if (a.type === "amount" && b.type === "boolean") return -1
@@ -73,7 +78,7 @@ export function SelectPlan({ onSelected, currentPlan }) {
                 const isActive = planData?.available || (planData?.quantity ?? 0) > 0
 
                 return (
-                  <Flex key={index} align="center" gap="xs">
+                  <Flex key={index} align="center" gap={4}>
                     <ThemeIcon color={isActive ? "green" : "gray"} variant="transparent" radius="xl">
                       {isActive ? <IconCircleCheckFilled /> : <IconCircleXFilled color={colors.main_app_color} />}
                     </ThemeIcon>

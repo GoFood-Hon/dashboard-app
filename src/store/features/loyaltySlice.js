@@ -506,12 +506,12 @@ const loyaltySlice = createSlice({
         state.loading = true
       })
       .addCase(markCardAsRedeemed.fulfilled, (state, action) => {
-        const { id, isRedeemed } = action.payload
+        const { id, isRedeemed, redeemedDate } = action.payload
         const currentCardsPage = state.userRewardsPerPage[state.currentRewardPage]
         const index = currentCardsPage.find((card) => card.id === id)
 
         if (index !== -1) {
-          currentCardsPage[index] = { ...currentCardsPage[index], isRedeemed }
+          currentCardsPage[index] = { ...currentCardsPage[index], isRedeemed, redeemedDate }
         }
         state.loading = false
       })

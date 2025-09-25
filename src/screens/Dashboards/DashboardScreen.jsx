@@ -24,7 +24,7 @@ export const DashboardScreen = ({ userRole, cardsStats, loadingStats }) => {
               <Text fz="h3" fw={700} className={classes.value}>
                 <NumberFormatter
                   value={stat.value || 0}
-                  suffix=" minutos"
+                  suffix={stat.value === 1 ? ' minuto' : ' minutos'}
                   decimalScale={0}
                   thousandSeparator="."
                   decimalSeparator=","

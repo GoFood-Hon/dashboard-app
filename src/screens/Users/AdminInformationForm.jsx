@@ -11,7 +11,7 @@ import { useDisclosure } from "@mantine/hooks"
 
 export const AdminInformationForm = ({ register, errors, setValue, image, watch }) => {
   const dispatch = useDispatch()
-  const { loadingRestaurants, restaurants } = useSelector((state) => state.restaurants)
+  const { loadingRestaurants, allRestaurants } = useSelector((state) => state.restaurants)
   const [visible, { toggle }] = useDisclosure(false)
 
   useEffect(() => {
@@ -76,7 +76,7 @@ export const AdminInformationForm = ({ register, errors, setValue, image, watch 
                 label="Asignar comercio"
                 name={"restaurantId"}
                 emptyMessage="No se encontró ningún comercio"
-                items={restaurants}
+                items={allRestaurants}
                 status={loadingRestaurants}
                 register={register}
                 errors={errors}

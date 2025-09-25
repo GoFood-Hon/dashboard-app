@@ -3,7 +3,6 @@ import { Link, useNavigate } from "react-router-dom"
 import { useForm } from "react-hook-form"
 import { emailRules, passwordRules } from "../../utils/inputRules"
 import InputField from "../../components/Form/InputField"
-import toast from "react-hot-toast"
 import authApi from "../../api/authApi"
 import { useDispatch } from "react-redux"
 import { setUser } from "../../store/features/userSlice"
@@ -54,11 +53,17 @@ export default function Login() {
         localStorage.setItem("token", res.token)
         localStorage.setItem("refreshToken", res.refreshToken)
         localStorage.setItem("setUserRole", res.data.user.role)
-        dispatch(setUser(res.data.user))
+        dispatch(setUser(userData))
         navigate("/")
       }
     } catch (err) {
-      toast.error("Hubo un error!")
+      showNotification({
+        title: "Error",
+        message: 'Hubo un error, por favor intente de nuevo más tarde',
+        color: "red"
+      })
+      setIsLoading(false)
+    } finally {
       setIsLoading(false)
     }
   }

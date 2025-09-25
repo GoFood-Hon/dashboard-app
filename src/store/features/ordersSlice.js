@@ -319,31 +319,61 @@ const ordersSlice = createSlice({
       state.totalOrdersForKitchen = updatedTotalOrders
       state.totalOrdersForKitchenPagesCount = updatedTotalPagesCount
     },
+    // setNewOrderForAdmins: (state, action) => {
+    //   const newOrder = action.payload
+    //   const itemsPerPage = state.itemsPerPage
+    //   const newOrdersPerPage = { ...state.ordersPerPage }
+
+    //   let lastPage = state.totalPagesCount
+
+    //   if (!newOrdersPerPage[lastPage]) {
+    //     newOrdersPerPage[lastPage] = []
+    //   }
+
+    //   newOrdersPerPage[lastPage].unshift(newOrder)
+
+    //   if (newOrdersPerPage[lastPage].length > itemsPerPage) {
+    //     const overflowOrder = newOrdersPerPage[lastPage].pop()
+    //     lastPage += 1
+    //     newOrdersPerPage[lastPage] = [overflowOrder]
+    //   }
+
+    //   const updatedTotalOrders = state.totalOrders + 1
+    //   const updatedTotalPagesCount = Math.ceil(updatedTotalOrders / itemsPerPage)
+
+    //   state.ordersPerPage = newOrdersPerPage
+    //   state.totalOrders = updatedTotalOrders
+    //   state.totalPagesCount = updatedTotalPagesCount
+    // },
     setNewOrderForAdmins: (state, action) => {
       const newOrder = action.payload
       const itemsPerPage = state.itemsPerPage
-      const newOrdersPerPage = { ...state.ordersPerPage }
+      const PAGE_KEY = "1"
 
-      let lastPage = state.totalPagesCount
+      if (!state.ordersPerPage) state.ordersPerPage = {}
+      if (!state.ordersPerPage[PAGE_KEY]) state.ordersPerPage[PAGE_KEY] = []
 
-      if (!newOrdersPerPage[lastPage]) {
-        newOrdersPerPage[lastPage] = []
+      const pageOne = state.ordersPerPage[PAGE_KEY]
+
+      const existingIdx = pageOne.findIndex((o) => o.id === newOrder.id)
+      if (existingIdx !== -1) {
+        pageOne.splice(existingIdx, 1)
       }
 
-      newOrdersPerPage[lastPage].unshift(newOrder)
+      pageOne.unshift(newOrder)
 
-      if (newOrdersPerPage[lastPage].length > itemsPerPage) {
-        const overflowOrder = newOrdersPerPage[lastPage].pop()
-        lastPage += 1
-        newOrdersPerPage[lastPage] = [overflowOrder]
+      if (pageOne.length > itemsPerPage) {
+        pageOne.length = itemsPerPage
       }
 
-      const updatedTotalOrders = state.totalOrders + 1
-      const updatedTotalPagesCount = Math.ceil(updatedTotalOrders / itemsPerPage)
+      for (const key of Object.keys(state.ordersPerPage)) {
+        if (key !== PAGE_KEY) {
+          state.ordersPerPage[key] = []
+        }
+      }
 
-      state.ordersPerPage = newOrdersPerPage
-      state.totalOrders = updatedTotalOrders
-      state.totalPagesCount = updatedTotalPagesCount
+      state.totalOrders = (state.totalOrders || 0) + 1
+      state.totalPagesCount = Math.max(1, Math.ceil(state.totalOrders / itemsPerPage))
     },
     setOrderStatus: (state, action) => {
       const { id, status, sentToKitchenTimestamp, finishedCookingTimestamp } = action.payload

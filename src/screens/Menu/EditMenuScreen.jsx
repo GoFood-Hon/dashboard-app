@@ -11,6 +11,7 @@ import { showNotification } from "@mantine/notifications"
 import FormLayout from "../../components/Form/FormLayout"
 import { editMenuSchema } from "../../utils/validationSchemas"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { LoadingPage } from "../../components/LoadingPage"
 
 export default function EditMenuScreen() {
   const { menuId } = useParams()
@@ -20,6 +21,7 @@ export default function EditMenuScreen() {
   const [menuDetails, setMenuDetails] = useState({})
   const isLoading = useSelector((state) => state.menus.updatingMenus)
   const { dishes, currentDishPage, hasMore, dishesPerPage } = useSelector((state) => state.menus)
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     if (dishes.length === 0) {
@@ -50,6 +52,7 @@ export default function EditMenuScreen() {
 
   useEffect(() => {
     const fetchMenu = async () => {
+      setLoading(true)
       try {
         const response = await menuApi.getMenuDetails({ menuId })
         const menuDetails = response?.data
@@ -62,6 +65,8 @@ export default function EditMenuScreen() {
           duration: 7000
         })
         throw error
+      } finally {
+        setLoading(false)
       }
     }
     fetchMenu()
@@ -116,17 +121,21 @@ export default function EditMenuScreen() {
 
   return (
     <>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <FormLayout
-          title={menuDetails?.name}
-          show
-          accordionTitles={["Información general", "Productos"]}
-          accordionStructure={accordionStructure}
-          navigate={() => navigate(NAVIGATION_ROUTES_RES_ADMIN.Menu.path)}
-          isLoading={isLoading}
-          update
-        />
-      </form>
+      {loading ? (
+        <LoadingPage />
+      ) : (
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <FormLayout
+            title={menuDetails?.name}
+            show
+            accordionTitles={["Información general", "Productos"]}
+            accordionStructure={accordionStructure}
+            navigate={() => navigate(NAVIGATION_ROUTES_RES_ADMIN.Menu.path)}
+            isLoading={isLoading}
+            update
+          />
+        </form>
+      )}
     </>
   )
 }

@@ -12,6 +12,7 @@ import FormLayout from "../../components/Form/FormLayout"
 import { useSelector } from "react-redux"
 import { editDishSchema } from "../../utils/validationSchemas"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { LoadingPage } from "../../components/LoadingPage"
 
 export default function EditDishScreen() {
   const dispatch = useDispatch()
@@ -20,6 +21,7 @@ export default function EditDishScreen() {
   const [dishDetails, setDishDetails] = useState({})
   const [additional, setAdditional] = useState([])
   const isLoading = useSelector((state) => state.dishes.updatingDish)
+  const [loading, setLoading] = useState(false)
 
   const {
     register,
@@ -37,6 +39,7 @@ export default function EditDishScreen() {
   const imageLocation = watch("images[0].location")
 
   useEffect(() => {
+    setLoading(true)
     const fetchDish = async () => {
       try {
         const response = await dishesApi.getDish(dishId)
@@ -48,6 +51,8 @@ export default function EditDishScreen() {
       } catch (error) {
         dispatch(setError("Error fetching dishes"))
         throw error
+      } finally {
+        setLoading(false)
       }
     }
     fetchDish()
@@ -109,17 +114,21 @@ export default function EditDishScreen() {
 
   return (
     <>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <FormLayout
-          title={dishDetails?.name}
-          show
-          accordionTitles={["Información general", "Pagos", "Preparación", "Adicionales"]}
-          accordionStructure={accordionStructure}
-          navigate={() => navigate(NAVIGATION_ROUTES_RES_ADMIN.Menu.submenu.Dishes.path)}
-          isLoading={isLoading}
-          update
-        />
-      </form>
+      {loading ? (
+        <LoadingPage />
+      ) : (
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <FormLayout
+            title={dishDetails?.name}
+            show
+            accordionTitles={["Información general", "Pagos", "Preparación", "Adicionales"]}
+            accordionStructure={accordionStructure}
+            navigate={() => navigate(NAVIGATION_ROUTES_RES_ADMIN.Menu.submenu.Dishes.path)}
+            isLoading={isLoading}
+            update
+          />
+        </form>
+      )}
     </>
   )
 }

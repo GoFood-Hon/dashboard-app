@@ -5,6 +5,7 @@ import { showNotification } from "@mantine/notifications"
 
 const initialState = {
   restaurants: [],
+  allRestaurants: [],
   itemsPerPage: ITEMS_PER_PAGE_CARDS,
   restaurantsPerPage: [],
   totalRestaurants: 0,
@@ -54,11 +55,11 @@ export const fetchRestaurants = createAsyncThunk(
 export const fetchNoPaginatedRestaurants = createAsyncThunk(
   "restaurants/fetchNoPaginatedRestaurants",
   async (_, { getState, rejectWithValue }) => {
-    const state = getState().restaurants
+    //const state = getState().restaurants
 
-    if (state.restaurants && state.restaurants.length > 0) {
-      return state.restaurants
-    }
+    // if (state.restaurants && state.restaurants.length > 0) {
+    //   return state.restaurants
+    // }
 
     try {
       const response = await restaurantsApi.getAllRestaurantsNoPagination({
@@ -140,7 +141,7 @@ export const fetchRestaurantData = createAsyncThunk("restaurants/fetchRestaurant
     if (response.error) {
       showNotification({
         title: "Error",
-        message: response.error,
+        message: response.message,
         color: "red",
         duration: 7000
       })
@@ -363,7 +364,7 @@ export const restaurantsSlice = createSlice({
         state.loadingRestaurants = true
       })
       .addCase(fetchNoPaginatedRestaurants.fulfilled, (state, action) => {
-        state.restaurants = action.payload
+        state.allRestaurants = action.payload
         state.loadingRestaurants = false
       })
       .addCase(fetchNoPaginatedRestaurants.rejected, (state, action) => {

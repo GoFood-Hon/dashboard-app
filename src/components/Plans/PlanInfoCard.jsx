@@ -2,7 +2,7 @@ import { Button, Flex, Group, Modal, Paper, Text, ThemeIcon, rem } from "@mantin
 import { IconCreditCard } from "@tabler/icons-react"
 import classes from "./CardGradient.module.css"
 import { colors } from "../../theme/colors"
-import { getFormattedHNL } from "../../utils"
+import { getFormattedHNL, getFormattedUSD } from "../../utils"
 import { useDisclosure } from "@mantine/hooks"
 
 export function PlanInfoCard({ data, onCancelPlan }) {
@@ -23,7 +23,8 @@ export function PlanInfoCard({ data, onCancelPlan }) {
         </Text>
       </Flex>
       <Text mt="sm" c="dimmed">
-        Su plan actual consta de un pago {data?.Plan?.paymentType?.toLowerCase()} de {getFormattedHNL(data?.Plan?.price)}. Puede
+        Su plan actual consta de un pago {data?.Plan?.paymentType?.toLowerCase()} de{" "}
+        {data?.Plan?.currency === "USD" ? getFormattedUSD(data?.Plan?.price) : getFormattedHNL(data?.Plan?.price)}. Puede
         cancelarlo en cualquier momento y ver en la lista los planes disponibles con el detalle de precios y características.
       </Text>
       <Flex mt="lg" justify="end">
@@ -36,7 +37,7 @@ export function PlanInfoCard({ data, onCancelPlan }) {
         opened={opened}
         onClose={close}
         withCloseButton={false}
-        radius='md'
+        radius="md"
         closeOnEscape
         size="md"
         overlayProps={{

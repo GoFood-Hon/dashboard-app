@@ -1,8 +1,6 @@
-import { Flex, Grid, Image, Paper, rem, Select, Text } from "@mantine/core"
-import React, { useEffect, useState } from "react"
+import { Grid, Paper, Select } from "@mantine/core"
+import React, { useEffect } from "react"
 import InputField from "../../components/Form/InputField"
-import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone"
-import { IconPhoto } from "@tabler/icons-react"
 import { useDispatch } from "react-redux"
 import { useSelector } from "react-redux"
 import { fetchNoPaginatedRestaurants } from "../../store/features/restaurantSlice"
@@ -11,22 +9,14 @@ import { ImageDropzone } from "../../components/ImageDropzone"
 
 export const AdminGeneralInformationForm = ({ register, errors, setValue, image, control, watch }) => {
   const dispatch = useDispatch()
-  const [images, setImages] = useState([])
-  const { restaurants } = useSelector((state) => state.restaurants)
+  const { allRestaurants } = useSelector((state) => state.restaurants)
 
   useEffect(() => {
     dispatch(fetchNoPaginatedRestaurants())
   }, [dispatch])
 
-  const previews = images.map((file, index) => {
-    const imageUrl = URL.createObjectURL(file)
-    return <Image radius="md" h={250} src={imageUrl} />
-  })
-
   const handleDrop = (acceptedFiles) => {
     if (acceptedFiles.length > 0) {
-      const [file] = acceptedFiles
-      setImages(acceptedFiles)
       setValue("files", acceptedFiles)
     }
   }
@@ -80,8 +70,8 @@ export const AdminGeneralInformationForm = ({ register, errors, setValue, image,
                 control={control}
                 render={({ field, fieldState }) => (
                   <Select
-                    label="Restaurante asignado"
-                    data={restaurants.map((item) => ({
+                    label="Comercio asignado"
+                    data={allRestaurants.map((item) => ({
                       value: item.id,
                       label: item.name
                     }))}

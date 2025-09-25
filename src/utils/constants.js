@@ -319,7 +319,7 @@ export const statistictsExample = {
 
 //Search options for orders
 export const searchOptionsOrders = [
-  { value: "id", label: "ID" },
+  { value: "orderId", label: "ID" },
   { value: "identityNumber", label: "DNI" },
   { value: "phoneNumber", label: "Teléfono del cliente" },
   { value: "name", label: "Nombre del cliente" }
@@ -446,3 +446,18 @@ export const cardLogos = {
   mastercard: "https://upload.wikimedia.org/wikipedia/commons/0/04/Mastercard-logo.png",
   americanexpress: "https://upload.wikimedia.org/wikipedia/commons/3/30/American_Express_logo_%282018%29.svg"
 }
+
+//Bill details data
+export const billsData = (orderDetails) => [
+  ["Subtotal", getFormattedHNL(orderDetails?.subtotal)],
+  ["Descuento", getFormattedHNL(orderDetails?.discount)],
+  ["Precio de envío", getFormattedHNL(orderDetails?.shippingPrice)],
+  ["ISV", getFormattedHNL(orderDetails?.isv)],
+  ["ISV (15%)", getFormattedHNL(orderDetails?.isv15)],
+  ["ISV (18%)", getFormattedHNL(orderDetails?.isv18)],
+  ["Cantidad exonerada", getFormattedHNL(orderDetails?.exoneratedAmount)],
+  ["Cantidad exenta", getFormattedHNL(orderDetails?.exemptAmount)],
+  ["Monto imponible (15%)", getFormattedHNL(orderDetails?.taxable15Amount)],
+  ["Monto imponible (18%)", getFormattedHNL(orderDetails?.taxable18Amount)],
+  ["Propina", getFormattedHNL(orderDetails?.tip)]
+]

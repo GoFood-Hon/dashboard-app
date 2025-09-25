@@ -13,6 +13,7 @@ import { Characteristics } from "./Characteristics"
 import { showNotification } from "@mantine/notifications"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { newPlanSchema } from "../../utils/validationSchemas"
+import { LoadingPage } from "../../components/LoadingPage"
 
 export const EditPlan = () => {
   const { planId } = useParams()
@@ -21,9 +22,11 @@ export const EditPlan = () => {
   const [planDetails, setPlanDetails] = useState({})
   const isLoading = useSelector((state) => state.plans.updatingPlan)
   const featuresList = useSelector((state) => state.plans.featuresList)
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     ;(async () => {
+      setLoading(true)
       try {
         const response = await plansApi.getPlan(planId)
         setPlanDetails(response.data.plan)
@@ -34,6 +37,8 @@ export const EditPlan = () => {
           color: "red",
           duration: 7000
         })
+      } finally {
+        setLoading(false)
       }
     })()
   }, [])
@@ -112,17 +117,21 @@ export const EditPlan = () => {
 
   return (
     <>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <FormLayout
-          title={planDetails?.name}
-          show
-          accordionTitles={["Información general", "Características"]}
-          accordionStructure={accordionStructure}
-          navigate={() => navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Plans.path)}
-          isLoading={isLoading}
-          update
-        />
-      </form>
+      {loading ? (
+        <LoadingPage />
+      ) : (
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <FormLayout
+            title={planDetails?.name}
+            show
+            accordionTitles={["Información general", "Características"]}
+            accordionStructure={accordionStructure}
+            navigate={() => navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Plans.path)}
+            isLoading={isLoading}
+            update
+          />
+        </form>
+      )}
     </>
   )
 }

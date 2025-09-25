@@ -1,4 +1,4 @@
-import { Grid, Stack, Title, Flex, Menu, Group, Button } from "@mantine/core"
+import { Grid, Stack, Title, Flex, Menu, Group, Button, Text, CloseButton, ActionIcon } from "@mantine/core"
 import { DatePickerInput } from "@mantine/dates"
 import { DashboardScreen } from "./Dashboards/DashboardScreen"
 import { MostSelledDishes } from "./Dashboards/MostSelledDishes"
@@ -27,6 +27,8 @@ import dayjs from "dayjs"
 import utc from "dayjs/plugin/utc"
 import timezone from "dayjs/plugin/timezone"
 import { TopShops } from "./Dashboards/TopShops"
+import { notifications } from "@mantine/notifications"
+import { IconX } from "@tabler/icons-react"
 
 dayjs.extend(isoWeek)
 dayjs.extend(utc)
@@ -145,7 +147,41 @@ function Home() {
   return (
     <Stack gap="xs">
       <Flex justify="space-between" align="center" wrap="wrap">
-        <Title order={2}>Dashboard</Title>
+        <Title
+          onClick={() =>
+            notifications.show({
+              id: "custom-noti",
+              autoClose: false,
+              color: "green",
+              withCloseButton: false,
+              title: (
+                <Flex justify="space-between" align="center">
+                  <Text size="sm">Reservación actualizada</Text>
+                  <ActionIcon variant="subtle" c='dimmed' color="gray" onClick={() => notifications.hide("custom-noti")}>
+                    <IconX size='1.1rem' /> 
+                  </ActionIcon>
+                </Flex>
+              ),
+              message: (
+                <Flex justify="space-between" align="center">
+                  <Text size="sm">Se cambió el estado de la reservación</Text>
+                  <Button
+                    size="xs"
+                    variant="light"
+                    w="125px"
+                    color="green"
+                    onClick={() => {
+                      notifications.hide("custom-noti")
+                    }}>
+                    Ver reservación
+                  </Button>
+                </Flex>
+              )
+            })
+          }
+          order={2}>
+          Dashboard
+        </Title>
 
         <Group align="center" gap="xs">
           {showDatePickers && (

@@ -205,14 +205,6 @@ export default function BusinessSettings() {
           <section>
             <Paper withBorder radius="md" p="md">
               <Flex justify="end" gap="xs">
-                <Button
-                  color={colors.main_app_color}
-                  variant="outline"
-                  onClick={() => {
-                    navigate(NAVIGATION_ROUTES_SUPER_ADMIN.General.path)
-                  }}>
-                  Descartar
-                </Button>
                 <Button loading={isLoading} color={colors.main_app_color} type="submit">
                   Actualizar
                 </Button>

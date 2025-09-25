@@ -16,6 +16,21 @@ export function getFormattedHNL(amount) {
   }).format(amount)
 }
 
+export function getFormattedUSD(amount) {
+  const formatted = new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD"
+  }).format(amount)
+
+  return `USD ${formatted.slice(1)}`
+}
+
+export function toPercentage(value) {
+  const num = parseFloat(value)
+  if (isNaN(num)) return ""
+  return `${(num * 100).toFixed(0)}%`
+}
+
 export const formatDay = (day) => {
   const daysInSpanish = {
     monday: "Lunes",
@@ -30,23 +45,25 @@ export const formatDay = (day) => {
 }
 
 export function dateTimeConverter(timestamptz) {
-  const timeZone = "America/Tegucigalpa"
-  const options = {
+  if (!timestamptz) return "Fecha inválida"
+
+  const date = new Date(timestamptz)
+
+  const formattedDate = new Intl.DateTimeFormat("es", {
     day: "numeric",
     month: "long",
     year: "numeric",
-    timeZone
-  }
+    timeZone: "UTC" // 👈 fuerza a no mover la hora
+  }).format(date)
 
-  const date = new Date(timestamptz)
-  const formattedDate = date.toLocaleDateString("es", options)
+  const formattedTime = new Intl.DateTimeFormat("es", {
+    hour: "numeric",
+    minute: "numeric",
+    hour12: true,
+    timeZone: "UTC" // 👈 fuerza a no mover la hora
+  }).format(date)
 
-  const hour = date.getHours()
-  const minute = date.getMinutes()
-  const amPm = hour >= 12 ? "p. m." : "a. m."
-  const hour12 = hour % 12 || 12
-
-  return `${formattedDate} a ${hour12 !== 1 ? "las" : "la"} ${hour12}:${minute < 10 ? "0" : ""}${minute} ${amPm}`
+  return `${formattedDate} a las ${formattedTime}`
 }
 
 export const formatTime = (time) => dayjs.utc(time).tz("America/Tegucigalpa").format("DD/MM/YYYY hh:mm A")

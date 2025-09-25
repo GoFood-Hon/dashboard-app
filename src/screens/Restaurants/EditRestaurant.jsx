@@ -19,6 +19,7 @@ import FormLayout from "../../components/Form/FormLayout"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { SocialMediaInformation } from "./SocialMediaInformation"
 import { editRestaurantSchema } from "../../utils/validationSchemas"
+import { LoadingPage } from "../../components/LoadingPage"
 
 export const EditRestaurant = () => {
   const { restaurantId } = useParams()
@@ -28,14 +29,27 @@ export const EditRestaurant = () => {
   const [planCancelled, setPlanCancelled] = useState(false)
   const [newPlan, setNewPlan] = useState({})
   const isLoading = useSelector((state) => state.restaurants.updatingRestaurant)
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     ;(async () => {
-      const response = await restaurantsApi.getRestaurant(restaurantId)
-      const details = response?.data
-      setRestaurantDetails(details)
+      setLoading(true)
+      try {
+        const response = await restaurantsApi.getRestaurant(restaurantId)
+        const details = response?.data
+        setRestaurantDetails(details)
+      } catch (error) {
+        showNotification({
+          title: "Error",
+          message: error?.message,
+          color: "red",
+          duration: 7000
+        })
+      } finally {
+        setLoading(false)
+      }
     })()
-  }, [])
+  }, [restaurantId])
 
   const handlePlanCancel = (cancelled) => {
     setPlanCancelled(cancelled)
@@ -256,16 +270,28 @@ export const EditRestaurant = () => {
   })
 
   return (
-    <form onSubmit={handleSubmit(onSubmit, onError)}>
-      <FormLayout
-        title={restaurantDetails?.name}
-        show
-        accordionStructure={filteredAccordionStructure}
-        accordionTitles={["Añadir banner", "Información general", "Datos de reservación", "Redes sociales", "Selección del plan"]}
-        navigate={() => navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Restaurants.path)}
-        isLoading={isLoading}
-        update
-      />
-    </form>
+    <>
+      {loading ? (
+        <LoadingPage />
+      ) : (
+        <form onSubmit={handleSubmit(onSubmit, onError)}>
+          <FormLayout
+            title={restaurantDetails?.name}
+            show
+            accordionStructure={filteredAccordionStructure}
+            accordionTitles={[
+              "Añadir banner",
+              "Información general",
+              "Datos de reservación",
+              "Redes sociales",
+              "Selección del plan"
+            ]}
+            navigate={() => navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Restaurants.path)}
+            isLoading={isLoading}
+            update
+          />
+        </form>
+      )}
+    </>
   )
 }

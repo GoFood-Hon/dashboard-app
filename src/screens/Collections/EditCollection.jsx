@@ -16,6 +16,7 @@ import { useParams } from "react-router-dom"
 import FormLayout from "../../components/Form/FormLayout"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { editCollectionsSchema } from "../../utils/validationSchemas"
+import { LoadingPage } from "../../components/LoadingPage"
 
 export default function EditCollection() {
   const { collectionId } = useParams()
@@ -34,6 +35,7 @@ export default function EditCollection() {
     collectionType,
     updatingCollection
   } = useSelector((state) => state.collections)
+  const [loading, setLoading] = useState(false)
 
   const {
     register,
@@ -49,9 +51,9 @@ export default function EditCollection() {
   })
 
   const bannerLocation = watch("banner[0].location")
-  console.log(errors)
 
   useEffect(() => {
+    setLoading(true)
     const fetchMenu = async () => {
       try {
         const response = await collectionsApi.getCollectionDetails(collectionId)
@@ -66,6 +68,8 @@ export default function EditCollection() {
           duration: 7000
         })
         throw error
+      } finally {
+        setLoading(false)
       }
     }
     fetchMenu()
@@ -150,17 +154,21 @@ export default function EditCollection() {
 
   return (
     <>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <FormLayout
-          title={elements.name}
-          show
-          accordionStructure={accordionStructure}
-          accordionTitles={["Información general", "Lista de productos", "Lista de restaurantes"]}
-          navigate={() => navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Collections.path)}
-          isLoading={updatingCollection}
-          update
-        />
-      </form>
+      {loading ? (
+        <LoadingPage />
+      ) : (
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <FormLayout
+            title={elements.name}
+            show
+            accordionStructure={accordionStructure}
+            accordionTitles={["Información general", "Lista de productos", "Lista de restaurantes"]}
+            navigate={() => navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Collections.path)}
+            isLoading={updatingCollection}
+            update
+          />
+        </form>
+      )}
     </>
   )
 }

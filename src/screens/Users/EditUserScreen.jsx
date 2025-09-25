@@ -10,6 +10,7 @@ import FormLayout from "../../components/Form/FormLayout"
 import { updateUser } from "../../store/features/userSlice"
 import { useSelector } from "react-redux"
 import { useDispatch } from "react-redux"
+import { LoadingPage } from "../../components/LoadingPage"
 
 export const EditUserScreen = () => {
   const { userId } = useParams()
@@ -17,8 +18,10 @@ export const EditUserScreen = () => {
   const dispatch = useDispatch()
   const [userDetails, setUserDetails] = useState({})
   const isLoading = useSelector((state) => state.user.updatingOtherUser)
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
+    setLoading(true)
     const fetchDetails = async () => {
       try {
         const response = await authApi.getUserDetails(userId)
@@ -27,6 +30,8 @@ export const EditUserScreen = () => {
       } catch (error) {
         toast.error("Hubo un error obteniendo los detalles del usuario")
         throw error
+      } finally {
+        setLoading(false)
       }
     }
     fetchDetails()
@@ -116,17 +121,21 @@ export const EditUserScreen = () => {
 
   return (
     <>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <FormLayout
-          title={userDetails?.name}
-          show
-          accordionTitles={["Información general", "Sucursal"]}
-          accordionStructure={accordionStructure}
-          navigate={() => navigate(NAVIGATION_ROUTES_RES_ADMIN.Users.path)}
-          isLoading={isLoading}
-          update
-        />
-      </form>
+      {loading ? (
+        <LoadingPage />
+      ) : (
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <FormLayout
+            title={userDetails?.name}
+            show
+            accordionTitles={["Información general", "Sucursal"]}
+            accordionStructure={accordionStructure}
+            navigate={() => navigate(NAVIGATION_ROUTES_RES_ADMIN.Users.path)}
+            isLoading={isLoading}
+            update
+          />
+        </form>
+      )}
     </>
   )
 }

@@ -9,6 +9,8 @@ import { useSelector, useDispatch } from "react-redux"
 import FormLayout from "../../components/Form/FormLayout"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { editAdminUserSchema } from "../../utils/validationSchemas"
+import { showNotification } from "@mantine/notifications"
+import { LoadingPage } from "../../components/LoadingPage"
 
 export const EditAdminUser = () => {
   const { adminId } = useParams()
@@ -16,17 +18,29 @@ export const EditAdminUser = () => {
   const dispatch = useDispatch()
   const [details, setDetails] = useState({})
   const loading = useSelector((state) => state.user.updatingUser)
+  const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
+    setIsLoading(true)
     ;(async () => {
-      const response = await authApi.getUserDetails(adminId)
+      try {
+        const response = await authApi.getUserDetails(adminId)
 
-      if (response?.data) {
-        const details = response.data
-        setDetails(details)
+        if (response?.data) {
+          const details = response.data
+          setDetails(details)
+        }
+      } catch (error) {
+        showNotification({
+          title: "Error",
+          message: "No se pudieron cargar los detalles del usuario.",
+          color: "red"
+        })
+      } finally {
+        setIsLoading(false)
       }
     })()
-  }, [])
+  }, [adminId])
 
   const {
     register,
@@ -89,17 +103,21 @@ export const EditAdminUser = () => {
 
   return (
     <>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <FormLayout
-          title={details.name}
-          show
-          accordionTitles={["Información general"]}
-          accordionStructure={accordionStructure}
-          navigate={() => navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Users.path)}
-          isLoading={loading}
-          update
-        />
-      </form>
+      {isLoading ? (
+        <LoadingPage />
+      ) : (
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <FormLayout
+            title={details.name}
+            show
+            accordionTitles={["Información general"]}
+            accordionStructure={accordionStructure}
+            navigate={() => navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Users.path)}
+            isLoading={loading}
+            update
+          />
+        </form>
+      )}
     </>
   )
 }

@@ -171,7 +171,6 @@ export default function ComplementsForm({ setValue, defaultMessage, moreData, da
                         key={key}
                         item={item}
                         onItemClick={handleComplementClick}
-                        handleRemoveComplement={handleRemoveComplement}
                         isSelected={addedComplements.some((complement) => complement.id === item.id)}
                       />
                     ))}

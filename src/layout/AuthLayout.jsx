@@ -11,7 +11,7 @@ import {
   NAVIGATION_ROUTES_BRANCH_ADMIN_TWO,
   NAVIGATION_ROUTES_CASHIER_TWO
 } from "../routes"
-import { Alert, AppShell, Burger, Container, useMantineColorScheme, useMantineTheme } from "@mantine/core"
+import { AppShell, Burger, Container, useMantineColorScheme, useMantineTheme } from "@mantine/core"
 import { useDisclosure } from "@mantine/hooks"
 import { AdminHeader } from "../components/Headers/AdminHeader"
 import { Navbar } from "../components/Navbar/Navbar"
@@ -20,8 +20,7 @@ import Lottie from "react-lottie"
 import animatedBurger from "../assets/animation/LoadingBurgerAnimation.json"
 import { NotificationProvider } from "../components/NotificationProvider"
 import { useLocation } from "react-router-dom"
-import { colors } from "../theme/colors"
-import { IconAlertCircle } from "@tabler/icons-react"
+import { Alerts } from "../components/Alerts"
 
 function AuthLayout() {
   const dispatch = useDispatch()
@@ -45,7 +44,6 @@ function AuthLayout() {
     const hidden = localStorage.getItem("hideSubscriptionAlert")
     return hidden !== "true"
   })
-  const { sellsData } = useSelector((state) => state.stats)
 
   const roleRoutesMap = {
     [APP_ROLES.restaurantAdmin]: NAVIGATION_ROUTES_RES_ADMIN_TWO,
@@ -55,14 +53,32 @@ function AuthLayout() {
     [APP_ROLES.kitchenUser]: NAVIGATION_ROUTES_KITCHEN_TWO
   }
 
+  const userFromStore = useSelector((state) => state.user.value)
+
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const user = await authUtils.isAuthenticated()
-        if (!user) {
+        const apiUser = await authUtils.isAuthenticated()
+        if (!apiUser) {
           navigate(AUTH_NAVIGATION_ROUTES.Login.path)
+          return
+        }
+
+        if (!userFromStore?.id) {
+          dispatch(setUser(apiUser))
         } else {
-          dispatch(setUser(user))
+          const mergedUser = {
+            ...userFromStore,
+            ...apiUser,
+            Restaurant: {
+              ...userFromStore?.Restaurant,
+              ...apiUser?.Restaurant,
+              isActive: apiUser?.Restaurant?.isActive ?? userFromStore?.Restaurant?.isActive ?? null,
+              Subscription: apiUser?.Restaurant?.Subscription ?? userFromStore?.Restaurant?.Subscription ?? null
+            }
+          }
+
+          dispatch(setUser(mergedUser))
         }
       } catch (error) {
         navigate(AUTH_NAVIGATION_ROUTES.Login.path)
@@ -112,33 +128,28 @@ function AuthLayout() {
             </AppShell.Main>
           </AppShell>
         )}
-        {user?.Restaurant?.Subscription === null && showAlert && !loading && (
-          <Alert
-            style={{
-              position: "fixed",
-              bottom: 20,
-              right: 16,
-              zIndex: 9999,
-              width: 500
-            }}
-            variant="filled"
-            color={colors.main_app_color}
+        {user?.role !== "superadmin" && user?.Restaurant?.Subscription === null && showAlert && !loading && (
+          <Alerts
             title="Alerta de suscripción"
-            icon={<IconAlertCircle />}
-            withCloseButton
-            onClose={() => {
-              localStorage.setItem("hideSubscriptionAlert", "true")
-              setShowAlert(false)
-            }}
-            radius="md">
-            Este comercio no tiene un plan activo. Mientras no se contrate uno, no podrá recibir pedidos ni aparecerá en la
-            aplicación móvil.
-            <br />
-            <br />
-            Contacta con soporte para adquirir o renovar tu plan y de este modo podrás hacer uso de todas las funcionalidades del
-            sistema.
-          </Alert>
+            setShowAlert={setShowAlert}
+            description="Este comercio no tiene un plan activo. Mientras no se contrate uno, no podrá recibir pedidos ni aparecerá en la
+            aplicación móvil."
+            subdescription="Contacta con soporte para adquirir o renovar tu plan y de este modo podrás hacer uso de todas las funcionalidades del
+            sistema."
+          />
         )}
+        {user?.role !== "superadmin" &&
+          user?.Restaurant?.isActive === false &&
+          user?.Restaurant?.Subscription !== null &&
+          showAlert &&
+          !loading && (
+            <Alerts
+              title="Alerta de comercio inactivo"
+              setShowAlert={setShowAlert}
+              description="Este comercio actualmente se encuentra inactivo."
+              subdescription="Contacta con soporte para poder reactivar el comercio y de este modo podrás hacer uso de todas las funcionalidades del sistema."
+            />
+          )}
       </NotificationProvider>
     </>
   )

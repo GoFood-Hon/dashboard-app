@@ -242,7 +242,6 @@ export default function ComplementsForm({ setValue, defaultMessage, moreData, da
                         <AvailableComplementsCard
                           item={item}
                           onItemClick={handleComplementClick}
-                          handleRemoveComplement={handleRemoveComplement}
                           isSelected={addedComplements.some((complement) => complement.id === item.id)}
                         />
                       </Grid.Col>

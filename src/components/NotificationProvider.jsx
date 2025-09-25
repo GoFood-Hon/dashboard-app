@@ -3,11 +3,12 @@ import { useSocket } from "../hooks/useOrderSocket"
 import { notifications } from "@mantine/notifications"
 import { USER_ROLES } from "../utils/constants"
 import { useSelector, useDispatch } from "react-redux"
-import { setNewOrder, setNewOrderForAdmins, setOrderStatus } from "../store/features/ordersSlice"
+import { fetchOrderDetails, setNewOrder, setNewOrderForAdmins, setOrderStatus } from "../store/features/ordersSlice"
 import notificationSound from "../assets/sound/notificationSound.wav"
 import { useNavigate, useLocation } from "react-router-dom"
-import { Button, Flex, Text } from "@mantine/core"
+import { ActionIcon, Button, Flex, Text } from "@mantine/core"
 import { fetchReservationDetails, setNewReservation } from "../store/features/reservationsSlice"
+import { IconX } from "@tabler/icons-react"
 
 export const NotificationProvider = ({ children }) => {
   const user = useSelector((state) => state.user.value)
@@ -15,12 +16,11 @@ export const NotificationProvider = ({ children }) => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const location = useLocation()
+  const isOrderDetailRoute = (path) => /^\/orders\/[^/]+$/.test(path);
 
   useEffect(() => {
     if (!orderSocket) return
-
     const audio = new Audio(notificationSound)
-
     const playSound = () => {
       audio.currentTime = 0
       audio.play().catch((error) => console.error("Error al reproducir sonido:", error))
@@ -30,7 +30,14 @@ export const NotificationProvider = ({ children }) => {
       playSound()
       notifications.show({
         id: order.id,
-        title: "Nueva orden",
+        title: (
+          <Flex justify="space-between" align="center">
+            <Text size="sm">Nueva orden</Text>
+            <ActionIcon variant="subtle" c="dimmed" color="gray" onClick={() => notifications.hide(order.id)}>
+              <IconX size="1.1rem" />
+            </ActionIcon>
+          </Flex>
+        ),
         message: (
           <Flex direction="row" align="center" justify="space-between">
             <Text size="sm">
@@ -47,7 +54,11 @@ export const NotificationProvider = ({ children }) => {
               w="120px"
               color="green"
               onClick={() => {
-                navigate(`/orders/${order.id}`)
+                if (isOrderDetailRoute(location.pathname)) {
+                  dispatch(fetchOrderDetails(order.id))
+                } else {
+                  navigate(`/orders/${order.id}`)
+                }
                 notifications.hide(order.id)
               }}>
               Ver pedido
@@ -66,7 +77,14 @@ export const NotificationProvider = ({ children }) => {
       playSound()
       notifications.show({
         id: order.id,
-        title: "Orden actualizada",
+        title: (
+          <Flex justify="space-between" align="center">
+            <Text size="sm">Orden actualizada</Text>
+            <ActionIcon variant="subtle" c="dimmed" color="gray" onClick={() => notifications.hide(order.id)}>
+              <IconX size="1.1rem" />
+            </ActionIcon>
+          </Flex>
+        ),
         message: (
           <Flex direction="row" align="center" justify="space-between">
             <Text size="sm">El pedido se marcó como preparado</Text>
@@ -111,18 +129,6 @@ export const NotificationProvider = ({ children }) => {
       dispatch(setOrderStatus(order))
     }
 
-    // const handleDriverAssigned = (order) => {
-    //   playSound()
-    //   notifications.show({
-    //     title: "Orden actualizada",
-    //     message: "Se asignó un conductor a la orden",
-    //     autoClose: true,
-    //     withCloseButton: true,
-    //     color: "green"
-    //   })
-    //   dispatch(setOrderStatus(order))
-    // }
-
     const handleOrderPickedUp = (order) => {
       const isCurrentOrderPage = location.pathname === `/orders/${order.id}`
 
@@ -138,7 +144,14 @@ export const NotificationProvider = ({ children }) => {
       } else {
         notifications.show({
           id: order.id,
-          title: "Orden actualizada",
+          title: (
+            <Flex justify="space-between" align="center">
+              <Text size="sm">Orden actualizada</Text>
+              <ActionIcon variant="subtle" c="dimmed" color="gray" onClick={() => notifications.hide(order.id)}>
+                <IconX size="1.1rem" />
+              </ActionIcon>
+            </Flex>
+          ),
           message: (
             <Flex direction="row" align="center" justify="space-between">
               <Text size="sm">El repartidor recogió el pedido y va en camino a entregarlo</Text>
@@ -177,7 +190,14 @@ export const NotificationProvider = ({ children }) => {
       } else {
         notifications.show({
           id: order.id,
-          title: "Orden actualizada",
+          title: (
+            <Flex justify="space-between" align="center">
+              <Text size="sm">Orden actualizada</Text>
+              <ActionIcon variant="subtle" c="dimmed" color="gray" onClick={() => notifications.hide(order.id)}>
+                <IconX size="1.1rem" />
+              </ActionIcon>
+            </Flex>
+          ),
           message: (
             <Flex direction="row" align="center" justify="space-between">
               <Text size="sm">El repartidor marcó el pedido como entregado</Text>
@@ -206,7 +226,14 @@ export const NotificationProvider = ({ children }) => {
       playSound()
       notifications.show({
         id: reservation.id,
-        title: "Nueva reservación",
+        title: (
+          <Flex justify="space-between" align="center">
+            <Text size="sm">Nueva reservación</Text>
+            <ActionIcon variant="subtle" c="dimmed" color="gray" onClick={() => notifications.hide(reservation.id)}>
+              <IconX size="1.1rem" />
+            </ActionIcon>
+          </Flex>
+        ),
         message: (
           <Flex direction="row" align="center" justify="space-between">
             <Text size="sm">Se ha creado una nueva solicitud de reservación</Text>
@@ -234,7 +261,14 @@ export const NotificationProvider = ({ children }) => {
       playSound()
       notifications.show({
         id: reservation.id,
-        title: "Reservación actualizada",
+        title: (
+          <Flex justify="space-between" align="center">
+            <Text size="sm">Reservación actualizada</Text>
+            <ActionIcon variant="subtle" c="dimmed" color="gray" onClick={() => notifications.hide(reservation.id)}>
+              <IconX size="1.1rem" />
+            </ActionIcon>
+          </Flex>
+        ),
         message: (
           <Flex direction="row" align="center" justify="space-between">
             <Text size="sm">Se cambió el estado de la reservación</Text>
@@ -262,7 +296,14 @@ export const NotificationProvider = ({ children }) => {
       playSound()
       notifications.show({
         id: reservation.id,
-        title: "Nuevo comentario",
+        title: (
+          <Flex justify="space-between" align="center">
+            <Text size="sm">Nuevo comentario</Text>
+            <ActionIcon variant="subtle" c="dimmed" color="gray" onClick={() => notifications.hide(reservation.id)}>
+              <IconX size="1.1rem" />
+            </ActionIcon>
+          </Flex>
+        ),
         message: (
           <Flex direction="row" align="center" justify="space-between">
             <Text size="sm">Se agregó un nuevo comentario a la reservación</Text>
@@ -289,7 +330,6 @@ export const NotificationProvider = ({ children }) => {
     //Orders sockets
     orderSocket.on("newOrder", handleNewOrder)
     orderSocket.on("orderReady", handleOrderReady)
-    //orderSocket.on("orderDriverAssigned", handleDriverAssigned)
     orderSocket.on("orderPickedUp", handleOrderPickedUp)
     orderSocket.on("orderDelivered", handleOrderDelivered)
     orderSocket.on("orderUpdate", handleOrderUpdate)
@@ -302,7 +342,6 @@ export const NotificationProvider = ({ children }) => {
     return () => {
       orderSocket.off("newOrder", handleNewOrder)
       orderSocket.off("orderReady", handleOrderReady)
-      //orderSocket.off("orderDriverAssigned", handleDriverAssigned)
       orderSocket.off("orderUpdate", handleOrderUpdate)
       orderSocket.off("orderPickedUp", handleOrderPickedUp)
       orderSocket.off("orderDelivered", handleOrderDelivered)
@@ -311,7 +350,7 @@ export const NotificationProvider = ({ children }) => {
       orderSocket.off("tableReservationStatusUpdated", handleReservationStatus)
       orderSocket.off("tableReservationNewComment", handleReservationNewComment)
     }
-  }, [orderSocket, user.role])
+  }, [orderSocket, user.role, location.pathname])
 
   return children
 }

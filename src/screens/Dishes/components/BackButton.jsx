@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom"
 import { IconArrowNarrowLeft } from "@tabler/icons-react"
-import { Flex, Group, Title, Text, Box, ActionIcon } from "@mantine/core"
+import { Flex, Group, Title, Text, ActionIcon } from "@mantine/core"
 import { useMediaQuery } from "@mantine/hooks"
 
 export default function BackButton({ title, show }) {

@@ -373,9 +373,9 @@ const CardsViewLayout = ({
                             </Flex>
                             <Flex direction="column">
                               <Text c="dimmed" size="sm">
-                                Número de órden:
+                                Número de pedido:
                               </Text>
-                              <Text size="sm">{item?.id}</Text>
+                              <Text size="sm">{item?.orderId}</Text>
                             </Flex>
                             <Flex direction="column">
                               <Text c="dimmed" size="sm">

@@ -1,10 +1,11 @@
-import { Button, Flex, Group, Skeleton, Stack, Text } from "@mantine/core"
+import { Button, Card, Flex, Group, Skeleton, Stack, Text } from "@mantine/core"
 import MenuTable from "./Menu/MenuTable"
 import { colors } from "../theme/colors"
 import BackButton from "../screens/Dishes/components/BackButton"
 import { useMediaQuery } from "@mantine/hooks"
 import { SearchComponent } from "../components/SearchComponent"
 import { DatePickerInput } from "@mantine/dates"
+import { IconStarFilled } from "@tabler/icons-react"
 
 const TableViewLayout = ({
   title,
@@ -29,7 +30,8 @@ const TableViewLayout = ({
   selectedOption,
   setSelectedSearchOption,
   noCounts,
-  openModal
+  openModal,
+  rankingAverage
 }) => {
   const isSmallScreen = useMediaQuery("(max-width: 430px)")
 
@@ -64,6 +66,19 @@ const TableViewLayout = ({
           )}
         </Flex>
       </Group>
+      {title === "Reseñas" && rankingAverage && (
+        <Card p='xs' radius='md' withBorder>
+          <Flex align="center" gap={5} justify="space-between">
+            <Text>Promedio general del comercio</Text>
+            <Flex align='center' gap={5}>
+              <IconStarFilled size='1.1rem' color={colors.yellow_logo} />
+              <Text fw={700}>
+                {rankingAverage ? `${rankingAverage.toFixed(1)} de 5` : "N/A"}
+              </Text>
+            </Flex>
+          </Flex>
+        </Card>
+      )}
       {!noSearch && items && (
         <SearchComponent
           onSearch={onSearch}

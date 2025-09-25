@@ -208,7 +208,6 @@ export const cancelReservation = createAsyncThunk(
   }
 )
 
-// Thunk para aprobar una reserva
 export const approveReservation = createAsyncThunk(
   "reservations/approve",
   async ({ reservationId, revisedBy }, { rejectWithValue }) => {
@@ -361,13 +360,13 @@ const reservationsSlice = createSlice({
         state.cancellingReservation = true
       })
       .addCase(cancelReservation.fulfilled, (state, action) => {
-        const { id, status, ReservationComments } = action.payload
+        const { id, status, ReservationComments, updatedAt } = action.payload
         const currentPageReservations = state.reservationsPerPage[state.currentPage]
         if (currentPageReservations && currentPageReservations.length > 0) {
           const index = currentPageReservations.findIndex((reservation) => reservation?.id === id)
 
           if (index !== -1) {
-            currentPageReservations[index] = { ...currentPageReservations[index], status }
+            currentPageReservations[index] = { ...currentPageReservations[index], status, updatedAt }
           }
         }
         state.reservationDetails.status = status
@@ -384,13 +383,13 @@ const reservationsSlice = createSlice({
         state.approvingReservation = true
       })
       .addCase(approveReservation.fulfilled, (state, action) => {
-        const { id, status } = action.payload
+        const { id, status, updatedAt } = action.payload
         const currentPageReservations = state.reservationsPerPage[state.currentPage]
         if (currentPageReservations && currentPageReservations.length > 0) {
           const index = currentPageReservations.findIndex((reservation) => reservation?.id === id)
 
           if (index !== -1) {
-            currentPageReservations[index] = { ...currentPageReservations[index], status }
+            currentPageReservations[index] = { ...currentPageReservations[index], status, updatedAt }
           }
         }
         state.reservationDetails.status = status
