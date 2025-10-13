@@ -18,7 +18,7 @@ export const Alerts = ({ title, setShowAlert, description, subdescription }) => 
       icon={<IconAlertCircle />}
       withCloseButton
       onClose={() => {
-        localStorage.setItem("hideSubscriptionAlert", "true")
+        sessionStorage.setItem("hideSubscriptionAlert", "true")
         setShowAlert(false)
       }}
       radius="md">

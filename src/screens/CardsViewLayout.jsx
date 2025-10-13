@@ -50,6 +50,8 @@ import { useDispatch } from "react-redux"
 import { cancelOrder, updateOrderStatus } from "../store/features/ordersSlice"
 import { useTimer } from "react-timer-hook"
 import { useSelector } from "react-redux"
+import { IconNotes } from "@tabler/icons-react"
+import { useEffect } from "react"
 
 const CardsViewLayout = ({
   title,
@@ -94,16 +96,26 @@ const CardsViewLayout = ({
   const isSmallScreen = useMediaQuery("(max-width: 430px)")
   const { colorScheme } = useMantineColorScheme()
   const [orderId, setOrderId] = useState(null)
+  const [readyMap, setReadyMap] = useState({}) // { [orderId]: true } cuando el countdown termina
+  const markReady = (id) => setReadyMap((prev) => ({ ...prev, [id]: true }))
 
-  const OrderStopwatch = ({ sentToKitchenTimestamp }) => {
-    const stopwatchOffset = new Date()
-    const elapsedSeconds = dayjs().diff(dayjs(sentToKitchenTimestamp), "second")
-    stopwatchOffset.setSeconds(stopwatchOffset.getSeconds() + elapsedSeconds)
+  // arriba: import { useState, useEffect } from "react"
 
-    const { days, seconds, minutes, hours } = useStopwatch({
-      autoStart: true,
-      offsetTimestamp: stopwatchOffset
+  const OrderStopwatch = ({ sentToKitchenTimestamp, isPaused }) => {
+    const { days, hours, minutes, seconds, reset, pause } = useStopwatch({
+      autoStart: !isPaused
     })
+
+    useEffect(() => {
+      // Calcular el tiempo transcurrido desde sentToKitchenTimestamp
+      const elapsedSeconds = Math.max(0, dayjs().diff(dayjs(sentToKitchenTimestamp), "second"))
+      const offset = new Date()
+      offset.setSeconds(offset.getSeconds() + elapsedSeconds)
+
+      // Resetea al tiempo correcto y arranca/pausa según isPaused
+      reset(offset, !isPaused)
+      if (isPaused) pause()
+    }, [sentToKitchenTimestamp, isPaused, reset, pause])
 
     return (
       <Text size="md" fw={700}>
@@ -115,10 +127,9 @@ const CardsViewLayout = ({
 
   const Countdown = ({ scheduledDate, onExpire }) => {
     const targetDate = new Date(scheduledDate)
-
     const { seconds, minutes, hours, days } = useTimer({
       expiryTimestamp: targetDate,
-      onExpire
+      onExpire // <-- avisa cuando llega a 0
     })
 
     return `Disponible dentro de ${String(days).padStart(2, "0")}d:${String(hours).padStart(2, "0")}h:${String(minutes).padStart(2, "0")}m:${String(seconds).padStart(2, "0")}s`
@@ -352,6 +363,10 @@ const CardsViewLayout = ({
           ) : (
             <Grid gutter="sm">
               {elementsList?.map((item, key) => {
+                const isScheduled = Boolean(item?.scheduledDate) && !item?.isWantedAsSoonAsItIsReady
+                const isPast = isScheduled ? dayjs().isAfter(dayjs(item.scheduledDate)) : true
+                const isAvailable = !isScheduled || isPast || readyMap[item.id] === true
+                const isStopwatchPaused = isScheduled && !isAvailable
                 return (
                   <Grid.Col span={{ base: 12, md: 6, lg: 4 }} key={key}>
                     <Paper withBorder radius="md" p="md" className={classes.card}>
@@ -359,7 +374,7 @@ const CardsViewLayout = ({
                         {item.sentToKitchenTimestamp && (
                           <Flex align="start" gap={2} style={{ position: "absolute", top: 3, right: 3 }}>
                             <IconStopwatch size={24} />
-                            <OrderStopwatch sentToKitchenTimestamp={item.sentToKitchenTimestamp} />
+                            <OrderStopwatch sentToKitchenTimestamp={item.sentToKitchenTimestamp} isPaused={isStopwatchPaused} />
                           </Flex>
                         )}
 
@@ -394,8 +409,7 @@ const CardsViewLayout = ({
 
                         <Flex justify="space-between" align="center">
                           <Flex align="center" gap={2}>
-                            <IconClock size={18} />
-                            <Text size="sm">{formatTime(item.createdAt)}</Text>
+                            <Text size="sm" fw={600}>Creado el {formatTime(item.createdAt)}</Text>
                           </Flex>
                           <Flex align="center" gap={2}>
                             {item.isWantedAsSoonAsItIsReady ? <IconFlame size={18} /> : <IconClock size={18} />}
@@ -436,21 +450,23 @@ const CardsViewLayout = ({
                             Cancelar
                           </Button>
                           <Button
-                            //disabled={isDisabled}
                             style={{ flex: 1 }}
                             color={colors.main_app_color}
                             loading={updatingOrderStatus}
                             radius="md"
+                            disabled={!isAvailable} // 🔒 bloqueado mientras corre el countdown
                             onClick={() => {
                               openKitchen()
                               setOrderId(item.id)
                             }}>
-                            {/* {!item.scheduledDate && isDisabled ? (
-                              <Countdown scheduledDate={"2025-01-19T09:53:00Z"} onExpire={handleExpire} />
+                            {isScheduled && !isAvailable ? (
+                              <Countdown
+                                scheduledDate={item.scheduledDate}
+                                onExpire={() => markReady(item.id)} // ⏱️ cuando termina → habilita
+                              />
                             ) : (
                               "Marcar como preparado"
-                            )} */}
-                            Marcar como preparado
+                            )}
                           </Button>
                         </Flex>
                       </Stack>

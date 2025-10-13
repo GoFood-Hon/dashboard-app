@@ -10,21 +10,22 @@ import { logoutAction } from "../../store/features/authSlice"
 
 export function Navbar({ data }) {
   const navigate = useNavigate()
-  const dispatch  = useDispatch()
+  const dispatch = useDispatch()
   const links = data?.map((item) => <NavLinksGroup key={item.label} {...item} />)
 
   const logout = () => {
     localStorage.removeItem("token")
     localStorage.removeItem("setUserRole")
+    sessionStorage.removeItem("hideSubscriptionAlert")
     localStorage.removeItem("hideSubscriptionAlert")
-    dispatch(logoutAction());
+    dispatch(logoutAction())
     navigate(AUTH_NAVIGATION_ROUTES.Login.path)
   }
 
   return (
     <>
       <ScrollArea className={classes.links}>
-        <Box mt='sm'>{links}</Box>
+        <Box mt="sm">{links}</Box>
       </ScrollArea>
       <Divider />
       <div className={`cursor-pointer hover:bg-${colors.main_app_color}`} onClick={logout}>

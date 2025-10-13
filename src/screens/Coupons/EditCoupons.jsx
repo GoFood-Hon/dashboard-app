@@ -31,8 +31,6 @@ export const EditCoupon = () => {
     }
   })
 
-  console.log(errors)
-
   const imageLocation = watch("images[0].location")
 
   const accordionStructure = [

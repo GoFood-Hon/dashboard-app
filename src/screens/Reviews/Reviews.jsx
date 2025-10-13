@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux"
 import TableViewLayout from "../TableViewLayout"
 import { fetchAllReviews, setCurrentPage } from "../../store/features/reviewsSlice"
 import { useDisclosure } from "@mantine/hooks"
-import { Anchor, Card, Divider, Flex, Modal, Rating, Stack, Text, Title, Tooltip } from "@mantine/core"
+import { Anchor, Card, Divider, Flex, Modal, Rating, Stack, Text, Tooltip } from "@mantine/core"
 import { IconMotorbike } from "@tabler/icons-react"
 import { IconBurger } from "@tabler/icons-react"
 import { IconBox } from "@tabler/icons-react"
@@ -24,9 +24,10 @@ export default function Reviews() {
 
   const [opened, { open, close }] = useDisclosure(false)
   const [selectedReview, setSelectedReview] = useState(null)
-  const reviewTotal = parseFloat(
-    ((selectedReview?.driverRating + selectedReview?.foodRating + selectedReview?.suborderRating) / 3).toFixed(1)
-  )
+  const reviewTotal =
+    selectedReview?.driverRating === null
+      ? parseFloat(((selectedReview?.foodRating + selectedReview?.suborderRating) / 2).toFixed(1))
+      : parseFloat(((selectedReview?.driverRating + selectedReview?.foodRating + selectedReview?.suborderRating) / 3).toFixed(1))
 
   const handleOpenModal = (reviewId) => {
     const review = reviewsList.find((r) => r.id === reviewId)
@@ -85,15 +86,19 @@ export default function Reviews() {
               </Flex>
             </Flex>
             <Divider my="xs" />
-            <Flex align="center" gap={5}>
-              <IconMotorbike />
-              <Text size="sm">Repartidor:</Text>
-              <Rating defaultValue={selectedReview?.driverRating || 0} readOnly />
-              <Text size="sm">({selectedReview?.driverRating || 0})</Text>
-            </Flex>
-            <Card radius="md">
-              <Text size="sm">{selectedReview?.driverComment || "No hay comentario"}</Text>
-            </Card>
+            {selectedReview?.driverRating !== null && (
+              <>
+                <Flex align="center" gap={5}>
+                  <IconMotorbike />
+                  <Text size="sm">Repartidor:</Text>
+                  <Rating defaultValue={selectedReview?.driverRating || 0} readOnly />
+                  <Text size="sm">({selectedReview?.driverRating || 0})</Text>
+                </Flex>
+                <Card radius="md">
+                  <Text size="sm">{selectedReview?.driverComment || "No hay comentario"}</Text>
+                </Card>
+              </>
+            )}
             <Flex align="center" gap={5}>
               <IconBurger />
               <Text size="sm">Producto:</Text>

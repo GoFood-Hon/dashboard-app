@@ -16,7 +16,8 @@ export const NotificationProvider = ({ children }) => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const location = useLocation()
-  const isOrderDetailRoute = (path) => /^\/orders\/[^/]+$/.test(path);
+  const isOrderDetailRoute = (path) => /^\/orders\/[^/]+$/.test(path)
+  const isReservationDetailRoute = (path) => /^\/reservations\/[^/]+$/.test(path)
 
   useEffect(() => {
     if (!orderSocket) return
@@ -39,9 +40,10 @@ export const NotificationProvider = ({ children }) => {
           </Flex>
         ),
         message: (
-          <Flex direction="row" align="center" justify="space-between">
+          <Flex direction="row" gap='sm' align="center" justify="space-between">
             <Text size="sm">
-              El usuario {order?.Order?.User?.name} hizo un pedido{" "}
+              El usuario {order?.Order?.User?.name}{" "}
+              {order?.isWantedAsSoonAsItIsReady ? "programó un pedido" : "realizó un pedido"}{" "}
               {order?.serviceType === "delivery"
                 ? "a domicilio"
                 : order?.serviceType === "onSite"
@@ -86,7 +88,7 @@ export const NotificationProvider = ({ children }) => {
           </Flex>
         ),
         message: (
-          <Flex direction="row" align="center" justify="space-between">
+          <Flex direction="row" gap='sm' align="center" justify="space-between">
             <Text size="sm">El pedido se marcó como preparado</Text>
             <Button
               size="xs"
@@ -153,7 +155,7 @@ export const NotificationProvider = ({ children }) => {
             </Flex>
           ),
           message: (
-            <Flex direction="row" align="center" justify="space-between">
+            <Flex direction="row" gap='sm' align="center" justify="space-between">
               <Text size="sm">El repartidor recogió el pedido y va en camino a entregarlo</Text>
               <Button
                 size="xs"
@@ -199,7 +201,7 @@ export const NotificationProvider = ({ children }) => {
             </Flex>
           ),
           message: (
-            <Flex direction="row" align="center" justify="space-between">
+            <Flex direction="row" gap='sm' align="center" justify="space-between">
               <Text size="sm">El repartidor marcó el pedido como entregado</Text>
               <Button
                 size="xs"
@@ -235,7 +237,7 @@ export const NotificationProvider = ({ children }) => {
           </Flex>
         ),
         message: (
-          <Flex direction="row" align="center" justify="space-between">
+          <Flex direction="row" gap='sm' align="center" justify="space-between">
             <Text size="sm">Se ha creado una nueva solicitud de reservación</Text>
             <Button
               size="xs"
@@ -243,7 +245,11 @@ export const NotificationProvider = ({ children }) => {
               w="125px"
               color="green"
               onClick={() => {
-                navigate(`/reservations/${reservation.id}`)
+                if (isReservationDetailRoute(location.pathname)) {
+                  dispatch(fetchReservationDetails(reservation.id))
+                } else {
+                  navigate(`/reservations/${reservation.id}`)
+                }
                 notifications.hide(reservation.id)
               }}>
               Ver reservación
@@ -270,7 +276,7 @@ export const NotificationProvider = ({ children }) => {
           </Flex>
         ),
         message: (
-          <Flex direction="row" align="center" justify="space-between">
+          <Flex direction="row" gap='sm' align="center" justify="space-between">
             <Text size="sm">Se cambió el estado de la reservación</Text>
             <Button
               size="xs"
@@ -305,7 +311,7 @@ export const NotificationProvider = ({ children }) => {
           </Flex>
         ),
         message: (
-          <Flex direction="row" align="center" justify="space-between">
+          <Flex direction="row" gap='sm' align="center" justify="space-between">
             <Text size="sm">Se agregó un nuevo comentario a la reservación</Text>
             <Button
               size="xs"

@@ -28,7 +28,6 @@ export default function CouponsList() {
   const haveCouponsModule = !!user?.Restaurant?.Subscription?.Plan?.PlanFeatures?.some(
     (feature) => feature.featureCode === "promotions-coupon" && feature.PlanPlanFeatures?.avai === true
   )
-  console.log(user?.Restaurant?.Subscription?.Plan?.PlanFeatures)
 
   const handleNewCoupon = () => {
     navigate(SETTING_NAVIGATION_ROUTES.Coupons.newCoupon.path)

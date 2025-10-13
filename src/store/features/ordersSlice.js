@@ -438,22 +438,18 @@ const ordersSlice = createSlice({
       .addCase(updateOrderStatus.fulfilled, (state, action) => {
         const { id, status } = action.payload
 
-        if (localStorage.getItem("setUserRole") !== "kitchen") {
-          const currentPageOrders = state.ordersPerPage[state.currentPage]
-          if (currentPageOrders && currentPageOrders.length > 0) {
-            const index = currentPageOrders.findIndex((order) => order?.id === id)
+        const currentPageOrders = state.ordersPerPage[state.currentPage]
+        if (currentPageOrders && currentPageOrders.length > 0) {
+          const index = currentPageOrders.findIndex((order) => order?.id === id)
 
-            if (index !== -1) {
-              currentPageOrders[index] = { ...currentPageOrders[index], status }
-            }
+          if (index !== -1) {
+            currentPageOrders[index] = { ...currentPageOrders[index], status }
           }
-
-          state.orderDetails.status = status
-        } else {
-          const currentPageOrdersForKitchen = state.ordersForKitchenPerPage[state.currentOrdersForKitchenPage]
-          const updatedOrders = currentPageOrdersForKitchen?.filter((order) => order.id !== id)
-          state.ordersForKitchenPerPage[state.currentOrdersForKitchenPage] = updatedOrders
         }
+
+        const currentPageOrdersForKitchen = state.ordersForKitchenPerPage[state.currentOrdersForKitchenPage]
+        const updatedOrders = currentPageOrdersForKitchen?.filter((order) => order.id !== id)
+        state.ordersForKitchenPerPage[state.currentOrdersForKitchenPage] = updatedOrders
 
         state.updatingOrderStatus = false
       })
@@ -499,6 +495,9 @@ const ordersSlice = createSlice({
             currentPageOrders[index] = { ...currentPageOrders[index], status }
           }
         }
+        const currentPageOrdersForKitchen = state.ordersForKitchenPerPage[state.currentOrdersForKitchenPage]
+        const updatedOrders = currentPageOrdersForKitchen?.filter((order) => order.id !== id)
+        state.ordersForKitchenPerPage[state.currentOrdersForKitchenPage] = updatedOrders
         state.orderDetails.status = status
         state.cancelOrderStatus = false
       })

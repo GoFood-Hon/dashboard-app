@@ -17,6 +17,8 @@ export function UserButton({ image, name, email, role }) {
   const logout = () => {
     localStorage.removeItem("token")
     localStorage.removeItem("setUserRole")
+    sessionStorage.removeItem("hideSubscriptionAlert")
+    localStorage.removeItem("hideSubscriptionAlert")
     dispatch(logoutAction())
     navigate(AUTH_NAVIGATION_ROUTES.Login.path)
   }
@@ -32,7 +34,7 @@ export function UserButton({ image, name, email, role }) {
           {name}
         </Text>
 
-        <Text color="dimmed" size="sm" ta='right'>
+        <Text color="dimmed" size="sm" ta="right">
           {email}
         </Text>
       </div>

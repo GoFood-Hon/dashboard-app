@@ -41,8 +41,17 @@ function AuthLayout() {
   const [loading, setLoading] = useState(true)
   const user = useSelector((state) => state.user.value)
   const [showAlert, setShowAlert] = useState(() => {
-    const hidden = localStorage.getItem("hideSubscriptionAlert")
-    return hidden !== "true"
+    // Preferimos sessionStorage (por sesión). Si no está, revisamos localStorage (compat viejo).
+    const hiddenSession = sessionStorage.getItem("hideSubscriptionAlert")
+    const hiddenLegacy = localStorage.getItem("hideSubscriptionAlert")
+
+    // Migración/limpieza de legado (opcional pero recomendado)
+    if (hiddenLegacy === "true" && hiddenSession === null) {
+      // Si alguna vez guardaste en localStorage, limpia para no “arrastrar” estado viejo
+      localStorage.removeItem("hideSubscriptionAlert")
+    }
+
+    return hiddenSession !== "true"
   })
 
   const roleRoutesMap = {

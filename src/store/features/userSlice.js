@@ -111,7 +111,6 @@ export const createAdminUser = createAsyncThunk(
   async ({ params, formDataImage }, { rejectWithValue }) => {
     try {
       const response = await authApi.createNewAdmin(params)
-      console.log(response)
       const userData = response.data.data
 
       if (response.error) {

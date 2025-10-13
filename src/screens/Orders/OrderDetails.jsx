@@ -26,7 +26,7 @@ import {
 } from "@mantine/core"
 import React, { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
-import { calculateTimeDifference, getFormattedHNL } from "../../utils"
+import { calculateTimeDifference, formatTime, getFormattedHNL } from "../../utils"
 import {
   APP_ROLES,
   billsData,
@@ -57,7 +57,6 @@ import UserData from "../../components/UserData/UserData"
 import {
   IconCircleCheck,
   IconCancel,
-  IconShoppingCart,
   IconReceipt,
   IconBrandRedux,
   IconMotorbike,
@@ -67,12 +66,12 @@ import {
   IconBox,
   IconHelmet,
   IconUser,
-  IconBorderCorners
+  IconCheck,
+  IconCopy,
+  IconFlame,
+  IconClock,
+  IconTable
 } from "@tabler/icons-react"
-import { IconTable } from "@tabler/icons-react"
-import dayjs from "dayjs"
-import { IconCheck } from "@tabler/icons-react"
-import { IconCopy } from "@tabler/icons-react"
 import { LoadingPage } from "../../components/LoadingPage"
 
 export const OrderDetails = () => {
@@ -243,8 +242,12 @@ export const OrderDetails = () => {
                   </Group>
                   <Flex align="center" justify="space-between">
                     <Flex align="center" gap={5}>
-                      <IconShoppingCart size="1.1rem" />
-                      <Title order={5}>Lista de productos</Title>
+                      {orderDetails?.isWantedAsSoonAsItIsReady ? <IconFlame size={18} /> : <IconClock size={18} />}
+                      <Text size="sm">
+                        {orderDetails?.isWantedAsSoonAsItIsReady
+                          ? "Pedido para preparar de inmediato"
+                          : `Pedido programado para el ${formatTime(orderDetails?.scheduledDate)}`}
+                      </Text>
                     </Flex>
                     <Flex align="center" gap={5}>
                       <Button
@@ -276,7 +279,7 @@ export const OrderDetails = () => {
                       email={orderDetails?.Order?.User?.email}
                       userId={orderDetails?.Order?.User?.identityNumber}
                       phoneNumber={orderDetails?.Order?.User?.phoneNumber}
-                      address={orderDetails?.userAddress?.address}
+                      address={user?.role === APP_ROLES.kitchenUser ? null : orderDetails?.userAddress?.address}
                       isSmallScreen={isSmallScreen}
                       orderDetails={orderDetails}
                     />

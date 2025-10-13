@@ -30,6 +30,8 @@ export default function Header() {
   useEffect(() => {
     if (location.pathname === AUTH_NAVIGATION_ROUTES.Logout.path) {
       localStorage.removeItem("token")
+      sessionStorage.removeItem("hideSubscriptionAlert")
+      localStorage.removeItem("hideSubscriptionAlert")
       navigate(AUTH_NAVIGATION_ROUTES.Login.path)
     }
   }, [location.pathname])

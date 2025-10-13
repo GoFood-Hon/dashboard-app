@@ -19,7 +19,6 @@ const UserData = ({
   tableNumberAndText,
   noIcons
 }) => {
-
   return (
     <Stack h="100%" gap="xs">
       <Flex align="center" gap={5}>
@@ -47,29 +46,29 @@ const UserData = ({
           <Flex align="center" gap="xs" ml={5}>
             {noIcons ?? <IconMail size="1.1rem" />}
             <Text c="dimmed" size={isSmallScreen ? "xs" : "sm"}>
-              {email || 'No se proporcionó'}
+              {email || "No se proporcionó"}
             </Text>
           </Flex>
           <Flex align="center" gap="xs" ml={5}>
             {noIcons ?? <IconId size="1.1rem" />}
             <Text c="dimmed" size={isSmallScreen ? "xs" : "sm"}>
-              {userId || 'No se proporcionó'}
+              {userId || "No se proporcionó"}
             </Text>
           </Flex>
           <Flex align="center" gap="xs" ml={5}>
             {noIcons ?? <IconPhone size="1.1rem" />}
             <Text c="dimmed" size={isSmallScreen ? "xs" : "sm"}>
-              {phoneNumber || 'No se proporcionó'}
+              {phoneNumber || "No se proporcionó"}
             </Text>
           </Flex>
           <Flex align="center" gap="xs" ml={5}>
-            {bikeId ? noIcons ?? <IconMotorbike size="1.1rem" style={{ flexShrink: 0 }} /> : noIcons ?? <IconMapPin size="1.1rem" style={{ flexShrink: 0 }} />}
+            {bikeId ? (
+              (noIcons ?? <IconMotorbike size="1.1rem" style={{ flexShrink: 0 }} />)
+            ) : (noIcons ?? address !== null) ? (
+              <IconMapPin size="1.1rem" style={{ flexShrink: 0 }} />
+            ) : null}
             <Text c="dimmed" size={isSmallScreen ? "xs" : "sm"} style={{ wordBreak: "break-word" }}>
-              {bikeId
-                ? bikeId
-                : orderDetails?.serviceType === "delivery"
-                  ? address || 'No se proporcionó'
-                  : "La dirección no es requerida"}
+              {bikeId ? bikeId : orderDetails?.serviceType === "delivery" ? address : "La dirección no es requerida"}
             </Text>
           </Flex>
         </>

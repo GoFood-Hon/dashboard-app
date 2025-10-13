@@ -51,7 +51,8 @@ export default function SideBar() {
   const logout = () => {
     localStorage.removeItem("token")
     localStorage.removeItem("setUserRole")
-    localStorage.removeItem("hideSubscriptionAlert") 
+    sessionStorage.removeItem("hideSubscriptionAlert")
+    localStorage.removeItem("hideSubscriptionAlert")
     navigate(AUTH_NAVIGATION_ROUTES.Login.path)
   }
 
