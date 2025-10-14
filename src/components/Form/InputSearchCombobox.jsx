@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react"
+import React, { useEffect, useState } from "react"
 import { InputBase, Combobox, useCombobox, ScrollArea } from "@mantine/core"
 import { ErrorMessage } from "./ErrorMessage"
 import LoadingCircle from "../LoadingCircle"

@@ -26,7 +26,7 @@ import {
 } from "@mantine/core"
 import React, { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
-import { calculateTimeDifference, formatTime, getFormattedHNL } from "../../utils"
+import { calculateTimeDifference, Countdown, formatTime, getFormattedHNL } from "../../utils"
 import {
   APP_ROLES,
   billsData,
@@ -70,9 +70,12 @@ import {
   IconCopy,
   IconFlame,
   IconClock,
-  IconTable
+  IconTable,
+  IconCash,
+  IconCreditCard
 } from "@tabler/icons-react"
 import { LoadingPage } from "../../components/LoadingPage"
+import dayjs from "dayjs"
 
 export const OrderDetails = () => {
   const { orderId } = useParams()
@@ -92,6 +95,12 @@ export const OrderDetails = () => {
     return matchingStep ? matchingStep.step : 0
   }
   const [active, setActive] = useState(getInitialStep)
+  const [selectedAction, setSelectedAction] = useState(null)
+  const [readyMap, setReadyMap] = useState({})
+  const markReady = (id) => setReadyMap((prev) => ({ ...prev, [id]: true }))
+  const isScheduled = Boolean(orderDetails?.scheduledDate) && !orderDetails?.isWantedAsSoonAsItIsReady
+  const isPast = isScheduled ? dayjs().isAfter(dayjs(orderDetails?.scheduledDate)) : true
+  const isAvailable = !isScheduled || isPast || readyMap[orderDetails?.id] === true
 
   useEffect(() => {
     setActive(getInitialStep())
@@ -179,9 +188,7 @@ export const OrderDetails = () => {
               ) : (
                 <Flex align="center" justify="center" gap="xs">
                   <IconCancel color="white" size={40} />
-                  <Text fw={700} color="white">
-                    Este pedido fue marcado como cancelado
-                  </Text>
+                  <Text fw={700}>Este pedido fue marcado como cancelado</Text>
                 </Flex>
               )}
             </Paper>
@@ -208,24 +215,38 @@ export const OrderDetails = () => {
                           <Text c="white">{orderDetails?.Sucursal?.city + ", " + orderDetails?.Sucursal?.state}</Text>
                         </Flex>
                         <Flex direction={isSmallScreen ? "column" : "row"} gap={isSmallScreen && 3} justify="space-between">
-                          <Flex c="white" align="center" gap={2}>
-                            {orderDetails?.serviceType === "delivery" ? (
-                              <IconMotorbike size="1.1rem" />
-                            ) : orderDetails?.serviceType === "onSite" ? (
-                              <IconToolsKitchen3 size="1.1rem" />
-                            ) : (
-                              <IconCar size="1.1rem" />
-                            )}
-                            <Text c="white" ta="end" size="sm" fw={700}>
-                              {orderDetails?.serviceType === "delivery"
-                                ? "Pedido a domicilio"
-                                : orderDetails?.serviceType === "onSite"
-                                  ? "Pedido para venta en mesa"
-                                  : "Pedido para llevar"}
-                            </Text>
+                          <Flex direction="column" gap={3}>
+                            <Flex c="white" align="center" gap={2}>
+                              {orderDetails?.serviceType === "delivery" ? (
+                                <IconMotorbike size="1.1rem" />
+                              ) : orderDetails?.serviceType === "onSite" ? (
+                                <IconToolsKitchen3 size="1.1rem" />
+                              ) : (
+                                <IconCar size="1.1rem" />
+                              )}
+                              <Text c="white" ta="end" size="sm" fw={700}>
+                                {orderDetails?.serviceType === "delivery"
+                                  ? "Pedido a domicilio"
+                                  : orderDetails?.serviceType === "onSite"
+                                    ? "Pedido para venta en mesa"
+                                    : "Pedido para llevar"}
+                              </Text>
+                            </Flex>
+                            <Flex c="white" align="center" gap={2}>
+                              {orderDetails?.paymentMethod === "cash" ? (
+                                <IconCash size="1.1rem" />
+                              ) : (
+                                <IconCreditCard size="1.1rem" />
+                              )}
+                              <Text c="white" ta="end" size="sm" fw={700}>
+                                {orderDetails?.paymentMethod === "cash"
+                                  ? `Se ${orderDetails?.status === "delivered" ? "pagó" : "pagará"} en efectivo`
+                                  : "Pagado con tarjeta"}
+                              </Text>
+                            </Flex>
                           </Flex>
                           {orderDetails?.sentToKitchenTimestamp && orderDetails?.finishedCookingTimestamp && (
-                            <Flex c="white" align="center" gap={2}>
+                            <Flex c="white" align="end" gap={2}>
                               <IconStopwatch size={20} />
                               <Text c="white" size="sm" fw={700}>
                                 Preparado en{" "}
@@ -282,6 +303,8 @@ export const OrderDetails = () => {
                       address={user?.role === APP_ROLES.kitchenUser ? null : orderDetails?.userAddress?.address}
                       isSmallScreen={isSmallScreen}
                       orderDetails={orderDetails}
+                      rtnName={orderDetails?.name}
+                      rtn={orderDetails?.rtn}
                     />
                   </Paper>
                 </Grid.Col>
@@ -309,7 +332,7 @@ export const OrderDetails = () => {
                           orderDetails?.serviceType === "delivery"
                             ? "Pedido a domicilio"
                             : orderDetails?.serviceType === "onSite"
-                              ? `Servir pedido en mesa #${orderDetails?.tableNumber}`
+                              ? `${orderDetails?.tableNumber ? `Servir pedido en mesa ${orderDetails.tableNumber}` : "Pedido para servir en mesa"}`
                               : "Pedido para llevar"
                         }
                       />
@@ -332,7 +355,8 @@ export const OrderDetails = () => {
                                 <Text size={isSmallScreen ? "xs" : "sm"}>Subtotal</Text>
                                 <Text size={isSmallScreen ? "xs" : "sm"}>Descuento</Text>
                                 <Text size={isSmallScreen ? "xs" : "sm"}>Precio de envío</Text>
-                                <Text size={isSmallScreen ? "xs" : "sm"}>ISV ( 15% )</Text>
+                                <Text size={isSmallScreen ? "xs" : "sm"}>ISV 15%</Text>
+                                <Text size={isSmallScreen ? "xs" : "sm"}>ISV 18%</Text>
                                 <Space />
                                 <Text size={isSmallScreen ? "xs" : "sm"}>Total</Text>
                               </Stack>
@@ -349,7 +373,10 @@ export const OrderDetails = () => {
                                   {getFormattedHNL(orderDetails?.shippingPrice)}
                                 </Text>
                                 <Text size={isSmallScreen ? "xs" : "sm"} c="dimmed">
-                                  {getFormattedHNL(orderDetails?.isv)}
+                                  {getFormattedHNL(orderDetails?.isv15)}
+                                </Text>
+                                <Text size={isSmallScreen ? "xs" : "sm"} c="dimmed">
+                                  {getFormattedHNL(orderDetails?.isv18)}
                                 </Text>
                                 <Divider />
                                 <Text size={isSmallScreen ? "xs" : "sm"} c="dimmed">
@@ -395,7 +422,11 @@ export const OrderDetails = () => {
                                     fullWidth
                                     loading={updatingOrderStatus}
                                     color={colors.main_app_color}
-                                    onClick={() => dispatch(confirmOrder(orderId))}
+                                    //onClick={() => dispatch(confirmOrder(orderId))}
+                                    onClick={() => {
+                                      openModal()
+                                      setSelectedAction("confirmOrder")
+                                    }}
                                     radius="md"
                                     size={isSmallScreen ? "xs" : "sm"}>
                                     Confirmar pedido
@@ -409,12 +440,22 @@ export const OrderDetails = () => {
                             ) : orderDetails?.status === orderStatusValues.confirmed ? (
                               <Button
                                 fullWidth
-                                loading={updatingOrderStatus}
                                 color={colors.main_app_color}
-                                onClick={() => orderId && dispatch(updateOrderStatus(orderId))}
+                                loading={updatingOrderStatus}
                                 radius="md"
-                                size={isSmallScreen ? "xs" : "sm"}>
-                                Marcar como preparado
+                                disabled={!isAvailable}
+                                onClick={() => {
+                                  openModal()
+                                  setSelectedAction("markOrderAsPrepared")
+                                }}>
+                                {isScheduled && !isAvailable ? (
+                                  <Countdown
+                                    scheduledDate={orderDetails?.scheduledDate}
+                                    onExpire={() => markReady(orderDetails?.id)}
+                                  />
+                                ) : (
+                                  "Marcar como preparado"
+                                )}
                               </Button>
                             ) : orderDetails?.serviceType === orderDeliveryTypes.delivery &&
                               orderDetails?.status === orderStatusValues.ready ? (
@@ -445,7 +486,11 @@ export const OrderDetails = () => {
                                   fullWidth
                                   loading={updatingOrderStatus}
                                   color={colors.main_app_color}
-                                  onClick={() => orderId && dispatch(markOrderDelivered(orderId))}
+                                  //onClick={() => dispatch(markOrderDelivered(orderId))}
+                                  onClick={() => {
+                                    openModal()
+                                    setSelectedAction("markOrderDelivered")
+                                  }}
                                   radius="md">
                                   Marcar como entregado
                                 </Button>
@@ -469,7 +514,11 @@ export const OrderDetails = () => {
                                   loading={cancelOrderStatus}
                                   color={colors.main_app_color}
                                   variant="outline"
-                                  onClick={() => dispatch(cancelOrder(orderId))}
+                                  //onClick={() => dispatch(cancelOrder(orderId))}
+                                  onClick={() => {
+                                    openModal()
+                                    setSelectedAction("cancelOrder")
+                                  }}
                                   radius="md"
                                   size={isSmallScreen ? "xs" : "sm"}>
                                   Cancelar pedido
@@ -501,9 +550,19 @@ export const OrderDetails = () => {
           <ConfirmationModal
             opened={openedModal}
             close={closeModal}
-            title="¿Estás seguro que deseas actualiza?"
-            description="La categoría se quitará de todos los productos a los que esté asociado"
-            onConfirm={() => handleDeleteTag(tagId)}
+            title={`¿Estás seguro que deseas ${selectedAction === "cancelOrder" ? "cancelar" : "actualizar"} el pedido?`}
+            description={`El pedido ${selectedAction === "cancelOrder" ? "será cancelado" : "pasará al siguiente estado"} y se le notificará al cliente`}
+            onConfirm={() => {
+              if (selectedAction === "confirmOrder") {
+                dispatch(confirmOrder(orderId))
+              } else if (selectedAction === "markOrderAsPrepared") {
+                dispatch(updateOrderStatus(orderId))
+              } else if (selectedAction === "markOrderDelivered") {
+                dispatch(markOrderDelivered(orderId))
+              } else if (selectedAction === "cancelOrder") {
+                dispatch(cancelOrder(orderId))
+              }
+            }}
           />
 
           <ModalLayout

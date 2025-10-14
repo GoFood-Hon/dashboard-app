@@ -5,6 +5,7 @@ import dayjs from "dayjs"
 import timezone from "dayjs/plugin/timezone"
 import utc from "dayjs/plugin/utc"
 import { NAVIGATION_ROUTES_SUPER_ADMIN_TWO } from "../routes"
+import { useTimer } from "react-timer-hook"
 
 dayjs.extend(utc)
 dayjs.extend(timezone)
@@ -195,4 +196,14 @@ export const onError = (errors) => {
   } else {
     window.scrollTo({ top: 0, behavior: "smooth" })
   }
+}
+
+export const Countdown = ({ scheduledDate, onExpire }) => {
+  const targetDate = new Date(scheduledDate)
+  const { seconds, minutes, hours, days } = useTimer({
+    expiryTimestamp: targetDate,
+    onExpire
+  })
+
+  return `Disponible dentro de ${String(days).padStart(2, "0")}d:${String(hours).padStart(2, "0")}h:${String(minutes).padStart(2, "0")}m:${String(seconds).padStart(2, "0")}s`
 }

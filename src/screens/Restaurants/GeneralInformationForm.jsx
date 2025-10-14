@@ -83,7 +83,7 @@ export const GeneralInformationForm = ({ register, control, errors, setValue, im
             </Grid.Col>
             <Grid.Col span={{ base: 12 }}>
               <InputField
-                label="Clinpays Token (Obligatorio)"
+                label="Token (Obligatorio)"
                 name="clinpaysCommerceToken"
                 register={register}
                 errors={errors}

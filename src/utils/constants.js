@@ -450,14 +450,13 @@ export const cardLogos = {
 //Bill details data
 export const billsData = (orderDetails) => [
   ["Subtotal", getFormattedHNL(orderDetails?.subtotal)],
-  ["Descuento", getFormattedHNL(orderDetails?.discount)],
-  ["Precio de envío", getFormattedHNL(orderDetails?.shippingPrice)],
-  ["ISV", getFormattedHNL(orderDetails?.isv)],
-  ["ISV (15%)", getFormattedHNL(orderDetails?.isv15)],
-  ["ISV (18%)", getFormattedHNL(orderDetails?.isv18)],
-  ["Cantidad exonerada", getFormattedHNL(orderDetails?.exoneratedAmount)],
   ["Cantidad exenta", getFormattedHNL(orderDetails?.exemptAmount)],
+  ["Descuento", getFormattedHNL(orderDetails?.discount)],
   ["Monto imponible (15%)", getFormattedHNL(orderDetails?.taxable15Amount)],
+  ["ISV (15%)", getFormattedHNL(orderDetails?.isv15)],
   ["Monto imponible (18%)", getFormattedHNL(orderDetails?.taxable18Amount)],
+  ["ISV (18%)", getFormattedHNL(orderDetails?.isv18)],
+  ["ISV", getFormattedHNL(orderDetails?.isv)],
+  ["Precio de envío", getFormattedHNL(orderDetails?.shippingPrice)],
   ["Propina", getFormattedHNL(orderDetails?.tip)]
 ]

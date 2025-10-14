@@ -275,14 +275,8 @@ export const ReservationDetails = () => {
                     </Text>
                   </Paper>
                 ) : (
-                  <Paper key={comment?.id} withBorder radius="md" mb="xs" className={classes.comment}>
-                    <Group gap="xs">
-                      <Box>
-                        <Text fz="sm">{comment?.User?.name}</Text>
-                        <Text fz="xs" c="dimmed">
-                          {dayjs(comment?.createdAt).fromNow()}
-                        </Text>
-                      </Box>
+                  <Paper key={comment?.id} withBorder radius="md" mb="sm" className={classes.comment}>
+                    <Group justify="flex-start" gap="xs">
                       <Avatar
                         src={comment?.User?.photo}
                         alt="it's me"
@@ -293,8 +287,14 @@ export const ReservationDetails = () => {
                           .join("")
                           .toUpperCase()}
                       />
+                      <Box>
+                        <Text fz="sm">{comment?.User?.name}</Text>
+                        <Text fz="xs" c="dimmed">
+                          {dayjs(comment?.createdAt).fromNow()}
+                        </Text>
+                      </Box>
                     </Group>
-                    <Text pl={54} pt="sm" size="sm">
+                    <Text pl={50} pt="sm" size="sm" ta="left">
                       {comment?.comment}
                     </Text>
                   </Paper>

@@ -693,12 +693,10 @@ export const editBranchSchema = z.object({
       ])
     )
     .optional(),
-  state: z
-    .string({
-      required_error: "El departamento es requerido",
-      invalid_type_error: "El departamento es requerido"
-    })
-    .min(1, "El departamento es requerido"),
+  state: z.number({
+    required_error: "El departamento es requerido",
+    invalid_type_error: "El departamento debe ser un número válido"
+  }),
   city: z.string().min(1, "La ciudad es requerida"),
 
   phoneNumber: z

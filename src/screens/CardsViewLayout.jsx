@@ -27,7 +27,7 @@ import {
 import { IconCheck, IconX } from "@tabler/icons-react"
 import BackButton from "./Dishes/components/BackButton"
 import { colors } from "../theme/colors"
-import { formatTime, getFormattedHNL } from "../utils"
+import { Countdown, formatTime, getFormattedHNL } from "../utils"
 import Lottie from "react-lottie"
 import animationData from "../assets/animation/NothingFoundAnimation.json"
 import { APP_ROLES, KITCHEN_SCROLL_VIEW_HEIGHT } from "../utils/constants"
@@ -107,12 +107,10 @@ const CardsViewLayout = ({
     })
 
     useEffect(() => {
-      // Calcular el tiempo transcurrido desde sentToKitchenTimestamp
       const elapsedSeconds = Math.max(0, dayjs().diff(dayjs(sentToKitchenTimestamp), "second"))
       const offset = new Date()
       offset.setSeconds(offset.getSeconds() + elapsedSeconds)
 
-      // Resetea al tiempo correcto y arranca/pausa según isPaused
       reset(offset, !isPaused)
       if (isPaused) pause()
     }, [sentToKitchenTimestamp, isPaused, reset, pause])
@@ -123,16 +121,6 @@ const CardsViewLayout = ({
         {String(seconds).padStart(2, "0")}
       </Text>
     )
-  }
-
-  const Countdown = ({ scheduledDate, onExpire }) => {
-    const targetDate = new Date(scheduledDate)
-    const { seconds, minutes, hours, days } = useTimer({
-      expiryTimestamp: targetDate,
-      onExpire // <-- avisa cuando llega a 0
-    })
-
-    return `Disponible dentro de ${String(days).padStart(2, "0")}d:${String(hours).padStart(2, "0")}h:${String(minutes).padStart(2, "0")}m:${String(seconds).padStart(2, "0")}s`
   }
 
   const handlePrint = (value) => {
@@ -422,7 +410,7 @@ const CardsViewLayout = ({
                         <ScrollArea h={KITCHEN_SCROLL_VIEW_HEIGHT}>
                           <SimpleGrid spacing={8} pb={1}>
                             {item.note && (
-                              <Accordion variant="separated" radius="md">
+                              <Accordion variant="separated" radius="md" >
                                 <Accordion.Item value="order-note">
                                   <Accordion.Control icon={<IconNotes size={20} />} fz="sm">
                                     Nota del pedido
@@ -454,7 +442,7 @@ const CardsViewLayout = ({
                             color={colors.main_app_color}
                             loading={updatingOrderStatus}
                             radius="md"
-                            disabled={!isAvailable} // 🔒 bloqueado mientras corre el countdown
+                            disabled={!isAvailable}
                             onClick={() => {
                               openKitchen()
                               setOrderId(item.id)
@@ -462,7 +450,7 @@ const CardsViewLayout = ({
                             {isScheduled && !isAvailable ? (
                               <Countdown
                                 scheduledDate={item.scheduledDate}
-                                onExpire={() => markReady(item.id)} // ⏱️ cuando termina → habilita
+                                onExpire={() => markReady(item.id)}
                               />
                             ) : (
                               "Marcar como preparado"

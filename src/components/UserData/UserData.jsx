@@ -1,7 +1,6 @@
 import { Avatar, Divider, Flex, Loader, Stack, Title, Text } from "@mantine/core"
-import { IconMail, IconPhone, IconId, IconMapPin } from "@tabler/icons-react"
+import { IconMail, IconPhone, IconId, IconMapPin, IconMotorbike, IconBuilding, IconCertificate } from "@tabler/icons-react"
 import { colors } from "../../theme/colors"
-import { IconMotorbike } from "@tabler/icons-react"
 
 const UserData = ({
   title,
@@ -9,6 +8,8 @@ const UserData = ({
   photo,
   name,
   email,
+  rtn,
+  rtnName,
   userId,
   phoneNumber,
   address,
@@ -71,6 +72,23 @@ const UserData = ({
               {bikeId ? bikeId : orderDetails?.serviceType === "delivery" ? address : "La dirección no es requerida"}
             </Text>
           </Flex>
+          {}
+          {rtnName && rtn && (
+            <>
+              <Flex align="center" gap="xs" ml={5}>
+                {noIcons ?? <IconBuilding size="1.1rem" />}
+                <Text c="dimmed" size={isSmallScreen ? "xs" : "sm"}>
+                  {rtnName || "No se proporcionó"}
+                </Text>
+              </Flex>
+              <Flex align="center" gap="xs" ml={5}>
+                {noIcons ?? <IconCertificate size="1.1rem" />}
+                <Text c="dimmed" size={isSmallScreen ? "xs" : "sm"}>
+                  {rtn || "No se proporcionó"}
+                </Text>
+              </Flex>
+            </>
+          )}
         </>
       ) : (
         <Flex direction="column" justify="center" align="center" style={{ flexGrow: 1 }} gap="sm">

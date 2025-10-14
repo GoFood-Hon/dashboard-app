@@ -450,7 +450,7 @@ const ordersSlice = createSlice({
         const currentPageOrdersForKitchen = state.ordersForKitchenPerPage[state.currentOrdersForKitchenPage]
         const updatedOrders = currentPageOrdersForKitchen?.filter((order) => order.id !== id)
         state.ordersForKitchenPerPage[state.currentOrdersForKitchenPage] = updatedOrders
-
+        state.orderDetails.status = status
         state.updatingOrderStatus = false
       })
       .addCase(updateOrderStatus.rejected, (state, action) => {

@@ -142,39 +142,51 @@ export const updateLoyaltyProgram = createAsyncThunk(
       }
 
       if (Array.isArray(deletedCards) && deletedCards.length) {
-        try {
-          await Promise.all(
-            deletedCards.map(async (cardId) => {
-              try {
-                await loyaltyApi.deleteLoyaltyCardWithReward(id, cardId)
-              } catch (error) {
-                throw error
+        const failedDeletes = []
+        const failedMessages = []
+
+        await Promise.all(
+          deletedCards.map(async (cardObj) => {
+            const cardId = cardObj.id
+            try {
+              const res = await loyaltyApi.deleteLoyaltyCardWithReward(id, cardId)
+              if (res?.status === "fail" || res?.error) {
+                throw new Error(res?.message || "Error al eliminar tarjeta")
               }
-            })
-          )
+            } catch (error) {
+              failedDeletes.push(cardObj)
+              const msg = error?.response?.data?.message || error?.message || "No se pudo eliminar la tarjeta."
+              failedMessages.push(msg)
+            }
+          })
+        )
+
+        if (failedDeletes.length > 0) {
+          dispatch(restoreLoyaltyCards(failedDeletes))
+          const errorMessage = failedMessages.length > 1 ? failedMessages.join("\n") : failedMessages[0]
+          showNotification({
+            title: "Error",
+            message: errorMessage || "Una o más tarjetas no pudieron eliminarse.",
+            color: "red"
+          })
+          return rejectWithValue("Error al eliminar una o más tarjetas.")
+        } else {
           dispatch(clearDeletedCards())
-        } catch (error) {
-          return rejectWithValue(error)
         }
       }
 
       if (Array.isArray(loyaltyCards) && loyaltyCards.length) {
-        try {
-          const newCards = loyaltyCards.map((card, index) => ({ ...card, index })).filter((card) => !card.id)
+        const newCards = loyaltyCards.map((card, index) => ({ ...card, index })).filter((card) => !card.id)
 
-          if (newCards.length) {
-            for (const card of newCards) {
-              try {
-                const response = await loyaltyApi.createLoyaltyCardWithReward(id, card)
-                dispatch(updateLoyaltyCards({ ...response.data, index: card.index }))
-              } catch (error) {
-                throw error
-              }
+        if (newCards.length) {
+          for (const card of newCards) {
+            try {
+              const response = await loyaltyApi.createLoyaltyCardWithReward(id, card)
+              dispatch(updateLoyaltyCards({ ...response.data, index: card.index }))
+            } catch (error) {
+              console.error("Error al crear tarjeta:", error)
+              return rejectWithValue(error)
             }
-          }
-        } catch (error) {
-          if (error) {
-            return rejectWithValue(error)
           }
         }
       }
@@ -187,6 +199,12 @@ export const updateLoyaltyProgram = createAsyncThunk(
 
       return response.data
     } catch (error) {
+      console.error("Error general en updateLoyaltyProgram:", error)
+      showNotification({
+        title: "Error",
+        message: "Hubo un problema al actualizar el programa de lealtad",
+        color: "red"
+      })
       return rejectWithValue(error)
     }
   }
@@ -310,7 +328,7 @@ const loyaltySlice = createSlice({
         const cardToRemove = state.loyaltyCards[index]
 
         if (cardToRemove?.id) {
-          state.deletedCards = [...state.deletedCards, cardToRemove.id]
+          state.deletedCards = [...state.deletedCards, { id: cardToRemove.id, index, card: cardToRemove }]
         }
 
         state.loyaltyCards = state.loyaltyCards.filter((_, i) => i !== index)
@@ -341,6 +359,21 @@ const loyaltySlice = createSlice({
     },
     setSelectedSearchOption: (state, action) => {
       state.searchField = action.payload
+    },
+    restoreLoyaltyCards: (state, action) => {
+      const restored = action.payload
+      const updatedCards = [...state.loyaltyCards]
+
+      restored.forEach(({ index, card }) => {
+        updatedCards.splice(index, 0, card)
+      })
+
+      updatedCards.sort((a, b) => a.purchasesWithWhichRewardBegins - b.purchasesWithWhichRewardBegins)
+
+      state.loyaltyCards = updatedCards
+
+      const restoredIds = restored.map((c) => c.id)
+      state.deletedCards = state.deletedCards.filter((obj) => !restoredIds.includes(obj.id))
     }
   },
   extraReducers: (builder) => {
@@ -534,7 +567,8 @@ export const {
   setCardCode,
   setFilterValue,
   setCurrentRewardPage,
-  setSelectedSearchOption
+  setSelectedSearchOption,
+  restoreLoyaltyCards
 } = loyaltySlice.actions
 
 export default loyaltySlice.reducer

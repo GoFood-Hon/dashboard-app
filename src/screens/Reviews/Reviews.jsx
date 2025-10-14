@@ -4,9 +4,7 @@ import TableViewLayout from "../TableViewLayout"
 import { fetchAllReviews, setCurrentPage } from "../../store/features/reviewsSlice"
 import { useDisclosure } from "@mantine/hooks"
 import { Anchor, Card, Divider, Flex, Modal, Rating, Stack, Text, Tooltip } from "@mantine/core"
-import { IconMotorbike } from "@tabler/icons-react"
-import { IconBurger } from "@tabler/icons-react"
-import { IconBox } from "@tabler/icons-react"
+import { IconMotorbike, IconBurger, IconBuildingStore } from "@tabler/icons-react"
 import { useNavigate } from "react-router-dom"
 
 export default function Reviews() {
@@ -109,8 +107,8 @@ export default function Reviews() {
               <Text size="sm">{selectedReview?.foodComment || "No hay comentario"}</Text>
             </Card>
             <Flex align="center" gap={5}>
-              <IconBox />
-              <Text size="sm">Orden:</Text>
+              <IconBuildingStore />
+              <Text size="sm">Comercio:</Text>
               <Rating defaultValue={selectedReview?.suborderRating || 0} readOnly />
               <Text size="sm">({selectedReview?.suborderRating || 0})</Text>
             </Flex>
