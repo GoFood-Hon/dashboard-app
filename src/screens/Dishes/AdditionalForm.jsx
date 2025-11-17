@@ -18,6 +18,7 @@ import toast from "react-hot-toast"
 import { colors } from "../../theme/colors"
 import { convertToDecimal, getFormattedHNL } from "../../utils"
 import { IconArrowNarrowRight } from "@tabler/icons-react"
+import { additionalSchema } from "../../utils/validationSchemas"
 
 export const AdditionalForm = ({ additional, setAdditional }) => {
   const [newAdditionalTitle, setNewAdditionalTitle] = useState("")
@@ -30,39 +31,49 @@ export const AdditionalForm = ({ additional, setAdditional }) => {
       isFree: false
     }
   ])
+  const [errors, setErrors] = useState({})
 
   const theme = createTheme({
     cursorType: "pointer"
   })
 
   const handleNewCategory = () => {
-    if (newAdditionalTitle === "") {
-      toast.error("Complete todos los campos.")
-    } else {
-      const newItemObject = {
-        name: newAdditionalTitle,
-        required: isRequired,
-        requiredMinimum: isRequired ? minRequired : null,
-        additionalsDetails: additionalItem?.map((item) => ({
-          name: item.name,
-          isFree: item.isFree,
-          price: convertToDecimal(item.price)
-        }))
-      }
-
-      setAdditional([...additional, newItemObject])
-
-      setNewAdditionalTitle("")
-      setIsRequired(false)
-      setMinRequired("")
-      setAdditionalItem([
-        {
-          name: "",
-          price: "",
-          isFree: false
-        }
-      ])
+    const newItemObject = {
+      name: newAdditionalTitle,
+      required: isRequired,
+      requiredMinimum: isRequired ? minRequired : null,
+      additionalsDetails: additionalItem?.map((item) => ({
+        name: item.name,
+        isFree: item.isFree,
+        price: convertToDecimal(item.price)
+      }))
     }
+
+    const validation = additionalSchema.safeParse(newItemObject)
+
+    if (!validation.success) {
+      const fieldErrors = {}
+      validation.error.errors.forEach((err) => {
+        const field = err.path.join(".")
+        fieldErrors[field] = err.message
+      })
+      setErrors(fieldErrors)
+      return
+    }
+
+    setErrors({})
+    setAdditional([...additional, newItemObject])
+
+    setNewAdditionalTitle("")
+    setIsRequired(false)
+    setMinRequired("")
+    setAdditionalItem([
+      {
+        name: "",
+        price: "",
+        isFree: false
+      }
+    ])
   }
 
   const handleDeleteAdditional = (index) => {
@@ -74,6 +85,7 @@ export const AdditionalForm = ({ additional, setAdditional }) => {
   const handleAddItem = () => {
     setAdditionalItem([...additionalItem, { name: "", price: "", isFree: false }])
   }
+
   const handleDeleteItem = (index) => {
     setAdditionalItem(additionalItem.filter((_, i) => i !== index))
   }
@@ -99,9 +111,10 @@ export const AdditionalForm = ({ additional, setAdditional }) => {
       <Grid.Col span={{ base: 12, md: 7 }}>
         <Paper withBorder radius="md" className="w-full h-full p-6 rounded-lg">
           <div>
-            <Input.Wrapper label="Titulo">
+            <Input.Wrapper label="Titulo" error={errors.name}>
               <Input name="title" value={newAdditionalTitle} onChange={(e) => setNewAdditionalTitle(e.target.value)} />
             </Input.Wrapper>
+
             <MantineProvider theme={theme}>
               <Checkbox
                 mt={"md"}
@@ -114,40 +127,45 @@ export const AdditionalForm = ({ additional, setAdditional }) => {
                 onChange={handleIsRequired}
               />
             </MantineProvider>
+
             {isRequired ? (
-              <>
-                <span className="text-sm font-semibold w-full">Mínimo requerido</span>
-                <Input
-                  name="requiredMinimum"
-                  value={minRequired}
-                  onChange={(e) => setMinRequired(e.target.value)}
-                  className="text-black"
-                />
-              </>
+              <Input.Wrapper label="Cantidad requerida" error={errors.requiredMinimum}>
+                <Input name="requiredMinimum" value={minRequired} onChange={(e) => setMinRequired(e.target.value)} />
+              </Input.Wrapper>
             ) : null}
           </div>
+
           <Paper withBorder radius="md" className="p-2 my-4 rounded-lg">
             {additionalItem?.map((item, index) => (
               <div key={index}>
-                <div className="flex w-full gap-2 my-2 items-center justify-between">
-                  <Input
-                    name="name"
-                    placeholder="Nombre"
-                    value={item.name}
-                    onChange={(e) => handleInputChange(index, "name", e.target.value)}
-                    className="text-black w-full"
-                  />
-                  <Input
-                    name="price"
-                    placeholder="Precio"
-                    value={item.price}
-                    disabled={item.isFree}
-                    onChange={(e) => handleInputChange(index, "price", e.target.value)}
-                    className="text-black w-full"
-                  />
+                <div className="flex w-full gap-2 my-2 items-start justify-between">
+                  <div className="w-full gap-2">
+                    <Input.Wrapper error={errors[`additionalsDetails.${index}.name`]}>
+                      <Input
+                        name="name"
+                        placeholder="Nombre"
+                        value={item.name}
+                        disabled={item.isFree}
+                        onChange={(e) => handleInputChange(index, "name", e.target.value)}
+                      />
+                    </Input.Wrapper>
+                  </div>
+
+                  <div className="w-full">
+                    <Input.Wrapper error={errors[`additionalsDetails.${index}.price`]}>
+                      <Input
+                        placeholder="Precio"
+                        name="price"
+                        value={item.price}
+                        disabled={item.isFree}
+                        onChange={(e) => handleInputChange(index, "price", e.target.value)}
+                      />
+                    </Input.Wrapper>
+                  </div>
 
                   <CloseButton onClick={() => handleDeleteItem(index)} />
                 </div>
+
                 <Checkbox
                   mt={"md"}
                   labelPosition="left"
@@ -163,6 +181,11 @@ export const AdditionalForm = ({ additional, setAdditional }) => {
                 />
               </div>
             ))}
+            {errors.additionalsDetails && (
+              <Text c={colors.main_app_color} size="xs">
+                {errors.additionalsDetails}
+              </Text>
+            )}
             <Button className="my-2" color={colors.main_app_color} onClick={handleAddItem}>
               Nuevo
             </Button>
@@ -186,7 +209,7 @@ export const AdditionalForm = ({ additional, setAdditional }) => {
                     <Stack gap={5}>
                       <Group justify="space-between" mb="xs">
                         <Text fw={600} size="md">
-                          {category.name} {category.requiredMinimum ? `(min: ${category.requiredMinimum})` : null}
+                          {category.name} {category.requiredMinimum ? `(requiere ${category.requiredMinimum})` : null}
                         </Text>
                         <CloseButton onClick={() => handleDeleteAdditional(index)} />
                       </Group>

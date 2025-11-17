@@ -105,7 +105,7 @@ export const createBranch = createAsyncThunk(
 
       return { ...branchData, images }
     } catch (error) {
-      return rejectWithValue(error.response?.data || "Error al crear el restaurante")
+      return rejectWithValue(error.response?.data || "Error al crear el comercio")
     }
   }
 )

@@ -636,10 +636,11 @@ export const newBranchSchema = z.object({
     })
     .min(1, "La imagen de la sucursal es requerida"),
 
-  state: z.number({
-    required_error: "El departamento es requerido",
-    invalid_type_error: "El departamento debe ser un número válido"
-  }),
+  state: z
+    .string({
+      required_error: "El departamento es requerido"
+    })
+    .min(1, "Debes seleccionar un departamento"),
   city: z.string().min(1, "La ciudad es requerida"),
 
   phoneNumber: z
@@ -693,10 +694,11 @@ export const editBranchSchema = z.object({
       ])
     )
     .optional(),
-  state: z.number({
-    required_error: "El departamento es requerido",
-    invalid_type_error: "El departamento debe ser un número válido"
-  }),
+  state: z
+    .string({
+      required_error: "El departamento es requerido"
+    })
+    .min(1, "Debes seleccionar un departamento"),
   city: z.string().min(1, "La ciudad es requerida"),
 
   phoneNumber: z
@@ -915,7 +917,7 @@ export const newPromotionSchema = z
       ctx.addIssue({
         path: ["Dishes"],
         code: z.ZodIssueCode.custom,
-        message: "Debes seleccionar al menos un platillo"
+        message: "Debes seleccionar al menos un producto"
       })
     }
 
@@ -923,7 +925,7 @@ export const newPromotionSchema = z
       ctx.addIssue({
         path: ["Dishes"],
         code: z.ZodIssueCode.custom,
-        message: "No debes seleccionar platillos si el descuento aplica a todos"
+        message: "No debes seleccionar productos si el descuento aplica a todos"
       })
     }
   })
@@ -992,7 +994,7 @@ export const editPromotionSchema = z
       ctx.addIssue({
         path: ["Dishes"],
         code: z.ZodIssueCode.custom,
-        message: "Debes seleccionar al menos un platillo"
+        message: "Debes seleccionar al menos un producto"
       })
     }
 
@@ -1000,7 +1002,7 @@ export const editPromotionSchema = z
       ctx.addIssue({
         path: ["Dishes"],
         code: z.ZodIssueCode.custom,
-        message: "No debes seleccionar platillos si el descuento aplica a todos"
+        message: "No debes seleccionar productos si el descuento aplica a todos"
       })
     }
   })
@@ -1154,6 +1156,125 @@ export const editCouponSchema = z
           path: ["timesToUse"],
           code: z.ZodIssueCode.custom,
           message: "La cantidad de usos es requerida"
+        })
+      }
+    }
+  })
+
+export const loyaltyCardSchema = z
+  .object({
+    purchasesWithWhichRewardBegins: z
+      .number({ required_error: "La cantidad de compras es requerida" })
+      .min(1, "Debe ser mayor que 0"),
+
+    cardDescription: z.string().optional(),
+    isRewardADiscountInPurchase: z.boolean().default(false),
+
+    type: z.enum(["porcentaje", "fijo"]).default("porcentaje"),
+
+    discountPercentage: z.number().min(1, "Debe ser mayor o igual a 1").max(100, "No puede ser mayor que 100").optional(),
+
+    discountFixedAmount: z.number().min(1, "Debe ser mayor que 0").optional(),
+
+    minPriceToRedeem: z.number({ invalid_type_error: "Debe ingresar un número" }).positive("Debe ser mayor que 0").optional()
+  })
+
+  .refine(
+    (data) => {
+      if (!data.isRewardADiscountInPurchase) {
+        return !!data.cardDescription
+      }
+      return true
+    },
+    {
+      path: ["cardDescription"],
+      message: "La descripción es requerida"
+    }
+  )
+
+  .refine(
+    (data) => {
+      if (data.isRewardADiscountInPurchase && data.type === "porcentaje") {
+        return !!data.discountPercentage && !!data.minPriceToRedeem
+      }
+      return true
+    },
+    {
+      path: ["discountPercentage"],
+      message: "El porcentaje de descuento es requerido"
+    }
+  )
+
+  .refine(
+    (data) => {
+      if (data.isRewardADiscountInPurchase && data.type === "fijo") {
+        return !!data.discountFixedAmount && !!data.minPriceToRedeem
+      }
+      return true
+    },
+    {
+      path: ["discountFixedAmount"],
+      message: "El monto fijo de descuento es requerido"
+    }
+  )
+
+  .refine(
+    (data) => {
+      if (data.isRewardADiscountInPurchase && data.type === "fijo" && data.discountFixedAmount && data.minPriceToRedeem) {
+        return Number(data.discountFixedAmount) < Number(data.minPriceToRedeem)
+      }
+      return true
+    },
+    {
+      path: ["discountFixedAmount"],
+      message: "El monto fijo debe ser menor que la cantidad mínima de compra requerida"
+    }
+  )
+
+  .refine(
+    (data) => {
+      if (data.isRewardADiscountInPurchase) {
+        return !!data.minPriceToRedeem
+      }
+      return true
+    },
+    {
+      path: ["minPriceToRedeem"],
+      message: "La cantidad mínima de compra es requerida"
+    }
+  )
+
+const additionalItemSchema = z.object({
+  name: z.string().min(1, "El nombre es requerido"),
+  price: z.string().refine((val) => val === "" || !isNaN(Number(val)), "Debe ser un número válido"),
+  isFree: z.boolean()
+})
+
+export const additionalSchema = z
+  .object({
+    name: z.string().min(1, "El título es requerido"),
+    required: z.boolean(),
+    requiredMinimum: z.union([z.string().optional(), z.number().optional(), z.null()]),
+    additionalsDetails: z.array(additionalItemSchema).min(1, "Debe agregar al menos una opción para este adicional.")
+  })
+  .superRefine((data, ctx) => {
+    if (data.required) {
+      // Validar requiredMinimum
+      if (!data.requiredMinimum || Number(data.requiredMinimum) <= 0) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "Debe especificar la cantidad requerida (mayor o igual a 1).",
+          path: ["requiredMinimum"]
+        })
+      }
+
+      // Validar que haya al menos una opción gratuita
+      const hasFree = data.additionalsDetails.some((item) => item.isFree)
+      if (!hasFree) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "Al menos una opción debe ser gratuita si el adicional es requerido.",
+          path: ["additionalsDetails"]
         })
       }
     }

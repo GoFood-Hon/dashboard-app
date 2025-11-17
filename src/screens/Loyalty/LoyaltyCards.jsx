@@ -1,4 +1,4 @@
-import { Button, Flex, Grid, Modal, Paper, Select, SimpleGrid, Stack, Text } from "@mantine/core"
+import { Button, Flex, Grid, Modal, Paper, Select, SimpleGrid, Text } from "@mantine/core"
 import animationData from "../../assets/animation/CouponsAnimation.json"
 import { IconCircleDashedPlus } from "@tabler/icons-react"
 import { useDisclosure } from "@mantine/hooks"
@@ -9,14 +9,14 @@ import InputCheckbox from "../../components/Form/InputCheckbox"
 import { useState } from "react"
 import { colors } from "../../theme/colors"
 import ConfirmationModal from "../ConfirmationModal"
-import { useSelector } from "react-redux"
+import { useSelector, useDispatch } from "react-redux"
 import InputTextAreaField from "../../components/Form/InputTextAreaField"
-import { useDispatch } from "react-redux"
 import { addCards, removeLoyaltyCard } from "../../store/features/loyaltySlice"
 import { notifications } from "@mantine/notifications"
 import LoyaltyCardView from "../../components/Loyalty/LoyaltyCardView"
+import { loyaltyCardSchema } from "../../utils/validationSchemas"
 
-const LoyaltyCards = ({ register, setValue, control, errors, watch }) => {
+const LoyaltyCards = ({ register, setValue, control, errors, watch, setError, clearErrors }) => {
   const user = useSelector((state) => state.user.value)
   const dispatch = useDispatch()
   const [opened, { open, close }] = useDisclosure(false)
@@ -30,9 +30,7 @@ const LoyaltyCards = ({ register, setValue, control, errors, watch }) => {
     loop: true,
     autoplay: true,
     animationData: animationData,
-    rendererSettings: {
-      preserveAspectRatio: "xMidYMid slice"
-    }
+    rendererSettings: { preserveAspectRatio: "xMidYMid slice" }
   }
 
   const handleReset = () => {
@@ -43,99 +41,74 @@ const LoyaltyCards = ({ register, setValue, control, errors, watch }) => {
     setValue("discountFixedAmount", "")
     setValue("discountPercentage", "")
     setValue("minPriceToRedeem", "")
+    clearErrors()
   }
 
   const handleRemoveCard = (indexToRemove) => {
     dispatch(removeLoyaltyCard(indexToRemove))
   }
 
-  const handleAddCard = () => {
-    const validateCard = (card) => {
-      const errors = []
-
-      if (!card.purchasesWithWhichRewardBegins) {
-        errors.push("El campo 'Compras para iniciar recompensa' es obligatorio")
-      } else if (!isRewardADiscountInPurchase && !card.description) {
-        errors.push("El campo 'Descripción' es obligatorio cuando la recompensa no es un descuento")
-      } else {
-        const duplicate = loyaltyCards.some(
-          (existingCard) => existingCard.purchasesWithWhichRewardBegins == card.purchasesWithWhichRewardBegins
-        )
-        if (duplicate) {
-          errors.push("No pueden haber dos tarjetas con el mismo número de compras para iniciar recompensa")
-        }
-      }
-
-      if (isRewardADiscountInPurchase) {
-        if (type === "porcentaje") {
-          if (!card.discountPercentage || card.discountPercentage < 1 || card.discountPercentage > 100) {
-            errors.push("El campo 'Porcentaje de descuento' es obligatorio y debe estar entre 1 y 100")
-          }
-          if (!card.minPriceToRedeem) {
-            errors.push("El campo 'Precio mínimo para redimir' es obligatorio")
-          }
-        } else {
-          if (!card.discountFixedAmount) {
-            errors.push("El campo 'Monto fijo de descuento' es obligatorio")
-          }
-          if (
-            card.discountFixedAmount &&
-            card.minPriceToRedeem &&
-            parseInt(card.discountFixedAmount) >= parseInt(card.minPriceToRedeem)
-          ) {
-            errors.push("El 'Monto fijo de descuento' debe ser menor que la 'Cantidad mínima de compra requerida'")
-          }
-        }
-      }
-
-      if (errors.length > 0) {
-        errors.forEach((error) => {
-          notifications.show({
-            title: "Error de validación",
-            message: error,
-            color: "red"
-          })
-        })
-        return false
-      }
-
-      return true
+  const handleAddCard = async () => {
+    const newCard = {
+      purchasesWithWhichRewardBegins: Number(watch("purchasesWithWhichRewardBegins")) || 0,
+      cardDescription: watch("cardDescription")?.trim() || "",
+      isRewardADiscountInPurchase: Boolean(watch("isRewardADiscountInPurchase")),
+      type: watch("type"),
+      discountPercentage: watch("discountPercentage") ? Number(watch("discountPercentage")) : undefined,
+      discountFixedAmount: watch("discountFixedAmount") ? Number(watch("discountFixedAmount")) : undefined,
+      minPriceToRedeem: watch("minPriceToRedeem") ? Number(watch("minPriceToRedeem")) : undefined
     }
 
-    const newCard = isRewardADiscountInPurchase
-      ? type === "porcentaje"
-        ? {
-            description: watch("cardDescription"),
-            purchasesWithWhichRewardBegins: watch("purchasesWithWhichRewardBegins"),
-            isRewardADiscountInPurchase: isRewardADiscountInPurchase,
-            type,
-            discountPercentage: watch("discountPercentage"),
-            minPriceToRedeem: watch("minPriceToRedeem")
-          }
-        : {
-            description: watch("cardDescription"),
-            purchasesWithWhichRewardBegins: watch("purchasesWithWhichRewardBegins"),
-            isRewardADiscountInPurchase: isRewardADiscountInPurchase,
-            type,
-            discountFixedAmount: watch("discountFixedAmount"),
-            minPriceToRedeem: watch("minPriceToRedeem")
-          }
-      : {
-          description: watch("cardDescription"),
-          purchasesWithWhichRewardBegins: watch("purchasesWithWhichRewardBegins"),
-          isRewardADiscountInPurchase: isRewardADiscountInPurchase
-        }
+    clearErrors()
 
-    if (!validateCard(newCard)) {
+    const maximumAmountOfPurchasesAllowed = watch("maximumAmountOfPurchasesAllowed")
+    if (maximumAmountOfPurchasesAllowed && newCard.purchasesWithWhichRewardBegins > Number(maximumAmountOfPurchasesAllowed)) {
+      notifications.show({
+        title: "Error",
+        message: `El número de compras requeridas 
+                  no puede ser mayor que el máximo de compras permitido por el programa.`,
+        color: "red"
+      })
+      return
+    }
+
+    const duplicate = loyaltyCards.some(
+      (existingCard) => existingCard.purchasesWithWhichRewardBegins == newCard.purchasesWithWhichRewardBegins
+    )
+    if (duplicate) {
+      notifications.show({
+        title: "Error",
+        message: "No pueden haber dos tarjetas con el mismo número de compras para iniciar recompensa",
+        color: "red"
+      })
+      return
+    }
+
+    const result = loyaltyCardSchema.safeParse(newCard)
+
+    if (!result.success) {
+      const formatted = result.error.format()
+
+      for (const key in formatted) {
+        if (key !== "_errors") {
+          const message = formatted[key]?._errors?.[0]
+          if (message) {
+            setError(key, { type: "manual", message })
+          }
+        }
+      }
       return
     }
 
     dispatch(addCards(newCard))
     handleReset()
     close()
+
     notifications.show({
       title: "Tarjeta añadida",
-      message: `La tarjeta se añadió a la lista, presione '${programs && Object.keys(programs).length !== 0 ? "Actualizar" : "Guardar"}' para poder crearla`,
+      message: `La tarjeta se añadió a la lista, presione '${
+        programs && Object.keys(programs).length !== 0 ? "Actualizar" : "Guardar"
+      }' para poder crearla`,
       color: "green"
     })
   }
@@ -201,6 +174,7 @@ const LoyaltyCards = ({ register, setValue, control, errors, watch }) => {
           <Grid.Col span={12}>
             <InputCheckbox label="¿Esta recompensa es un descuento?" name="isRewardADiscountInPurchase" register={register} />
           </Grid.Col>
+
           {isRewardADiscountInPurchase && (
             <>
               <Grid.Col span={12}>
@@ -223,6 +197,7 @@ const LoyaltyCards = ({ register, setValue, control, errors, watch }) => {
                   )}
                 />
               </Grid.Col>
+
               {type === "porcentaje" ? (
                 <Grid.Col span={12}>
                   <InputField
@@ -244,6 +219,7 @@ const LoyaltyCards = ({ register, setValue, control, errors, watch }) => {
                   />
                 </Grid.Col>
               )}
+
               <Grid.Col span={12}>
                 <InputField
                   type="number"
@@ -255,6 +231,7 @@ const LoyaltyCards = ({ register, setValue, control, errors, watch }) => {
               </Grid.Col>
             </>
           )}
+
           <Grid.Col span={12}>
             <Flex justify="end" gap={5}>
               <Button color={colors.main_app_color} onClick={handleAddCard}>
@@ -268,7 +245,7 @@ const LoyaltyCards = ({ register, setValue, control, errors, watch }) => {
       <ConfirmationModal
         opened={openedDelete}
         close={closeDelete}
-        title={"¿Estás seguro que deseas eliminar?"}
+        title="¿Estás seguro que deseas eliminar?"
         description={
           programs &&
           Object.keys(programs).length !== 0 &&

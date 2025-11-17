@@ -1,17 +1,27 @@
-import { IconClockHour3 } from "@tabler/icons-react"
 import { NAVIGATION_ROUTES_BRANCH_ADMIN, NAVIGATION_ROUTES_KITCHEN } from "../routes"
-import { IconToolsKitchen } from "@tabler/icons-react"
-import { IconUserPlus } from "@tabler/icons-react"
-import { IconHomeCheck } from "@tabler/icons-react"
-import { createTheme, NumberFormatter } from "@mantine/core"
-import { IconMotorbike } from "@tabler/icons-react"
 import { getFormattedHNL } from "."
-import { IconCoin } from "@tabler/icons-react"
-import { IconCube } from "@tabler/icons-react"
-import { IconCooker } from "@tabler/icons-react"
-import { IconCancel } from "@tabler/icons-react"
-import { IconTicket } from "@tabler/icons-react"
-import { IconUsersGroup } from "@tabler/icons-react"
+import { createTheme } from "@mantine/core"
+import {
+  IconClockHour3,
+  IconToolsKitchen,
+  IconUserPlus,
+  IconHomeCheck,
+  IconMotorbike,
+  IconCoin,
+  IconCube,
+  IconCooker,
+  IconCancel,
+  IconTicket,
+  IconUsersGroup,
+  IconShoppingBagCheck,
+  IconCircleCheck
+} from "@tabler/icons-react"
+import dayjs from "dayjs"
+import relativeTime from "dayjs/plugin/relativeTime"
+import "dayjs/locale/es"
+
+dayjs.extend(relativeTime)
+dayjs.locale("es")
 
 export const DEFAULT_DISCOUNT_PERCENTAGE = "5%"
 export const DEFAULT_COUPON_TYPE = "Por fecha"
@@ -161,24 +171,24 @@ export const dashboardCards = [
 export const mapBoxStyles = "mapbox://styles/ot-dev/clyxy5xuc012m01p99fld27px"
 
 export const hondurasDepartments = [
-  { id: 1, name: "Atlántida" },
-  { id: 2, name: "Colón" },
-  { id: 3, name: "Comayagua" },
-  { id: 4, name: "Copán" },
-  { id: 5, name: "Cortés" },
-  { id: 6, name: "Choluteca" },
-  { id: 7, name: "El Paraíso" },
-  { id: 8, name: "Francisco Morazán" },
-  { id: 9, name: "Gracias a Dios" },
-  { id: 10, name: "Intibucá" },
-  { id: 11, name: "Islas de la Bahía" },
-  { id: 12, name: "La Paz" },
-  { id: 13, name: "Lempira" },
-  { id: 14, name: "Ocotepeque" },
-  { id: 15, name: "Olancho" },
-  { id: 16, name: "Santa Bárbara" },
-  { id: 17, name: "Valle" },
-  { id: 18, name: "Yoro" }
+  { id: "1", name: "Atlántida" },
+  { id: "2", name: "Colón" },
+  { id: "3", name: "Comayagua" },
+  { id: "4", name: "Copán" },
+  { id: "5", name: "Cortés" },
+  { id: "6", name: "Choluteca" },
+  { id: "7", name: "El Paraíso" },
+  { id: "8", name: "Francisco Morazán" },
+  { id: "9", name: "Gracias a Dios" },
+  { id: "10", name: "Intibucá" },
+  { id: "11", name: "Islas de la Bahía" },
+  { id: "12", name: "La Paz" },
+  { id: "13", name: "Lempira" },
+  { id: "14", name: "Ocotepeque" },
+  { id: "15", name: "Olancho" },
+  { id: "16", name: "Santa Bárbara" },
+  { id: "17", name: "Valle" },
+  { id: "18", name: "Yoro" }
 ]
 
 export const menuType = [
@@ -289,10 +299,37 @@ export const orderStates = {
   ]
 }
 
-export const PRIMARY_COL_HEIGHT = "77vh"
+export const deliveryDetails = [
+  {
+    step: 0,
+    value: "assignedTimestamp",
+    icon: IconShoppingBagCheck,
+    title: "Pedido asignado",
+    description: "El pedido fue asignado al repartidor",
+    time: "Pendiente"
+  },
+  {
+    step: 1,
+    value: "pickedUpTimestamp",
+    icon: IconMotorbike,
+    title: "Pedido recogido y en camino",
+    description: "El repartidor recogió el pedido del comercio",
+    time: "Pendiente"
+  },
+  {
+    step: 2,
+    value: "deliveredTimestamp",
+    icon: IconCircleCheck,
+    title: "Pedido entregado",
+    description: "El repartidor entregó el pedido al cliente",
+    time: "Pendiente"
+  }
+]
+
+export const PRIMARY_COL_HEIGHT = "77dvh"
 export const SECONDARY_COL_HEIGHT = `calc(${PRIMARY_COL_HEIGHT} / 2 - var(--mantine-spacing-xs) / 2)`
-export const SCROLL_VIEW_HEIGHT = `calc(${PRIMARY_COL_HEIGHT} - 23vh)`
-export const KITCHEN_SCROLL_VIEW_HEIGHT = `calc(${PRIMARY_COL_HEIGHT} - 43vh)`
+export const SCROLL_VIEW_HEIGHT = `calc(${PRIMARY_COL_HEIGHT} - 23dvh)`
+export const KITCHEN_SCROLL_VIEW_HEIGHT = `calc(${PRIMARY_COL_HEIGHT} - 43dvh)`
 
 export const theme = createTheme({
   cursorType: "pointer"

@@ -165,15 +165,13 @@ export default function MenuTable({
         label: "Rol",
         accessor: "role",
         render: (role) =>
-          role === "admin-restaurant"
-            ? "Admin. de restaurante"
-            : role === "admin-sucursal"
-              ? "Admin. de sucursal"
-              : role === "cashier"
-                ? "Cajero"
-                : role === "kitchen"
-                  ? "Cocinero"
-                  : "Repartidor"
+          role === "admin-sucursal"
+            ? "Admin. de sucursal"
+            : role === "cashier"
+              ? "Cajero"
+              : role === "kitchen"
+                ? "Cocinero"
+                : "Repartidor"
       },
       { label: "Correo", accessor: "email" },
       { label: "Teléfono", accessor: "phoneNumber" },
@@ -234,7 +232,14 @@ export default function MenuTable({
           </div>
         )
       },
-      { label: "Rol", accessor: "role" },
+      {
+        label: "Rol",
+        accessor: "role",
+        render: (role) =>
+          role === "admin-restaurant"
+            ? "Admin. de comercio"
+            : ""
+      },
       { label: "Correo", accessor: "email" },
       { label: "Teléfono", accessor: "phoneNumber" },
       { label: "Fecha y hora", accessor: "createdAt" },
@@ -533,7 +538,7 @@ export default function MenuTable({
     ],
     loyaltyProgramsScreen: [
       { label: "Título", accessor: "title" },
-      { label: "Restaurante", accessor: "restaurantName" },
+      { label: "Comercio", accessor: "restaurantName" },
       { label: "Cantidad máxima de compras", accessor: "maximumAmountOfPurchasesAllowed", center: true },
       { label: "Fecha y hora", accessor: "createdAt" },
       { label: "Estado", accessor: "isActive", render: (active) => (active ? "Activo" : "Inactivo") },

@@ -73,7 +73,7 @@ export const AdminUserDetails = () => {
               <div className="pt-8">
                 <span className="text-sky-950 text-base font-bold leading-normal">Numero de teléfono</span>
                 <p className="text-zinc-500 text-sm font-medium py-2">{userDetails?.phoneNumber}</p>
-                <span className="text-sky-950 text-base font-bold leading-normal">Restaurante seleccionado</span>
+                <span className="text-sky-950 text-base font-bold leading-normal">Comercio seleccionado</span>
                 <p className="text-zinc-500 text-sm font-medium py-2">{userDetails?.restaurantName}</p>
                 <span className="text-sky-950 text-base font-bold leading-normal">Plan seleccionado</span>
                 <p className="text-zinc-500 text-sm font-medium py-2">{userDetails?.planName || "Sin plan asignado"}</p>

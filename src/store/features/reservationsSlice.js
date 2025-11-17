@@ -61,7 +61,7 @@ export const fetchReservationByBranch = createAsyncThunk(
   }
 )
 
-// Thunk para obtener las reservas por restaurante
+// Thunk para obtener las reservas por comercio
 export const fetchReservationByRestaurant = createAsyncThunk(
   "reservations/fetchByRestaurant",
   async ({ restaurantId, limit, page, order, search, search_field }, { rejectWithValue }) => {
@@ -309,7 +309,7 @@ const reservationsSlice = createSlice({
         state.error = action.payload
       })
 
-      // Obtener reservas por restaurante
+      // Obtener reservas por comercio
       .addCase(fetchReservationByRestaurant.pending, (state) => {
         state.loadingReservations = true
       })

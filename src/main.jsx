@@ -12,22 +12,20 @@ import { Notifications } from "@mantine/notifications"
 import "@mantine/core/styles.css"
 import "mapbox-gl/dist/mapbox-gl.css"
 import "@mantine/notifications/styles.css"
-import "@mantine/charts/styles.css";
+import "@mantine/charts/styles.css"
 
 const theme = createTheme({
-  fontFamily: 'Poppins, sans-serif',
+  fontFamily: "Poppins, sans-serif"
 })
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <React.StrictMode>
-    <Provider store={store}>
-      <React.Suspense >
-        <MantineProvider theme={theme}>
-          <Notifications />
-          <App />
-          <Toaster position="top-right" />
-        </MantineProvider>
-      </React.Suspense>
-    </Provider>
-  </React.StrictMode>
+  <Provider store={store}>
+    <React.Suspense>
+      <MantineProvider theme={theme}>
+        <Notifications />
+        <App />
+        <Toaster position="top-right" />
+      </MantineProvider>
+    </React.Suspense>
+  </Provider>
 )

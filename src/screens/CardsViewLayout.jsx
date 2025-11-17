@@ -48,10 +48,11 @@ import { IconStopwatch } from "@tabler/icons-react"
 import dayjs from "dayjs"
 import { useDispatch } from "react-redux"
 import { cancelOrder, updateOrderStatus } from "../store/features/ordersSlice"
-import { useTimer } from "react-timer-hook"
 import { useSelector } from "react-redux"
 import { IconNotes } from "@tabler/icons-react"
 import { useEffect } from "react"
+import { notifications, showNotification } from "@mantine/notifications"
+import notificationSound from "../assets/sound/programedOrdersSound.mp3"
 
 const CardsViewLayout = ({
   title,
@@ -74,7 +75,8 @@ const CardsViewLayout = ({
   kitchenView,
   searchOptions = [],
   selectedOption,
-  setSelectedSearchOption
+  setSelectedSearchOption,
+  updatingValue
 }) => {
   const dispatch = useDispatch()
   const [opened, { open, close }] = useDisclosure(false)
@@ -96,10 +98,12 @@ const CardsViewLayout = ({
   const isSmallScreen = useMediaQuery("(max-width: 430px)")
   const { colorScheme } = useMantineColorScheme()
   const [orderId, setOrderId] = useState(null)
-  const [readyMap, setReadyMap] = useState({}) // { [orderId]: true } cuando el countdown termina
+  const [readyMap, setReadyMap] = useState({})
   const markReady = (id) => setReadyMap((prev) => ({ ...prev, [id]: true }))
-
-  // arriba: import { useState, useEffect } from "react"
+  const audio = new Audio(notificationSound)
+  const playSound = () => {
+    audio.currentTime = 0
+  }
 
   const OrderStopwatch = ({ sentToKitchenTimestamp, isPaused }) => {
     const { days, hours, minutes, seconds, reset, pause } = useStopwatch({
@@ -355,9 +359,11 @@ const CardsViewLayout = ({
                 const isPast = isScheduled ? dayjs().isAfter(dayjs(item.scheduledDate)) : true
                 const isAvailable = !isScheduled || isPast || readyMap[item.id] === true
                 const isStopwatchPaused = isScheduled && !isAvailable
+                const shouldWarn = readyMap[`warn-${item.id}`]
+
                 return (
                   <Grid.Col span={{ base: 12, md: 6, lg: 4 }} key={key}>
-                    <Paper withBorder radius="md" p="md" className={classes.card}>
+                    <Paper withBorder radius="md" p="md" className={`${classes.card} ${shouldWarn ? classes.cardWarning : ""}`}>
                       <Stack gap="xs" style={{ position: "relative" }}>
                         {item.sentToKitchenTimestamp && (
                           <Flex align="start" gap={2} style={{ position: "absolute", top: 3, right: 3 }}>
@@ -397,7 +403,9 @@ const CardsViewLayout = ({
 
                         <Flex justify="space-between" align="center">
                           <Flex align="center" gap={2}>
-                            <Text size="sm" fw={600}>Creado el {formatTime(item.createdAt)}</Text>
+                            <Text size="sm" fw={600}>
+                              Creado el {formatTime(item.createdAt)}
+                            </Text>
                           </Flex>
                           <Flex align="center" gap={2}>
                             {item.isWantedAsSoonAsItIsReady ? <IconFlame size={18} /> : <IconClock size={18} />}
@@ -410,7 +418,7 @@ const CardsViewLayout = ({
                         <ScrollArea h={KITCHEN_SCROLL_VIEW_HEIGHT}>
                           <SimpleGrid spacing={8} pb={1}>
                             {item.note && (
-                              <Accordion variant="separated" radius="md" >
+                              <Accordion variant="separated" radius="md">
                                 <Accordion.Item value="order-note">
                                   <Accordion.Control icon={<IconNotes size={20} />} fz="sm">
                                     Nota del pedido
@@ -440,7 +448,7 @@ const CardsViewLayout = ({
                           <Button
                             style={{ flex: 1 }}
                             color={colors.main_app_color}
-                            loading={updatingOrderStatus}
+                            loading={item.id === updatingValue ? updatingOrderStatus : false}
                             radius="md"
                             disabled={!isAvailable}
                             onClick={() => {
@@ -450,7 +458,47 @@ const CardsViewLayout = ({
                             {isScheduled && !isAvailable ? (
                               <Countdown
                                 scheduledDate={item.scheduledDate}
-                                onExpire={() => markReady(item.id)}
+                                onExpire={() => {
+                                  markReady(item.id)
+                                  const notificationKey = `warn-${item.id}`
+                                  notifications.hide(notificationKey)
+
+                                  setReadyMap((prev) => {
+                                    const updated = { ...prev }
+                                    delete updated[`warn-${item.id}`]
+                                    delete updated[`notified-${item.id}`]
+                                    return updated
+                                  })
+                                }}
+                                onUpdate={(diffMinutes) => {
+                                  const WARNING_THRESHOLD_MINUTES = 72
+
+                                  if (diffMinutes <= WARNING_THRESHOLD_MINUTES && diffMinutes > 0) {
+                                    setReadyMap((prev) => ({
+                                      ...prev,
+                                      [`warn-${item.id}`]: true
+                                    }))
+
+                                    const notificationKey = `warn-${item.id}`
+                                    if (!readyMap[`notified-${item.id}`]) {
+                                      showNotification({
+                                        id: notificationKey,
+                                        title: "Pedido programado",
+                                        message: `Ya puedes comenzar a preparar el pedido de ${item?.Order?.User?.name}, su hora programada se acerca`,
+                                        color: "green",
+                                        autoClose: false,
+                                        withCloseButton: true
+                                      })
+
+                                      playSound()
+
+                                      setReadyMap((prev) => ({
+                                        ...prev,
+                                        [`notified-${item.id}`]: true
+                                      }))
+                                    }
+                                  }
+                                }}
                               />
                             ) : (
                               "Marcar como preparado"

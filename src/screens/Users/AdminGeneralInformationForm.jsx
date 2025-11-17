@@ -42,28 +42,6 @@ export const AdminGeneralInformationForm = ({ register, errors, setValue, image,
                 countryPrefix="+504"
               />
             </Grid.Col>
-            {/* <Grid.Col span={{ base: 12, md: 6 }}>
-              <InputField
-                label="Nueva contraseña"
-                name="password"
-                register={register}
-                errors={errors}
-                className="text-black"
-                placeholder="*******************"
-                type="password"
-              />
-            </Grid.Col>
-            <Grid.Col span={{ base: 12, md: 6 }}>
-              <InputField
-                label="Vuelva a ingresar la contraseña"
-                name="passwordConfirm"
-                register={register}
-                errors={errors}
-                className="text-black"
-                placeholder="*******************"
-                type="password"
-              />
-            </Grid.Col> */}
             <Grid.Col span={{ base: 12 }}>
               <Controller
                 name="restaurantId"
@@ -80,6 +58,7 @@ export const AdminGeneralInformationForm = ({ register, errors, setValue, image,
                     value={field.value}
                     onChange={(val) => field.onChange(val ?? "")}
                     error={fieldState.error ? fieldState.error.message : null}
+                    nothingFoundMessage="No se encontró ningún comercio"
                     searchable
                     clearable
                   />

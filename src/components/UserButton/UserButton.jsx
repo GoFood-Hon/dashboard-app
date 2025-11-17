@@ -59,7 +59,7 @@ export function UserButton({ image, name, email, role }) {
         <Menu.Dropdown>
           <Menu.Label>
             {role === "admin-restaurant"
-              ? "Administrador de restaurante"
+              ? "Administrador de comercio"
               : role === "admin-sucursal"
                 ? "Administrador de sucursal"
                 : role === "cashier"

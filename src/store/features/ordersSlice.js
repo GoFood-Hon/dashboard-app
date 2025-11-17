@@ -18,6 +18,7 @@ const initialState = {
   searchField: "name",
   searchData: null,
   searchValue: null,
+  updatingValue: "7eb09cc9-9dc8-4fb3-baba-750041d61e53",
 
   //kitchen data
   itemsForKitchenPerPage: ITEMS_PER_PAGE_CARDS,
@@ -319,32 +320,6 @@ const ordersSlice = createSlice({
       state.totalOrdersForKitchen = updatedTotalOrders
       state.totalOrdersForKitchenPagesCount = updatedTotalPagesCount
     },
-    // setNewOrderForAdmins: (state, action) => {
-    //   const newOrder = action.payload
-    //   const itemsPerPage = state.itemsPerPage
-    //   const newOrdersPerPage = { ...state.ordersPerPage }
-
-    //   let lastPage = state.totalPagesCount
-
-    //   if (!newOrdersPerPage[lastPage]) {
-    //     newOrdersPerPage[lastPage] = []
-    //   }
-
-    //   newOrdersPerPage[lastPage].unshift(newOrder)
-
-    //   if (newOrdersPerPage[lastPage].length > itemsPerPage) {
-    //     const overflowOrder = newOrdersPerPage[lastPage].pop()
-    //     lastPage += 1
-    //     newOrdersPerPage[lastPage] = [overflowOrder]
-    //   }
-
-    //   const updatedTotalOrders = state.totalOrders + 1
-    //   const updatedTotalPagesCount = Math.ceil(updatedTotalOrders / itemsPerPage)
-
-    //   state.ordersPerPage = newOrdersPerPage
-    //   state.totalOrders = updatedTotalOrders
-    //   state.totalPagesCount = updatedTotalPagesCount
-    // },
     setNewOrderForAdmins: (state, action) => {
       const newOrder = action.payload
       const itemsPerPage = state.itemsPerPage
@@ -376,13 +351,28 @@ const ordersSlice = createSlice({
       state.totalPagesCount = Math.max(1, Math.ceil(state.totalOrders / itemsPerPage))
     },
     setOrderStatus: (state, action) => {
-      const { id, status, sentToKitchenTimestamp, finishedCookingTimestamp } = action.payload
+      const {
+        id,
+        status,
+        sentToKitchenTimestamp,
+        finishedCookingTimestamp,
+        assignedTimestamp,
+        pickedUpTimestamp,
+        deliveredTimestamp
+      } = action.payload
       const currentPageOrders = state.ordersPerPage[state.currentPage]
-      const index = currentPageOrders.findIndex((order) => order?.id === id)
 
-      if (index !== -1) {
-        currentPageOrders[index] = { ...currentPageOrders[index], status }
+      if (currentPageOrders && currentPageOrders.length > 0) {
+        const index = currentPageOrders.findIndex((order) => order?.id === id)
+
+        if (index !== -1) {
+          currentPageOrders[index] = { ...currentPageOrders[index], status }
+        }
       }
+
+      state.orderDetails.assignedTimestamp = assignedTimestamp
+      state.orderDetails.pickedUpTimestamp = pickedUpTimestamp
+      state.orderDetails.deliveredTimestamp = deliveredTimestamp
 
       if (state.orderDetails && state.orderDetails.id === id) {
         state.orderDetails = { ...state.orderDetails, status, sentToKitchenTimestamp, finishedCookingTimestamp }
@@ -432,8 +422,9 @@ const ordersSlice = createSlice({
       })
 
       //Marcar el pedido como listo desde el rol de cocina
-      .addCase(updateOrderStatus.pending, (state) => {
+      .addCase(updateOrderStatus.pending, (state, action) => {
         state.updatingOrderStatus = true
+        state.updatingValue = action.meta.arg
       })
       .addCase(updateOrderStatus.fulfilled, (state, action) => {
         const { id, status } = action.payload
@@ -450,15 +441,19 @@ const ordersSlice = createSlice({
         const currentPageOrdersForKitchen = state.ordersForKitchenPerPage[state.currentOrdersForKitchenPage]
         const updatedOrders = currentPageOrdersForKitchen?.filter((order) => order.id !== id)
         state.ordersForKitchenPerPage[state.currentOrdersForKitchenPage] = updatedOrders
-        state.orderDetails.status = status
+        if (state.orderDetails) {
+          state.orderDetails.status = status
+        }
         state.updatingOrderStatus = false
+        state.updatingValue = null
       })
       .addCase(updateOrderStatus.rejected, (state, action) => {
         state.updatingOrderStatus = false
         state.error = action.payload
+        state.updatingValue = null
       })
 
-      //Confirmar orden desde el rol de administrador de restaurante o de sucursal
+      //Confirmar orden desde el rol de administrador de comercio o de sucursal
       .addCase(confirmOrder.pending, (state) => {
         state.updatingOrderStatus = true
       })
@@ -481,7 +476,7 @@ const ordersSlice = createSlice({
         state.error = action.payload
       })
 
-      //Cancelar la orden desde el rol de administrador de restaurante o de sucursal
+      //Cancelar la orden desde el rol de administrador de comercio o de sucursal
       .addCase(cancelOrder.pending, (state, action) => {
         state.cancelOrderStatus = true
       })
@@ -541,7 +536,7 @@ const ordersSlice = createSlice({
         state.updatingDriver = true
       })
       .addCase(assignDriver.fulfilled, (state, action) => {
-        const { id, status } = action.payload
+        const { id, status, assignedTimestamp } = action.payload
         const currentPageOrders = state.ordersPerPage[state.currentPage]
         if (currentPageOrders && currentPageOrders.length > 0) {
           const index = currentPageOrders.findIndex((order) => order?.id === id)
@@ -552,6 +547,7 @@ const ordersSlice = createSlice({
         }
         state.orderDetails.status = status
         state.orderDetails.driver = action.payload
+        state.orderDetails.assignedTimestamp = assignedTimestamp
         state.updatingDriver = false
       })
       .addCase(assignDriver.rejected, (state, action) => {
@@ -559,7 +555,7 @@ const ordersSlice = createSlice({
         state.error = action.payload
       })
 
-      //Marcar el pedido como entregado desde el rol de administrador de restaurante o de sucursal
+      //Marcar el pedido como entregado desde el rol de administrador de comercio o de sucursal
       .addCase(markOrderDelivered.pending, (state) => {
         state.updatingOrderStatus = true
       })

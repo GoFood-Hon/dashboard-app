@@ -95,7 +95,7 @@ export const NewRestaurant = () => {
         .catch((error) => {
           showNotification({
             title: "Error",
-            message: "Hubo un problema al crear el restaurante",
+            message: "Hubo un problema al crear el comercio",
             color: "red"
           })
         })

@@ -92,12 +92,33 @@ export const createLoyaltyProgram = createAsyncThunk(
 
       if (Array.isArray(loyaltyCards) && loyaltyCards.length) {
         try {
-          const newCards = loyaltyCards.map((card, index) => ({ ...card, index })).filter((card) => !card.id)
+          const newCards = loyaltyCards
+            .map((card, index) => {
+              const formattedCard = { ...card, index }
+
+              if (formattedCard.cardDescription) {
+                formattedCard.description = formattedCard.cardDescription
+                delete formattedCard.cardDescription
+              }
+
+              return formattedCard
+            })
+            .filter((card) => !card.id)
 
           if (newCards.length) {
             for (const card of newCards) {
               try {
                 const response = await loyaltyApi.createLoyaltyCardWithReward(loyaltyProgram.id, card)
+
+                if (response.error) {
+                  showNotification({
+                    title: "Error",
+                    message: response.message,
+                    color: "red"
+                  })
+                  return rejectWithValue(response.error)
+                }
+
                 dispatch(updateLoyaltyCards({ ...response.data, index: card.index }))
               } catch (error) {
                 throw error
@@ -176,12 +197,32 @@ export const updateLoyaltyProgram = createAsyncThunk(
       }
 
       if (Array.isArray(loyaltyCards) && loyaltyCards.length) {
-        const newCards = loyaltyCards.map((card, index) => ({ ...card, index })).filter((card) => !card.id)
+        const newCards = loyaltyCards
+          .map((card, index) => {
+            const formattedCard = { ...card, index }
+
+            if (formattedCard.cardDescription) {
+              formattedCard.description = formattedCard.cardDescription
+              delete formattedCard.cardDescription
+            }
+
+            return formattedCard
+          })
+          .filter((card) => !card.id)
 
         if (newCards.length) {
           for (const card of newCards) {
             try {
               const response = await loyaltyApi.createLoyaltyCardWithReward(id, card)
+
+              if (response.error) {
+                showNotification({
+                  title: "Error",
+                  message: response.message,
+                  color: "red"
+                })
+                return rejectWithValue(response.error)
+              }
               dispatch(updateLoyaltyCards({ ...response.data, index: card.index }))
             } catch (error) {
               console.error("Error al crear tarjeta:", error)

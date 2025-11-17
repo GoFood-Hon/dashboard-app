@@ -86,7 +86,7 @@ export const TimeForm = ({ setDaysData, hoursData, isAlwaysOpen, setIsAlwaysOpen
           <Grid.Col span={{ base: 6 }}>
             <label className="text-sm font-bold leading-snug mb-2">Marcar como 24/7</label>
             <Text className="font-semibold" size="sm" c="dimmed" inline>
-              Si seleccionas esta opción el restaurante se mostrará como siempre abierto
+              Si seleccionas esta opción el comercio se mostrará como siempre abierto
             </Text>
           </Grid.Col>
           <Grid.Col span="auto">

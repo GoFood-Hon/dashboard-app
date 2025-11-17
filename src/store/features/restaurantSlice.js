@@ -54,13 +54,7 @@ export const fetchRestaurants = createAsyncThunk(
 
 export const fetchNoPaginatedRestaurants = createAsyncThunk(
   "restaurants/fetchNoPaginatedRestaurants",
-  async (_, { getState, rejectWithValue }) => {
-    //const state = getState().restaurants
-
-    // if (state.restaurants && state.restaurants.length > 0) {
-    //   return state.restaurants
-    // }
-
+  async (_, { rejectWithValue }) => {
     try {
       const response = await restaurantsApi.getAllRestaurantsNoPagination({
         order: "DESC",

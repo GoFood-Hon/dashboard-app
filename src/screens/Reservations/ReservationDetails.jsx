@@ -112,7 +112,7 @@ export const ReservationDetails = () => {
                   <Flex align="center" gap={5}>
                     <IconId size={25} />
                     <Text size="sm" fw={500}>
-                      ID: {reservationId}
+                      ID: {reservationId?.split('-')[4]?.substring(0, 6)?.toUpperCase()}
                     </Text>
                   </Flex>
                   <Flex align="center" gap={5}>

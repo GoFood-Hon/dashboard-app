@@ -31,6 +31,8 @@ export const LoyaltyProgram = () => {
     control,
     reset,
     watch,
+    setError,
+    clearErrors,
     formState: { errors }
   } = useForm({
     defaultValues: programs
@@ -45,7 +47,17 @@ export const LoyaltyProgram = () => {
     {
       title: "Tarjetas de descuento",
       requirement: "Obligatorio",
-      form: <LoyaltyCards register={register} errors={errors} setValue={setValue} control={control} watch={watch} />
+      form: (
+        <LoyaltyCards
+          register={register}
+          errors={errors}
+          setValue={setValue}
+          control={control}
+          watch={watch}
+          setError={setError}
+          clearErrors={clearErrors}
+        />
+      )
     }
   ]
 

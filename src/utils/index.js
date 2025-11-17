@@ -1,12 +1,17 @@
 import { format, formatDistanceToNow, parseISO } from "date-fns"
 import { es } from "date-fns/locale"
-import { hondurasDepartments } from "./constants"
+import { deliveryDetails, hondurasDepartments } from "./constants"
 import dayjs from "dayjs"
 import timezone from "dayjs/plugin/timezone"
 import utc from "dayjs/plugin/utc"
 import { NAVIGATION_ROUTES_SUPER_ADMIN_TWO } from "../routes"
 import { useTimer } from "react-timer-hook"
+import { useEffect } from "react"
+import relativeTime from "dayjs/plugin/relativeTime"
+import "dayjs/locale/es"
 
+dayjs.extend(relativeTime)
+dayjs.locale("es")
 dayjs.extend(utc)
 dayjs.extend(timezone)
 
@@ -108,9 +113,23 @@ export const formatDateToString = (dateString) => {
  * @param {number} id
  * @returns {string}
  */
-export function getDepartmentNameById(id) {
-  const department = hondurasDepartments.find((department) => department.id === id)
-  return department ? department.name : null
+export function getDepartmentNameById(value) {
+  const isNumericLike =
+    typeof value === "number" || (typeof value === "string" && value.trim() !== "" && !Number.isNaN(Number(value)))
+
+  if (isNumericLike) {
+    const id = Number(value)
+    const department = hondurasDepartments.find((d) => Number(d.id) === id)
+    return department ? department.name : null
+  }
+
+  if (typeof value === "string") {
+    const name = value.trim()
+    const department = hondurasDepartments.find((d) => d.name === name)
+    return department ? department.id.toString() : null
+  }
+
+  return null
 }
 
 /**
@@ -198,12 +217,44 @@ export const onError = (errors) => {
   }
 }
 
-export const Countdown = ({ scheduledDate, onExpire }) => {
+export const Countdown = ({ scheduledDate, onExpire, noMessage, onUpdate }) => {
   const targetDate = new Date(scheduledDate)
   const { seconds, minutes, hours, days } = useTimer({
     expiryTimestamp: targetDate,
     onExpire
   })
 
-  return `Disponible dentro de ${String(days).padStart(2, "0")}d:${String(hours).padStart(2, "0")}h:${String(minutes).padStart(2, "0")}m:${String(seconds).padStart(2, "0")}s`
+  // Calcular minutos restantes en total
+  const diffMinutes = days * 24 * 60 + hours * 60 + minutes
+
+  // Notificar al padre cada vez que cambia el tiempo
+  useEffect(() => {
+    if (typeof onUpdate === "function") {
+      onUpdate(diffMinutes)
+    }
+  }, [diffMinutes])
+
+  return `${!noMessage ? "Disponible dentro de" : ""} ${String(days).padStart(2, "0")}d:${String(hours).padStart(
+    2,
+    "0"
+  )}h:${String(minutes).padStart(2, "0")}m:${String(seconds).padStart(2, "0")}s`
+}
+
+export const getDeliverySteps = (orderDetails) => {
+  if (!orderDetails) return { steps: deliveryDetails, activeStep: 0 }
+
+  const lastCompletedIndex = deliveryDetails.findLastIndex((item) => orderDetails[item.value])
+
+  const steps = deliveryDetails.map((item) => {
+    const timestamp = orderDetails[item.value]
+    return {
+      ...item,
+      time: timestamp ? formatTime(timestamp) : "Pendiente"
+    }
+  })
+
+  return {
+    steps,
+    activeStep: lastCompletedIndex >= 0 ? lastCompletedIndex : 0
+  }
 }

@@ -21,8 +21,8 @@ export const HourlyPerformanceChart = () => {
         withLabels
         data={[
           { name: "Delivery", value: 11, color: "indigo.6" },
-          { name: "Recoger en restaurante", value: 7, color: "yellow.6" },
-          { name: "Comer en restaurante", value: 15, color: "teal.6" }
+          { name: "Recoger en comercio", value: 7, color: "yellow.6" },
+          { name: "Comer en comercio", value: 15, color: "teal.6" }
         ]}
       />
     </Paper>

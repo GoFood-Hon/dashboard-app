@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { Outlet, useNavigate } from "react-router-dom"
+import { Outlet, useNavigate, useRouteError } from "react-router-dom"
 import authUtils from "../utils/authUtils"
 import { useDispatch, useSelector } from "react-redux"
 import { setUser } from "../store/features/userSlice"
@@ -21,11 +21,13 @@ import animatedBurger from "../assets/animation/LoadingBurgerAnimation.json"
 import { NotificationProvider } from "../components/NotificationProvider"
 import { useLocation } from "react-router-dom"
 import { Alerts } from "../components/Alerts"
+import { ReactErrorBoundary } from "../screens/ReactErrorBoundary"
 
 function AuthLayout() {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const location = useLocation()
+  const error = useRouteError()
   const [opened, { toggle }] = useDisclosure()
   const { colorScheme } = useMantineColorScheme()
   const theme = useMantineTheme()
@@ -133,7 +135,9 @@ function AuthLayout() {
               <AdminHeader burger={<Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />} />
             </AppShell.Header>
             <AppShell.Main bg={bg}>
-              <Outlet />
+              <ReactErrorBoundary>
+                <Outlet />
+              </ReactErrorBoundary>
             </AppShell.Main>
           </AppShell>
         )}

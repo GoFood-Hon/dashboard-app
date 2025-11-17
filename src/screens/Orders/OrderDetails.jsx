@@ -22,11 +22,12 @@ import {
   Tooltip,
   ActionIcon,
   rem,
-  Box
+  Box,
+  Timeline
 } from "@mantine/core"
 import React, { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
-import { calculateTimeDifference, Countdown, formatTime, getFormattedHNL } from "../../utils"
+import { calculateTimeDifference, Countdown, formatTime, getDeliverySteps, getFormattedHNL } from "../../utils"
 import {
   APP_ROLES,
   billsData,
@@ -88,6 +89,7 @@ export const OrderDetails = () => {
   const [openedModal, { open: openModal, close: closeModal }] = useDisclosure(false)
   const [openedComments, { open: openModalComment, close: closeModalComment }] = useDisclosure(false)
   const [openedBill, { open: openBillModal, close: closeBillModal }] = useDisclosure(false)
+  const [openedDeliveryDetails, { open: openDeliveryDetails, close: closeDeliveryDetails }] = useDisclosure(false)
   const isSmallScreen = useMediaQuery("(max-width: 1080px)")
   const getInitialStep = () => {
     const serviceSteps = orderStates[orderDetails?.serviceType] || []
@@ -101,6 +103,7 @@ export const OrderDetails = () => {
   const isScheduled = Boolean(orderDetails?.scheduledDate) && !orderDetails?.isWantedAsSoonAsItIsReady
   const isPast = isScheduled ? dayjs().isAfter(dayjs(orderDetails?.scheduledDate)) : true
   const isAvailable = !isScheduled || isPast || readyMap[orderDetails?.id] === true
+  const { steps, activeStep } = getDeliverySteps(orderDetails)
 
   useEffect(() => {
     setActive(getInitialStep())
@@ -118,9 +121,9 @@ export const OrderDetails = () => {
         <>
           <Stack gap="xs">
             <Group>
-              <Flex align="center" justify="space-between" gap="xs">
-                <BackButton title={orderDetails?.orderId} show />
-                <CopyButton value={orderDetails?.orderId} timeout={2000}>
+              <Flex align="center" justify="space-between" gap={4}>
+                <BackButton title={`#${orderDetails?.orderId?.split("-")[0]?.toUpperCase()}`} show />
+                <CopyButton value={orderDetails?.orderId?.split("-")[0]?.toUpperCase()} timeout={2000}>
                   {({ copied, copy }) => (
                     <Tooltip label={copied ? "Copiado" : "Copiar"} withArrow position="right">
                       <ActionIcon color={copied ? "teal" : "gray"} variant="subtle" onClick={copy}>
@@ -323,6 +326,9 @@ export const OrderDetails = () => {
                         isSmallScreen={isSmallScreen}
                         updatingDriver={updatingDriver}
                         orderDetails={orderDetails}
+                        buttonText={"Ver detalles de entrega"}
+                        openModal={openDeliveryDetails}
+                        showButton
                       />
                     ) : (
                       <UserData
@@ -388,7 +394,7 @@ export const OrderDetails = () => {
                         </Stack>
 
                         <Button mt="auto" py="xs" color={colors.main_app_color} onClick={() => openBillModal()}>
-                          Ver factura detallada
+                          Ver detalle de factura
                         </Button>
                       </Flex>
                     ) : (
@@ -422,7 +428,6 @@ export const OrderDetails = () => {
                                     fullWidth
                                     loading={updatingOrderStatus}
                                     color={colors.main_app_color}
-                                    //onClick={() => dispatch(confirmOrder(orderId))}
                                     onClick={() => {
                                       openModal()
                                       setSelectedAction("confirmOrder")
@@ -452,6 +457,7 @@ export const OrderDetails = () => {
                                   <Countdown
                                     scheduledDate={orderDetails?.scheduledDate}
                                     onExpire={() => markReady(orderDetails?.id)}
+                                    noMessage
                                   />
                                 ) : (
                                   "Marcar como preparado"
@@ -486,7 +492,6 @@ export const OrderDetails = () => {
                                   fullWidth
                                   loading={updatingOrderStatus}
                                   color={colors.main_app_color}
-                                  //onClick={() => dispatch(markOrderDelivered(orderId))}
                                   onClick={() => {
                                     openModal()
                                     setSelectedAction("markOrderDelivered")
@@ -514,7 +519,6 @@ export const OrderDetails = () => {
                                   loading={cancelOrderStatus}
                                   color={colors.main_app_color}
                                   variant="outline"
-                                  //onClick={() => dispatch(cancelOrder(orderId))}
                                   onClick={() => {
                                     openModal()
                                     setSelectedAction("cancelOrder")
@@ -642,6 +646,28 @@ export const OrderDetails = () => {
               <Text c="dimmed" pt="xs" size="sm">
                 {orderDetails?.note}
               </Text>
+            </Paper>
+          </ModalLayout>
+
+          <ModalLayout
+            opened={openedDeliveryDetails}
+            onClose={() => {
+              closeDeliveryDetails()
+            }}
+            title="Detalles de entrega">
+            <Paper withBorder radius="md" p="sm">
+              <Timeline active={activeStep} bulletSize={28} lineWidth={2} color={colors.main_app_color}>
+                {steps.map((item) => (
+                  <Timeline.Item key={item.step} bullet={<item.icon size="1.1rem" />} title={item.title}>
+                    <Text c="dimmed" size="sm">
+                      {item.description}
+                    </Text>
+                    <Text size="xs" c={item.time === "Pendiente" ? colors.yellow_logo : ""} mt={4}>
+                      {item.time}
+                    </Text>
+                  </Timeline.Item>
+                ))}
+              </Timeline>
             </Paper>
           </ModalLayout>
 

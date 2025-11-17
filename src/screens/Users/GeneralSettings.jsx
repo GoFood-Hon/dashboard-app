@@ -19,14 +19,14 @@ export default function GeneralSettings() {
         const response = await restaurantsApi.getRestaurant(user?.restaurantId)
 
         if (response.error) {
-          toast.error(`Fallo al obtenerla información del restaurante. Por favor intente de nuevo. ${response.message}`, {
+          toast.error(`Fallo al obtenerla información del comercio. Por favor intente de nuevo. ${response.message}`, {
             duration: 7000
           })
         } else {
           setRestaurants(response.data)
         }
       } catch (error) {
-        toast.error(`Fallo al obtenerla información del restaurante. Por favor intente de nuevo.`, {
+        toast.error(`Fallo al obtenerla información del comercio. Por favor intente de nuevo.`, {
           duration: 7000
         })
         throw error
@@ -153,7 +153,7 @@ export default function GeneralSettings() {
               <Text fw={700}>{userData.name}</Text>
               <Text c="dimmed" size="sm">
                 {userData.role === "admin-restaurant"
-                  ? "Administrador de restaurante"
+                  ? "Administrador de comercio"
                   : userData.role === "admin-sucursal"
                     ? "Administrador de sucursal"
                     : userData.role === "cashier"

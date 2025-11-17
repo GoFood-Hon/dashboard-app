@@ -24,7 +24,6 @@ export const NotificationProvider = ({ children }) => {
     const audio = new Audio(notificationSound)
     const playSound = () => {
       audio.currentTime = 0
-      audio.play().catch((error) => console.error("Error al reproducir sonido:", error))
     }
 
     const handleNewOrder = (order) => {
@@ -47,7 +46,7 @@ export const NotificationProvider = ({ children }) => {
               {order?.serviceType === "delivery"
                 ? "a domicilio"
                 : order?.serviceType === "onSite"
-                  ? "para comer en restaurante"
+                  ? "para venta en mesa"
                   : "para llevar"}
             </Text>
             <Button
@@ -126,7 +125,7 @@ export const NotificationProvider = ({ children }) => {
           })
         : notifications.show({
             title: "Orden actualizada",
-            message: `El administrador de ${user.role === USER_ROLES.administrator ? "restaurante" : "sucursal"} confirmó la orden`,
+            message: `El administrador de ${user.role === USER_ROLES.administrator ? "comercio" : "sucursal"} confirmó la orden`,
             autoClose: false,
             withCloseButton: true,
             color: "green"
@@ -276,6 +275,7 @@ export const NotificationProvider = ({ children }) => {
     }
 
     const handleReservationStatus = (reservation) => {
+      if(location.pathname === `/reservations/${reservation.id}`) return
       playSound()
       notifications.show({
         id: reservation.id,

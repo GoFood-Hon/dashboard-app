@@ -5,7 +5,7 @@ import {
   NAVIGATION_ROUTES_SUPER_ADMIN,
   SETTING_NAVIGATION_ROUTES,
   NAVIGATION_ROUTES_KITCHEN,
-  NAVIGATION_ROUTES_CASHIER,
+  NAVIGATION_ROUTES_CASHIER
 } from "./routes"
 import { Route, RouterProvider, createBrowserRouter, createRoutesFromElements } from "react-router-dom"
 import AuthLayout from "./layout/AuthLayout"

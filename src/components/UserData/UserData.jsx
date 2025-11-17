@@ -1,6 +1,6 @@
-import { Avatar, Divider, Flex, Loader, Stack, Title, Text } from "@mantine/core"
-import { IconMail, IconPhone, IconId, IconMapPin, IconMotorbike, IconBuilding, IconCertificate } from "@tabler/icons-react"
 import { colors } from "../../theme/colors"
+import { Avatar, Divider, Flex, Loader, Stack, Title, Text, Button } from "@mantine/core"
+import { IconMail, IconPhone, IconId, IconMapPin, IconMotorbike, IconBuilding, IconCertificate } from "@tabler/icons-react"
 
 const UserData = ({
   title,
@@ -18,7 +18,10 @@ const UserData = ({
   updatingDriver,
   orderDetails,
   tableNumberAndText,
-  noIcons
+  noIcons,
+  showButton,
+  buttonText,
+  openModal
 }) => {
   return (
     <Stack h="100%" gap="xs">
@@ -88,6 +91,11 @@ const UserData = ({
                 </Text>
               </Flex>
             </>
+          )}
+          {showButton && (
+            <Button mt="auto" py="xs" color={colors.main_app_color} onClick={openModal}>
+              {buttonText}
+            </Button>
           )}
         </>
       ) : (

@@ -10,20 +10,46 @@ const initialState = {
   error: null
 }
 
-// Obtener todos los tipos de establecimiento
 export const fetchAllKitchenTypes = createAsyncThunk("kitchenAndTags/fetchAllKitchenTypes", async (_, { rejectWithValue }) => {
   try {
     const response = await kitchenAndTagsApi.getAllKitchenType()
+
+    if (response.error) {
+      showNotification({
+        title: "Error",
+        message: response?.error?.details?.errors?.[0]?.message || response?.message,
+        color: "red"
+      })
+
+      return rejectWithValue(message)
+    }
+
     return response.data
   } catch (error) {
     return rejectWithValue(error.response?.data || "Error fetching kitchen types")
   }
 })
 
-// Crear un nuevo tipo de establecimiento
 export const createKitchenType = createAsyncThunk("kitchenAndTags/createKitchenType", async (params, { rejectWithValue }) => {
   try {
     const response = await kitchenAndTagsApi.createKitchenType(params)
+
+    if (response.error) {
+      const message =
+        response?.error?.details?.errors?.[0]?.message ||
+        (response?.message?.includes("cocina")
+          ? response.message.replace("cocina", "establecimiento")
+          : response?.message || "Ocurrió un error inesperado")
+
+      showNotification({
+        title: "Error",
+        message,
+        color: "red"
+      })
+
+      return rejectWithValue(message)
+    }
+
     showNotification({
       title: "Creación exitosa",
       message: "El tipo de establecimiento fue creado correctamente",
@@ -35,7 +61,6 @@ export const createKitchenType = createAsyncThunk("kitchenAndTags/createKitchenT
   }
 })
 
-// Actualizar un tipo de establecimiento
 export const updateKitchenType = createAsyncThunk(
   "kitchenAndTags/updateKitchenType",
   async ({ id, params }, { rejectWithValue }) => {
@@ -49,7 +74,6 @@ export const updateKitchenType = createAsyncThunk(
   }
 )
 
-// Eliminar un tipo de establecimiento
 export const deleteKitchenType = createAsyncThunk("kitchenAndTags/deleteKitchenType", async (id, { rejectWithValue }) => {
   try {
     await kitchenAndTagsApi.deleteKitchenType(id)
@@ -65,7 +89,6 @@ export const deleteKitchenType = createAsyncThunk("kitchenAndTags/deleteKitchenT
   }
 })
 
-// Obtener todos las categorías de productos
 export const fetchAllDishesTags = createAsyncThunk(
   "kitchenAndTags/fetchAllDishesTags",
   async (_, { getState, rejectWithValue }) => {
@@ -77,6 +100,16 @@ export const fetchAllDishesTags = createAsyncThunk(
 
     try {
       const response = await kitchenAndTagsApi.getAllDishesTags()
+
+      if (response.error) {
+        showNotification({
+          title: "Error",
+          message: response?.error?.details?.errors?.[0]?.message || response?.message,
+          color: "red"
+        })
+
+        return rejectWithValue(message)
+      }
       return response.data
     } catch (error) {
       return rejectWithValue(error.response?.data || "Error fetching dish categories")
@@ -84,10 +117,26 @@ export const fetchAllDishesTags = createAsyncThunk(
   }
 )
 
-// Crear un nuevo tag de producto
 export const createDishesTag = createAsyncThunk("kitchenAndTags/createDishesTag", async (params, { rejectWithValue }) => {
   try {
     const response = await kitchenAndTagsApi.createDishesTag(params)
+
+    if (response.error) {
+      const message =
+        response?.error?.details?.errors?.[0]?.message ||
+        (response?.message?.includes("El tag")
+          ? response.message.replace("El tag", "La categoría")
+          : response?.message || "Ocurrió un error inesperado")
+
+      showNotification({
+        title: "Error",
+        message,
+        color: "red"
+      })
+
+      return rejectWithValue(message)
+    }
+
     showNotification({ title: "Creación exitosa", message: `Se agregó la categoría ${response?.data?.name}`, color: "green" })
     return response.data
   } catch (error) {
@@ -95,7 +144,6 @@ export const createDishesTag = createAsyncThunk("kitchenAndTags/createDishesTag"
   }
 })
 
-// Actualizar un tag de producto
 export const updateDishesTag = createAsyncThunk("kitchenAndTags/updateDishesTag", async ({ id, params }, { rejectWithValue }) => {
   try {
     const response = await kitchenAndTagsApi.updateDishesTag(id, params)
@@ -106,7 +154,6 @@ export const updateDishesTag = createAsyncThunk("kitchenAndTags/updateDishesTag"
   }
 })
 
-// Eliminar un tag de producto
 export const deleteDishesTag = createAsyncThunk("kitchenAndTags/deleteDishesTag", async (id, { rejectWithValue }) => {
   try {
     await kitchenAndTagsApi.deleteDishesTag(id)
@@ -118,13 +165,11 @@ export const deleteDishesTag = createAsyncThunk("kitchenAndTags/deleteDishesTag"
   }
 })
 
-// Slice
 const kitchenAndTagsSlice = createSlice({
   name: "kitchenAndTags",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    // Thunks para los tipos de establecimiento
     builder
       .addCase(fetchAllKitchenTypes.pending, (state) => {
         state.loadingKitchenTypes = true

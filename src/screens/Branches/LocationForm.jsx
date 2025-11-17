@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react"
-import { Grid, Paper, SimpleGrid, Stack, Text, TextInput, useMantineColorScheme } from "@mantine/core"
+import { Grid, Paper, Select, SimpleGrid, Stack, Text, TextInput, useMantineColorScheme } from "@mantine/core"
 import Map, { GeolocateControl, Marker, Source, Layer } from "react-map-gl"
 import "mapbox-gl/dist/mapbox-gl.css"
 import InputSearchCombobox from "../../components/Form/InputSearchCombobox"
@@ -9,8 +9,9 @@ import InputTextAreaField from "../../components/Form/InputTextAreaField"
 import * as turf from "@turf/turf"
 import { useSelector } from "react-redux"
 import { colors } from "../../theme/colors"
+import { Controller } from "react-hook-form"
 
-export default function LocationForm({ register, errors, setValue, itemDetails, newBranch }) {
+export default function LocationForm({ register, errors, setValue, itemDetails, newBranch, control }) {
   const { colorScheme } = useMantineColorScheme()
   const [markerPosition, setMarkerPosition] = useState(null)
   const [lng, setLng] = useState(0)
@@ -54,14 +55,24 @@ export default function LocationForm({ register, errors, setValue, itemDetails, 
         <Paper withBorder radius="md" p="md">
           <Stack gap="xs">
             <InputTextAreaField label="Dirección exacta (Obligatorio)" name="address" register={register} errors={errors} />
-            <InputSearchCombobox
-              label="Departamento (Obligatorio)"
-              name={"state"}
-              searchValue={itemDetails?.state}
-              items={hondurasDepartments}
-              register={register}
-              errors={errors}
-              setValue={setValue}
+            <Controller
+              name="state"
+              control={control}
+              render={({ field, fieldState }) => (
+                <Select
+                  label="Departamento"
+                  data={hondurasDepartments.map((item) => ({
+                    value: item.id,
+                    label: item.name
+                  }))}
+                  allowDeselect={false}
+                  maxDropdownHeight={200}
+                  value={field.value}
+                  onChange={(val) => field.onChange(val ?? "")}
+                  error={fieldState.error ? fieldState.error.message : null}
+                  nothingFoundMessage="No se encontró ningún departamento"
+                />
+              )}
             />
             <InputField label="Ciudad (Obligatorio)" name="city" register={register} errors={errors} />
             <Stack>

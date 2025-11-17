@@ -38,8 +38,9 @@ export const EditBranch = () => {
     formState: { errors }
   } = useForm({
     resolver: zodResolver(editBranchSchema),
-    defaultValues: details || {}
+    defaultValues: { ...details, state: details.state && getDepartmentNameById(details.state) } || {}
   })
+
   const navigate = useNavigate()
   const imageLocation = watch("images[0].location")
   dispatch(setShippingRange(watch("maxDistanceShipping") || 0))
@@ -64,7 +65,11 @@ export const EditBranch = () => {
 
   useEffect(() => {
     if (Object.keys(details).length > 0) {
-      reset(details)
+      const departmentId = getDepartmentNameById(details.state)
+      reset({
+        ...details,
+        state: departmentId ?? ""
+      })
     }
     window.scrollTo(0, 0)
   }, [details, reset])
