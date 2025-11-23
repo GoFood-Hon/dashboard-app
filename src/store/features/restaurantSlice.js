@@ -29,10 +29,8 @@ const initialState = {
 
 export const fetchRestaurants = createAsyncThunk(
   "restaurants/fetchRestaurants",
-  async ({ limit, page, order, search, search_field }, { dispatch }) => {
+  async ({ limit, page, order, search, search_field }, { dispatch, rejectWithValue }) => {
     try {
-      dispatch(setLoading(true))
-
       const response = await restaurantsApi.getAllRestaurants({
         limit,
         page,
@@ -41,13 +39,17 @@ export const fetchRestaurants = createAsyncThunk(
         search_field
       })
 
-      dispatch(setRestaurants(response.data))
-      dispatch(setLoading(false))
       return { data: response.data, results: response.results, page }
     } catch (error) {
-      dispatch(setLoading(false))
-      dispatch(setError("Error fetching menus"))
-      throw error
+      if (error?.response?.data?.status !== "token_expired") {
+        showNotification({
+          title: "Error",
+          message: error.response?.data?.message || "Error al obtener los comercios",
+          color: "red"
+        })
+      }
+
+      return rejectWithValue(error.response?.data || "Error al obtener los comercios")
     }
   }
 )
@@ -62,7 +64,15 @@ export const fetchNoPaginatedRestaurants = createAsyncThunk(
       })
       return response.data
     } catch (error) {
-      return rejectWithValue(error.response?.data || "Error fetching dish tags")
+      if (error?.response?.data?.status !== "token_expired") {
+        showNotification({
+          title: "Error",
+          message: error.response?.data?.message || "Error al obtener los comercios",
+          color: "red"
+        })
+      }
+
+      return rejectWithValue(error.response?.data || "Error al obtener los comercios")
     }
   }
 )
@@ -74,44 +84,14 @@ export const createRestaurant = createAsyncThunk(
       const response = await restaurantsApi.createRestaurant(params)
       const restaurantData = response.data
 
-      if (response.error) {
-        showNotification({
-          title: "Error",
-          message: response?.error?.details?.errors[0]?.message ?? response.message,
-          color: "red"
-        })
-
-        return rejectWithValue(response.message)
-      }
-
       let images = []
       if (imageParams) {
         const imageResponse = await restaurantsApi.addImage(restaurantData.id, imageParams)
         images = imageResponse.data.images
-
-        if (imageResponse.error) {
-          showNotification({
-            title: "Error",
-            message: imageResponse.message,
-            color: "red"
-          })
-
-          return rejectWithValue(imageResponse.message)
-        }
       }
 
       if (formDataBanner) {
-        const imageResponse = await restaurantsApi.updateBannerImage(restaurantData.id, formDataBanner)
-
-        if (imageResponse.error) {
-          showNotification({
-            title: "Error",
-            message: imageResponse.message,
-            color: "red"
-          })
-
-          return rejectWithValue(imageResponse.message)
-        }
+        await restaurantsApi.updateBannerImage(restaurantData.id, formDataBanner)
       }
 
       showNotification({
@@ -122,6 +102,14 @@ export const createRestaurant = createAsyncThunk(
 
       return { ...restaurantData, images }
     } catch (error) {
+      if (error?.response?.data?.status !== "token_expired") {
+        showNotification({
+          title: "Error",
+          message: error.response?.data?.message || "Error al crear el comercio",
+          color: "red"
+        })
+      }
+
       return rejectWithValue(error.response?.data || "Error al crear el comercio")
     }
   }
@@ -132,29 +120,20 @@ export const fetchRestaurantData = createAsyncThunk("restaurants/fetchRestaurant
     dispatch(setLoading(true))
     const response = await restaurantsApi.getRestaurant(restaurantId)
 
-    if (response.error) {
+    dispatch(setRestaurantData(response.data))
+    dispatch(setLoading(false))
+    dispatch(setImageUrl(response?.data?.images[0].location))
+    return response.data
+  } catch (error) {
+    if (error?.response?.data?.status !== "token_expired") {
       showNotification({
         title: "Error",
-        message: response.message,
-        color: "red",
-        duration: 7000
+        message: error.response?.data?.message || "Error al obtener los datos del comercio",
+        color: "red"
       })
-      return {}
-    } else {
-      dispatch(setRestaurantData(response.data))
-      dispatch(setLoading(false))
-      dispatch(setImageUrl(response?.data?.images[0].location))
-      return response.data
     }
-  } catch (error) {
-    showNotification({
-      title: "Error",
-      message: error,
-      color: "red",
-      duration: 7000
-    })
-    dispatch(setLoading(false))
-    throw error
+
+    return rejectWithValue(error.response?.data || "Error al obtener los datos del comercio")
   }
 })
 
@@ -180,34 +159,20 @@ export const updateRestaurant = createAsyncThunk(
   "restaurant/updateRestaurant",
   async ({ data, propertyToUpdate = "all" }, { dispatch }) => {
     try {
-      dispatch(setLoading(true))
-
       const formData = updateFormData(data, propertyToUpdate)
-
       const response = await restaurantsApi.updateRestaurant(formData, data?.id)
 
-      if (response.error) {
-        showNotification({
-          title: "Error",
-          message: response?.error?.details?.errors[0]?.message ?? response.message,
-          color: "red",
-          duration: 7000
-        })
-      }
-      dispatch(setLoading(false))
       return response.data
     } catch (error) {
-      dispatch(setLoading(false))
-      dispatch(setError("Error updating restaurant"))
+      if (error?.response?.data?.status !== "token_expired") {
+        showNotification({
+          title: "Error",
+          message: error.response?.data?.message || "Error al actualizar el comercio",
+          color: "red"
+        })
+      }
 
-      showNotification({
-        title: "Error",
-        message: error,
-        color: "red",
-        duration: 7000
-      })
-
-      throw error
+      return rejectWithValue(error.response?.data || "Error al actualizar el comercio")
     }
   }
 )
@@ -216,24 +181,17 @@ export const updateRestaurantStatus = createAsyncThunk("restaurant/updateRestaur
   try {
     const response = await restaurantsApi.updateRestaurant(params, restaurantId)
 
-    if (response.error) {
-      showNotification({
-        title: "Error",
-        message: response.message,
-        color: "red",
-        duration: 7000
-      })
-    }
     return response.data
   } catch (error) {
-    showNotification({
-      title: "Error",
-      message: error,
-      color: "red",
-      duration: 7000
-    })
+    if (error?.response?.data?.status !== "token_expired") {
+      showNotification({
+        title: "Error",
+        message: error.response?.data?.message || "Error al actualizar el estado del comercio",
+        color: "red"
+      })
+    }
 
-    throw error
+    return rejectWithValue(error.response?.data || "Error al actualizar el estado del comercio")
   }
 })
 
@@ -244,44 +202,14 @@ export const updateRestaurantData = createAsyncThunk(
       const response = await restaurantsApi.updateRestaurant(formData, restaurantId)
       let restaurantData = response.data
 
-      if (response.error) {
-        showNotification({
-          title: "Error",
-          message: response?.error?.details?.errors[0]?.message ?? response.message,
-          color: "red"
-        })
-
-        return rejectWithValue(response.message)
-      }
-
       if (formDataImage) {
         const imageResponse = await restaurantsApi.addImage(restaurantId, formDataImage)
-
-        if (imageResponse.error) {
-          showNotification({
-            title: "Error",
-            message: imageResponse.message,
-            color: "red"
-          })
-
-          return rejectWithValue(imageResponse.message)
-        }
 
         restaurantData = { ...restaurantData, images: imageResponse.data.images }
       }
 
       if (formDataBanner) {
-        const imageResponse = await restaurantsApi.updateBannerImage(restaurantId, formDataBanner)
-
-        if (imageResponse.error) {
-          showNotification({
-            title: "Error",
-            message: imageResponse.message,
-            color: "red"
-          })
-
-          return rejectWithValue(imageResponse.message)
-        }
+        await restaurantsApi.updateBannerImage(restaurantId, formDataBanner)
       }
 
       showNotification({
@@ -292,12 +220,15 @@ export const updateRestaurantData = createAsyncThunk(
 
       return restaurantData
     } catch (error) {
-      showNotification({
-        title: "Error",
-        message: error,
-        color: "red",
-        duration: 7000
-      })
+      if (error?.response?.data?.status !== "token_expired") {
+        showNotification({
+          title: "Error",
+          message: error.response?.data?.message || "Error al actualizar el comercio",
+          color: "red"
+        })
+      }
+
+      return rejectWithValue(error.response?.data || "Error al actualizar el comercio")
     }
   }
 )

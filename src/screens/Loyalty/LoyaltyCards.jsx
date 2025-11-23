@@ -118,7 +118,7 @@ const LoyaltyCards = ({ register, setValue, control, errors, watch, setError, cl
       <SimpleGrid cols={{ base: 1, sm: 2, lg: 3 }}>
         {loyaltyCards?.map((card, index) => (
           <LoyaltyCardView
-            key={index}
+            internalKey={index}
             user={user}
             openDelete={openDelete}
             setIndex={setIndex}

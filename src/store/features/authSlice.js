@@ -1,6 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit"
 import authApi from "../../api/authApi"
-import { showNotification } from "@mantine/notifications"
 
 const initialState = {
   user: null,

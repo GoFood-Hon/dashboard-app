@@ -241,7 +241,7 @@ export const Countdown = ({ scheduledDate, onExpire, noMessage, onUpdate }) => {
 }
 
 export const getDeliverySteps = (orderDetails) => {
-  if (!orderDetails) return { steps: deliveryDetails, activeStep: 0 }
+  if (!orderDetails) return { steps: deliveryDetails, activeStep: -1 }
 
   const lastCompletedIndex = deliveryDetails.findLastIndex((item) => orderDetails[item.value])
 
@@ -255,6 +255,6 @@ export const getDeliverySteps = (orderDetails) => {
 
   return {
     steps,
-    activeStep: lastCompletedIndex >= 0 ? lastCompletedIndex : 0
+    activeStep: lastCompletedIndex >= 0 ? lastCompletedIndex : -1
   }
 }

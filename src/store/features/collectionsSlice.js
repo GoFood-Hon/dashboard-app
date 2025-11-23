@@ -61,13 +61,15 @@ export const fetchCollections = createAsyncThunk(
 
       return { data: response.data, results: response.results, page }
     } catch (error) {
-      showNotification({
-        title: "Error",
-        message: error,
-        color: "red",
-        duration: 7000
-      })
-      return rejectWithValue(error.message)
+      if (error?.response?.data?.status !== "token_expired") {
+        showNotification({
+          title: "Error",
+          message: error.response?.data?.message || "Error al obtener las colecciones",
+          color: "red"
+        })
+      }
+
+      return rejectWithValue(error.response?.data || "Error al obtener las colecciones")
     }
   }
 )
@@ -94,13 +96,15 @@ export const fetchDishesForCollections = createAsyncThunk(
         page
       }
     } catch (error) {
-      showNotification({
-        title: "Error",
-        message: error,
-        color: "red",
-        duration: 7000
-      })
-      return rejectWithValue(error.message)
+      if (error?.response?.data?.status !== "token_expired") {
+        showNotification({
+          title: "Error",
+          message: error.response?.data?.message || "Error al obtener los productos",
+          color: "red"
+        })
+      }
+
+      return rejectWithValue(error.response?.data || "Error al obtener los productos")
     }
   }
 )
@@ -127,13 +131,15 @@ export const fetchRestaurantsForCollections = createAsyncThunk(
         page
       }
     } catch (error) {
-      showNotification({
-        title: "Error",
-        message: error,
-        color: "red",
-        duration: 7000
-      })
-      return rejectWithValue(error.message)
+      if (error?.response?.data?.status !== "token_expired") {
+        showNotification({
+          title: "Error",
+          message: error.response?.data?.message || "Error al obtener los comercios",
+          color: "red"
+        })
+      }
+
+      return rejectWithValue(error.response?.data || "Error al obtener los comercios")
     }
   }
 )
@@ -160,29 +166,10 @@ export const createCollection = createAsyncThunk(
         type: params.type
       })
 
-      if (response.error) {
-        showNotification({
-          title: "Error",
-          message: response.message,
-          color: "red"
-        })
-
-        return rejectWithValue(response.message)
-      }
-
       let banner = []
       if (formDataImage) {
         const imageResponse = await collectionsApi.createCollectionImage(response.data.id, formDataImage)
         banner = imageResponse.data.banner
-        if (imageResponse.error) {
-          showNotification({
-            title: "Error",
-            message: response.message,
-            color: "red"
-          })
-
-          return rejectWithValue(imageResponse.message)
-        }
       }
 
       if (params.type === "dishes") {
@@ -201,7 +188,15 @@ export const createCollection = createAsyncThunk(
 
       return { ...response.data, banner }
     } catch (error) {
-      return rejectWithValue(error.response.data)
+      if (error?.response?.data?.status !== "token_expired") {
+        showNotification({
+          title: "Error",
+          message: error.response?.data?.message || "Error al crear la colección",
+          color: "red"
+        })
+      }
+
+      return rejectWithValue(error.response?.data || "Error al crear la colección")
     }
   }
 )
@@ -213,7 +208,14 @@ export const updateCollectionStatus = createAsyncThunk(
       const response = await collectionsApi.updateCollection(setId, params)
       return response.data
     } catch (error) {
-      return rejectWithValue(error.response.data)
+      if (error?.response?.data?.status !== "token_expired") {
+        showNotification({
+          title: "Error",
+          message: error.response?.data?.message || "Error al actualizar el estado de la colección",
+          color: "red"
+        })
+      }
+      return rejectWithValue(error.response?.data || "Error al actualizar el estado de la colección")
     }
   }
 )
@@ -230,29 +232,10 @@ export const updateCollection = createAsyncThunk(
       })
       let collectionData = response?.data
 
-      if (response?.error) {
-        showNotification({
-          title: "Error",
-          message: response.message,
-          color: "red"
-        })
-
-        return rejectWithValue(response?.message)
-      }
-
       let banner = []
       if (formDataImage) {
         const imageResponse = await collectionsApi.createCollectionImage(id, formDataImage)
         banner = imageResponse?.data?.banner
-        if (imageResponse.error) {
-          showNotification({
-            title: "Error",
-            message: response.message,
-            color: "red"
-          })
-
-          return rejectWithValue(imageResponse?.message)
-        }
 
         collectionData = { ...collectionData, banner }
       }
@@ -289,7 +272,15 @@ export const updateCollection = createAsyncThunk(
 
       return collectionData
     } catch (error) {
-      return rejectWithValue(error)
+      if (error?.response?.data?.status !== "token_expired") {
+        showNotification({
+          title: "Error",
+          message: error.response?.data?.message || "Error al actualizar la colección",
+          color: "red"
+        })
+      }
+
+      return rejectWithValue(error.response?.data || "Error al actualizar la colección")
     }
   }
 )

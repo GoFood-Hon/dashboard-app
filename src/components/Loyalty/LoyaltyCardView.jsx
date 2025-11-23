@@ -11,7 +11,7 @@ import { markCardAsRedeemed } from "../../store/features/loyaltySlice"
 
 const LoyaltyCardView = ({
   id,
-  key,
+  internalKey,
   options,
   type,
   purchasesWithWhichRewardBegins,
@@ -32,7 +32,7 @@ const LoyaltyCardView = ({
 
   return (
     <>
-      <Paper mih={190} w="100%" key={key} p="sm" radius="md" style={{ position: "relative", overflow: "hidden" }}>
+      <Paper mih={190} w="100%" key={internalKey} p="sm" radius="md" style={{ position: "relative", overflow: "hidden" }}>
         {tracking && !isRewardADiscountInPurchase && (
           <MantineProvider theme={theme}>
             <Tooltip

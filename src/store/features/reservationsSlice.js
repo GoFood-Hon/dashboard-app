@@ -18,13 +18,11 @@ const initialState = {
   error: null,
   reservationComment: "",
 
-  //Search data
   searchField: "identityNumber",
   searchData: null,
   searchDishesData: null
 }
 
-// Thunk para obtener las reservas por sucursal
 export const fetchReservationByBranch = createAsyncThunk(
   "reservations/fetchByBranch",
   async ({ branchId, limit, page, order, search, search_field }, { rejectWithValue }) => {
@@ -38,33 +36,28 @@ export const fetchReservationByBranch = createAsyncThunk(
         search_field
       })
 
-      if (response.error) {
+      return { data: response.data, results: response.results, page }
+    } catch (error) {
+      if (error?.response?.data?.status !== "token_expired") {
         showNotification({
           title: "Error",
-          message: response.error,
+          message: error.response?.data?.message || "Error al obtener las reservaciones",
           color: "red",
           duration: 7000
         })
-        return rejectWithValue(response.error)
       }
 
-      return { data: response.data, results: response.results, page }
-    } catch (error) {
-      showNotification({
-        title: "Error",
-        message: error,
-        color: "red",
-        duration: 7000
-      })
-      return rejectWithValue(error.response.data)
+      return rejectWithValue(error?.response?.data || "Error al obtener las reservaciones")
     }
   }
 )
 
-// Thunk para obtener las reservas por comercio
 export const fetchReservationByRestaurant = createAsyncThunk(
   "reservations/fetchByRestaurant",
-  async ({ restaurantId, limit, page, order, search, search_field }, { rejectWithValue }) => {
+  async ({ restaurantId, limit, page, order, search, search_field }, thunkAPI) => {
+    const { rejectWithValue } = thunkAPI
+    thunkAPI.meta.thunk = fetchReservationByRestaurant
+
     try {
       const response = await reservationsApi.getReservationByRestaurant({
         restaurantId,
@@ -75,60 +68,44 @@ export const fetchReservationByRestaurant = createAsyncThunk(
         search_field
       })
 
-      if (response.error) {
+      return { data: response.data, results: response.results, page }
+    } catch (error) {
+      if (error?.response?.data?.status !== "token_expired") {
         showNotification({
           title: "Error",
-          message: response.error,
+          message: error.response?.data?.message || "Error al obtener las reservaciones",
           color: "red",
           duration: 7000
         })
-        return rejectWithValue(response.error)
       }
 
-      return { data: response.data, results: response.results, page }
-    } catch (error) {
-      showNotification({
-        title: "Error",
-        message: error,
-        color: "red",
-        duration: 7000
-      })
-      return rejectWithValue(error.response.data)
+      return rejectWithValue(error?.response?.data || "Error al obtener las reservaciones")
     }
   }
 )
 
-// Thunk para obtener los detalles de una reserva
 export const fetchReservationDetails = createAsyncThunk(
   "reservations/fetchDetails",
   async (reservationId, { rejectWithValue }) => {
     try {
       const response = await reservationsApi.getReservationDetails(reservationId)
 
-      if (response.error) {
+      return response.data
+    } catch (error) {
+      if (error?.response?.data?.status !== "token_expired") {
         showNotification({
           title: "Error",
-          message: response.error,
+          message: error.response?.data?.message || "Error al obtener los detalles de la reservación",
           color: "red",
           duration: 7000
         })
-        return rejectWithValue(response.error)
       }
 
-      return response.data
-    } catch (error) {
-      showNotification({
-        title: "Error",
-        message: error,
-        color: "red",
-        duration: 7000
-      })
-      return rejectWithValue(error.response.data)
+      return rejectWithValue(error?.response?.data || "Error al obtener los detalles de la reservación")
     }
   }
 )
 
-// Thunk para agregar comentarios a una reserva
 export const addCommentsToReservation = createAsyncThunk(
   "reservations/addComment",
   async ({ reservationId, params }, { rejectWithValue, getState }) => {
@@ -136,16 +113,6 @@ export const addCommentsToReservation = createAsyncThunk(
       const state = getState()
       const { name, images } = state.user.value
       const response = await reservationsApi.addCommentsToReservations(reservationId, params)
-
-      if (response.error) {
-        showNotification({
-          title: "Error",
-          message: response.error,
-          color: "red",
-          duration: 7000
-        })
-        return rejectWithValue(response.error)
-      }
 
       showNotification({
         title: "Creación exitosa",
@@ -161,33 +128,25 @@ export const addCommentsToReservation = createAsyncThunk(
         }
       }
     } catch (error) {
-      showNotification({
-        title: "Error",
-        message: error,
-        color: "red",
-        duration: 7000
-      })
-      return rejectWithValue(error.response.data)
+      if (error?.response?.data?.status !== "token_expired") {
+        showNotification({
+          title: "Error",
+          message: error.response?.data?.message || "Error al agregar el comentario",
+          color: "red",
+          duration: 7000
+        })
+      }
+
+      return rejectWithValue(error?.response?.data || "Error al agregar el comentario")
     }
   }
 )
 
-// Thunk para cancelar una reserva
 export const cancelReservation = createAsyncThunk(
   "reservations/cancel",
   async ({ reservationId, params }, { rejectWithValue }) => {
     try {
       const response = await reservationsApi.cancelReservation(reservationId, params)
-
-      if (response.error) {
-        showNotification({
-          title: "Error",
-          message: response.error,
-          color: "red",
-          duration: 7000
-        })
-        return rejectWithValue(response.error)
-      }
 
       showNotification({
         title: "Cancelación exitosa",
@@ -197,13 +156,16 @@ export const cancelReservation = createAsyncThunk(
       })
       return response.data
     } catch (error) {
-      showNotification({
-        title: "Error",
-        message: error,
-        color: "red",
-        duration: 7000
-      })
-      return rejectWithValue(error.response.data)
+      if (error?.response?.data?.status !== "token_expired") {
+        showNotification({
+          title: "Error",
+          message: error.response?.data?.message || "Error al cancelar la reservación",
+          color: "red",
+          duration: 7000
+        })
+      }
+
+      return rejectWithValue(error?.response?.data || "Error al cancelar la reservación")
     }
   }
 )
@@ -214,16 +176,6 @@ export const approveReservation = createAsyncThunk(
     try {
       const response = await reservationsApi.approveReservation(reservationId, revisedBy)
 
-      if (response.error) {
-        showNotification({
-          title: "Error",
-          message: response.error,
-          color: "red",
-          duration: 7000
-        })
-        return rejectWithValue(response.error)
-      }
-
       showNotification({
         title: "Aprobación exitosa",
         message: "La reservación se aprobó correctamente",
@@ -232,13 +184,16 @@ export const approveReservation = createAsyncThunk(
       })
       return response.data
     } catch (error) {
-      showNotification({
-        title: "Error",
-        message: error,
-        color: "red",
-        duration: 7000
-      })
-      return rejectWithValue(error.response.data)
+      if (error?.response?.data?.status !== "token_expired") {
+        showNotification({
+          title: "Error",
+          message: error.response?.data?.message || "Error al aprobar la reservación",
+          color: "red",
+          duration: 7000
+        })
+      }
+
+      return rejectWithValue(error?.response?.data || "Error al aprobar la reservación")
     }
   }
 )

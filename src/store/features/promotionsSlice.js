@@ -28,18 +28,18 @@ export const getPromotionByRestaurant = createAsyncThunk(
   async ({ limit, page, order, search, search_field }, { rejectWithValue }) => {
     try {
       const response = await promotionApi.getPromotionByRestaurant({ limit, page, order, search, search_field })
-      if (response.error) {
-        showNotification({
-          title: "Error",
-          message: response.message,
-          color: "red"
-        })
 
-        return rejectWithValue(response.message)
-      }
       return { data: response.data, results: response.results, page }
     } catch (error) {
-      return rejectWithValue(error.response.data)
+      if (error?.response?.data?.status !== "token_expired") {
+        showNotification({
+          title: "Error",
+          message: error.response?.data?.message || "Error al obtener las promociones",
+          color: "red"
+        })
+      }
+
+      return rejectWithValue(error.response?.data || "Error al obtener las promociones")
     }
   }
 )
@@ -51,44 +51,16 @@ export const createOffer = createAsyncThunk(
       const response = await promotionApi.createOffer(params)
       let promotionsData = response.data
 
-      if (response.error) {
-        showNotification({
-          title: "Error",
-          message: response.message,
-          color: "red"
-        })
-
-        return rejectWithValue(response.message)
-      }
-
       let images = []
       if (imageParams) {
         const imageResponse = await promotionApi.addImage(promotionsData.id, imageParams)
         images = imageResponse.data.images
-
-        if (imageResponse.error) {
-          showNotification({
-            title: "Error",
-            message: imageResponse.message,
-            color: "red"
-          })
-
-          return rejectWithValue(imageResponse.message)
-        }
 
         promotionsData = { ...promotionsData, images: imageResponse.data.images }
       }
 
       if (dishes.length !== 0) {
         const dishesAddedResponse = await promotionApi.addDishesToOffer({ dishes }, promotionsData.id)
-
-        if (dishesAddedResponse.error) {
-          showNotification({
-            title: "Error",
-            message: dishesAddedResponse.message,
-            color: "red"
-          })
-        }
 
         promotionsData = { ...promotionsData, Dishes: dishesAddedResponse.data }
       }
@@ -101,7 +73,15 @@ export const createOffer = createAsyncThunk(
 
       return promotionsData
     } catch (error) {
-      return rejectWithValue(error.response.data)
+      if (error?.response?.data?.status !== "token_expired") {
+        showNotification({
+          title: "Error",
+          message: error.response?.data?.message || "Error al crear la promoción",
+          color: "red"
+        })
+      }
+
+      return rejectWithValue(error.response?.data || "Error al crear la promoción")
     }
   }
 )
@@ -109,15 +89,6 @@ export const createOffer = createAsyncThunk(
 export const deleteOffer = createAsyncThunk("promotions/deleteOffer", async (promotionId, { rejectWithValue, dispatch }) => {
   try {
     const response = await promotionApi.deleteOffer(promotionId)
-    if (response.error) {
-      showNotification({
-        title: "Error",
-        message: response.message,
-        color: "red"
-      })
-
-      return rejectWithValue(response.message)
-    }
 
     showNotification({
       title: "Promoción eliminada",
@@ -129,7 +100,15 @@ export const deleteOffer = createAsyncThunk("promotions/deleteOffer", async (pro
 
     return response.data
   } catch (error) {
-    return rejectWithValue(error.response.data)
+    if (error?.response?.data?.status !== "token_expired") {
+      showNotification({
+        title: "Error",
+        message: error.response?.data?.message || "Error al eliminar la promoción",
+        color: "red"
+      })
+    }
+
+    return rejectWithValue(error.response?.data || "Error al eliminar la promoción")
   }
 })
 
@@ -140,28 +119,8 @@ export const updateOffer = createAsyncThunk(
       const response = await promotionApi.updateOffer(promotionId, params)
       let promotionsData = response.data
 
-      if (response.error) {
-        showNotification({
-          title: "Error",
-          message: response.message,
-          color: "red"
-        })
-
-        return rejectWithValue(response.message)
-      }
-
       if (imageParams) {
         const imageResponse = await promotionApi.addImage(promotionId, imageParams)
-
-        if (imageResponse.error) {
-          showNotification({
-            title: "Error",
-            message: imageResponse.message,
-            color: "red"
-          })
-
-          return rejectWithValue(imageResponse.message)
-        }
 
         promotionsData = { ...promotionsData, images: imageResponse.data.images }
       }
@@ -169,13 +128,6 @@ export const updateOffer = createAsyncThunk(
       if (dishes.length !== 0) {
         const dishesAddedResponse = await promotionApi.addDishesToOffer({ dishes }, promotionId)
 
-        if (dishesAddedResponse.error) {
-          showNotification({
-            title: "Error",
-            message: dishesAddedResponse.message,
-            color: "red"
-          })
-        }
         promotionsData = { ...promotionsData, Dishes: dishesAddedResponse.data }
       }
 
@@ -187,7 +139,15 @@ export const updateOffer = createAsyncThunk(
 
       return promotionsData
     } catch (error) {
-      return rejectWithValue(error.response.data)
+      if (error?.response?.data?.status !== "token_expired") {
+        showNotification({
+          title: "Error",
+          message: error.response?.data?.message || "Error al actualizar la promoción",
+          color: "red"
+        })
+      }
+
+      return rejectWithValue(error.response?.data || "Error al actualizar la promoción")
     }
   }
 )
@@ -197,17 +157,18 @@ export const updateOfferStatus = createAsyncThunk(
   async ({ promotionId, params }, { rejectWithValue }) => {
     try {
       const response = await promotionApi.updateOfferStatus(promotionId, params)
-      if (response.error) {
-        showNotification({
-          title: "Error",
-          message: response.message,
-          color: "red",
-          duration: 7000
-        })
-      }
+
       return response.data
     } catch (error) {
-      return rejectWithValue(error.response.data)
+      if (error?.response?.data?.status !== "token_expired") {
+        showNotification({
+          title: "Error",
+          message: error.response?.data?.message || "Error al actualizar el estado de la promoción",
+          color: "red"
+        })
+      }
+
+      return rejectWithValue(error.response?.data || "Error al actualizar el estado de la promoción")
     }
   }
 )
@@ -226,7 +187,15 @@ export const getAllDishesList = createAsyncThunk("promotions/getAllDishesList", 
     const response = await promotionApi.getAllDishes(restaurantId)
     return response.data
   } catch {
-    return rejectWithValue(error.response.data)
+    if (error?.response?.data?.status !== "token_expired") {
+      showNotification({
+        title: "Error",
+        message: error.response?.data?.message || "Error al obtener la lista de platos",
+        color: "red"
+      })
+    }
+
+    return rejectWithValue(error.response?.data || "Error al obtener la lista de productos")
   }
 })
 

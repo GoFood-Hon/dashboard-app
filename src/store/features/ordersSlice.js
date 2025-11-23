@@ -20,7 +20,6 @@ const initialState = {
   searchValue: null,
   updatingValue: "7eb09cc9-9dc8-4fb3-baba-750041d61e53",
 
-  //kitchen data
   itemsForKitchenPerPage: ITEMS_PER_PAGE_CARDS,
   currentOrdersForKitchenPage: 1,
   totalOrdersForKitchenPagesCount: 0,
@@ -28,14 +27,12 @@ const initialState = {
   ordersForKitchenPerPage: [],
   loadingOrdersForKitchen: false,
 
-  //Drivers data
   loadingDrivers: false,
   updatingDriver: false,
   drivers: [],
   status: "idle",
   error: null,
 
-  //Purchase history data
   purchaseHistoryData: [],
   dateRange: [],
   loadingHistory: false
@@ -55,7 +52,15 @@ export const fetchAllOrders = createAsyncThunk(
       })
       return { data: response.data, result: response.result, page }
     } catch (error) {
-      return rejectWithValue(error.response?.data || error.message)
+      if (error.response?.data?.status !== "token_expired") {
+        showNotification({
+          title: "Error",
+          message: error.response?.data?.message || "Error al obtener los pedidos",
+          color: "red"
+        })
+      }
+
+      return rejectWithValue(error.response?.data || "Error al obtener los pedidos")
     }
   }
 )
@@ -74,7 +79,15 @@ export const fetchOrdersForKitchen = createAsyncThunk(
       })
       return { data: response.data, result: response.result, page }
     } catch (error) {
-      return rejectWithValue(error.response?.data || error.message)
+      if (error.response?.data?.status !== "token_expired") {
+        showNotification({
+          title: "Error",
+          message: error.response?.data?.message || "Error al obtener los pedidos",
+          color: "red"
+        })
+      }
+
+      return rejectWithValue(error.response?.data || "Error al obtener los pedidos")
     }
   }
 )
@@ -92,16 +105,6 @@ export const updateOrderStatus = createAsyncThunk("orders/updateOrderStatus", as
   try {
     const response = await orderApi.updateOrderStatus(id)
 
-    if (response.error) {
-      showNotification({
-        title: "Error",
-        message: response.message,
-        color: "red"
-      })
-
-      return rejectWithValue(response.message)
-    }
-
     showNotification({
       title: "Orden actualizada",
       message: "El estado del pedido se actualizó correctamente",
@@ -111,23 +114,21 @@ export const updateOrderStatus = createAsyncThunk("orders/updateOrderStatus", as
 
     return response.data
   } catch (error) {
-    return rejectWithValue(error.response?.data || error.message)
+    if (error.response?.data?.status !== "token_expired") {
+      showNotification({
+        title: "Error",
+        message: error.response?.data?.message || "Error al actualizar el estado del pedido",
+        color: "red"
+      })
+    }
+
+    return rejectWithValue(error.response?.data || "Error al actualizar el estado del pedido")
   }
 })
 
 export const confirmOrder = createAsyncThunk("orders/confirmOrder", async (id, { rejectWithValue }) => {
   try {
     const response = await orderApi.confirmOrder(id)
-
-    if (response.error) {
-      showNotification({
-        title: "Error",
-        message: response.message,
-        color: "red"
-      })
-
-      return rejectWithValue(response.message)
-    }
 
     showNotification({
       title: "Orden actualizada",
@@ -138,22 +139,21 @@ export const confirmOrder = createAsyncThunk("orders/confirmOrder", async (id, {
 
     return response.data
   } catch (error) {
-    return rejectWithValue(error.response?.data || error.message)
+    if (error.response?.data?.status !== "token_expired") {
+      showNotification({
+        title: "Error",
+        message: error.response?.data?.message || "Error al confirmar el pedido",
+        color: "red"
+      })
+    }
+
+    return rejectWithValue(error.response?.data || "Error al confirmar el pedido")
   }
 })
 
 export const cancelOrder = createAsyncThunk("orders/cancelOrder", async (id, { rejectWithValue }) => {
   try {
     const response = await orderApi.cancelOrder(id)
-    if (response.error) {
-      showNotification({
-        title: "Error",
-        message: response.message,
-        color: "red"
-      })
-
-      return rejectWithValue(response.message)
-    }
 
     showNotification({
       title: "Orden actualizada",
@@ -163,7 +163,15 @@ export const cancelOrder = createAsyncThunk("orders/cancelOrder", async (id, { r
     })
     return response.data
   } catch (error) {
-    return rejectWithValue(error.response?.data || error.message)
+    if (error.response?.data?.status !== "token_expired") {
+      showNotification({
+        title: "Error",
+        message: error.response?.data?.message || "Error al cancelar el pedido",
+        color: "red"
+      })
+    }
+
+    return rejectWithValue(error.response?.data || "Error al cancelar el pedido")
   }
 })
 
@@ -172,7 +180,15 @@ export const fetchKitchenOrders = createAsyncThunk("orders/fetchKitchenOrders", 
     const response = await orderApi.getKitchenOrders()
     return response.data
   } catch (error) {
-    return rejectWithValue(error.response?.data || error.message)
+    if (error.response?.data?.status !== "token_expired") {
+      showNotification({
+        title: "Error",
+        message: error.response?.data?.message || "Error al obtener los pedidos",
+        color: "red"
+      })
+    }
+
+    return rejectWithValue(error.response?.data || "Error al obtener los pedidos")
   }
 })
 
@@ -181,22 +197,21 @@ export const fetchDrivers = createAsyncThunk("orders/fetchDrivers", async (sucur
     const response = await orderApi.getDrivers(sucursalId)
     return response.data
   } catch (error) {
-    return rejectWithValue(error.response?.data || error.message)
+    if (error.response?.data?.status !== "token_expired") {
+      showNotification({
+        title: "Error",
+        message: error.response?.data?.message || "Error al obtener los repartidores",
+        color: "red"
+      })
+    }
+
+    return rejectWithValue(error.response?.data || "Error al obtener los repartidores")
   }
 })
 
 export const assignDriver = createAsyncThunk("orders/assignDriver", async (params, { rejectWithValue }) => {
   try {
     const response = await orderApi.assignDriver(params)
-    if (response.error) {
-      showNotification({
-        title: "Error",
-        message: response.message,
-        color: "red"
-      })
-
-      return rejectWithValue(response.message)
-    }
 
     showNotification({
       title: "Orden actualizada",
@@ -207,22 +222,21 @@ export const assignDriver = createAsyncThunk("orders/assignDriver", async (param
 
     return { ...response.data, status: "ready-to-pick-up" }
   } catch (error) {
-    return rejectWithValue(error.response?.data || error.message)
+    if (error.response?.data?.status !== "token_expired") {
+      showNotification({
+        title: "Error",
+        message: error.response?.data?.message || "Error al asignar el repartidor",
+        color: "red"
+      })
+    }
+
+    return rejectWithValue(error.response?.data || "Error al asignar el repartidor")
   }
 })
 
 export const markOrderDelivered = createAsyncThunk("orders/markOrderDelivered", async (id, { rejectWithValue }) => {
   try {
     const response = await orderApi.markOrderDelivered(id)
-    if (response.error) {
-      showNotification({
-        title: "Error",
-        message: response.message,
-        color: "red"
-      })
-
-      return rejectWithValue(response.message)
-    }
 
     showNotification({
       title: "Orden actualizada",
@@ -232,7 +246,15 @@ export const markOrderDelivered = createAsyncThunk("orders/markOrderDelivered", 
     })
     return response.data
   } catch (error) {
-    return rejectWithValue(error.response?.data || error.message)
+    if (error.response?.data?.status !== "token_expired") {
+      showNotification({
+        title: "Error",
+        message: error.response?.data?.message || "Error al marcar el pedido como entregado",
+        color: "red"
+      })
+    }
+
+    return rejectWithValue(error.response?.data || "Error al marcar el pedido como entregado")
   }
 })
 
@@ -241,19 +263,18 @@ export const getOrdersHistoryRestaurant = createAsyncThunk(
   async ({ restaurantId, startDate, endDate }, { rejectWithValue }) => {
     try {
       const response = await orderApi.getOrdersHistoryRestaurant({ restaurantId, startDate, endDate })
-      if (response.error) {
-        showNotification({
-          title: "Error",
-          message: response.message,
-          color: "red"
-        })
-
-        return rejectWithValue(response.message)
-      }
 
       return response.data
     } catch (error) {
-      return rejectWithValue(error.response?.data || error.message)
+      if (error.response?.data?.status !== "token_expired") {
+        showNotification({
+          title: "Error",
+          message: error.response?.data?.message || "Error al obtener el historial de pedidos",
+          color: "red"
+        })
+      }
+
+      return rejectWithValue(error.response?.data || "Error al obtener el historial de pedidos")
     }
   }
 )
@@ -263,24 +284,22 @@ export const getOrdersHistorySucursal = createAsyncThunk(
   async ({ sucursalId, startDate, endDate }, { rejectWithValue }) => {
     try {
       const response = await orderApi.getOrdersHistorySucursal({ sucursalId, startDate, endDate })
-      if (response.error) {
-        showNotification({
-          title: "Error",
-          message: response.message,
-          color: "red"
-        })
-
-        return rejectWithValue(response.message)
-      }
 
       return response.data
     } catch (error) {
-      return rejectWithValue(error.response?.data || error.message)
+      if (error.response?.data?.status !== "token_expired") {
+        showNotification({
+          title: "Error",
+          message: error.response?.data?.message || "Error al obtener el historial de pedidos",
+          color: "red"
+        })
+      }
+
+      return rejectWithValue(error.response?.data || "Error al obtener el historial de pedidos")
     }
   }
 )
 
-// Slice de órdenes
 const ordersSlice = createSlice({
   name: "orders",
   initialState,

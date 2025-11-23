@@ -19,7 +19,6 @@ const initialState = {
   imageUrl: "",
   shippingRange: 0,
 
-  //Buscar sucursal
   searchField: "name",
   searchData: null
 }
@@ -37,6 +36,14 @@ export const fetchBranches = createAsyncThunk(
       })
       return { data: response.data, results: response.results, page }
     } catch (error) {
+      if (error?.response?.data?.status !== "token_expired") {
+        showNotification({
+          title: "Error",
+          message: error.response?.data?.message || "Error al obtener las sucursales",
+          color: "red"
+        })
+      }
+
       return rejectWithValue(error.response?.data || "Error fetching branches")
     }
   }
@@ -59,6 +66,14 @@ export const fetchNoPaginatedBranches = createAsyncThunk(
       })
       return response.data
     } catch (error) {
+      if (error?.response?.data?.status !== "token_expired") {
+        showNotification({
+          title: "Error",
+          message: error.response?.data?.message || "Error al obtener las sucursales",
+          color: "red"
+        })
+      }
+
       return rejectWithValue(error.response?.data || "Error fetching branches")
     }
   }
@@ -71,30 +86,10 @@ export const createBranch = createAsyncThunk(
       const response = await branchesApi.createBranch(formData)
       const branchData = response.data
 
-      if (response.error) {
-        showNotification({
-          title: "Error",
-          message: response.message,
-          color: "red"
-        })
-
-        return rejectWithValue(response.message)
-      }
-
       let images = []
       if (formDataImage) {
         const imageResponse = await branchesApi.addImage(branchData.id, formDataImage)
         images = imageResponse.data.images
-
-        if (imageResponse.error) {
-          showNotification({
-            title: "Error",
-            message: imageResponse.message,
-            color: "red"
-          })
-
-          return rejectWithValue(imageResponse.message)
-        }
       }
 
       showNotification({
@@ -105,7 +100,15 @@ export const createBranch = createAsyncThunk(
 
       return { ...branchData, images }
     } catch (error) {
-      return rejectWithValue(error.response?.data || "Error al crear el comercio")
+      if (error?.response?.data?.status !== "token_expired") {
+        showNotification({
+          title: "Error",
+          message: error.response?.data?.message || "Error al crear la sucursal",
+          color: "red"
+        })
+      }
+
+      return rejectWithValue(error.response?.data || "Error al crear la sucursal")
     }
   }
 )
@@ -126,45 +129,35 @@ const updateFormData = (data, propertyToUpdate) => {
 
 export const updateBranches = createAsyncThunk(
   "branches/updateBranches",
-  async ({ formData, formDataImage }, { dispatch, rejectWithValue }) => {
+  async ({ formData, formDataImage }, { rejectWithValue }) => {
     try {
       const response = await branchesApi.updateBranches(formData, formData.id)
       let branchUpdated = response.data
 
-      if (response.error) {
-        showNotification({
-          title: "Error",
-          message: response.message,
-          color: "red",
-          duration: 7000
-        })
+      if (formDataImage) {
+        const imageResponse = await branchesApi.addImage(formData.id, formDataImage)
 
-        return rejectWithValue(response.message)
-      } else {
-        if (formDataImage) {
-          const imageResponse = await branchesApi.addImage(formData.id, formDataImage)
-
-          branchUpdated = { ...branchUpdated, images: imageResponse.data.images }
-        }
-
-        showNotification({
-          title: "Actualización exitosa",
-          message: `La sucursal ${branchUpdated.name} fue actualizada correctamente`,
-          color: "green",
-          radius: "md"
-        })
+        branchUpdated = { ...branchUpdated, images: imageResponse.data.images }
       }
-      return branchUpdated
-    } catch (error) {
-      dispatch(setError("Error updating branch"))
+
       showNotification({
-        title: "Error",
-        message: error,
-        color: "red",
+        title: "Actualización exitosa",
+        message: `La sucursal ${branchUpdated.name} fue actualizada correctamente`,
+        color: "green",
         radius: "md"
       })
 
-      throw error
+      return branchUpdated
+    } catch (error) {
+      if (error?.response?.data?.status !== "token_expired") {
+        showNotification({
+          title: "Error",
+          message: error.response?.data?.message || "Error al actualizar la sucursal",
+          color: "red"
+        })
+      }
+
+      return rejectWithValue(error.response?.data || "Error al actualizar la sucursal")
     }
   }
 )
@@ -177,26 +170,17 @@ export const updateBranchStatus = createAsyncThunk(
 
       const response = await branchesApi.updateBranches(formData, data?.id)
 
-      if (response.error) {
-        showNotification({
-          title: "Error",
-          message: response.message,
-          color: "red",
-          duration: 7000
-        })
-
-        return rejectWithValue(response.message)
-      }
       return response.data
     } catch (error) {
-      showNotification({
-        title: "Error",
-        message: error,
-        color: "red",
-        duration: 7000
-      })
+      if (error?.response?.data?.status !== "token_expired") {
+        showNotification({
+          title: "Error",
+          message: error.response?.data?.message || "Error al actualizar el estado de la sucursal",
+          color: "red"
+        })
+      }
 
-      throw error
+      return rejectWithValue(error.response?.data || "Error al actualizar el estado de la sucursal")
     }
   }
 )

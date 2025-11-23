@@ -235,10 +235,7 @@ export default function MenuTable({
       {
         label: "Rol",
         accessor: "role",
-        render: (role) =>
-          role === "admin-restaurant"
-            ? "Admin. de comercio"
-            : ""
+        render: (role) => (role === "admin-restaurant" ? "Admin. de comercio" : "")
       },
       { label: "Correo", accessor: "email" },
       { label: "Teléfono", accessor: "phoneNumber" },
@@ -362,6 +359,9 @@ export default function MenuTable({
       { label: "Nombre", accessor: "name" },
       {
         label: "Tipo de pago",
+        render: (paymentType) => {
+          return paymentType.toLowerCase().charAt(0).toUpperCase() + paymentType.slice(1).toLowerCase()
+        },
         accessor: "paymentType"
       },
       {

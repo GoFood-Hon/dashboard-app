@@ -59,7 +59,7 @@ export default function Login() {
     } catch (err) {
       showNotification({
         title: "Error",
-        message: 'Hubo un error, por favor intente de nuevo más tarde',
+        message: err?.response?.data?.message || "Ha ocurrido un error inesperado",
         color: "red"
       })
       setIsLoading(false)

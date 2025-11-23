@@ -27,18 +27,17 @@ export const getCoupons = createAsyncThunk(
   async ({ limit, page, order, search, search_field }, { rejectWithValue }) => {
     try {
       const response = await couponApi.getCoupons({ limit, page, order, search, search_field })
-      if (response.error) {
-        showNotification({
-          title: "Error",
-          message: response.message,
-          color: "red"
-        })
-
-        return rejectWithValue(response.message)
-      }
       return { data: response.data, results: response.results, page }
     } catch (error) {
-      return rejectWithValue(error.response.data)
+      if (error?.response?.data?.status !== "token_expired") {
+        showNotification({
+          title: "Error",
+          message: error.response?.data?.message || "Error al obtener los cupones",
+          color: "red"
+        })
+      }
+
+      return rejectWithValue(error.response?.data || "Error al obtener los cupones")
     }
   }
 )
@@ -48,30 +47,10 @@ export const createCoupon = createAsyncThunk("coupons/createCoupon", async ({ pa
     const response = await couponApi.createCoupon(params)
     const couponsData = response.data
 
-    if (response.error) {
-      showNotification({
-        title: "Error",
-        message: response.message,
-        color: "red"
-      })
-
-      return rejectWithValue(response.message)
-    }
-
     let images = []
     if (imageParams) {
       const imageResponse = await couponApi.addImage(couponsData.id, imageParams)
       images = imageResponse.data.images
-
-      if (imageResponse.error) {
-        showNotification({
-          title: "Error",
-          message: imageResponse.message,
-          color: "red"
-        })
-
-        return rejectWithValue(imageResponse.message)
-      }
     }
 
     showNotification({
@@ -82,22 +61,21 @@ export const createCoupon = createAsyncThunk("coupons/createCoupon", async ({ pa
 
     return { ...couponsData, images }
   } catch (error) {
-    return rejectWithValue(error.response.data)
+    if (error?.response?.data?.status !== "token_expired") {
+      showNotification({
+        title: "Error",
+        message: error.response?.data?.message || "Error al crear el cupón",
+        color: "red"
+      })
+    }
+
+    return rejectWithValue(error.response?.data || "Error al crear el cupón")
   }
 })
 
 export const deleteCoupon = createAsyncThunk("coupons/deleteCoupon", async (couponId, { rejectWithValue, dispatch }) => {
   try {
     const response = await couponApi.deleteCoupon(couponId)
-    if (response.error) {
-      showNotification({
-        title: "Error",
-        message: response.message,
-        color: "red"
-      })
-
-      return rejectWithValue(response.message)
-    }
 
     showNotification({
       title: "Cupón eliminado",
@@ -109,7 +87,15 @@ export const deleteCoupon = createAsyncThunk("coupons/deleteCoupon", async (coup
 
     return response.data
   } catch (error) {
-    return rejectWithValue(error.response.data)
+    if (error?.response?.data?.status !== "token_expired") {
+      showNotification({
+        title: "Error",
+        message: error.response?.data?.message || "Error al eliminar el cupón",
+        color: "red"
+      })
+    }
+
+    return rejectWithValue(error.response?.data || "Error al eliminar el cupón")
   }
 })
 
@@ -118,7 +104,15 @@ export const updateStatus = createAsyncThunk("coupons/updateStatus", async ({ co
     const response = await couponApi.updateStatus(couponId, params)
     return response.data
   } catch (error) {
-    return rejectWithValue(error.response.data)
+    if (error?.response?.data?.status !== "token_expired") {
+      showNotification({
+        title: "Error",
+        message: error.response?.data?.message || "Error al actualizar el estado del cupón",
+        color: "red"
+      })
+    }
+
+    return rejectWithValue(error.response?.data || "Error al actualizar el estado del cupón")
   }
 })
 
@@ -129,28 +123,8 @@ export const updateCoupon = createAsyncThunk(
       const response = await couponApi.updateCoupon(couponId, params)
       let couponsData = response.data
 
-      if (response.error) {
-        showNotification({
-          title: "Error",
-          message: response.message,
-          color: "red"
-        })
-
-        return rejectWithValue(response.message)
-      }
-
       if (imageParams) {
         const imageResponse = await couponApi.addImage(couponId, imageParams)
-
-        if (imageResponse.error) {
-          showNotification({
-            title: "Error",
-            message: imageResponse.message,
-            color: "red"
-          })
-
-          return rejectWithValue(imageResponse.message)
-        }
 
         couponsData = { ...couponsData, images: imageResponse.data.images }
       }
@@ -163,7 +137,15 @@ export const updateCoupon = createAsyncThunk(
 
       return couponsData
     } catch (error) {
-      return rejectWithValue(error.response.data)
+      if (error?.response?.data?.status !== "token_expired") {
+        showNotification({
+          title: "Error",
+          message: error.response?.data?.message || "Error al actualizar el cupón",
+          color: "red"
+        })
+      }
+
+      return rejectWithValue(error.response?.data || "Error al actualizar el cupón")
     }
   }
 )
@@ -188,54 +170,42 @@ const couponsSlice = createSlice({
       const { couponId } = action.payload
       const { couponsPerPage } = state
 
-      // Encuentra la página que contiene el registro a eliminar
       const pageIndex = Object.keys(couponsPerPage).find((page) => couponsPerPage[page].some((coupon) => coupon.id === couponId))
 
       if (pageIndex) {
         const page = parseInt(pageIndex)
         const currentPageData = [...couponsPerPage[page]]
 
-        // Elimina el registro de la página actual
         const updatedPage = currentPageData.filter((promo) => promo.id !== couponId)
         state.couponsPerPage[page] = updatedPage
 
-        // Caso 1: Solo hay una página cargada
         if (Object.keys(couponsPerPage).length === 1) {
           state.totalCoupons -= 1
           return
         }
 
-        // Caso 2: Hay varias páginas cargadas
         if (updatedPage.length < 10 && couponsPerPage[page + 1]?.length > 0) {
-          // Pasa el primer elemento de la página siguiente a la página actual
           const [firstOfNextPage, ...restOfNextPage] = couponsPerPage[page + 1]
           state.couponsPerPage[page].push(firstOfNextPage)
           state.couponsPerPage[page + 1] = restOfNextPage
 
-          // Elimina las páginas posteriores, independientemente de si tienen datos o no
           for (let i = page + 1; i <= Object.keys(couponsPerPage).length; i++) {
             delete state.couponsPerPage[i]
           }
         }
 
-        // Caso 3: Las siguientes páginas no están cargadas
         if (updatedPage.length < 10 && !couponsPerPage[page + 1]) {
-          // Fetch de los datos de la siguiente página
           return dispatch(getCoupons({ limit: state.itemsPerPage, page: page + 1 }))
             .unwrap()
             .then(({ data }) => {
-              // Filtrar los datos que ya existen en las páginas actuales
               const existingCoupons = Object.values(couponsPerPage).flat()
               const missingCoupons = data.filter((promo) => !existingCoupons.some((p) => p.id === promo.id))
 
-              // Redistribuir registros entre las páginas actuales
-              const neededCoupons = 10 - updatedPage.length // Cuántos faltan para completar la página actual
+              const neededCoupons = 10 - updatedPage.length
               const couponsToAdd = missingCoupons.slice(0, neededCoupons)
 
-              // Actualizar la página actual con los datos faltantes
               state.couponsPerPage[page] = [...updatedPage, ...couponsToAdd]
 
-              // Si aún quedan promociones después de rellenar la página actual, añadirlas como una nueva página
               if (missingCoupons.length > neededCoupons) {
                 state.couponsPerPage[page + 1] = missingCoupons.slice(neededCoupons)
               }
@@ -245,7 +215,6 @@ const couponsSlice = createSlice({
             })
         }
 
-        // Ajustar totalCoupons
         state.totalCoupons -= 1
       }
     },

@@ -17,7 +17,6 @@ const initialState = {
   creatingMenus: false,
   updatingMenus: false,
 
-  //Dishes state
   dishes: [],
   currentDishPage: 1,
   dishesPerPage: ITEMS_PER_PAGE,
@@ -34,15 +33,10 @@ const initialState = {
   dishesAddedToMenu: 0,
   isLoading: false,
 
-  //Search menus
   searchField: "name",
   searchData: null,
   searchDishesData: null
 }
-
-/*
- * GET MENUS
- */
 
 export const fetchMenus = createAsyncThunk(
   "menus/fetchMenus",
@@ -57,24 +51,18 @@ export const fetchMenus = createAsyncThunk(
         search_field
       })
 
-      if (response.error) {
+      return { data: response.data, results: response.results, page }
+    } catch (error) {
+      if (error?.response?.data?.status !== "token_expired") {
         showNotification({
           title: "Error",
-          message: response.message,
+          message: error.response?.data?.message || "Error al obtener los menús",
           color: "red",
           duration: 7000
         })
-        return rejectWithValue(response.error)
       }
 
-      return { data: response.data, results: response.results, page }
-    } catch (error) {
-      showNotification({
-        title: "Error",
-        message: error,
-        color: "red",
-        duration: 7000
-      })
+      return rejectWithValue(error.response?.data || "Error al obtener los menús")
     }
   }
 )
@@ -92,16 +80,6 @@ export const getAllDishes = createAsyncThunk(
         search
       })
 
-      if (response.error) {
-        showNotification({
-          title: "Error",
-          message: response.message,
-          color: "red",
-          duration: 7000
-        })
-        return rejectWithValue(response.error)
-      }
-
       return {
         data: response.data.map((item) => ({
           id: item.id,
@@ -113,20 +91,19 @@ export const getAllDishes = createAsyncThunk(
         page
       }
     } catch (error) {
-      showNotification({
-        title: "Error",
-        message: error.message || error,
-        color: "red",
-        duration: 7000
-      })
-      return rejectWithValue(error.message)
+      if (error?.response?.data?.status !== "token_expired") {
+        showNotification({
+          title: "Error",
+          message: error.response?.data?.message || "Error al obtener los platos",
+          color: "red",
+          duration: 7000
+        })
+      }
+
+      return rejectWithValue(error.response?.data || "Error al obtener los platos")
     }
   }
 )
-
-/*
- * CREATE MENUS
- */
 
 const uploadMenuImage = async (id, file) => {
   const formDataImage = new FormData()
@@ -152,45 +129,12 @@ export const createMenu = createAsyncThunk("menus/createMenu", async ({ data, re
     const response = await menuApi.createMenu(formData)
     let menuData = response.data
 
-    if (response.error) {
-      showNotification({
-        title: "Error",
-        message: response.message,
-        color: "red",
-        duration: 7000
-      })
-
-      return rejectWithValue(response.error)
-    }
-
     const dishId = response.data.id
     const addImageResponse = await uploadMenuImage(dishId, data?.files?.[0])
-
-    if (addImageResponse.error) {
-      showNotification({
-        title: "Error",
-        message: addImageResponse.message,
-        color: "red",
-        duration: 7000
-      })
-
-      return rejectWithValue(addImageResponse.error)
-    }
 
     menuData = { ...menuData, images: addImageResponse.data.images }
 
     const addComplementsResponse = await addComplements(dishId, data?.dishes)
-
-    if (addComplementsResponse.error) {
-      showNotification({
-        title: "Error",
-        message: addComplementsResponse.message,
-        color: "red",
-        duration: 7000
-      })
-
-      return rejectWithValue(addComplementsResponse.error)
-    }
 
     showNotification({
       title: "Creación exitosa",
@@ -201,17 +145,18 @@ export const createMenu = createAsyncThunk("menus/createMenu", async ({ data, re
 
     return { ...menuData, Dishes: state.menus.dishesAddedToMenu }
   } catch (error) {
-    toast.error("Fallo al actualizar el menu. Por favor intente de nuevo.", {
-      duration: 7000
-    })
+    if (error?.response?.data?.status !== "token_expired") {
+      showNotification({
+        title: "Error",
+        message: error.response?.data?.message || "Error al crear el menú",
+        color: "red",
+        duration: 7000
+      })
+    }
 
-    throw error
+    return rejectWithValue(error.response?.data || "Error al crear el menú")
   }
 })
-
-/*
- * UPDATE MENUS
- */
 
 const updateComplements = async (id, dishes) => {
   const raw = JSON.stringify({ dishes })
@@ -234,52 +179,20 @@ const updateMenuFormData = (data, propertyToUpdate) => {
 
 export const updateMenu = createAsyncThunk(
   "menus/updateMenu",
-  async ({ data, propertyToUpdate = "all" }, { dispatch, rejectWithValue, getState }) => {
+  async ({ data, propertyToUpdate = "all" }, { rejectWithValue, getState }) => {
     try {
       const state = getState()
       const formData = updateMenuFormData(data, propertyToUpdate)
       const response = await menuApi.updateMenu(formData, data.id)
       let menuData = response.data
 
-      if (response.error) {
-        showNotification({
-          title: "Error",
-          message: response.message,
-          color: "red",
-          duration: 7000
-        })
-
-        return rejectWithValue(response.error)
-      }
-
       if (data?.files) {
         const imageResponse = await uploadMenuImage(data?.id, data?.files?.[0])
-        if (imageResponse.error) {
-          showNotification({
-            title: "Error",
-            message: imageResponse.message,
-            color: "red",
-            duration: 7000
-          })
-
-          return rejectWithValue(imageResponse.error)
-        }
         menuData = { ...menuData, images: imageResponse.data.images }
       }
 
       if (Array.isArray(data.dishes) && data.dishes.length > 0 && data.dishes.every((dish) => typeof dish === "string")) {
-        const complementsResponse = await updateComplements(data.id, data.dishes)
-
-        if (complementsResponse.error) {
-          showNotification({
-            title: "Error",
-            message: complementsResponse.message,
-            color: "red",
-            duration: 7000
-          })
-
-          return rejectWithValue(complementsResponse.error)
-        }
+        await updateComplements(data.id, data.dishes)
       }
 
       showNotification({
@@ -291,12 +204,16 @@ export const updateMenu = createAsyncThunk(
 
       return { ...menuData, Dishes: state.menus.dishesAddedToMenu }
     } catch (error) {
-      dispatch(setError("Error updating menu"))
-      toast.error("Fallo al actualizar el menu. Por favor intente de nuevo.", {
-        duration: 7000
-      })
+      if (error?.response?.data?.status !== "token_expired") {
+        showNotification({
+          title: "Error",
+          message: error.response?.data?.message || "Error al actualizar el menú",
+          color: "red",
+          duration: 7000
+        })
+      }
 
-      throw error
+      return rejectWithValue(error.response?.data || "Error al actualizar el menú")
     }
   }
 )
@@ -309,32 +226,21 @@ export const updateMenuStatus = createAsyncThunk(
 
       const response = await menuApi.updateMenu(formData, data.id)
 
-      if (response.error) {
+      return response.data
+    } catch (error) {
+      if (error?.response?.data?.status !== "token_expired") {
         showNotification({
           title: "Error",
-          message: response.message,
+          message: error.response?.data?.message || "Error al actualizar el estado del menú",
           color: "red",
           duration: 7000
         })
-
-        return rejectWithValue(response.error)
       }
 
-      return response.data
-    } catch (error) {
-      showNotification({
-        title: "Error",
-        message: error,
-        color: "red",
-        duration: 7000
-      })
+      return rejectWithValue(error.response?.data || "Error al actualizar el estado del menú")
     }
   }
 )
-
-/*
- * MENU SLICE
- */
 
 export const menusSlice = createSlice({
   name: "menus",
@@ -358,7 +264,7 @@ export const menusSlice = createSlice({
       state.error = action.payload
     },
     setLoading: (state, action) => {
-      state.isLoading = action.payload // Actualiza el estado de carga
+      state.isLoading = action.payload
     },
     setDishesAddedToMenuCount: (state, action) => {
       state.dishesAddedToMenu = action.payload

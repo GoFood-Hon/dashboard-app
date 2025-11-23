@@ -15,7 +15,7 @@ const initialState = {
   loadingReviewDetails: false,
   updatingVisibility: false,
   error: null,
-  rating: null,
+  rating: null
 }
 
 export const fetchAllReviews = createAsyncThunk(
@@ -24,19 +24,17 @@ export const fetchAllReviews = createAsyncThunk(
     try {
       const response = await reviewsApi.getAllReviews({ restaurantId, limit, page, order, search, search_field })
 
-      if (response.error) {
-        showNotification({
-          title: "Error",
-          message: response.message,
-          color: "red",
-          duration: 7000
-        })
-        return rejectWithValue(response.error)
-      }
-
       return { data: response.data, results: response.results, page, ratingAverage: response.restaurantRating }
     } catch (error) {
-      return rejectWithValue(error.response?.data || "Error fetching reviews")
+      if (error?.response?.data?.status !== "token_expired") {
+        showNotification({
+          title: "Error",
+          message: error.response?.data?.message || "Error al obtener las reseñas",
+          color: "red"
+        })
+      }
+
+      return rejectWithValue(error.response?.data || "Error al obtener las reseñas")
     }
   }
 )
@@ -63,7 +61,6 @@ export const updateReviewVisibility = createAsyncThunk(
   }
 )
 
-// Slice
 const reviewsSlice = createSlice({
   name: "reviews",
   initialState,

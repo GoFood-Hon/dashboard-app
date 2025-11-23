@@ -27,10 +27,10 @@ export default function RestaurantsScreen() {
   const searchField = useSelector((state) => state.restaurants.searchField)
 
   useEffect(() => {
-    if (!restaurantsPerPage[page]) {
+    if (!restaurantsPerPage[page] && !loadingRestaurants) {
       dispatch(fetchRestaurants({ limit, page, order: "DESC" }))
     }
-  }, [dispatch, limit, page, restaurantsPerPage, loadingRestaurants])
+  }, [dispatch, limit, page])
 
   const onChangePagination = (newPage) => {
     dispatch(setPage(newPage))

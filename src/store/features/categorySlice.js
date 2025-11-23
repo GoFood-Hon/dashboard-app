@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 import dishesCategoriesApi from "../../api/dishesCategoriesApi.js"
-import toast from "react-hot-toast"
+import { showNotification } from "@mantine/notifications"
 
 const initialState = {
   dishesCategories: [],
@@ -22,28 +22,32 @@ export const fetchDishesCategories = createAsyncThunk(
   }
 )
 
-export const createDishCategory = createAsyncThunk("dishesCategories/createDishCategory", async (formData, { dispatch }) => {
-  try {
-    const response = await dishesCategoriesApi.createCategory(formData)
-    if (response.error) {
-      toast.error(`Fallo al crear nueva categoría de producto. Por favor intente de nuevo. ${response.message}`, {
-        duration: 7000
-      })
-    } else {
-      toast.success("Categoría creada exitosamente", {
-        duration: 7000
-      })
-    }
-    return response.data
-  } catch (error) {
-    dispatch(setError("Error creating dish category"))
-    toast.error("Fallo al crear nueva categoría de producto. Por favor intente de nuevo.", {
-      duration: 7000
-    })
+export const createDishCategory = createAsyncThunk(
+  "dishesCategories/createDishCategory",
+  async (formData, { rejectWithValue }) => {
+    try {
+      const response = await dishesCategoriesApi.createCategory(formData)
 
-    throw error
+      showNotification({
+        title: "Éxito",
+        message: "Categoría de producto creada exitosamente.",
+        color: "green"
+      })
+
+      return response.data
+    } catch (error) {
+      if (error?.response?.data?.status !== "token_expired") {
+        showNotification({
+          title: "Error",
+          message: error.response?.data?.message || "Error al crear la categoría de producto",
+          color: "red"
+        })
+      }
+
+      return rejectWithValue(error.response?.data || "Error al crear la categoría de producto")
+    }
   }
-})
+)
 
 export const dishesCategoriesSlice = createSlice({
   name: "dishesCategories",

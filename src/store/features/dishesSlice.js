@@ -25,14 +25,9 @@ const initialState = {
     dateSort: null
   },
 
-  //Buscar productos
   searchField: "name",
   searchData: null
 }
-
-/*
- * GET DISHES
- */
 
 export const getAllDishes = createAsyncThunk(
   "dishes/getAllDishes",
@@ -47,25 +42,17 @@ export const getAllDishes = createAsyncThunk(
         search
       })
 
-      if (response.error) {
-        showNotification({
-          title: "Error",
-          message: response.message,
-          color: "red",
-          duration: 7000
-        })
-        return rejectWithValue(response.error)
-      }
-
       return { data: response.data, results: response.results, page }
     } catch (error) {
-      showNotification({
-        title: "Error",
-        message: error.message || error,
-        color: "red",
-        duration: 7000
-      })
-      return rejectWithValue(error.message)
+      if (error?.response?.data?.status !== "token_expired") {
+        showNotification({
+          title: "Error",
+          message: error.response?.data?.message || "Error al obtener los productos",
+          color: "red"
+        })
+      }
+
+      return rejectWithValue(error.response?.data || "Error al obtener los productos")
     }
   }
 )
@@ -129,29 +116,7 @@ export const createDish = createAsyncThunk(
 
       dispatch(fetchDishes())
 
-      if (response.error) {
-        showNotification({
-          title: "Error",
-          message: response.message,
-          color: "red",
-          duration: 7000
-        })
-
-        return rejectWithValue(response.error)
-      }
-
       const addImageResponse = await uploadDishImage(response?.data?.id, data?.files?.[0])
-
-      if (addImageResponse.error) {
-        showNotification({
-          title: "Error",
-          message: addImageResponse.message,
-          color: "red",
-          duration: 7000
-        })
-
-        return rejectWithValue(addImageResponse.error)
-      }
 
       dishResponse = { ...dishResponse, images: addImageResponse.data.images }
 
@@ -164,8 +129,16 @@ export const createDish = createAsyncThunk(
 
       return dishResponse
     } catch (error) {
-      handleErrorOnCreateDish(error, dispatch)
-      throw error
+      if (error?.response?.data?.status !== "token_expired") {
+        showNotification({
+          title: "Error",
+          message: error.response?.data?.message || "Error al crear el producto",
+          color: "red",
+          duration: 7000
+        })
+      }
+
+      return rejectWithValue(error.response?.data || "Error al crear el producto")
     }
   }
 )
@@ -205,43 +178,15 @@ const uploadDishImage = async (dishId, file) => {
   return await dishesApi.addImage(dishId, formDataImage)
 }
 
-const handleErrorOnCreateDish = (error, dispatch) => {
-  dispatch(setError("Error creating dish"))
-  toast.error(`Fallo al crear el producto. Por favor intente de nuevo!!. ${error}`, {
-    duration: 7000
-  })
-}
-
 export const updateDish = createAsyncThunk(
   "dishes/updateDish",
   async ({ dishData, propertyToUpdate = "all", dishId }, { dispatch, rejectWithValue }) => {
     try {
       const response = await dishesApi.updateDishWithExtra(dishId, dishData)
       let dishResponse = response.data
-      if (response.error) {
-        showNotification({
-          title: "Error",
-          message: response.message,
-          color: "red",
-          duration: 7000
-        })
-
-        return rejectWithValue(response.error)
-      }
 
       if (propertyToUpdate !== "isActive" && dishData.files) {
         const imageResponse = await uploadDishImage(dishData?.id, dishData?.files?.[0])
-
-        if (imageResponse.error) {
-          showNotification({
-            title: "Error",
-            message: imageResponse.message,
-            color: "red",
-            duration: 7000
-          })
-
-          return rejectWithValue(response.error)
-        }
 
         dishResponse = { ...dishData, images: imageResponse.data.images }
       }
@@ -255,15 +200,16 @@ export const updateDish = createAsyncThunk(
 
       return dishResponse
     } catch (error) {
-      dispatch(setError("Error updating dish"))
-      showNotification({
-        title: "Error",
-        message: error,
-        color: "red",
-        duration: 7000
-      })
+      if (error?.response?.data?.status !== "token_expired") {
+        showNotification({
+          title: "Error",
+          message: error.response?.data?.message || "Error al actualizar el producto",
+          color: "red",
+          duration: 7000
+        })
+      }
 
-      throw error
+      return rejectWithValue(error.response?.data || "Error al actualizar el producto")
     }
   }
 )
@@ -273,34 +219,21 @@ export const updateDishStatus = createAsyncThunk(
   async ({ dishData, dishId }, { dispatch, rejectWithValue }) => {
     try {
       const response = await dishesApi.updateDishesStatus(dishId, dishData)
-      if (response.error) {
+      return response.data
+    } catch (error) {
+      if (error?.response?.data?.status !== "token_expired") {
         showNotification({
           title: "Error",
-          message: response.message,
+          message: error.response?.data?.message || "Error al actualizar el estado del producto",
           color: "red",
           duration: 7000
         })
-
-        return rejectWithValue(response.message)
       }
-      return response.data
-    } catch (error) {
-      dispatch(setError("Error updating dish"))
-      showNotification({
-        title: "Error",
-        message: error,
-        color: "red",
-        duration: 7000
-      })
 
-      throw error
+      return rejectWithValue(error.response?.data || "Error al actualizar el estado del producto")
     }
   }
 )
-
-/*
- * DISHES SLICE
- */
 
 export const dishesSlice = createSlice({
   name: "dishes",

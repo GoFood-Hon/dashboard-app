@@ -17,7 +17,6 @@ const initialState = {
   featuresList: [],
   loadingFeatures: false,
 
-  //Plans view for SelectPlan component
   currentPageSelectPlan: 1,
   itemsPerPageSelectPlan: ITEMS_PER_PAGE_CARDS,
   totalPlansSelectPlan: 0,
@@ -25,12 +24,10 @@ const initialState = {
   plansByPageSelectPlan: [],
   loadingPlansSelectPlan: false,
 
-  //Buscar planes
   searchData: null,
   searchField: "name"
 }
 
-// Thunk para obtener todos los planes
 export const fetchAllPlans = createAsyncThunk(
   "plans/fetchAll",
   async ({ limit, page, search_field, search }, { rejectWithValue }) => {
@@ -43,25 +40,18 @@ export const fetchAllPlans = createAsyncThunk(
         search
       })
 
-      if (response.error) {
+      return { data: response.data, results: response.results, page }
+    } catch (error) {
+      if (error?.response?.data?.status !== "token_expired") {
         showNotification({
           title: "Error",
-          message: response.message,
+          message: error.response?.data?.message || "Error al obtener los planes",
           color: "red",
           duration: 7000
         })
-        return rejectWithValue(response.error)
       }
 
-      return { data: response.data, results: response.results, page }
-    } catch (error) {
-      showNotification({
-        title: "Error",
-        message: error.message || error,
-        color: "red",
-        duration: 7000
-      })
-      return rejectWithValue(error.message)
+      return rejectWithValue(error.response?.data || "Error al obtener los planes")
     }
   }
 )
@@ -79,25 +69,18 @@ export const fetchAllPlansSelectPlan = createAsyncThunk(
         isActive
       })
 
-      if (response.error) {
+      return { data: response.data, results: response.results, page }
+    } catch (error) {
+      if (error?.response?.data?.status !== "token_expired") {
         showNotification({
           title: "Error",
-          message: response.message,
+          message: error.response?.data?.message || "Error al obtener los planes",
           color: "red",
           duration: 7000
         })
-        return rejectWithValue(response.error)
       }
 
-      return { data: response.data, results: response.results, page }
-    } catch (error) {
-      showNotification({
-        title: "Error",
-        message: error.message || error,
-        color: "red",
-        duration: 7000
-      })
-      return rejectWithValue(error.message)
+      return rejectWithValue(error.response?.data || "Error al obtener los planes")
     }
   }
 )
@@ -105,16 +88,6 @@ export const fetchAllPlansSelectPlan = createAsyncThunk(
 export const createPlan = createAsyncThunk("plans/createPlan", async ({ params }, { rejectWithValue }) => {
   try {
     const response = await plansApi.createPlan(params)
-
-    if (response.error) {
-      showNotification({
-        title: "Error",
-        message: response.message,
-        color: "red",
-        duration: 7000
-      })
-      return rejectWithValue(response.error)
-    }
 
     showNotification({
       title: "Creación exitosa",
@@ -124,29 +97,22 @@ export const createPlan = createAsyncThunk("plans/createPlan", async ({ params }
 
     return response.data
   } catch (error) {
-    showNotification({
-      title: "Error",
-      message: error.message || error,
-      color: "red",
-      duration: 7000
-    })
-    return rejectWithValue(error.message)
+    if (error?.response?.data?.status !== "token_expired") {
+      showNotification({
+        title: "Error",
+        message: error.response?.data?.message || "Error al crear el plan",
+        color: "red",
+        duration: 7000
+      })
+    }
+
+    return rejectWithValue(error.response?.data || "Error al crear el plan")
   }
 })
 
 export const updatePlanData = createAsyncThunk("plans/updatePlanData", async ({ id, params }, { rejectWithValue }) => {
   try {
     const response = await plansApi.updatePlan(id, params)
-    if (response.error) {
-      showNotification({
-        title: "Error",
-        message: response.message,
-        color: "red",
-        duration: 7000
-      })
-
-      return rejectWithValue(response.message)
-    }
 
     showNotification({
       title: "Actualización exitosa",
@@ -155,64 +121,54 @@ export const updatePlanData = createAsyncThunk("plans/updatePlanData", async ({ 
     })
     return response.data
   } catch (error) {
-    showNotification({
-      title: "Error",
-      message: error,
-      color: "red",
-      duration: 7000
-    })
+    if (error?.response?.data?.status !== "token_expired") {
+      showNotification({
+        title: "Error",
+        message: error.response?.data?.message || "Error al actualizar el plan",
+        color: "red",
+        duration: 7000
+      })
+    }
 
-    throw error
+    return rejectWithValue(error.response?.data || "Error updating plan data")
   }
 })
 
 export const updatePlanStatus = createAsyncThunk("plans/updatePlanStatus", async ({ id, params }, { rejectWithValue }) => {
   try {
     const response = await plansApi.updatePlan(id, params)
-    if (response.error) {
+
+    return response.data
+  } catch (error) {
+    if (error?.response?.data?.status !== "token_expired") {
       showNotification({
         title: "Error",
-        message: response.message,
+        message: error.response?.data?.message || "Error al actualizar el estado del plan",
         color: "red",
         duration: 7000
       })
-
-      return rejectWithValue(response.message)
     }
-    return response.data
-  } catch (error) {
-    showNotification({
-      title: "Error",
-      message: error,
-      color: "red",
-      duration: 7000
-    })
 
-    throw error
+    return rejectWithValue(error.response?.data || "Error al actualizar el estado del plan")
   }
 })
 
 export const getPlansFeatures = createAsyncThunk("plans/getPlansFeatures", async (_, { rejectWithValue }) => {
   try {
     const response = await plansApi.getFeatures()
-    if (response.error) {
+
+    return response.data
+  } catch (error) {
+    if (error?.response?.data?.status !== "token_expired") {
       showNotification({
         title: "Error",
-        message: response.message,
+        message: error.response?.data?.message || "Error al obtener las características de los planes",
         color: "red",
         duration: 7000
       })
-      return rejectWithValue(response.error)
     }
-    return response.data
-  } catch (error) {
-    showNotification({
-      title: "Error",
-      message: error.message || error,
-      color: "red",
-      duration: 7000
-    })
-    return rejectWithValue(error.message)
+
+    return rejectWithValue(error.response?.data || "Error al obtener las características de los planes")
   }
 })
 

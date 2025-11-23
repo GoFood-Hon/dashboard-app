@@ -6,7 +6,6 @@ import authApi from "../../api/authApi"
 
 const initialState = {
   value: {},
-  //Estado de usuarios administradores
   currentPage: 1,
   totalAdminUsers: 0,
   itemsPerPage: ITEMS_PER_PAGE,
@@ -16,7 +15,6 @@ const initialState = {
   updatingUser: false,
   creatingUser: false,
 
-  //Estado de los demás usuarios
   currentUserPage: 1,
   totalUsers: 0,
   totalUserPagesCount: 0,
@@ -28,7 +26,6 @@ const initialState = {
 
   userRole: null,
 
-  //Buscador de usuarios
   searchAdminUsersData: null,
   searchUsersData: null,
   searchFieldUsers: "name",
@@ -47,25 +44,17 @@ export const fetchAdminUsers = createAsyncThunk(
         search
       })
 
-      if (response.error) {
-        showNotification({
-          title: "Error",
-          message: response.message,
-          color: "red",
-          duration: 7000
-        })
-        return rejectWithValue(response.error)
-      }
-
       return { data: response.data, results: response.results, page }
     } catch (error) {
-      showNotification({
-        title: "Error",
-        message: error.message || error,
-        color: "red",
-        duration: 7000
-      })
-      return rejectWithValue(error.message)
+      if (error?.response?.data?.status !== "token_expired") {
+        showNotification({
+          title: "Error",
+          message: error.response?.data?.message || "Error al obtener los usuarios administradores",
+          color: "red"
+        })
+      }
+
+      return rejectWithValue(error.response?.data || "Error al obtener los usuarios administradores")
     }
   }
 )
@@ -83,25 +72,17 @@ export const fetchUsers = createAsyncThunk(
         search
       })
 
-      if (response.error) {
-        showNotification({
-          title: "Error",
-          message: response.message,
-          color: "red",
-          duration: 7000
-        })
-        return rejectWithValue(response.error)
-      }
-
       return { data: response.data, results: response.results, page }
     } catch (error) {
-      showNotification({
-        title: "Error",
-        message: error.message || error,
-        color: "red",
-        duration: 7000
-      })
-      return rejectWithValue(error.message)
+      if (error?.response?.data?.status !== "token_expired") {
+        showNotification({
+          title: "Error",
+          message: error.response?.data?.message || "Error al obtener los usuarios",
+          color: "red"
+        })
+      }
+
+      return rejectWithValue(error.response?.data || "Error al obtener los usuarios")
     }
   }
 )
@@ -113,32 +94,10 @@ export const createAdminUser = createAsyncThunk(
       const response = await authApi.createNewAdmin(params)
       const userData = response?.data?.data
 
-      if (response.error) {
-        showNotification({
-          title: "Error",
-          message: response?.error?.details?.errors[0]?.message ?? response.message,
-          color: "red",
-          duration: 7000
-        })
-
-        return rejectWithValue(response.message)
-      }
-
       let images = []
       if (formDataImage) {
         const imageResponse = await userApi.addImage(userData.id, formDataImage)
         images = imageResponse.data
-
-        if (imageResponse.error) {
-          showNotification({
-            title: "Error",
-            message: imageResponse.message,
-            color: "red",
-            duration: 7000
-          })
-
-          return rejectWithValue(imageResponse.message)
-        }
       }
 
       showNotification({
@@ -150,14 +109,16 @@ export const createAdminUser = createAsyncThunk(
 
       return { ...userData, images }
     } catch (error) {
-      showNotification({
-        title: "Error",
-        message: error.message || "Error desconocido",
-        color: "red",
-        duration: 7000
-      })
+      if (error?.response?.data?.status !== "token_expired") {
+        showNotification({
+          title: "Error",
+          message: error.response?.data?.message || "Error al crear el administrador",
+          color: "red",
+          duration: 7000
+        })
+      }
 
-      return rejectWithValue(error.message)
+      return rejectWithValue(error.response?.data || "Error al crear el administrador")
     }
   }
 )
@@ -166,45 +127,11 @@ export const createUser = createAsyncThunk("user/createUser", async ({ params, i
   try {
     const response = await userApi.createUser(params)
 
-    if (!response || response.error) {
-      showNotification({
-        title: "Error",
-        message: response?.error?.details?.errors[0]?.message || response?.message,
-        color: "red",
-        duration: 7000
-      })
-
-      return rejectWithValue(response?.message || "Error desconocido.")
-    }
-
     let userData = response.data.AdminUser ?? response.data
 
     if (imageParams) {
-      try {
-        const imageResponse = await userApi.addImage(userData.id, imageParams)
-
-        if (!imageResponse || imageResponse.error) {
-          showNotification({
-            title: "Error",
-            message: imageResponse?.message || "Error al subir la imagen.",
-            color: "red",
-            duration: 7000
-          })
-
-          return rejectWithValue(imageResponse?.message || "Error desconocido al subir la imagen.")
-        }
-
-        userData = { ...userData, images: imageResponse.data }
-      } catch (imageError) {
-        showNotification({
-          title: "Error",
-          message: imageError.message || "Error desconocido al subir la imagen.",
-          color: "red",
-          duration: 7000
-        })
-
-        return rejectWithValue(imageError.message)
-      }
+      const imageResponse = await userApi.addImage(userData.id, imageParams)
+      userData = { ...userData, images: imageResponse.data }
     }
 
     showNotification({
@@ -216,14 +143,16 @@ export const createUser = createAsyncThunk("user/createUser", async ({ params, i
 
     return userData
   } catch (error) {
-    showNotification({
-      title: "Error",
-      message: error.message || "Error desconocido al crear el usuario.",
-      color: "red",
-      duration: 7000
-    })
+    if (error?.response?.data?.status !== "token_expired") {
+      showNotification({
+        title: "Error",
+        message: error.response?.data?.message || "Error al crear el usuario",
+        color: "red",
+        duration: 7000
+      })
+    }
 
-    return rejectWithValue(error.message)
+    return rejectWithValue(error.response?.data || "Error al crear el usuario")
   }
 })
 
@@ -233,29 +162,9 @@ export const updateUserData = createAsyncThunk(
     try {
       const response = await userApi.updateAdminUser(id, params)
       let userData = response.data
-      if (response.error) {
-        showNotification({
-          title: "Error",
-          message: response?.error?.details?.errors[0]?.message ?? response.message,
-          color: "red",
-          duration: 7000
-        })
-
-        return rejectWithValue(response.message)
-      }
 
       if (formDataImage) {
         const imageResponse = await userApi.addImage(id, formDataImage)
-
-        if (imageResponse.error) {
-          showNotification({
-            title: "Error",
-            message: imageResponse.message,
-            color: "red"
-          })
-
-          return rejectWithValue(imageResponse.message)
-        }
 
         userData = { ...userData, images: imageResponse.data }
       }
@@ -268,12 +177,16 @@ export const updateUserData = createAsyncThunk(
 
       return userData
     } catch (error) {
-      showNotification({
-        title: "Error",
-        message: error,
-        color: "red",
-        duration: 7000
-      })
+      if (error?.response?.data?.status !== "token_expired") {
+        showNotification({
+          title: "Error",
+          message: error.response?.data?.message || "Error al actualizar el usuario",
+          color: "red",
+          duration: 7000
+        })
+      }
+
+      return rejectWithValue(error.response?.data || "Error al actualizar el usuario")
     }
   }
 )
@@ -281,24 +194,19 @@ export const updateUserData = createAsyncThunk(
 export const updateUserStatus = createAsyncThunk("user/updateUserStatus", async ({ id, params }, { rejectWithValue }) => {
   try {
     const response = await userApi.updateAdminUser(id, params)
-    if (response.error) {
+
+    return response.data
+  } catch (error) {
+    if (error?.response?.data?.status !== "token_expired") {
       showNotification({
         title: "Error",
-        message: response.message,
+        message: error.response?.data?.message || "Error al actualizar el estado del usuario",
         color: "red",
         duration: 7000
       })
-
-      return rejectWithValue(response.message)
     }
-    return response.data
-  } catch (error) {
-    showNotification({
-      title: "Error",
-      message: error,
-      color: "red",
-      duration: 7000
-    })
+
+    return rejectWithValue(error.response?.data || "Error al actualizar el estado del usuario")
   }
 })
 
@@ -308,29 +216,9 @@ export const updateUser = createAsyncThunk(
     try {
       const response = await userApi.updateUserRestaurant(formData, userId)
       let userData = response.data
-      if (response.error) {
-        showNotification({
-          title: "Error",
-          message: response.message,
-          color: "red",
-          duration: 7000
-        })
-
-        return rejectWithValue(response.message)
-      }
 
       if (formDataImage) {
         const imageResponse = await userApi.addImage(userId, formDataImage)
-
-        if (imageResponse.error) {
-          showNotification({
-            title: "Error",
-            message: imageResponse.message,
-            color: "red"
-          })
-
-          return rejectWithValue(imageResponse.message)
-        }
 
         if (userData.AdminUser) {
           userData = {
@@ -365,12 +253,16 @@ export const updateUser = createAsyncThunk(
 
       return userData
     } catch (error) {
-      showNotification({
-        title: "Error",
-        message: error,
-        color: "red",
-        duration: 7000
-      })
+      if (error?.response?.data?.status !== "token_expired") {
+        showNotification({
+          title: "Error",
+          message: error.response?.data?.message || "Error al actualizar el usuario",
+          color: "red",
+          duration: 7000
+        })
+      }
+
+      return rejectWithValue(error.response?.data || "Error al actualizar el usuario")
     }
   }
 )
@@ -380,29 +272,23 @@ export const updateOtherUserStatus = createAsyncThunk(
   async ({ params, userId }, { rejectWithValue }) => {
     try {
       const response = await userApi.updateUserRestaurant(params, userId)
-      if (response.error) {
+
+      return response.data
+    } catch (error) {
+      if (error?.response?.data?.status !== "token_expired") {
         showNotification({
           title: "Error",
-          message: response.message,
+          message: error.response?.data?.message || "Error al actualizar el estado del usuario",
           color: "red",
           duration: 7000
         })
-
-        return rejectWithValue(response.message)
       }
-      return response.data
-    } catch (error) {
-      showNotification({
-        title: "Error",
-        message: error,
-        color: "red",
-        duration: 7000
-      })
+
+      return rejectWithValue(error.response?.data || "Error al actualizar el estado del usuario")
     }
   }
 )
 
-// Slice de usuarios
 export const userSlice = createSlice({
   name: "user",
   initialState,

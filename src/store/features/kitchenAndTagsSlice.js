@@ -14,41 +14,23 @@ export const fetchAllKitchenTypes = createAsyncThunk("kitchenAndTags/fetchAllKit
   try {
     const response = await kitchenAndTagsApi.getAllKitchenType()
 
-    if (response.error) {
-      showNotification({
-        title: "Error",
-        message: response?.error?.details?.errors?.[0]?.message || response?.message,
-        color: "red"
-      })
-
-      return rejectWithValue(message)
-    }
-
     return response.data
   } catch (error) {
-    return rejectWithValue(error.response?.data || "Error fetching kitchen types")
+    if (error?.response?.data?.status !== "token_expired") {
+      showNotification({
+        title: "Error",
+        message: error.response?.data?.message || "Error al obtener los tipos de establecimientos",
+        color: "red"
+      })
+    }
+
+    return rejectWithValue(error.response?.data || "Error al obtener los tipos de establecimientos")
   }
 })
 
 export const createKitchenType = createAsyncThunk("kitchenAndTags/createKitchenType", async (params, { rejectWithValue }) => {
   try {
     const response = await kitchenAndTagsApi.createKitchenType(params)
-
-    if (response.error) {
-      const message =
-        response?.error?.details?.errors?.[0]?.message ||
-        (response?.message?.includes("cocina")
-          ? response.message.replace("cocina", "establecimiento")
-          : response?.message || "Ocurrió un error inesperado")
-
-      showNotification({
-        title: "Error",
-        message,
-        color: "red"
-      })
-
-      return rejectWithValue(message)
-    }
 
     showNotification({
       title: "Creación exitosa",
@@ -57,6 +39,18 @@ export const createKitchenType = createAsyncThunk("kitchenAndTags/createKitchenT
     })
     return response.data
   } catch (error) {
+    const message = error?.response?.data?.message?.includes("cocina")
+      ? error?.response.data?.message.replace("cocina", "establecimiento")
+      : error?.response?.data?.message || "Ocurrió un error inesperado"
+
+    if (error?.response?.data?.status !== "token_expired") {
+      showNotification({
+        title: "Error",
+        message: message || "Error al crear el tipo de establecimiento",
+        color: "red"
+      })
+    }
+
     return rejectWithValue(error.response?.data || "Error creating kitchen type")
   }
 })
@@ -84,8 +78,15 @@ export const deleteKitchenType = createAsyncThunk("kitchenAndTags/deleteKitchenT
     })
     return id
   } catch (error) {
-    showNotification({ title: "Error", message: "Error eliminando el tipo de establecimiento", color: "red" })
-    return rejectWithValue(error.response?.data || "Error deleting kitchen type")
+    if (error?.response?.data?.status !== "token_expired") {
+      showNotification({
+        title: "Error",
+        message: error.response?.data?.message || "Error eliminando el tipo de establecimiento",
+        color: "red"
+      })
+    }
+
+    return rejectWithValue(error.response?.data || "Error eliminando el tipo de establecimiento")
   }
 })
 
@@ -101,18 +102,17 @@ export const fetchAllDishesTags = createAsyncThunk(
     try {
       const response = await kitchenAndTagsApi.getAllDishesTags()
 
-      if (response.error) {
-        showNotification({
-          title: "Error",
-          message: response?.error?.details?.errors?.[0]?.message || response?.message,
-          color: "red"
-        })
-
-        return rejectWithValue(message)
-      }
       return response.data
     } catch (error) {
-      return rejectWithValue(error.response?.data || "Error fetching dish categories")
+      if (error?.response?.data?.status !== "token_expired") {
+        showNotification({
+          title: "Error",
+          message: error.response?.data?.message || "Error al obtener las categorías de productos",
+          color: "red"
+        })
+      }
+
+      return rejectWithValue(error.response?.data || "Error al obtener las categorías de productos")
     }
   }
 )
@@ -122,12 +122,6 @@ export const createDishesTag = createAsyncThunk("kitchenAndTags/createDishesTag"
     const response = await kitchenAndTagsApi.createDishesTag(params)
 
     if (response.error) {
-      const message =
-        response?.error?.details?.errors?.[0]?.message ||
-        (response?.message?.includes("El tag")
-          ? response.message.replace("El tag", "La categoría")
-          : response?.message || "Ocurrió un error inesperado")
-
       showNotification({
         title: "Error",
         message,
@@ -140,7 +134,19 @@ export const createDishesTag = createAsyncThunk("kitchenAndTags/createDishesTag"
     showNotification({ title: "Creación exitosa", message: `Se agregó la categoría ${response?.data?.name}`, color: "green" })
     return response.data
   } catch (error) {
-    return rejectWithValue(error.response?.data || "Error creating dish tag")
+    const message = error?.response?.data?.message?.includes("El tag")
+      ? error?.response?.data?.message.replace("El tag", "La categoría")
+      : error?.response?.data?.message || "Ocurrió un error inesperado"
+
+    if (error?.response?.data?.status !== "token_expired") {
+      showNotification({
+        title: "Error",
+        message: message || "Error creando la categoría",
+        color: "red"
+      })
+    }
+
+    return rejectWithValue(error.response?.data || "Error creando la categoría")
   }
 })
 
@@ -160,8 +166,15 @@ export const deleteDishesTag = createAsyncThunk("kitchenAndTags/deleteDishesTag"
     showNotification({ title: "Eliminación exitosa", message: "La categoría fue eliminada correctamente", color: "green" })
     return id
   } catch (error) {
-    showNotification({ title: "Error", message: "Error eliminando la categoría", color: "red" })
-    return rejectWithValue(error.response?.data || "Error deleting category")
+    if (error?.response?.data?.status !== "token_expired") {
+      showNotification({
+        title: "Error",
+        message: error.response?.data?.message || "Error eliminando la categoría",
+        color: "red"
+      })
+    }
+
+    return rejectWithValue(error.response?.data || "Error eliminando la categoría")
   }
 })
 

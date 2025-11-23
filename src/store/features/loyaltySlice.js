@@ -19,11 +19,9 @@ const initialState = {
   loading: false,
   error: null,
 
-  // Buscador de programas de lealtad
   searchData: null,
   searchField: "title",
 
-  //Loyalty Tracking variables
   clientIdentity: null,
   cardCode: null,
   userRewardData: [],
@@ -38,7 +36,6 @@ const initialState = {
   prefetchUser: null
 }
 
-// Async thunks para interactuar con los endpoints
 export const fetchLoyaltyProgramsByRestaurant = createAsyncThunk(
   "loyalty/fetchLoyaltyProgramsByRestaurant",
   async (restaurantId, { rejectWithValue }) => {
@@ -46,7 +43,15 @@ export const fetchLoyaltyProgramsByRestaurant = createAsyncThunk(
       const response = await loyaltyApi.getLoyaltyProgramsByRestaurant(restaurantId)
       return response.data
     } catch (error) {
-      return rejectWithValue(error.response.data)
+      if (error?.response?.data?.status !== "token_expired") {
+        showNotification({
+          title: "Error",
+          message: error.response?.data?.message || "Error al obtener los programas de lealtad",
+          color: "red"
+        })
+      }
+
+      return rejectWithValue(error.response.data || "Error al obtener los programas de lealtad")
     }
   }
 )
@@ -58,7 +63,15 @@ export const fetchAllLoyaltyPrograms = createAsyncThunk(
       const response = await loyaltyApi.getAllLoyaltyPrograms({ page, limit, order, orderby, search, search_field, status })
       return { data: response.data, results: response.results, page }
     } catch (error) {
-      return rejectWithValue(error.response.data)
+      if (error?.response?.data?.status !== "token_expired") {
+        showNotification({
+          title: "Error",
+          message: error.response?.data?.message || "Error al obtener los programas de lealtad",
+          color: "red"
+        })
+      }
+
+      return rejectWithValue(error.response.data || "Error al obtener los programas de lealtad")
     }
   }
 )
@@ -68,7 +81,15 @@ export const getLoyaltyProgramById = createAsyncThunk("loyalty/getLoyaltyProgram
     const response = await loyaltyApi.getLoyaltyProgram(id)
     return response.data
   } catch (error) {
-    return rejectWithValue(error.response.data)
+    if (error?.response?.data?.status !== "token_expired") {
+      showNotification({
+        title: "Error",
+        message: error.response?.data?.message || "Error al obtener el programa de lealtad",
+        color: "red"
+      })
+    }
+
+    return rejectWithValue(error.response.data || "Error al obtener el programa de lealtad")
   }
 })
 
@@ -240,13 +261,15 @@ export const updateLoyaltyProgram = createAsyncThunk(
 
       return response.data
     } catch (error) {
-      console.error("Error general en updateLoyaltyProgram:", error)
-      showNotification({
-        title: "Error",
-        message: "Hubo un problema al actualizar el programa de lealtad",
-        color: "red"
-      })
-      return rejectWithValue(error)
+      if (error?.response?.data?.status !== "token_expired") {
+        showNotification({
+          title: "Error",
+          message: error.response?.data?.message || "Error al actualizar el programa de lealtad",
+          color: "red"
+        })
+      }
+
+      return rejectWithValue(error.response?.data || "Error al actualizar el programa de lealtad")
     }
   }
 )
@@ -257,15 +280,6 @@ export const updateLoyaltyProgramStatus = createAsyncThunk(
     try {
       const response = await loyaltyApi.updateLoyaltyProgram(id, params)
 
-      if (response.error) {
-        showNotification({
-          title: "Error",
-          message: response.message,
-          color: "red"
-        })
-        return rejectWithValue(response.error)
-      }
-
       showNotification({
         title: "Actualización exitosa",
         message: "Se actualizó el estado del programa de lealtad",
@@ -274,7 +288,15 @@ export const updateLoyaltyProgramStatus = createAsyncThunk(
 
       return response.data
     } catch (error) {
-      return rejectWithValue(error)
+      if (error?.response?.data?.status !== "token_expired") {
+        showNotification({
+          title: "Error",
+          message: error.response?.data?.message || "Error al actualizar el estado del programa de lealtad",
+          color: "red"
+        })
+      }
+
+      return rejectWithValue(error.response?.data || "Error al actualizar el estado del programa de lealtad")
     }
   }
 )
@@ -304,25 +326,17 @@ export const getUserLoyaltyCards = createAsyncThunk(
         isRedeemed
       })
 
-      if (response.error) {
-        showNotification({
-          title: "Error",
-          message: response.message,
-          color: "red"
-        })
-        return rejectWithValue(response.error)
-      }
-
       return { data: response.data, results: response.results, page }
     } catch (error) {
-      const errorMessage = error.response?.data?.message || "Ocurrió un error inesperado."
-      showNotification({
-        title: "Error",
-        message: errorMessage,
-        color: "red"
-      })
+      if (error?.response?.data?.status !== "token_expired") {
+        showNotification({
+          title: "Error",
+          message: error.response?.data?.message || "Error al obtener las tarjetas de lealtad del usuario",
+          color: "red"
+        })
+      }
 
-      return rejectWithValue(errorMessage)
+      return rejectWithValue(error.response.data || "Error al obtener las tarjetas de lealtad del usuario")
     }
   }
 )
@@ -330,21 +344,20 @@ export const getUserLoyaltyCards = createAsyncThunk(
 export const markCardAsRedeemed = createAsyncThunk("loyalty/markCardAsRedeemed", async (loyaltyCardId, { rejectWithValue }) => {
   try {
     const response = await loyaltyApi.markLoyaltyCardAsRedeemed(loyaltyCardId)
-    if (response.error) {
+    return response.data
+  } catch (error) {
+    if (error?.response?.data?.status !== "token_expired") {
       showNotification({
         title: "Error",
-        message: response.message,
+        message: error.response?.data?.message || "Error al marcar la tarjeta como reclamada",
         color: "red"
       })
-      return rejectWithValue(response.error)
     }
-    return id
-  } catch (error) {
-    return rejectWithValue(error.response.data)
+
+    return rejectWithValue(error.response.data || "Error al marcar la tarjeta como reclamada")
   }
 })
 
-// Slice
 const loyaltySlice = createSlice({
   name: "loyalty",
   initialState,

@@ -180,7 +180,7 @@ const RewardsTracking = () => {
                   {rewardCardsList?.map((card, index) => (
                     <LoyaltyCardView
                       id={card.id}
-                      key={index}
+                      internalKey={index}
                       user={user}
                       options={defaultOptions}
                       type={card?.LoyaltyCard?.LoyaltyRedeemableCardReward?.type}

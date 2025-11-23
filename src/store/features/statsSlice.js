@@ -24,7 +24,15 @@ export const mainCardsStats = createAsyncThunk(
       const response = await statsApi.getMainCardsStats({ restaurantId, startDate, endDate })
       return response.data
     } catch (error) {
-      return rejectWithValue(error.response.data || "Error fetching main cards stats")
+      if (error?.response?.data?.status !== "token_expired") {
+        showNotification({
+          title: "Error",
+          message: error.response?.data?.message || "Error al obtener estadísticas",
+          color: "red"
+        })
+      }
+
+      return rejectWithValue(error.response?.data || "Error al obtener estadísticas")
     }
   }
 )
@@ -36,7 +44,15 @@ export const mainAdminCardsStats = createAsyncThunk(
       const response = await statsApi.getMainAdminCardsStats({ startDate, endDate })
       return response.data
     } catch (error) {
-      return rejectWithValue(error.response.data || "Error fetching main admin cards stats")
+      if (error?.response?.data?.status !== "token_expired") {
+        showNotification({
+          title: "Error",
+          message: error.response?.data?.message || "Error al obtener estadísticas",
+          color: "red"
+        })
+      }
+
+      return rejectWithValue(error.response?.data || "Error al obtener estadísticas")
     }
   }
 )
@@ -48,7 +64,15 @@ export const getOrdersData = createAsyncThunk(
       const response = await statsApi.getSellsAndOrdersData({ restaurantId, sucursalId, startDate, endDate, type })
       return response.data
     } catch (error) {
-      return rejectWithValue(error.response.data || "Error fetching sells data")
+      if (error?.response?.data?.status !== "token_expired") {
+        showNotification({
+          title: "Error",
+          message: error.response?.data?.message || "Error al obtener datos de pedidos",
+          color: "red"
+        })
+      }
+
+      return rejectWithValue(error.response?.data || "Error al obtener datos de pedidos")
     }
   }
 )
@@ -60,7 +84,15 @@ export const getSellsData = createAsyncThunk(
       const response = await statsApi.getSellsAndOrdersData({ restaurantId, sucursalId, startDate, endDate, type })
       return response.data
     } catch (error) {
-      return rejectWithValue(error.response.data || "Error fetching sells data")
+      if (error?.response?.data?.status !== "token_expired") {
+        showNotification({
+          title: "Error",
+          message: error.response?.data?.message || "Error al obtener datos de ventas",
+          color: "red"
+        })
+      }
+
+      return rejectWithValue(error.response?.data || "Error al obtener datos de ventas")
     }
   }
 )
@@ -72,7 +104,15 @@ export const getMostSelledProducts = createAsyncThunk(
       const response = await statsApi.getMostSelledProducts({ restaurantId, startDate, endDate })
       return response.data
     } catch (error) {
-      return rejectWithValue(error.response.data || "Error fetching most selled products")
+      if (error?.response?.data?.status !== "token_expired") {
+        showNotification({
+          title: "Error",
+          message: error.response?.data?.message || "Error al obtener los productos más vendidos",
+          color: "red"
+        })
+      }
+
+      return rejectWithValue(error.response?.data || "Error al obtener los productos más vendidos")
     }
   }
 )
@@ -84,7 +124,15 @@ export const getMostSelledMenus = createAsyncThunk(
       const response = await statsApi.getMostSelledMenus({ restaurantId, startDate, endDate })
       return response.data
     } catch (error) {
-      return rejectWithValue(error.response.data || "Error fetching most selled menus")
+      if (error?.response?.data?.status !== "token_expired") {
+        showNotification({
+          title: "Error",
+          message: error.response?.data?.message || "Error al obtener los menús más vendidos",
+          color: "red"
+        })
+      }
+
+      return rejectWithValue(error.response?.data || "Error al obtener los menús más vendidos")
     }
   }
 )
@@ -94,7 +142,15 @@ export const getTopShops = createAsyncThunk("statistics/getTopShops", async ({ s
     const response = await statsApi.getTopShops({ startDate, endDate })
     return response.data
   } catch (error) {
-    return rejectWithValue(error.response.data || "Error fetching top shops stats")
+    if (error?.response?.data?.status !== "token_expired") {
+      showNotification({
+        title: "Error",
+        message: error.response?.data?.message || "Error al obtener los comercios más destacados",
+        color: "red"
+      })
+    }
+
+    return rejectWithValue(error.response?.data || "Error al obtener los comercios más destacados")
   }
 })
 

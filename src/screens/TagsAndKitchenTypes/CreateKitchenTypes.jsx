@@ -5,7 +5,7 @@ import { colors } from "../../theme/colors"
 import { createKitchenType, fetchAllKitchenTypes, deleteKitchenType } from "../../store/features/kitchenAndTagsSlice"
 import { useDisclosure } from "@mantine/hooks"
 import classes from "./ActionsGrid.module.css"
-import { IconToolsKitchen2 } from "@tabler/icons-react"
+import { IconBuildingStore } from "@tabler/icons-react"
 import ConfirmationModal from "../ConfirmationModal"
 
 export const CreateKitchenTypes = () => {
@@ -74,7 +74,7 @@ export const CreateKitchenTypes = () => {
                 style={{ position: "absolute", top: "5px", right: "5px" }}
               />
               <Flex direction="column" align="center">
-                <IconToolsKitchen2 size="2rem" />
+                <IconBuildingStore size="2rem" />
                 <Text size="sm" tt="capitalize" mt={7}>
                   {type.name}
                 </Text>
