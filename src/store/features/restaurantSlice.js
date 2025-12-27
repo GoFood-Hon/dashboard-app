@@ -102,10 +102,14 @@ export const createRestaurant = createAsyncThunk(
 
       return { ...restaurantData, images }
     } catch (error) {
+      console.log(error)
       if (error?.response?.data?.status !== "token_expired") {
         showNotification({
           title: "Error",
-          message: error.response?.data?.message || "Error al crear el comercio",
+          message:
+            error.response?.data?.error?.details?.errors[0]?.message ||
+            error.response?.data?.message ||
+            "Error al crear el comercio",
           color: "red"
         })
       }
@@ -167,7 +171,10 @@ export const updateRestaurant = createAsyncThunk(
       if (error?.response?.data?.status !== "token_expired") {
         showNotification({
           title: "Error",
-          message: error.response?.data?.message || "Error al actualizar el comercio",
+          message:
+            error.response?.data?.error?.details?.errors[0]?.message ||
+            error.response?.data?.message ||
+            "Error al actualizar el comercio",
           color: "red"
         })
       }
@@ -223,7 +230,10 @@ export const updateRestaurantData = createAsyncThunk(
       if (error?.response?.data?.status !== "token_expired") {
         showNotification({
           title: "Error",
-          message: error.response?.data?.message || "Error al actualizar el comercio",
+          message:
+            error.response?.data?.error?.details?.errors[0]?.message ||
+            error.response?.data?.message ||
+            "Error al actualizar el comercio",
           color: "red"
         })
       }

@@ -36,76 +36,61 @@ export const NewRestaurant = () => {
   })
 
   const onSubmit = async (data) => {
-    try {
-      const formData = new FormData()
-      formData.append("name", data.name)
-      formData.append("email", data.email)
-      formData.append("phoneNumber", data.phoneNumber.startsWith("+504") ? data.phoneNumber : `+504${data.phoneNumber}`)
-      formData.append("socialReason", data.socialReason)
-      formData.append("rtn", data.rtn)
-      formData.append("billingAddress", data.billingAddress)
-      formData.append("cai", data.cai)
-      formData.append("shippingFree", data.shippingFree ?? true)
-      formData.append("cuisineTypeId", data.cuisineTypeId ?? "")
-      formData.append("clinpaysCommerceToken", data.clinpaysCommerceToken ?? "")
+    const formData = new FormData()
+    formData.append("name", data.name)
+    formData.append("email", data.email)
+    formData.append("phoneNumber", data.phoneNumber.startsWith("+504") ? data.phoneNumber : `+504${data.phoneNumber}`)
+    formData.append("socialReason", data.socialReason)
+    formData.append("rtn", data.rtn)
+    formData.append("billingAddress", data.billingAddress)
+    formData.append("cai", data.cai)
+    formData.append("shippingFree", data.shippingFree ?? true)
+    formData.append("cuisineTypeId", data.cuisineTypeId ?? "")
+    formData.append("clinpaysCommerceToken", data.clinpaysCommerceToken ?? "")
 
-      if (data.pricePerChair) {
-        formData.append("pricePerChair", data.pricePerChair)
-      }
-      if (data.hoursBeforeCancellation) {
-        formData.append("hoursBeforeCancellation", data.hoursBeforeCancellation)
-      }
-      if (data.hoursBeforeBooking) {
-        formData.append("hoursBeforeBooking", data.hoursBeforeBooking)
-      }
-
-      if (data.shippingFree !== true && data.shippingPrice) {
-        formData.append("shippingPrice", convertToDecimal(data.shippingPrice))
-      }
-      if (data.whatsapp) {
-        formData.append("whatsapp", data.whatsapp.startsWith("+504") ? data.whatsapp : `+504${data.whatsapp}`)
-      }
-      if (data.facebook) {
-        formData.append("facebook", data.facebook)
-      }
-      if (data.instagram) {
-        formData.append("instagram", data.instagram)
-      }
-      if (data.website) {
-        formData.append("website", data.website)
-      }
-
-      const formDataImage = new FormData()
-      formDataImage.append("files", data.files[0] || [])
-
-      const formDataBanner = new FormData()
-      formDataBanner.append("files", data.bannerDishes[0] || [])
-
-      dispatch(
-        createRestaurant({
-          params: formData,
-          imageParams: formDataImage,
-          formDataBanner
-        })
-      )
-        .unwrap()
-        .then(() => {
-          navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Restaurants.path)
-        })
-        .catch((error) => {
-          showNotification({
-            title: "Error",
-            message: "Hubo un problema al crear el comercio",
-            color: "red"
-          })
-        })
-    } catch (err) {
-      showNotification({
-        title: "Error",
-        message: "Ocurrió un error inesperado",
-        color: "red"
-      })
+    if (data.pricePerChair) {
+      formData.append("pricePerChair", data.pricePerChair)
     }
+    if (data.hoursBeforeCancellation) {
+      formData.append("hoursBeforeCancellation", data.hoursBeforeCancellation)
+    }
+    if (data.hoursBeforeBooking) {
+      formData.append("hoursBeforeBooking", data.hoursBeforeBooking)
+    }
+
+    if (data.shippingFree !== true && data.shippingPrice) {
+      formData.append("shippingPrice", convertToDecimal(data.shippingPrice))
+    }
+    if (data.whatsapp) {
+      formData.append("whatsapp", data.whatsapp.startsWith("+504") ? data.whatsapp : `+504${data.whatsapp}`)
+    }
+    if (data.facebook) {
+      formData.append("facebook", data.facebook)
+    }
+    if (data.instagram) {
+      formData.append("instagram", data.instagram)
+    }
+    if (data.website) {
+      formData.append("website", data.website)
+    }
+
+    const formDataImage = new FormData()
+    formDataImage.append("files", data.files[0] || [])
+
+    const formDataBanner = new FormData()
+    formDataBanner.append("files", data.bannerDishes[0] || [])
+
+    dispatch(
+      createRestaurant({
+        params: formData,
+        imageParams: formDataImage,
+        formDataBanner
+      })
+    ).then((response) => {
+      if (!response?.payload?.error) {
+        navigate(NAVIGATION_ROUTES_SUPER_ADMIN.Restaurants.path)
+      }
+    })
   }
 
   const accordionStructure = [

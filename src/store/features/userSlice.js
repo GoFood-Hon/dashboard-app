@@ -112,7 +112,10 @@ export const createAdminUser = createAsyncThunk(
       if (error?.response?.data?.status !== "token_expired") {
         showNotification({
           title: "Error",
-          message: error.response?.data?.message || "Error al crear el administrador",
+          message:
+            error.response?.data?.error?.details?.errors[0]?.message ||
+            error.response?.data?.message ||
+            "Error al crear el administrador",
           color: "red",
           duration: 7000
         })
@@ -146,7 +149,10 @@ export const createUser = createAsyncThunk("user/createUser", async ({ params, i
     if (error?.response?.data?.status !== "token_expired") {
       showNotification({
         title: "Error",
-        message: error.response?.data?.message || "Error al crear el usuario",
+        message:
+          error.response?.data?.error?.details?.errors[0]?.message ||
+          error.response?.data?.message ||
+          "Error al crear el usuario",
         color: "red",
         duration: 7000
       })
@@ -180,7 +186,10 @@ export const updateUserData = createAsyncThunk(
       if (error?.response?.data?.status !== "token_expired") {
         showNotification({
           title: "Error",
-          message: error.response?.data?.message || "Error al actualizar el usuario",
+          message:
+            error.response?.data?.error?.details?.errors[0]?.message ||
+            error.response?.data?.message ||
+            "Error al actualizar el usuario",
           color: "red",
           duration: 7000
         })
@@ -256,7 +265,10 @@ export const updateUser = createAsyncThunk(
       if (error?.response?.data?.status !== "token_expired") {
         showNotification({
           title: "Error",
-          message: error.response?.data?.message || "Error al actualizar el usuario",
+          message:
+            error.response?.data?.error?.details?.errors[0]?.message ||
+            error.response?.data?.message ||
+            "Error al actualizar el usuario",
           color: "red",
           duration: 7000
         })

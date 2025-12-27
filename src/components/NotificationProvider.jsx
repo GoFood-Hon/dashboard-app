@@ -16,14 +16,13 @@ export const NotificationProvider = ({ children }) => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const location = useLocation()
-  const isOrderDetailRoute = (path) => /^\/orders\/[^/]+$/.test(path)
-  const isReservationDetailRoute = (path) => /^\/reservations\/[^/]+$/.test(path)
 
   useEffect(() => {
     if (!orderSocket) return
     const audio = new Audio(notificationSound)
     const playSound = () => {
       audio.currentTime = 0
+      audio.play().catch((err) => console.warn("No se pudo reproducir el sonido:", err))
     }
 
     const handleNewOrder = (order) => {
@@ -55,11 +54,8 @@ export const NotificationProvider = ({ children }) => {
               w="120px"
               color="green"
               onClick={() => {
-                if (isOrderDetailRoute(location.pathname)) {
-                  dispatch(fetchOrderDetails(order.id))
-                } else {
-                  navigate(`/orders/${order.id}`)
-                }
+                navigate(`/orders/${order.id}`)
+                dispatch(fetchOrderDetails(order.id))
                 notifications.hide(order.id)
               }}>
               Ver pedido
@@ -95,11 +91,8 @@ export const NotificationProvider = ({ children }) => {
               w="120px"
               color="green"
               onClick={() => {
-                if (isOrderDetailRoute(location.pathname)) {
-                  dispatch(fetchOrderDetails(order.id))
-                } else {
-                  navigate(`/orders/${order.id}`)
-                }
+                navigate(`/orders/${order.id}`)
+                dispatch(fetchOrderDetails(order.id))
                 notifications.hide(order.id)
               }}>
               Ver pedido
@@ -166,11 +159,8 @@ export const NotificationProvider = ({ children }) => {
                 w="120px"
                 color="green"
                 onClick={() => {
-                  if (isOrderDetailRoute(location.pathname)) {
-                    dispatch(fetchOrderDetails(order.id))
-                  } else {
-                    navigate(`/orders/${order.id}`)
-                  }
+                  navigate(`/orders/${order.id}`)
+                  dispatch(fetchOrderDetails(order.id))
                   notifications.hide(order.id)
                 }}>
                 Ver pedido
@@ -216,11 +206,8 @@ export const NotificationProvider = ({ children }) => {
                 w="120px"
                 color="green"
                 onClick={() => {
-                  if (isOrderDetailRoute(location.pathname)) {
-                    dispatch(fetchOrderDetails(order.id))
-                  } else {
-                    navigate(`/orders/${order.id}`)
-                  }
+                  navigate(`/orders/${order.id}`)
+                  dispatch(fetchOrderDetails(order.id))
                   notifications.hide(order.id)
                 }}>
                 Ver pedido
@@ -256,11 +243,8 @@ export const NotificationProvider = ({ children }) => {
               w="125px"
               color="green"
               onClick={() => {
-                if (isReservationDetailRoute(location.pathname)) {
-                  dispatch(fetchReservationDetails(reservation.id))
-                } else {
-                  navigate(`/reservations/${reservation.id}`)
-                }
+                navigate(`/reservations/${reservation.id}`)
+                dispatch(fetchReservationDetails(reservation.id))
                 notifications.hide(reservation.id)
               }}>
               Ver reservación
@@ -275,7 +259,7 @@ export const NotificationProvider = ({ children }) => {
     }
 
     const handleReservationStatus = (reservation) => {
-      if(location.pathname === `/reservations/${reservation.id}`) return
+      if (location.pathname === `/reservations/${reservation.id}`) return
       playSound()
       notifications.show({
         id: reservation.id,
@@ -296,11 +280,8 @@ export const NotificationProvider = ({ children }) => {
               w="125px"
               color="green"
               onClick={() => {
-                if (isReservationDetailRoute(location.pathname)) {
-                  dispatch(fetchReservationDetails(reservation.id))
-                } else {
-                  navigate(`/reservations/${reservation.id}`)
-                }
+                navigate(`/reservations/${reservation.id}`)
+                dispatch(fetchReservationDetails(reservation.id))
                 notifications.hide(reservation.id)
               }}>
               Ver reservación
@@ -335,11 +316,8 @@ export const NotificationProvider = ({ children }) => {
               w="125px"
               color="green"
               onClick={() => {
-                if (isReservationDetailRoute(location.pathname)) {
-                  dispatch(fetchReservationDetails(reservation.id))
-                } else {
-                  navigate(`/reservations/${reservation.id}`)
-                }
+                navigate(`/reservations/${reservation.id}`)
+                dispatch(fetchReservationDetails(reservation.id))
                 notifications.hide(reservation.id)
               }}>
               Ver reservación

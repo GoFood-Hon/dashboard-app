@@ -258,3 +258,10 @@ export const getDeliverySteps = (orderDetails) => {
     activeStep: lastCompletedIndex >= 0 ? lastCompletedIndex : -1
   }
 }
+
+export const toISOWithHNOffset = (date) => {
+  if (!date) return ""
+  return dayjs(date)
+    .tz("America/Tegucigalpa") 
+    .format("YYYY-MM-DDTHH:mm:ssZ")
+}

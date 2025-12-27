@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { Grid, MultiSelect, Paper, Select } from "@mantine/core"
-import { DatePickerInput } from "@mantine/dates"
+import { DateTimePicker } from "@mantine/dates"
 import { discountAppliedTo, promotionsDiscountType } from "../../utils/constants"
 import InputField from "../../components/Form/InputField"
 import { Controller } from "react-hook-form"
@@ -13,26 +13,29 @@ export const GeneralInformationForm = ({ register, errors, setValue, control, im
   const allDishes = watch("allDishes")
   const category = watch("category")
   const percentage = watch("percentage")
+
   const startDate = watch("startDate") ? new Date(watch("startDate")) : null
   const endDate = watch("endDate") ? new Date(watch("endDate")) : null
+
   const dishesAlreadySelected = watch("Dishes")
   const dishes = useSelector((state) => state.promotions.dishesList)
   const user = useSelector((state) => state.user.value)
   const dispatch = useDispatch()
   const [selectedDishes, setSelectedDishes] = useState([])
-  const initialStartDate = offersData?.startDate ? new Date(offersData.startDate) : null
-  const initialEndDate = offersData?.endDate ? new Date(offersData.endDate) : null
-  const [dateRange, setDateRange] = useState({
-    initialDate: initialStartDate || new Date(),
-    endDate: initialEndDate || new Date()
-  })
+
+  // ✅ now + 1 minuto en tiempo real
+  const [nowPlusOne, setNowPlusOne] = useState(() => dayjs().add(1, "minute"))
+
+  useEffect(() => {
+    const id = setInterval(() => setNowPlusOne(dayjs().add(1, "minute")), 1000)
+    return () => clearInterval(id)
+  }, [])
 
   const handleDateChange = (date, type) => {
-    setDateRange((prevState) => ({
-      ...prevState,
-      [type]: date
-    }))
-    setValue(type === "initialDate" ? "startDate" : "endDate", date)
+    setValue(type === "initialDate" ? "startDate" : "endDate", date, {
+      shouldDirty: true,
+      shouldValidate: true
+    })
   }
 
   useEffect(() => {
@@ -43,17 +46,58 @@ export const GeneralInformationForm = ({ register, errors, setValue, control, im
   useEffect(() => {
     dispatch(getAllDishesList(user.restaurantId))
   }, [allDishes])
-  
+
   const handleDishesChange = (selected) => {
     setSelectedDishes(selected)
     setValue("Dishes", selected)
   }
 
   const handleDrop = (acceptedFiles) => {
-    if (acceptedFiles.length > 0) {
-      setValue("files", acceptedFiles)
-    }
+    if (acceptedFiles.length > 0) setValue("files", acceptedFiles)
   }
+
+  // ✅ helper: minTime dinámico (HH:mm) solo si la fecha es HOY
+  const getMinTimeIfToday = (date) => {
+    if (!date) return undefined
+    const isToday = dayjs(date).isSame(dayjs(), "day")
+    return isToday ? nowPlusOne.format("HH:mm") : undefined
+  }
+
+  const startMinTime = useMemo(() => getMinTimeIfToday(startDate), [startDate, nowPlusOne])
+  const endMinTime = useMemo(() => getMinTimeIfToday(endDate), [endDate, nowPlusOne])
+
+  // ✅ auto-corrección para START (si hoy y quedó atrás -> now+1)
+  useEffect(() => {
+    if (update) return
+    if (!startDate) return
+
+    const s = dayjs(startDate)
+    if (s.isSame(dayjs(), "day") && s.isBefore(nowPlusOne)) {
+      setValue("startDate", nowPlusOne.toDate(), { shouldDirty: true, shouldValidate: true })
+    }
+  }, [nowPlusOne, startDate, setValue, update])
+
+  // ✅ auto-corrección para END (si hoy y quedó atrás -> now+1)
+  useEffect(() => {
+    if (update) return
+    if (!endDate) return
+
+    const e = dayjs(endDate)
+    if (e.isSame(dayjs(), "day") && e.isBefore(nowPlusOne)) {
+      setValue("endDate", nowPlusOne.toDate(), { shouldDirty: true, shouldValidate: true })
+    }
+  }, [nowPlusOne, endDate, setValue, update])
+
+  // ✅ regla adicional: end >= start + 1 minuto (si ambos existen)
+  useEffect(() => {
+    if (update) return
+    if (!startDate || !endDate) return
+
+    const minEnd = dayjs(startDate).add(1, "minute")
+    if (dayjs(endDate).isBefore(minEnd)) {
+      setValue("endDate", minEnd.toDate(), { shouldDirty: true, shouldValidate: true })
+    }
+  }, [startDate, endDate, setValue, update])
 
   return (
     <Grid>
@@ -63,9 +107,11 @@ export const GeneralInformationForm = ({ register, errors, setValue, control, im
             <Grid.Col span={{ base: 12, md: 6 }}>
               <InputField label="Titulo" name="title" register={register} errors={errors} />
             </Grid.Col>
+
             <Grid.Col span={{ base: 12, md: 6 }}>
               <InputField label="Compra minima" name="minPurchase" register={register} errors={errors} />
             </Grid.Col>
+
             <Grid.Col span={{ base: 12, md: 6 }}>
               <Controller
                 name="category"
@@ -87,6 +133,7 @@ export const GeneralInformationForm = ({ register, errors, setValue, control, im
                 )}
               />
             </Grid.Col>
+
             <Grid.Col span={{ base: 12, md: 6 }}>
               {category === "fijo" ? (
                 <InputField label="Monto" name="amount" register={register} errors={errors} />
@@ -99,10 +146,7 @@ export const GeneralInformationForm = ({ register, errors, setValue, control, im
                       label="Porcentaje"
                       data={Array.from({ length: 20 }, (_, i) => {
                         const value = (i + 1) * 5
-                        return {
-                          value: value.toString(),
-                          label: `${value}%`
-                        }
+                        return { value: value.toString(), label: `${value}%` }
                       })}
                       defaultValue={percentage}
                       allowDeselect={false}
@@ -114,28 +158,41 @@ export const GeneralInformationForm = ({ register, errors, setValue, control, im
                 />
               )}
             </Grid.Col>
+
             <Grid.Col span={{ base: 12, md: 6 }}>
-              <DatePickerInput
+              <DateTimePicker
                 value={startDate}
                 locale="es"
-                label="Fecha de inicio"
+                label="Fecha y hora de inicio"
                 placeholder="Seleccionar fecha"
                 popoverProps={{ withinPortal: false }}
                 onChange={(val) => handleDateChange(val, "initialDate")}
                 minDate={dayjs().startOf("day").toDate()}
+                disabled={update}
+                timePickerProps={{
+                  min: startMinTime, // ✅ HH:mm dinámico si es hoy
+                  withDropdown: true
+                }}
               />
             </Grid.Col>
+
             <Grid.Col span={{ base: 12, md: 6 }}>
-              <DatePickerInput
+              <DateTimePicker
                 value={endDate}
                 locale="es"
-                label="Fecha de finalización"
+                label="Fecha y hora de finalización"
                 placeholder="Seleccionar fecha"
                 popoverProps={{ withinPortal: false }}
                 onChange={(val) => handleDateChange(val, "endDate")}
                 minDate={dayjs().startOf("day").toDate()}
+                disabled={update}
+                timePickerProps={{
+                  min: endMinTime, // ✅ HH:mm dinámico si es hoy
+                  withDropdown: true
+                }}
               />
             </Grid.Col>
+
             <Grid.Col span={{ base: 12 }}>
               <Controller
                 name="allDishes"
@@ -157,14 +214,12 @@ export const GeneralInformationForm = ({ register, errors, setValue, control, im
                 )}
               />
             </Grid.Col>
+
             {allDishes === "some" && (
               <Grid.Col span={{ base: 12 }}>
                 <MultiSelect
                   label={`Productos ${update ? "seleccionados" : "disponibles"}`}
-                  data={dishes?.map((item) => ({
-                    value: item.id,
-                    label: item.name
-                  }))}
+                  data={dishes?.map((item) => ({ value: item.id, label: item.name }))}
                   searchable
                   maxValues={10}
                   hidePickedOptions
@@ -179,6 +234,7 @@ export const GeneralInformationForm = ({ register, errors, setValue, control, im
           </Grid>
         </Paper>
       </Grid.Col>
+
       <Grid.Col order={{ base: 1, sm: 1, md: 2 }} span={{ base: 12, md: 4, lg: 4 }}>
         <ImageDropzone
           image={image}

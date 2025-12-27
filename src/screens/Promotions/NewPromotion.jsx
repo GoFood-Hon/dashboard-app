@@ -8,6 +8,7 @@ import { useDispatch } from "react-redux"
 import { useNavigate } from "react-router-dom"
 import { newPromotionSchema } from "../../utils/validationSchemas"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { toISOWithHNOffset } from "../../utils"
 
 export const NewPromotion = () => {
   const dispatch = useDispatch()
@@ -49,21 +50,19 @@ export const NewPromotion = () => {
     data.category === "porcentual"
       ? formData.append("percentage", data.percentage)
       : formData.append("amount", data.amount.includes(".00") ? data.amount : data.amount.concat(".00"))
-    formData.append("startDate", data.startDate)
-    formData.append("endDate", data.endDate)
+    formData.append("startDate", toISOWithHNOffset(data.startDate))
+    formData.append("endDate", toISOWithHNOffset(data.endDate))
     formData.append("allDishes", data.allDishes === "all" ? true : false)
 
     const formDataImage = new FormData()
     formDataImage.append("files", data.files[0])
 
-
-    dispatch(createOffer({ params: formData, imageParams: formDataImage, dishes: data?.allDishes === "some" ? data?.Dishes : [] }))
+    dispatch(
+      createOffer({ params: formData, imageParams: formDataImage, dishes: data?.allDishes === "some" ? data?.Dishes : [] })
+    )
       .unwrap()
       .then(() => {
         navigate(SETTING_NAVIGATION_ROUTES.Promotions.path)
-      })
-      .catch((error) => {
-        console.error("Error creating promotion:", error)
       })
   }
 

@@ -41,7 +41,6 @@ export default function PurchasesHistory() {
       loading={loadingHistory}
       noSearch
       dates
-      filterData
       value={dateRange.map((date) => (date ? new Date(date) : null))}
       setRange={handleDateChange}
       filterAction={handleFilterSearch}

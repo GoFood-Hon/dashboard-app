@@ -54,10 +54,7 @@ export const fetchReservationByBranch = createAsyncThunk(
 
 export const fetchReservationByRestaurant = createAsyncThunk(
   "reservations/fetchByRestaurant",
-  async ({ restaurantId, limit, page, order, search, search_field }, thunkAPI) => {
-    const { rejectWithValue } = thunkAPI
-    thunkAPI.meta.thunk = fetchReservationByRestaurant
-
+  async ({ restaurantId, limit, page, order, search, search_field }, { rejectWithValue }) => {
     try {
       const response = await reservationsApi.getReservationByRestaurant({
         restaurantId,
